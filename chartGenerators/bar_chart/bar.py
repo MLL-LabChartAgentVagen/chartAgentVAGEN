@@ -313,89 +313,41 @@ def draw__1_bar__func_1__mask(
     
     # Now apply specific masks only for valid mask_idx
     if mask_idx:
-        # Draw the canvas to get proper coordinates
-        fig.canvas.draw()
-        renderer = fig.canvas.get_renderer()
-        
-        # 1. Mask the text labels on the bars if present
+        # 1. Mask the text labels on the bars if present by adjusting style
         if show_text_label:
             for idx in mask_idx:
                 if 0 <= idx < len(bars) and idx < len(ax.texts):
                     text = ax.texts[idx]
-                    bbox = text.get_window_extent(renderer=renderer)
-                    bbox_fig = bbox.transformed(fig.transFigure.inverted())
-                    
-                    rect = plt.Rectangle(
-                        (bbox_fig.x0 - 0.005, bbox_fig.y0 - 0.005),
-                        bbox_fig.width + 0.01, bbox_fig.height + 0.01,
-                        transform=fig.transFigure,
-                        color=mask_color,
-                        zorder=100
-                    )
-                    fig.patches.append(rect)
+                    text.set_color(mask_color)
+                    text.set_alpha(0.0)
         
-        # 2. Mask the category labels based on orientation
+        # 2. Mask the category labels based on orientation by dimming them
         if horizontal:
-            # For horizontal bars, categories are on y-axis
             labels = ax.get_yticklabels()
         else:
-            # For vertical bars, categories are on x-axis
             labels = ax.get_xticklabels()
             
         for idx in mask_idx:
             if 0 <= idx < len(labels):
                 label = labels[idx]
-                bbox = label.get_window_extent(renderer=renderer)
-                bbox_fig = bbox.transformed(fig.transFigure.inverted())
-                
-                # For rotated labels (in vertical mode), increase padding
-                padding_x = 0.01 if not horizontal else 0.005
-                padding_y = 0.01 if not horizontal else 0.005
-                
-                rect = plt.Rectangle(
-                    (bbox_fig.x0 - padding_x, bbox_fig.y0 - padding_y),
-                    bbox_fig.width + (padding_x * 2), bbox_fig.height + (padding_y * 2),
-                    transform=fig.transFigure,
-                    color=mask_color,
-                    zorder=100
-                )
-                fig.patches.append(rect)
+                label.set_color(mask_color)
+                label.set_alpha(0.0)
         
-        # 3. Mask the legend if present
+        # 3. Mask the legend if present by dimming text and handles
         if show_legend and legend:
             texts = legend.get_texts()
             handles = legend.legend_handles
             
             for idx in mask_idx:
                 if 0 <= idx < len(texts):
-                    # Mask legend text
-                    text = texts[idx]
-                    bbox = text.get_window_extent(renderer=renderer)
-                    bbox_fig = bbox.transformed(fig.transFigure.inverted())
-                    
-                    rect = plt.Rectangle(
-                        (bbox_fig.x0 - 0.005, bbox_fig.y0 - 0.005),
-                        bbox_fig.width + 0.01, bbox_fig.height + 0.01,
-                        transform=fig.transFigure,
-                        color=mask_color,
-                        zorder=100
-                    )
-                    fig.patches.append(rect)
-                    
-                    # Mask legend handle
-                    if 0 <= idx < len(handles):
-                        handle = handles[idx]
-                        bbox = handle.get_window_extent(renderer=renderer)
-                        bbox_fig = bbox.transformed(fig.transFigure.inverted())
-                        
-                        rect = plt.Rectangle(
-                            (bbox_fig.x0 - 0.005, bbox_fig.y0 - 0.005),
-                            bbox_fig.width + 0.01, bbox_fig.height + 0.01,
-                            transform=fig.transFigure,
-                            color=mask_color,
-                            zorder=100
-                        )
-                        fig.patches.append(rect)
+                    texts[idx].set_color(mask_color)
+                    texts[idx].set_alpha(0.0)
+                if 0 <= idx < len(handles):
+                    handle = handles[idx]
+                    if hasattr(handle, "set_facecolor"):
+                        handle.set_facecolor(mask_color)
+                    if hasattr(handle, "set_edgecolor"):
+                        handle.set_edgecolor(mask_color)
     
     # Save the image if a filename is provided
     if img_save_name:

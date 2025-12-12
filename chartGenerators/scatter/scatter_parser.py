@@ -10,18 +10,19 @@ from templates.question_generator import QuestionGenerator
 from templates.operator import Operator, OperatorResult
 
 # Use absolute imports after sys.path is set
-from chartGenerators.pie_chart.pie_operator import (
-    SumOperator, MeanOperator, MedianOperator, CountOperator, ReadValueOperator,
+from chartGenerators.scatter.scatter_operator import (
+    SumOperator, MeanOperator, MedianOperator, CountOperator, ReadValueOperator, ReadLabelOperator,
     MaxOperator, MinOperator, DifferenceOperator, ThresholdOperator, KthOperator, TopkOperator, TakeAllOperator
 )
-from chartGenerators.pie_chart.pie_question_generator import (
+from chartGenerators.scatter.scatter_question_generator import (
     SumQuestionGenerator, MeanQuestionGenerator, MedianQuestionGenerator, CountQuestionGenerator,
-    ReadValueQuestionGenerator, MaxQuestionGenerator, MinQuestionGenerator, DifferenceQuestionGenerator,
-    ThresholdQuestionGenerator, KthQuestionGenerator, TopkQuestionGenerator, TakeAllQuestionGenerator
+    ReadValueQuestionGenerator, ReadLabelQuestionGenerator, MaxQuestionGenerator, MinQuestionGenerator, 
+    DifferenceQuestionGenerator, ThresholdQuestionGenerator, KthQuestionGenerator, TopkQuestionGenerator, 
+    TakeAllQuestionGenerator
 )
 
-class PieChartParser(Parser):
-    """Parser for pie chart operations and questions."""
+class ScatterChartParser(Parser):
+    """Parser for scatter chart operations and questions."""
     
     # Simplified mapping - one key per operator
     OPERATION_MAP = {
@@ -30,6 +31,7 @@ class PieChartParser(Parser):
         'median': (MedianOperator, MedianQuestionGenerator),
         'count': (CountOperator, CountQuestionGenerator),
         'read': (ReadValueOperator, ReadValueQuestionGenerator),
+        'read_label': (ReadLabelOperator, ReadLabelQuestionGenerator),
         'max': (MaxOperator, MaxQuestionGenerator),
         'min': (MinOperator, MinQuestionGenerator),
         'diff': (DifferenceOperator, DifferenceQuestionGenerator),
@@ -85,7 +87,7 @@ class PieChartParser(Parser):
 
 def create_operation(settings: OperationSettings, chart_metadata: Dict) -> Tuple[Operator, QuestionGenerator]:
     """Convenience function to create operator and question generator."""
-    parser = PieChartParser(chart_metadata)
+    parser = ScatterChartParser(chart_metadata)
     parsed = parser.parse(settings)
     return parsed.operator, parsed.question_generator
 
@@ -116,27 +118,28 @@ def execute_operation(settings: OperationSettings, chart_metadata: Dict) -> Tupl
 if __name__ == "__main__":
     # Sample chart metadata
     sample_metadata = {
-        'pie_data': [35, 25, 20, 15, 5],
-        'pie_labels': ["Technology", "Healthcare", "Finance", "Education", "Others"],
-        'pie_data_category': {"singular": "market share", "plural": "market shares"},
-        'pie_label_category': {"singular": "sector", "plural": "sectors"},
-        'img_title': "Market Share Distribution by Sector"
+        'scatter_x_data': [1.2, 2.5, 3.8, 4.1, 5.3],
+        'scatter_y_data': [22.75, 32.43, 33.96, 45.36, 19.32],
+        'scatter_labels': ["A", "B", "C", "D", "E"],
+        'x_label': 'Rating Score',
+        'y_label': 'Box Office Earnings',
     }
     
-    print("=== Pie Chart Parser Test ===")
-    print(f"Sample Data: {sample_metadata['pie_data']}")
+    print("=== Scatter Chart Parser Test ===")
+    print(f"Sample X Data: {sample_metadata['scatter_x_data']}")
+    print(f"Sample Y Data: {sample_metadata['scatter_y_data']}")
     print()
     
     # Test 1: Simple operation
     print("--- Test 1: Simple Operation ---")
-    result, question = execute_operation(OperationSettings('mean'), sample_metadata)
+    result, question = execute_operation(OperationSettings('mean', {'axis': 'x'}), sample_metadata)
     print(f"Question: {question}")
     print(f"Result: {result}")
     print()
     
     # Test 2: Operation with config
     print("--- Test 2: Operation with Config ---")
-    filter_settings = OperationSettings('threshold', {'threshold': 20, 'direction': 'above'})
+    filter_settings = OperationSettings('threshold', {'threshold': 3.0, 'direction': 'above', 'axis': 'x'})
     result, question = execute_operation(filter_settings, sample_metadata)
     print(f"Question: {question}")
     print(f"Result: {result}")
@@ -144,26 +147,21 @@ if __name__ == "__main__":
     
     # Test 3: Sequential composition
     print("--- Test 3: Sequential Composition ---")
-    seq_settings = OperationSettings('sum', args=[
-        OperationSettings('threshold', {'threshold': 20, 'direction': 'above'})
+    seq_settings = OperationSettings('sum', {'axis': 'x'}, args=[
+        OperationSettings('threshold', {'threshold': 3.0, 'direction': 'above', 'axis': 'x'})
     ])
     result, question = execute_operation(seq_settings, sample_metadata)
     print(f"Question: {question}")
     print(f"Result: {result}")
     print()
     
-    # Test 4: Parallel composition
-    print("--- Test 4: Parallel Composition ---")
-    par_settings = OperationSettings('diff', args=[
-        OperationSettings('max'),
-        OperationSettings('min')
-    ])
-    print(f"Parallel Settings: {par_settings}")
-    result, question = execute_operation(par_settings, sample_metadata)
+    # Test 4: Read label
+    print("--- Test 4: Read Label ---")
+    label_settings = OperationSettings('read_label')
+    result, question = execute_operation(label_settings, sample_metadata)
     print(f"Question: {question}")
     print(f"Result: {result}")
     print()
     
     print("=== Test Complete ===")
-
 

@@ -13,6 +13,7 @@ if str(project_root) not in sys.path:
     sys.path.insert(0, str(project_root))
 
 from chartGenerators.bar_chart.bar import BarChartRunDraw
+from chartGenerators.pie_chart.pie import PieChartRunDraw
 from utils.logger import logger
 
 
@@ -64,10 +65,9 @@ def get_chart_generator(chart_type: str, args):
     if chart_type == "bar":
         return BarChartRunDraw(args)
     elif chart_type == "pie":
-        # TODO: Implement PieChartRunDraw when available
-        raise NotImplementedError("Pie chart generation not yet implemented")
+        return PieChartRunDraw(args)
     else:
-        raise ValueError(f"Unsupported chart type: {chart_type}. Supported types: 'bar'")
+        raise ValueError(f"Unsupported chart type: {chart_type}. Supported types: 'bar', 'pie'")
 
 
 def parse_stages(stages_str: str) -> str:
@@ -142,7 +142,7 @@ Stages:
         "--chart-type",
         type=str,
         default="bar",
-        choices=["bar"],  # Add more as they're implemented
+        choices=["bar", "pie"],
         help="Type of chart to generate (default: bar)"
     )
     

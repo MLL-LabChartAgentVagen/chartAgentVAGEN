@@ -68,6 +68,8 @@ class Operator(ABC):
         self.x_label = self.chart_metadata.get('x_label', 'Category')
         self.y_label = self.chart_metadata.get('y_label', 'Value')
         self.chart_direction = self.chart_metadata.get('chart_direction', 'vertical')
+
+        
         
         # Initialize random state
         if random_state is not None:
@@ -161,4 +163,5 @@ class Operator(ABC):
         combined_reasoning.extend(self_result.reasoning)
         combined_step_indices.extend(self_result.step_indices)
         
-        return OperatorResult(self_result.value, combined_indices, combined_reasoning, combined_step_indices)
+        # Use self_result.indices (final result) instead of combined_indices (union of parallel inputs)
+        return OperatorResult(self_result.value, self_result.indices, combined_reasoning, combined_step_indices)

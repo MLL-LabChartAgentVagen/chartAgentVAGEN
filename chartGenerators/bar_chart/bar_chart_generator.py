@@ -23,6 +23,7 @@ class BarChartGenerator(ChartGenerator):
         self.round_num = 2
         self.qa_idx = 0
         self.random_state = None
+        self.current_chart_metadata = None
     
     def _format_answer(self, answer):
         """Format answer to string with proper rounding for floats."""
@@ -32,16 +33,110 @@ class BarChartGenerator(ChartGenerator):
             return ", ".join(str(item) for item in answer)
         return str(answer)
     
-    def _create_qa_data(self, qa_type: str, question: str, reasoning: List[str], 
-                       answer: Any, mask_indices: List[int], constraint: str = None,
-                       curriculum_level: int = 1):
+    def _create_qa_data(
+        self,
+        qa_type: str,
+        question: str,
+        reasoning: List[str],
+        answer: Any,
+        mask_indices: List[int],
+        constraint: str = None,
+        curriculum_level: int = 1,
+        step_indices: Optional[List[List[int]]] = None,
+        num_bars: Optional[int] = None,
+    ):
         """Create a single QA data entry."""
         self.qa_idx += 1
         
         # Create reasoning dict and mask
         reasoning_dict = {f"step_{i+1}": step for i, step in enumerate(reasoning)}
-        mask_dict = {f"step_{i+1}": mask_indices for i, step in enumerate(reasoning)}
-        mask_dict["answer"] = mask_indices
+
+        def _ensure_index_list(indices):
+            if indices is None:
+                return []
+            if isinstance(indices, (list, tuple, set)):
+                result = []
+                for item in indices:
+                    if isinstance(item, (list, tuple, set)):
+                        result.extend(_ensure_index_list(item))
+                    else:
+                        result.append(int(item))
+                return result
+            return [int(indices)]
+
+        normalized_mask_indices = _ensure_index_list(mask_indices)
+
+        if num_bars is None:
+            if self.current_chart_metadata:
+                num_bars = len(self.current_chart_metadata.get("bar_data", []))
+            elif normalized_mask_indices:
+                num_bars = max(normalized_mask_indices) + 1
+            else:
+                num_bars = 0
+
+        all_indices = list(range(num_bars))
+
+        mask_dict = {}
+
+        if step_indices:
+            normalized_steps = [_ensure_index_list(step) for step in step_indices]
+            num_reasoning_steps = len(reasoning)
+            output_indices_list: List[List[int]] = []
+
+            if num_reasoning_steps == 1:
+                output_indices_list.append(
+                    normalized_steps[-1] if normalized_steps else normalized_mask_indices
+                )
+            elif num_reasoning_steps == 2:
+                if len(normalized_steps) >= 2:
+                    output_indices_list.append(normalized_steps[1])
+                else:
+                    output_indices_list.append(
+                        normalized_steps[0] if normalized_steps else normalized_mask_indices
+                    )
+                output_indices_list.append(
+                    normalized_steps[-1] if normalized_steps else normalized_mask_indices
+                )
+            else:
+                num_parallel_ops = num_reasoning_steps - 1
+                for i in range(num_parallel_ops):
+                    output_idx = (i * 2) + 1  # 1, 3, 5, ...
+                    if output_idx < len(normalized_steps):
+                        output_indices_list.append(normalized_steps[output_idx])
+                    else:
+                        fallback_idx = output_idx - 1 if output_idx > 0 else 0
+                        if fallback_idx < len(normalized_steps):
+                            output_indices_list.append(normalized_steps[fallback_idx])
+                        else:
+                            output_indices_list.append(normalized_mask_indices)
+                output_indices_list.append(
+                    normalized_steps[-1] if normalized_steps else normalized_mask_indices
+                )
+
+            if output_indices_list:
+                output_indices_list[-1] = (
+                    normalized_mask_indices if normalized_mask_indices else output_indices_list[-1]
+                )
+            else:
+                output_indices_list.append(normalized_mask_indices)
+
+            for i, step_reasoning in enumerate(reasoning):
+                step_key = f"step_{i+1}"
+                output_indices = (
+                    output_indices_list[i]
+                    if i < len(output_indices_list)
+                    else normalized_mask_indices
+                )
+                masked_indices = [idx for idx in all_indices if idx not in output_indices]
+                mask_dict[step_key] = masked_indices
+        else:
+            masked_indices = [idx for idx in all_indices if idx not in normalized_mask_indices]
+            mask_dict = {
+                f"step_{i+1}": masked_indices for i, _ in enumerate(reasoning)
+            }
+
+        answer_masked_indices = [idx for idx in all_indices if idx not in normalized_mask_indices]
+        mask_dict["answer"] = answer_masked_indices
         
         return {
             "qa_id": f"{self.chart_id}_qa{self.qa_idx}",
@@ -143,6 +238,7 @@ class BarChartGenerator(ChartGenerator):
         self.random_state = random.Random(random_seed)
         self.all_qa_data_list = []
         self.qa_idx = 0
+        self.current_chart_metadata = chart_metadata
         
         complexity_weights = [0.4, 0.4, 0.2]  # Simple, Moderate, Complex
         successful = 0
@@ -167,10 +263,12 @@ class BarChartGenerator(ChartGenerator):
                     answer = result.value
                     mask_indices = result.indices or list(range(len(chart_metadata["bar_data"])))
                     reasoning = result.reasoning or ["I need to perform the requested operation."]
+                    step_indices = getattr(result, 'step_indices', None)
                 else:
                     answer = result
                     mask_indices = list(range(len(chart_metadata["bar_data"])))
                     reasoning = ["I need to perform the requested operation."]
+                    step_indices = None
                 
                 # Create QA data
                 constraint = self._extract_constraint_from_settings(operation_settings)
@@ -181,7 +279,9 @@ class BarChartGenerator(ChartGenerator):
                     answer=answer,
                     mask_indices=mask_indices,
                     constraint=constraint,
-                    curriculum_level=curriculum_level
+                    curriculum_level=curriculum_level,
+                    step_indices=step_indices,
+                    num_bars=len(chart_metadata["bar_data"])
                 )
                 
                 self.all_qa_data_list.append(qa_data)
