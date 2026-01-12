@@ -1,19 +1,19 @@
 import copy
+import sys
+import os
 from typing import List, Dict, Any, Optional, Tuple
 import random
-import sys
-from pathlib import Path
 
-project_root = Path(__file__).parent.parent.parent
-if str(project_root) not in sys.path:
-    sys.path.insert(0, str(project_root))
+# Handle both relative and absolute imports
+try:
+    from .bar_parser import OperationSettings, execute_operation
+except ImportError:
+    # Add parent directory to path for direct execution
+    sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+    from constructor.source.bar_parser import OperationSettings, execute_operation
 
-# Use absolute import after sys.path is set
-from chartGenerators.bar_chart.bar_parser import OperationSettings, execute_operation
 
-from templates.chart_generator import ChartGenerator
-
-class BarChartGenerator(ChartGenerator):
+class BarChartGenerator:
     """BarChartGenerator with random operator composition."""
     
     def __init__(self, args, chart_id):
@@ -23,7 +23,6 @@ class BarChartGenerator(ChartGenerator):
         self.round_num = 2
         self.qa_idx = 0
         self.random_state = None
-        self.current_chart_metadata = None
     
     def _format_answer(self, answer):
         """Format answer to string with proper rounding for floats."""
@@ -33,111 +32,16 @@ class BarChartGenerator(ChartGenerator):
             return ", ".join(str(item) for item in answer)
         return str(answer)
     
-    def _create_qa_data(
-        self,
-        qa_type: str,
-        question: str,
-        reasoning: List[str],
-        answer: Any,
-        bbox_indices: List[int],  # Changed from mask_indices to bbox_indices
-        constraint: str = None,
-        curriculum_level: int = 1,
-        step_indices: Optional[List[List[int]]] = None,
-        num_bars: Optional[int] = None,
-    ):
-        """Create a single QA data entry with bounding box indices (highlighting relevant bars)."""
+    def _create_qa_data(self, qa_type: str, question: str, reasoning: List[str], 
+                       answer: Any, mask_indices: List[int], constraint: str = None,
+                       curriculum_level: int = 1):
+        """Create a single QA data entry."""
         self.qa_idx += 1
         
-        # Create reasoning dict and bbox dict
+        # Create reasoning dict and mask
         reasoning_dict = {f"step_{i+1}": step for i, step in enumerate(reasoning)}
-
-        def _ensure_index_list(indices):
-            if indices is None:
-                return []
-            if isinstance(indices, (list, tuple, set)):
-                result = []
-                for item in indices:
-                    if isinstance(item, (list, tuple, set)):
-                        result.extend(_ensure_index_list(item))
-                    else:
-                        result.append(int(item))
-                return result
-            return [int(indices)]
-
-        normalized_bbox_indices = _ensure_index_list(bbox_indices)
-
-        if num_bars is None:
-            if self.current_chart_metadata:
-                num_bars = len(self.current_chart_metadata.get("bar_data", []))
-            elif normalized_bbox_indices:
-                num_bars = max(normalized_bbox_indices) + 1
-            else:
-                num_bars = 0
-
-        all_indices = list(range(num_bars))
-
-        # Changed from mask_dict to bbox_dict - now stores indices to HIGHLIGHT, not to mask
-        bbox_dict = {}
-
-        if step_indices:
-            normalized_steps = [_ensure_index_list(step) for step in step_indices]
-            num_reasoning_steps = len(reasoning)
-            output_indices_list: List[List[int]] = []
-
-            if num_reasoning_steps == 1:
-                output_indices_list.append(
-                    normalized_steps[-1] if normalized_steps else normalized_bbox_indices
-                )
-            elif num_reasoning_steps == 2:
-                if len(normalized_steps) >= 2:
-                    output_indices_list.append(normalized_steps[1])
-                else:
-                    output_indices_list.append(
-                        normalized_steps[0] if normalized_steps else normalized_bbox_indices
-                    )
-                output_indices_list.append(
-                    normalized_steps[-1] if normalized_steps else normalized_bbox_indices
-                )
-            else:
-                num_parallel_ops = num_reasoning_steps - 1
-                for i in range(num_parallel_ops):
-                    output_idx = (i * 2) + 1  # 1, 3, 5, ...
-                    if output_idx < len(normalized_steps):
-                        output_indices_list.append(normalized_steps[output_idx])
-                    else:
-                        fallback_idx = output_idx - 1 if output_idx > 0 else 0
-                        if fallback_idx < len(normalized_steps):
-                            output_indices_list.append(normalized_steps[fallback_idx])
-                        else:
-                            output_indices_list.append(normalized_bbox_indices)
-                output_indices_list.append(
-                    normalized_steps[-1] if normalized_steps else normalized_bbox_indices
-                )
-
-            if output_indices_list:
-                output_indices_list[-1] = (
-                    normalized_bbox_indices if normalized_bbox_indices else output_indices_list[-1]
-                )
-            else:
-                output_indices_list.append(normalized_bbox_indices)
-
-            for i, step_reasoning in enumerate(reasoning):
-                step_key = f"step_{i+1}"
-                output_indices = (
-                    output_indices_list[i]
-                    if i < len(output_indices_list)
-                    else normalized_bbox_indices
-                )
-                # Store the indices to HIGHLIGHT (not to mask)
-                bbox_dict[step_key] = output_indices
-        else:
-            # Store the indices to HIGHLIGHT for each step
-            bbox_dict = {
-                f"step_{i+1}": normalized_bbox_indices for i, _ in enumerate(reasoning)
-            }
-
-        # Store answer bounding box indices (indices to highlight)
-        bbox_dict["answer"] = normalized_bbox_indices
+        mask_dict = {f"step_{i+1}": mask_indices for i, step in enumerate(reasoning)}
+        mask_dict["answer"] = mask_indices
         
         return {
             "qa_id": f"{self.chart_id}_qa{self.qa_idx}",
@@ -147,7 +51,7 @@ class BarChartGenerator(ChartGenerator):
             "question": question,
             "reasoning": reasoning_dict,
             "answer": self._format_answer(answer),
-            "bbox": bbox_dict,  # Changed from "mask" to "bbox"
+            "mask": mask_dict,
         }
     
     def _generate_random_configs(self, chart_metadata: Dict) -> Dict:
@@ -239,7 +143,6 @@ class BarChartGenerator(ChartGenerator):
         self.random_state = random.Random(random_seed)
         self.all_qa_data_list = []
         self.qa_idx = 0
-        self.current_chart_metadata = chart_metadata
         
         complexity_weights = [0.4, 0.4, 0.2]  # Simple, Moderate, Complex
         successful = 0
@@ -262,27 +165,23 @@ class BarChartGenerator(ChartGenerator):
                 # Validate and extract data
                 if hasattr(result, 'value'):
                     answer = result.value
-                    bbox_indices = result.indices or list(range(len(chart_metadata["bar_data"])))
+                    mask_indices = result.indices or list(range(len(chart_metadata["bar_data"])))
                     reasoning = result.reasoning or ["I need to perform the requested operation."]
-                    step_indices = getattr(result, 'step_indices', None)
                 else:
                     answer = result
-                    bbox_indices = list(range(len(chart_metadata["bar_data"])))
+                    mask_indices = list(range(len(chart_metadata["bar_data"])))
                     reasoning = ["I need to perform the requested operation."]
-                    step_indices = None
                 
-                # Create QA data with bounding box indices (indices to highlight)
+                # Create QA data
                 constraint = self._extract_constraint_from_settings(operation_settings)
                 qa_data = self._create_qa_data(
                     qa_type=f"random__{description}",
                     question=question,
                     reasoning=reasoning,
                     answer=answer,
-                    bbox_indices=bbox_indices,  # Changed from mask_indices
+                    mask_indices=mask_indices,
                     constraint=constraint,
-                    curriculum_level=curriculum_level,
-                    step_indices=step_indices,
-                    num_bars=len(chart_metadata["bar_data"])
+                    curriculum_level=curriculum_level
                 )
                 
                 self.all_qa_data_list.append(qa_data)
