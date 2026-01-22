@@ -39,16 +39,16 @@ class PieChartGenerator(ChartGenerator):
         question: str,
         reasoning: List[str],
         answer: Any,
-        mask_indices: List[int],
+        bbox_indices: List[int],  # Changed from mask_indices to bbox_indices
         constraint: str = None,
         curriculum_level: int = 1,
         step_indices: Optional[List[List[int]]] = None,
         num_slices: Optional[int] = None,
     ):
-        """Create a single QA data entry."""
+        """Create a single QA data entry with bounding box indices (highlighting relevant slices)."""
         self.qa_idx += 1
         
-        # Create reasoning dict and mask
+        # Create reasoning dict and bbox dict
         reasoning_dict = {f"step_{i+1}": step for i, step in enumerate(reasoning)}
 
         def _ensure_index_list(indices):
@@ -64,18 +64,20 @@ class PieChartGenerator(ChartGenerator):
                 return result
             return [int(indices)]
 
-        normalized_mask_indices = _ensure_index_list(mask_indices)
+        normalized_bbox_indices = _ensure_index_list(bbox_indices)
 
         if num_slices is None:
             if self.current_chart_metadata:
                 num_slices = len(self.current_chart_metadata.get("pie_data", []))
-            elif normalized_mask_indices:
-                num_slices = max(normalized_mask_indices) + 1
+            elif normalized_bbox_indices:
+                num_slices = max(normalized_bbox_indices) + 1
             else:
                 num_slices = 0
 
         all_indices = list(range(num_slices))
-        mask_dict = {}
+        
+        # Changed from mask_dict to bbox_dict - now stores indices to HIGHLIGHT, not to mask
+        bbox_dict = {}
 
         if step_indices:
             normalized_steps = [_ensure_index_list(step) for step in step_indices]
@@ -84,17 +86,17 @@ class PieChartGenerator(ChartGenerator):
 
             if num_reasoning_steps == 1:
                 output_indices_list.append(
-                    normalized_steps[-1] if normalized_steps else normalized_mask_indices
+                    normalized_steps[-1] if normalized_steps else normalized_bbox_indices
                 )
             elif num_reasoning_steps == 2:
                 if len(normalized_steps) >= 2:
                     output_indices_list.append(normalized_steps[1])
                 else:
                     output_indices_list.append(
-                        normalized_steps[0] if normalized_steps else normalized_mask_indices
+                        normalized_steps[0] if normalized_steps else normalized_bbox_indices
                     )
                 output_indices_list.append(
-                    normalized_steps[-1] if normalized_steps else normalized_mask_indices
+                    normalized_steps[-1] if normalized_steps else normalized_bbox_indices
                 )
             else:
                 num_parallel_ops = num_reasoning_steps - 1
@@ -107,35 +109,35 @@ class PieChartGenerator(ChartGenerator):
                         if fallback_idx < len(normalized_steps):
                             output_indices_list.append(normalized_steps[fallback_idx])
                         else:
-                            output_indices_list.append(normalized_mask_indices)
+                            output_indices_list.append(normalized_bbox_indices)
                 output_indices_list.append(
-                    normalized_steps[-1] if normalized_steps else normalized_mask_indices
+                    normalized_steps[-1] if normalized_steps else normalized_bbox_indices
                 )
 
             if output_indices_list:
                 output_indices_list[-1] = (
-                    normalized_mask_indices if normalized_mask_indices else output_indices_list[-1]
+                    normalized_bbox_indices if normalized_bbox_indices else output_indices_list[-1]
                 )
             else:
-                output_indices_list.append(normalized_mask_indices)
+                output_indices_list.append(normalized_bbox_indices)
 
             for i, step_reasoning in enumerate(reasoning):
                 step_key = f"step_{i+1}"
                 output_indices = (
                     output_indices_list[i]
                     if i < len(output_indices_list)
-                    else normalized_mask_indices
+                    else normalized_bbox_indices
                 )
-                masked_indices = [idx for idx in all_indices if idx not in output_indices]
-                mask_dict[step_key] = masked_indices
+                # Store the indices to HIGHLIGHT (not to mask)
+                bbox_dict[step_key] = output_indices
         else:
-            masked_indices = [idx for idx in all_indices if idx not in normalized_mask_indices]
-            mask_dict = {
-                f"step_{i+1}": masked_indices for i, _ in enumerate(reasoning)
+            # Store the indices to HIGHLIGHT for each step
+            bbox_dict = {
+                f"step_{i+1}": normalized_bbox_indices for i, _ in enumerate(reasoning)
             }
 
-        answer_masked_indices = [idx for idx in all_indices if idx not in normalized_mask_indices]
-        mask_dict["answer"] = answer_masked_indices
+        # Store answer bounding box indices (indices to highlight)
+        bbox_dict["answer"] = normalized_bbox_indices
         
         return {
             "qa_id": f"{self.chart_id}_qa{self.qa_idx}",
@@ -145,7 +147,7 @@ class PieChartGenerator(ChartGenerator):
             "question": question,
             "reasoning": reasoning_dict,
             "answer": self._format_answer(answer),
-            "mask": mask_dict,
+            "bbox": bbox_dict,  # Changed from "mask" to "bbox"
         }
     
     def _generate_random_configs(self, chart_metadata: Dict) -> Dict:
@@ -276,7 +278,7 @@ class PieChartGenerator(ChartGenerator):
                     question=question,
                     reasoning=reasoning,
                     answer=answer,
-                    mask_indices=mask_indices,
+                    bbox_indices=mask_indices,  # mask_indices contains the indices to highlight
                     constraint=constraint,
                     curriculum_level=curriculum_level,
                     step_indices=step_indices,

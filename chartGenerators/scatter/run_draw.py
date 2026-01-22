@@ -26,6 +26,98 @@ from utils.logger import logger
 from utils.json_util import read_from_json
 
 
+def _place_legend_outside_scatter(ax, scatter_points, scatter_labels, change_x_axis_pos, change_y_axis_pos, scatter_size_in_legend):
+    """
+    Place legend outside the plot area to prevent overlap with chart content.
+    Uses dynamic spacing based on legend size.
+    
+    Args:
+        ax: Matplotlib axes object
+        scatter_points: List of scatter plot objects
+        scatter_labels: Labels for the legend
+        change_x_axis_pos: Whether x-axis is at top
+        change_y_axis_pos: Whether y-axis is at right
+        scatter_size_in_legend: Size for markers in legend
+    
+    Returns:
+        Legend object
+    """
+    fig = ax.figure
+    
+    # First, do a tight layout to fit the plot content
+    plt.tight_layout()
+    
+    # Get initial axes position
+    initial_bbox = ax.get_position()
+    
+    # Determine best side for legend based on axis positions
+    if change_y_axis_pos:
+        # Y-axis on right, place legend on left side of plot
+        bbox_to_anchor = (0.0, 0.5)  # At left edge of axes
+        loc = 'center right'
+        side = 'left'
+    else:
+        # Y-axis on left, place legend on right side of plot
+        bbox_to_anchor = (1.0, 0.5)  # At right edge of axes
+        loc = 'center left'
+        side = 'right'
+    
+    # Create legend outside the plot area (in axes coordinates)
+    legend = ax.legend(scatter_points, scatter_labels, loc=loc, bbox_to_anchor=bbox_to_anchor, 
+                      frameon=True, fancybox=True, shadow=True, markerscale=0.8)
+    
+    # Set marker sizes in legend
+    for handle in legend.legend_handles:
+        handle.set_sizes([scatter_size_in_legend])
+    
+    # Draw the figure to get accurate measurements
+    fig.canvas.draw()
+    
+    # Get the legend's bounding box in figure coordinates
+    legend_bbox_fig = legend.get_window_extent().transformed(fig.transFigure.inverted())
+    
+    # Get current subplot position in figure coordinates
+    bbox = ax.get_position()
+    
+    # Calculate how much space we need and adjust subplot
+    if side == 'right':
+        # Legend is on the right side of plot
+        # Calculate space needed: legend width + small padding
+        legend_width = legend_bbox_fig.width
+        padding = 0.015  # 1.5% padding
+        total_needed = legend_width + padding
+        
+        # Calculate new right edge, ensuring we don't shrink too much
+        max_right = 0.98
+        new_right = min(max_right, bbox.x1 - total_needed)
+        
+        # Only adjust if we need to make room and won't shrink too much
+        min_width = 0.15  # Keep at least 15% of figure width for plot
+        if new_right < bbox.x1 and (new_right - bbox.x0) >= min_width:
+            ax.set_position([bbox.x0, bbox.y0, new_right - bbox.x0, bbox.height])
+            # Update legend position to stay outside
+            legend.set_bbox_to_anchor((1.0, 0.5))
+    else:
+        # Legend is on the left side of plot
+        legend_width = legend_bbox_fig.width
+        padding = 0.015
+        total_needed = legend_width + padding
+        
+        # Calculate new left edge
+        min_left = 0.02
+        new_left = max(min_left, bbox.x0 + total_needed)
+        
+        # Only adjust if we need to make room and won't shrink too much
+        min_width = 0.15
+        if new_left > bbox.x0 and (bbox.x1 - new_left) >= min_width:
+            ax.set_position([new_left, bbox.y0, bbox.x1 - new_left, bbox.height])
+            # Update legend position to stay outside
+            legend.set_bbox_to_anchor((0.0, 0.5))
+            legend.set_loc('center right')
+    
+    return legend
+
+
 # ============================================================
 #                        Function 1
 # Draw a scatter plot with customizable axes, colors, sizes, and positioning.
@@ -162,11 +254,15 @@ def draw__3_scatter__func_1(
         ax.set_ylabel(y_label, fontsize=13)
     ax.set_title(img_title, fontsize=16)
     
-    # Add legend
+    # Add legend outside plot area to prevent overlap
+    legend = None
     if show_legend:
-        legend = ax.legend(loc='best', markerscale=0.8)
-        for handle in legend.legend_handles:
-            handle.set_sizes([scatter_size_in_legend])
+        legend = _place_legend_outside_scatter(ax, scatter_points, scatter_labels, 
+                                               change_x_axis_pos, change_y_axis_pos, 
+                                               scatter_size_in_legend)
+    else:
+        # Adjust layout only if no legend
+        plt.tight_layout()
     
     # Add grid for better readability
     ax.grid(True, alpha=0.3)
@@ -329,12 +425,15 @@ def draw__3_scatter__func_1__mask(
         ax.set_ylabel(y_label, fontsize=13)
     ax.set_title(img_title, fontsize=16)
     
-    # Add legend
+    # Add legend outside plot area to prevent overlap
     legend = None
     if show_legend:
-        legend = ax.legend(loc='best', markerscale=0.8)
-        for handle in legend.legend_handles:
-            handle.set_sizes([scatter_size_in_legend])
+        legend = _place_legend_outside_scatter(ax, scatter_points, scatter_labels, 
+                                               change_x_axis_pos, change_y_axis_pos, 
+                                               scatter_size_in_legend)
+    else:
+        # Adjust layout only if no legend
+        plt.tight_layout()
     
     # Add grid for better readability
     ax.grid(True, alpha=0.3)

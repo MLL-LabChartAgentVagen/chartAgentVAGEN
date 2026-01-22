@@ -200,6 +200,7 @@ class BarChartGenerator(ChartGenerator):
         
         elif complexity_level == 2:
             # Parallel: zero_step(one_step1, one_step2)
+            # Exclude "all" from parallel compositions
             if zero_op == "diff":
                 # Diff needs exactly 2 single-value operations
                 one_op1 = OperationSettings("kth", configs['kth'])
@@ -207,8 +208,8 @@ class BarChartGenerator(ChartGenerator):
                 kth_config2['k'] = self.random_state.randint(1, min(len(set(chart_metadata["bar_data"])), 5))
                 one_op2 = OperationSettings("kth", kth_config2)
             else:
-                # For sum, mean, count - use any operations
-                one_step_ops = ["threshold", "kth", "topk", "all"]
+                # For sum, mean, count - use any operations EXCEPT "all"
+                one_step_ops = ["threshold", "kth", "topk"]  # Removed "all"
                 op1_name = self.random_state.choice(one_step_ops)
                 op2_name = self.random_state.choice(one_step_ops)
                 
@@ -221,7 +222,8 @@ class BarChartGenerator(ChartGenerator):
         
         else:  # complexity_level == 3
             # Nested: zero_step(one_step1(one_step2))
-            one_step_ops = ["threshold", "kth", "topk", "all"]
+            # Exclude "all" from nested compositions
+            one_step_ops = ["threshold", "kth", "topk"]  # Removed "all"
             outer_op = self.random_state.choice(one_step_ops)
             inner_op = self.random_state.choice(one_step_ops)
             
@@ -233,15 +235,53 @@ class BarChartGenerator(ChartGenerator):
             return composed, desc, 3
     
     def generate_random_qa_data(self, chart_metadata: Dict, random_seed: int, 
-                               num_questions: int = 20) -> List[Dict]:
-        """Generate random QA data using random operator compositions."""
+                               num_questions: int = 20,
+                               composition_types: Optional[List[str]] = None) -> List[Dict]:
+        """Generate random QA data using random operator compositions.
+        
+        Args:
+            chart_metadata: Chart metadata dictionary
+            random_seed: Random seed for reproducibility
+            num_questions: Number of questions to generate
+            composition_types: List of allowed composition types. Options:
+                - "one_step": Simple one-step composition (level 1)
+                - "parallel": Parallel composition (level 2)
+                - "nested": Nested composition (level 3)
+                If None, all types are allowed with default weights.
+        """
         
         self.random_state = random.Random(random_seed)
         self.all_qa_data_list = []
         self.qa_idx = 0
         self.current_chart_metadata = chart_metadata
         
-        complexity_weights = [0.4, 0.4, 0.2]  # Simple, Moderate, Complex
+        # Map composition types to complexity levels
+        type_to_level = {
+            "one_step": 1,
+            "parallel": 2,
+            "nested": 3
+        }
+        
+        # Determine allowed levels based on composition_types
+        if composition_types is None or len(composition_types) == 0:
+            # Default: allow all types with weights
+            allowed_levels = [1, 2, 3]
+            complexity_weights = [0.4, 0.4, 0.2]  # Simple, Moderate, Complex
+        else:
+            # Filter to only allowed types
+            allowed_levels = []
+            for comp_type in composition_types:
+                if comp_type in type_to_level:
+                    level = type_to_level[comp_type]
+                    if level not in allowed_levels:
+                        allowed_levels.append(level)
+            
+            if not allowed_levels:
+                raise ValueError(f"No valid composition types. Valid options: {list(type_to_level.keys())}")
+            
+            # Equal weights for allowed types
+            complexity_weights = [1.0 / len(allowed_levels)] * len(allowed_levels)
+        
         successful = 0
         
         for _ in range(num_questions * 3):  # Allow retries
@@ -249,8 +289,8 @@ class BarChartGenerator(ChartGenerator):
                 break
                 
             try:
-                # Choose complexity level
-                level = self.random_state.choices([1, 2, 3], weights=complexity_weights)[0]
+                # Choose complexity level from allowed levels
+                level = self.random_state.choices(allowed_levels, weights=complexity_weights)[0]
                 
                 # Generate composition
                 operation_settings, description, curriculum_level = \
@@ -318,9 +358,21 @@ class BarChartGenerator(ChartGenerator):
         return " and ".join(constraints) if constraints else None
     
     def chart_qa_generator(self, chart_metadata: Dict, random_seed: int = 42, 
-                          num_questions: int = 20) -> List[Dict]:
-        """Main interface - generate QA data with random operator compositions."""
-        return self.generate_random_qa_data(chart_metadata, random_seed, num_questions)
+                          num_questions: int = 20,
+                          composition_types: Optional[List[str]] = None) -> List[Dict]:
+        """Main interface - generate QA data with random operator compositions.
+        
+        Args:
+            chart_metadata: Chart metadata dictionary
+            random_seed: Random seed for reproducibility
+            num_questions: Number of questions to generate
+            composition_types: List of allowed composition types. Options:
+                - "one_step": Simple one-step composition (level 1)
+                - "parallel": Parallel composition (level 2)
+                - "nested": Nested composition (level 3)
+                If None, all types are allowed with default weights.
+        """
+        return self.generate_random_qa_data(chart_metadata, random_seed, num_questions, composition_types)
 
 if __name__ == "__main__":
     def run_tests():

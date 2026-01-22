@@ -1,6 +1,6 @@
 """
 Test script to generate one example from the pie chart workflow.
-This demonstrates the complete pipeline: original chart, QA data, masked charts, and masks.
+This demonstrates the complete pipeline: original chart, QA data, and bbox charts.
 """
 
 import sys
@@ -12,7 +12,7 @@ if str(project_root) not in sys.path:
     sys.path.insert(0, str(project_root))
 
 from metadata.metadata import METADATA_PIE
-from chartGenerators.pie_chart.pie import PieChartRunDraw
+from chartGenerators.pie_chart.main import PieChartRunDraw
 from chartGenerators.pie_chart.pie_chart_generator import PieChartGenerator
 from utils.logger import logger
 
@@ -25,7 +25,7 @@ class TestArgs:
         self.chart_mode = "single"
         self.data_path = "./data"
         # Run all stages: 0=masked images, 1=original images, 2/3=masks
-        self.construction_subtask = "0123"
+        self.construction_subtask = "0123"  # 0=bbox images, 1=original images
         self.global_figsize = (10, 6)
         self.gray_mask = "#CCCCCC"
 
@@ -69,7 +69,7 @@ def test_single_chart_workflow():
             chart_entry = METADATA_PIE[func_id][category_id][0]
 
             self.draw_chart_function = self.function_dict[func_id]["original_img"]
-            self.draw_masked_chart_function = self.function_dict[func_id]["masked_img"]
+            self.draw_bbox_chart_function = self.function_dict[func_id]["bbox_img"]
 
             # Use representative settings for simplicity
             show_percentages = "w_percent"
@@ -135,11 +135,11 @@ def test_single_chart_workflow():
                 print(f"     Answer: {new_qa_data['answer']}")
                 print(f"     Curriculum Level: {new_qa_data['curriculum_level']}")
 
-                # Mask paths
-                new_mask_path = {}
-                for step_key in new_qa_data["mask"]:
-                    new_mask_path[step_key] = (
-                        f"./data/imgs/{self.args.chart_type}/{self.args.chart_mode}/{new_qa_id}__mask_{step_key}.png"
+                # Bbox paths
+                new_bbox_path = {}
+                for step_key in new_qa_data["bbox"]:
+                    new_bbox_path[step_key] = (
+                        f"./data/imgs/{self.args.chart_type}/{self.args.chart_mode}/{new_qa_id}__bbox_{step_key}.png"
                     )
 
                 # Save to self.generated_vqa_data
@@ -153,30 +153,30 @@ def test_single_chart_workflow():
                     "constraint": new_qa_data["constraint"],
                     "eval_mode": show_percentages,
                     "img_path": f"./data/imgs/{self.args.chart_type}/{self.args.chart_mode}/{chart_id}.png",
-                    "mask_path": new_mask_path,
-                    "mask_indices": new_qa_data["mask"],
+                    "bbox_path": new_bbox_path,
+                    "bbox_indices": new_qa_data["bbox"],
                     "question": new_qa_data["question"],
                     "reasoning": new_qa_data["reasoning"],
                     "answer": new_qa_data["answer"],
                 }
 
-                # Generate masked chart
-                print(f"     Generating masked charts and masks...")
-                for step_key in new_mask_path:
-                    curr_mask_id = (
-                        new_mask_path[step_key].split("/")[-1].replace(".png", "").strip()
+                # Generate bbox chart
+                print(f"     Generating bbox charts...")
+                for step_key in new_bbox_path:
+                    curr_bbox_id = (
+                        new_bbox_path[step_key].split("/")[-1].replace(".png", "").strip()
                     )
-                    self._plot_masked_chart(
-                        mask_idx_list=new_qa_data["mask"][step_key],
+                    self._plot_bbox_chart(
+                        bbox_idx_list=new_qa_data["bbox"][step_key],
                         chart_entry=chart_entry,
                         show_percentages=show_percentages,
                         show_values=show_values,
                         show_legend=show_legend,
                         explode_slices=explode_slices,
                         chart_id=chart_id,
-                        mask_id=curr_mask_id,
+                        bbox_id=curr_bbox_id,
                     )
-                    print(f"       ✓ {step_key}: {curr_mask_id}")
+                    print(f"       ✓ {step_key}: {curr_bbox_id}")
 
                 # Save after each QA
                 self._save_chart_qa_data_to_json()
@@ -198,8 +198,7 @@ def test_single_chart_workflow():
     print("\n🎉 Test completed successfully!")
     print(f"\n📁 Check the following files:")
     print(f"   - Original chart: {args.data_path}/imgs/{args.chart_type}/{args.chart_mode}/pie__img_1__*.png")
-    print(f"   - Masked charts: {args.data_path}/imgs/{args.chart_type}/{args.chart_mode}/*__gray_mask.png")
-    print(f"   - Mask files: {args.data_path}/imgs/{args.chart_type}/{args.chart_mode}/*__mask_*.png")
+    print(f"   - Bbox charts: {args.data_path}/imgs/{args.chart_type}/{args.chart_mode}/*__bbox_*.png")
     print(f"   - QA data: {args.data_path}/pie__meta_qa_data.json")
     logger.info("Pie chart workflow test run complete.")
 

@@ -27,6 +27,94 @@ from utils.logger import logger
 from utils.json_util import read_from_json
 
 
+def _place_legend_outside(ax, bars, bar_labels, change_x_axis_pos, change_y_axis_pos, horizontal):
+    """
+    Place legend outside the plot area to prevent overlap with chart content.
+    Uses dynamic spacing based on legend size.
+    
+    Args:
+        ax: Matplotlib axes object
+        bars: Bar chart objects
+        bar_labels: Labels for the legend
+        change_x_axis_pos: Whether x-axis is at top
+        change_y_axis_pos: Whether y-axis is at right
+        horizontal: Whether bars are horizontal
+    
+    Returns:
+        Legend object
+    """
+    fig = ax.figure
+    
+    # First, do a tight layout to fit the plot content
+    plt.tight_layout()
+    
+    # Get initial axes position
+    initial_bbox = ax.get_position()
+    
+    # Determine best side for legend based on axis positions
+    if change_y_axis_pos:
+        # Y-axis on right, place legend on left side of plot
+        bbox_to_anchor = (1.0, 0.5)  # At right edge of axes
+        loc = 'center left'
+        side = 'left'
+    else:
+        # Y-axis on left, place legend on right side of plot
+        bbox_to_anchor = (1.0, 0.5)  # At right edge of axes
+        loc = 'center left'
+        side = 'right'
+    
+    # Create legend outside the plot area (in axes coordinates)
+    legend = ax.legend(bars, bar_labels, loc=loc, bbox_to_anchor=bbox_to_anchor, 
+                      frameon=True, fancybox=True, shadow=True)
+    
+    # Draw the figure to get accurate measurements
+    fig.canvas.draw()
+    
+    # Get the legend's bounding box in figure coordinates
+    legend_bbox_fig = legend.get_window_extent().transformed(fig.transFigure.inverted())
+    
+    # Get current subplot position in figure coordinates
+    bbox = ax.get_position()
+    
+    # Calculate how much space we need and adjust subplot
+    if side == 'right':
+        # Legend is on the right side of plot
+        # Calculate space needed: legend width + small padding
+        legend_width = legend_bbox_fig.width
+        padding = 0.015  # 1.5% padding
+        total_needed = legend_width + padding
+        
+        # Calculate new right edge, ensuring we don't shrink too much
+        max_right = 0.98
+        new_right = min(max_right, bbox.x1 - total_needed)
+        
+        # Only adjust if we need to make room and won't shrink too much
+        min_width = 0.15  # Keep at least 15% of figure width for plot
+        if new_right < bbox.x1 and (new_right - bbox.x0) >= min_width:
+            ax.set_position([bbox.x0, bbox.y0, new_right - bbox.x0, bbox.height])
+            # Update legend position to stay outside
+            legend.set_bbox_to_anchor((1.0, 0.5))
+    else:
+        # Legend is on the left side of plot
+        legend_width = legend_bbox_fig.width
+        padding = 0.015
+        total_needed = legend_width + padding
+        
+        # Calculate new left edge
+        min_left = 0.02
+        new_left = max(min_left, bbox.x0 + total_needed)
+        
+        # Only adjust if we need to make room and won't shrink too much
+        min_width = 0.15
+        if new_left > bbox.x0 and (bbox.x1 - new_left) >= min_width:
+            ax.set_position([new_left, bbox.y0, bbox.x1 - new_left, bbox.height])
+            # Update legend position to stay outside
+            legend.set_bbox_to_anchor((0.0, 0.5))
+            legend.set_loc('center right')
+    
+    return legend
+
+
 # ============================================================
 #                        Function 1
 # Draw a bar chart with X and Y axises, different bars in different colors, and the corresponding legend(s)
@@ -162,12 +250,12 @@ def draw__1_bar__func_1(
         ax.set_xticklabels(bar_labels, rotation=label_angle, ha=ha_config)
         plt.subplots_adjust(bottom=0.2)  # Add more space for rotated labels
     
-    # Add legend
+    # Add legend outside plot area to prevent overlap
     if show_legend:
-        ax.legend(bars, bar_labels, loc='best')
-    
-    # Adjust layout to make sure everything fits
-    plt.tight_layout()
+        _place_legend_outside(ax, bars, bar_labels, change_x_axis_pos, change_y_axis_pos, horizontal)
+    else:
+        # Adjust layout only if no legend
+        plt.tight_layout()
     
     # Save the image if a save path is provided
     if img_save_name:
@@ -305,12 +393,13 @@ def draw__1_bar__func_1__mask(
         ax.set_xticklabels(bar_labels, rotation=label_angle, ha=ha_config)
         plt.subplots_adjust(bottom=0.2)  # Add more space for rotated labels
     
-    # Add legend
+    # Add legend outside plot area to prevent overlap
+    legend = None
     if show_legend:
-        legend = ax.legend(bars, bar_labels, loc='best')
-    
-    # Adjust layout to make sure everything fits
-    plt.tight_layout()
+        legend = _place_legend_outside(ax, bars, bar_labels, change_x_axis_pos, change_y_axis_pos, horizontal)
+    else:
+        # Adjust layout only if no legend
+        plt.tight_layout()
     
     # Now apply specific masks only for valid mask_idx
     if mask_idx:
@@ -482,12 +571,13 @@ def draw__1_bar__func_1__bbox(
         ax.set_xticklabels(bar_labels, rotation=label_angle, ha=ha_config)
         plt.subplots_adjust(bottom=0.2)  # Add more space for rotated labels
     
-    # Add legend
+    # Add legend outside plot area to prevent overlap
+    legend = None
     if show_legend:
-        legend = ax.legend(bars, bar_labels, loc='best')
-    
-    # Adjust layout to make sure everything fits
-    plt.tight_layout()
+        legend = _place_legend_outside(ax, bars, bar_labels, change_x_axis_pos, change_y_axis_pos, horizontal)
+    else:
+        # Adjust layout only if no legend
+        plt.tight_layout()
     
     # Dictionary to store bounding box coordinates
     bbox_coords = {}
@@ -746,12 +836,13 @@ def draw__1_bar__func_1__axis_mask(
         ax.set_xticklabels(bar_labels, rotation=label_angle, ha=ha_config)
         plt.subplots_adjust(bottom=0.2)  # Add more space for rotated labels
     
-    # Add legend
+    # Add legend outside plot area to prevent overlap
+    legend = None
     if show_legend:
-        legend = ax.legend(bars, bar_labels, loc='best')
-    
-    # Adjust layout to make sure everything fits
-    plt.tight_layout()
+        legend = _place_legend_outside(ax, bars, bar_labels, change_x_axis_pos, change_y_axis_pos, horizontal)
+    else:
+        # Adjust layout only if no legend
+        plt.tight_layout()
     
     # Apply axis masking
     if mask_axis in ['x', 'y']:
@@ -964,6 +1055,7 @@ class BarChartRunDraw(RunDraw):
         self.num_charts = getattr(args, 'num_charts', None)  # None means all charts
         self.num_questions_per_chart = getattr(args, 'num_questions_per_chart', 20)
         self.random_seed = getattr(args, 'random_seed', 42)
+        self.composition_types = getattr(args, 'composition_types', None)
 
     def _init_plot_functions(self):
         function_dict = {
@@ -1123,10 +1215,12 @@ class BarChartRunDraw(RunDraw):
 
             # Chart QA data generation & bbox chart
             # Use configurable number of questions per chart
+            composition_types = getattr(self.args, 'composition_types', None)
             qa_data_condidates = self.vqa_generator.chart_qa_generator(
                 chart_entry, 
                 random_seed=self.random_seed + chart_idx,  # Different seed per chart
-                num_questions=self.num_questions_per_chart
+                num_questions=self.num_questions_per_chart,
+                composition_types=composition_types
             )
 
             for new_qa_data in qa_data_condidates:
@@ -1255,6 +1349,12 @@ Examples:
   # Generate with custom bbox color
   python chartGenerators/bar_chart/main.py --bbox-color "#00FF00" --num-charts 3
   
+  # Generate only parallel composition questions
+  python chartGenerators/bar_chart/main.py --num-charts 5 --composition-types parallel
+  
+  # Generate both one-step and nested compositions
+  python chartGenerators/bar_chart/main.py --num-charts 5 --composition-types one_step nested
+  
   # Full example with all options
   python chartGenerators/bar_chart/main.py \\
       --num-charts 5 \\
@@ -1264,7 +1364,8 @@ Examples:
       --random-seed 42 \\
       --bbox-color "#FF0000" \\
       --stages 01 \\
-      --figsize 12,8
+      --figsize 12,8 \\
+      --composition-types one_step parallel nested
 
 Default Behavior:
   - Processes all charts from default metadata
@@ -1272,6 +1373,7 @@ Default Behavior:
   - Uses random seed 42
   - Outputs to ./data directory
   - Generates both original and bbox images (stages 01)
+  - Generates all composition types with default weights (40% one_step, 40% parallel, 20% nested)
         """
     )
     
@@ -1348,6 +1450,17 @@ Default Behavior:
         help="Color for bounding boxes (default: #FF0000 = red)"
     )
     
+    parser.add_argument(
+        "--composition-types",
+        type=str,
+        nargs="+",
+        choices=["one_step", "parallel", "nested"],
+        default=None,
+        help="Composition types to generate. Options: 'one_step', 'parallel', 'nested'. "
+             "Can specify multiple types (e.g., --composition-types one_step parallel). "
+             "If not specified, generates all types with default weights. (default: None = all types)"
+    )
+    
     # Parse arguments
     args = parser.parse_args()
     
@@ -1366,6 +1479,7 @@ Default Behavior:
             self.num_charts = args.num_charts
             self.num_questions_per_chart = args.num_questions
             self.random_seed = args.random_seed
+            self.composition_types = args.composition_types
     
     # Create args object
     config = BarChartArgs()
@@ -1389,6 +1503,7 @@ Default Behavior:
     logger.info(f"Figure Size: {config.global_figsize}")
     logger.info(f"Gray Mask: {config.gray_mask}")
     logger.info(f"Bbox Color: {config.bbox_color}")
+    logger.info(f"Composition Types: {config.composition_types or 'All types (default weights)'}")
     logger.info("=" * 100)
     
     try:

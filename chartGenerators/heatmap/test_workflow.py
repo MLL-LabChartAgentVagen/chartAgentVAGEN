@@ -37,6 +37,8 @@ def test_single_chart_workflow():
     class SingleChartRunDraw(HeatmapChartRunDraw):
         def run_draw_single_figure(self):
             self._init_dir(self.root_path)
+            self.total_img_num = 0
+            self.total_vqa_num = 0
             chart_id = "heatmap__img_1__test"
 
             self.draw_chart_function = self.function_dict[func_id]["original_img"]
@@ -60,12 +62,18 @@ def test_single_chart_workflow():
             self.generated_vqa_data = {}
             for qa_data in qa_examples:
                 qa_id = qa_data["qa_id"]
+                
+                # Skip if already exists
+                if self._check_if_skip_existing_data(qa_id):
+                    continue
+                
                 mask_paths = {}
                 for step_key in qa_data["mask"]:
                     mask_paths[step_key] = (
                         f"./data/imgs/{self.args.chart_type}/{self.args.chart_mode}/{qa_id}__mask_{step_key}.png"
                     )
 
+                self.total_vqa_num += 1
                 self.generated_vqa_data[qa_id] = {
                     "qa_id": qa_id,
                     "qa_type": qa_data["qa_type"],
@@ -82,20 +90,20 @@ def test_single_chart_workflow():
                     "answer": qa_data["answer"],
                 }
 
-            num_rows = len(chart_entry["heatmap_data"])
-            num_cols = len(chart_entry["heatmap_data"][0]) if num_rows else 0
-            all_indices = set(range(num_rows * num_cols))
+                # Process each mask step for this QA data
+                for step_key, mask_idx_list in qa_data["mask"].items():
+                    mask_id = mask_paths[step_key].split("/")[-1].replace(".png", "").strip()
+                    self._plot_masked_chart(
+                        mask_idx_list=mask_idx_list,  # Use mask_idx_list directly (indices to mask)
+                        chart_entry=chart_entry,
+                        chart_id=chart_id,
+                        mask_id=mask_id,
+                    )
 
-            for step_key, masked_out in qa_data["mask"].items():
-                highlighted = sorted(all_indices - set(masked_out))
-                mask_id = mask_paths[step_key].split("/")[-1].replace(".png", "").strip()
-                self._plot_masked_chart(
-                    mask_idx_list=highlighted,
-                    chart_entry=chart_entry,
-                    chart_id=chart_id,
-                    mask_id=mask_id,
-                )
+                # Save after each QA
+                self._save_chart_qa_data_to_json()
 
+            self.total_img_num = 1
             self._save_chart_qa_data_to_json()
 
     runner = SingleChartRunDraw(args)

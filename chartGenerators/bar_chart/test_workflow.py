@@ -122,8 +122,9 @@ def test_single_chart_workflow():
             self.vqa_generator = BarChartGenerator(self.args, chart_id)
 
             # Generate QA data (limit to 3 questions for testing)
+            # Test with all composition types
             qa_data_candidates = self.vqa_generator.chart_qa_generator(
-                chart_entry, random_seed=42, num_questions=3
+                chart_entry, random_seed=42, num_questions=3, composition_types=None
             )
             print(f"  ✓ Generated {len(qa_data_candidates)} QA examples")
 
