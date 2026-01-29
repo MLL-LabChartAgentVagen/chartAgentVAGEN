@@ -59,7 +59,7 @@ class EvaluationState(TypedDict):
 # SECTION 2: SYSTEM PROMPTS
 # =============================================================================
 
-PROMPT_NODE_A_VLM_QA = """You are a chart comprehension expert. Analyze the provided chart image and answer the question accurately.
+PROMPT_NODE_A_VLM_QA = PROMPT_NODE_A_VLM_QA = """You are a chart comprehension expert. Analyze the provided chart image and answer the question accurately.
 
 ## Instructions
 1. Carefully examine the chart image
@@ -82,6 +82,7 @@ PROMPT_NODE_A_VLM_QA = """You are a chart comprehension expert. Analyze the prov
 
 Respond with ONLY the answer value, nothing else."""
 
+# """Answer this question about the chart in one short phrase."""
 
 # =============================================================================
 # SECTION 3: NODE IMPLEMENTATIONS
@@ -163,9 +164,20 @@ class NodeA_VLMAnswerGenerator:
                 user=state["question"],
                 image_base64=image_base64,
                 temperature=0.1,  # 低温度以获得更确定的答案
-                max_tokens=256
+                # max_tokens=256
+                max_tokens=8000
             )
         except Exception as e:
+            # 打印详细的异常信息
+            import traceback
+            print(f"\n{'!'*80}")
+            print(f"[ERROR] API 调用失败!")
+            print(f"[ERROR] 异常类型: {type(e).__name__}")
+            print(f"[ERROR] 异常信息: {e}")
+            print(f"[ERROR] 完整堆栈跟踪:")
+            traceback.print_exc()
+            print(f"{'!'*80}\n")
+            
             state["vlm_answer"] = ""
             state["vlm_raw_response"] = f"API Error: {e}"
             state["latency_ms"] = (time.time() - start_time) * 1000
@@ -663,7 +675,7 @@ def extend_llm_client_with_vision(llm_client):
         user: str,
         image_base64: str,
         temperature: float = 0.3,
-        max_tokens: int = 1024
+        max_tokens: int = 5000 # FIXME： originally 1024
     ) -> str:
         """
         带图像的多模态生成
@@ -698,12 +710,112 @@ def extend_llm_client_with_vision(llm_client):
                 "max_output_tokens": max_tokens
             }
             
-            response = self._native_client.models.generate_content(
-                model=self.model,
-                contents=[image_part, full_prompt],
-                config=generation_config
-            )
-            return response.text
+            # 添加安全设置（设置为最宽松，用于调试和避免误拦截）
+            safety_settings = [
+                {"category": "HARM_CATEGORY_HARASSMENT", "threshold": "BLOCK_NONE"},
+                {"category": "HARM_CATEGORY_HATE_SPEECH", "threshold": "BLOCK_NONE"},
+                {"category": "HARM_CATEGORY_SEXUALLY_EXPLICIT", "threshold": "BLOCK_NONE"},
+                {"category": "HARM_CATEGORY_DANGEROUS_CONTENT", "threshold": "BLOCK_NONE"},
+            ]
+            
+            print(f"\n{'='*80}")
+            print(f"[DEBUG] 调用 Gemini API")
+            print(f"[DEBUG] Model: {self.model}")
+            print(f"[DEBUG] Temperature: {temperature}")
+            print(f"[DEBUG] Max tokens: {max_tokens}")
+            print(f"[DEBUG] Question: {user[:100]}...")
+            
+            # 构建 API 参数
+            api_kwargs = {
+                "model": self.model,
+                "contents": [image_part, full_prompt],
+                "config": generation_config
+            }
+            
+            # 只有非 Gemini-3 模型才支持 safety_settings
+            if not self.model.startswith("gemini-3"):
+                api_kwargs["safety_settings"] = safety_settings
+                print(f"[DEBUG] 使用 safety_settings (Gemini 2.x)")
+            else:
+                print(f"[DEBUG] 跳过 safety_settings (Gemini 3.x 不支持)")
+            
+            try:
+                response = self._native_client.models.generate_content(**api_kwargs)
+                print(f"[DEBUG] API 调用成功!")
+            except Exception as api_error:
+                print(f"[ERROR] API 调用失败!")
+                print(f"[ERROR] 异常类型: {type(api_error).__name__}")
+                print(f"[ERROR] 异常信息: {api_error}")
+                import traceback
+                traceback.print_exc()
+                raise
+            
+            # 详细的响应检查和调试日志
+            print(f"[DEBUG] Response type: {type(response)}")
+            print(f"[DEBUG] Response object: {response}")
+            print(f"[DEBUG] Has candidates: {hasattr(response, 'candidates')}")
+            
+            if hasattr(response, 'candidates'):
+                print(f"[DEBUG] Candidates count: {len(response.candidates) if response.candidates else 0}")
+                
+                if not response.candidates:
+                    print(f"[ERROR] Gemini 返回空 candidates!")
+                    print(f"[ERROR] 完整响应: {response}")
+                    raise ValueError(f"Gemini returned no candidates. Response: {response}")
+                
+                candidate = response.candidates[0]
+                print(f"[DEBUG] Candidate type: {type(candidate)}")
+                print(f"[DEBUG] Finish reason: {candidate.finish_reason}")
+                print(f"[DEBUG] Has content: {hasattr(candidate, 'content')}")
+                
+                if candidate.finish_reason.name != "STOP":
+                    print(f"[WARNING] Finish reason 不是 STOP: {candidate.finish_reason.name}")
+                    # 对于新模型，某些 finish_reason 可能仍有内容，所以只警告不抛出异常
+                
+                if hasattr(candidate, 'content') and candidate.content:
+                    print(f"[DEBUG] Content type: {type(candidate.content)}")
+                    print(f"[DEBUG] Has parts: {hasattr(candidate.content, 'parts')}")
+                    
+                    if candidate.content.parts:
+                        print(f"[DEBUG] Parts count: {len(candidate.content.parts)}")
+                        first_part = candidate.content.parts[0]
+                        print(f"[DEBUG] First part type: {type(first_part)}")
+                        print(f"[DEBUG] First part has 'text': {hasattr(first_part, 'text')}")
+                        
+                        try:
+                            text_content = first_part.text
+                            print(f"[DEBUG] 成功获取 text 属性")
+                        except Exception as text_error:
+                            print(f"[ERROR] 获取 text 属性失败: {text_error}")
+                            print(f"[DEBUG] First part 内容: {first_part}")
+                            raise
+                        
+                        print(f"[DEBUG] Text content length: {len(text_content) if text_content else 0}")
+                        print(f"[DEBUG] Text content preview: {text_content[:200] if text_content else '(empty)'}")
+                        print(f"{'='*80}\n")
+                        
+                        if not text_content or not text_content.strip():
+                            print(f"[ERROR] Gemini 返回的文本为空!")
+                            raise ValueError("Gemini returned empty text content")
+                        
+                        return text_content
+                    else:
+                        print(f"[ERROR] Content.parts 为空!")
+                        raise ValueError(f"Gemini returned empty content.parts. Response: {response}")
+                else:
+                    print(f"[ERROR] Candidate 没有 content!")
+                    raise ValueError(f"Gemini candidate has no content. Response: {response}")
+            else:
+                print(f"[ERROR] Response 没有 candidates 属性!")
+                # 尝试直接访问 .text 属性
+                if hasattr(response, 'text'):
+                    text = response.text
+                    print(f"[DEBUG] 找到 response.text: {text[:200] if text else '(empty)'}")
+                    if text and text.strip():
+                        print(f"{'='*80}\n")
+                        return text
+                
+                raise ValueError(f"Gemini response has no candidates attribute. Response: {response}")
         
         else:
             # OpenAI 兼容 API 多模态调用
@@ -726,15 +838,69 @@ def extend_llm_client_with_vision(llm_client):
             kwargs = {
                 "model": self.model,
                 "messages": messages,
-                "max_tokens": max_tokens
             }
+            
+            # 根据模型选择正确的 token 参数
+            # GPT-5+, o1, o3 系列使用 max_completion_tokens
+            if self.model.startswith("gpt-5") or self.model.startswith("o1") or self.model.startswith("o3"):
+                kwargs["max_completion_tokens"] = max_tokens
+                token_param_name = "max_completion_tokens"
+            else:
+                kwargs["max_tokens"] = max_tokens
+                token_param_name = "max_tokens"
             
             # 添加温度参数 (如果支持)
             if self.adapter.capabilities.supports_temperature:
                 kwargs["temperature"] = temperature
             
-            response = self._client.chat.completions.create(**kwargs)
-            return response.choices[0].message.content
+            print(f"\n{'='*80}")
+            print(f"[DEBUG] 调用 OpenAI API")
+            print(f"[DEBUG] Model: {self.model}")
+            print(f"[DEBUG] Temperature: {kwargs.get('temperature', 'N/A')}")
+            print(f"[DEBUG] Max tokens: {max_tokens} (使用参数: {token_param_name})")
+            print(f"[DEBUG] Question: {user[:100]}...")
+            
+            try:
+                response = self._client.chat.completions.create(**kwargs)
+                print(f"[DEBUG] API 调用成功!")
+            except Exception as api_error:
+                print(f"[ERROR] API 调用失败!")
+                print(f"[ERROR] 异常类型: {type(api_error).__name__}")
+                print(f"[ERROR] 异常信息: {api_error}")
+                import traceback
+                traceback.print_exc()
+                raise
+            
+            # 调试日志
+            print(f"[DEBUG] Response type: {type(response)}")
+            print(f"[DEBUG] Has choices: {hasattr(response, 'choices')}")
+            
+            if hasattr(response, 'choices') and response.choices:
+                print(f"[DEBUG] Choices count: {len(response.choices)}")
+                choice = response.choices[0]
+                print(f"[DEBUG] Finish reason: {choice.finish_reason}")
+                print(f"[DEBUG] Has message: {hasattr(choice, 'message')}")
+                
+                if hasattr(choice, 'message') and choice.message:
+                    content = choice.message.content
+                    print(f"[DEBUG] Content length: {len(content) if content else 0}")
+                    print(f"[DEBUG] Content preview: {content[:200] if content else '(empty)'}")
+                    print(f"{'='*80}\n")
+                    
+                    if not content or not content.strip():
+                        print(f"[ERROR] OpenAI 返回的内容为空!")
+                        print(f"[ERROR] 完整响应: {response}")
+                        raise ValueError("OpenAI returned empty content")
+                    
+                    return content
+                else:
+                    print(f"[ERROR] Choice 没有 message!")
+                    raise ValueError(f"OpenAI choice has no message. Response: {response}")
+            else:
+                print(f"[ERROR] Response 没有 choices!")
+                raise ValueError(f"OpenAI response has no choices. Response: {response}")
+            
+            print(f"{'='*80}\n")
     
     # 动态绑定方法
     import types as py_types

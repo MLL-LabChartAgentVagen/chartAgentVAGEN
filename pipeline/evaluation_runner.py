@@ -290,7 +290,9 @@ End Time: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
     
     def run(
         self, 
-        data_path: str = "./data/evaluation_data.json",
+        # data_path: str = "./data/evaluation_data.json",
+        # output_path: str = "./results/evaluation_results.json",
+        data_path: str = "./data_files/bar__meta_qa_data.json",
         output_path: str = "./results/evaluation_results.json",
         level: Optional[str] = None,
         qa_type: Optional[str] = None,
@@ -490,13 +492,16 @@ Examples:
     # 数据参数
     parser.add_argument(
         "--data", "-d",
-        default="./data/evaluation_data.json",
+        # default="./data/evaluation_data.json",
+        default= "./data_files/bar__meta_qa_data.json",
         help="Path to evaluation data JSON (default: ./data/evaluation_data.json)"
+
     )
     
     parser.add_argument(
         "--output", "-o",
-        default="./results/evaluation_results.json",
+        # default="./results/evaluation_results.json",
+        default="./results/evaluation_results.json", 
         help="Output path for results (default: ./results/evaluation_results.json)"
     )
     
