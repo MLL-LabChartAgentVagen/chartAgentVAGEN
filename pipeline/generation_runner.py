@@ -173,8 +173,7 @@ class ChartAgentPipelineRunner:
     Uses the ChartAgentPipeline orchestrator which coordinates:
     - NodeA_TopicAgent (generates topic within user-specified category)
     - NodeB_DataFabricator (generates realistic master data)
-    - NodeC_SchemaMapper (transforms to BAR/SCATTER/PIE formats)
-    - NodeD_RLCaptioner (generates ground truth captions)
+    - NodeC_SchemaMapper (transforms to BAR/SCATTER/PIE formats and generates captions)
     
     Complete workflow with Node A integrated for topic diversity control.
     """
@@ -239,23 +238,18 @@ class ChartAgentPipelineRunner:
         self.log(f"    Entities: {len(master_data.get('entities', []))}")
         self.log(f"    Distribution: {master_data.get('statistical_properties', {}).get('distribution_type', 'unknown')}")
         
-        # ===== Node C: Schema Mapping =====
-        self.log(f"  → Node C: Mapping to chart schemas...")
+        # ===== Node C: Schema Mapping + Caption Generation =====
+        self.log(f"  → Node C: Mapping to chart schemas and generating captions...")
         node_start = time.time()
         state = self.pipeline.node_c(state)
         node_time = time.time() - node_start
         self.log(f"  ✓ Node C completed in {node_time:.1f}s")
         self.log(f"    Schemas: {list(state.get('chart_entries', {}).keys())}")
         
-        # ===== Node D: Caption Generation =====
-        self.log(f"  → Node D: Generating captions...")
-        node_start = time.time()
-        state = self.pipeline.node_d(state)
-        node_time = time.time() - node_start
+        # 显示 caption 信息
         captions = state.get("captions", {})
-        self.log(f"  ✓ Node D completed in {node_time:.1f}s")
         if captions:
-            self.log(f"    Generated {len(captions)} captions")
+            self.log(f"    Captions: {len(captions)} generated")
         
         # Pipeline completion summary
         total_time = time.time() - pipeline_start
