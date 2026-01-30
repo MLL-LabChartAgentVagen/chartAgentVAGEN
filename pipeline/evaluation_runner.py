@@ -146,17 +146,19 @@ class ChartQAEvaluationRunner:
     封装了数据加载、pipeline 执行和结果保存的完整流程
     """
     
-    def __init__(self, llm_client, verbose: bool = True, log_file: Optional[str] = None):
+    def __init__(self, llm_client, verbose: bool = True, log_file: Optional[str] = None, debug: bool = False):
         """
         Args:
             llm_client: LLMClient 实例
             verbose: 是否输出详细日志
             log_file: 日志文件路径（可选）
+            debug: 是否启用详细的 API 调试信息
         """
         self.llm = llm_client
         self.verbose = verbose
         self.log_file = log_file
         self.log_file_handle = None
+        self.debug = debug
         
         # 打开日志文件
         if self.log_file:
@@ -171,7 +173,7 @@ class ChartQAEvaluationRunner:
         )
         
         # 扩展 LLM 客户端以支持多模态
-        extended_llm = extend_llm_client_with_vision(llm_client)
+        extended_llm = extend_llm_client_with_vision(llm_client, debug=debug)
         
         self.pipeline = ChartQAEvaluationPipeline(
             extended_llm,
@@ -543,6 +545,12 @@ Examples:
     )
     
     parser.add_argument(
+        "--debug",
+        action="store_true",
+        help="Enable detailed debug logging for API calls"
+    )
+    
+    parser.add_argument(
         "--log-dir",
         default="./results/logs",
         help="Directory to save log files (default: ./results/logs)"
@@ -614,7 +622,8 @@ Examples:
     runner = ChartQAEvaluationRunner(
         llm, 
         verbose=not args.quiet,
-        log_file=str(log_path)
+        log_file=str(log_path),
+        debug=args.debug
     )
     
     try:

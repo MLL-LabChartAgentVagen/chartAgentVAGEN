@@ -1,0 +1,100 @@
+Chart QA Evaluation Log
+================================================================================
+Model: gemini-3-pro-preview
+Provider: gemini-native
+Start Time: 2026-01-29 17:53:21
+================================================================================
+
+[17:53:21] Loading data from ./data_files/bar__meta_qa_data.json...
+[17:53:21] Loaded 20 QA entries
+[17:53:21] Evaluating 20 entries after filtering
+[17:53:21] Starting evaluation...
+[17:53:21] --------------------------------------------------
+[17:53:30]   [1/20] ✓ bar__img_1__category6__angle30__vertical__labeled__w_legend__xtop__yright_qa1
+[17:53:30]       VLM: 10... | GT: 10...
+[17:54:19]   [2/20] ✗ bar__img_2__category2__angle60__horizontal__labeled__w_legend__xtop__yright_qa1
+[17:54:19]       VLM: Based on the chart provided:
+
+... | GT: 503.47...
+[17:54:26]   [3/20] ✓ bar__img_3__category15__angle60__horizontal__labeled__w_legend__xbottom__yright_qa1
+[17:54:26]       VLM: 10... | GT: 10...
+[17:54:42]   [4/20] ✗ bar__img_4__category13__angle30__vertical__labeled__w_legend__xtop__yleft_qa1
+[17:54:42]       VLM: 4... | GT: 5...
+[17:54:49]   [5/20] ✓ bar__img_5__category12__angle60__horizontal__labeled__w_legend__xbottom__yright_qa1
+[17:54:49]       VLM: 10... | GT: 10...
+[17:56:02]   [6/20] ✗ bar__img_6__category8__angle45__horizontal__labeled__w_legend__xbottom__yleft_qa1
+[17:56:02]       VLM: (empty)... | GT: 0.98...
+[17:56:21]   [7/20] ✓ bar__img_7__category6__angle30__vertical__labeled__w_legend__xbottom__yleft_qa1
+[17:56:21]       VLM: 389.4, 352.7, 319.5, 284.8, 25... | GT: 389.4, 352.7, 319.5, 284.8, 25...
+[17:57:20]   [8/20] ✗ bar__img_8__category29__angle60__horizontal__labeled__w_legend__xbottom__yleft_qa1
+[17:57:20]       VLM: Based on the chart, we first i... | GT: 42.27...
+[17:57:28]   [9/20] ✓ bar__img_9__category5__angle90__vertical__labeled__w_legend__xtop__yleft_qa1
+[17:57:28]       VLM: 178.5, 165.2, 153.9, 142.7, 13... | GT: 178.5, 165.2, 153.9, 142.7, 13...
+[17:57:45]   [10/20] ✓ bar__img_10__category22__angle30__horizontal__labeled__w_legend__xbottom__yright_qa1
+[17:57:45]       VLM: 315... | GT: 315.00...
+[17:59:01]   [11/20] ✗ bar__img_11__category2__angle30__vertical__labeled__w_legend__xbottom__yright_qa1
+[17:59:01]       VLM: (empty)... | GT: 18.57...
+[17:59:57]   [12/20] ✗ bar__img_12__category2__angle90__vertical__labeled__w_legend__xbottom__yright_qa1
+[17:59:57]       VLM: Based on the chart provided, t... | GT: 2...
+[18:00:08]   [13/20] ✓ bar__img_13__category5__angle45__vertical__labeled__w_legend__xtop__yright_qa1
+[18:00:08]       VLM: 3.605... | GT: 3.60...
+[18:00:53]   [14/20] ✓ bar__img_14__category12__angle30__vertical__labeled__w_legend__xbottom__yright_qa1
+[18:00:53]       VLM: 16.4... | GT: 16.40...
+[18:00:58]   [15/20] ✓ bar__img_15__category12__angle90__vertical__labeled__w_legend__xtop__yleft_qa1
+[18:00:58]       VLM: 10... | GT: 10...
+[18:01:51]   [16/20] ✗ bar__img_16__category26__angle90__vertical__labeled__w_legend__xtop__yleft_qa1
+[18:01:51]       VLM: Based on the chart provided, t... | GT: 370.00...
+[18:01:57]   [17/20] ✓ bar__img_17__category2__angle60__vertical__labeled__w_legend__xbottom__yleft_qa1
+[18:01:57]       VLM: 2.68... | GT: 2.68...
+[18:02:09]   [18/20] ✓ bar__img_18__category29__angle90__horizontal__labeled__w_legend__xtop__yright_qa1
+[18:02:09]       VLM: 165... | GT: 165...
+[18:03:30]   [19/20] ✗ bar__img_19__category11__angle60__horizontal__labeled__w_legend__xtop__yright_qa1
+[18:03:30]       VLM: (empty)... | GT: 3...
+[18:03:36]   [20/20] ✓ bar__img_20__category22__angle60__vertical__labeled__w_legend__xtop__yright_qa1
+[18:03:36]       VLM: 17... | GT: 17...
+[18:03:36] --------------------------------------------------
+[18:03:36] Evaluation completed in 614.5s
+[18:03:36] Results saved to ./results/evaluation_results.json
+
+============================================================
+                  EVALUATION SUMMARY
+============================================================
+
+📊 Overall Performance:
+   Accuracy:        60.00%
+   Total Questions: 20
+   Correct:         12
+   Incorrect:       8
+   Avg Similarity:  0.642
+   Avg Latency:     30724ms
+   Total Time:      614.5s
+
+📈 Accuracy by Difficulty Level:
+   Level 1: 100.00% (10 questions)
+   Level 2: 0.00% (6 questions)
+   Level 3: 50.00% (4 questions)
+
+📋 Accuracy by QA Type (Top 10):
+   random__nested_mean_of_all_of_kth: 100.00% (1)
+   random__nested_min_of_kth_of_threshold: 100.00% (1)
+   random__simple_count: 100.00% (4)
+   random__simple_max: 100.00% (1)
+   random__simple_median: 100.00% (1)
+   random__simple_min: 100.00% (1)
+   random__simple_read: 100.00% (1)
+   random__simple_read_of_threshold: 100.00% (1)
+   random__simple_sum_of_threshold: 100.00% (1)
+   random__nested_count_of_topk_of_all: 0.00% (1)
+
+🔍 Match Type Distribution:
+   exact: 9
+   string_mismatch: 4
+   empty_response: 3
+   numeric_close: 3
+   numeric_mismatch: 1
+
+============================================================
+
+================================================================================
+End Time: 2026-01-29 18:03:36
+================================================================================

@@ -59,30 +59,47 @@ class EvaluationState(TypedDict):
 # SECTION 2: SYSTEM PROMPTS
 # =============================================================================
 
-PROMPT_NODE_A_VLM_QA = PROMPT_NODE_A_VLM_QA = """You are a chart comprehension expert. Analyze the provided chart image and answer the question accurately.
+PROMPT_NODE_A_VLM_QA = PROMPT_NODE_A_VLM_QA = """Analyze the chart and answer the question.
 
-## Instructions
-1. Carefully examine the chart image
-2. Read and understand the question
-3. Extract relevant information from the chart
-4. Provide a precise, concise answer
+CRITICAL: Your response must contain ONLY the numerical answer.
+- Do NOT explain your reasoning
+- Do NOT show calculations
+- Do NOT add any text before or after the number
 
-## Answer Format Rules
-- For numeric answers: Provide the exact number with appropriate decimal places (e.g., "42.50" or "287.60")
-- For multiple values: Use comma-separated format with spaces (e.g., "18.4, 35.2, 20.1")
-- For counts: Provide integer only (e.g., "3" or "0")
-- Do NOT include units, explanations, or any other text
-- Do NOT add percentage signs (%) or currency symbols
+Examples:
+Question: "What is the sum?" → Response: "503.47"
+Question: "How many?" → Response: "5"
+Question: "List all values?" → Response: "1.2, 3.4, 5.6"
+"""
 
-## Examples
-- Question: "What is the highest value?" → Answer: "42.50"
-- Question: "What is the sum of all values?" → Answer: "287.60"
-- Question: "How many items are above 30?" → Answer: "5"
-- Question: "What are all the values?" → Answer: "18.4, 35.2, 20.1, 42.5"
 
-Respond with ONLY the answer value, nothing else."""
+# """Analyze the chart and answer concisely.
+# Provide only the numerical answer, no explanation."""
 
-# """Answer this question about the chart in one short phrase."""
+
+# """You are a chart comprehension expert. Analyze the provided chart image and answer the question accurately.
+
+# ## Instructions
+# 1. Carefully examine the chart image
+# 2. Read and understand the question
+# 3. Extract relevant information from the chart
+# 4. Provide a precise, concise answer
+
+# ## Answer Format Rules
+# - For numeric answers: Provide the exact number with appropriate decimal places (e.g., "42.50" or "287.60")
+# - For multiple values: Use comma-separated format with spaces (e.g., "18.4, 35.2, 20.1")
+# - For counts: Provide integer only (e.g., "3" or "0")
+# - Do NOT include units, explanations, or any other text
+# - Do NOT add percentage signs (%) or currency symbols
+
+# ## Examples
+# - Question: "What is the highest value?" → Answer: "42.50"
+# - Question: "What is the sum of all values?" → Answer: "287.60"
+# - Question: "How many items are above 30?" → Answer: "5"
+# - Question: "What are all the values?" → Answer: "18.4, 35.2, 20.1, 42.5"
+
+# Respond with ONLY the answer value, nothing else."""
+
 
 # =============================================================================
 # SECTION 3: NODE IMPLEMENTATIONS
@@ -165,7 +182,7 @@ class NodeA_VLMAnswerGenerator:
                 image_base64=image_base64,
                 temperature=0.1,  # 低温度以获得更确定的答案
                 # max_tokens=256
-                max_tokens=8000
+                max_tokens=16000 # FIXME： originally 8000 
             )
         except Exception as e:
             # 打印详细的异常信息
@@ -234,6 +251,78 @@ class NodeB_AnswerEvaluator:
         for char in ["%", "$", "€", "£", "¥"]:
             normalized = normalized.replace(char, "")
         return normalized.strip()
+    
+    def extract_answer_from_text(self, text: str) -> tuple[str, str]:
+        """
+        从包含思维链的文本中智能提取最终数字答案
+        
+        应用多种提取策略（按优先级顺序）：
+        1. 提取最后一行的纯数字/数字列表
+        2. 查找 "Answer:" 标记后的内容
+        3. 提取 Markdown 粗体中的数字（末尾200字符内）
+        4. 查找 "= " 后面的数字
+        5. 提取所有数字取最后一个（fallback）
+        
+        Args:
+            text: VLM 的原始响应文本
+        
+        Returns:
+            (提取的答案, 使用的策略名称)
+        """
+        import re
+        
+        if not text or not text.strip():
+            return "", "no_extraction"
+        
+        # 策略1: 提取最后一行的纯数字/数字列表
+        # 匹配模式: 只包含数字、空格、逗号、点的行
+        lines = text.strip().split('\n')
+        for i in range(len(lines) - 1, max(-1, len(lines) - 6), -1):  # 检查最后5行
+            line = lines[i].strip()
+            # 匹配纯数字或数字列表 (可以包含逗号分隔)
+            if re.match(r'^[\d\s\.,]+$', line) and line:
+                # 确保不是空行或只有标点
+                if re.search(r'\d', line):
+                    return line, "strategy_1_last_line"
+        
+        # 策略2: 查找 "Answer:" 标记后的内容
+        answer_patterns = [
+            r'(?:answer|result|solution):\s*([\d\s\.,]+)',
+            r'(?:answer|result|solution)\s*=\s*([\d\s\.,]+)',
+        ]
+        for pattern in answer_patterns:
+            match = re.search(pattern, text, re.IGNORECASE)
+            if match:
+                return match.group(1).strip(), "strategy_2_answer_keyword"
+        
+        # 策略3: 提取 Markdown 粗体中的数字（在末尾200字符内优先查找）
+        tail_text = text[-200:] if len(text) > 200 else text
+        bold_matches = re.findall(r'\*\*([\d\s\.,]+)\*\*', tail_text)
+        if bold_matches:
+            # 返回最后一个匹配
+            return bold_matches[-1].strip(), "strategy_3_markdown_bold"
+        
+        # 策略4: 查找 "= " 后面的数字（在最后几行中）
+        last_lines = '\n'.join(lines[-10:])  # 最后10行
+        equals_matches = re.findall(r'=\s*([\d\s\.,]+)', last_lines)
+        if equals_matches:
+            # 返回最后一个匹配
+            return equals_matches[-1].strip(), "strategy_4_equals_sign"
+        
+        # 策略5: 提取所有数字，取最后一个（fallback）
+        # 匹配数字列表或单个数字
+        number_list_pattern = r'\b\d+(?:\.\d+)?(?:\s*,\s*\d+(?:\.\d+)?)+\b'
+        number_lists = re.findall(number_list_pattern, text)
+        if number_lists:
+            return number_lists[-1].strip(), "strategy_5_fallback_list"
+        
+        # 如果没有列表，尝试单个数字
+        single_numbers = re.findall(r'\b\d+\.?\d*\b', text)
+        if single_numbers:
+            return single_numbers[-1].strip(), "strategy_5_fallback_single"
+        
+        # 无法提取，返回原文
+        return text, "no_extraction"
     
     def parse_numeric(self, value: str) -> Optional[float]:
         """
@@ -329,7 +418,15 @@ class NodeB_AnswerEvaluator:
             - similarity_score: float
             - details: dict
         """
-        pred_norm = self.normalize_answer(vlm_answer)
+        # 智能提取答案（处理思维链输出）
+        extracted_answer, extraction_strategy = self.extract_answer_from_text(vlm_answer)
+        
+        # 记录提取信息供调试
+        extraction_applied = extraction_strategy != "no_extraction"
+        original_answer_preview = vlm_answer[:100] if vlm_answer else ""
+        
+        # 使用提取后的答案进行评估
+        pred_norm = self.normalize_answer(extracted_answer)
         truth_norm = self.normalize_answer(ground_truth)
         
         # 处理空答案
@@ -338,7 +435,14 @@ class NodeB_AnswerEvaluator:
                 "is_correct": False,
                 "match_type": "empty_response",
                 "similarity_score": 0.0,
-                "details": {"method": "empty_check", "error": "VLM returned empty answer"}
+                "details": {
+                    "method": "empty_check",
+                    "error": "VLM returned empty answer",
+                    "extraction_applied": extraction_applied,
+                    "extraction_strategy": extraction_strategy,
+                    "original_answer": original_answer_preview,
+                    "extracted_answer": extracted_answer[:100] if extracted_answer else ""
+                }
             }
         
         # 1. 精确字符串匹配
@@ -347,7 +451,13 @@ class NodeB_AnswerEvaluator:
                 "is_correct": True,
                 "match_type": "exact",
                 "similarity_score": 1.0,
-                "details": {"method": "exact_string_match"}
+                "details": {
+                    "method": "exact_string_match",
+                    "extraction_applied": extraction_applied,
+                    "extraction_strategy": extraction_strategy,
+                    "original_answer": original_answer_preview,
+                    "extracted_answer": extracted_answer[:100] if extracted_answer else ""
+                }
             }
         
         # 2. 尝试数值列表比较 (优先，因为更复杂)
@@ -366,7 +476,11 @@ class NodeB_AnswerEvaluator:
                     "ground_truth_values": truth_list,
                     "predicted_count": len(pred_list),
                     "ground_truth_count": len(truth_list),
-                    "element_accuracy": accuracy
+                    "element_accuracy": accuracy,
+                    "extraction_applied": extraction_applied,
+                    "extraction_strategy": extraction_strategy,
+                    "original_answer": original_answer_preview,
+                    "extracted_answer": extracted_answer[:100] if extracted_answer else ""
                 }
             }
         
@@ -390,7 +504,11 @@ class NodeB_AnswerEvaluator:
                     "predicted": pred_num,
                     "ground_truth": truth_num,
                     "relative_error": relative_error,
-                    "tolerance": self.tolerance
+                    "tolerance": self.tolerance,
+                    "extraction_applied": extraction_applied,
+                    "extraction_strategy": extraction_strategy,
+                    "original_answer": original_answer_preview,
+                    "extracted_answer": extracted_answer[:100] if extracted_answer else ""
                 }
             }
         
@@ -408,7 +526,11 @@ class NodeB_AnswerEvaluator:
                 "method": "string_similarity",
                 "similarity_ratio": similarity,
                 "predicted_normalized": pred_norm[:100],  # 截断防止过长
-                "ground_truth_normalized": truth_norm[:100]
+                "ground_truth_normalized": truth_norm[:100],
+                "extraction_applied": extraction_applied,
+                "extraction_strategy": extraction_strategy,
+                "original_answer": original_answer_preview,
+                "extracted_answer": extracted_answer[:100] if extracted_answer else ""
             }
         }
     
@@ -654,7 +776,7 @@ class ChartQAEvaluationPipeline:
 # SECTION 5: LLM CLIENT EXTENSION (Multimodal Support)
 # =============================================================================
 
-def extend_llm_client_with_vision(llm_client):
+def extend_llm_client_with_vision(llm_client, debug: bool = False):
     """
     为 LLMClient 添加多模态支持
     
@@ -662,6 +784,7 @@ def extend_llm_client_with_vision(llm_client):
     
     Args:
         llm_client: 原始 LLMClient 实例
+        debug: 是否启用详细的 API 调试信息
     
     Returns:
         扩展后的 LLMClient
@@ -669,13 +792,21 @@ def extend_llm_client_with_vision(llm_client):
     if hasattr(llm_client, 'generate_with_image'):
         return llm_client
     
+    # 存储 debug 标志到 llm_client
+    llm_client._debug_mode = debug
+    
+    def debug_print(self, message: str):
+        """只在 debug 模式下打印信息"""
+        if getattr(self, '_debug_mode', False):
+            print(message)
+    
     def generate_with_image(
         self,
         system: str,
         user: str,
         image_base64: str,
         temperature: float = 0.3,
-        max_tokens: int = 5000 # FIXME： originally 1024
+        max_tokens: int = 16000 # FIXME： originally 1024
     ) -> str:
         """
         带图像的多模态生成
@@ -710,6 +841,15 @@ def extend_llm_client_with_vision(llm_client):
                 "max_output_tokens": max_tokens
             }
             
+            # Gemini 3 thinking models: 添加 thinking_config 来限制推理 token 数量
+            # 这可以防止模型用完所有 token 在思考上，导致没有空间输出答案 (empty_response)
+            if self.model.startswith("gemini-3"):
+                thinking_budget = 4000  # 对于图表理解任务，4000 tokens 足够
+                generation_config["thinking_config"] = {
+                    "thinking_budget": thinking_budget
+                }
+                self.debug_print(f"[DEBUG] Gemini 3 thinking model detected, setting thinking_budget={thinking_budget}")
+            
             # 添加安全设置（设置为最宽松，用于调试和避免误拦截）
             safety_settings = [
                 {"category": "HARM_CATEGORY_HARASSMENT", "threshold": "BLOCK_NONE"},
@@ -718,12 +858,15 @@ def extend_llm_client_with_vision(llm_client):
                 {"category": "HARM_CATEGORY_DANGEROUS_CONTENT", "threshold": "BLOCK_NONE"},
             ]
             
-            print(f"\n{'='*80}")
-            print(f"[DEBUG] 调用 Gemini API")
-            print(f"[DEBUG] Model: {self.model}")
-            print(f"[DEBUG] Temperature: {temperature}")
-            print(f"[DEBUG] Max tokens: {max_tokens}")
-            print(f"[DEBUG] Question: {user[:100]}...")
+            self.debug_print(f"\n{'='*80}")
+            self.debug_print(f"[DEBUG] 调用 Gemini API")
+            self.debug_print(f"[DEBUG] Model: {self.model}")
+            self.debug_print(f"[DEBUG] Is thinking model: {self.model.startswith('gemini-3')}")
+            self.debug_print(f"[DEBUG] Temperature: {temperature}")
+            self.debug_print(f"[DEBUG] Max tokens: {max_tokens}")
+            if "thinking_config" in generation_config:
+                self.debug_print(f"[DEBUG] Thinking budget: {generation_config['thinking_config']['thinking_budget']}")
+            self.debug_print(f"[DEBUG] Question: {user[:100]}...")
             
             # 构建 API 参数
             api_kwargs = {
@@ -735,13 +878,13 @@ def extend_llm_client_with_vision(llm_client):
             # 只有非 Gemini-3 模型才支持 safety_settings
             if not self.model.startswith("gemini-3"):
                 api_kwargs["safety_settings"] = safety_settings
-                print(f"[DEBUG] 使用 safety_settings (Gemini 2.x)")
+                self.debug_print(f"[DEBUG] 使用 safety_settings (Gemini 2.x)")
             else:
-                print(f"[DEBUG] 跳过 safety_settings (Gemini 3.x 不支持)")
+                self.debug_print(f"[DEBUG] 跳过 safety_settings (Gemini 3.x 不支持)")
             
             try:
                 response = self._native_client.models.generate_content(**api_kwargs)
-                print(f"[DEBUG] API 调用成功!")
+                self.debug_print(f"[DEBUG] API 调用成功!")
             except Exception as api_error:
                 print(f"[ERROR] API 调用失败!")
                 print(f"[ERROR] 异常类型: {type(api_error).__name__}")
@@ -751,12 +894,12 @@ def extend_llm_client_with_vision(llm_client):
                 raise
             
             # 详细的响应检查和调试日志
-            print(f"[DEBUG] Response type: {type(response)}")
-            print(f"[DEBUG] Response object: {response}")
-            print(f"[DEBUG] Has candidates: {hasattr(response, 'candidates')}")
+            self.debug_print(f"[DEBUG] Response type: {type(response)}")
+            self.debug_print(f"[DEBUG] Response object: {response}")
+            self.debug_print(f"[DEBUG] Has candidates: {hasattr(response, 'candidates')}")
             
             if hasattr(response, 'candidates'):
-                print(f"[DEBUG] Candidates count: {len(response.candidates) if response.candidates else 0}")
+                self.debug_print(f"[DEBUG] Candidates count: {len(response.candidates) if response.candidates else 0}")
                 
                 if not response.candidates:
                     print(f"[ERROR] Gemini 返回空 candidates!")
@@ -764,35 +907,35 @@ def extend_llm_client_with_vision(llm_client):
                     raise ValueError(f"Gemini returned no candidates. Response: {response}")
                 
                 candidate = response.candidates[0]
-                print(f"[DEBUG] Candidate type: {type(candidate)}")
-                print(f"[DEBUG] Finish reason: {candidate.finish_reason}")
-                print(f"[DEBUG] Has content: {hasattr(candidate, 'content')}")
+                self.debug_print(f"[DEBUG] Candidate type: {type(candidate)}")
+                self.debug_print(f"[DEBUG] Finish reason: {candidate.finish_reason}")
+                self.debug_print(f"[DEBUG] Has content: {hasattr(candidate, 'content')}")
                 
                 if candidate.finish_reason.name != "STOP":
-                    print(f"[WARNING] Finish reason 不是 STOP: {candidate.finish_reason.name}")
+                    self.debug_print(f"[WARNING] Finish reason 不是 STOP: {candidate.finish_reason.name}")
                     # 对于新模型，某些 finish_reason 可能仍有内容，所以只警告不抛出异常
                 
                 if hasattr(candidate, 'content') and candidate.content:
-                    print(f"[DEBUG] Content type: {type(candidate.content)}")
-                    print(f"[DEBUG] Has parts: {hasattr(candidate.content, 'parts')}")
+                    self.debug_print(f"[DEBUG] Content type: {type(candidate.content)}")
+                    self.debug_print(f"[DEBUG] Has parts: {hasattr(candidate.content, 'parts')}")
                     
                     if candidate.content.parts:
-                        print(f"[DEBUG] Parts count: {len(candidate.content.parts)}")
+                        self.debug_print(f"[DEBUG] Parts count: {len(candidate.content.parts)}")
                         first_part = candidate.content.parts[0]
-                        print(f"[DEBUG] First part type: {type(first_part)}")
-                        print(f"[DEBUG] First part has 'text': {hasattr(first_part, 'text')}")
+                        self.debug_print(f"[DEBUG] First part type: {type(first_part)}")
+                        self.debug_print(f"[DEBUG] First part has 'text': {hasattr(first_part, 'text')}")
                         
                         try:
                             text_content = first_part.text
-                            print(f"[DEBUG] 成功获取 text 属性")
+                            self.debug_print(f"[DEBUG] 成功获取 text 属性")
                         except Exception as text_error:
                             print(f"[ERROR] 获取 text 属性失败: {text_error}")
-                            print(f"[DEBUG] First part 内容: {first_part}")
+                            self.debug_print(f"[DEBUG] First part 内容: {first_part}")
                             raise
                         
-                        print(f"[DEBUG] Text content length: {len(text_content) if text_content else 0}")
-                        print(f"[DEBUG] Text content preview: {text_content[:200] if text_content else '(empty)'}")
-                        print(f"{'='*80}\n")
+                        self.debug_print(f"[DEBUG] Text content length: {len(text_content) if text_content else 0}")
+                        self.debug_print(f"[DEBUG] Text content preview: {text_content[:200] if text_content else '(empty)'}")
+                        self.debug_print(f"{'='*80}\n")
                         
                         if not text_content or not text_content.strip():
                             print(f"[ERROR] Gemini 返回的文本为空!")
@@ -810,9 +953,9 @@ def extend_llm_client_with_vision(llm_client):
                 # 尝试直接访问 .text 属性
                 if hasattr(response, 'text'):
                     text = response.text
-                    print(f"[DEBUG] 找到 response.text: {text[:200] if text else '(empty)'}")
+                    self.debug_print(f"[DEBUG] 找到 response.text: {text[:200] if text else '(empty)'}")
                     if text and text.strip():
-                        print(f"{'='*80}\n")
+                        self.debug_print(f"{'='*80}\n")
                         return text
                 
                 raise ValueError(f"Gemini response has no candidates attribute. Response: {response}")
@@ -842,9 +985,22 @@ def extend_llm_client_with_vision(llm_client):
             
             # 根据模型选择正确的 token 参数
             # GPT-5+, o1, o3 系列使用 max_completion_tokens
-            if self.model.startswith("gpt-5") or self.model.startswith("o1") or self.model.startswith("o3"):
+            is_reasoning_model = (
+                self.model.startswith("gpt-5") or 
+                self.model.startswith("o1") or 
+                self.model.startswith("o3")
+            )
+            
+            if is_reasoning_model:
                 kwargs["max_completion_tokens"] = max_tokens
                 token_param_name = "max_completion_tokens"
+                
+                # OpenAI reasoning models: 添加 reasoning_effort 来控制推理强度
+                # "low" = 快速但较浅的推理, "medium" = 平衡, "high" = 深度推理
+                # 对于图表理解任务，"low" 通常足够，可以减少 token 消耗和延迟
+                reasoning_effort = "low"  # 可选: "low", "medium", "high"
+                kwargs["reasoning_effort"] = reasoning_effort
+                self.debug_print(f"[DEBUG] OpenAI reasoning model detected, setting reasoning_effort='{reasoning_effort}'")
             else:
                 kwargs["max_tokens"] = max_tokens
                 token_param_name = "max_tokens"
@@ -853,16 +1009,19 @@ def extend_llm_client_with_vision(llm_client):
             if self.adapter.capabilities.supports_temperature:
                 kwargs["temperature"] = temperature
             
-            print(f"\n{'='*80}")
-            print(f"[DEBUG] 调用 OpenAI API")
-            print(f"[DEBUG] Model: {self.model}")
-            print(f"[DEBUG] Temperature: {kwargs.get('temperature', 'N/A')}")
-            print(f"[DEBUG] Max tokens: {max_tokens} (使用参数: {token_param_name})")
-            print(f"[DEBUG] Question: {user[:100]}...")
+            self.debug_print(f"\n{'='*80}")
+            self.debug_print(f"[DEBUG] 调用 OpenAI API")
+            self.debug_print(f"[DEBUG] Model: {self.model}")
+            self.debug_print(f"[DEBUG] Is reasoning model: {is_reasoning_model}")
+            self.debug_print(f"[DEBUG] Temperature: {kwargs.get('temperature', 'N/A')}")
+            self.debug_print(f"[DEBUG] Max tokens: {max_tokens} (使用参数: {token_param_name})")
+            if is_reasoning_model:
+                self.debug_print(f"[DEBUG] Reasoning effort: {kwargs.get('reasoning_effort', 'N/A')}")
+            self.debug_print(f"[DEBUG] Question: {user[:100]}...")
             
             try:
                 response = self._client.chat.completions.create(**kwargs)
-                print(f"[DEBUG] API 调用成功!")
+                self.debug_print(f"[DEBUG] API 调用成功!")
             except Exception as api_error:
                 print(f"[ERROR] API 调用失败!")
                 print(f"[ERROR] 异常类型: {type(api_error).__name__}")
@@ -872,20 +1031,20 @@ def extend_llm_client_with_vision(llm_client):
                 raise
             
             # 调试日志
-            print(f"[DEBUG] Response type: {type(response)}")
-            print(f"[DEBUG] Has choices: {hasattr(response, 'choices')}")
+            self.debug_print(f"[DEBUG] Response type: {type(response)}")
+            self.debug_print(f"[DEBUG] Has choices: {hasattr(response, 'choices')}")
             
             if hasattr(response, 'choices') and response.choices:
-                print(f"[DEBUG] Choices count: {len(response.choices)}")
+                self.debug_print(f"[DEBUG] Choices count: {len(response.choices)}")
                 choice = response.choices[0]
-                print(f"[DEBUG] Finish reason: {choice.finish_reason}")
-                print(f"[DEBUG] Has message: {hasattr(choice, 'message')}")
+                self.debug_print(f"[DEBUG] Finish reason: {choice.finish_reason}")
+                self.debug_print(f"[DEBUG] Has message: {hasattr(choice, 'message')}")
                 
                 if hasattr(choice, 'message') and choice.message:
                     content = choice.message.content
-                    print(f"[DEBUG] Content length: {len(content) if content else 0}")
-                    print(f"[DEBUG] Content preview: {content[:200] if content else '(empty)'}")
-                    print(f"{'='*80}\n")
+                    self.debug_print(f"[DEBUG] Content length: {len(content) if content else 0}")
+                    self.debug_print(f"[DEBUG] Content preview: {content[:200] if content else '(empty)'}")
+                    self.debug_print(f"{'='*80}\n")
                     
                     if not content or not content.strip():
                         print(f"[ERROR] OpenAI 返回的内容为空!")
@@ -899,11 +1058,10 @@ def extend_llm_client_with_vision(llm_client):
             else:
                 print(f"[ERROR] Response 没有 choices!")
                 raise ValueError(f"OpenAI response has no choices. Response: {response}")
-            
-            print(f"{'='*80}\n")
     
     # 动态绑定方法
     import types as py_types
+    llm_client.debug_print = py_types.MethodType(debug_print, llm_client)
     llm_client.generate_with_image = py_types.MethodType(generate_with_image, llm_client)
     
     return llm_client
