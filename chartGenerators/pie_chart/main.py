@@ -27,6 +27,170 @@ from utils.logger import logger
 from utils.json_util import read_from_json
 
 
+def _pie_layout_params(num_slices: int, show_autopct: bool) -> dict:
+    """
+    Return radius, pctdistance, labeldistance (and autopct font size) to reduce label overlap.
+    Smaller pie + larger distances when many slices so labels and autopct text don't overlap.
+    Also returns top margin and title_pad so the title does not overlap external labels.
+    """
+    if num_slices >= 9:
+        radius = 0.6
+        pctdistance = 0.85
+        labeldistance = 1.35
+        autopct_fontsize = 8
+        top = 0.80
+        title_pad = 32
+    elif num_slices >= 7:
+        radius = 0.7
+        pctdistance = 0.78
+        labeldistance = 1.25
+        autopct_fontsize = 9
+        top = 0.84
+        title_pad = 28
+    elif num_slices >= 5:
+        radius = 0.85
+        pctdistance = 0.7
+        labeldistance = 1.15
+        autopct_fontsize = 10
+        top = 0.88
+        title_pad = 24
+    else:
+        radius = 1.0
+        pctdistance = 0.6
+        labeldistance = 1.1
+        autopct_fontsize = 12
+        top = 0.92
+        title_pad = 20
+    return {
+        'radius': radius,
+        'pctdistance': pctdistance if show_autopct else 0.6,
+        'labeldistance': labeldistance,
+        'autopct_fontsize': autopct_fontsize,
+        'top': top,
+        'title_pad': title_pad,
+    }
+
+
+def _place_pie_legend_outside(ax, wedges, pie_labels):
+    """
+    Place legend outside the plot area to prevent overlap with pie chart labels.
+    Dynamically positions the legend based on label positions.
+    
+    Args:
+        ax: Matplotlib axes object
+        wedges: Pie chart wedge objects
+        pie_labels: Labels for the legend
+    
+    Returns:
+        Legend object
+    """
+    fig = ax.figure
+    
+    # First, do a tight layout to fit the plot content
+    plt.tight_layout()
+    
+    # Draw the canvas to get accurate measurements
+    fig.canvas.draw()
+    renderer = fig.canvas.get_renderer()
+    
+    # Get the bounding boxes of all pie chart labels (texts outside the pie)
+    # These are the labels returned from ax.pie() - they're in ax.texts
+    label_bboxes = []
+    for text in ax.texts:
+        text_str = text.get_text()
+        # Only consider non-empty labels that are outside the pie (not autopct)
+        # Autopct texts are usually shorter and inside slices
+        if text_str and len(text_str) > 0:
+            bbox = text.get_window_extent(renderer=renderer)
+            # Convert to figure coordinates for easier comparison
+            bbox_fig = bbox.transformed(fig.transFigure.inverted())
+            label_bboxes.append(bbox_fig)
+    
+    # Get axes position in figure coordinates
+    ax_bbox = ax.get_position()
+    
+    # Try different legend positions and find one that doesn't overlap
+    # Priority: right side, then left side, then bottom
+    legend_positions = [
+        ((1.05, 0.5), 'center left'),      # Right side
+        ((-0.05, 0.5), 'center right'),    # Left side
+        ((0.5, -0.1), 'upper center'),     # Bottom center
+        ((1.05, 0.3), 'upper left'),       # Right side, lower
+        ((1.05, 0.7), 'lower left'),       # Right side, upper
+    ]
+    
+    best_legend = None
+    best_overlap = float('inf')
+    best_bbox_anchor = None
+    best_loc = None
+    
+    for bbox_anchor, loc in legend_positions:
+        # Create a temporary legend to measure its size
+        temp_legend = ax.legend(wedges, pie_labels, title="Categories", 
+                                loc=loc, bbox_to_anchor=bbox_anchor, 
+                                frameon=True)
+        temp_bbox = temp_legend.get_window_extent(renderer=renderer)
+        temp_bbox_fig = temp_bbox.transformed(fig.transFigure.inverted())
+        temp_legend.remove()
+        
+        # Check for overlap with labels
+        overlap_count = 0
+        for label_bbox in label_bboxes:
+            # Check if legend bbox intersects with label bbox
+            if (temp_bbox_fig.x0 < label_bbox.x1 and temp_bbox_fig.x1 > label_bbox.x0 and
+                temp_bbox_fig.y0 < label_bbox.y1 and temp_bbox_fig.y1 > label_bbox.y0):
+                overlap_count += 1
+        
+        if overlap_count == 0:
+            # No overlap, use this position
+            legend = ax.legend(wedges, pie_labels, title="Categories", 
+                             loc=loc, bbox_to_anchor=bbox_anchor, 
+                             frameon=True, fancybox=True, shadow=True)
+            
+            # Adjust axes position to make room for legend
+            if bbox_anchor[0] > 1.0:  # Legend on right
+                new_right = min(0.95, ax_bbox.x1 - 0.1)
+                ax.set_position([ax_bbox.x0, ax_bbox.y0, new_right - ax_bbox.x0, ax_bbox.height])
+            elif bbox_anchor[0] < 0:  # Legend on left
+                new_left = max(0.05, ax_bbox.x0 + 0.1)
+                ax.set_position([new_left, ax_bbox.y0, ax_bbox.x1 - new_left, ax_bbox.height])
+            elif bbox_anchor[1] < 0:  # Legend on bottom
+                new_bottom = max(0.05, ax_bbox.y0 + 0.1)
+                ax.set_position([ax_bbox.x0, new_bottom, ax_bbox.width, ax_bbox.y1 - new_bottom])
+            
+            return legend
+        
+        if overlap_count < best_overlap:
+            best_overlap = overlap_count
+            best_bbox_anchor = bbox_anchor
+            best_loc = loc
+    
+    # If all positions have some overlap, use the one with least overlap
+    # and adjust axes to minimize it
+    if best_bbox_anchor is not None:
+        legend = ax.legend(wedges, pie_labels, title="Categories", 
+                          loc=best_loc, bbox_to_anchor=best_bbox_anchor, 
+                          frameon=True, fancybox=True, shadow=True)
+        
+        # Adjust axes to make more room
+        if best_bbox_anchor[0] > 1.0:  # Legend on right
+            new_right = min(0.90, ax_bbox.x1 - 0.15)
+            ax.set_position([ax_bbox.x0, ax_bbox.y0, new_right - ax_bbox.x0, ax_bbox.height])
+        elif best_bbox_anchor[0] < 0:  # Legend on left
+            new_left = max(0.10, ax_bbox.x0 + 0.15)
+            ax.set_position([new_left, ax_bbox.y0, ax_bbox.x1 - new_left, ax_bbox.height])
+        elif best_bbox_anchor[1] < 0:  # Legend on bottom
+            new_bottom = max(0.10, ax_bbox.y0 + 0.15)
+            ax.set_position([ax_bbox.x0, new_bottom, ax_bbox.width, ax_bbox.y1 - new_bottom])
+    else:
+        # Fallback to default position
+        legend = ax.legend(wedges, pie_labels, title="Categories", 
+                          loc="center left", bbox_to_anchor=(1.05, 0.5), 
+                          frameon=True, fancybox=True, shadow=True)
+    
+    return legend
+
+
 # ============================================================
 #                        Function 1
 # Draw a pie chart with customizable colors, labels, and positioning.
@@ -94,6 +258,9 @@ def draw__8_pie__func_1(
             return my_autopct
         autopct = make_autopct_values(pie_data)
     
+    # Layout params to reduce label overlap (smaller pie, larger distances when many slices)
+    layout = _pie_layout_params(len(pie_data), show_autopct=(autopct is not None))
+    
     # Create the pie chart
     wedges, texts, autotexts = ax.pie(
         pie_data,
@@ -102,21 +269,27 @@ def draw__8_pie__func_1(
         autopct=autopct,
         startangle=startangle,
         explode=explode_slices,
-        textprops={'fontsize': 12}
+        radius=layout['radius'],
+        pctdistance=layout['pctdistance'],
+        labeldistance=layout['labeldistance'],
+        textprops={'fontsize': min(12, layout['autopct_fontsize'] + 2)}
     )
+    for t in autotexts:
+        t.set_fontsize(layout['autopct_fontsize'])
     
-    # Set title
-    ax.set_title(img_title, fontsize=16, pad=20)
-    
-    # Add legend
-    if show_legend:
-        ax.legend(wedges, pie_labels, title="Categories", loc="center left", bbox_to_anchor=(1, 0, 0.5, 1))
+    ax.set_title(img_title, fontsize=16, pad=layout['title_pad'])
     
     # Ensure the pie chart is circular
     ax.axis('equal')
     
+    # Add legend (positioned to avoid label overlap)
+    if show_legend:
+        _place_pie_legend_outside(ax, wedges, pie_labels)
+    
     # Adjust layout to make sure everything fits
     plt.tight_layout()
+    # Reserve top margin after tight_layout so title never overlaps external labels
+    fig.subplots_adjust(top=layout['top'])
     
     # Save the image if a save path is provided
     if img_save_name:
@@ -199,6 +372,9 @@ def draw__8_pie__func_1__mask(
             return my_autopct
         autopct = make_autopct_values(pie_data)
     
+    # Layout params to reduce label overlap
+    layout = _pie_layout_params(len(pie_data), show_autopct=(autopct is not None))
+    
     # Create the pie chart with original colors (we'll mask with rectangles later)
     wedges, texts, autotexts = ax.pie(
         pie_data,
@@ -207,22 +383,28 @@ def draw__8_pie__func_1__mask(
         autopct=autopct,
         startangle=startangle,
         explode=explode_slices,
-        textprops={'fontsize': 12}
+        radius=layout['radius'],
+        pctdistance=layout['pctdistance'],
+        labeldistance=layout['labeldistance'],
+        textprops={'fontsize': min(12, layout['autopct_fontsize'] + 2)}
     )
+    for t in autotexts:
+        t.set_fontsize(layout['autopct_fontsize'])
     
-    # Set title
-    ax.set_title(img_title, fontsize=16, pad=20)
-    
-    # Add legend
-    legend = None
-    if show_legend:
-        legend = ax.legend(wedges, pie_labels, title="Categories", loc="center left", bbox_to_anchor=(1, 0, 0.5, 1))
+    ax.set_title(img_title, fontsize=16, pad=layout['title_pad'])
     
     # Ensure the pie chart is circular
     ax.axis('equal')
     
+    # Add legend (positioned to avoid label overlap)
+    legend = None
+    if show_legend:
+        legend = _place_pie_legend_outside(ax, wedges, pie_labels)
+    
     # Adjust layout to make sure everything fits
     plt.tight_layout()
+    # Reserve top margin after tight_layout so title never overlaps external labels
+    fig.subplots_adjust(top=layout['top'])
     
     # Apply masking if mask_idx is provided
     if mask_idx:
@@ -409,6 +591,9 @@ def draw__8_pie__func_1__bbox(
             return my_autopct
         autopct = make_autopct_values(pie_data)
     
+    # Layout params to reduce label overlap
+    layout = _pie_layout_params(len(pie_data), show_autopct=(autopct is not None))
+    
     # Create the pie chart
     wedges, texts, autotexts = ax.pie(
         pie_data,
@@ -417,22 +602,28 @@ def draw__8_pie__func_1__bbox(
         autopct=autopct,
         startangle=startangle,
         explode=explode_slices,
-        textprops={'fontsize': 12}
+        radius=layout['radius'],
+        pctdistance=layout['pctdistance'],
+        labeldistance=layout['labeldistance'],
+        textprops={'fontsize': min(12, layout['autopct_fontsize'] + 2)}
     )
+    for t in autotexts:
+        t.set_fontsize(layout['autopct_fontsize'])
     
-    # Set title
-    ax.set_title(img_title, fontsize=16, pad=20)
-    
-    # Add legend
-    legend = None
-    if show_legend:
-        legend = ax.legend(wedges, pie_labels, title="Categories", loc="center left", bbox_to_anchor=(1, 0, 0.5, 1))
+    ax.set_title(img_title, fontsize=16, pad=layout['title_pad'])
     
     # Ensure the pie chart is circular
     ax.axis('equal')
     
+    # Add legend (positioned to avoid label overlap)
+    legend = None
+    if show_legend:
+        legend = _place_pie_legend_outside(ax, wedges, pie_labels)
+    
     # Adjust layout to make sure everything fits
     plt.tight_layout()
+    # Reserve top margin after tight_layout so title never overlaps external labels
+    fig.subplots_adjust(top=layout['top'])
     
     # Dictionary to store bounding box coordinates
     bbox_coords = {}
@@ -587,6 +778,10 @@ def load_metadata(metadata_path: Optional[str] = None) -> Dict:
     """
     Load metadata from a custom JSON file or use default METADATA_PIE.
     
+    Supports two JSON formats:
+    1. Standard format: {func_id: {category_id: [chart_entry, ...]}}
+    2. Generated format: [{category_id, category_name, chart_entries: {bar, pie, scatter}}, ...]
+    
     Args:
         metadata_path: Optional path to a custom metadata JSON file.
                       If None, uses the default METADATA_PIE from metadata.metadata.
@@ -613,15 +808,100 @@ def load_metadata(metadata_path: Optional[str] = None) -> Dict:
         )
     
     with open(metadata_path, 'r', encoding='utf-8') as f:
-        metadata = json.load(f)
+        raw_data = json.load(f)
+    
+    # Check if it's the generated format (array of category objects)
+    if isinstance(raw_data, list) and len(raw_data) > 0 and isinstance(raw_data[0], dict) and 'chart_entries' in raw_data[0]:
+        # Transform from generated format to expected format
+        logger.info(f"Detected generated metadata format, transforming to standard format...")
+        metadata = _transform_generated_metadata(raw_data, chart_type='pie')
+        logger.info(f"Transformed {len(raw_data)} categories from generated format")
+    else:
+        # Assume it's already in the standard format
+        metadata = raw_data
     
     logger.info(f"Loaded custom metadata from: {metadata_path}")
     return metadata
 
 
+def _transform_generated_metadata(generated_data: List[Dict], chart_type: str = 'pie') -> Dict:
+    """
+    Transform generated metadata format to standard metadata format.
+    
+    Generated format: [{category_id, category_name, chart_entries: {bar, pie, scatter}}, ...]
+    Standard format: {func_id: {category_name: [chart_entry, ...]}}
+    
+    Args:
+        generated_data: List of category objects with chart_entries
+        chart_type: Type of chart to extract ('bar', 'pie', 'scatter')
+    
+    Returns:
+        Dictionary in standard metadata format
+    """
+    # Map chart types to function IDs
+    func_id_map = {
+        'bar': 'draw__1_bar__func_1',
+        'pie': 'draw__8_pie__func_1',
+        'scatter': 'draw__2_scatter__func_1'  # Assuming scatter uses this func_id
+    }
+    
+    func_id = func_id_map.get(chart_type, f'draw__1_{chart_type}__func_1')
+    result = {func_id: {}}
+    
+    for category_obj in generated_data:
+        category_name = category_obj.get('category_name', f"{category_obj.get('category_id', 'Unknown')} - Unknown")
+        chart_entries = category_obj.get('chart_entries', {})
+        
+        # Extract the chart type entry
+        chart_entry = chart_entries.get(chart_type)
+        if chart_entry:
+            # Initialize category if it doesn't exist
+            if category_name not in result[func_id]:
+                result[func_id][category_name] = []
+            
+            # Add the chart entry
+            result[func_id][category_name].append(chart_entry)
+    
+    return result
+
+
+def _consolidate_pie_small_slices(chart_entry: Dict, threshold: float = 5.0) -> Dict:
+    """
+    Consolidate pie slices with percentage below threshold into a single "Other" category.
+    Returns a new chart_entry; does not mutate the input.
+    """
+    if 'pie_data' not in chart_entry:
+        return copy.deepcopy(chart_entry)
+    pie_data = chart_entry['pie_data']
+    pie_labels = chart_entry['pie_labels']
+    pie_colors = chart_entry['pie_colors']
+    total = sum(pie_data)
+    if total <= 0:
+        return copy.deepcopy(chart_entry)
+    percentages = [100.0 * v / total for v in pie_data]
+    small_indices = [i for i, p in enumerate(percentages) if p < threshold]
+    if not small_indices:
+        return copy.deepcopy(chart_entry)
+    new_data = [v for i, v in enumerate(pie_data) if i not in small_indices]
+    new_labels = [pie_labels[i] for i in range(len(pie_labels)) if i not in small_indices]
+    new_colors = [pie_colors[i] for i in range(len(pie_colors)) if i not in small_indices]
+    other_value = sum(pie_data[i] for i in small_indices)
+    new_data.append(other_value)
+    new_labels.append("Other")
+    other_color = pie_colors[small_indices[0]] if small_indices else '#808080'
+    new_colors.append(other_color)
+    return {
+        **chart_entry,
+        'pie_data': new_data,
+        'pie_labels': new_labels,
+        'pie_colors': new_colors,
+    }
+
+
 def collect_all_chart_entries(metadata: Dict) -> List[tuple]:
     """
     Collect all chart entries from metadata with their context.
+    Pie chart entries are processed to consolidate slices below 5% into "Other".
     
     Args:
         metadata: Dictionary containing chart metadata.
@@ -634,6 +914,8 @@ def collect_all_chart_entries(metadata: Dict) -> List[tuple]:
         for category_id in metadata[func_id].keys():
             chart_metadata = metadata[func_id][category_id]
             for chart_entry in chart_metadata:
+                if 'pie_data' in chart_entry:
+                    chart_entry = _consolidate_pie_small_slices(chart_entry)
                 all_entries.append((func_id, category_id, chart_entry))
     return all_entries
 

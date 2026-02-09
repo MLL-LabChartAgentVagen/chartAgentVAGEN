@@ -205,7 +205,13 @@ class BarChartGenerator(ChartGenerator):
                 # Diff needs exactly 2 single-value operations
                 one_op1 = OperationSettings("kth", configs['kth'])
                 kth_config2 = configs['kth'].copy()
-                kth_config2['k'] = self.random_state.randint(1, min(len(set(chart_metadata["bar_data"])), 5))
+                # Ensure different k value
+                k1 = configs['kth']['k']
+                available_ks = [k for k in range(1, min(len(set(chart_metadata["bar_data"])), 5) + 1) if k != k1]
+                if available_ks:
+                    kth_config2['k'] = self.random_state.choice(available_ks)
+                else:
+                    kth_config2['k'] = self.random_state.randint(1, min(len(set(chart_metadata["bar_data"])), 5))
                 one_op2 = OperationSettings("kth", kth_config2)
             else:
                 # For sum, mean, count - use any operations EXCEPT "all"
@@ -213,8 +219,47 @@ class BarChartGenerator(ChartGenerator):
                 op1_name = self.random_state.choice(one_step_ops)
                 op2_name = self.random_state.choice(one_step_ops)
                 
-                one_op1 = OperationSettings(op1_name, configs.get(op1_name, {}))
-                one_op2 = OperationSettings(op2_name, configs.get(op2_name, {}))
+                # Get configs for both operations
+                config1 = configs.get(op1_name, {}).copy()
+                config2 = configs.get(op2_name, {}).copy()
+                
+                # If both operations are the same type, ensure different parameters
+                if op1_name == op2_name:
+                    if op1_name == "kth":
+                        # Ensure different k values
+                        k1 = config1.get('k', 1)
+                        available_ks = [k for k in range(1, min(len(set(chart_metadata["bar_data"])), 5) + 1) if k != k1]
+                        if available_ks:
+                            config2['k'] = self.random_state.choice(available_ks)
+                        else:
+                            # If only one k available, change direction
+                            config2['direction'] = "lowest" if config1.get('direction') == "highest" else "highest"
+                    elif op1_name == "topk":
+                        # Ensure different k values
+                        k1 = config1.get('k', 1)
+                        num_bars = len(chart_metadata["bar_data"])
+                        available_ks = [k for k in range(1, min(num_bars - 1, 3) + 1) if k != k1]
+                        if available_ks:
+                            config2['k'] = self.random_state.choice(available_ks)
+                        else:
+                            # If only one k available, change direction
+                            config2['direction'] = "bottom" if config1.get('direction') == "top" else "top"
+                    elif op1_name == "threshold":
+                        # Ensure different threshold values or directions
+                        threshold1 = config1.get('threshold', 0)
+                        values = chart_metadata["bar_data"]
+                        min_val, max_val = min(values), max(values)
+                        # Try to get a different threshold
+                        if threshold1 < (min_val + max_val) / 2:
+                            config2['threshold'] = round(self.random_state.uniform((min_val + max_val) / 2, max_val - 1), 1)
+                        else:
+                            config2['threshold'] = round(self.random_state.uniform(min_val + 1, (min_val + max_val) / 2), 1)
+                        # Also change direction if thresholds are too close
+                        if abs(config2['threshold'] - threshold1) < (max_val - min_val) * 0.1:
+                            config2['direction'] = "below" if config1.get('direction') == "above" else "above"
+                
+                one_op1 = OperationSettings(op1_name, config1)
+                one_op2 = OperationSettings(op2_name, config2)
             
             composed = OperationSettings(zero_op, args=[one_op1, one_op2])
             desc = f"parallel_{zero_op}_of_{one_op1.operation}_and_{one_op2.operation}"

@@ -1,6 +1,7 @@
 """
 Main entry point for chart generation.
-Supports multiple chart types and configurable generation stages.
+Runs bar_chart and pie_chart pipelines with generated metadata JSON.
+Supports: number of chart-QA sets, stages, input file, output directory, and all chart parameters.
 """
 
 import argparse
@@ -17,227 +18,241 @@ from chartGenerators.pie_chart.main import PieChartRunDraw
 from utils.logger import logger
 
 
-class ChartGenerationArgs:
-    """Configuration object for chart generation."""
-    
-    def __init__(
-        self,
-        chart_type: str = "bar",
-        chart_mode: str = "single",
-        data_path: str = "./data",
-        construction_subtask: str = "0123",
-        global_figsize: tuple = (10, 6),
-        gray_mask: str = "#CCCCCC"
-    ):
-        """
-        Args:
-            chart_type: Type of chart ('bar', 'pie', etc.)
-            chart_mode: Mode of chart generation ('single', etc.)
-            data_path: Base path for saving generated data
-            construction_subtask: Stages to run ('0'=masked images, '1'=original images, '2'/'3'=masks)
-            global_figsize: Figure size tuple (width, height)
-            gray_mask: Gray color code for masking
-        """
-        self.chart_type = chart_type
-        self.chart_mode = chart_mode
-        self.data_path = data_path
-        self.construction_subtask = construction_subtask
-        self.global_figsize = global_figsize
-        self.gray_mask = gray_mask
-
-
-def get_chart_generator(chart_type: str, args):
-    """
-    Factory function to get the appropriate chart generator.
-    
-    Args:
-        chart_type: Type of chart ('bar', 'pie', etc.)
-        args: ChartGenerationArgs object
-        
-    Returns:
-        Chart generator instance
-        
-    Raises:
-        ValueError: If chart_type is not supported
-    """
-    chart_type = chart_type.lower()
-    
-    if chart_type == "bar":
-        return BarChartRunDraw(args)
-    elif chart_type == "pie":
-        return PieChartRunDraw(args)
-    else:
-        raise ValueError(f"Unsupported chart type: {chart_type}. Supported types: 'bar', 'pie'")
-
-
 def parse_stages(stages_str: str) -> str:
     """
     Parse and validate construction stages string.
-    
-    Args:
-        stages_str: Comma-separated or concatenated stage numbers (e.g., "0,1,2,3" or "0123")
-        
-    Returns:
-        Validated stage string (e.g., "0123")
-        
-    Raises:
-        ValueError: If invalid stages are provided
+    Valid stages for bar/pie: 0 (bbox images), 1 (original images).
     """
-    # Remove commas and whitespace
     stages_str = stages_str.replace(",", "").replace(" ", "")
-    
-    # Validate that all characters are digits 0-3
-    valid_stages = set("0123")
+    valid_stages = set("01")
     stages_set = set(stages_str)
-    
     if not stages_set.issubset(valid_stages):
         invalid = stages_set - valid_stages
         raise ValueError(
-            f"Invalid stages: {invalid}. Valid stages are: 0 (masked images), "
-            f"1 (original images), 2/3 (mask generation)"
+            f"Invalid stages: {invalid}. Valid stages are: 0 (bbox images), 1 (original images)"
         )
-    
-    # Remove duplicates while preserving order
     seen = set()
-    unique_stages = []
-    for stage in stages_str:
-        if stage not in seen:
-            seen.add(stage)
-            unique_stages.append(stage)
-    
-    return "".join(unique_stages)
+    unique = []
+    for s in stages_str:
+        if s not in seen:
+            seen.add(s)
+            unique.append(s)
+    return "".join(unique)
+
+
+def parse_figsize(figsize_str: str) -> tuple:
+    """Parse figure size string 'width,height' into tuple."""
+    parts = figsize_str.split(",")
+    if len(parts) != 2:
+        raise ValueError("Figure size must be in format 'width,height'")
+    return (float(parts[0].strip()), float(parts[1].strip()))
+
+
+def build_args_for_chart_type(
+    chart_type: str,
+    input_path: str,
+    output_dir: str,
+    num_charts: int,
+    stages: str,
+    num_questions: int,
+    random_seed: int,
+    figsize: tuple,
+    gray_mask: str,
+    bbox_color: str,
+    composition_types: list,
+) -> object:
+    """Build an args object compatible with BarChartRunDraw / PieChartRunDraw."""
+    class Args:
+        pass
+    args = Args()
+    args.chart_type = chart_type
+    args.chart_mode = "single"
+    args.data_path = output_dir
+    args.construction_subtask = stages
+    args.global_figsize = figsize
+    args.gray_mask = gray_mask
+    args.bbox_color = bbox_color
+    args.metadata_path = input_path
+    args.num_charts = num_charts
+    args.num_questions_per_chart = num_questions
+    args.random_seed = random_seed
+    args.composition_types = composition_types
+    return args
 
 
 def main():
-    """Main entry point for chart generation."""
-    
     parser = argparse.ArgumentParser(
-        description="Chart Generation Pipeline",
+        description="Chart generation: bar and pie charts from generated metadata JSON",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
-  # Run full pipeline with all stages for bar charts (default)
-  python main.py
-  
-  # Run only original image generation (stage 1)
-  python main.py --stages 1
-  
-  # Run original and masked images (stages 0 and 1)
-  python main.py --stages 0,1
-  
-  # Run for pie charts (when implemented)
-  python main.py --chart-type pie
-  
-  # Custom data path
-  python main.py --data-path ./custom_data
+  # Generate 10 bar + 10 pie chart-QA sets from generated_metadata.json, original images only
+  python main.py --input generated_metadata.json --output ./data --num-charts 10 --stages 1
+
+  # Generate 5 of each type with both original and bbox images
+  python main.py --input generated_metadata.json --output ./out --num-charts 5 --stages 01
+
+  # Bar charts only, 20 chart-QA sets
+  python main.py --input generated_metadata.json --chart-types bar --num-charts 20 --stages 1
+
+  # Full options
+  python main.py --input generated_metadata.json --output ./data --num-charts 10 \\
+      --stages 01 --num-questions 15 --figsize 12,8
 
 Stages:
-  0: Generate masked chart images
-  1: Generate original chart images  
-  2/3: Generate mask files
+  0: bbox images (highlighted regions)
+  1: original chart images
         """
     )
-    
+
+    # Required / core options
     parser.add_argument(
-        "--chart-type",
+        "--input", "-i",
         type=str,
-        default="bar",
-        choices=["bar", "pie"],
-        help="Type of chart to generate (default: bar)"
+        default="generated_metadata.json",
+        help="Input metadata JSON file (e.g. generated_metadata.json). (default: generated_metadata.json)"
     )
-    
+    parser.add_argument(
+        "--output", "-o",
+        type=str,
+        default="./data",
+        help="Output directory for charts and QA data (default: ./data)"
+    )
+    parser.add_argument(
+        "--num-charts", "-n",
+        type=int,
+        default=10,
+        help="Number of chart-QA sets to generate per chart type (default: 10). With bar+pie this yields 2*num-charts total."
+    )
     parser.add_argument(
         "--stages",
         type=str,
-        default="0123",
-        help="Comma-separated or concatenated stage numbers to run (default: 0123 = all stages). "
-             "Valid stages: 0 (masked images), 1 (original images), 2/3 (mask generation)"
+        default="1",
+        help="Stages to run: '0'=bbox images, '1'=original images. Use '0', '1', or '01' (default: 1)"
     )
-    
     parser.add_argument(
-        "--data-path",
+        "--chart-types",
         type=str,
-        default="./data",
-        help="Base path for saving generated data (default: ./data)"
+        nargs="+",
+        choices=["bar", "pie"],
+        default=["bar", "pie"],
+        help="Chart types to generate (default: bar pie)"
     )
-    
+
+    # Chart/QA parameters (forwarded to bar and pie pipelines)
     parser.add_argument(
-        "--chart-mode",
-        type=str,
-        default="single",
-        help="Mode of chart generation (default: single)"
+        "--num-questions",
+        type=int,
+        default=20,
+        help="Number of questions per chart (default: 20)"
     )
-    
+    parser.add_argument(
+        "--random-seed",
+        type=int,
+        default=42,
+        help="Random seed (default: 42)"
+    )
     parser.add_argument(
         "--figsize",
         type=str,
         default="10,6",
-        help="Figure size as 'width,height' (default: 10,6)"
+        help="Figure size as width,height (default: 10,6)"
     )
-    
     parser.add_argument(
         "--gray-mask",
         type=str,
         default="#CCCCCC",
-        help="Gray color code for masking (default: #CCCCCC)"
+        help="Gray color for masking (default: #CCCCCC)"
     )
-    
+    parser.add_argument(
+        "--bbox-color",
+        type=str,
+        default="#FF0000",
+        help="Bounding box color (default: #FF0000)"
+    )
+    parser.add_argument(
+        "--composition-types",
+        type=str,
+        nargs="+",
+        choices=["one_step", "parallel", "nested"],
+        default=None,
+        help="QA composition types (bar only). Default: all. (one_step, parallel, nested)"
+    )
+
     args = parser.parse_args()
-    
-    # Parse and validate stages
+
+    # Validate input file
+    input_path = Path(args.input)
+    if not input_path.is_file():
+        logger.error(f"Input file not found: {input_path}")
+        logger.error("Use --input to point to a generated metadata JSON (e.g. generated_metadata.json).")
+        sys.exit(1)
+
+    # Parse stages
     try:
-        construction_subtask = parse_stages(args.stages)
+        stages = parse_stages(args.stages)
     except ValueError as e:
-        logger.error(f"Invalid stages: {e}")
+        logger.error(str(e))
         sys.exit(1)
-    
-    # Parse figure size
+
+    # Parse figsize
     try:
-        figsize_parts = args.figsize.split(",")
-        if len(figsize_parts) != 2:
-            raise ValueError("Figure size must be in format 'width,height'")
-        global_figsize = (float(figsize_parts[0]), float(figsize_parts[1]))
-    except (ValueError, IndexError) as e:
-        logger.error(f"Invalid figure size format: {e}. Expected format: 'width,height'")
+        figsize = parse_figsize(args.figsize)
+    except ValueError as e:
+        logger.error(f"Invalid --figsize: {e}")
         sys.exit(1)
-    
-    # Create configuration object
-    config = ChartGenerationArgs(
-        chart_type=args.chart_type,
-        chart_mode=args.chart_mode,
-        data_path=args.data_path,
-        construction_subtask=construction_subtask,
-        global_figsize=global_figsize,
-        gray_mask=args.gray_mask
-    )
-    
-    # Log configuration
-    logger.info("=" * 100)
-    logger.info("Chart Generation Configuration")
-    logger.info("=" * 100)
-    logger.info(f"Chart Type: {config.chart_type}")
-    logger.info(f"Chart Mode: {config.chart_mode}")
-    logger.info(f"Data Path: {config.data_path}")
-    logger.info(f"Stages: {config.construction_subtask}")
-    logger.info(f"Figure Size: {config.global_figsize}")
-    logger.info(f"Gray Mask: {config.gray_mask}")
-    logger.info("=" * 100)
-    
-    try:
-        # Get appropriate chart generator
-        generator = get_chart_generator(config.chart_type, config)
-        
-        # Run the generation pipeline
-        logger.info(f"Starting {config.chart_type} chart generation...")
-        generator.run_draw_single_figure()
-        
-        logger.info("=" * 100)
-        logger.info("Chart generation completed successfully!")
-        logger.info("=" * 100)
-        
-    except Exception as e:
-        logger.error(f"Error during chart generation: {e}", exc_info=True)
-        sys.exit(1)
+
+    # Resolve paths
+    output_dir = str(Path(args.output).resolve())
+    input_abs = str(input_path.resolve())
+
+    logger.info("=" * 80)
+    logger.info("Chart Generation (Bar + Pie from generated metadata)")
+    logger.info("=" * 80)
+    logger.info(f"Input file:    {input_abs}")
+    logger.info(f"Output dir:   {output_dir}")
+    logger.info(f"Num charts:   {args.num_charts} per chart type")
+    logger.info(f"Chart types:  {args.chart_types}")
+    logger.info(f"Stages:       {stages} (0=bbox, 1=original)")
+    logger.info(f"Num questions per chart: {args.num_questions}")
+    logger.info(f"Random seed:  {args.random_seed}")
+    logger.info(f"Figsize:      {figsize}")
+    logger.info("=" * 80)
+
+    chart_types = list(dict.fromkeys(args.chart_types))  # preserve order, no dupes
+
+    for chart_type in chart_types:
+        try:
+            run_args = build_args_for_chart_type(
+                chart_type=chart_type,
+                input_path=input_abs,
+                output_dir=output_dir,
+                num_charts=args.num_charts,
+                stages=stages,
+                num_questions=args.num_questions,
+                random_seed=args.random_seed,
+                figsize=figsize,
+                gray_mask=args.gray_mask,
+                bbox_color=args.bbox_color,
+                composition_types=args.composition_types,
+            )
+            if chart_type == "bar":
+                generator = BarChartRunDraw(run_args)
+            else:
+                generator = PieChartRunDraw(run_args)
+            logger.info(f"Running {chart_type} chart generation ({args.num_charts} chart-QA sets)...")
+            generator.run_draw_single_figure()
+            logger.info(f"{chart_type} chart generation completed.")
+        except FileNotFoundError as e:
+            logger.error(f"{chart_type}: {e}")
+            sys.exit(1)
+        except Exception as e:
+            logger.error(f"{chart_type} generation failed: {e}", exc_info=True)
+            sys.exit(1)
+
+    logger.info("=" * 80)
+    logger.info("All chart generation completed successfully.")
+    logger.info("=" * 80)
 
 
 if __name__ == "__main__":

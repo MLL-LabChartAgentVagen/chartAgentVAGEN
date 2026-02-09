@@ -27,6 +27,73 @@ from utils.logger import logger
 from utils.json_util import read_from_json
 
 
+def _horizontal_x_labels_would_overlap(bar_labels: List) -> bool:
+    """Return True if horizontal x-axis labels would likely overlap (vertical bar chart)."""
+    if not bar_labels:
+        return False
+    n = len(bar_labels)
+    max_len = max(len(s) for s in bar_labels)
+    avg_len = sum(len(s) for s in bar_labels) / n
+    # Many bars or long labels: horizontal would overlap
+    if n >= 7:
+        return True
+    if n >= 5 and (max_len > 18 or avg_len > 12):
+        return True
+    if max_len > 28:
+        return True
+    return False
+
+
+def _x_tick_fontsize(bar_labels: List, label_angle: int) -> int:
+    """Return font size for x-axis tick labels so they don't overlap (horizontal or vertical only)."""
+    n = len(bar_labels)
+    if label_angle == 90:
+        # Vertical text: little overlap risk; use consistent size
+        return 9
+    # Horizontal text: reduce font when many bars so labels don't overlap
+    if n >= 10:
+        return 6
+    if n >= 8:
+        return 7
+    return 9
+
+
+def _y_tick_fontsize(bar_labels: List) -> int:
+    """Return font size for y-axis tick labels (horizontal bar charts) so they don't overlap."""
+    n = len(bar_labels)
+    if n >= 10:
+        return 7
+    if n >= 8:
+        return 8
+    return 10
+
+
+def _apply_bar_chart_layout(ax, horizontal: bool, bar_data: List, bar_labels: List,
+                            label_angle: int, change_x_axis_pos: bool, img_title: str):
+    """
+    Apply layout to prevent text overlap: title padding, axis limits for value labels,
+    margins for tick labels, and tick padding. Labels are horizontal (0) or vertical (90) only.
+    """
+    data_max = max(bar_data) if bar_data else 1
+
+    if horizontal:
+        # Horizontal bars: add right margin so value labels don't overlap y-axis labels
+        ax.set_xlim(left=0, right=max(data_max * 1.28, data_max + 0.1))
+        ax.tick_params(axis='y', pad=10)
+    else:
+        # Vertical bars: add top headroom so value labels above bars don't overlap
+        ax.set_ylim(bottom=0, top=max(data_max * 1.25, data_max + 0.1))
+        ax.tick_params(axis='x', pad=12)
+        # Margin for x-axis labels: more space for horizontal labels to avoid overlap
+        if label_angle == 0:
+            plt.subplots_adjust(bottom=0.42, top=0.90)
+        else:
+            plt.subplots_adjust(bottom=0.28, top=0.90)
+
+    # Title padding so title never overlaps axis or axis label
+    ax.set_title(img_title, fontsize=16, pad=18)
+
+
 def _place_legend_outside(ax, bars, bar_labels, change_x_axis_pos, change_y_axis_pos, horizontal):
     """
     Place legend outside the plot area to prevent overlap with chart content.
@@ -205,19 +272,17 @@ def draw__1_bar__func_1(
         # Vertical bars (categories on x-axis, values on y-axis)
         bars = ax.bar(positions, bar_data, color=bar_colors)
     
-    # Add text labels on bars
+    # Add text labels on bars (offset to avoid overlap with bars and axis labels)
     if show_text_label:
         for i, bar in enumerate(bars):
             if horizontal:
-                # For horizontal bars, text is to the right of the bar end
-                x_pos = bar.get_width() * 1.01
+                x_pos = bar.get_width() * 1.04
                 y_pos = bar.get_y() + bar.get_height() / 2
-                ax.text(x_pos, y_pos, f'{bar_data[i]}', va='center')
+                ax.text(x_pos, y_pos, f'{bar_data[i]}', va='center', fontsize=10)
             else:
-                # For vertical bars, text is above the bar
                 x_pos = bar.get_x() + bar.get_width() / 2
-                y_pos = bar.get_height() * 1.01
-                ax.text(x_pos, y_pos, f'{bar_data[i]}', ha='center')
+                y_pos = bar.get_height() * 1.03
+                ax.text(x_pos, y_pos, f'{bar_data[i]}', ha='center', va='bottom', fontsize=10)
     
     # Set the position of the axes
     if change_x_axis_pos:
@@ -228,27 +293,23 @@ def draw__1_bar__func_1(
         ax.yaxis.set_ticks_position('right')
         ax.yaxis.set_label_position('right')
     
-    # Set labels and title
-    # When horizontal=True, we need to swap the axis labels
+    # Set labels (title and layout via helper to avoid overlap)
     if horizontal:
-        ax.set_xlabel(y_label, fontsize=13)  # X-axis gets the original y_label
-        ax.set_ylabel(x_label, fontsize=13)  # Y-axis gets the original x_label
+        ax.set_xlabel(y_label, fontsize=13)
+        ax.set_ylabel(x_label, fontsize=13)
     else:
         ax.set_xlabel(x_label, fontsize=13)
         ax.set_ylabel(y_label, fontsize=13)
-    ax.set_title(img_title, fontsize=16)
     
-    # Set the tick labels based on orientation
     if horizontal:
-        # For horizontal bars, categories are on y-axis
         ax.set_yticks(positions)
-        ax.set_yticklabels(bar_labels)
+        ax.set_yticklabels(bar_labels, fontsize=_y_tick_fontsize(bar_labels))
     else:
-        # For vertical bars, categories are on x-axis
         ax.set_xticks(positions)
         ha_config = 'left' if change_x_axis_pos else 'right'
-        ax.set_xticklabels(bar_labels, rotation=label_angle, ha=ha_config)
-        plt.subplots_adjust(bottom=0.2)  # Add more space for rotated labels
+        ax.set_xticklabels(bar_labels, rotation=label_angle, ha=ha_config, fontsize=_x_tick_fontsize(bar_labels, label_angle))
+    
+    _apply_bar_chart_layout(ax, horizontal, bar_data, bar_labels, label_angle, change_x_axis_pos, img_title)
     
     # Add legend outside plot area to prevent overlap
     if show_legend:
@@ -342,58 +403,46 @@ def draw__1_bar__func_1__mask(
     
     # Draw bars based on orientation with masked colors
     if horizontal:
-        # Horizontal bars (categories on y-axis, values on x-axis)
         bars = ax.barh(positions, bar_data, color=masked_colors)
     else:
-        # Vertical bars (categories on x-axis, values on y-axis)
         bars = ax.bar(positions, bar_data, color=masked_colors)
     
-    # Add text labels on bars
+    # Add text labels on bars (offset to avoid overlap)
     if show_text_label:
         for i, bar in enumerate(bars):
             if horizontal:
-                # For horizontal bars, text is to the right of the bar end
-                x_pos = bar.get_width() * 1.01
+                x_pos = bar.get_width() * 1.04
                 y_pos = bar.get_y() + bar.get_height() / 2
-                ax.text(x_pos, y_pos, f'{bar_data[i]}', va='center')
+                ax.text(x_pos, y_pos, f'{bar_data[i]}', va='center', fontsize=10)
             else:
-                # For vertical bars, text is above the bar
                 x_pos = bar.get_x() + bar.get_width() / 2
-                y_pos = bar.get_height() * 1.01
-                ax.text(x_pos, y_pos, f'{bar_data[i]}', ha='center')
+                y_pos = bar.get_height() * 1.03
+                ax.text(x_pos, y_pos, f'{bar_data[i]}', ha='center', va='bottom', fontsize=10)
     
-    # Set the position of the axes
     if change_x_axis_pos:
         ax.xaxis.set_ticks_position('top')
         ax.xaxis.set_label_position('top')
-    
     if change_y_axis_pos:
         ax.yaxis.set_ticks_position('right')
         ax.yaxis.set_label_position('right')
     
-    # Set labels and title
-    # When horizontal=True, we need to swap the axis labels
     if horizontal:
-        ax.set_xlabel(y_label, fontsize=13)  # X-axis gets the original y_label
-        ax.set_ylabel(x_label, fontsize=13)  # Y-axis gets the original x_label
+        ax.set_xlabel(y_label, fontsize=13)
+        ax.set_ylabel(x_label, fontsize=13)
     else:
         ax.set_xlabel(x_label, fontsize=13)
         ax.set_ylabel(y_label, fontsize=13)
-    ax.set_title(img_title, fontsize=16)
     
-    # Set the tick labels based on orientation
     if horizontal:
-        # For horizontal bars, categories are on y-axis
         ax.set_yticks(positions)
-        ax.set_yticklabels(bar_labels)
+        ax.set_yticklabels(bar_labels, fontsize=_y_tick_fontsize(bar_labels))
     else:
-        # For vertical bars, categories are on x-axis
         ax.set_xticks(positions)
         ha_config = 'left' if change_x_axis_pos else 'right'
-        ax.set_xticklabels(bar_labels, rotation=label_angle, ha=ha_config)
-        plt.subplots_adjust(bottom=0.2)  # Add more space for rotated labels
+        ax.set_xticklabels(bar_labels, rotation=label_angle, ha=ha_config, fontsize=_x_tick_fontsize(bar_labels, label_angle))
     
-    # Add legend outside plot area to prevent overlap
+    _apply_bar_chart_layout(ax, horizontal, bar_data, bar_labels, label_angle, change_x_axis_pos, img_title)
+    
     legend = None
     if show_legend:
         legend = _place_legend_outside(ax, bars, bar_labels, change_x_axis_pos, change_y_axis_pos, horizontal)
@@ -520,66 +569,52 @@ def draw__1_bar__func_1__bbox(
     
     # Draw bars based on orientation
     if horizontal:
-        # Horizontal bars (categories on y-axis, values on x-axis)
         bars = ax.barh(positions, bar_data, color=bar_colors)
     else:
-        # Vertical bars (categories on x-axis, values on y-axis)
         bars = ax.bar(positions, bar_data, color=bar_colors)
     
-    # Add text labels on bars
+    # Add text labels on bars (offset to avoid overlap)
     if show_text_label:
         for i, bar in enumerate(bars):
             if horizontal:
-                # For horizontal bars, text is to the right of the bar end
-                x_pos = bar.get_width() * 1.01
+                x_pos = bar.get_width() * 1.04
                 y_pos = bar.get_y() + bar.get_height() / 2
-                ax.text(x_pos, y_pos, f'{bar_data[i]}', va='center')
+                ax.text(x_pos, y_pos, f'{bar_data[i]}', va='center', fontsize=10)
             else:
-                # For vertical bars, text is above the bar
                 x_pos = bar.get_x() + bar.get_width() / 2
-                y_pos = bar.get_height() * 1.01
-                ax.text(x_pos, y_pos, f'{bar_data[i]}', ha='center')
+                y_pos = bar.get_height() * 1.03
+                ax.text(x_pos, y_pos, f'{bar_data[i]}', ha='center', va='bottom', fontsize=10)
     
-    # Set the position of the axes
     if change_x_axis_pos:
         ax.xaxis.set_ticks_position('top')
         ax.xaxis.set_label_position('top')
-    
     if change_y_axis_pos:
         ax.yaxis.set_ticks_position('right')
         ax.yaxis.set_label_position('right')
     
-    # Set labels and title
-    # When horizontal=True, we need to swap the axis labels
     if horizontal:
-        ax.set_xlabel(y_label, fontsize=13)  # X-axis gets the original y_label
-        ax.set_ylabel(x_label, fontsize=13)  # Y-axis gets the original x_label
+        ax.set_xlabel(y_label, fontsize=13)
+        ax.set_ylabel(x_label, fontsize=13)
     else:
         ax.set_xlabel(x_label, fontsize=13)
         ax.set_ylabel(y_label, fontsize=13)
-    ax.set_title(img_title, fontsize=16)
     
-    # Set the tick labels based on orientation
     if horizontal:
-        # For horizontal bars, categories are on y-axis
         ax.set_yticks(positions)
-        ax.set_yticklabels(bar_labels)
+        ax.set_yticklabels(bar_labels, fontsize=_y_tick_fontsize(bar_labels))
     else:
-        # For vertical bars, categories are on x-axis
         ax.set_xticks(positions)
         ha_config = 'left' if change_x_axis_pos else 'right'
-        ax.set_xticklabels(bar_labels, rotation=label_angle, ha=ha_config)
-        plt.subplots_adjust(bottom=0.2)  # Add more space for rotated labels
+        ax.set_xticklabels(bar_labels, rotation=label_angle, ha=ha_config, fontsize=_x_tick_fontsize(bar_labels, label_angle))
     
-    # Add legend outside plot area to prevent overlap
+    _apply_bar_chart_layout(ax, horizontal, bar_data, bar_labels, label_angle, change_x_axis_pos, img_title)
+    
     legend = None
     if show_legend:
         legend = _place_legend_outside(ax, bars, bar_labels, change_x_axis_pos, change_y_axis_pos, horizontal)
     else:
-        # Adjust layout only if no legend
         plt.tight_layout()
     
-    # Dictionary to store bounding box coordinates
     bbox_coords = {}
     
     # Draw bounding boxes around relevant bars
@@ -625,8 +660,8 @@ def draw__1_bar__func_1__bbox(
                     transform=fig.transFigure,
                     fill=False,
                     edgecolor=bbox_color,
-                    linewidth=3,
-                    linestyle='--',
+                    linewidth=1,
+                    linestyle='-',
                     zorder=100
                 )
                 fig.patches.append(rect)
@@ -654,8 +689,8 @@ def draw__1_bar__func_1__bbox(
                         transform=fig.transFigure,
                         fill=False,
                         edgecolor=bbox_color,
-                        linewidth=2,
-                        linestyle='--',
+                        linewidth=1,
+                        linestyle='-',
                         zorder=101
                     )
                     fig.patches.append(text_rect)
@@ -681,18 +716,20 @@ def draw__1_bar__func_1__bbox(
                     label_bbox = label.get_window_extent(renderer=renderer)
                     label_bbox_fig = label_bbox.transformed(fig.transFigure.inverted())
                     
-                    # Draw bounding box around label
+                    # Draw bounding box around label (axis-aligned so it always draws reliably)
                     padding_x = 0.01 if not horizontal else 0.005
                     padding_y = 0.01 if not horizontal else 0.005
-                    
+                    lx0 = label_bbox_fig.x0 - padding_x
+                    ly0 = label_bbox_fig.y0 - padding_y
+                    lw = label_bbox_fig.width + (padding_x * 2)
+                    lh = label_bbox_fig.height + (padding_y * 2)
                     label_rect = plt.Rectangle(
-                        (label_bbox_fig.x0 - padding_x, label_bbox_fig.y0 - padding_y),
-                        label_bbox_fig.width + (padding_x * 2), label_bbox_fig.height + (padding_y * 2),
+                        (lx0, ly0), lw, lh,
                         transform=fig.transFigure,
                         fill=False,
                         edgecolor=bbox_color,
-                        linewidth=2,
-                        linestyle='--',
+                        linewidth=1,
+                        linestyle='-',
                         zorder=101
                     )
                     fig.patches.append(label_rect)
@@ -785,63 +822,50 @@ def draw__1_bar__func_1__axis_mask(
     
     # Draw bars based on orientation
     if horizontal:
-        # Horizontal bars (categories on y-axis, values on x-axis)
         bars = ax.barh(positions, bar_data, color=bar_colors)
     else:
-        # Vertical bars (categories on x-axis, values on y-axis)
         bars = ax.bar(positions, bar_data, color=bar_colors)
     
-    # Add text labels on bars
+    # Add text labels on bars (offset to avoid overlap)
     if show_text_label:
         for i, bar in enumerate(bars):
             if horizontal:
-                # For horizontal bars, text is to the right of the bar end
-                x_pos = bar.get_width() * 1.01
+                x_pos = bar.get_width() * 1.04
                 y_pos = bar.get_y() + bar.get_height() / 2
-                ax.text(x_pos, y_pos, f'{bar_data[i]}', va='center')
+                ax.text(x_pos, y_pos, f'{bar_data[i]}', va='center', fontsize=10)
             else:
-                # For vertical bars, text is above the bar
                 x_pos = bar.get_x() + bar.get_width() / 2
-                y_pos = bar.get_height() * 1.01
-                ax.text(x_pos, y_pos, f'{bar_data[i]}', ha='center')
+                y_pos = bar.get_height() * 1.03
+                ax.text(x_pos, y_pos, f'{bar_data[i]}', ha='center', va='bottom', fontsize=10)
     
-    # Set the position of the axes
     if change_x_axis_pos:
         ax.xaxis.set_ticks_position('top')
         ax.xaxis.set_label_position('top')
-    
     if change_y_axis_pos:
         ax.yaxis.set_ticks_position('right')
         ax.yaxis.set_label_position('right')
     
-    # Set labels and title
-    # When horizontal=True, we need to swap the axis labels
     if horizontal:
-        ax.set_xlabel(y_label, fontsize=13)  # X-axis gets the original y_label
-        ax.set_ylabel(x_label, fontsize=13)  # Y-axis gets the original x_label
+        ax.set_xlabel(y_label, fontsize=13)
+        ax.set_ylabel(x_label, fontsize=13)
     else:
         ax.set_xlabel(x_label, fontsize=13)
         ax.set_ylabel(y_label, fontsize=13)
-    ax.set_title(img_title, fontsize=16)
     
-    # Set the tick labels based on orientation
     if horizontal:
-        # For horizontal bars, categories are on y-axis
         ax.set_yticks(positions)
-        ax.set_yticklabels(bar_labels)
+        ax.set_yticklabels(bar_labels, fontsize=_y_tick_fontsize(bar_labels))
     else:
-        # For vertical bars, categories are on x-axis
         ax.set_xticks(positions)
         ha_config = 'left' if change_x_axis_pos else 'right'
-        ax.set_xticklabels(bar_labels, rotation=label_angle, ha=ha_config)
-        plt.subplots_adjust(bottom=0.2)  # Add more space for rotated labels
+        ax.set_xticklabels(bar_labels, rotation=label_angle, ha=ha_config, fontsize=_x_tick_fontsize(bar_labels, label_angle))
     
-    # Add legend outside plot area to prevent overlap
+    _apply_bar_chart_layout(ax, horizontal, bar_data, bar_labels, label_angle, change_x_axis_pos, img_title)
+    
     legend = None
     if show_legend:
         legend = _place_legend_outside(ax, bars, bar_labels, change_x_axis_pos, change_y_axis_pos, horizontal)
     else:
-        # Adjust layout only if no legend
         plt.tight_layout()
     
     # Apply axis masking
@@ -979,6 +1003,10 @@ def load_metadata(metadata_path: Optional[str] = None) -> Dict:
     """
     Load metadata from a custom JSON file or use default METADATA_BAR.
     
+    Supports two JSON formats:
+    1. Standard format: {func_id: {category_id: [chart_entry, ...]}}
+    2. Generated format: [{category_id, category_name, chart_entries: {bar, pie, scatter}}, ...]
+    
     Args:
         metadata_path: Optional path to a custom metadata JSON file.
                       If None, uses the default METADATA_BAR from metadata.metadata.
@@ -1005,10 +1033,61 @@ def load_metadata(metadata_path: Optional[str] = None) -> Dict:
         )
     
     with open(metadata_path, 'r', encoding='utf-8') as f:
-        metadata = json.load(f)
+        raw_data = json.load(f)
+    
+    # Check if it's the generated format (array of category objects)
+    if isinstance(raw_data, list) and len(raw_data) > 0 and isinstance(raw_data[0], dict) and 'chart_entries' in raw_data[0]:
+        # Transform from generated format to expected format
+        logger.info(f"Detected generated metadata format, transforming to standard format...")
+        metadata = _transform_generated_metadata(raw_data, chart_type='bar')
+        logger.info(f"Transformed {len(raw_data)} categories from generated format")
+    else:
+        # Assume it's already in the standard format
+        metadata = raw_data
     
     logger.info(f"Loaded custom metadata from: {metadata_path}")
     return metadata
+
+
+def _transform_generated_metadata(generated_data: List[Dict], chart_type: str = 'bar') -> Dict:
+    """
+    Transform generated metadata format to standard metadata format.
+    
+    Generated format: [{category_id, category_name, chart_entries: {bar, pie, scatter}}, ...]
+    Standard format: {func_id: {category_name: [chart_entry, ...]}}
+    
+    Args:
+        generated_data: List of category objects with chart_entries
+        chart_type: Type of chart to extract ('bar', 'pie', 'scatter')
+    
+    Returns:
+        Dictionary in standard metadata format
+    """
+    # Map chart types to function IDs
+    func_id_map = {
+        'bar': 'draw__1_bar__func_1',
+        'pie': 'draw__8_pie__func_1',
+        'scatter': 'draw__2_scatter__func_1'  # Assuming scatter uses this func_id
+    }
+    
+    func_id = func_id_map.get(chart_type, f'draw__1_{chart_type}__func_1')
+    result = {func_id: {}}
+    
+    for category_obj in generated_data:
+        category_name = category_obj.get('category_name', f"{category_obj.get('category_id', 'Unknown')} - Unknown")
+        chart_entries = category_obj.get('chart_entries', {})
+        
+        # Extract the chart type entry
+        chart_entry = chart_entries.get(chart_type)
+        if chart_entry:
+            # Initialize category if it doesn't exist
+            if category_name not in result[func_id]:
+                result[func_id][category_name] = []
+            
+            # Add the chart entry
+            result[func_id][category_name].append(chart_entry)
+    
+    return result
 
 
 def collect_all_chart_entries(metadata: Dict) -> List[tuple]:
@@ -1179,8 +1258,13 @@ class BarChartRunDraw(RunDraw):
             x_axis_pos = entry_rng.choice(["xtop", "xbottom"])
             y_axis_pos = entry_rng.choice(["yleft", "yright"])
             show_legend = entry_rng.choice(["w_legend"])  # Can be extended to ["w_legend", "wo_legend"] if needed
-            label_angle = entry_rng.choice([30, 45, 60, 90])
-            
+            # Vertical bar chart: use vertical labels (90) when horizontal would overlap; else horizontal (0)
+            # Horizontal bar chart: category labels are on y-axis, use 0 for chart_id consistency
+            if chart_direction == "vertical":
+                label_angle = 90 if _horizontal_x_labels_would_overlap(chart_entry["bar_labels"]) else 0
+            else:
+                label_angle = 0
+
             chart_id = f"{self.args.chart_type}__img_{chart_idx}__category{category_id.split(' ')[0]}__angle{label_angle}__{chart_direction}__{show_label}__{show_legend}__{x_axis_pos}__{y_axis_pos}"
             chart_entry["chart_direction"] = chart_direction
             logger.info(
