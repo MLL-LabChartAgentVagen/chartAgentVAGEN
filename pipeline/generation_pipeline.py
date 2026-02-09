@@ -8,8 +8,13 @@ with RL-Ready outputs (Chain-of-Thought traces + Hard Negatives).
 Architecture: LangGraph-style sequential workflow
 LLM Backend: Google Gemini (gemini-1.5-pro / gemini-2.0-flash)
 
+Pipeline Nodes:
+- Node A: Topic Generation
+- Node B: Data Fabrication
+- Node C: Schema Mapping + Caption Generation (combined)
+
 Author: ChartAgentVAGEN Team
-Version: 1.0.0
+Version: 1.0.1
 """
 
 import json
@@ -156,6 +161,48 @@ PROMPT_NODE_A_TOPIC_AGENT = """You are a Topic Generation Agent for a chart data
 ## Your Role
 Generate diverse, realistic topics for data visualization WITHIN the assigned category.
 
+## CRITICAL: Autonomous Diversity Strategy
+
+To avoid model collapse and ensure maximum diversity, YOU MUST autonomously vary these dimensions:
+
+1. **Scale Dimension**: 
+   - Micro: Individual items, specific products, single entities
+   - Meso: Cities, companies, categories
+   - Macro: Countries, industries, global comparisons
+   - Meta: Cross-domain, abstract metrics
+
+2. **Temporal Dimension**:
+   - Historical: Pre-2010, decade-specific analysis
+   - Current: 2020-2025, recent trends
+   - Projected: Future predictions, forecasts
+   - Timeless: Universal patterns, non-temporal data
+
+3. **Geographic Scope**:
+   - Local: City-level, regional
+   - National: Country-specific
+   - International: Cross-country comparisons
+   - Global: Worldwide aggregates
+
+4. **Specificity Level**:
+   - Mainstream: Well-known entities, popular topics
+   - Specialized: Industry-specific, technical domains
+   - Niche: Obscure but valid topics, emerging areas
+   - Cross-disciplinary: Unexpected combinations
+
+5. **Metric Types**:
+   - Counts: Absolute numbers, quantities
+   - Rates: Percentages, ratios, per-capita
+   - Monetary: Revenue, costs, valuations
+   - Physical: Weights, distances, volumes
+   - Temporal: Durations, frequencies
+
+**For EACH generation**: Consciously select a DIFFERENT combination of these dimensions to create unique topics within the assigned category.
+
+**Example Variations Within "Media & Entertainment"**:
+- Micro + Current + Niche: "Average watch time of vertical short-form videos by creator tier (2024)"
+- Macro + Historical + Mainstream: "Global box office revenue by film genre (2010-2020)"
+- Meso + Projected + Specialized: "Podcast advertising revenue projections by category (2025-2027)"
+
 ## Assigned Category (User-Specified)
 **{category_name}** (ID: {category_id})
 
@@ -221,6 +268,79 @@ PROMPT_NODE_B_DATA_FABRICATOR = """You are a Statistical Data Fabrication Agent 
 
 ## Your Role
 Generate "Master Data" - raw numbers and entities that will be transformed into multiple chart formats.
+
+## CRITICAL: Statistical Diversity to Prevent Model Collapse
+
+For EACH data generation, autonomously select a DIFFERENT statistical pattern by consciously choosing ONE option from each category below:
+
+### 1. Distribution Type Selection
+Choose ONE distribution type that fits the domain:
+
+- **Normal Distribution** (bell curve):
+  - Use when: Natural variation around a typical value
+  - Pattern: Most values cluster around mean ± 1 standard deviation
+  - Example: Test scores, heights, measurement errors
+
+- **Power Law Distribution** (long tail):
+  - Use when: "Winner takes all" or popularity dynamics
+  - Pattern: Few dominant values, many small values (80-20 rule)
+  - Example: Social media followers, city populations, wealth
+
+- **Bimodal Distribution** (two peaks):
+  - Use when: Two distinct groups or categories exist
+  - Pattern: Two separate clusters with different means
+  - Example: Budget vs premium products, two market segments
+
+- **Uniform with Outliers**:
+  - Use when: Relatively even competition with exceptions
+  - Pattern: Values spread evenly with 1-2 exceptional cases
+  - Example: Sports team performance with one dominant team
+
+- **Exponential Decay** (rapid drop-off):
+  - Use when: Ranked data with sharp decline
+  - Pattern: #1 much higher than #2, #2 > #3, etc.
+  - Example: Market share rankings, app download rankings
+
+### 2. Value Range Strategy
+Vary the order of magnitude and precision:
+
+- **Scale Options**: tens (10-99), hundreds (100-999), thousands (1K-999K), millions (1M+), decimals (0.1-9.9)
+- **Precision Options**: integers, 1 decimal, 2 decimals, 3 decimals, scientific notation
+- **Sign**: positive only, mix of positive/negative, percentage (-100% to +100%)
+
+### 3. Correlation Pattern (for scatter plots)
+Select correlation strength between primary and secondary values:
+
+- **Strong Positive** (r = 0.7 to 0.9): Clear upward trend
+- **Moderate Positive** (r = 0.4 to 0.6): Visible but noisy relationship  
+- **Weak/None** (r = -0.2 to 0.2): Scattered, no clear pattern
+- **Negative** (r = -0.5 to -0.8): Inverse relationship
+- **Non-linear**: Logarithmic, exponential, or U-shaped patterns
+
+### 4. Entity Configuration
+Vary the dataset structure:
+
+- **Entity Count**: Choose 8, 10, 12, or 15 entities
+- **Naming Style**: Formal names, abbreviations, descriptive labels, mixed
+- **Geographic Mix**: Single region, multi-regional, international spread
+
+### 5. Outlier Strategy
+Decide on exceptional cases:
+
+- **No outliers**: All values within expected range (±2σ from mean)
+- **Single outlier**: One value 2-5x the median
+- **Multiple outliers**: 2-3 values with varying degrees (1.5x, 3x, 5x median)
+- **Negative outlier**: Exceptionally low value in otherwise high dataset
+
+### 6. Decimal Precision & Realism
+Match precision to domain:
+
+- Financial data: 2 decimals (e.g., $1,234.56)
+- Scientific metrics: 3-4 decimals (e.g., 98.7654)
+- Counts/rankings: integers (e.g., 1,234)
+- Percentages: 1-2 decimals (e.g., 23.4%)
+
+**IMPORTANT**: Due to temperature > 1.0, your sampling process will naturally produce varied outputs. Consciously leverage this to explore different statistical patterns in each generation.
 
 ## Input Context
 Category: {category_name}
@@ -342,10 +462,37 @@ Take Master Data and produce valid metadata dictionaries for BAR, SCATTER, and P
 ```
 
 ## Color Palette Guidelines
-Use visually distinct, accessible colors. Suggested palettes:
-- Categorical: ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#8884D8", "#82CA9D", "#FFC658", "#FF6B9D", "#4ECDC4", "#45B7D1", "#96CEB4", "#FFEAA7"]
-- Sequential warm: ["#FFF5F0", "#FEE0D2", "#FCBBA1", "#FC9272", "#FB6A4A", "#EF3B2C", "#CB181D", "#A50F15", "#67000D"]
-- Branded (if applicable): Match known brand colors for recognizable entities
+
+**IMPORTANT**: Use visually distinct colors that vary across generations.
+
+### Color Selection Strategy (vary each time):
+
+1. **Vibrant Palette** (high saturation):
+   - ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#8884D8", "#82CA9D", "#FFC658", "#FF6B9D"]
+
+2. **Professional Palette** (muted, business):
+   - ["#2E4057", "#048A81", "#54C6EB", "#F18F01", "#C73E1D", "#6A994E", "#BC4B51", "#5A189A"]
+
+3. **Pastel Palette** (soft, light):
+   - ["#B4E7CE", "#FFE5B4", "#FFC8DD", "#CAF0F8", "#E0BBE4", "#FFDAB9", "#C5E1A5", "#B39DDB"]
+
+4. **Earth Tones** (natural, warm):
+   - ["#8B4513", "#A0522D", "#CD853F", "#DEB887", "#F4A460", "#BC8F8F", "#DAA520", "#CD5C5C"]
+
+5. **Neon/Bold** (high contrast):
+   - ["#FF006E", "#FB5607", "#FFBE0B", "#8338EC", "#3A86FF", "#06FFA5", "#FF006A", "#7209B7"]
+
+6. **Cool Tones** (blues and greens):
+   - ["#03045E", "#0077B6", "#00B4D8", "#90E0EF", "#06D6A0", "#073B4C", "#118AB2", "#06FFA5"]
+
+7. **Warm Tones** (reds and oranges):
+   - ["#9B2226", "#AE2012", "#BB3E03", "#CA6702", "#EE9B00", "#E9D8A6", "#94D2BD", "#005F73"]
+
+**Instructions**:
+- For each generation, mentally rotate through palette styles (1→2→3→...→7→1)
+- Due to temperature > 0.9, your selection will naturally vary
+- Ensure adjacent colors have sufficient contrast (avoid similar hues next to each other)
+- For branded entities (e.g., Netflix, Spotify), you may use their actual brand colors
 
 ## Scatter Size Calculation
 scatter_sizes = [tertiary_value * scaling_factor for each entity]
@@ -381,6 +528,35 @@ Chart Type: {chart_type}
 Metadata: {chart_metadata_json}
 
 ## Output Specifications
+
+## Caption Style Diversity
+
+To prevent repetitive caption patterns, vary your writing style across generations:
+
+### Structural Variations:
+1. **Top-down**: Start with overview, then details
+   - "This chart shows market share distribution. Netflix leads with 45%, followed by..."
+
+2. **Bottom-up**: Start with specific data, then generalize
+   - "Netflix holds 45% market share, significantly higher than Disney+ at 25%. Overall, the market shows..."
+
+3. **Comparative**: Emphasize relationships between entities
+   - "Netflix's 45% share is nearly double that of Disney+ (25%), while smaller players..."
+
+4. **Analytical**: Focus on patterns and trends
+   - "The distribution reveals a power-law pattern with one dominant player controlling nearly half..."
+
+### Tone Variations:
+- **Neutral/Academic**: Factual, precise language
+- **Journalistic**: Engaging, story-like presentation
+- **Technical**: Emphasize statistical properties and metrics
+
+### Length Variations:
+- **Concise**: 2 sentences, 40-60 words
+- **Standard**: 3 sentences, 60-80 words  
+- **Detailed**: 4 sentences, 80-100 words
+
+**For each generation**: Naturally vary structure, tone, and length based on the data characteristics. Temperature > 1.0 will help produce diverse phrasings.
 
 ### Ground Truth Caption
 A factual description covering:
@@ -457,12 +633,18 @@ class NodeA_TopicAgent:
             if constraints.get("scale_preference"):
                 prompt += f"\n\n**Scale preference:** {constraints['scale_preference']}"
         
-        # Add diversity hints based on tracker
-        recent_concepts = self.diversity_tracker.get("used_concepts", [])[-15:]
+        # Enhanced diversity hints with anti-repetition context
+        recent_concepts = self.diversity_tracker.get("used_concepts", [])[-10:]
         if recent_concepts:
-            prompt += f"\n\n**Recently generated concepts (for diversity):**"
-            prompt += f"\n{', '.join(recent_concepts[-5:])}"
-            prompt += f"\n\nGenerate something DIFFERENT from these."
+            prompt += f"\n\n**Context: Recently generated concepts (for awareness, not constraints):**"
+            for i, concept in enumerate(recent_concepts[-5:], 1):
+                prompt += f"\n  {i}. {concept}"
+            
+            prompt += "\n\n**Your task**: Generate a concept that explores a DIFFERENT aspect of the category."
+            prompt += "\n- Use a different scale (micro/meso/macro) than recent examples"
+            prompt += "\n- Choose a different time period or geographic focus"
+            prompt += "\n- Select different metric types or entity categories"
+            prompt += "\n\nDue to your stochastic sampling (temperature > 1.0), naturally vary the theme, scale, and specificity."
         
         return prompt
     
@@ -547,7 +729,8 @@ class NodeA_TopicAgent:
         # Call LLM to generate topic
         response = self.llm.generate_json(
             system=self.get_system_prompt(category_id, category_name),
-            user=self.get_user_prompt(full_constraints)
+            user=self.get_user_prompt(full_constraints),
+            temperature=1.2  # High temperature for maximum topic diversity
         )
         
         # Validate output
@@ -648,7 +831,8 @@ class NodeB_DataFabricator:
         
         response = self.llm.generate_json(
             system=system_prompt,
-            user="Generate the master data now."
+            user="Generate the master data now.",
+            temperature=1.0  # Balance between realism and statistical diversity
         )
         
         # Validate output
@@ -662,10 +846,10 @@ class NodeB_DataFabricator:
 
 class NodeC_SchemaMapper:
     """
-    Node C: One-to-Many Schema Transformation
+    Node C: One-to-Many Schema Transformation + Caption Generation
     
     The CORE logic that transforms a single Master Data record
-    into three valid chart metadata dictionaries.
+    into three valid chart metadata dictionaries and generates captions.
     
     Responsibilities:
     - Transform data to BAR schema
@@ -673,6 +857,7 @@ class NodeC_SchemaMapper:
     - Transform data to PIE schema
     - Ensure strict schema compliance
     - Generate appropriate color palettes
+    - Generate ground truth captions for each chart type
     """
     
     # Default color palette for generation
@@ -827,8 +1012,21 @@ class NodeC_SchemaMapper:
         
         return len(errors) == 0, errors
     
+    def validate_caption_output(self, data: dict) -> tuple[bool, list[str]]:
+        """Validate caption output structure"""
+        errors = []
+        
+        if "ground_truth_caption" not in data:
+            errors.append("Missing ground_truth_caption")
+        elif not isinstance(data["ground_truth_caption"], str):
+            errors.append("ground_truth_caption must be a string")
+        elif len(data["ground_truth_caption"].strip()) == 0:
+            errors.append("ground_truth_caption cannot be empty")
+        
+        return len(errors) == 0, errors
+    
     def __call__(self, state: PipelineState) -> PipelineState:
-        """Execute Node C and update state"""
+        """Execute Node C: Generate schemas AND captions"""
         master_data = state.get("master_data", {})
         
         system_prompt = PROMPT_NODE_C_SCHEMA_MAPPER.format(
@@ -837,7 +1035,8 @@ class NodeC_SchemaMapper:
         
         response = self.llm.generate_json(
             system=system_prompt,
-            user=f"Transform this Master Data into BAR, SCATTER, and PIE chart schemas:\n\n{json.dumps(master_data, indent=2)}"
+            user=f"Transform this Master Data into BAR, SCATTER, and PIE chart schemas:\n\n{json.dumps(master_data, indent=2)}",
+            temperature=0.9  # Moderate diversity while maintaining schema compliance
         )
         
         # Validate each schema
@@ -858,48 +1057,10 @@ class NodeC_SchemaMapper:
                         response[chart_type] = self.transform_to_pie(master_data)
         
         state["chart_entries"] = response
-        return state
-
-
-class NodeD_RLCaptioner:
-    """
-    Node D: RL-Ready Caption Generation
-    
-    Responsibilities:
-    - Generate ground truth captions
-    - Produce Chain-of-Thought reasoning traces
-    - Create hard negative captions for contrastive learning
-    """
-    
-    def __init__(self, llm_client):
-        self.llm = llm_client
-    
-    def get_system_prompt(self) -> str:
-        return PROMPT_NODE_D_RL_CAPTIONER
-    
-    def get_user_prompt(self, chart_type: str, chart_metadata: dict) -> str:
-        return PROMPT_NODE_D_RL_CAPTIONER.format(
-            chart_type=chart_type.upper(),
-            chart_metadata_json=json.dumps(chart_metadata, indent=2)
-        )
-    
-    def validate_output(self, data: dict) -> tuple[bool, list[str]]:
-        """Validate caption output structure"""
-        errors = []
         
-        if "ground_truth_caption" not in data:
-            errors.append("Missing ground_truth_caption")
-        elif not isinstance(data["ground_truth_caption"], str):
-            errors.append("ground_truth_caption must be a string")
-        elif len(data["ground_truth_caption"].strip()) == 0:
-            errors.append("ground_truth_caption cannot be empty")
-        
-        return len(errors) == 0, errors
-    
-    def __call__(self, state: PipelineState) -> PipelineState:
-        """Execute Node D for all chart types and update state"""
-        chart_entries = state.get("chart_entries", {})
+        # ===== Generate captions for each chart type =====
         captions = {}
+        chart_entries = state.get("chart_entries", {})
         
         for chart_type, metadata in chart_entries.items():
             system_prompt = PROMPT_NODE_D_RL_CAPTIONER.format(
@@ -907,18 +1068,22 @@ class NodeD_RLCaptioner:
                 chart_metadata_json=json.dumps(metadata, indent=2)
             )
             
-            response = self.llm.generate_json(
+            caption_response = self.llm.generate_json(
                 system=system_prompt,
-                user=f"Generate caption for this {chart_type} chart:\n\nMetadata: {json.dumps(metadata, indent=2)}"
+                user=f"Generate caption for this {chart_type} chart:\n\nMetadata: {json.dumps(metadata, indent=2)}",
+                temperature=1.0  # Varied caption styles to prevent template-like outputs
             )
             
             # 只保留 ground_truth_caption
             cleaned_response = {
-                "ground_truth_caption": response.get("ground_truth_caption", f"Chart showing {metadata.get('img_title', 'data')}")
+                "ground_truth_caption": caption_response.get(
+                    "ground_truth_caption", 
+                    f"Chart showing {metadata.get('img_title', 'data')}"
+                )
             }
             
             # 验证输出
-            is_valid, errors = self.validate_output(cleaned_response)
+            is_valid, errors = self.validate_caption_output(cleaned_response)
             if not is_valid:
                 print(f"Warning: Caption validation failed for {chart_type}: {errors}")
                 # 使用默认值
@@ -938,9 +1103,8 @@ class ChartAgentPipeline:
       ↓
     Node B: Data Fabrication (generate realistic master data)
       ↓
-    Node C: Schema Mapping (transform to BAR/SCATTER/PIE formats)
-      ↓
-    Node D: Caption Generation (ground truth captions)
+    Node C: Schema Mapping + Caption Generation (transform to BAR/SCATTER/PIE 
+            formats and generate ground truth captions)
     
     Note: Category must be specified by user (no random selection).
     """
@@ -948,11 +1112,10 @@ class ChartAgentPipeline:
     def __init__(self, llm_client, config: Optional[dict] = None):
         self.config = config or {}
         
-        # Initialize all nodes (complete workflow)
+        # Initialize nodes (Node D is now merged into Node C)
         self.node_a = NodeA_TopicAgent(llm_client)
         self.node_b = NodeB_DataFabricator(llm_client)
         self.node_c = NodeC_SchemaMapper(llm_client)
-        self.node_d = NodeD_RLCaptioner(llm_client)
     
     def create_initial_state(self) -> PipelineState:
         """Create empty initial state"""
@@ -1001,11 +1164,8 @@ class ChartAgentPipeline:
         # Node B: Data Fabrication
         state = self.node_b(state)
         
-        # Node C: Schema Mapping
+        # Node C: Schema Mapping + Caption Generation (combined)
         state = self.node_c(state)
-        
-        # Node D: Caption Generation
-        state = self.node_d(state)
         
         return state
     
