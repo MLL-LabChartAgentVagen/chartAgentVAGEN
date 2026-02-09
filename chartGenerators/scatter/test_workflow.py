@@ -1,6 +1,6 @@
 """
 Test script to generate one example from the scatter chart workflow.
-This demonstrates the complete pipeline: original chart, QA data, masked charts, and masks.
+This demonstrates the complete pipeline: original chart, QA data, and bounding box charts.
 """
 
 import os
@@ -24,10 +24,11 @@ class TestArgs:
         self.chart_type = "scatter"
         self.chart_mode = "single"
         self.data_path = "./data"
-        # Run all stages: 0=masked images, 1=original images, 2/3=masks
-        self.construction_subtask = "0123"
+        # Run all stages: 0=bbox images, 1=original images
+        self.construction_subtask = "01"
         self.global_figsize = (10, 6)
         self.gray_mask = "#CCCCCC"
+        self.bbox_color = "#FF0000"  # Red for bounding boxes
 
 
 def test_single_chart_workflow():
@@ -71,7 +72,7 @@ def test_single_chart_workflow():
             chart_entry = METADATA_SCATTER[func_id][category_id][0]
             
             self.draw_chart_function = self.function_dict[func_id]["original_img"]
-            self.draw_masked_chart_function = self.function_dict[func_id]["masked_img"]
+            self.draw_bbox_chart_function = self.function_dict[func_id]["bbox_img"]
             
             # Use first combination of settings for simplicity
             chart_direction = "vertical"
@@ -116,7 +117,17 @@ def test_single_chart_workflow():
             self.vqa_generator = ScatterChartGenerator(self.args, chart_id)
             
             # Generate QA data (limit to 3 questions for testing)
-            qa_data_candidates = self.vqa_generator.chart_qa_generator(chart_entry, random_seed=42, num_questions=3)
+            # Pass func_id, category_id, and chart_index for hardcoded questions
+            qa_data_candidates = self.vqa_generator.chart_qa_generator(
+                chart_metadata=chart_entry,
+                func_id=func_id,
+                category=category_id,
+                chart_index=0,
+                use_hardcoded=True,  # Enable hardcoded questions
+                use_random=True,     # Enable random questions
+                random_seed=42,
+                num_questions=3
+            )
             print(f"  ✓ Generated {len(qa_data_candidates)} QA examples")
             
             # Process each QA
@@ -132,10 +143,10 @@ def test_single_chart_workflow():
                 print(f"     Answer: {new_qa_data['answer']}")
                 print(f"     Curriculum Level: {new_qa_data['curriculum_level']}")
                 
-                # Mask paths
-                new_mask_path = {}
-                for step_key in new_qa_data["mask"]:
-                    new_mask_path[step_key] = f"./data/imgs/{self.args.chart_type}/{self.args.chart_mode}/{new_qa_id}__mask_{step_key}.png"
+                # Bbox paths
+                new_bbox_path = {}
+                for step_key in new_qa_data["bbox"]:
+                    new_bbox_path[step_key] = f"./data/imgs/{self.args.chart_type}/{self.args.chart_mode}/{new_qa_id}__bbox_{step_key}.png"
                 
                 # Save to self.generated_vqa_data
                 self.total_vqa_num += 1
@@ -148,19 +159,19 @@ def test_single_chart_workflow():
                     "constraint": new_qa_data["constraint"],
                     "eval_mode": show_label,
                     "img_path": f"./data/imgs/{self.args.chart_type}/{self.args.chart_mode}/{chart_id}.png",
-                    "mask_path": new_mask_path,
-                    "mask_indices": new_qa_data["mask"],
+                    "bbox_path": new_bbox_path,  # Changed from mask_path
+                    "bbox_indices": new_qa_data["bbox"],  # Changed from mask_indices
                     "question": new_qa_data["question"],
                     "reasoning": new_qa_data["reasoning"],
                     "answer": new_qa_data["answer"],
                 }
                 
-                # Generate masked chart
-                print(f"     Generating masked charts and masks...")
-                for step_key in new_mask_path:
-                    curr_mask_id = new_mask_path[step_key].split("/")[-1].replace(".png", "").strip()
-                    self._plot_masked_chart(
-                        mask_idx_list=new_qa_data["mask"][step_key],
+                # Generate bbox chart (highlighting relevant scatter points)
+                print(f"     Generating bounding box charts...")
+                for step_key in new_bbox_path:
+                    curr_bbox_id = new_bbox_path[step_key].split("/")[-1].replace(".png", "").strip()
+                    self._plot_bbox_chart(
+                        bbox_idx_list=new_qa_data["bbox"][step_key],  # Indices to highlight
                         chart_entry=chart_entry,
                         horizontal=chart_direction,
                         show_text_label=show_label,
@@ -168,9 +179,9 @@ def test_single_chart_workflow():
                         change_x_axis_pos=x_axis_pos,
                         change_y_axis_pos=y_axis_pos,
                         chart_id=chart_id,
-                        mask_id=curr_mask_id,
+                        bbox_id=curr_bbox_id,
                     )
-                    print(f"       ✓ {step_key}: {curr_mask_id}")
+                    print(f"       ✓ {step_key}: {curr_bbox_id}")
                 
                 # Save after each QA
                 self._save_chart_qa_data_to_json()
@@ -192,8 +203,7 @@ def test_single_chart_workflow():
     print("\n🎉 Test completed successfully!")
     print(f"\n📁 Check the following files:")
     print(f"   - Original chart: {args.data_path}/imgs/{args.chart_type}/{args.chart_mode}/scatter__img_1__*.png")
-    print(f"   - Masked charts: {args.data_path}/imgs/{args.chart_type}/{args.chart_mode}/*__gray_mask.png")
-    print(f"   - Mask files: {args.data_path}/imgs/{args.chart_type}/{args.chart_mode}/*__mask_*.png")
+    print(f"   - Bounding box charts: {args.data_path}/imgs/{args.chart_type}/{args.chart_mode}/*__bbox_*.png")
     print(f"   - QA data: {args.data_path}/scatter__meta_qa_data.json")
 
 

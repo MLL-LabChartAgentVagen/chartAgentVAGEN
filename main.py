@@ -1,6 +1,6 @@
 """
 Main entry point for chart generation.
-Runs bar_chart and pie_chart pipelines with generated metadata JSON.
+Runs bar_chart, pie_chart, and scatter chart pipelines with generated metadata JSON.
 Supports: number of chart-QA sets, stages, input file, output directory, and all chart parameters.
 """
 
@@ -15,13 +15,14 @@ if str(project_root) not in sys.path:
 
 from chartGenerators.bar_chart.main import BarChartRunDraw
 from chartGenerators.pie_chart.main import PieChartRunDraw
+from chartGenerators.scatter.main import ScatterChartRunDraw
 from utils.logger import logger
 
 
 def parse_stages(stages_str: str) -> str:
     """
     Parse and validate construction stages string.
-    Valid stages for bar/pie: 0 (bbox images), 1 (original images).
+    Valid stages for bar/pie/scatter: 0 (bbox images), 1 (original images).
     """
     stages_str = stages_str.replace(",", "").replace(" ", "")
     valid_stages = set("01")
@@ -60,8 +61,10 @@ def build_args_for_chart_type(
     gray_mask: str,
     bbox_color: str,
     composition_types: list,
+    show_legend: bool = None,
+    no_legend: bool = None,
 ) -> object:
-    """Build an args object compatible with BarChartRunDraw / PieChartRunDraw."""
+    """Build an args object compatible with BarChartRunDraw / PieChartRunDraw / ScatterChartRunDraw."""
     class Args:
         pass
     args = Args()
@@ -76,28 +79,33 @@ def build_args_for_chart_type(
     args.num_charts = num_charts
     args.num_questions_per_chart = num_questions
     args.random_seed = random_seed
-    args.composition_types = composition_types
+    args.composition_types = composition_types  # Only used for bar charts
+    args.show_legend = show_legend  # Only used for scatter charts
+    args.no_legend = no_legend  # Only used for scatter charts
     return args
 
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Chart generation: bar and pie charts from generated metadata JSON",
+        description="Chart generation: bar, pie, and scatter charts from generated metadata JSON",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
   # Generate 10 bar + 10 pie chart-QA sets from generated_metadata.json, original images only
   python main.py --input generated_metadata.json --output ./data --num-charts 10 --stages 1
 
-  # Generate 5 of each type with both original and bbox images
-  python main.py --input generated_metadata.json --output ./out --num-charts 5 --stages 01
+  # Generate 5 of each type (bar, pie, scatter) with both original and bbox images
+  python main.py --input generated_metadata.json --output ./out --num-charts 5 --stages 01 --chart-types bar pie scatter
 
-  # Bar charts only, 20 chart-QA sets
-  python main.py --input generated_metadata.json --chart-types bar --num-charts 20 --stages 1
+  # Scatter charts only, 20 chart-QA sets
+  python main.py --input generated_metadata.json --chart-types scatter --num-charts 20 --stages 1
+
+  # Scatter charts with forced legend display
+  python main.py --input generated_metadata.json --chart-types scatter --num-charts 5 --show-legend
 
   # Full options
   python main.py --input generated_metadata.json --output ./data --num-charts 10 \\
-      --stages 01 --num-questions 15 --figsize 12,8
+      --stages 01 --num-questions 15 --figsize 12,8 --chart-types bar pie scatter
 
 Stages:
   0: bbox images (highlighted regions)
@@ -134,7 +142,7 @@ Stages:
         "--chart-types",
         type=str,
         nargs="+",
-        choices=["bar", "pie"],
+        choices=["bar", "pie", "scatter"],
         default=["bar", "pie"],
         help="Chart types to generate (default: bar pie)"
     )
@@ -178,6 +186,18 @@ Stages:
         default=None,
         help="QA composition types (bar only). Default: all. (one_step, parallel, nested)"
     )
+    parser.add_argument(
+        "--show-legend",
+        action="store_true",
+        default=None,
+        help="Force show legend even when labels are present (scatter only). By default, legend is hidden when labels are shown."
+    )
+    parser.add_argument(
+        "--no-legend",
+        action="store_true",
+        default=None,
+        help="Force hide legend (scatter only). By default, legend is hidden when labels are shown."
+    )
 
     args = parser.parse_args()
 
@@ -207,7 +227,8 @@ Stages:
     input_abs = str(input_path.resolve())
 
     logger.info("=" * 80)
-    logger.info("Chart Generation (Bar + Pie from generated metadata)")
+    chart_types_str = ", ".join(chart_types)
+    logger.info(f"Chart Generation ({chart_types_str} from generated metadata)")
     logger.info("=" * 80)
     logger.info(f"Input file:    {input_abs}")
     logger.info(f"Output dir:   {output_dir}")
@@ -235,11 +256,18 @@ Stages:
                 gray_mask=args.gray_mask,
                 bbox_color=args.bbox_color,
                 composition_types=args.composition_types,
+                show_legend=getattr(args, 'show_legend', None),
+                no_legend=getattr(args, 'no_legend', None),
             )
             if chart_type == "bar":
                 generator = BarChartRunDraw(run_args)
-            else:
+            elif chart_type == "pie":
                 generator = PieChartRunDraw(run_args)
+            elif chart_type == "scatter":
+                generator = ScatterChartRunDraw(run_args)
+            else:
+                logger.error(f"Unknown chart type: {chart_type}")
+                sys.exit(1)
             logger.info(f"Running {chart_type} chart generation ({args.num_charts} chart-QA sets)...")
             generator.run_draw_single_figure()
             logger.info(f"{chart_type} chart generation completed.")

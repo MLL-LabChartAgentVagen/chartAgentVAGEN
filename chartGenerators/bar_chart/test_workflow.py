@@ -80,7 +80,7 @@ def test_single_chart_workflow():
             x_axis_pos = "xbottom"
             y_axis_pos = "yleft"
             show_legend = "w_legend"
-            label_angle = 45
+            label_angle = 0  # horizontal or vertical only (0 or 90)
 
             chart_id = (
                 f"{self.args.chart_type}__img_{chart_idx}__category{category_id.split(' ')[0]}"

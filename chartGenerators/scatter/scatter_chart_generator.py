@@ -60,7 +60,7 @@ class ScatterChartGenerator(ChartGenerator):
         
         # Use step_indices if provided, otherwise use mask_indices for all steps
         if step_indices:
-            mask_dict = {}
+            bbox_dict = {}
             # Extract output indices for each reasoning step
             # step_indices structure:
             # Sequential: [op1_input, op1_output, op2_input, op2_output, ...]
@@ -101,7 +101,7 @@ class ScatterChartGenerator(ChartGenerator):
                 # Final operator's output is at the last index
                 output_indices_list.append(step_indices[-1] if step_indices else mask_indices)
             
-            # Now map reasoning steps to their output indices and invert masks
+            # Now map reasoning steps to their output indices for bounding boxes
             for i, step_reasoning in enumerate(reasoning):
                 step_key = f"step_{i+1}"
                 if i < len(output_indices_list):
@@ -109,20 +109,15 @@ class ScatterChartGenerator(ChartGenerator):
                 else:
                     output_indices = mask_indices
                 
-                # Invert mask: mask everything EXCEPT the relevant indices
-                # So we show the relevant points, not mask them
-                masked_indices = [idx for idx in all_indices if idx not in output_indices]
-                mask_dict[step_key] = masked_indices
+                # Use indices directly for bounding boxes (highlight relevant points)
+                bbox_dict[step_key] = output_indices
             
-            # Answer mask: invert to show answer points
-            answer_masked_indices = [idx for idx in all_indices if idx not in mask_indices]
-            mask_dict["answer"] = answer_masked_indices
+            # Answer bbox: use indices directly
+            bbox_dict["answer"] = mask_indices
         else:
-            # Invert mask: mask everything EXCEPT the relevant indices
-            masked_indices = [idx for idx in all_indices if idx not in mask_indices]
-            mask_dict = {f"step_{i+1}": masked_indices for i, step in enumerate(reasoning)}
-            answer_masked_indices = [idx for idx in all_indices if idx not in mask_indices]
-            mask_dict["answer"] = answer_masked_indices
+            # Use indices directly for bounding boxes
+            bbox_dict = {f"step_{i+1}": mask_indices for i, step in enumerate(reasoning)}
+            bbox_dict["answer"] = mask_indices
         
         return {
             "qa_id": f"{self.chart_id}_qa{self.qa_idx}",
@@ -132,7 +127,7 @@ class ScatterChartGenerator(ChartGenerator):
             "question": question,
             "reasoning": reasoning_dict,
             "answer": self._format_answer(answer),
-            "mask": mask_dict,
+            "bbox": bbox_dict,  # Changed from "mask" to "bbox"
         }
     
     def _generate_random_configs(self, chart_metadata: Dict) -> Dict:
@@ -363,7 +358,7 @@ class ScatterChartGenerator(ChartGenerator):
             reasoning_templates = question_template.get("reasoning", [])
             constraint = question_template.get("constraint")
             answer = question_template.get("answer")
-            mask_template = question_template.get("mask", {})
+            bbox_template = question_template.get("bbox", question_template.get("mask", {}))  # Support both for backward compatibility
             
             # Compute answer if None (from chart metadata)
             if answer is None:
@@ -383,29 +378,27 @@ class ScatterChartGenerator(ChartGenerator):
                 for reasoning_dict in reasoning_templates:
                     self.qa_idx += 1
                     
-                    # Process mask - compute if None
-                    mask_dict = {}
+                    # Process bbox - use indices directly (not inverted)
+                    bbox_dict = {}
                     for step_key in reasoning_dict.keys():
-                        if step_key in mask_template:
-                            mask_indices = mask_template[step_key]
-                            if mask_indices is None:
+                        if step_key in bbox_template:
+                            bbox_indices = bbox_template[step_key]
+                            if bbox_indices is None:
                                 # Default to all indices
-                                mask_indices = all_indices
-                            # Invert mask: mask everything EXCEPT relevant indices
-                            masked_indices = [idx for idx in all_indices if idx not in mask_indices]
-                            mask_dict[step_key] = masked_indices
+                                bbox_indices = all_indices
+                            # Use indices directly for bounding boxes (highlight relevant points)
+                            bbox_dict[step_key] = bbox_indices
                         else:
-                            mask_dict[step_key] = []
+                            bbox_dict[step_key] = []
                     
-                    # Answer mask
-                    if "answer" in mask_template:
-                        answer_mask_indices = mask_template["answer"]
-                        if answer_mask_indices is None:
-                            answer_mask_indices = all_indices
-                        masked_indices = [idx for idx in all_indices if idx not in answer_mask_indices]
-                        mask_dict["answer"] = masked_indices
+                    # Answer bbox
+                    if "answer" in bbox_template:
+                        answer_bbox_indices = bbox_template["answer"]
+                        if answer_bbox_indices is None:
+                            answer_bbox_indices = all_indices
+                        bbox_dict["answer"] = answer_bbox_indices
                     else:
-                        mask_dict["answer"] = []
+                        bbox_dict["answer"] = []
                     
                     qa_data = {
                         "qa_id": f"{self.chart_id}_qa{self.qa_idx}",
@@ -415,7 +408,7 @@ class ScatterChartGenerator(ChartGenerator):
                         "question": question_text,
                         "reasoning": reasoning_dict,
                         "answer": answer,
-                        "mask": mask_dict,
+                        "bbox": bbox_dict,  # Changed from "mask" to "bbox"
                     }
                     
                     qa_data_list.append(qa_data)
