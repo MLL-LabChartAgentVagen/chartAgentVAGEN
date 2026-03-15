@@ -423,10 +423,10 @@ Not all multi-chart combinations are equal. We define 7 relationship types, cate
 | **Comparative** | Same schema, different temporal/entity slices. | None | Chart A: `WHERE time < midpoint`; Chart B: `WHERE time >= midpoint` | Both: **same chart type** — `bar_chart`, `line_chart`, `scatter_plot` |
 | **Dual-Metric** | Same entities, different measures. | None | Chart A uses `measure_1`; Chart B uses `measure_2` on same `GROUP BY` | Both: **same chart type** — `line_chart`, `bar_chart` (enables direct visual comparison) |
 | **Part-Whole** | One chart shows composition, another shows totals. | None | Chart A: `pie(cat, SUM(m))`; Chart B: `bar(cat, SUM(m))` with drill-down | A: `pie_chart`, `donut_chart` (composition); B: `bar_chart`, `stacked_bar_chart` (totals/detail) |
-| **Associative** | Two measures with injected correlation — visible across charts. | **Requires `add_correlation()`** | Chart A: `bar(cat, AVG(m1))`; Chart B: `bar(cat, AVG(m2))` | A/B: `bar_chart`, `line_chart` (same category axis); optionally pair with `scatter_plot` (direct correlation) |
-| **Causal Chain** | Three+ variables with directional dependency. | **Requires `add_dependency()`** | Chart A: cause; Chart B: mediator; Chart C: effect | A: `bar_chart` (cause); B: `line_chart` (mediator trend); C: `bar_chart`, `scatter_plot` (effect) |
+| **Associative** | Two measures linked through structural dependency — visible across charts. | **Requires `add_measure_structural()`** | Chart A: `bar(cat, AVG(m1))`; Chart B: `bar(cat, AVG(m2))` | A/B: `bar_chart`, `line_chart` (same category axis); optionally pair with `scatter_plot` (direct relationship) |
+| **Causal Chain** | Three+ variables with directional dependency via measure DAG. | **Requires `add_measure_structural()` chain** | Chart A: cause; Chart B: mediator; Chart C: effect | A: `bar_chart` (cause); B: `line_chart` (mediator trend); C: `bar_chart`, `scatter_plot` (effect) |
 
-> **Key insight:** 5 of 7 relationship types require **zero** special DGP treatment — they emerge naturally from a well-designed schema with orthogonal dimensions and multiple measures. Only Associative and Causal relationships require explicit `add_correlation()` / `add_dependency()` calls in Phase 2. This is a direct benefit of the atomic-grain design.
+> **Key insight:** 5 of 7 relationship types require **zero** special DGP treatment — they emerge naturally from a well-designed schema with orthogonal dimensions and multiple measures. Associative and Causal relationships require structural measures (`add_measure_structural()`) creating edges in the measure DAG. This is a direct benefit of the atomic-grain design.
 
 > **Chart type selection principle for multi-chart:** For relationships that compare the *same* data across slices (Comparative, Dual-Metric), use **identical chart types** to minimize visual confounds. For relationships that show *different analytical facets* (Drill-down, Part-Whole, Causal Chain), use **complementary chart types** from different families to maximize information diversity.
 
@@ -547,11 +547,12 @@ class DashboardComposer:
                             views=[dv, rv], relationship="associative"))
 
         elif pattern == "cause_mediator_effect":
-            # Triple: requires dependency chain from schema metadata
-            deps = schema.get("dependencies", [])
-            corrs = schema.get("correlations", [])
-            if deps and corrs:
-                chain = self._build_causal_chain(deps, corrs, views)
+            # Triple: requires structural measure DAG chain from schema metadata
+            dag_order = schema.get("measure_dag_order", [])
+            structural_cols = [c for c in schema.get("columns", [])
+                               if c.get("measure_type") == "structural"]
+            if len(dag_order) >= 3 and structural_cols:
+                chain = self._build_causal_chain(dag_order, structural_cols, views)
                 if chain:
                     results.append(Dashboard(
                         views=chain, relationship="causal_chain"))
@@ -573,25 +574,23 @@ class DashboardComposer:
                 return True
         return False
 
-    def _build_causal_chain(self, deps, corrs, views) -> Optional[List[ViewSpec]]:
-        """Find 3 views covering a cause → mediator → effect chain."""
-        # Identify cause and effect from dependencies
-        for dep in deps:
-            target_col = dep["target"]
-            # Find source columns mentioned in formula
-            source_cols = self._extract_formula_columns(dep["formula"])
-            # Find correlations involving source columns
-            for corr in corrs:
-                mediator_candidates = set([corr["col_a"], corr["col_b"]]) - source_cols
-                if mediator_candidates:
-                    mediator = mediator_candidates.pop()
-                    cause = (source_cols & set([corr["col_a"], corr["col_b"]])).pop()
-                    # Find views covering cause, mediator, and target
-                    cause_view = self._find_view_for_measure(views, cause)
-                    med_view = self._find_view_for_measure(views, mediator)
-                    effect_view = self._find_view_for_measure(views, target_col)
-                    if cause_view and med_view and effect_view:
-                        return [cause_view, med_view, effect_view]
+    def _build_causal_chain(self, dag_order, structural_cols,
+                              views) -> Optional[List[ViewSpec]]:
+        """Find 3 views covering a cause → mediator → effect chain
+        using the measure DAG's topological order."""
+        # Walk the DAG: root measure → structural → downstream structural
+        for struct in structural_cols:
+            upstream = struct.get("depends_on", [])
+            for cause_col in upstream:
+                # cause_col is the root; struct is the effect
+                # Find a third measure that also depends on cause_col
+                for other in structural_cols:
+                    if other["name"] != struct["name"] and cause_col in other.get("depends_on", []):
+                        cause_view = self._find_view_for_measure(views, cause_col)
+                        med_view = self._find_view_for_measure(views, struct["name"])
+                        effect_view = self._find_view_for_measure(views, other["name"])
+                        if cause_view and med_view and effect_view:
+                            return [cause_view, med_view, effect_view]
         return None
 
     def _maximize_type_diversity(self, views: List[ViewSpec],

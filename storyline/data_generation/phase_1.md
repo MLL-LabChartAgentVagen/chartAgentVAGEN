@@ -42,7 +42,9 @@ Rules:
    correct unit and a realistic value range grounded in domain knowledge.
 5. "temporal_granularity": The data collection frequency (hourly | daily | weekly |
    monthly | quarterly | yearly).
-6. "target_rows": Recommended row count for the physical fact table (100-3000).
+6. "target_rows": Row count for the fact table, derived from complexity tier:
+   simple → 200-500, medium → 500-1000, complex → 1000-3000.
+   Adjust within range based on temporal span and entity count.
 7. Ground all numbers, entities, and time windows in plausible real-world conditions.
    The scenario must read as if it were a real dataset from a real organization.
 8. Output strictly valid JSON with no additional commentary.
