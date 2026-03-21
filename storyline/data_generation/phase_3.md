@@ -1,34 +1,34 @@
-## PHASE 3: View Amortization & QA Instantiation
+## PHASE 3: View Extraction & Question Generation
 
-> **Core Value:** 1 LLM call → 1 Python script → 1 Master Table → **10–30+ logically coherent tasks** (chart views + multi-hop QA). This phase is entirely deterministic — no LLM calls, no randomness beyond the fixed seed. Every derived chart shares the same ground-truth arithmetic by construction.
+> **Core Value:** 1 Master Table → **10–30+ logically coherent tasks** (chart views + multi-hop QA). This phase is entirely deterministic. Every derived chart shares the same ground-truth arithmetic by construction.
+
+> **Design Principle:** Questions drive everything. A view exists only if operators can query it. A multi-chart pair exists only if a bridge operator can connect them. One compatibility table replaces scoring heuristics, chart selection guides, and template systems.
 
 ---
 
-### 3.1 View Extraction Engine
+### 3.1 View Extraction
 
-The Master Table contains surplus information (e.g., 500 rows × 7 columns of individual visit records). The View Extraction Engine systematically projects this into chart-ready data frames using SQL-like operators.
+The Master Table contains surplus information (e.g., 500 rows × 7 columns). The View Extraction Engine projects it into chart-ready DataFrames using SQL-like operators.
 
 #### 3.1.1 Core Extraction Function
 
 ```python
 def extract_view(master_table: pd.DataFrame, view_spec: ViewSpec) -> pd.DataFrame:
-    """Deterministic SQL-like projection from Master Table to chart-ready view."""
+    """Deterministic projection from Master Table to chart-ready view."""
     df = master_table.copy()
-    if view_spec.filter:      df = df.query(view_spec.filter)       # σ: row selection
-    if view_spec.group_by:    df = df.groupby(view_spec.group_by)   # γ: grouping
-                                   .agg(view_spec.agg).reset_index()
-    if view_spec.sort_by:     df = df.sort_values(view_spec.sort_by)
-    if view_spec.limit:       df = df.head(view_spec.limit)
-    return df[view_spec.select_columns]                              # π: column projection
+    if view_spec.filter:    df = df.query(view_spec.filter)
+    if view_spec.group_by:  df = df.groupby(view_spec.group_by).agg(view_spec.agg).reset_index()
+    if view_spec.sort_by:   df = df.sort_values(view_spec.sort_by)
+    if view_spec.limit:     df = df.head(view_spec.limit)
+    return df[view_spec.select_columns]
 ```
 
-#### 3.1.2 View Extraction Rules — Complete Mapping for 16 Chart Types
+#### 3.1.2 View Extraction Rules
 
-Each rule specifies the SQL transformation, column role binding (which Schema roles can fill each slot), structural constraints, and visual channel mapping. The engine uses Schema Metadata to enumerate all legal `(chart_type, column_binding)` pairs for a given Master Table.
+Each rule specifies the SQL transformation, column role binding, structural constraints, and visual channel mapping. The engine uses Schema Metadata to enumerate all legal `(chart_type, column_binding)` pairs.
 
 ```python
 VIEW_EXTRACTION_RULES = {
-
     # ===== Comparison Family =====
     "bar_chart": {
         "transform": "SELECT {cat}, AGG({measure}) FROM M GROUP BY {cat} ORDER BY AGG DESC",
@@ -133,7 +133,7 @@ VIEW_EXTRACTION_RULES = {
     },
     "radar_chart": {
         "transform": "SELECT {cat}, AVG({m1}), AVG({m2}), ..., AVG({mk}) FROM M GROUP BY {cat}",
-        "column_binding": {"cat": ["primary"], "measures": ["measure"] * 4},  # >= 4 measures
+        "column_binding": {"cat": ["primary"], "measures": ["measure"] * 4},
         "constraint": "|cat| in [2, 8]; k >= 4 measures",
         "visual_mapping": {"entity": "{cat}", "axes": ["{m1}", ..., "{mk}"]}
     },
@@ -154,766 +154,380 @@ VIEW_EXTRACTION_RULES = {
 }
 ```
 
-#### 3.1.3 Chart Selection Guide — When to Use Which Chart
+#### 3.1.3 View Enumeration
 
-Structural feasibility (§3.1.2) determines what *can* be rendered; the **Chart Selection Guide** determines what *should* be rendered. The guide encodes practitioner knowledge as a decision matrix, mapping `(analytical_intent, data_shape)` → ranked chart types. The `ViewEnumerator` (§3.1.4) uses this guide to **score and rank** feasible views by suitability.
-
-```python
-CHART_SELECTION_GUIDE = {
-    # Each entry: (analytical_intent, data_shape_predicate) → ranked chart types
-    # The ranker matches the Master Table's schema to these predicates
-    # and boosts matching chart types during view scoring.
-
-    # --- Comparison ---
-    "compare_magnitudes": {
-        "description": "Compare a single metric across categorical entities",
-        "data_shape": {"categorical": 1, "numerical": 1},
-        "ranked_charts": ["bar_chart", "pie_chart"],
-        "rationale": "Bar is the default for magnitude comparison; pie only when "
-                     "part-of-whole is the primary question and |cat| ≤ 8"
-    },
-    "cross_group_comparison": {
-        "description": "Compare a metric across two categorical dimensions",
-        "data_shape": {"categorical": 2, "numerical": 1},
-        "ranked_charts": ["grouped_bar_chart", "stacked_bar_chart", "heatmap"],
-        "rationale": "Grouped bar for side-by-side comparison; stacked bar when "
-                     "composition is also relevant; heatmap for dense matrices"
-    },
-
-    # --- Trend ---
-    "show_trend": {
-        "description": "Show how a metric evolves over an ordered dimension",
-        "data_shape": {"temporal": 1, "numerical": "1+"},
-        "ranked_charts": ["line_chart", "area_chart"],
-        "rationale": "Line for precise trend reading; area when cumulative volume "
-                     "or composition change over time is the emphasis"
-    },
-
-    # --- Distribution ---
-    "understand_distribution": {
-        "description": "Assess the shape of a single continuous variable",
-        "data_shape": {"numerical": 1, "min_rows": 100},
-        "ranked_charts": ["histogram", "violin_plot", "box_plot"],
-        "rationale": "Histogram for shape; violin when comparing across groups; "
-                     "box when summary stats suffice"
-    },
-    "compare_distributions": {
-        "description": "Compare distribution of a measure across categorical groups",
-        "data_shape": {"categorical": 1, "numerical": 1, "min_rows_per_group": 15},
-        "ranked_charts": ["box_plot", "violin_plot"],
-        "rationale": "Box for quick median/IQR compare; violin when modality matters"
-    },
-
-    # --- Composition ---
-    "show_part_of_whole": {
-        "description": "Show proportional contribution of categories to a total",
-        "data_shape": {"categorical": 1, "numerical": 1, "max_cats": 8},
-        "ranked_charts": ["pie_chart", "donut_chart", "treemap"],
-        "rationale": "Pie/donut for ≤8 categories; treemap when hierarchical or >8"
-    },
-    "show_composition_over_categories": {
-        "description": "Show how sub-groups contribute to totals across a primary dimension",
-        "data_shape": {"categorical": 2, "numerical": 1},
-        "ranked_charts": ["stacked_bar_chart", "treemap"],
-        "rationale": "Stacked bar when both total and segments matter; treemap for hierarchy"
-    },
-    "show_hierarchical_composition": {
-        "description": "Show nested composition with 2-3 levels of categorical hierarchy",
-        "data_shape": {"categorical": "2+", "numerical": 1, "has_hierarchy": True},
-        "ranked_charts": ["treemap", "stacked_bar_chart"],
-        "rationale": "Treemap excels at multi-level hierarchies; stacked bar for 2-level"
-    },
-
-    # --- Relationship ---
-    "assess_correlation": {
-        "description": "Assess relationship between two continuous variables",
-        "data_shape": {"numerical": 2, "min_rows": 30},
-        "ranked_charts": ["scatter_plot", "bubble_chart"],
-        "rationale": "Scatter for 2D; bubble when a third dimension adds value"
-    },
-    "multi_dimensional_profile": {
-        "description": "Compare entities across 4+ metrics simultaneously",
-        "data_shape": {"categorical": 1, "numerical": "4+"},
-        "ranked_charts": ["radar_chart"],
-        "rationale": "Radar is uniquely suited for multi-axis profiling (4–8 axes)"
-    },
-    "matrix_interaction": {
-        "description": "Reveal interaction intensity between two categorical dimensions",
-        "data_shape": {"categorical": 2, "numerical": 1},
-        "ranked_charts": ["heatmap"],
-        "rationale": "Heatmap is the canonical choice for row × column intensity patterns"
-    },
-
-    # --- Flow ---
-    "show_incremental_changes": {
-        "description": "Show step-by-step increases and decreases to a running total",
-        "data_shape": {"ordered_stages": True, "numerical": 1, "has_pos_neg": True},
-        "ranked_charts": ["waterfall_chart"],
-        "rationale": "Waterfall is the only chart type designed for incremental buildup"
-    },
-    "show_conversion_pipeline": {
-        "description": "Show monotonically decreasing stages with drop-off rates",
-        "data_shape": {"ordered_stages": True, "numerical": 1, "monotonic_decrease": True},
-        "ranked_charts": ["funnel_chart"],
-        "rationale": "Funnel is purpose-built for conversion/pipeline visualization"
-    }
-}
-```
-
-> **Design note:** The guide is consulted during view scoring (§3.1.4) but does not hard-filter chart types. A chart type that is structurally feasible but not ranked first by the guide still enters the candidate pool — this preserves diversity across the benchmark while biasing toward analytically sound choices.
-
-#### 3.1.4 Automated View Enumeration
-
-The engine uses Schema Metadata (column roles + orthogonal pairs) to enumerate all feasible views, then **scores** each by suitability using the Chart Selection Guide.
+The engine uses Schema Metadata to enumerate all feasible views. No scoring — operator compatibility (§3.2) is the only filter.
 
 ```python
-class ViewEnumerator:
-    def enumerate(self, schema_metadata: dict,
-                  master_table: pd.DataFrame) -> List[ViewSpec]:
-        """Enumerate all legal (chart_type, column_binding) pairs, scored by suitability."""
-        feasible_views = []
-        cols_by_role = self._group_columns_by_role(schema_metadata)
-
-        for chart_type, rule in VIEW_EXTRACTION_RULES.items():
-            for binding in self._enumerate_bindings(rule["column_binding"], cols_by_role):
-                view_spec = ViewSpec(chart_type=chart_type, binding=binding, rule=rule)
-                if self._check_constraint(view_spec, master_table):
-                    view_spec.score = self._score_view(view_spec, schema_metadata, master_table)
-                    feasible_views.append(view_spec)
-
-        # Return sorted by suitability score (highest first)
-        return sorted(feasible_views, key=lambda v: v.score, reverse=True)
-
-    def _score_view(self, view_spec: ViewSpec, schema_metadata: dict,
-                    master_table: pd.DataFrame) -> float:
-        """Score a feasible view by how well it matches the Chart Selection Guide.
-
-        Scoring dimensions:
-          1. Guide match (0–3): Does the chart type appear in a matching guide entry?
-             3 = first-ranked, 2 = second-ranked, 1 = third-ranked, 0 = no match.
-          2. Data-shape fit (0–2): How well does the actual data satisfy the guide's
-             ideal conditions (row count, cardinality, etc.)?
-          3. Pattern visibility (0–2): Does this view expose injected patterns?
-          4. Family diversity bonus (0–1): Bonus for underrepresented chart families.
-        """
-        score = 0.0
-
-        # 1. Guide match — check which guide entries this chart type satisfies
-        for intent, spec in CHART_SELECTION_GUIDE.items():
-            if view_spec.chart_type in spec["ranked_charts"]:
-                rank = spec["ranked_charts"].index(view_spec.chart_type)
-                score += max(0, 3 - rank)  # 3 for first, 2 for second, 1 for third
-                break  # Use highest-scoring match
-
-        # 2. Data-shape fit — reward views near the ideal range
-        registry_entry = CHART_TYPE_REGISTRY[view_spec.chart_type]
-        row_lo, row_hi = registry_entry["row_range"]
-        view_rows = self._estimate_view_rows(view_spec, master_table)
-        if row_lo <= view_rows <= row_hi:
-            score += 2.0
-        elif view_rows >= row_lo * 0.5:
-            score += 1.0
-
-        # 3. Pattern visibility — reward views that expose injected patterns
-        for pattern in schema_metadata.get("patterns", []):
-            if self._pattern_visible(pattern, view_spec):
-                score += 0.5  # Each visible pattern adds 0.5, up to 2.0
-                if score >= 7.0:  # Cap pattern bonus
-                    break
-
-        # 4. Family diversity bonus — slight boost for rare families
-        #    (applied externally during final selection, not here)
-
-        return score
-
-    def _group_columns_by_role(self, schema_metadata) -> Dict[str, List[str]]:
-        """Group column names by their role for binding lookup."""
-        groups = defaultdict(list)
-        for col in schema_metadata["columns"]:
-            groups[col["role"]].append(col["name"])
-        return groups  # e.g., {"primary": ["hospital"], "orthogonal": ["severity"], ...}
-
-    def _enumerate_bindings(self, required_roles: dict,
-                            cols_by_role: dict) -> List[Dict]:
-        """Generate all valid column-to-slot assignments via Cartesian product."""
-        slot_options = {}
-        for slot, accepted_roles in required_roles.items():
-            candidates = []
-            for role in accepted_roles:
-                if role is None:
-                    candidates.append(None)  # Optional slot
-                else:
-                    candidates.extend(cols_by_role.get(role, []))
-            slot_options[slot] = candidates if candidates else [None]
-        # Cartesian product of all slot options
-        return [dict(zip(slot_options.keys(), combo))
-                for combo in itertools.product(*slot_options.values())]
-
-    def _check_constraint(self, view_spec: ViewSpec,
-                          master_table: pd.DataFrame) -> bool:
-        """Validate structural constraints (row count, cardinality, etc.)."""
-        rule = view_spec.rule
-        constraint = rule.get("constraint", "")
-
-        # Check row count constraints
-        if "rows" in constraint:
-            view_df = extract_view(master_table, view_spec)
-            row_count = len(view_df)
-            if ">=" in constraint:
-                min_rows = int(re.search(r'>= (\d+)', constraint).group(1))
-                return row_count >= min_rows
-            # ... additional constraint parsing
-
-        # Check cardinality constraints
-        if "|cat|" in constraint or "|GROUP BY" in constraint:
-            cat_col = view_spec.binding.get("cat") or view_spec.binding.get("cat1")
-            if cat_col:
-                card = master_table[cat_col].nunique()
-                # Parse range from constraint string
-                # ...
-
-        return True  # Default pass
-```
-
-**Example — Emergency Visits Master Table produces:**
-
-```
-ViewEnumerator output (14 feasible views):
-  bar_chart        → hospital × AVG(wait_minutes)
-  bar_chart        → hospital × AVG(cost)
-  bar_chart        → department × SUM(cost)
-  grouped_bar      → hospital × severity × AVG(wait_minutes)
-  line_chart       → visit_date × hospital × AVG(wait_minutes)
-  scatter_plot     → wait_minutes vs satisfaction, color=severity
-  scatter_plot     → wait_minutes vs cost, color=hospital
-  pie_chart        → department × SUM(cost)
-  heatmap          → hospital × department × AVG(satisfaction)
-  heatmap          → hospital × severity × AVG(wait_minutes)
-  box_plot         → hospital × wait_minutes
-  box_plot         → severity × satisfaction
-  stacked_bar      → hospital × severity × SUM(cost)
-  area_chart       → visit_date × severity × SUM(cost)
-  ✗ radar_chart    → needs >= 4 measures (have 3)
-  ✗ histogram      → needs >= 100 rows after filter (borderline)
+def enumerate_views(master_table, schema):
+    views = []
+    cols_by_role = group_columns_by_role(schema)
+    for chart_type, rule in VIEW_EXTRACTION_RULES.items():
+        for binding in enumerate_bindings(rule["column_binding"], cols_by_role):
+            if check_constraint(binding, master_table, rule):
+                views.append(ViewSpec(chart_type, binding))
+    return cap_per_family(views, max_per_family=3)  # prevent combinatorial explosion
 ```
 
 ---
 
-### 3.2 Multi-Plot Composition (Dashboard Generation)
+### 3.2 Operator Algebra for Question Generation
 
-Single-chart understanding is a solved problem for frontier VLMs. The real evaluation frontier is **cross-chart reasoning** — requiring a model to synthesize information across 2–4 charts sharing the same underlying data.
+A question is not a template — it is a **typed pipeline** of operators. This formalism replaces all template-based QA with one composable system.
 
-#### 3.2.1 Composition Distribution
+#### 3.2.1 Types and Operators
 
-| Plot Count (k) | Target Proportion | Difficulty | Rationale |
-|----------------|-------------------|------------|-----------|
-| k = 1 | 30% | Easy–Medium | Baseline single-chart tasks |
-| k = 2 | 40% | Medium–Hard | Most common real-world pairing |
-| k = 3 | 20% | Hard | Requires multi-hop synthesis |
-| k = 4 | 10% | Very Hard | Dashboard-level holistic reasoning |
+Two types: **V** (View — a table) and **S** (Scalar — a single value). 16 operators connect them:
 
-#### 3.2.2 Inter-Chart Relationship Taxonomy
+**Set operators** transform views (V → V):
 
-Not all multi-chart combinations are equal. We define 7 relationship types, categorized by whether the DGP needs special handling. Each relationship also specifies **recommended chart types** for each slot to guide the `DashboardComposer`.
+| Operator | What it does | Example |
+|----------|-------------|---------|
+| Filter | Keep rows matching a condition | Keep only rows where hospital = "Xiehe" |
+| Sort | Order rows by a column | Sort hospitals by cost descending |
+| Limit | Keep top-k rows | Keep the top 3 hospitals |
+| GroupBy | Aggregate rows by category | Group by department, compute AVG(cost) |
 
-| Relationship | Definition | DGP Requirement | View Extraction Strategy | Recommended Chart Types |
-|-------------|------------|-----------------|--------------------------|-------------------------|
-| **Drill-down** | Same metric at different aggregation granularity. | None | Chart A: `GROUP BY primary`; Chart B: `GROUP BY primary, secondary` | A: `pie_chart`, `bar_chart` (overview); B: `grouped_bar_chart`, `stacked_bar_chart` (detail) |
-| **Orthogonal Slice** | Same metric split by independent dimensions. | None (uses `declare_orthogonal` pairs) | Chart A: `GROUP BY primary`; Chart B: `GROUP BY orthogonal` | Both: `bar_chart`, `line_chart` (same type preferred for visual parallelism) |
-| **Comparative** | Same schema, different temporal/entity slices. | None | Chart A: `WHERE time < midpoint`; Chart B: `WHERE time >= midpoint` | Both: **same chart type** — `bar_chart`, `line_chart`, `scatter_plot` |
-| **Dual-Metric** | Same entities, different measures. | None | Chart A uses `measure_1`; Chart B uses `measure_2` on same `GROUP BY` | Both: **same chart type** — `line_chart`, `bar_chart` (enables direct visual comparison) |
-| **Part-Whole** | One chart shows composition, another shows totals. | None | Chart A: `pie(cat, SUM(m))`; Chart B: `bar(cat, SUM(m))` with drill-down | A: `pie_chart`, `donut_chart` (composition); B: `bar_chart`, `stacked_bar_chart` (totals/detail) |
-| **Associative** | Two measures linked through structural dependency — visible across charts. | **Requires `add_measure_structural()`** | Chart A: `bar(cat, AVG(m1))`; Chart B: `bar(cat, AVG(m2))` | A/B: `bar_chart`, `line_chart` (same category axis); optionally pair with `scatter_plot` (direct relationship) |
-| **Causal Chain** | Three+ variables with directional dependency via measure DAG. | **Requires `add_measure_structural()` chain** | Chart A: cause; Chart B: mediator; Chart C: effect | A: `bar_chart` (cause); B: `line_chart` (mediator trend); C: `bar_chart`, `scatter_plot` (effect) |
+**Scalar operators** reduce a view to one value (V → S):
 
-> **Key insight:** 5 of 7 relationship types require **zero** special DGP treatment — they emerge naturally from a well-designed schema with orthogonal dimensions and multiple measures. Associative and Causal relationships require structural measures (`add_measure_structural()`) creating edges in the measure DAG. This is a direct benefit of the atomic-grain design.
+| Operator | What it does | Example |
+|----------|-------------|---------|
+| Max, Min, Avg, Sum, Count | Aggregate a column | What is the average cost? → 4500 |
+| ArgMax, ArgMin | Entity with extreme value | Which hospital has the highest cost? → "Xiehe" |
+| ValueAt | Read from a single-row view | (After Filter to one row) What is the cost? → 6200 |
 
-> **Chart type selection principle for multi-chart:** For relationships that compare the *same* data across slices (Comparative, Dual-Metric), use **identical chart types** to minimize visual confounds. For relationships that show *different analytical facets* (Drill-down, Part-Whole, Causal Chain), use **complementary chart types** from different families to maximize information diversity.
+**Scalar combinators** merge two scalars (S, S → S):
 
-#### 3.2.3 Composition Patterns
+| Operator | What it does | Example |
+|----------|-------------|---------|
+| Diff | Subtract two scalars | cost_A - cost_B = 1200 |
+| Ratio | Divide two scalars | cost_A / avg_cost = 1.38 |
 
-| Pattern | k | Relationship | Recommended Chart Types per Slot | Cross-Chart QA Example |
-|---------|---|--------------|----------------------------------|------------------------|
-| Same-Type Compare | 2 | Comparative | Both: `bar_chart` or `line_chart` (identical type, different time slice) | "Which hospital improved most between Q1 and Q2?" |
-| Overview → Detail | 2 | Drill-down | A: `pie_chart` / `donut_chart`; B: `grouped_bar_chart` / `stacked_bar_chart` | "The department with the largest share — which hospital contributes most?" |
-| Orthogonal Contrast | 2 | Orthogonal Slice | Both: `bar_chart` (same type, different dimension axis) | "Does the hospital with the highest cost also treat the most severe cases?" |
-| Dual-Metric Profile | 2 | Dual-Metric | Both: `line_chart` or both: `bar_chart` (same type, different measures) | "When wait_time peaked, what happened to satisfaction?" |
-| Distribution + Cause | 2 | Associative | A: `histogram` / `box_plot` / `violin_plot`; B: `scatter_plot` / `bubble_chart` | "The right-tail outliers in the histogram — where do they fall on the scatter?" |
-| Cause → Mediator → Effect | 3 | Causal Chain | A: `bar_chart`; B: `line_chart`; C: `bar_chart` / `scatter_plot` | "Did increased marketing translate to conversion, or only traffic?" |
-| Summary + Dual Detail | 3 | Drill-down + Dual | A: `pie_chart`; B: `line_chart`; C: `scatter_plot` | "The dominant category — is its trend improving, and how correlated are its KPIs?" |
-| Full Dashboard | 4 | Mixed | One from each of 4 families (maximize family diversity) | "Across all four charts, which entity has the best overall profile?" |
+**Bridge operators** connect two charts (see §3.2.3 for details):
 
-#### 3.2.4 Dashboard Composition Algorithm
+| Operator | Signature | What it does |
+|----------|-----------|-------------|
+| EntityTransfer | (S, V) → V | Use an entity name from chart A to filter chart B |
+| ValueTransfer | (S, V) → V | Use a numeric value from chart A as a threshold for chart B |
+| TrendCompare | (V, V) → S | Compare the temporal trend direction of two views |
+| RankCompare | (V, V) → S | Compare the entity rankings between two views |
+
+#### 3.2.2 A Question = A Typed Pipeline
+
+Every question is a linear chain starting with V and ending with S. Each operator's output type must match the next operator's input type.
+
+```
+Single-chart:   V  →  [V→V ops]  →  [V→S op]  →  S (done)
+Multi-chart:    V_a → [ops] → S  →  Bridge(S, V_b)  →  V  →  [ops]  →  S (done)
+```
+
+**Single-chart examples:**
+
+| #Ops | Question | Pipeline |
+|------|----------|----------|
+| 1 | "Which hospital has the highest cost?" | V → **ArgMax** → S |
+| 2 | "Total cost in region A?" | V → **Filter** → V → **Sum** → S |
+| 3 | "Average cost of top-3?" | V → **Sort** → V → **Limit** → V → **Avg** → S |
+
+**Multi-chart examples:**
+
+| #Ops | Question | Pipeline |
+|------|----------|----------|
+| 3 | "Most expensive hospital (chart A) — its wait time (chart B)?" | V_a → ArgMax → **S** → EntityTransfer(V_b) → **V** → ValueAt → S |
+| 4 | "3rd-highest cost (A) — how many in B are below it?" | V_a → Sort → Limit(3) → V → Max → **S** → ValueTransfer(<, V_b) → **V** → Count → S |
+| 5 | "Top-3 by cost (A) — same ranking in B?" | V_a → Sort → Limit → **V** → RankCompare(V_b → Sort → Limit) → **S** |
+| 7 | "Largest dept (A) → peak month (B) → who in C beats it?" | V_a → ArgMax → **S** → EntityTransfer(V_b) → **V** → Sort → Limit(1) → Max → **S** → ValueTransfer(>, V_c) → **V** → Count → S |
+
+The 7-op example chains **two bridges**: the first bridge (EntityTransfer) produces V, the pipeline continues with more ops until a second scalar is produced, then the second bridge (ValueTransfer) connects to a third chart. Any number of bridges can be chained as long as types match.
+
+#### 3.2.3 Bridge Operators — Connecting Charts
+
+Bridge operators are the mechanism for multi-chart reasoning. They take information extracted from one chart and use it to query another chart. There are four bridge operators, each serving a different purpose:
+
+**EntityTransfer (S, V) → V** — "Look up this entity in the other chart."
+
+The scalar S is an entity name (e.g., "Xiehe Hospital" from ArgMax on chart A). EntityTransfer filters chart B to rows matching that entity. This requires both charts to share a categorical column.
+
+```
+Example: "The hospital with the highest wait time — what is its cost?"
+  Chart A (bar: hospital × wait):  V_a → ArgMax → S = "Xiehe"
+  Bridge:                          EntityTransfer(S="Xiehe", V_b) → V = [row where hospital="Xiehe" in chart B]
+  Chart B (bar: hospital × cost):  V → ValueAt → S = 6200
+```
+
+**ValueTransfer (S, V) → V** — "Use this number as a filter threshold on the other chart."
+
+The scalar S is a numeric value (e.g., cost = 5000 from chart A). ValueTransfer filters chart B by a comparison operator (>, <, =) using S as the threshold. This requires both charts to have comparable numeric columns.
+
+```
+Example: "How many departments have a cost below the highest hospital's cost?"
+  Chart A (bar: hospital × cost):  V_a → Max → S = 5000
+  Bridge:                          ValueTransfer(S=5000, op=<, V_b) → V = [rows in chart B where cost < 5000]
+  Chart B (bar: dept × cost):      V → Count → S = 2
+```
+
+**TrendCompare (V, V) → S** — "Do these two views show the same trend?"
+
+Takes two temporal views and compares their trend directions. Both views must have a time axis (line or area charts). Returns a qualitative comparison (e.g., "both increasing", "diverging").
+
+```
+Example: "Do wait times and costs trend in the same direction over the year?"
+  Chart A (line: month × wait):    V_a (temporal view of wait times)
+  Chart B (line: month × cost):    V_b (temporal view of costs)
+  Bridge:                          TrendCompare(V_a, V_b) → S = "both increasing"
+```
+
+**RankCompare (V, V) → S** — "Do these two views rank entities the same way?"
+
+Takes two views with ranked categorical entities and compares their orderings. Both views must have named entities (bar, pie, etc.). Returns overlap or rank delta.
+
+```
+Example: "Do the top-3 hospitals by cost also rank in the top-3 by satisfaction?"
+  Chart A (bar: hospital × cost):         V_a → Sort → Limit(3) → V (top-3 by cost)
+  Chart B (bar: hospital × satisfaction):  V_b → Sort → Limit(3) → V (top-3 by satisfaction)
+  Bridge:                                  RankCompare(V_a, V_b) → S = "2 of 3 overlap"
+```
+
+#### 3.2.4 Operator–Chart Compatibility
+
+**This is the key insight that unifies view extraction and question generation.** Not every operator makes sense on every chart type. ArgMax ("which bar is tallest?") makes sense on a bar chart but not on a histogram. TrendCompare makes sense on line charts but not on pie charts.
+
+This compatibility determines which views are useful and which multi-chart pairs are valid:
+- A view is useful iff at least one non-trivial operator is compatible with its chart type.
+- A multi-chart pair is useful iff at least one bridge operator is compatible with both chart types.
+
+| Operator | Compatible Chart Types | Why |
+|----------|----------------------|-----|
+| ArgMax, ArgMin | bar, grouped_bar, pie, donut, stacked_bar, bubble, radar, waterfall, funnel, heatmap | Needs named entities with comparable values |
+| Max, Min, Avg, Sum | bar, grouped_bar, pie, donut, stacked_bar, line, area, scatter, bubble, heatmap, radar | Needs a numeric column to aggregate |
+| Count | All | Always valid — count rows |
+| ValueAt | All | Read a specific cell |
+| Filter | All | Row selection always valid |
+| Sort | bar, grouped_bar, stacked_bar, scatter, bubble, heatmap, radar | Needs discrete rows that can be reordered |
+| Limit | bar, grouped_bar, stacked_bar, scatter, bubble | Needs enough rows to truncate |
+| GroupBy | scatter, bubble | Only when view has raw (ungrouped) rows |
+| Diff, Ratio | N/A (S,S → S) | Operates on scalars, chart-independent |
+| EntityTransfer | Any → Any with shared categorical column | Needs a named entity to look up |
+| ValueTransfer | Any → Any with comparable numeric column | Needs a numeric threshold to filter by |
+| TrendCompare | line, area (both sides must be temporal) | Needs temporal axis |
+| RankCompare | bar, grouped_bar, pie, stacked_bar (both sides) | Needs ranked categorical entities |
+
+---
+
+### 3.3 Unified Generation Algorithm
+
+View enumeration, multi-chart composition, and QA generation are fused into **one loop** with operator compatibility as the single filter.
+
+#### 3.3.1 Inter-Chart Relationships
+
+Two views can be paired only if they have a semantic relationship. `candidate_pairs()` yields all `(va, vb)` from enumerated views, plus **split pairs**: for each temporal view, split by time midpoint → `(v_early, v_late)` to produce Comparative pairs.
+
+| Relationship | Predicate | Example |
+|---|---|---|
+| **Drill-down** | Same measure, `va.group_keys ⊂ vb.group_keys` | bar(hospital × cost) → grouped_bar(hospital × dept × cost) |
+| **Orthogonal Slice** | Same measure, group keys declared orthogonal | bar(hospital × cost) vs bar(severity × cost) |
+| **Comparative** | Same chart type & measure, different time filter | bar(hospital × cost, Q1) vs bar(hospital × cost, Q2) |
+| **Dual-Metric** | Same group key, different measures | bar(hospital × cost) vs bar(hospital × wait) |
+| **Part-Whole** | Composition chart + totals chart, same data | pie(dept × cost) → bar(dept × cost) |
+| **Associative** | Measures linked by `add_correlation()` in schema | bar(hospital × cost) vs bar(hospital × satisfaction) |
+| **Causal Chain** | `va.measure → vb.measure` in dependency DAG | bar(marketing) → line(traffic) → bar(conversion) |
+
+#### 3.3.2 Bridge Selection
+
+A pair is kept **if and only if** the relationship allows a bridge AND both chart types support it. This single check fuses what used to be separate "composition" and "QA feasibility" stages.
 
 ```python
-class DashboardComposer:
-    """Compose multi-chart dashboards from enumerated single views."""
+def get_valid_bridges(relationship, chart_type_a, chart_type_b):
+    """Return bridge operators valid for this relationship AND both chart types."""
+    valid = []
+    for bridge in RELATIONSHIP_BRIDGES[relationship]:
+        if (chart_type_a in bridge.compatible_source_charts
+                and chart_type_b in bridge.compatible_target_charts):
+            valid.append(bridge)
+    return valid  # empty → this pair is infeasible, skip it
+```
 
-    COMPOSITION_PATTERNS = {
-        "same_type_compare":     {"k": 2, "rel": "comparative"},
-        "overview_detail":       {"k": 2, "rel": "drill_down"},
-        "orthogonal_contrast":   {"k": 2, "rel": "orthogonal_slice"},
-        "dual_metric":           {"k": 2, "rel": "dual_metric"},
-        "distribution_cause":    {"k": 2, "rel": "associative"},
-        "cause_mediator_effect": {"k": 3, "rel": "causal_chain"},
-        "summary_dual_detail":   {"k": 3, "rel": "drill_down+dual_metric"},
-        "full_dashboard":        {"k": 4, "rel": "mixed"},
-    }
+| Relationship | Valid Bridges |
+|---|---|
+| Drill-down | EntityTransfer, ValueTransfer |
+| Orthogonal Slice | EntityTransfer, RankCompare |
+| Comparative | ValueTransfer, TrendCompare |
+| Dual-Metric | EntityTransfer, RankCompare, ValueTransfer |
+| Part-Whole | EntityTransfer, ValueTransfer |
+| Associative | RankCompare, EntityTransfer |
+| Causal Chain | EntityTransfer, ValueTransfer |
 
-    def compose(self, feasible_views: List[ViewSpec],
-                schema_metadata: dict,
-                target_k: int) -> List[Dashboard]:
-        """Generate dashboard candidates for a given plot count."""
-        dashboards = []
-        for pattern_name, spec in self.COMPOSITION_PATTERNS.items():
-            if spec["k"] != target_k:
-                continue
-            candidates = self._match_pattern(
-                pattern_name, feasible_views, schema_metadata)
-            dashboards.extend(candidates)
-        return dashboards
+#### 3.3.3 The Algorithm
 
-    def _match_pattern(self, pattern: str, views: List[ViewSpec],
-                       schema: dict) -> List[Dashboard]:
-        """Match feasible views to a composition pattern."""
-        results = []
+```python
+def generate_tasks(master_table, schema):
+    """One loop: enumerate → check operator compatibility → sample questions."""
 
-        if pattern == "same_type_compare":
-            # Find views with temporal dimension; split by time midpoint
-            for v in views:
-                if self._has_temporal(v):
-                    midpoint = self._compute_temporal_midpoint(v)
-                    v1 = v.with_filter(f"{v.binding['time']} < '{midpoint}'")
-                    v2 = v.with_filter(f"{v.binding['time']} >= '{midpoint}'")
-                    results.append(Dashboard(
-                        views=[v1, v2], relationship="comparative"))
+    # Step 1: Enumerate all feasible views
+    all_views = enumerate_views(master_table, schema)
 
-        elif pattern == "overview_detail":
-            # Pair: aggregated overview (pie/bar) + detail (grouped_bar/stacked_bar)
-            overviews = [v for v in views
-                         if v.chart_type in ("pie_chart", "bar_chart")
-                         and v.uses_role("primary")
-                         and not v.uses_role("secondary")]
-            details = [v for v in views
-                       if v.chart_type in ("grouped_bar_chart", "stacked_bar_chart")
-                       and v.uses_role("primary") and v.uses_role("secondary")]
-            for ov in overviews:
-                for det in details:
-                    if ov.measure == det.measure:
-                        results.append(Dashboard(
-                            views=[ov, det], relationship="drill_down"))
+    # Step 2: Single-chart QA — check operator compatibility, sample pipelines
+    single_tasks = []
+    for view in all_views:
+        compatible_ops = get_compatible_ops(view.chart_type)
+        if len(compatible_ops) >= 2:
+            single_tasks.extend(
+                sample_pipelines(view, compatible_ops, target_ops=[1, 2, 3]))
 
-        elif pattern == "orthogonal_contrast":
-            # Pair: same metric, grouped by primary vs. grouped by orthogonal
-            # ONLY use declared orthogonal pairs from schema_metadata
-            ortho_pairs = schema.get("orthogonal_pairs", [])
-            primary_views = [v for v in views
-                             if v.uses_role("primary")
-                             and not v.uses_role("orthogonal")]
-            ortho_views = [v for v in views
-                           if v.uses_role("orthogonal")
-                           and not v.uses_role("primary")]
-            for pv in primary_views:
-                for ov in ortho_views:
-                    if pv.measure != ov.measure:
-                        continue
-                    # Verify this is a declared orthogonal pair
-                    pv_cat = pv.binding.get("cat") or pv.binding.get("cat1")
-                    ov_cat = ov.binding.get("cat") or ov.binding.get("cat1")
-                    if self._is_declared_orthogonal(pv_cat, ov_cat, ortho_pairs):
-                        results.append(Dashboard(
-                            views=[pv, ov], relationship="orthogonal_slice"))
+    # Step 3: Multi-chart QA — check relationship + bridge validity
+    multi_tasks = []
+    for (va, vb) in candidate_pairs(all_views, schema):
+        rel = detect_relationship(va, vb, schema)
+        if rel is None:
+            continue
+        valid_bridges = get_valid_bridges(rel, va.chart_type, vb.chart_type)
+        if not valid_bridges:
+            continue  # relationship exists but no bridge fits → skip
+        multi_tasks.extend(
+            sample_cross_pipelines(va, vb, valid_bridges, target_ops=[3, 4, 5, 6]))
 
-        elif pattern == "dual_metric":
-            # Pair: same GROUP BY key, different measures
-            for i, v1 in enumerate(views):
-                for v2 in views[i+1:]:
-                    if (v1.chart_type == v2.chart_type
-                            and v1.group_key == v2.group_key
-                            and v1.measure != v2.measure):
-                        results.append(Dashboard(
-                            views=[v1, v2], relationship="dual_metric"))
+    # Step 4: k=3,4 — extend valid pairs by chaining additional views
+    for pair in multi_tasks:
+        for vc in all_views:
+            if vc not in pair.views:
+                rel_c = detect_relationship(pair.views[-1], vc, schema)
+                if rel_c and get_valid_bridges(rel_c, pair.views[-1].chart_type, vc.chart_type):
+                    multi_tasks.append(extend_pair(pair, vc, rel_c))
 
-        elif pattern == "distribution_cause":
-            # Pair: distribution chart + relationship chart sharing a measure
-            dist_views = [v for v in views
-                          if v.chart_type in ("histogram", "box_plot", "violin_plot")]
-            rel_views = [v for v in views
-                         if v.chart_type in ("scatter_plot", "bubble_chart")]
-            for dv in dist_views:
-                for rv in rel_views:
-                    if dv.measure in (rv.binding.get("m1"), rv.binding.get("m2")):
-                        results.append(Dashboard(
-                            views=[dv, rv], relationship="associative"))
+    return single_tasks + multi_tasks
+```
 
-        elif pattern == "cause_mediator_effect":
-            # Triple: requires structural measure DAG chain from schema metadata
-            dag_order = schema.get("measure_dag_order", [])
-            structural_cols = [c for c in schema.get("columns", [])
-                               if c.get("measure_type") == "structural"]
-            if len(dag_order) >= 3 and structural_cols:
-                chain = self._build_causal_chain(dag_order, structural_cols, views)
-                if chain:
-                    results.append(Dashboard(
-                        views=chain, relationship="causal_chain"))
+#### 3.3.4 Pipeline Sampling
 
-        elif pattern == "full_dashboard":
-            # Select 4 views maximizing chart_type family diversity
-            if len(views) >= 4:
-                selected = self._maximize_type_diversity(views, k=4)
-                results.append(Dashboard(
-                    views=selected, relationship="mixed"))
+```python
+def sample_question(views, relationship, target_ops):
+    """Build a typed pipeline left-to-right."""
+    pipe = views[0]                # start: type = V
+    cur_type = "V"
+    ops_left = target_ops
+    view_idx = 1
 
-        return results
+    while ops_left > 0:
+        if cur_type == "V":
+            # Option A: apply a Set op (V → V), keep going
+            # Option B: apply a Scalar op (V → S)
+            # Option C: apply a bridge like RankCompare/TrendCompare (V,V) → S
+            op = sample_op(cur_type, ops_left, views[view_idx - 1].chart_type,
+                           can_bridge=(view_idx < len(views)))
+        elif cur_type == "S":
+            if view_idx < len(views) and ops_left > 1:
+                # Bridge to next view: EntityTransfer/ValueTransfer (S,V) → V
+                op = sample_bridge(cur_type, relationship)
+                op.set_side_input(preprocess(views[view_idx]))
+                view_idx += 1
+            else:
+                break  # pipeline complete
 
-    def _is_declared_orthogonal(self, col_a: str, col_b: str,
-                                 ortho_pairs: list) -> bool:
-        """Check if (col_a, col_b) is a declared orthogonal pair."""
-        for pair in ortho_pairs:
-            if set([pair["col_a"], pair["col_b"]]) == set([col_a, col_b]):
-                return True
-        return False
+        pipe = op(pipe)
+        cur_type = op.output_type
+        ops_left -= 1
 
-    def _build_causal_chain(self, dag_order, structural_cols,
-                              views) -> Optional[List[ViewSpec]]:
-        """Find 3 views covering a cause → mediator → effect chain
-        using the measure DAG's topological order."""
-        # Walk the DAG: root measure → structural → downstream structural
-        for struct in structural_cols:
-            upstream = struct.get("depends_on", [])
-            for cause_col in upstream:
-                # cause_col is the root; struct is the effect
-                # Find a third measure that also depends on cause_col
-                for other in structural_cols:
-                    if other["name"] != struct["name"] and cause_col in other.get("depends_on", []):
-                        cause_view = self._find_view_for_measure(views, cause_col)
-                        med_view = self._find_view_for_measure(views, struct["name"])
-                        effect_view = self._find_view_for_measure(views, other["name"])
-                        if cause_view and med_view and effect_view:
-                            return [cause_view, med_view, effect_view]
-        return None
+    return pipe  # final type must be S
 
-    def _maximize_type_diversity(self, views: List[ViewSpec],
-                                  k: int) -> List[ViewSpec]:
-        """Greedily select k views maximizing distinct chart families."""
-        selected, used_families = [], set()
-        # Priority: one view per family
-        for v in views:
-            if v.family not in used_families and len(selected) < k:
-                selected.append(v)
-                used_families.add(v.family)
-        # Fill remaining slots
-        for v in views:
-            if v not in selected and len(selected) < k:
-                selected.append(v)
-        return selected[:k]
+
+def sample_op(cur_type, budget, chart_type, can_bridge):
+    """Pick a random operator compatible with current type AND chart type."""
+    candidates = [op for op in ALL_OPS
+                  if op.input_type == cur_type
+                  and chart_type in OPERATOR_CHART_COMPAT[op.name]  # the compatibility check
+                  and (not op.is_bridge or can_bridge)]
+    if budget == 1:
+        candidates = [op for op in candidates if op.output_type == "S"]
+    return random.choice(candidates)
 ```
 
 ---
 
-### 3.3 Rule-Based QA Generation
+### 3.4 Pattern-Seeded QA
 
-With arithmetically sound chart views derived from a shared Master Table, QA pairs are generated through two complementary mechanisms: **Template QA** for systematic coverage and **Pattern-Triggered QA** for reasoning depth.
+Patterns injected in Phase 2 pre-fix certain operators in the pipeline. The remaining operators are randomly sampled. No special `PatternDetector` class is needed — patterns simply constrain which operators appear in the pipeline. The compatibility table ensures the fixed operators are valid for the view's chart type.
 
-#### 3.3.1 Intra-View QA (Single Chart)
+| Pattern | Fixed Operators | Example Question |
+|---------|----------------|-----------------|
+| outlier | Filter(target) + Ratio | "How much does the outlier entity deviate from the group mean?" |
+| trend_break | Filter(time > breakpoint) + ValueAt | "Is there a change point? When does it occur?" |
+| ranking_reversal | RankCompare | "Does the entity ranked highest on metric A also rank highest on B?" |
+| dominance_shift | Filter(early) + ArgMax vs Filter(late) + ArgMax | "Does the leading entity remain the same throughout?" |
+| convergence | TrendCompare | "Are the two series converging or diverging?" |
 
-| QA Type | Description | Applicable Charts | Difficulty |
-|---------|-------------|-------------------|------------|
-| **Value Retrieval** | Read a specific data point. | All | Easy |
-| **Extremum** | Identify max/min entity or value. | Bar, Line, Scatter | Easy |
-| **Comparison** | Compare two entities or time points. | Bar, Grouped Bar, Line | Medium |
-| **Trend** | Describe overall direction or inflection. | Line, Area | Medium |
-| **Distribution** | Characterize shape (skew, modality, spread). | Histogram, Box, Violin | Medium |
-| **Proportion** | Calculate or compare part-to-whole ratios. | Pie, Donut, Stacked Bar, Treemap | Medium |
-| **Correlation** | Assess direction/strength of variable relationship. | Scatter, Bubble, Heatmap | Hard |
-| **Anomaly Detection** | Identify outliers or unexpected values. | All (if pattern present) | Hard |
+---
 
-**Template QA Generation:**
+### 3.5 Difficulty = #Ops
 
-```python
-INTRA_VIEW_TEMPLATES = {
-    "value_retrieval": {
-        "template": "What is the {agg} {measure} for {entity}?",
-        "answer_fn": lambda view, entity, measure, cat:
-            view.loc[view[cat] == entity, measure].values[0],
-        "difficulty": "easy",
-        "applicable": ["bar_chart", "grouped_bar_chart", "heatmap", "radar_chart"]
-    },
-    "extremum": {
-        "template": "Which {cat} has the {highest/lowest} {measure}?",
-        "answer_fn": lambda view, measure, cat, mode:
-            view.loc[view[measure].idxmax() if mode == "highest"
-                     else view[measure].idxmin(), cat],
-        "difficulty": "easy",
-        "applicable": ["bar_chart", "line_chart", "scatter_plot"]
-    },
-    "comparison": {
-        "template": "How much {more/less} is {entity_a}'s {measure} compared to {entity_b}?",
-        "answer_fn": lambda view, a, b, m, cat:
-            abs(view.loc[view[cat] == a, m].values[0]
-                - view.loc[view[cat] == b, m].values[0]),
-        "difficulty": "medium",
-        "applicable": ["bar_chart", "grouped_bar_chart"]
-    },
-    "trend": {
-        "template": "What is the overall trend of {measure} from {start} to {end}?",
-        "answer_fn": lambda view, m:
-            "increasing" if view[m].iloc[-1] > view[m].iloc[0] else "decreasing",
-        "difficulty": "medium",
-        "applicable": ["line_chart", "area_chart"]
-    },
-    "proportion": {
-        "template": "What percentage does {entity} contribute to the total {measure}?",
-        "answer_fn": lambda view, entity, m, cat:
-            view.loc[view[cat] == entity, m].values[0] / view[m].sum() * 100,
-        "difficulty": "medium",
-        "applicable": ["pie_chart", "donut_chart", "stacked_bar_chart"]
-    },
-    "distribution_shape": {
-        "template": "Is the distribution of {measure} left-skewed, right-skewed, or symmetric?",
-        "answer_fn": lambda view, m:
-            "right-skewed" if view[m].skew() > 0.5
-            else ("left-skewed" if view[m].skew() < -0.5 else "approximately symmetric"),
-        "difficulty": "medium",
-        "applicable": ["histogram", "violin_plot"]
-    },
-    "correlation_direction": {
-        "template": "What is the relationship between {m1} and {m2}? Positive, negative, or none?",
-        "answer_fn": lambda view, m1, m2:
-            "positive" if view[m1].corr(view[m2]) > 0.3
-            else ("negative" if view[m1].corr(view[m2]) < -0.3 else "no clear relationship"),
-        "difficulty": "hard",
-        "applicable": ["scatter_plot", "bubble_chart"]
-    }
-}
+Difficulty is determined by a single, objective metric: the number of operators in the pipeline. No manual labeling, no heuristic scoring.
+
+| #Ops | Difficulty | Typical Shape |
+|------|-----------|---------------|
+| 1–2 | Easy | Single-chart: direct lookup |
+| 3–4 | Medium | Single-chart chain or 2-chart with 1 bridge |
+| 5–6 | Hard | Multi-chart with ops on both sides of the bridge |
+| 7+ | Very Hard | 3+ charts with chained bridges |
+
+---
+
+### 3.6 Walkthrough Example
+
+**Setup:** Master Table with 500 rows, 7 columns. Three hospitals, three departments, 12 months of visits.
+
+```
+Columns: hospital(P), dept(S), severity(O), visit_date(T), wait_min(M), cost(M), satisfaction(M)
+P = primary, S = secondary, O = orthogonal, T = temporal, M = measure
 ```
 
-#### 3.3.2 Inter-View QA (Cross-Chart, Multi-Plot Only)
+**Step 1 — Enumerate views:** Match column roles to chart type rules.
 
-These questions are the **unique strength** of Table Amortization — only possible because all charts derive from the same Master Table with guaranteed arithmetic consistency.
-
-| QA Type | Description | Required Relationship | Difficulty |
-|---------|-------------|----------------------|------------|
-| **Ranking Consistency** | Does entity ranking stay the same across metrics? | Dual-Metric, Associative | Hard |
-| **Conditional Lookup** | Use one chart to identify an entity, look it up in another. | Any k >= 2 | Hard |
-| **Trend Divergence** | Do two entities/metrics trend in the same direction? | Comparative, Dual-Metric | Hard |
-| **Drill-down Verification** | Does a detail chart confirm the overview's pattern? | Drill-down | Hard |
-| **Orthogonal Reasoning** | Does a pattern hold when sliced by an orthogonal dimension? | Orthogonal Slice | Very Hard |
-| **Causal Inference** | Does the cause metric explain the effect? | Causal Chain (k=3) | Very Hard |
-| **Holistic Synthesis** | Across all charts, which entity has the best overall profile? | Full Dashboard (k=4) | Very Hard |
-
-```python
-INTER_VIEW_TEMPLATES = {
-    "ranking_consistency": {
-        "template": "The {cat} with the highest {m1} in Chart A — "
-                    "what is its rank for {m2} in Chart B?",
-        "answer_fn": lambda views: cross_rank_lookup(views[0], views[1]),
-        "required_rel": ["dual_metric", "associative"],
-        "difficulty": "hard"
-    },
-    "conditional_lookup": {
-        "template": "In Chart A, {cat} has a {measure} of {value}. "
-                    "What is this {cat}'s {other_measure} shown in Chart B?",
-        "answer_fn": lambda views: conditional_value_transfer(views[0], views[1]),
-        "required_rel": ["any"],
-        "difficulty": "hard"
-    },
-    "trend_divergence": {
-        "template": "Do {entity_a} and {entity_b} show the same trend direction "
-                    "for {measure} across both time periods?",
-        "answer_fn": lambda views: compare_trend_directions(views[0], views[1]),
-        "required_rel": ["comparative", "dual_metric"],
-        "difficulty": "hard"
-    },
-    "drilldown_verification": {
-        "template": "Chart A shows {cat_a} dominates overall. "
-                    "In the detailed Chart B, which sub-category drives this dominance?",
-        "answer_fn": lambda views: identify_dominant_subcategory(views[0], views[1]),
-        "required_rel": ["drill_down"],
-        "difficulty": "hard"
-    },
-    "orthogonal_reasoning": {
-        "template": "Chart A shows {measure} by {primary_cat}. "
-                    "Chart B shows the same metric by {ortho_cat}. "
-                    "Is the top-performing {primary_cat} also dominant "
-                    "within each {ortho_cat} group?",
-        "answer_fn": lambda views, master:
-            verify_orthogonal_dominance(views, master),
-        "required_rel": ["orthogonal_slice"],
-        "difficulty": "very_hard"
-    },
-    "causal_inference": {
-        "template": "Chart A shows {cause} increased. Chart B shows {mediator} "
-                    "also increased. But Chart C shows {effect} decreased. "
-                    "What might explain this?",
-        "answer_fn": lambda views, schema:
-            build_causal_explanation(views, schema["dependencies"]),
-        "required_rel": ["causal_chain"],
-        "difficulty": "very_hard"
-    },
-    "holistic_synthesis": {
-        "template": "Considering all {k} charts, which {cat} demonstrates "
-                    "the best overall performance across all metrics?",
-        "answer_fn": lambda views: compute_composite_ranking(views),
-        "required_rel": ["mixed"],
-        "difficulty": "very_hard"
-    }
-}
+```
+V1: bar_chart(hospital × AVG(wait))         — rule: (cat:P/S, measure:M), |cat|∈[3,30] ✓
+V2: bar_chart(hospital × AVG(cost))         — same rule, different measure ✓
+V3: line_chart(date × hospital × AVG(wait)) — rule: (time:T, series:P/O, measure:M) ✓
+V4: pie_chart(dept × SUM(cost))             — rule: (cat:P/S, measure:M), |cat|∈[3,8] ✓
 ```
 
-#### 3.3.3 Pattern-Triggered QA
+**Step 2 — Single-chart QA:** V1 is a bar_chart → compatible ops: ArgMax, Sort, Limit, Filter, Max, Min, Avg, Sum, Count, ValueAt.
 
-The `PatternDetector` scans each extracted view for the statistical patterns injected during Phase 2. When a pattern is detected, it triggers a specialized hard question that tests genuine visual reasoning.
+```
+1-op:  V1 → ArgMax → S                      "Which hospital has the highest wait time?"
+3-op:  V1 → Sort → Limit(2) → V → Avg → S  "Average wait of the top-2 hospitals?"
+```
 
-```python
-class PatternDetector:
-    """Scan view DataFrames for patterns injected in Phase 2."""
+**Step 3 — Multi-chart QA:** Check each pair for relationship + bridge validity.
 
-    def detect_and_generate_qa(self, view: pd.DataFrame, view_spec: ViewSpec,
-                                pattern_metadata: List[dict]) -> List[QAPair]:
-        qa_pairs = []
-        for pattern in pattern_metadata:
-            if self._pattern_visible_in_view(pattern, view_spec):
-                qa_pairs.extend(self._generate_pattern_qa(pattern, view, view_spec))
-        return qa_pairs
+```
+Pair (V1, V2):  same group_key(hospital), different measure(wait vs cost)  →  Dual-Metric
+  Valid bridges for Dual-Metric: [EntityTransfer, RankCompare, ValueTransfer]
+  bar_chart supports EntityTransfer? ✓ (has named entities)
+  bar_chart supports RankCompare?    ✓ (has ranked entities)
+  → valid_bridges not empty → KEEP this pair
 
-    def _pattern_visible_in_view(self, pattern: dict,
-                                  view_spec: ViewSpec) -> bool:
-        """Check if the pattern's target column/entity appears in this view."""
-        if pattern.get("col") and pattern["col"] not in view_spec.select_columns:
-            return False
-        if pattern.get("target"):
-            return view_spec.filter_compatible(pattern["target"])
-        return True
+  Sample pipeline (3-op):
+  V1 → ArgMax → S="Xiehe" → EntityTransfer(S, V2) → V=[Xiehe's cost row] → ValueAt → S=6200
+  "The hospital with the longest wait — what is its average cost?"
 
-    def _generate_pattern_qa(self, pattern: dict, view: pd.DataFrame,
-                              view_spec: ViewSpec) -> List[QAPair]:
-        """Generate QA pairs specific to each pattern type."""
-        ptype = pattern["type"]
+Pair (V1, V3):  same measure(wait), {hospital} ⊂ {date, hospital}  →  Drill-down
+  Valid bridges: [EntityTransfer, ValueTransfer]
+  bar → EntityTransfer → line? bar has entities ✓, line has series ✓  → KEEP
 
-        if ptype == "outlier_entity":
-            entity_val = view.query(pattern["target"])[pattern["col"]].mean()
-            overall_mean = view[pattern["col"]].mean()
-            return [QAPair(
-                question=f"Which entity shows an anomalously high "
-                         f"{pattern['col']}? By how much does it deviate?",
-                answer=f"{self._extract_entity(pattern['target'])}; "
-                       f"deviates by {entity_val - overall_mean:.1f}",
-                reasoning=f"Visual inspection shows "
-                          f"{self._extract_entity(pattern['target'])} is "
-                          f"clearly separated. Its value ({entity_val:.1f}) "
-                          f"exceeds the group mean ({overall_mean:.1f}).",
-                difficulty="hard"
-            )]
-
-        elif ptype == "trend_break":
-            bp = pattern.get("break_point", pattern.get("params", {}).get("break_point"))
-            mag = pattern.get("magnitude", pattern.get("params", {}).get("magnitude", 0))
-            return [QAPair(
-                question=f"Is there a significant change point in "
-                         f"{pattern['col']}? When does it occur?",
-                answer=f"Yes, around {bp} with ~{mag*100:.0f}% magnitude.",
-                reasoning="The chart shows a visible discontinuity at "
-                          "the identified time point.",
-                difficulty="hard"
-            )]
-
-        elif ptype == "ranking_reversal":
-            metrics = pattern.get("metrics",
-                                  pattern.get("params", {}).get("metrics", []))
-            desc = pattern.get("description",
-                               pattern.get("params", {}).get("description", ""))
-            m1, m2 = metrics[0], metrics[1]
-            return [QAPair(
-                question=f"Does the entity ranked highest on {m1} "
-                         f"also rank highest on {m2}?",
-                answer=f"No — ranking reversal: {desc}.",
-                reasoning=f"Comparing charts reveals high {m1} does not "
-                          f"imply high {m2}.",
-                difficulty="very_hard"
-            )]
-
-        elif ptype == "dominance_shift":
-            return [QAPair(
-                question="Does the leading entity remain the same "
-                         "throughout the entire time period?",
-                answer="No — a dominance shift occurs mid-period.",
-                reasoning="Early time points show one entity leading, "
-                          "but a crossover occurs.",
-                difficulty="hard"
-            )]
-
-        elif ptype == "convergence":
-            return [QAPair(
-                question="Are the two series converging, diverging, "
-                         "or maintaining a constant gap?",
-                answer="Converging — the gap narrows over time.",
-                reasoning="Visual comparison shows decreasing difference.",
-                difficulty="medium"
-            )]
-
-        elif ptype == "seasonal_anomaly":
-            return [QAPair(
-                question=f"Does {pattern['col']} follow a consistent "
-                         f"seasonal pattern across all entities?",
-                answer=f"Most follow typical seasonality, but "
-                       f"{self._extract_entity(pattern['target'])} deviates.",
-                reasoning="One entity breaks the expected cyclical pattern.",
-                difficulty="hard"
-            )]
-
-        return []
-
-    def _extract_entity(self, target_filter: str) -> str:
-        """Extract entity name from filter string like \"hospital == 'Xiehe'\"."""
-        match = re.search(r"== '([^']+)'", target_filter)
-        return match.group(1) if match else target_filter
+Pair (V2, V3):  different measure, no shared group_key pattern  →  None  →  SKIP
 ```
 
 ---
 
-### 3.4 Difficulty Classification
-
-Each QA pair is assigned a difficulty level based on the reasoning steps required:
-
-| Difficulty | Definition | Reasoning Steps | Example |
-|------------|-----------|-----------------|---------|
-| **Easy** | Single-step lookup from one chart. | 1 | "What is hospital A's wait time?" |
-| **Medium** | Aggregation, comparison, or derivation within one chart. | 2 | "How much more does A cost than B?" |
-| **Hard** | Multi-step reasoning, cross-chart lookup, or pattern detection. | 3–4 | "The hospital with longest wait — what's its satisfaction rank?" |
-| **Very Hard** | 3–4 chart synthesis, causal reasoning, or holistic judgment. | 5+ | "Across all charts, which hospital has the best composite profile?" |
-
-**Target difficulty distribution per Master Table:**
-
-| Difficulty | Proportion |
-|------------|-----------|
-| Easy | 25% |
-| Medium | 35% |
-| Hard | 25% |
-| Very Hard | 15% |
-
----
-
-### 3.5 End-to-End Summary
+### 3.7 End-to-End Summary
 
 ```
-Input: Master Table (N rows × C columns) + Schema Metadata
+Input:  Master Table + Schema Metadata
 
-Step 1: ViewEnumerator.enumerate()
-        → All feasible (chart_type, column_binding) pairs
+Step 1: Enumerate feasible views (column-role matching)
+Step 2: For each view/pair/group:
+        a) Check operator–chart compatibility (single-chart)
+        b) Check relationship + bridge compatibility (multi-chart)
+        c) Sample operator pipelines → {question, answer, chain}
+Step 3: Render charts + package QA
 
-Step 2: DashboardComposer.compose()
-        → Single views (k=1) + multi-chart dashboards (k=2,3,4)
-
-Step 3: For each view/dashboard:
-        a) extract_view() → chart-ready DataFrame
-        b) Render chart image (matplotlib/plotly)
-        c) Generate Intra-View QA via templates
-        d) Generate Inter-View QA via cross-chart templates (k >= 2)
-        e) PatternDetector → Pattern-Triggered QA
-
-Step 4: Difficulty assignment + proportion balancing
-
-Output per Master Table: 10–30+ {chart_image(s), question, answer,
-                                  reasoning_chain, difficulty}
+Output: 10–30+ {chart_image(s), question, answer, operator_chain, difficulty}
 ```
