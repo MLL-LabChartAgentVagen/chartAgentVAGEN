@@ -1,0 +1,55 @@
+---
+description: Phase 2 spec-analysis workflow rules for Cursor/Codex
+globs:
+alwaysApply: true
+---
+
+# Phase 2 Workflow Rules
+
+## Authoritative sources
+Treat the following files as the only authoritative sources for Phase 2 analysis:
+- `docs/phase2/spec/phase_2.md`
+- `docs/phase2/spec/1_phase2_implementation_task_hierarchy.md`
+- `docs/phase2/spec/2_phase2_gap_analysis.md`
+- `docs/phase2/spec/3_phase2_implementation_alignment_map.md`
+- `docs/phase2/spec/4_phase2_sprint_plan.md`
+
+If evidence is insufficient, say so explicitly.
+Do not invent implementation details not grounded in these files.
+Do not treat examples as formal contracts unless the spec explicitly says so.
+
+## Status handling
+Always distinguish:
+- `SPEC_READY`
+- `NEEDS_CLARIFICATION`
+- `BLOCKED`
+- `SPEC_INCORRECT`
+
+Treat `SPEC_INCORRECT` as equally important as `BLOCKED`.
+Do not treat `NEEDS_CLARIFICATION` as equivalent to a blocker unless the documents explicitly justify that.
+
+## Progress accounting
+For any question about Sprint 1–8 completion, always use all three lenses:
+1. Sprint completion rate
+2. Implementable subtask completion rate
+3. Total Phase 2 coverage rate
+
+## Workflow discipline
+Follow the staged workflow in `docs/phase2/prompts/`.
+Do not jump ahead to later stages.
+Each stage should write its result to `docs/phase2/outputs/`.
+
+## Output style
+Use Chinese.
+Use structured Markdown.
+Be concise, technical, and audit-style.
+Prefer tables where useful.
+When current-stage outputs conflict with prior outputs, prefer the source documents and explicitly note the conflict.
+
+## File-writing behavior
+For each stage:
+- read the required prompt file
+- read the required prior-stage output files
+- re-check source spec files when needed
+- write exactly one primary output file under `docs/phase2/outputs/`
+- in chat, only summarize what was read, what was written, and key findings briefly
