@@ -1,0 +1,149 @@
+{
+  "dimension_groups": {
+    "customer": {
+      "columns": [
+        "region",
+        "segment"
+      ],
+      "hierarchy": [
+        "region",
+        "segment"
+      ]
+    },
+    "product": {
+      "columns": [
+        "category",
+        "brand"
+      ],
+      "hierarchy": [
+        "category",
+        "brand"
+      ]
+    }
+  },
+  "orthogonal_groups": [
+    {
+      "group_a": "customer",
+      "group_b": "product",
+      "rationale": "Customer segments and regions are independent of the product catalog."
+    }
+  ],
+  "columns": [
+    {
+      "name": "region",
+      "type": "categorical",
+      "group": "customer",
+      "parent": null,
+      "cardinality": 4
+    },
+    {
+      "name": "segment",
+      "type": "categorical",
+      "group": "customer",
+      "parent": null,
+      "cardinality": 3
+    },
+    {
+      "name": "category",
+      "type": "categorical",
+      "group": "product",
+      "parent": null,
+      "cardinality": 3
+    },
+    {
+      "name": "brand",
+      "type": "categorical",
+      "group": "product",
+      "parent": "category",
+      "cardinality": 3
+    },
+    {
+      "name": "order_date",
+      "type": "temporal"
+    },
+    {
+      "name": "revenue",
+      "type": "measure",
+      "declared_dist": "lognormal",
+      "declared_params": {
+        "mu": 4.5,
+        "sigma": 0.8
+      }
+    },
+    {
+      "name": "discount",
+      "type": "measure",
+      "declared_dist": "beta",
+      "declared_params": {
+        "alpha": 2.0,
+        "beta": 15.0
+      }
+    },
+    {
+      "name": "shipping_cost",
+      "type": "measure",
+      "declared_dist": "gamma",
+      "declared_params": {
+        "shape": 2.0,
+        "scale": 5.0
+      }
+    },
+    {
+      "name": "quantity",
+      "type": "measure",
+      "declared_dist": "poisson",
+      "declared_params": {
+        "lam": 3.0
+      }
+    }
+  ],
+  "conditionals": [
+    {
+      "measure": "discount",
+      "on": "segment",
+      "mapping": {
+        "Retail": {
+          "alpha": 2.0,
+          "beta": 20.0
+        },
+        "Wholesale": {
+          "alpha": 5.0,
+          "beta": 10.0
+        },
+        "Enterprise": {
+          "alpha": 8.0,
+          "beta": 5.0
+        }
+      }
+    }
+  ],
+  "correlations": [
+    {
+      "col_a": "revenue",
+      "col_b": "shipping_cost",
+      "target_r": 0.65
+    }
+  ],
+  "dependencies": [
+    {
+      "target": "shipping_cost",
+      "formula": "revenue * 0.02 + quantity * 2.5"
+    }
+  ],
+  "patterns": [
+    {
+      "type": "trend_break",
+      "target": "category == 'Electronics'",
+      "col": "revenue",
+      "break_point": "2023-07-01",
+      "factor": 1.8
+    },
+    {
+      "type": "outlier_entity",
+      "target": "region == 'West'",
+      "col": "shipping_cost",
+      "factor": 3.0
+    }
+  ],
+  "total_rows": 2000
+}

@@ -7,6 +7,7 @@ Supports: number of chart-QA sets, stages, input file, output directory, and all
 import argparse
 import sys
 from pathlib import Path
+from typing import Optional
 
 # Add project root to path
 project_root = Path(__file__).parent
@@ -56,7 +57,7 @@ def build_args_for_chart_type(
     num_charts: int,
     stages: str,
     num_questions: int,
-    random_seed: int,
+    random_seed: Optional[int],
     figsize: tuple,
     gray_mask: str,
     bbox_color: str,
@@ -157,8 +158,8 @@ Stages:
     parser.add_argument(
         "--random-seed",
         type=int,
-        default=42,
-        help="Random seed (default: 42)"
+        default=None,
+        help="Random seed for reproducibility. If not specified, uses system randomness (no seed)."
     )
     parser.add_argument(
         "--figsize",
@@ -236,7 +237,7 @@ Stages:
     logger.info(f"Chart types:  {args.chart_types}")
     logger.info(f"Stages:       {stages} (0=bbox, 1=original)")
     logger.info(f"Num questions per chart: {args.num_questions}")
-    logger.info(f"Random seed:  {args.random_seed}")
+    logger.info(f"Random seed:  {args.random_seed if args.random_seed is not None else 'None (using system randomness)'}")
     logger.info(f"Figsize:      {figsize}")
     logger.info("=" * 80)
 
