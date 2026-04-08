@@ -83,14 +83,19 @@ class AGPDSRunner:
                     json.dump(schema_content, f, indent=2)
                 result["schema_metadata_path"] = os.path.join("schemas", f"{gen_id}_metadata.json")
 
-            # Save per-generation chart JSON (same basename as master_tables)
-            result["charts_path"] = os.path.join("charts", f"{gen_id}.json")
+            # Save per-generation chart JSON — strip raw blobs, keep path references
+            chart_record = {
+                k: v for k, v in result.items()
+                if k not in ("master_data_csv", "schema_metadata")
+            }
+            chart_record["charts_path"] = os.path.join("charts", f"{gen_id}.json")
+            result["charts_path"] = chart_record["charts_path"]
             charts_path = os.path.join(charts_dir, f"{gen_id}.json")
             with open(charts_path, 'w', encoding='utf-8') as f:
-                json.dump(result, f, indent=2)
+                json.dump(chart_record, f, indent=2)
             charts_count += 1
 
-            json_results.append(result)
+            json_results.append(chart_record)
 
         # Save main charts bundle (all generations combined)
         output_path = os.path.join(output_dir, "charts.json")

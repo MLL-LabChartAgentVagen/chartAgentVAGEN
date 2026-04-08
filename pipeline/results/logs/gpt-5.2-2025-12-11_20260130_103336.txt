@@ -1,0 +1,97 @@
+Chart QA Evaluation Log
+================================================================================
+Model: gpt-5.2-2025-12-11
+Provider: openai
+Start Time: 2026-01-30 10:33:36
+================================================================================
+
+[10:33:36] Loading data from ./data_files/bar__meta_qa_data.json...
+[10:33:36] Loaded 20 QA entries
+[10:33:36] Evaluating 20 entries after filtering
+[10:33:36] Starting evaluation...
+[10:33:36] --------------------------------------------------
+[10:33:43]   [1/20] ✓ bar__img_1__category6__angle30__vertical__labeled__w_legend__xtop__yright_qa1
+[10:33:43]       VLM: 10... | GT: 10...
+[10:33:54]   [2/20] ✓ bar__img_2__category2__angle60__horizontal__labeled__w_legend__xtop__yright_qa1
+[10:33:54]       VLM: 503.47... | GT: 503.47...
+[10:33:57]   [3/20] ✓ bar__img_3__category15__angle60__horizontal__labeled__w_legend__xbottom__yright_qa1
+[10:33:57]       VLM: 10... | GT: 10...
+[10:34:02]   [4/20] ✗ bar__img_4__category13__angle30__vertical__labeled__w_legend__xtop__yleft_qa1
+[10:34:02]       VLM: 4... | GT: 5...
+[10:34:06]   [5/20] ✓ bar__img_5__category12__angle60__horizontal__labeled__w_legend__xbottom__yright_qa1
+[10:34:06]       VLM: 10... | GT: 10...
+[10:34:19]   [6/20] ✓ bar__img_6__category8__angle45__horizontal__labeled__w_legend__xbottom__yleft_qa1
+[10:34:19]       VLM: 0.985... | GT: 0.98...
+[10:34:23]   [7/20] ✓ bar__img_7__category6__angle30__vertical__labeled__w_legend__xbottom__yleft_qa1
+[10:34:23]       VLM: 389.4, 352.7, 319.5, 284.8, 25... | GT: 389.4, 352.7, 319.5, 284.8, 25...
+[10:34:34]   [8/20] ✗ bar__img_8__category29__angle60__horizontal__labeled__w_legend__xbottom__yleft_qa1
+[10:34:34]       VLM: 47.1666666667, 27.6... | GT: 42.27...
+[10:34:41]   [9/20] ✓ bar__img_9__category5__angle90__vertical__labeled__w_legend__xtop__yleft_qa1
+[10:34:41]       VLM: 178.5, 165.2, 153.9, 142.7, 13... | GT: 178.5, 165.2, 153.9, 142.7, 13...
+[10:34:46]   [10/20] ✓ bar__img_10__category22__angle30__horizontal__labeled__w_legend__xbottom__yright_qa1
+[10:34:46]       VLM: 315... | GT: 315.00...
+[10:34:55]   [11/20] ✓ bar__img_11__category2__angle30__vertical__labeled__w_legend__xbottom__yright_qa1
+[10:34:55]       VLM: 18.57, 8... | GT: 18.57...
+[10:34:57]   [12/20] ✓ bar__img_12__category2__angle90__vertical__labeled__w_legend__xbottom__yright_qa1
+[10:34:57]       VLM: 2... | GT: 2...
+[10:35:05]   [13/20] ✓ bar__img_13__category5__angle45__vertical__labeled__w_legend__xtop__yright_qa1
+[10:35:05]       VLM: 3.605... | GT: 3.60...
+[10:35:10]   [14/20] ✓ bar__img_14__category12__angle30__vertical__labeled__w_legend__xbottom__yright_qa1
+[10:35:10]       VLM: 16.4... | GT: 16.40...
+[10:35:15]   [15/20] ✓ bar__img_15__category12__angle90__vertical__labeled__w_legend__xtop__yleft_qa1
+[10:35:15]       VLM: 10... | GT: 10...
+[10:35:19]   [16/20] ✓ bar__img_16__category26__angle90__vertical__labeled__w_legend__xtop__yleft_qa1
+[10:35:19]       VLM: 370... | GT: 370.00...
+[10:35:23]   [17/20] ✓ bar__img_17__category2__angle60__vertical__labeled__w_legend__xbottom__yleft_qa1
+[10:35:23]       VLM: 2.68... | GT: 2.68...
+[10:35:28]   [18/20] ✓ bar__img_18__category29__angle90__horizontal__labeled__w_legend__xtop__yright_qa1
+[10:35:28]       VLM: 165... | GT: 165...
+[10:35:33]   [19/20] ✗ bar__img_19__category11__angle60__horizontal__labeled__w_legend__xtop__yright_qa1
+[10:35:33]       VLM: 6... | GT: 3...
+[10:35:36]   [20/20] ✓ bar__img_20__category22__angle60__vertical__labeled__w_legend__xtop__yright_qa1
+[10:35:36]       VLM: 17... | GT: 17...
+[10:35:36] --------------------------------------------------
+[10:35:36] Evaluation completed in 119.4s
+[10:35:36] Results saved to ./results/evaluation_results.json
+
+============================================================
+                  EVALUATION SUMMARY
+============================================================
+
+📊 Overall Performance:
+   Accuracy:        85.00%
+   Total Questions: 20
+   Correct:         17
+   Incorrect:       3
+   Avg Similarity:  0.906
+   Avg Latency:     5967ms
+   Total Time:      119.4s
+
+📈 Accuracy by Difficulty Level:
+   Level 1: 100.00% (10 questions)
+   Level 2: 66.67% (6 questions)
+   Level 3: 75.00% (4 questions)
+
+📋 Accuracy by QA Type (Top 10):
+   random__nested_count_of_topk_of_all: 100.00% (1)
+   random__nested_mean_of_all_of_kth: 100.00% (1)
+   random__nested_min_of_kth_of_threshold: 100.00% (1)
+   random__parallel_mean_of_kth_and_thresho...: 100.00% (1)
+   random__parallel_median_of_topk_and_topk: 100.00% (1)
+   random__parallel_min_of_all_and_threshol...: 100.00% (1)
+   random__parallel_sum_of_kth_and_threshol...: 100.00% (1)
+   random__simple_count: 100.00% (4)
+   random__simple_max: 100.00% (1)
+   random__simple_median: 100.00% (1)
+
+🔍 Match Type Distribution:
+   exact: 11
+   numeric_close: 6
+   numeric_mismatch: 2
+   string_mismatch: 1
+
+============================================================
+
+================================================================================
+End Time: 2026-01-30 10:35:36
+================================================================================
