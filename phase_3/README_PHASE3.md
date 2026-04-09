@@ -2,6 +2,125 @@
 
 Phase 3 takes a master dataset and schema metadata, enumerates all valid chart views, generates chart images, and produces single-chart (intra) and multi-chart (inter) QA pairs.
 
+```mermaid
+flowchart LR
+
+%% ══════════════ INPUT DATA ═══════════════════════════════════════
+subgraph INPUT[" Input Data "]
+    direction TB
+    SCH(["Schema Metadata"])
+    MT[("Master Table")]
+end
+style INPUT fill:#1e293b,stroke:#60a5fa,stroke-width:3px,color:#e2e8f0
+style SCH fill:#334155,stroke:#94a3b8,color:#f1f5f9
+style MT fill:#334155,stroke:#94a3b8,color:#f1f5f9
+
+%% ══════════════ UNIFIED GENERATION ALGORITHM ═════════════════════
+subgraph UGA["Unified Generation Algorithm"]
+    direction LR
+
+    subgraph VC["View Creation"]
+        direction LR
+        VER{{"View Extraction Rules"}}
+        CTR{{"Chart Type Registry"}}
+        CSG{{"Chart Selection Guide"}}
+        VE["ViewEnumerator<br>enumerate()<br>_score_view()"]
+        VS["ViewSpec<br>chart_type · binding<br>extract_view()"]
+        VER --> VE
+        CTR --> VE
+        CSG --> VE
+        VE --> VS
+    end
+
+    subgraph DC["Dashboard Creation"]
+        direction LR
+        DBC["DashboardComposer<br>7 composition patterns"]
+        DASH["Dashboard<br>views · relationship<br>pattern · layout"]
+        DBC --> DASH
+    end
+
+    subgraph CG["Chart Generation"]
+        direction TB
+        CGT["ChartGeneratorTemplate<br>generate_chart()"]
+        GENS[/"17 Concrete Generators<br>Bar · Line · Pie · Scatter<br>Area · Grouped · Stacked<br>Heatmap · Histogram · Box<br>Violin · Bubble · Radar<br>Donut · Treemap<br>Waterfall · Funnel"\]
+        CGT --> GENS
+    end
+
+    subgraph QG["Question Generation"]
+        direction TB
+        subgraph OPS["Operator Algebra"]
+            direction TB
+            OP_BASE["Operator ABC<br>name · input/output type<br>compatible_charts<br>question_templates"]
+            SET["SetOperator V to V<br>Filter · Sort · Limit · GroupBy"]
+            SCALAR["ScalarOperator V to S<br>Max · Min · Avg · Sum<br>Count · ArgMax · ArgMin · ValueAt"]
+            COMB["Combinators<br>Diff · Ratio · Union<br>Intersect · Difference"]
+            BRIDGE["BridgeOperator<br>EntityTransfer · ValueTransfer<br>TrendCompare · RankCompare"]
+            OREG["Operator Registry<br>get_compatible_ops<br>get_ops_by_signature"]
+            OP_BASE --> SET
+            OP_BASE --> SCALAR
+            OP_BASE --> COMB
+            OP_BASE --> BRIDGE
+            SET --> OREG
+            SCALAR --> OREG
+            COMB --> OREG
+            BRIDGE --> OREG
+        end
+        OCC["Operator Compatibility<br>chart type to operator<br>relationship to bridge"]
+        QP["Question Pipeline<br>sample_question<br>typed chain V to S<br>compose NL fragments"]
+        OREG --> OCC
+        OCC --> QP
+    end
+
+    %% internal connections
+    VS --> DBC
+    VS --> CGT
+    VS --> OCC
+    DASH --> CGT
+    DASH --> OCC
+end
+style UGA fill:#0f172a,stroke:#475569,stroke-width:3px,color:#e2e8f0
+style VC fill:#1e3a5f,stroke:#3b82f6,stroke-width:3px,color:#bfdbfe
+style VER fill:#1e3a5f,stroke:#60a5fa,color:#bfdbfe
+style CTR fill:#1e3a5f,stroke:#60a5fa,color:#bfdbfe
+style CSG fill:#1e3a5f,stroke:#60a5fa,color:#bfdbfe
+style VE fill:#1e3a5f,stroke:#93c5fd,color:#f0f9ff
+style VS fill:#1e3a5f,stroke:#93c5fd,color:#f0f9ff
+style DC fill:#14532d,stroke:#4ade80,stroke-width:3px,color:#bbf7d0
+style DBC fill:#14532d,stroke:#86efac,color:#f0fdf4
+style DASH fill:#14532d,stroke:#86efac,color:#f0fdf4
+style CG fill:#3b1f7b,stroke:#a78bfa,stroke-width:3px,color:#e9d5ff
+style CGT fill:#3b1f7b,stroke:#c4b5fd,color:#f5f3ff
+style GENS fill:#3b1f7b,stroke:#c4b5fd,color:#f5f3ff
+style QG fill:#713f12,stroke:#facc15,stroke-width:3px,color:#fef9c3
+style OPS fill:#78350f,stroke:#f59e0b,stroke-width:2px,color:#fef3c7
+style OP_BASE fill:#78350f,stroke:#fbbf24,color:#fefce8
+style SET fill:#78350f,stroke:#fcd34d,color:#fefce8
+style SCALAR fill:#78350f,stroke:#fcd34d,color:#fefce8
+style COMB fill:#78350f,stroke:#fcd34d,color:#fefce8
+style BRIDGE fill:#78350f,stroke:#fcd34d,color:#fefce8
+style OREG fill:#78350f,stroke:#fbbf24,color:#fefce8
+style OCC fill:#713f12,stroke:#fde68a,color:#fefce8
+style QP fill:#713f12,stroke:#fde68a,color:#fefce8
+
+%% ══════════════ OUTPUT DATA ══════════════════════════════════════
+subgraph OUTPUT[" Output Data "]
+    direction TB
+    IMGS(["Chart Images .png"])
+    QAJSON(["QA Pairs .json"])
+end
+style OUTPUT fill:#1e293b,stroke:#60a5fa,stroke-width:3px,color:#e2e8f0
+style IMGS fill:#334155,stroke:#94a3b8,color:#f1f5f9
+style QAJSON fill:#334155,stroke:#94a3b8,color:#f1f5f9
+
+%% ══════════════ EXTERNAL CONNECTIONS ═════════════════════════════
+MT --> VE
+SCH --> VE
+GENS --> IMGS
+QP --> QAJSON
+
+linkStyle default stroke:#e2e8f0,stroke-width:3px
+```
+
 ---
 
 ## Classes
