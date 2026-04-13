@@ -328,11 +328,337 @@ This compatibility determines which views are useful and which multi-chart pairs
 
 ---
 
-### 3.3 Unified Generation Algorithm
+### 3.3 Question Generation Pipeline
+
+The abstract pipeline notation from §3.2.2 is realized by two concrete classes in `pipeline.py` — **`PipelineNode`** and **`Pipeline`** — and assembled by a composer factory that builds all four pipeline shapes.
+
+#### 3.3.1 PipelineNode — The Operator Tree
+
+A `PipelineNode` is a single node in a tree. It wraps one `Operator` and holds a list of child `PipelineNode` inputs:
+
+| Inputs list | Meaning | Example |
+|-------------|---------|---------|
+| `[]` (empty) | Leaf — operator runs on the raw base view | `PipelineNode(Filter(...), inputs=[])` |
+| `[n]` (single) | Unary/sequential — chain of one-after-another ops | `PipelineNode(Avg(...), inputs=[sort_node])` |
+| `[a, b]` (two+) | Binary/fork — combinator merging two branches | `PipelineNode(Union(), inputs=[branch_a, branch_b])` |
+
+This representation unifies all four pipeline shapes from §3.2.2 into a single recursive tree structure. Building a sequential chain simply produces a linked list of nodes; building a forked pipeline produces a tree with branching.
+
+**Core methods:**
+
+| Method | What it does |
+|--------|-------------|
+| `execute(view)` | Recursively executes the tree bottom-up. Leaf nodes call `operator.execute(view)`. Unary inner nodes pass their child's result. Binary nodes pass all child results as positional args. |
+| `render_question(**ctx)` | Recursively composes NL fragments inside-out — children render first, then the parent fragment is appended. |
+| `display(indent)` | Pretty-prints the tree for debugging with indentation showing depth. |
+| `type_check()` | Recursively verifies every child→parent connection is type-compatible (`V→V`, `V→S`, etc.). |
+| `depth` / `op_count` | Recursive properties — max tree depth and total operator count. |
+| `to_dict()` | Serializes the tree to a JSON-safe dict (no DataFrames). |
+
+**Execution walkthrough (sequential 3-op pipeline):**
+
+```
+Tree:          Avg("cost")           ← root, V→S
+                 └── Sort("cost")    ← unary, V→V
+                       └── Filter()  ← leaf,  V→V
+
+execute(view):
+  1. Avg.execute calls  →  Sort.execute  →  Filter.execute(view)
+  2. Filter returns OperatorResult(V, filtered_df)
+  3. Sort receives filtered_df, returns OperatorResult(V, sorted_df)
+  4. Avg receives sorted_df, returns OperatorResult(S, mean_value)
+```
+
+**Execution walkthrough (forked pipeline):**
+
+```
+Tree:          Avg("cost")                  ← root, V→S
+                 └── Union()                ← binary, (V,V)→V
+                       ├── Limit(3)         ← branch a
+                       │     └── Sort(desc) ← leaf a
+                       └── Limit(2)         ← branch b
+                             └── Sort(asc)  ← leaf b
+
+execute(view):
+  1. Union.execute calls both branches in parallel
+  2. Branch a: Sort(desc)(view) → Limit(3) → top-3 rows
+  3. Branch b: Sort(asc)(view) → Limit(2) → bottom-2 rows
+  4. Union merges both into a single DataFrame
+  5. Avg reduces to a scalar
+```
+
+#### 3.3.2 Pipeline — Wrapper with Metadata
+
+`Pipeline` is a thin dataclass wrapper around the root `PipelineNode`. It adds metadata and delegates all behavior to the root:
+
+```python
+@dataclass
+class Pipeline:
+    root: PipelineNode              # root of the operator tree
+    view_specs: List[ViewSpec]      # which view(s) this pipeline was built for
+    pipeline_type: str              # "sequential" | "forked" | "nested" | "multi_chart"
+    relationship: Optional[str]     # inter-chart relationship (multi-chart only)
+```
+
+All core methods (`execute`, `render_question`, `display`, `type_check`) are one-line delegates to `self.root`. Pipeline also provides:
+
+- **`op_count` / `depth`** — delegates to root's recursive properties (these determine difficulty per §3.6).
+- **`to_dict()` / `to_json()`** — serializes the full pipeline including metadata and the operator tree.
+
+The `pipeline_type` field classifies the tree's shape for logging, display, and downstream analysis.
+
+#### 3.3.3 Pipeline Composer — Design Approach
+
+> **Location:** `pipeline_composer.py` — not yet implemented. This section specifies how it will work.
+
+The pipeline composer is the factory that translates the abstract pipeline-sampling algorithm (§3.4.4) into concrete `PipelineNode` trees. It consumes view specs + compatible operators and emits `Pipeline` objects.
+
+The composer has one builder function per pipeline shape. Each builder works by constructing `PipelineNode` trees bottom-up (leaves first, root last):
+
+```python
+class PipelineComposer:
+    """Factory that builds Pipeline objects from view specs + operators."""
+
+    def __init__(self, operator_registry, compatibility_table):
+        self.registry = operator_registry        # all concrete operator instances
+        self.compat = compatibility_table         # chart_type → [operator names]
+
+    # ── public API ────────────────────────────────────────────────────────
+
+    def compose(self, view_specs, relationship=None, target_ops=3):
+        """Entry point — dispatches to the appropriate builder."""
+        if len(view_specs) == 1:
+            return self._single_chart(view_specs[0], target_ops)
+        else:
+            return self._multi_chart(view_specs, relationship, target_ops)
+```
+
+#### 3.3.4 Composing Sequential Pipelines
+
+A sequential pipeline is a linear chain: `V → [V→V ops] → [V→S op] → S`.
+
+```python
+def _build_sequential(self, view_spec, target_ops):
+    """Build a left-to-right linear chain."""
+    chart = view_spec.chart_type
+    ops = self._compatible_ops(chart)
+
+    # Select (target_ops - 1) set ops (V→V), then 1 scalar op (V→S)
+    set_ops = sample(ops, kind="V→V", count=target_ops - 1)
+    scalar_op = sample(ops, kind="V→S", count=1)[0]
+
+    # Build bottom-up: leaf → ... → root
+    node = PipelineNode(set_ops[0], inputs=[])          # leaf
+    for op in set_ops[1:]:
+        node = PipelineNode(op, inputs=[node])           # chain
+    root = PipelineNode(scalar_op, inputs=[node])        # final V→S
+
+    return Pipeline(
+        root=root,
+        view_specs=[view_spec],
+        pipeline_type="sequential",
+    )
+```
+
+**Example output for `target_ops=3`:**
+
+```
+Pipeline(sequential, 3 ops)
+  Avg (V → S)
+    Sort (V → V)
+      Filter (V → V)
+```
+
+#### 3.3.5 Composing Forked (Parallel) Pipelines
+
+A forked pipeline splits the base view into two branches, merges with a view combinator (`Union`, `Intersect`, `Difference`), and then reduces to a scalar.
+
+```python
+def _build_forked(self, view_spec, target_ops):
+    """Build a two-branch fork with a combinator merge."""
+    chart = view_spec.chart_type
+    ops = self._compatible_ops(chart)
+
+    # Allocate ops across two branches + combinator + final scalar
+    # e.g. target_ops=5 → branch_a=2 ops, branch_b=1 op, combinator=1, scalar=1
+    a_len, b_len = distribute(target_ops - 2, num_branches=2)
+
+    # Branch A: leaf chain
+    branch_a = self._build_chain(ops, kind="V→V", length=a_len)
+
+    # Branch B: leaf chain (independent — also starts from the base view)
+    branch_b = self._build_chain(ops, kind="V→V", length=b_len)
+
+    # Merge node: (V, V) → V
+    combinator = sample(ops, kind="(V,V)→V", count=1)[0]
+    merge = PipelineNode(combinator, inputs=[branch_a, branch_b])
+
+    # Final scalar reduction
+    scalar_op = sample(ops, kind="V→S", count=1)[0]
+    root = PipelineNode(scalar_op, inputs=[merge])
+
+    return Pipeline(
+        root=root,
+        view_specs=[view_spec],
+        pipeline_type="forked",
+    )
+```
+
+**Example output for `target_ops=5`:**
+
+```
+Pipeline(forked, 5 ops)
+  Avg (V → S)
+    Union ((V,V) → V)
+      Limit (V → V)                 ← branch a
+        Sort (V → V)
+      Limit (V → V)                 ← branch b
+        Sort (V → V)
+```
+
+Both branches execute independently on the same base view. Their results are merged by the combinator before the final scalar reduction.
+
+#### 3.3.6 Composing Nested Pipelines
+
+A nested pipeline uses a sub-pipeline's scalar result as a parameter for an outer operator — e.g., `Filter(cost > Avg(V))`.
+
+```python
+def _build_nested(self, view_spec, target_ops):
+    """Build a pipeline where an inner sub-pipeline feeds a parameter
+    to an outer operator."""
+    chart = view_spec.chart_type
+    ops = self._compatible_ops(chart)
+
+    # Inner pipeline: independent chain that produces a scalar
+    # e.g., Avg("cost") → S
+    inner_scalar = self._build_chain(ops, kind="V→S", length=1)
+
+    # Outer operator uses the inner scalar as a threshold
+    # e.g., Filter(cost > inner_result)
+    outer_filter = make_parameterized_filter(inner_scalar)
+    outer_node = PipelineNode(outer_filter, inputs=[inner_scalar])
+
+    # Continue with more ops after the filter
+    remaining = target_ops - 2  # inner (1) + outer filter (1)
+    node = outer_node
+    for _ in range(remaining - 1):
+        node = PipelineNode(sample(ops, "V→V", 1)[0], inputs=[node])
+
+    # Final scalar
+    root = PipelineNode(sample(ops, "V→S", 1)[0], inputs=[node])
+
+    return Pipeline(
+        root=root,
+        view_specs=[view_spec],
+        pipeline_type="nested",
+    )
+```
+
+**Example output for `target_ops=3` — "Which hospitals have above-average cost?":**
+
+```
+Pipeline(nested, 3 ops)
+  Count (V → S)
+    Filter[cost > Avg(V)] (V → V)         ← outer op with nested scalar
+      Avg (V → S)                          ← inner sub-pipeline (leaf)
+```
+
+The inner `Avg` executes on the raw view and returns a scalar. The outer `Filter` uses that scalar as its threshold, then `Count` reduces the filtered result.
+
+#### 3.3.7 Composing Multi-Chart Pipelines
+
+Multi-chart pipelines chain across two or more views via bridge operators. The composer alternates between single-chart processing and bridge crossings:
+
+```python
+def _multi_chart(self, view_specs, relationship, target_ops):
+    """Build a pipeline spanning multiple views via bridge operators."""
+    bridges = get_valid_bridges(
+        relationship, view_specs[0].chart_type, view_specs[1].chart_type
+    )
+    bridge_op = random.choice(bridges)
+
+    if bridge_op.input_type == "(S,V)":
+        # EntityTransfer / ValueTransfer pattern:
+        # 1. Process chart A → produce scalar S
+        # 2. Bridge (S, V_b) → V
+        # 3. Process chart B → produce scalar S
+
+        a_ops = allocate(target_ops, side="a")
+        b_ops = allocate(target_ops, side="b")
+
+        # Chart A chain → S
+        node_a = self._build_chain_for(view_specs[0], a_ops, end_type="S")
+
+        # Bridge: the scalar from A + raw view B
+        view_b_leaf = PipelineNode(identity_op(), inputs=[])
+        bridge_node = PipelineNode(bridge_op, inputs=[node_a, view_b_leaf])
+
+        # Chart B chain → S
+        node = bridge_node
+        for op in self._sample_ops(view_specs[1], b_ops - 1, "V→V"):
+            node = PipelineNode(op, inputs=[node])
+        root = PipelineNode(
+            self._sample_op(view_specs[1], "V→S"), inputs=[node]
+        )
+
+    elif bridge_op.input_type == "(V,V)":
+        # TrendCompare / RankCompare pattern:
+        # Two view branches feed directly into bridge → S
+
+        branch_a = self._build_chain_for(view_specs[0], target_ops // 2)
+        branch_b = self._build_chain_for(view_specs[1], target_ops // 2)
+        root = PipelineNode(bridge_op, inputs=[branch_a, branch_b])
+
+    return Pipeline(
+        root=root,
+        view_specs=view_specs,
+        pipeline_type="multi_chart",
+        relationship=relationship,
+    )
+```
+
+**Example output — EntityTransfer (3 ops):**
+
+```
+Pipeline(multi_chart, 3 ops, relationship=Dual-Metric)
+  ValueAt (V → S)                            ← chart B side
+    EntityTransfer ((S,V) → V)               ← bridge crossing
+      ArgMax (V → S)                         ← chart A side (leaf on V_a)
+      Identity (V → V)                       ← leaf on V_b
+```
+
+**Example output — RankCompare (5 ops):**
+
+```
+Pipeline(multi_chart, 5 ops, relationship=Dual-Metric)
+  RankCompare ((V,V) → S)                   ← bridge
+    Limit (V → V)                            ← chart A branch
+      Sort (V → V)
+    Limit (V → V)                            ← chart B branch
+      Sort (V → V)
+```
+
+#### 3.3.8 Composer Summary
+
+| Pipeline Shape | Builder | Tree Shape | Key Constraint |
+|----------------|---------|------------|----------------|
+| Sequential | `_build_sequential` | Linear linked list | Must end with V→S |
+| Forked | `_build_forked` | Two branches + combinator | Combinator must be (V,V)→V |
+| Nested | `_build_nested` | Inner sub-pipeline as param | Inner must produce S for outer's threshold |
+| Multi-chart | `_multi_chart` | Bridge node connects two sub-trees | Bridge type must match relationship + chart types |
+
+All builders share three invariants:
+1. **The root's output type is always `S`** — every pipeline produces a scalar answer.
+2. **`type_check()` passes** — child output types match parent input types at every edge.
+3. **Every operator is chart-compatible** — only operators from the compatibility table (§3.2.4) are sampled.
+
+---
+
+### 3.4 Unified Generation Algorithm
 
 View enumeration, multi-chart composition, and QA generation are fused into **one loop** with operator compatibility as the single filter.
 
-#### 3.3.1 Inter-Chart Relationships
+#### 3.4.1 Inter-Chart Relationships
 Two views can be paired only if they have a semantic relationship. `candidate_pairs()` yields all `(va, vb)` from enumerated views, plus **split pairs**: for each temporal view, split by time midpoint → `(v_early, v_late)` to produce Comparative pairs.
 
 | Relationship | Predicate | Example |
@@ -345,7 +671,7 @@ Two views can be paired only if they have a semantic relationship. `candidate_pa
 | **Associative** | Measures linked by `add_correlation()` in schema | bar(hospital × cost) vs bar(hospital × satisfaction) |
 | **Causal Chain** | `va.measure → vb.measure` in dependency DAG | bar(marketing) → line(traffic) → bar(conversion) |
 
-#### 3.3.2 Bridge Selection
+#### 3.4.2 Bridge Selection
 
 A pair is kept **if and only if** the relationship allows a bridge AND both chart types support it. This single check fuses what used to be separate "composition" and "QA feasibility" stages.
 
@@ -370,7 +696,7 @@ def get_valid_bridges(relationship, chart_type_a, chart_type_b):
 | Associative | RankCompare, EntityTransfer |
 | Causal Chain | EntityTransfer, ValueTransfer |
 
-#### 3.3.3 The Algorithm
+#### 3.4.3 The Algorithm
 
 ```python
 def generate_tasks(master_table, schema):
@@ -410,7 +736,7 @@ def generate_tasks(master_table, schema):
     return single_tasks + multi_tasks
 ```
 
-#### 3.3.4 Pipeline Sampling
+#### 3.4.4 Pipeline Sampling
 
 ```python
 def sample_question(views, relationship, target_ops):
@@ -456,7 +782,7 @@ def sample_op(cur_type, budget, chart_type, can_bridge):
 
 ---
 
-### 3.4 Pattern-Seeded QA
+### 3.5 Pattern-Seeded QA
 
 Patterns injected in Phase 2 pre-fix certain operators in the pipeline. The remaining operators are randomly sampled. No special `PatternDetector` class is needed — patterns simply constrain which operators appear in the pipeline. The compatibility table ensures the fixed operators are valid for the view's chart type.
 
@@ -470,7 +796,7 @@ Patterns injected in Phase 2 pre-fix certain operators in the pipeline. The rema
 
 ---
 
-### 3.5 Difficulty = #Ops
+### 3.6 Difficulty = #Ops
 
 Difficulty is determined by a single, objective metric: the number of operators in the pipeline. No manual labeling, no heuristic scoring.
 
@@ -483,7 +809,7 @@ Difficulty is determined by a single, objective metric: the number of operators 
 
 ---
 
-### 3.6 Walkthrough Example
+### 3.7 Walkthrough Example
 
 **Setup:** Master Table with 500 rows, 7 columns. Three hospitals, three departments, 12 months of visits.
 
@@ -530,7 +856,7 @@ Pair (V2, V3):  different measure, no shared group_key pattern  →  None  →  
 
 ---
 
-### 3.7 End-to-End Summary
+### 3.8 End-to-End Summary
 
 ```
 Input:  Master Table + Schema Metadata
@@ -544,3 +870,4 @@ Step 3: Render charts + package QA
 
 Output: 10–30+ {chart_image(s), question, answer, operator_chain, difficulty}
 ```
+
