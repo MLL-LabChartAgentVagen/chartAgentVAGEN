@@ -1,0 +1,275 @@
+<svg viewBox="0 0 870 870" xmlns="http://www.w3.org/2000/svg"
+     font-family="'Courier New', Courier, 'Lucida Console', monospace">
+
+<defs>
+  <!-- Arrow markers for print: all dark enough to survive printing -->
+  <marker id="aw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+    <path d="M0,1 L9,5 L0,9 z" fill="#1a1a2e"/>
+  </marker>
+  <marker id="aw-rev" viewBox="0 0 10 10" refX="1" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+    <path d="M10,1 L1,5 L10,9 z" fill="#1a1a2e"/>
+  </marker>
+  <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+    <path d="M0,1 L9,5 L0,9 z" fill="#555555"/>
+  </marker>
+  <marker id="ar-rev" viewBox="0 0 10 10" refX="1" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+    <path d="M10,1 L1,5 L10,9 z" fill="#555555"/>
+  </marker>
+  <marker id="ag" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+    <path d="M0,1 L9,5 L0,9 z" fill="#225522"/>
+  </marker>
+  <marker id="ap" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+    <path d="M0,1 L9,5 L0,9 z" fill="#5c2d91"/>
+  </marker>
+</defs>
+
+<!-- ═══ WHITE BACKGROUND ═══ -->
+<rect width="870" height="870" fill="#ffffff"/>
+
+<!-- ═══ OUTER MODULE BORDER ═══ -->
+<rect x="8" y="8" width="854" height="854" rx="10" fill="none" stroke="#cccccc" stroke-width="1.5"/>
+
+<!-- ═══ MODULE TITLE ═══ -->
+<rect x="8" y="8" width="854" height="40" rx="10" fill="#f0f4ff"/>
+<rect x="8" y="28" width="854" height="20" fill="#f0f4ff"/>
+<text x="435" y="33" text-anchor="middle" fill="#1a1a2e" font-size="14" font-weight="bold" letter-spacing="0.5">Module 1: SDK Surface (M1)</text>
+
+<!-- ═══════════════════════════════════════════════
+     LEFT COLUMN — SDK METHOD BOXES
+     x=18, width=222
+═══════════════════════════════════════════════ -->
+
+<!-- §2.1 Constructor  y=56..138 -->
+<rect x="18" y="56" width="222" height="82" rx="5" fill="#f7f9ff" stroke="#1a4fa0" stroke-width="1.5"/>
+<rect x="18" y="56" width="222" height="28" rx="5" fill="#d8e6ff"/>
+<rect x="18" y="70" width="222" height="14" fill="#d8e6ff"/>
+<text x="27" y="70" fill="#1a4fa0" font-size="9" font-weight="bold">§2.1  Constructor</text>
+<text x="27" y="90" fill="#333333" font-size="10.5">FactTableSimulator(</text>
+<text x="27" y="106" fill="#333333" font-size="10.5">  target_rows, seed )</text>
+<text x="27" y="128" fill="#1a4fa0" font-size="9">→ empty instance w/ config</text>
+
+<!-- §2.1.1 Column Declarations  y=148..310 -->
+<rect x="18" y="148" width="222" height="162" rx="5" fill="#f7f9ff" stroke="#1a4fa0" stroke-width="1.5"/>
+<rect x="18" y="148" width="222" height="28" rx="5" fill="#d8e6ff"/>
+<rect x="18" y="162" width="222" height="14" fill="#d8e6ff"/>
+<text x="27" y="163" fill="#1a4fa0" font-size="9" font-weight="bold">§2.1.1  Column Declarations</text>
+<text x="27" y="189" fill="#333333" font-size="10.5">add_category()</text>
+<text x="27" y="206" fill="#333333" font-size="10.5">add_temporal()</text>
+<text x="27" y="223" fill="#333333" font-size="10.5">add_measure()</text>
+<text x="27" y="240" fill="#333333" font-size="10.5">add_measure_structural()</text>
+<line x1="26" y1="253" x2="232" y2="253" stroke="#cccccc" stroke-width="0.8"/>
+<text x="27" y="268" fill="#666666" font-size="9">Writes column descriptors:</text>
+<text x="27" y="283" fill="#666666" font-size="9">name, type, group, parent,</text>
+<text x="27" y="298" fill="#666666" font-size="9">param_model, formula, effects, noise</text>
+
+<!-- §2.1.2 Relationship & Pattern  y=320..468 -->
+<rect x="18" y="320" width="222" height="148" rx="5" fill="#fffaf2" stroke="#a05c00" stroke-width="1.5"/>
+<rect x="18" y="320" width="222" height="28" rx="5" fill="#fde8c2"/>
+<rect x="18" y="334" width="222" height="14" fill="#fde8c2"/>
+<text x="27" y="335" fill="#7a3d00" font-size="9" font-weight="bold">§2.1.2  Relationship &amp; Pattern Decls</text>
+<text x="27" y="361" fill="#333333" font-size="10.5">declare_orth()</text>
+<text x="27" y="378" fill="#333333" font-size="10.5">add_group_dep()</text>
+<text x="27" y="395" fill="#333333" font-size="10.5">inject_patt()</text>
+<text x="27" y="412" fill="#333333" font-size="10.5">set_realism()</text>
+<line x1="26" y1="422" x2="232" y2="422" stroke="#cccccc" stroke-width="0.8"/>
+<text x="27" y="437" fill="#666666" font-size="9">Appends: orth pairs, group deps,</text>
+<text x="27" y="452" fill="#666666" font-size="9">pattern specs, realism config</text>
+
+<!-- §2.2 Dimension Groups  y=480..572  DASHED BORDER (read-only) -->
+<rect x="18" y="480" width="222" height="92" rx="5" fill="#fafafa" stroke="#666666" stroke-width="1.5" stroke-dasharray="7,3"/>
+<text x="27" y="499" fill="#444444" font-size="9" font-weight="bold">§2.2  Dimension Groups</text>
+<line x1="26" y1="505" x2="232" y2="505" stroke="#bbbbbb" stroke-width="0.8"/>
+<text x="27" y="520" fill="#555555" font-size="9">No new data produced.</text>
+<text x="27" y="536" fill="#555555" font-size="9">Conceptual lens / read-only view</text>
+<text x="27" y="552" fill="#555555" font-size="9">over columns + groups</text>
+
+<!-- §2.3 Closed-Form Measures  y=582..700 -->
+<rect x="18" y="582" width="222" height="118" rx="5" fill="#f8f4ff" stroke="#5c2d91" stroke-width="1.5"/>
+<rect x="18" y="582" width="222" height="28" rx="5" fill="#e8d8ff"/>
+<rect x="18" y="596" width="222" height="14" fill="#e8d8ff"/>
+<text x="27" y="597" fill="#3d1a6e" font-size="9" font-weight="bold">§2.3  Closed-Form Measures</text>
+<text x="27" y="622" fill="#333333" font-size="9">READS   measure_dag</text>
+<text x="27" y="638" fill="#333333" font-size="9">          (set by §2.1.1 add_measure_</text>
+<text x="27" y="654" fill="#333333" font-size="9">           structural())</text>
+<line x1="26" y1="664" x2="232" y2="664" stroke="#cccccc" stroke-width="0.8"/>
+<text x="27" y="678" fill="#5c2d91" font-size="9">WRITES  measure_dag_order[]</text>
+<text x="27" y="692" fill="#666666" font-size="9">          (topological sort of edges)</text>
+
+<!-- ═══════════════════════════════════════════════
+     RIGHT COLUMN — DECLARATION STORE
+     x=462, width=390
+═══════════════════════════════════════════════ -->
+
+<rect x="462" y="56" width="390" height="644" rx="6" fill="#f4faf4" stroke="#1a6e3a" stroke-width="2"/>
+
+<!-- Store header -->
+<rect x="462" y="56" width="390" height="48" rx="6" fill="#c8f0d0"/>
+<rect x="462" y="80" width="390" height="24" fill="#c8f0d0"/>
+<text x="657" y="78" text-anchor="middle" fill="#0d3d1e" font-size="11" font-weight="bold">INTERNAL STATE</text>
+<text x="657" y="96" text-anchor="middle" fill="#0d3d1e" font-size="13" font-weight="bold">Declaration Store</text>
+<line x1="470" y1="104" x2="844" y2="104" stroke="#5aaa77" stroke-width="0.8"/>
+
+<!-- Store fields — each row has a highlight rect when referenced externally -->
+
+<!-- Field rows header -->
+<text x="472" y="120" fill="#444444" font-size="9" font-style="italic">Fields populated by §2.1 → §2.1.2:</text>
+
+<!-- columns[] — §2.2 reads this; highlighted -->
+<rect x="464" y="124" width="386" height="18" fill="#dce8ff" rx="2"/>
+<text x="474" y="137" fill="#1a1a2e" font-size="11">•  columns[]</text>
+<text x="790" y="137" text-anchor="end" fill="#1a4fa0" font-size="8">◄ §2.2 reads</text>
+
+<!-- groups{} — §2.2 reads this; highlighted -->
+<rect x="464" y="144" width="386" height="18" fill="#dce8ff" rx="2"/>
+<text x="474" y="157" fill="#1a1a2e" font-size="11">•  groups{}</text>
+<text x="790" y="157" text-anchor="end" fill="#1a4fa0" font-size="8">◄ §2.2 reads</text>
+
+<!-- measure_dag — §2.3 reads this; highlighted -->
+<rect x="464" y="164" width="386" height="18" fill="#fde8c2" rx="2"/>
+<text x="474" y="177" fill="#1a1a2e" font-size="11">•  measure_dag</text>
+<text x="790" y="177" text-anchor="end" fill="#7a3d00" font-size="8">◄ §2.3 reads</text>
+
+<!-- other fields — plain -->
+<text x="474" y="199" fill="#1a1a2e" font-size="11">•  patterns[]</text>
+<text x="474" y="219" fill="#1a1a2e" font-size="11">•  orthogonal_pairs[]</text>
+<text x="474" y="239" fill="#1a1a2e" font-size="11">•  group_dependencies[]</text>
+<text x="474" y="259" fill="#1a1a2e" font-size="11">•  realism_config?</text>
+
+<!-- divider -->
+<line x1="470" y1="268" x2="844" y2="268" stroke="#aaaaaa" stroke-width="0.8" stroke-dasharray="4,2"/>
+<text x="472" y="280" fill="#444444" font-size="9" font-style="italic">Computed by §2.3:</text>
+
+<!-- measure_dag_order[] — §2.3 writes this; highlighted -->
+<rect x="464" y="283" width="386" height="18" fill="#e8d8ff" rx="2"/>
+<text x="474" y="296" fill="#1a1a2e" font-size="11">•  measure_dag_order[]</text>
+<text x="790" y="296" text-anchor="end" fill="#5c2d91" font-size="8">◄ §2.3 writes</text>
+
+<line x1="470" y1="310" x2="844" y2="310" stroke="#cccccc" stroke-width="0.8"/>
+
+<!-- Lifecycle annotations section -->
+<text x="657" y="330" text-anchor="middle" fill="#1a4fa0" font-size="10" font-weight="bold">Lifecycle &amp; Dependencies</text>
+<line x1="470" y1="338" x2="844" y2="338" stroke="#dddddd" stroke-width="0.5"/>
+
+<text x="474" y="356" fill="#333333" font-size="9">1.  §2.1  Constructor seeds the store (target_rows, seed)</text>
+<text x="474" y="373" fill="#333333" font-size="9">2.  §2.1.1 populates columns[], groups{},</text>
+<text x="474" y="388" fill="#666666" font-size="9">         measure_dag, patterns[]</text>
+<text x="474" y="405" fill="#333333" font-size="9">3.  §2.1.2 requires columns to exist first</text>
+<text x="474" y="420" fill="#666666" font-size="9">         (ordering constraint) → appends orth_pairs,</text>
+<text x="474" y="435" fill="#666666" font-size="9">         group_dependencies, realism_config</text>
+<text x="474" y="452" fill="#333333" font-size="9">4.  §2.2  is a read-only lens — no fields written</text>
+<text x="474" y="467" fill="#666666" font-size="9">         Reads columns + groups</text>
+<text x="474" y="484" fill="#666666" font-size="9">         to expose logical dimension-group structure</text>
+<text x="474" y="501" fill="#333333" font-size="9">5.  §2.3  reads measure_dag → topo-sorts →</text>
+<text x="474" y="516" fill="#666666" font-size="9">         writes measure_dag_order[] back to store</text>
+<text x="474" y="531" fill="#666666" font-size="9">         (M2 relies on this ordering to sequence</text>
+<text x="474" y="546" fill="#666666" font-size="9">         structural measure evaluation correctly)</text>
+
+<line x1="470" y1="560" x2="844" y2="560" stroke="#aaaaaa" stroke-width="0.8"/>
+
+<!-- Consumers -->
+<text x="657" y="578" text-anchor="middle" fill="#1a6e3a" font-size="10" font-weight="bold">Downstream Consumers (frozen store)</text>
+<text x="474" y="598" fill="#333333" font-size="9.5">──►  M2 Gen Engine:      full store + seed</text>
+<text x="474" y="616" fill="#333333" font-size="9.5">──►  M4 Schema Metadata: full store</text>
+<text x="474" y="634" fill="#333333" font-size="9.5">──►  M3 LLM Orchestration: typed Exceptions on</text>
+<text x="474" y="650" fill="#666666" font-size="9.5">                             validation failure</text>
+<line x1="470" y1="664" x2="844" y2="664" stroke="#aaaaaa" stroke-width="0.8"/>
+
+<!-- Ordering constraint note -->
+<rect x="464" y="668" width="386" height="28" fill="#fff7e6" rx="3"/>
+<text x="657" y="681" text-anchor="middle" fill="#7a3d00" font-size="9" font-weight="bold">Ordering constraint:</text>
+<text x="657" y="694" text-anchor="middle" fill="#7a3d00" font-size="9">§2.1.1 must complete before §2.1.2 is callable</text>
+
+<!-- ═══════════════════════════════════════════════
+     ARROWS — left boxes to Declaration Store
+═══════════════════════════════════════════════ -->
+
+<!-- Legend (top-right area of middle zone) -->
+<rect x="240" y="56" width="210" height="78" rx="4" fill="#f9f9f9" stroke="#cccccc" stroke-width="1"/>
+<text x="345" y="72" text-anchor="middle" fill="#333333" font-size="9" font-weight="bold">ARROW LEGEND</text>
+<line x1="252" y1="77" x2="440" y2="77" stroke="#cccccc" stroke-width="0.5"/>
+<line x1="256" y1="91" x2="296" y2="91" stroke="#1a1a2e" stroke-width="1.5" marker-end="url(#aw)"/>
+<text x="302" y="95" fill="#333333" font-size="9">WRITE to store</text>
+<line x1="256" y1="109" x2="296" y2="109" stroke="#555555" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#ar)"/>
+<text x="302" y="113" fill="#333333" font-size="9">READ from store</text>
+<line x1="256" y1="124" x2="296" y2="124" stroke="#5c2d91" stroke-width="1.5" marker-end="url(#ap)"/>
+<text x="302" y="128" fill="#333333" font-size="9">WRITE back to store</text>
+
+<!-- §2.1 → Store: solid write arrow  (center of §2.1 = y=97) -->
+<line x1="240" y1="97" x2="460" y2="97" stroke="#1a1a2e" stroke-width="1.5" marker-end="url(#aw)"/>
+<text x="350" y="90" text-anchor="middle" fill="#1a1a2e" font-size="8.5">empty instance / config</text>
+
+<!-- §2.1.1 → Store: solid write arrow  (center y=229) -->
+<line x1="240" y1="229" x2="460" y2="170" stroke="#1a1a2e" stroke-width="1.5" marker-end="url(#aw)"/>
+<text x="340" y="214" text-anchor="middle" fill="#1a1a2e" font-size="8.5">column descriptors</text>
+<text x="340" y="225" text-anchor="middle" fill="#666666" font-size="7.5">(also writes measure_dag</text>
+<text x="340" y="234" text-anchor="middle" fill="#666666" font-size="7.5"> via add_measure_structural)</text>
+
+<!-- §2.1.2 → Store: solid write arrow  (center y=394) -->
+<line x1="240" y1="394" x2="460" y2="230" stroke="#1a4fa0" stroke-width="1.5" stroke-dasharray="none" marker-end="url(#aw)"/>
+<text x="340" y="324" text-anchor="middle" fill="#7a3d00" font-size="8.5">orth pairs, group deps,</text>
+<text x="340" y="335" text-anchor="middle" fill="#7a3d00" font-size="8.5">patterns, realism config</text>
+
+<!-- Store → §2.2: DASHED read arrow  (center of §2.2 = y=526)
+     Goes from store left edge at y=150 (columns + groups zone)
+     down to §2.2 right edge -->
+<!-- Bent path: start at store left x=462, y=149 → left to x=244, y=149 → down to x=244, y=526 → left to x=240, y=526 -->
+<path d="M 462,149 L 244,149 L 244,526 L 240,526"
+      fill="none" stroke="#555555" stroke-width="1.5" stroke-dasharray="6,3"
+      marker-end="url(#ar)"/>
+<!-- Label alongside the vertical segment -->
+<text x="252" y="390" fill="#555555" font-size="8.5" transform="rotate(-90, 252, 390)">reads columns + groups</text>
+
+<!-- Store → §2.3: DASHED read arrow 
+     Start at store left x=462 at y=172 (measure_dag row)
+     Route: down the outer left side to §2.3 level, then into §2.3 -->
+<!-- Use a path that doesn't overlap with the §2.2 path by going slightly further left -->
+<path d="M 462,172 L 230,172 L 230,622 L 240,622"
+      fill="none" stroke="#7a3d00" stroke-width="1.5" stroke-dasharray="5,3"
+      marker-end="url(#ar)"/>
+<text x="219" y="430" fill="#7a3d00" font-size="8.5" transform="rotate(-90, 219, 430)">reads measure_dag</text>
+
+<!-- §2.3 → Store: SOLID write-back arrow (purple)
+     From §2.3 right edge, going right to store left at measure_dag_order row y=292 -->
+<path d="M 240,660 L 462,292"
+      fill="none" stroke="#5c2d91" stroke-width="1.5"
+      marker-end="url(#ap)"/>
+<!-- Small curved label along this diagonal -->
+<text x="380" y="480" fill="#5c2d91" font-size="8.5" transform="rotate(-30, 380, 480)">writes measure_dag_order[]</text>
+
+<!-- ═══════════════════════════════════════════════
+     FROZEN DECLARATION STORE BAR
+═══════════════════════════════════════════════ -->
+
+<rect x="18" y="720" width="834" height="46" rx="5" fill="#f0f4ff" stroke="#1a4fa0" stroke-width="2"/>
+<line x1="18" y1="735" x2="852" y2="735" stroke="#1a4fa0" stroke-width="0.8" stroke-dasharray="5,3"/>
+<text x="435" y="732" text-anchor="middle" fill="#1a1a2e" font-size="13" font-weight="bold" letter-spacing="1">FROZEN DECLARATION STORE  —  output boundary</text>
+<text x="435" y="757" text-anchor="middle" fill="#555555" font-size="10">All declarations sealed after §2.1 → §2.3 complete; store is now immutable</text>
+
+<!-- Vertical arrow from store bottom to frozen bar -->
+<line x1="657" y1="700" x2="657" y2="718" stroke="#1a1a2e" stroke-width="1.5" marker-end="url(#aw)"/>
+
+<!-- ═══════════════════════════════════════════════
+     OUTPUT MODULE BOXES
+═══════════════════════════════════════════════ -->
+
+<!-- Arrows down from frozen bar -->
+<line x1="155" y1="766" x2="155" y2="784" stroke="#1a1a2e" stroke-width="1.5" marker-end="url(#aw)"/>
+<line x1="435" y1="766" x2="435" y2="784" stroke="#1a1a2e" stroke-width="1.5" marker-end="url(#aw)"/>
+<line x1="715" y1="766" x2="715" y2="784" stroke="#1a1a2e" stroke-width="1.5" marker-end="url(#aw)"/>
+
+<!-- M2 -->
+<rect x="18" y="784" width="270" height="52" rx="5" fill="#f4faf4" stroke="#1a6e3a" stroke-width="1.5"/>
+<text x="153" y="806" text-anchor="middle" fill="#1a6e3a" font-size="11" font-weight="bold">M2: Generation Engine</text>
+<text x="153" y="826" text-anchor="middle" fill="#555555" font-size="9">full decl store + seed</text>
+
+<!-- M4 -->
+<rect x="300" y="784" width="270" height="52" rx="5" fill="#fffaf2" stroke="#a05c00" stroke-width="1.5"/>
+<text x="435" y="806" text-anchor="middle" fill="#7a3d00" font-size="11" font-weight="bold">M4: Schema Metadata</text>
+<text x="435" y="826" text-anchor="middle" fill="#555555" font-size="9">full decl store</text>
+
+<!-- M3 -->
+<rect x="582" y="784" width="270" height="52" rx="5" fill="#fff4f4" stroke="#a01a1a" stroke-width="1.5"/>
+<text x="717" y="806" text-anchor="middle" fill="#a01a1a" font-size="11" font-weight="bold">M3: LLM Orchestration</text>
+<text x="717" y="826" text-anchor="middle" fill="#555555" font-size="9">typed Exceptions on validation fail</text>
+
+</svg>

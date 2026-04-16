@@ -16,7 +16,7 @@ import numpy as np
 import pandas as pd
 import scipy.stats
 
-from ..types import Check
+from phase_2.types import Check
 
 logger = logging.getLogger(__name__)
 
@@ -314,6 +314,38 @@ def check_stochastic_ks(
     return checks
 
 
+def _get_formula_measure_deps(
+    formula: str,
+    col_name: str,
+    columns_meta: dict[str, Any],
+) -> set[str]:
+    """Extract measure column names directly referenced in a structural formula.
+
+    Parses the formula for identifier symbols, then filters to those
+    that exist in columns_meta as measure-type columns (excluding the
+    measure being validated itself).
+
+    Args:
+        formula: Arithmetic formula string.
+        col_name: The structural measure being validated (excluded from result).
+        columns_meta: The columns metadata dict.
+
+    Returns:
+        Set of measure column names that are direct formula dependencies.
+    """
+    from phase_2.sdk.validation import extract_formula_symbols
+
+    all_symbols = extract_formula_symbols(formula)
+    dep_measures: set[str] = set()
+    for sym in all_symbols:
+        if sym == col_name:
+            continue
+        sym_meta = columns_meta.get(sym, {})
+        if sym_meta.get("type") == "measure":
+            dep_measures.add(sym)
+    return dep_measures
+
+
 def check_structural_residuals(
     df: pd.DataFrame,
     col_name: str,
@@ -328,7 +360,9 @@ def check_structural_residuals(
     - When noise_sigma == 0: deterministic formula, residuals should be near-zero
       (std < 1e-6). Guards against divide-by-zero (P3-15).
     - When noise_sigma > 0: checks abs(residuals.std() - sigma) / sigma < 0.2.
-    - Excludes rows matching pattern targets for the same column (P3-8).
+    - Excludes rows matching pattern targets for this column or any
+      upstream measure referenced in the formula (P3-8).  This prevents
+      false residual inflation from patterns that modify formula inputs.
 
     Args:
         df: Generated DataFrame.
@@ -340,7 +374,7 @@ def check_structural_residuals(
     Returns:
         Check named "residual_{col_name}".
     """
-    from ..engine.measures import _safe_eval_formula, _resolve_effects
+    from phase_2.engine.measures import _safe_eval_formula, _resolve_effects
 
     columns_meta = meta.get("columns", {})
     col_meta = columns_meta.get(col_name, {})
@@ -354,11 +388,20 @@ def check_structural_residuals(
         )
 
     # --- P3-8: Exclude pattern-targeted rows ---
+    # Exclude rows where patterns modify this column OR any upstream
+    # measure referenced in the formula.  Upstream patterns cause
+    # systematic residual inflation because downstream values were
+    # computed from pre-pattern upstream values in Phase β.
     work_df = df
     if patterns:
+        formula_deps = _get_formula_measure_deps(
+            formula, col_name, columns_meta,
+        )
+        affected_cols = {col_name} | formula_deps
+
         pattern_mask = pd.Series(False, index=df.index)
         for p in patterns:
-            if p.get("col") == col_name:
+            if p.get("col") in affected_cols:
                 try:
                     pattern_mask |= df.eval(p["target"])
                 except Exception:
@@ -428,7 +471,7 @@ def check_group_dependency_transitions(
 ) -> list[Check]:
     """L2: Verify conditional weight distributions match declared weights.
 
-    TODO [M5 SPEC_READY #9]: L2 group dependency conditional transition check.
+    Implements M5 SPEC_READY #9: L2 group dependency conditional transition check.
 
     For each group dependency, computes the observed conditional distribution
     of the child_root column given each value of the parent (on[0]) column,

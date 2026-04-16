@@ -49,22 +49,44 @@ def check_outlier_entity(
             detail=f"Target '{target_expr}' matched zero rows.",
         )
 
-    global_mean = float(df[col].mean())
-    global_std = float(df[col].std())
+    # Use complement (non-target) statistics as the reference distribution.
+    # The injection shifted target values using pre-injection global stats,
+    # so post-injection global stats are contaminated by the shift itself,
+    # systematically reducing the measured z-score.  The complement is
+    # unaffected by the injection and approximates the pre-injection dist.
+    complement_mask = ~target_mask
+    subset_mean = float(df.loc[target_idx, col].mean())
 
-    if global_std == 0.0 or np.isnan(global_std):
+    if complement_mask.sum() >= 2:
+        ref_mean = float(df.loc[complement_mask, col].mean())
+        ref_std = float(df.loc[complement_mask, col].std())
+    else:
+        # Fewer than 2 complement rows — fall back to global stats
+        ref_mean = float(df[col].mean())
+        ref_std = float(df[col].std())
+
+    if ref_std == 0.0 or np.isnan(ref_std):
+        # Zero std: if subset differs from reference, outlier is obvious
+        if abs(subset_mean - ref_mean) > 1e-9:
+            return Check(
+                name=f"outlier_{col}",
+                passed=True,
+                detail=(
+                    f"z=inf (subset_mean={subset_mean:.4f}, "
+                    f"ref_mean={ref_mean:.4f}, ref_std=0.0)"
+                ),
+            )
         return Check(
             name=f"outlier_{col}",
             passed=False,
-            detail=f"Global std of '{col}' is {global_std}; z-score undefined.",
+            detail=f"Global std of '{col}' is {ref_std}; z-score undefined.",
         )
 
-    subset_mean = float(df.loc[target_idx, col].mean())
-    z = abs(subset_mean - global_mean) / global_std
+    z = abs(subset_mean - ref_mean) / ref_std
     passed = bool(z >= 2.0)
     detail = (
         f"z={z:.4f} (subset_mean={subset_mean:.4f}, "
-        f"global_mean={global_mean:.4f}, global_std={global_std:.4f})"
+        f"ref_mean={ref_mean:.4f}, ref_std={ref_std:.4f})"
     )
     return Check(name=f"outlier_{col}", passed=passed, detail=detail)
 

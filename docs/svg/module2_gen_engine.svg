@@ -1,0 +1,280 @@
+<svg viewBox="0 0 870 1056" xmlns="http://www.w3.org/2000/svg"
+     font-family="'Courier New', Courier, 'Lucida Console', monospace">
+
+<defs>
+  <!-- black data-flow arrow -->
+  <marker id="aw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+    <path d="M0,1 L9,5 L0,9 z" fill="#1a1a2e"/>
+  </marker>
+  <!-- amber rng-pass arrow -->
+  <marker id="arn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+    <path d="M0,1 L9,5 L0,9 z" fill="#7a5000"/>
+  </marker>
+  <!-- red feedback arrow -->
+  <marker id="afb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+    <path d="M0,1 L9,5 L0,9 z" fill="#a01a1a"/>
+  </marker>
+</defs>
+
+<!-- ══ BACKGROUND ══ -->
+<rect width="870" height="1056" fill="#ffffff"/>
+<rect x="8" y="8" width="854" height="1040" rx="10" fill="none" stroke="#cccccc" stroke-width="1.5"/>
+
+<!-- ══ TITLE ══ -->
+<rect x="8" y="8" width="854" height="38" rx="10" fill="#f0f4ff"/>
+<rect x="8" y="28" width="854" height="18" fill="#f0f4ff"/>
+<text x="435" y="32" text-anchor="middle" fill="#1a1a2e" font-size="14" font-weight="bold">Module 2: Generation Engine (M2)</text>
+
+<!-- ══════════════════════════════════════════
+     EXTERNAL INPUTS  y=54..162
+══════════════════════════════════════════ -->
+<rect x="155" y="54" width="560" height="108" rx="6" fill="#f0f4ff" stroke="#1a4fa0" stroke-width="1.5"/>
+<rect x="155" y="54" width="560" height="26" rx="6" fill="#d8e6ff"/>
+<rect x="155" y="68" width="560" height="12" fill="#d8e6ff"/>
+<text x="435" y="68" text-anchor="middle" fill="#1a4fa0" font-size="10.5" font-weight="bold">EXTERNAL INPUTS — from M1 Frozen Declaration Store</text>
+<text x="172" y="92"  fill="#333" font-size="10">•  columns</text>
+<text x="172" y="108" fill="#333" font-size="10">•  groups</text>
+<text x="172" y="124" fill="#333" font-size="10">•  measure_dag + measure_dag_order</text>
+<text x="455" y="92"  fill="#333" font-size="10">•  patterns</text>
+<text x="455" y="108" fill="#333" font-size="10">•  realism_config</text>
+<text x="455" y="124" fill="#333" font-size="10">•  seed  (integer)  ← source of rng</text>
+
+<!-- Arrow: Inputs → §2.4 -->
+<line x1="435" y1="162" x2="435" y2="180" stroke="#1a1a2e" stroke-width="1.5" marker-end="url(#aw)"/>
+
+<!-- ══════════════════════════════════════════
+     §2.4 CONCEPTUAL ALGORITHM  y=182..278
+══════════════════════════════════════════ -->
+<rect x="18" y="182" width="834" height="96" rx="6" fill="#fafafa" stroke="#888" stroke-width="1.5" stroke-dasharray="7,3"/>
+<text x="28" y="200" fill="#444" font-size="10" font-weight="bold">§2.4  Conceptual Algorithm</text>
+<text x="230" y="200" fill="#888" font-size="9" font-style="italic">  ⟨ no runtime artifact — purely architectural spec ⟩</text>
+<line x1="26" y1="206" x2="844" y2="206" stroke="#cccccc" stroke-width="0.8"/>
+<text x="36" y="222" fill="#555" font-size="9.5">•  Full generation DAG (all column types unified)</text>
+<text x="36" y="238" fill="#555" font-size="9.5">•  Topological layer assignment for all columns</text>
+<text x="36" y="254" fill="#555" font-size="9.5">•  Row generation algorithm — per-row loop + post-generation passes</text>
+<text x="36" y="270" fill="#555" font-size="9.5">•  target_rows contract received from Phase 1 / M3</text>
+
+<!-- «implements» arrow -->
+<line x1="435" y1="278" x2="435" y2="304" stroke="#1a1a2e" stroke-width="1.5" marker-end="url(#aw)"/>
+<rect x="360" y="281" width="150" height="16" fill="#ffffff"/>
+<text x="435" y="294" text-anchor="middle" fill="#555" font-size="9" font-style="italic">«implements»</text>
+
+<!-- ══════════════════════════════════════════
+     §2.8 PIPELINE OUTER BOX  y=307..933
+══════════════════════════════════════════ -->
+<rect x="18" y="307" width="834" height="643" rx="6" fill="#fdfcfa" stroke="#888" stroke-width="1.5"/>
+<rect x="18" y="307" width="834" height="26" rx="6" fill="#eeeeee"/>
+<rect x="18" y="319" width="834" height="14" fill="#eeeeee"/>
+<text x="300" y="325" text-anchor="middle" fill="#1a1a2e" font-size="11" font-weight="bold">§2.8  generate()  Pipeline</text>
+<text x="600" y="325" text-anchor="middle" fill="#7a5000" font-size="8.5" font-style="italic">rng is a single stateful object passed stage-to-stage; each stage advances its draw sequence</text>
+
+<!-- ────────────────────────────────────────
+     HELPER: rng badge template (reused inline)
+     Green  [rng ✓]:  fill #eafaf0  stroke #1a6e3a  text #1a6e3a
+     Gray   [rng ✗]:  fill #f0f0f0  stroke #888     text #888
+──────────────────────────────────────────── -->
+
+<!-- ══════════════════════════════
+     PRE-FLIGHT   y=336..404
+══════════════════════════════ -->
+<rect x="30" y="336" width="806" height="68" rx="5" fill="#f0f4ff" stroke="#1a4fa0" stroke-width="1.5"/>
+<rect x="30" y="336" width="806" height="22" rx="5" fill="#d8e6ff"/>
+<rect x="30" y="348" width="806" height="10" fill="#d8e6ff"/>
+<text x="40" y="349" fill="#1a4fa0" font-size="10" font-weight="bold">Pre-flight</text>
+<!-- rng badge: CREATES -->
+<rect x="732" y="338" width="96" height="14" rx="3" fill="#fff8e6" stroke="#7a5000" stroke-width="1"/>
+<text x="780" y="349" text-anchor="middle" fill="#7a5000" font-size="8.5" font-weight="bold">rng: CREATES</text>
+<text x="40" y="368" fill="#333" font-size="9.5">  decl store  ──►  _build_full_dag()  ──►  topo_sort()  ──►  topo_order</text>
+<text x="40" y="384" fill="#333" font-size="9.5">  seed        ──►  np.random.default_rng(seed)           ──►  rng</text>
+<text x="40" y="398" fill="#666" font-size="8.5">  Output: topo_order  +  rng object  (seeded, ready for first draw)</text>
+
+<!-- ═══ TRANSFER ZONE 1: Pre-flight → α   y=404..430  (26px) ════════════════
+     Left:  data (topo_order)
+     Right: rng passing down  -->
+<!-- data arrow -->
+<line x1="260" y1="404" x2="260" y2="430" stroke="#1a1a2e" stroke-width="1.5" marker-end="url(#aw)"/>
+<text x="270" y="413" fill="#333" font-size="8.5">topo_order</text>
+<!-- rng arrow -->
+<line x1="600" y1="404" x2="600" y2="430" stroke="#7a5000" stroke-width="1.5" stroke-dasharray="4,2" marker-end="url(#arn)"/>
+<text x="610" y="413" fill="#7a5000" font-size="8.5" font-weight="bold">rng</text>
+<text x="610" y="424" fill="#7a5000" font-size="7.5" font-style="italic">(state: initial)</text>
+
+<!-- ══════════════════════════════
+     STAGE α   y=430..526
+══════════════════════════════ -->
+<rect x="30" y="430" width="806" height="96" rx="5" fill="#f4faf4" stroke="#1a6e3a" stroke-width="1.5"/>
+<rect x="30" y="430" width="806" height="22" rx="5" fill="#c8f0d0"/>
+<rect x="30" y="442" width="806" height="10" fill="#c8f0d0"/>
+<text x="40" y="443" fill="#1a6e3a" font-size="10" font-weight="bold">Stage α  —  _build_skeleton(topo_order, rng)</text>
+<!-- rng badge: USES -->
+<rect x="730" y="432" width="94" height="14" rx="3" fill="#eafaf0" stroke="#1a6e3a" stroke-width="1"/>
+<text x="777" y="443" text-anchor="middle" fill="#1a6e3a" font-size="8.5" font-weight="bold">rng: USES ✓</text>
+<text x="40" y="461" fill="#555" font-size="8.5" font-style="italic">Inputs: topo_order, rng, declaration store</text>
+<line x1="38" y1="466" x2="828" y2="466" stroke="#dddddd" stroke-width="0.6"/>
+<text x="40" y="479" fill="#333" font-size="9">  For each non-measure col in topo_order:</text>
+<text x="40" y="493" fill="#444" font-size="9">    • root categorical  →  sample from weights  [rng]       • cross-group dep   →  sample | upstream root  [rng]</text>
+<text x="40" y="507" fill="#444" font-size="9">    • child categorical →  sample | parent value  [rng]      • temporal root     →  sample in [start, end]  [rng]</text>
+<text x="40" y="521" fill="#444" font-size="9">    • temporal derived  →  extract from root  (no rng)</text>
+<text x="490" y="521" fill="#1a6e3a" font-size="8.5">Output: rows with all non-measure cols filled</text>
+
+<!-- ═══ TRANSFER ZONE 2: α → β   y=526..552  (26px) ════════════════ -->
+<line x1="260" y1="526" x2="260" y2="552" stroke="#1a1a2e" stroke-width="1.5" marker-end="url(#aw)"/>
+<text x="270" y="535" fill="#333" font-size="8.5">rows</text>
+<text x="270" y="547" fill="#666" font-size="7.5">(partial — non-measure cols filled)</text>
+<line x1="600" y1="526" x2="600" y2="552" stroke="#7a5000" stroke-width="1.5" stroke-dasharray="4,2" marker-end="url(#arn)"/>
+<text x="610" y="535" fill="#7a5000" font-size="8.5" font-weight="bold">rng</text>
+<text x="610" y="547" fill="#7a5000" font-size="7.5" font-style="italic">(state: advanced by α)</text>
+
+<!-- ══════════════════════════════
+     STAGE β   y=552..668
+══════════════════════════════ -->
+<rect x="30" y="552" width="806" height="116" rx="5" fill="#fffaf2" stroke="#a05c00" stroke-width="1.5"/>
+<rect x="30" y="552" width="806" height="22" rx="5" fill="#fde8c2"/>
+<rect x="30" y="564" width="806" height="10" fill="#fde8c2"/>
+<text x="40" y="565" fill="#7a3d00" font-size="10" font-weight="bold">Stage β  —  Measure generation loop</text>
+<!-- rng badge -->
+<rect x="730" y="554" width="94" height="14" rx="3" fill="#eafaf0" stroke="#1a6e3a" stroke-width="1"/>
+<text x="777" y="565" text-anchor="middle" fill="#1a6e3a" font-size="8.5" font-weight="bold">rng: USES ✓</text>
+<text x="40" y="582" fill="#555" font-size="8.5" font-style="italic">Inputs: topo_order, rows, rng, declarations</text>
+<line x1="38" y1="588" x2="828" y2="588" stroke="#dddddd" stroke-width="0.6"/>
+<text x="40" y="601" fill="#333" font-size="9">  For each measure col in topo_order:</text>
+<text x="40" y="615" fill="#444" font-size="9">    stochastic  →  _sample_stochastic(col, rows, rng)</text>
+<text x="230" y="629" fill="#666" font-size="8.5">params = intercept + Σ effects   →   draw from family(params)  [rng]</text>
+<text x="40" y="643" fill="#444" font-size="9">    structural  →  _eval_structural(col, rows, rng)</text>
+<text x="230" y="657" fill="#666" font-size="8.5">evaluate formula with upstream values   →   add noise term  [rng]</text>
+<text x="520" y="665" fill="#7a3d00" font-size="8.5">Output: rows — fully populated</text>
+
+<!-- ═══ TRANSFER ZONE 3: β → γ   y=668..694  (26px) ════════════════ -->
+<line x1="260" y1="668" x2="260" y2="694" stroke="#1a1a2e" stroke-width="1.5" marker-end="url(#aw)"/>
+<text x="270" y="677" fill="#333" font-size="8.5">rows</text>
+<text x="270" y="689" fill="#666" font-size="7.5">(complete — all cols populated)</text>
+<line x1="600" y1="668" x2="600" y2="694" stroke="#7a5000" stroke-width="1.5" stroke-dasharray="4,2" marker-end="url(#arn)"/>
+<text x="610" y="677" fill="#7a5000" font-size="8.5" font-weight="bold">rng</text>
+<text x="610" y="689" fill="#7a5000" font-size="7.5" font-style="italic">(state: advanced by β)</text>
+
+<!-- ══════════════════════════════
+     STAGE γ   y=694..766
+══════════════════════════════ -->
+<rect x="30" y="694" width="806" height="72" rx="5" fill="#f0fafa" stroke="#1a5c6e" stroke-width="1.5"/>
+<rect x="30" y="694" width="806" height="22" rx="5" fill="#c8e8f0"/>
+<rect x="30" y="706" width="806" height="10" fill="#c8e8f0"/>
+<text x="40" y="707" fill="#1a3d50" font-size="10" font-weight="bold">Stage γ  —  _inject_patterns(rows, rng)</text>
+<!-- rng badge -->
+<rect x="730" y="696" width="94" height="14" rx="3" fill="#eafaf0" stroke="#1a6e3a" stroke-width="1"/>
+<text x="777" y="707" text-anchor="middle" fill="#1a6e3a" font-size="8.5" font-weight="bold">rng: USES ✓</text>
+<text x="40" y="725" fill="#555" font-size="8.5" font-style="italic">Inputs: full DataFrame, patterns, rng</text>
+<line x1="38" y1="731" x2="828" y2="731" stroke="#dddddd" stroke-width="0.6"/>
+<text x="40" y="745" fill="#333" font-size="9">  For each pattern:  filter rows by target expression   →   apply pattern transformation  [rng for stochastic magnitudes]</text>
+<text x="40" y="759" fill="#1a3d50" font-size="8.5">  Output: DataFrame with patterns injected</text>
+
+<!-- ═══ TRANSFER ZONE 4: γ → δ   y=766..792  (26px) ════════════════ -->
+<line x1="260" y1="766" x2="260" y2="792" stroke="#1a1a2e" stroke-width="1.5" marker-end="url(#aw)"/>
+<text x="270" y="775" fill="#333" font-size="8.5">rows</text>
+<text x="270" y="787" fill="#666" font-size="7.5">(patterns injected)</text>
+<line x1="600" y1="766" x2="600" y2="792" stroke="#7a5000" stroke-width="1.5" stroke-dasharray="4,2" marker-end="url(#arn)"/>
+<text x="610" y="775" fill="#7a5000" font-size="8.5" font-weight="bold">rng</text>
+<text x="610" y="787" fill="#7a5000" font-size="7.5" font-style="italic">(state: advanced by γ)</text>
+
+<!-- ══════════════════════════════
+     STAGE δ  (optional)   y=792..862
+══════════════════════════════ -->
+<rect x="30" y="792" width="806" height="70" rx="5" fill="#f8f8f8" stroke="#666666" stroke-width="1.5" stroke-dasharray="7,3"/>
+<rect x="30" y="792" width="806" height="22" rx="5" fill="#e8e8e8"/>
+<rect x="30" y="804" width="806" height="10" fill="#e8e8e8"/>
+<text x="40" y="805" fill="#444" font-size="10" font-weight="bold">Stage δ  —  _inject_realism(rows, rng)</text>
+<text x="270" y="805" fill="#888" font-size="9" font-style="italic">  ⟨ optional: only runs if realism_config is set ⟩</text>
+<!-- rng badge -->
+<rect x="730" y="794" width="94" height="14" rx="3" fill="#eafaf0" stroke="#1a6e3a" stroke-width="1"/>
+<text x="777" y="805" text-anchor="middle" fill="#1a6e3a" font-size="8.5" font-weight="bold">rng: USES ✓</text>
+<text x="40" y="823" fill="#555" font-size="8.5" font-style="italic">Inputs: DataFrame, realism_config, rng</text>
+<line x1="38" y1="829" x2="828" y2="829" stroke="#dddddd" stroke-width="0.6"/>
+<text x="40" y="843" fill="#555" font-size="9">  Randomly inject missing, dirty, and censored values  [rng selects which cells are affected]</text>
+<text x="40" y="857" fill="#666" font-size="8.5">  Output: DataFrame with controlled imperfections</text>
+
+<!-- ═══ TRANSFER ZONE 5: δ → Post   y=862..886  ════════════════
+     rng is NOT passed to Post — show termination clearly -->
+<line x1="260" y1="862" x2="260" y2="886" stroke="#1a1a2e" stroke-width="1.5" marker-end="url(#aw)"/>
+<text x="270" y="871" fill="#333" font-size="8.5">rows</text>
+<text x="270" y="883" fill="#666" font-size="7.5">(with imperfections)</text>
+<!-- rng stops: show X terminus -->
+<line x1="600" y1="862" x2="600" y2="874" stroke="#aaaaaa" stroke-width="1.2" stroke-dasharray="3,2"/>
+<line x1="592" y1="874" x2="608" y2="874" stroke="#aaaaaa" stroke-width="1.5"/>
+<text x="614" y="874" fill="#888" font-size="8">rng not passed</text>
+<text x="614" y="884" fill="#888" font-size="7.5">Post is deterministic</text>
+
+<!-- ══════════════════════════════
+     POST   y=886..940
+══════════════════════════════ -->
+<rect x="30" y="886" width="806" height="56" rx="5" fill="#f8f4ff" stroke="#5c2d91" stroke-width="1.5"/>
+<rect x="30" y="886" width="806" height="22" rx="5" fill="#e8d8ff"/>
+<rect x="30" y="898" width="806" height="10" fill="#e8d8ff"/>
+<text x="40" y="899" fill="#3d1a6e" font-size="10" font-weight="bold">Post  —  _post_process(rows)  +  _build_schema_metadata()</text>
+<!-- rng badge: NOT USED -->
+<rect x="720" y="888" width="108" height="14" rx="3" fill="#f0f0f0" stroke="#888" stroke-width="1"/>
+<text x="774" y="899" text-anchor="middle" fill="#888" font-size="8.5">rng: NOT USED ✗</text>
+<text x="40" y="919" fill="#444" font-size="9">  _post_process:          rows  →  pd.DataFrame  (type coercion, index reset)</text>
+<text x="40" y="933" fill="#444" font-size="9">  _build_schema_metadata: declarations  →  dict  (raw schema material for M4)</text>
+
+<!-- §2.8 bottom = 307 + 626 = 933 (Post ends at 942 — need to stretch §2.8 slightly) -->
+
+<!-- ══════════════════════════════════════════
+     OUTPUTS + FEEDBACK   y=950..1012
+══════════════════════════════════════════ -->
+<line x1="260" y1="950" x2="260" y2="958" stroke="#1a1a2e" stroke-width="1.5" marker-end="url(#aw)"/>
+
+<!-- Module Outputs -->
+<rect x="18" y="959" width="468" height="62" rx="5" fill="#f4faf4" stroke="#1a6e3a" stroke-width="1.5"/>
+<rect x="18" y="959" width="468" height="22" rx="5" fill="#c8f0d0"/>
+<rect x="18" y="971" width="468" height="10" fill="#c8f0d0"/>
+<text x="252" y="972" text-anchor="middle" fill="#1a6e3a" font-size="10.5" font-weight="bold">MODULE OUTPUTS</text>
+<text x="28" y="992" fill="#333" font-size="9.5">  →  M5 Validation:    Master DataFrame   (pd.DataFrame)</text>
+<text x="28" y="1008" fill="#333" font-size="9.5">  →  M4 Schema Meta:  schema_metadata    (dict)</text>
+
+<!-- Feedback -->
+<rect x="498" y="959" width="356" height="62" rx="5" fill="#fff4f4" stroke="#a01a1a" stroke-width="1.5" stroke-dasharray="6,2"/>
+<rect x="498" y="959" width="356" height="22" rx="5" fill="#ffd8d8"/>
+<rect x="498" y="971" width="356" height="10" fill="#ffd8d8"/>
+<text x="676" y="972" text-anchor="middle" fill="#a01a1a" font-size="10.5" font-weight="bold">FEEDBACK INPUT  ⟵  M5 Validation</text>
+<text x="508" y="992" fill="#555" font-size="9">Loop B  (max 3 retries):  adjusted params + new seed</text>
+<text x="508" y="1008" fill="#666" font-size="8.5">seed on attempt k  =  42 + k   →  triggers full re-run of §2.8</text>
+
+<!-- Feedback loop arrow: up right margin, back into §2.8 -->
+<path d="M 854,990 L 862,990 L 862,614 L 854,614"
+      fill="none" stroke="#a01a1a" stroke-width="1.5" stroke-dasharray="6,3"
+      marker-end="url(#afb)"/>
+<text x="866" y="808" fill="#a01a1a" font-size="9" transform="rotate(90,866,808)">Loop B — max 3 retries</text>
+
+<!-- ══════════════════════════════════════════
+     LEGEND   y=1020..1048
+══════════════════════════════════════════ -->
+<rect x="18" y="1020" width="834" height="28" rx="4" fill="#f9f9f9" stroke="#cccccc" stroke-width="0.8"/>
+<line x1="18" y1="1034" x2="852" y2="1034" stroke="#e8e8e8" stroke-width="0.6"/>
+
+<!-- Row 1: symbols -->
+<text x="28" y="1030" fill="#333" font-size="8.5" font-weight="bold">SYMBOLS:</text>
+<line x1="92" y1="1027" x2="114" y2="1027" stroke="#1a1a2e" stroke-width="1.5" marker-end="url(#aw)"/>
+<text x="119" y="1031" fill="#333" font-size="8">data flow</text>
+<line x1="175" y1="1027" x2="197" y2="1027" stroke="#7a5000" stroke-width="1.5" stroke-dasharray="4,2" marker-end="url(#arn)"/>
+<text x="202" y="1031" fill="#7a5000" font-size="8">rng passed to next stage</text>
+<line x1="318" y1="1027" x2="330" y2="1027" stroke="#aaaaaa" stroke-width="1.2"/>
+<line x1="315" y1="1027" x2="322" y2="1027" stroke="#aaaaaa" stroke-width="1.2"/>
+<line x1="330" y1="1023" x2="330" y2="1031" stroke="#aaaaaa" stroke-width="1.5"/>
+<text x="336" y="1031" fill="#888" font-size="8">rng terminated</text>
+<rect x="418" y="1022" width="50" height="12" rx="3" fill="#eafaf0" stroke="#1a6e3a" stroke-width="1"/>
+<text x="443" y="1031" text-anchor="middle" fill="#1a6e3a" font-size="7.5" font-weight="bold">rng: USES ✓</text>
+<rect x="476" y="1022" width="66" height="12" rx="3" fill="#fff8e6" stroke="#7a5000" stroke-width="1"/>
+<text x="509" y="1031" text-anchor="middle" fill="#7a5000" font-size="7.5" font-weight="bold">rng: CREATES</text>
+<rect x="550" y="1022" width="72" height="12" rx="3" fill="#f0f0f0" stroke="#888" stroke-width="1"/>
+<text x="586" y="1031" text-anchor="middle" fill="#888" font-size="7.5">rng: NOT USED ✗</text>
+<line x1="630" y1="1027" x2="652" y2="1027" stroke="#a01a1a" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#afb)"/>
+<text x="657" y="1031" fill="#333" font-size="8">feedback/retry</text>
+<rect x="725" y="1022" width="26" height="12" fill="#fafafa" stroke="#888" stroke-width="1.2" stroke-dasharray="6,2" rx="1"/>
+<text x="757" y="1031" fill="#333" font-size="8">optional stage</text>
+<rect x="812" y="1022" width="26" height="12" fill="#fafafa" stroke="#888" stroke-width="1.2" stroke-dasharray="7,3" rx="1"/>
+<text x="840" y="1031" fill="#888" font-size="8">arch. spec</text>
+
+<!-- Row 2: rng explanation -->
+<text x="28" y="1046" fill="#333" font-size="8.5" font-weight="bold">rng:</text>
+<text x="52" y="1046" fill="#444" font-size="8">np.random.default_rng(seed) — NumPy Generator; stateful, deterministic. Same seed → identical output. One object passed α → β → γ → δ; each stage advances its draw sequence. Post does not consume rng.</text>
+
+</svg>

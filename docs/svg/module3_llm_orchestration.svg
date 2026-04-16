@@ -1,0 +1,270 @@
+<svg viewBox="0 0 870 840" xmlns="http://www.w3.org/2000/svg"
+     font-family="'Courier New', Courier, 'Lucida Console', monospace">
+
+<defs>
+  <marker id="aw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+    <path d="M0,1 L9,5 L0,9 z" fill="#1a1a2e"/>
+  </marker>
+  <marker id="aw-l" viewBox="0 0 10 10" refX="1" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+    <path d="M0,1 L9,5 L0,9 z" fill="#1a1a2e"/>
+  </marker>
+  <marker id="ag" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+    <path d="M0,1 L9,5 L0,9 z" fill="#1a6e3a"/>
+  </marker>
+  <marker id="ard" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+    <path d="M0,1 L9,5 L0,9 z" fill="#a01a1a"/>
+  </marker>
+  <marker id="ard-l" viewBox="0 0 10 10" refX="1" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+    <path d="M0,1 L9,5 L0,9 z" fill="#a01a1a"/>
+  </marker>
+  <marker id="aor" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+    <path d="M0,1 L9,5 L0,9 z" fill="#a05c00"/>
+  </marker>
+</defs>
+
+<!-- ══ BACKGROUND + OUTER BORDER ══ -->
+<rect width="870" height="840" fill="#ffffff"/>
+<rect x="8" y="8" width="854" height="824" rx="10" fill="none" stroke="#cccccc" stroke-width="1.5"/>
+
+<!-- ══ TITLE ══ -->
+<rect x="8" y="8" width="854" height="38" rx="10" fill="#f0f4ff"/>
+<rect x="8" y="28" width="854" height="18" fill="#f0f4ff"/>
+<text x="435" y="32" text-anchor="middle" fill="#1a1a2e" font-size="14" font-weight="bold">Module 3: LLM Orchestration (M3)</text>
+
+<!-- ════════════════════════════════════════════════
+     LEFT COLUMN — main flow   x=18..482
+════════════════════════════════════════════════ -->
+
+<!-- ── SCENARIO CONTEXT INPUT  y=54..128 ── -->
+<rect x="18" y="54" width="464" height="74" rx="6" fill="#f0f4ff" stroke="#1a4fa0" stroke-width="1.5"/>
+<rect x="18" y="54" width="464" height="26" rx="6" fill="#d8e6ff"/>
+<rect x="18" y="68" width="464" height="12" fill="#d8e6ff"/>
+<text x="250" y="68" text-anchor="middle" fill="#1a4fa0" font-size="10.5" font-weight="bold">SCENARIO CONTEXT INPUT  (from Phase 1)</text>
+<text x="28" y="92"  fill="#333" font-size="9.5">•  scenario_context dict  —  describes the chart domain, topic, and data characteristics</text>
+<text x="28" y="108" fill="#333" font-size="9.5">•  Used to fill the scenario slot in the LLM prompt (§2.5 scenario slot fill)</text>
+<text x="28" y="124" fill="#666" font-size="8.5">   e.g. "quarterly revenue by product category for a SaaS company"</text>
+
+<!-- Arrow: Input → §2.5 -->
+<line x1="250" y1="128" x2="250" y2="142" stroke="#1a1a2e" stroke-width="1.5" marker-end="url(#aw)"/>
+
+<!-- ── §2.5 LLM CODE GENERATION PROMPT  y=144..334 ── -->
+<rect x="18" y="144" width="464" height="190" rx="6" fill="#f0f4ff" stroke="#1a4fa0" stroke-width="1.5"/>
+<rect x="18" y="144" width="464" height="24" rx="6" fill="#d8e6ff"/>
+<rect x="18" y="156" width="464" height="12" fill="#d8e6ff"/>
+<text x="28" y="157" fill="#1a4fa0" font-size="10" font-weight="bold">§2.5  LLM Code Generation Prompt</text>
+<text x="28" y="178" fill="#333" font-size="9.5">Assembles a complete LLM prompt from five components:</text>
+<line x1="26" y1="184" x2="474" y2="184" stroke="#dddddd" stroke-width="0.8"/>
+
+<!-- 5 components with small colored badges -->
+<rect x="28" y="190" width="56" height="13" rx="2" fill="#d8e6ff" stroke="#1a4fa0" stroke-width="0.8"/>
+<text x="56" y="200" text-anchor="middle" fill="#1a4fa0" font-size="8" font-weight="bold">① system</text>
+<text x="90" y="200" fill="#333" font-size="9">prompt  —  sets role, task description, and output format requirements</text>
+
+<rect x="28" y="207" width="56" height="13" rx="2" fill="#d8e6ff" stroke="#1a4fa0" stroke-width="0.8"/>
+<text x="56" y="217" text-anchor="middle" fill="#1a4fa0" font-size="8" font-weight="bold">② SDK</text>
+<text x="90" y="217" fill="#333" font-size="9">whitelist  —  permitted M1 API surface (which methods the script may call)</text>
+
+<rect x="28" y="224" width="56" height="13" rx="2" fill="#d8e6ff" stroke="#1a4fa0" stroke-width="0.8"/>
+<text x="56" y="234" text-anchor="middle" fill="#1a4fa0" font-size="8" font-weight="bold">③ hard</text>
+<text x="90" y="234" fill="#333" font-size="9">constraints  —  column count range, type mix, structural rules</text>
+
+<rect x="28" y="241" width="56" height="13" rx="2" fill="#d8e6ff" stroke="#1a4fa0" stroke-width="0.8"/>
+<text x="56" y="251" text-anchor="middle" fill="#1a4fa0" font-size="8" font-weight="bold">④ example</text>
+<text x="90" y="251" fill="#333" font-size="9">one-shot  —  exemplar script for in-context learning (format guidance)</text>
+
+<rect x="28" y="258" width="56" height="13" rx="2" fill="#d8e6ff" stroke="#1a4fa0" stroke-width="0.8"/>
+<text x="56" y="268" text-anchor="middle" fill="#1a4fa0" font-size="8" font-weight="bold">⑤ scenario</text>
+<text x="90" y="268" fill="#333" font-size="9">slot fill  —  scenario_context dict injected into prompt template</text>
+
+<line x1="26" y1="278" x2="474" y2="278" stroke="#dddddd" stroke-width="0.8"/>
+
+<!-- Output A annotation -->
+<text x="28" y="294" fill="#555" font-size="9">Output  (A):  assembled_prompt</text>
+<text x="28" y="310" fill="#666" font-size="8.5">= system message  (①②③④ baked in)  +  user turn  (⑤ scenario filled)</text>
+<text x="28" y="326" fill="#666" font-size="8.5">Complete, self-contained prompt ready to send to the LLM</text>
+
+<!-- Arrow (A): §2.5 → §2.7 -->
+<line x1="250" y1="334" x2="250" y2="358" stroke="#1a1a2e" stroke-width="1.5" marker-end="url(#aw)"/>
+<rect x="126" y="336" width="248" height="14" fill="#ffffff"/>
+<text x="250" y="347" text-anchor="middle" fill="#1a4fa0" font-size="9" font-weight="bold">(A)  assembled_prompt</text>
+<text x="250" y="358" text-anchor="middle" fill="#666" font-size="8">system message + user turn</text>
+
+<!-- ── §2.7 EXECUTION-ERROR FEEDBACK LOOP  y=360..582 ── -->
+<rect x="18" y="360" width="464" height="222" rx="6" fill="#fffaf2" stroke="#a05c00" stroke-width="1.5"/>
+<rect x="18" y="360" width="464" height="24" rx="6" fill="#fde8c2"/>
+<rect x="18" y="372" width="464" height="12" fill="#fde8c2"/>
+<text x="28" y="373" fill="#7a3d00" font-size="10" font-weight="bold">§2.7  Execution-Error Feedback Loop</text>
+<text x="330" y="373" fill="#a05c00" font-size="8.5" font-style="italic">max_retries = 3  (attempts 0, 1, 2, 3)</text>
+
+<!-- Step 1 -->
+<text x="34" y="394" fill="#333" font-size="9.5">1.  Send  assembled_prompt  to LLM</text>
+<!-- Step 2 -->
+<text x="34" y="410" fill="#333" font-size="9.5">2.  Receive generated Python script  from LLM response</text>
+<!-- Step 3 — sandbox execution, arrow goes right -->
+<text x="34" y="426" fill="#333" font-size="9.5">3.  Execute script in sandbox</text>
+<text x="220" y="426" fill="#a05c00" font-size="9">──►  M1 SDK validates  (see right)</text>
+
+<line x1="26" y1="434" x2="474" y2="434" stroke="#e8e8e8" stroke-width="0.8"/>
+
+<!-- Step 4 — exception path -->
+<text x="34" y="449" fill="#a01a1a" font-size="9.5">4.  If  SDKException  raised:</text>
+<text x="50" y="464" fill="#555" font-size="9">    •  append  (script + traceback)  to  conversation_history</text>
+<text x="50" y="478" fill="#555" font-size="9">    •  retry  ─  go to step 1  (while attempt &lt; max_retries)</text>
+
+<line x1="26" y1="487" x2="474" y2="487" stroke="#e8e8e8" stroke-width="0.8"/>
+
+<!-- Step 5 — success path -->
+<text x="34" y="502" fill="#1a6e3a" font-size="9.5">5.  If success:   emit validated script artifact  →  output (B1)</text>
+<!-- Step 6 — terminal failure -->
+<text x="34" y="516" fill="#a01a1a" font-size="9.5">6.  If terminal failure  (all retries exhausted):</text>
+<text x="50" y="530" fill="#555" font-size="9">    emit SKIP signal  →  output (B2)</text>
+
+<line x1="26" y1="539" x2="474" y2="539" stroke="#e8e8e8" stroke-width="0.8"/>
+
+<text x="28" y="554" fill="#666" font-size="8.5">conversation_history  grows with each failed attempt — LLM sees prior code + error trace</text>
+<text x="28" y="568" fill="#666" font-size="8.5">on the next attempt, enabling targeted self-correction  (multi-turn repair)</text>
+
+<!-- ── RETRY LOOP-BACK ARC on left edge of §2.7 ──
+     From step 4 retry (y=478) curving left, up to step 1 (y=394) -->
+<path d="M 26,472  L 8,472  L 8,389  L 26,389"
+      fill="none" stroke="#a05c00" stroke-width="1.5"
+      stroke-dasharray="5,3" marker-end="url(#aor)"/>
+<text x="4" y="434" fill="#a05c00" font-size="8" font-weight="bold"
+      transform="rotate(-90,4,434)">retry loop</text>
+
+<!-- Arrow (B): §2.7 → outputs -->
+<line x1="250" y1="582" x2="250" y2="598" stroke="#1a1a2e" stroke-width="1.5" marker-end="url(#aw)"/>
+<rect x="156" y="583" width="188" height="13" fill="#ffffff"/>
+<text x="250" y="595" text-anchor="middle" fill="#333" font-size="9" font-weight="bold">(B)  FINAL OUTPUT  —  one of:</text>
+
+<!-- ── OUTPUT BRANCHES  y=600..714 ── -->
+
+<!-- SUCCESS branch (left) -->
+<rect x="18" y="600" width="226" height="114" rx="5" fill="#f4faf4" stroke="#1a6e3a" stroke-width="2"/>
+<rect x="18" y="600" width="226" height="24" rx="5" fill="#c8f0d0"/>
+<rect x="18" y="612" width="226" height="12" fill="#c8f0d0"/>
+<text x="131" y="613" text-anchor="middle" fill="#1a6e3a" font-size="10" font-weight="bold">(B1)  SUCCESS ✓</text>
+<text x="28" y="633" fill="#333" font-size="9">Validated Python script</text>
+<text x="28" y="648" fill="#444" font-size="9">build_fact_table()</text>
+<line x1="26" y1="656" x2="236" y2="656" stroke="#dddddd" stroke-width="0.8"/>
+<text x="28" y="670" fill="#555" font-size="8.5">→  M1  declaration store</text>
+<text x="28" y="684" fill="#555" font-size="8.5">→  M2  Gen Engine</text>
+<text x="28" y="698" fill="#555" font-size="8.5">→  M4  Schema Metadata</text>
+
+<!-- SKIP branch (right) -->
+<rect x="256" y="600" width="226" height="114" rx="5" fill="#fff4f4" stroke="#a01a1a" stroke-width="2"/>
+<rect x="256" y="600" width="226" height="24" rx="5" fill="#ffd8d8"/>
+<rect x="256" y="612" width="226" height="12" fill="#ffd8d8"/>
+<text x="369" y="613" text-anchor="middle" fill="#a01a1a" font-size="10" font-weight="bold">(B2)  TERMINAL FAILURE ✗</text>
+<text x="266" y="633" fill="#333" font-size="9">Logged skip signal</text>
+<text x="266" y="648" fill="#444" font-size="9">All retries exhausted  (attempt 3 failed)</text>
+<line x1="264" y1="656" x2="474" y2="656" stroke="#dddddd" stroke-width="0.8"/>
+<text x="266" y="670" fill="#555" font-size="8.5">→  Upstream orchestrator</text>
+<text x="266" y="684" fill="#555" font-size="8.5">Scenario skipped; pipeline continues</text>
+<text x="266" y="698" fill="#555" font-size="8.5">with next scenario in queue</text>
+
+<!-- ════════════════════════════════════════════════
+     RIGHT COLUMN   x=496..852
+════════════════════════════════════════════════ -->
+
+<!-- ── M1 SANDBOX BOX  y=370..462 ── -->
+<rect x="496" y="370" width="358" height="92" rx="6" fill="#fffaf2" stroke="#a05c00" stroke-width="1.5" stroke-dasharray="6,3"/>
+<rect x="496" y="370" width="358" height="22" rx="6" fill="#fde8c2"/>
+<rect x="496" y="382" width="358" height="10" fill="#fde8c2"/>
+<text x="675" y="383" text-anchor="middle" fill="#7a3d00" font-size="10" font-weight="bold">M1  Sandbox  (SDK Validation)</text>
+<text x="506" y="403" fill="#444" font-size="9">Receives Python script from §2.7 step 3</text>
+<text x="506" y="418" fill="#444" font-size="9">Executes  build_fact_table()  call against M1 SDK</text>
+<line x1="504" y1="427" x2="846" y2="427" stroke="#dddddd" stroke-width="0.8"/>
+<text x="506" y="441" fill="#1a6e3a" font-size="9">If valid:   returns silently  →  script accepted ✓</text>
+<text x="506" y="455" fill="#a01a1a" font-size="9">If invalid: raises typed  SDKException  →  returned to §2.7</text>
+
+<!-- Arrows between §2.7 and M1 Sandbox -->
+<!-- Script send: §2.7 right (x=482) → M1 Sandbox left (x=496), at y=418 -->
+<line x1="482" y1="418" x2="494" y2="418" stroke="#1a1a2e" stroke-width="1.5" marker-end="url(#aw)"/>
+<text x="487" y="414" text-anchor="middle" fill="#333" font-size="7.5">script</text>
+
+<!-- Exception return: M1 Sandbox left (x=496) → §2.7 right (x=482), at y=448 -->
+<line x1="494" y1="448" x2="482" y2="448" stroke="#a01a1a" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#ard-l)"/>
+<text x="487" y="460" text-anchor="middle" fill="#a01a1a" font-size="7.5">exception</text>
+
+<!-- ── RETRY DETAIL  y=472..780 ── -->
+<rect x="496" y="472" width="358" height="308" rx="6" fill="#f9f9f9" stroke="#888888" stroke-width="1.5"/>
+<rect x="496" y="472" width="358" height="24" rx="6" fill="#eeeeee"/>
+<rect x="496" y="484" width="358" height="12" fill="#eeeeee"/>
+<text x="675" y="485" text-anchor="middle" fill="#444" font-size="10" font-weight="bold">RETRY DETAIL  (inside §2.7)</text>
+<line x1="504" y1="496" x2="846" y2="496" stroke="#cccccc" stroke-width="0.8"/>
+
+<!-- Pseudo-code block -->
+<!-- Line 1 -->
+<text x="510" y="512" fill="#555" font-size="9">conversation_history = [system_prompt  ←  from §2.5]</text>
+<line x1="504" y1="520" x2="846" y2="520" stroke="#eeeeee" stroke-width="0.6"/>
+
+<!-- for loop header -->
+<text x="510" y="534" fill="#1a1a2e" font-size="9" font-weight="bold">for</text>
+<text x="534" y="534" fill="#333" font-size="9">attempt</text>
+<text x="576" y="534" fill="#1a1a2e" font-size="9" font-weight="bold">in</text>
+<text x="590" y="534" fill="#333" font-size="9">0 .. max_retries:</text>
+
+<!-- loop body -->
+<!-- indent = 526 -->
+<text x="526" y="550" fill="#333" font-size="9">script = LLM(conversation_history)</text>
+<text x="526" y="566" fill="#666" font-size="8.5">conversation_history.append(</text>
+<text x="560" y="579" fill="#666" font-size="8.5">role="assistant",  content=script</text>
+<text x="526" y="592" fill="#666" font-size="8.5">)</text>
+
+<!-- try block -->
+<text x="526" y="608" fill="#1a1a2e" font-size="9" font-weight="bold">try:</text>
+<text x="542" y="622" fill="#333" font-size="9">sandbox_exec(script)  ──►  M1 SDK validates</text>
+<text x="542" y="637" fill="#1a6e3a" font-size="9" font-weight="bold">return</text>
+<text x="576" y="637" fill="#1a6e3a" font-size="9">script  ✓   # success — exit loop</text>
+
+<!-- except block -->
+<text x="526" y="653" fill="#1a1a2e" font-size="9" font-weight="bold">except</text>
+<text x="564" y="653" fill="#a01a1a" font-size="9">SDKException  as  e:</text>
+<text x="542" y="668" fill="#666" font-size="8.5">conversation_history.append(</text>
+<text x="560" y="681" fill="#666" font-size="8.5">role="user",</text>
+<text x="560" y="694" fill="#666" font-size="8.5">content = f"Code:\n{script}\nError:\n{e}"</text>
+<text x="542" y="707" fill="#666" font-size="8.5">)  # LLM sees the error on next attempt</text>
+
+<line x1="504" y1="716" x2="846" y2="716" stroke="#eeeeee" stroke-width="0.8"/>
+
+<!-- After loop -->
+<text x="510" y="730" fill="#a01a1a" font-size="9" font-weight="bold">return</text>
+<text x="544" y="730" fill="#a01a1a" font-size="9">SKIP  ✗   # all retries exhausted</text>
+
+<line x1="504" y1="740" x2="846" y2="740" stroke="#cccccc" stroke-width="0.8"/>
+
+<!-- Annotation notes -->
+<text x="510" y="754" fill="#666" font-size="8.5">Key:  conversation_history accumulates failed attempts.</text>
+<text x="510" y="768" fill="#666" font-size="8.5">Each retry shows LLM the previous code + its error trace,</text>
+<text x="510" y="782" fill="#888" font-size="8.5">enabling targeted self-correction across turns.</text>
+
+<!-- Connecting bracket: RETRY DETAIL references §2.7 -->
+<line x1="496" y1="536" x2="484" y2="536" stroke="#888" stroke-width="1" stroke-dasharray="3,2"/>
+<line x1="496" y1="622" x2="484" y2="622" stroke="#888" stroke-width="1" stroke-dasharray="3,2"/>
+<line x1="484" y1="536" x2="484" y2="622" stroke="#888" stroke-width="1" stroke-dasharray="3,2"/>
+
+<!-- ════════════════════════════════════════════════
+     LEGEND   y=796..832
+════════════════════════════════════════════════ -->
+<rect x="18" y="796" width="834" height="36" rx="4" fill="#f9f9f9" stroke="#cccccc" stroke-width="0.8"/>
+<line x1="18" y1="812" x2="852" y2="812" stroke="#eeeeee" stroke-width="0.6"/>
+
+<!-- Row 1: symbols — spaced to avoid overlap (char width ≈ 4.8 px at font-size 8) -->
+<text x="28" y="808" fill="#333" font-size="8.5" font-weight="bold">SYMBOLS:</text>
+<line x1="92" y1="805" x2="114" y2="805" stroke="#1a1a2e" stroke-width="1.5" marker-end="url(#aw)"/>
+<text x="119" y="809" fill="#333" font-size="8">data flow</text>
+<line x1="174" y1="805" x2="196" y2="805" stroke="#a01a1a" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#ard)"/>
+<text x="201" y="809" fill="#333" font-size="8">error/exception</text>
+<line x1="292" y1="805" x2="314" y2="805" stroke="#a05c00" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#aor)"/>
+<text x="319" y="809" fill="#333" font-size="8">retry loop</text>
+<rect x="382" y="800" width="22" height="11" fill="#fafafa" stroke="#888" stroke-width="1.2" stroke-dasharray="6,3" rx="1"/>
+<text x="409" y="809" fill="#333" font-size="8">external component</text>
+<text x="530" y="809" fill="#888" font-size="8">(A) = assembled_prompt to LLM</text>
+<text x="700" y="809" fill="#888" font-size="8">(B1/B2) = final output</text>
+
+<!-- Row 2: flow summary -->
+<text x="28" y="826" fill="#444" font-size="8.5" font-weight="bold">Flow:</text>
+<text x="58" y="826" fill="#444" font-size="8">scenario_context  →  §2.5 assembles prompt  →  §2.7 LLM + sandbox loop  →  (B1) validated script  or  (B2) skip signal</text>
+
+</svg>

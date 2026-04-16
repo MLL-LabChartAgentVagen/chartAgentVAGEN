@@ -1,0 +1,233 @@
+<svg viewBox="0 0 870 726" xmlns="http://www.w3.org/2000/svg"
+     font-family="'Courier New', Courier, 'Lucida Console', monospace">
+
+<defs>
+  <marker id="aw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+    <path d="M0,1 L9,5 L0,9 z" fill="#1a1a2e"/>
+  </marker>
+  <marker id="ag" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+    <path d="M0,1 L9,5 L0,9 z" fill="#1a5c6e"/>
+  </marker>
+  <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+    <path d="M0,1 L9,5 L0,9 z" fill="#888"/>
+  </marker>
+</defs>
+
+<!-- ══ BACKGROUND + BORDER ══ -->
+<rect width="870" height="726" fill="#ffffff"/>
+<rect x="8" y="8" width="854" height="710" rx="10" fill="none" stroke="#cccccc" stroke-width="1.5"/>
+
+<!-- ══ TITLE ══ -->
+<rect x="8" y="8" width="854" height="38" rx="10" fill="#f0fafa"/>
+<rect x="8" y="28" width="854" height="18" fill="#f0fafa"/>
+<text x="435" y="32" text-anchor="middle" fill="#1a1a2e" font-size="14" font-weight="bold">Module 4: Schema Metadata (M4)</text>
+
+<!-- ══════════════════════════════════════════════════
+     INPUT BOXES  (side by side)  y=54..168
+══════════════════════════════════════════════════ -->
+
+<!-- ── M1: Declaration Store  (required, solid border) ── -->
+<rect x="18" y="54" width="414" height="114" rx="6" fill="#f0f4ff" stroke="#1a4fa0" stroke-width="1.5"/>
+<rect x="18" y="54" width="414" height="24" rx="6" fill="#d8e6ff"/>
+<rect x="18" y="66" width="414" height="12" fill="#d8e6ff"/>
+<text x="225" y="67" text-anchor="middle" fill="#1a4fa0" font-size="10" font-weight="bold">INPUT 1  —  M1 Declaration Store  (required)</text>
+<text x="28" y="88"  fill="#333" font-size="9">•  columns[]                 •  orthogonal_pairs[]</text>
+<text x="28" y="103" fill="#333" font-size="9">•  groups{}                   •  group_dependencies[]</text>
+<text x="28" y="118" fill="#333" font-size="9">•  measure_dag                •  realism_config?</text>
+<text x="28" y="133" fill="#333" font-size="9">•  measure_dag_order[]        •  target_rows</text>
+<text x="28" y="148" fill="#333" font-size="9">•  patterns[]</text>
+<text x="220" y="160" fill="#1a4fa0" font-size="8.5" font-style="italic">primary source — always consumed</text>
+
+<!-- ── M2: Master DataFrame  (optional, dashed border) ── -->
+<rect x="444" y="54" width="408" height="114" rx="6" fill="#f8f8f8" stroke="#888" stroke-width="1.5" stroke-dasharray="7,3"/>
+<rect x="444" y="54" width="408" height="24" rx="6" fill="#e8e8e8"/>
+<rect x="444" y="66" width="408" height="12" fill="#e8e8e8"/>
+<text x="648" y="67" text-anchor="middle" fill="#555" font-size="10" font-weight="bold">INPUT 2  —  M2 Master DataFrame  (possibly unused)</text>
+<text x="454" y="88"  fill="#555" font-size="9">•  pd.DataFrame  with all generated rows + columns</text>
+<text x="454" y="103" fill="#555" font-size="9">•  Used only if empirical stats are needed:</text>
+<text x="466" y="118" fill="#666" font-size="8.5">  – actual per-column  min / max / nunique / null_rate</text>
+<text x="466" y="133" fill="#666" font-size="8.5">  – actual row count  (for cross-checking target_rows)</text>
+<text x="454" y="155" fill="#888" font-size="8.5" font-style="italic">declaration store alone is usually sufficient</text>
+
+<!-- Arrows: inputs → §2.6 -->
+<!-- M1 solid arrow: down from x=225 -->
+<line x1="225" y1="168" x2="225" y2="184" stroke="#1a4fa0" stroke-width="1.5" marker-end="url(#aw)"/>
+<!-- M2 dashed arrow: down from x=648, then merge leftward into §2.6 -->
+<line x1="648" y1="168" x2="648" y2="184" stroke="#888" stroke-width="1.5" stroke-dasharray="6,3" marker-end="url(#ar)"/>
+<!-- Label between arrows -->
+<text x="435" y="179" text-anchor="middle" fill="#888" font-size="8" font-style="italic">solid = required   dashed = optional</text>
+
+<!-- ══════════════════════════════════════════════════
+     §2.6 SCHEMA METADATA BUILDER  y=186..440
+══════════════════════════════════════════════════ -->
+<rect x="18" y="186" width="834" height="254" rx="6" fill="#f0fafa" stroke="#1a5c6e" stroke-width="2"/>
+<rect x="18" y="186" width="834" height="26" rx="6" fill="#c8e8f0"/>
+<rect x="18" y="200" width="834" height="12" fill="#c8e8f0"/>
+<text x="435" y="201" text-anchor="middle" fill="#1a3d50" font-size="11" font-weight="bold">§2.6  Schema Metadata Builder</text>
+
+<!-- Internal divider: left = declaration store work | right = dataframe work -->
+<line x1="470" y1="214" x2="470" y2="436" stroke="#c8e8f0" stroke-width="1.2"/>
+
+<!-- ── LEFT HALF: From Declaration Store ── -->
+<text x="240" y="230" text-anchor="middle" fill="#1a3d50" font-size="9.5" font-weight="bold">From Declaration Store  (required)</text>
+<line x1="26" y1="236" x2="462" y2="236" stroke="#d8f0f0" stroke-width="0.8"/>
+
+<!-- Column descriptors -->
+<rect x="26" y="242" width="90" height="12" rx="2" fill="#d8f0f0"/>
+<text x="71" y="252" text-anchor="middle" fill="#1a3d50" font-size="8" font-weight="bold">per column</text>
+<text x="122" y="252" fill="#333" font-size="9">name, type, role, group, parent, family, param_model, formula?</text>
+
+<!-- Group structure -->
+<rect x="26" y="260" width="90" height="12" rx="2" fill="#d8f0f0"/>
+<text x="71" y="270" text-anchor="middle" fill="#1a3d50" font-size="8" font-weight="bold">group structure</text>
+<text x="122" y="270" fill="#333" font-size="9">dimension groups: root col, member cols, group type</text>
+
+<!-- Measure topology -->
+<rect x="26" y="278" width="90" height="12" rx="2" fill="#d8f0f0"/>
+<text x="71" y="288" text-anchor="middle" fill="#1a3d50" font-size="8" font-weight="bold">measure DAG</text>
+<text x="122" y="288" fill="#333" font-size="9">topo order (from §2.3), dependency edges, formula map</text>
+
+<!-- Patterns -->
+<rect x="26" y="296" width="90" height="12" rx="2" fill="#d8f0f0"/>
+<text x="71" y="306" text-anchor="middle" fill="#1a3d50" font-size="8" font-weight="bold">pattern catalog</text>
+<text x="122" y="306" fill="#333" font-size="9">pattern type, target column, parameters per entry</text>
+
+<!-- Constraints -->
+<rect x="26" y="314" width="90" height="12" rx="2" fill="#d8f0f0"/>
+<text x="71" y="324" text-anchor="middle" fill="#1a3d50" font-size="8" font-weight="bold">constraints</text>
+<text x="122" y="324" fill="#333" font-size="9">orthogonal pairs, cross-group dependencies</text>
+
+<!-- Realism config -->
+<rect x="26" y="332" width="90" height="12" rx="2" fill="#d8f0f0"/>
+<text x="71" y="342" text-anchor="middle" fill="#1a3d50" font-size="8" font-weight="bold">realism config</text>
+<text x="122" y="342" fill="#333" font-size="9">missing_rate, dirty_rate, censored_rate  (null if §2.1.2 unset)</text>
+
+<!-- target_rows -->
+<rect x="26" y="350" width="90" height="12" rx="2" fill="#d8f0f0"/>
+<text x="71" y="360" text-anchor="middle" fill="#1a3d50" font-size="8" font-weight="bold">target_rows</text>
+<text x="122" y="360" fill="#333" font-size="9">expected row count  (from §2.1 Constructor)</text>
+
+<line x1="26" y1="370" x2="462" y2="370" stroke="#d8f0f0" stroke-width="0.8"/>
+<text x="240" y="384" text-anchor="middle" fill="#1a5c6e" font-size="9">→  all fields serialized into  schema_metadata  dict keys</text>
+
+<!-- ── RIGHT HALF: Optional DataFrame work ── -->
+<text x="655" y="230" text-anchor="middle" fill="#555" font-size="9.5" font-weight="bold">From Master DataFrame  (optional)</text>
+<line x1="478" y1="236" x2="844" y2="236" stroke="#d8f0f0" stroke-width="0.8"/>
+
+<text x="484" y="252" fill="#555" font-size="9">If DataFrame is provided, also computes:</text>
+
+<rect x="484" y="258" width="90" height="12" rx="2" fill="#e8e8e8"/>
+<text x="529" y="268" text-anchor="middle" fill="#444" font-size="8" font-weight="bold">per-col stats</text>
+<text x="580" y="268" fill="#555" font-size="9">min, max, mean, nunique, null_rate</text>
+
+<rect x="484" y="276" width="90" height="12" rx="2" fill="#e8e8e8"/>
+<text x="529" y="286" text-anchor="middle" fill="#444" font-size="8" font-weight="bold">row count</text>
+<text x="580" y="286" fill="#555" font-size="9">actual vs target_rows  (cross-check)</text>
+
+<rect x="484" y="294" width="90" height="12" rx="2" fill="#e8e8e8"/>
+<text x="529" y="304" text-anchor="middle" fill="#444" font-size="8" font-weight="bold">value ranges</text>
+<text x="580" y="304" fill="#555" font-size="9">used to tighten M5 L2 statistical thresholds</text>
+
+<line x1="478" y1="316" x2="844" y2="316" stroke="#e8e8e8" stroke-width="0.8"/>
+<text x="484" y="332" fill="#888" font-size="8.5" font-style="italic">Enriches df_stats key of schema_metadata dict</text>
+<text x="484" y="347" fill="#888" font-size="8.5" font-style="italic">when present; key is absent if DataFrame unused</text>
+
+<!-- Ordering note on right side -->
+<line x1="478" y1="358" x2="844" y2="358" stroke="#e8e8e8" stroke-width="0.8"/>
+<text x="655" y="373" text-anchor="middle" fill="#888" font-size="8.5">Note: M2 also calls _build_schema_metadata()</text>
+<text x="655" y="387" text-anchor="middle" fill="#888" font-size="8.5">internally (Post stage).  M4 may reuse or rebuild</text>
+<text x="655" y="401" text-anchor="middle" fill="#888" font-size="8.5">that raw dict with additional DataFrame enrichment.</text>
+
+<!-- Output annotation inside §2.6 -->
+<line x1="26" y1="412" x2="844" y2="412" stroke="#9ecfda" stroke-width="1"/>
+<text x="435" y="428" text-anchor="middle" fill="#1a3d50" font-size="9.5" font-weight="bold">Output:  schema_metadata  (dict)  —  passed to M5 Validation</text>
+
+<!-- Arrow: §2.6 → schema_metadata display -->
+<line x1="435" y1="440" x2="435" y2="456" stroke="#1a5c6e" stroke-width="1.5" marker-end="url(#ag)"/>
+
+<!-- ══════════════════════════════════════════════════
+     schema_metadata DICT STRUCTURE  y=458..596
+     Single-column layout: key x=94, value x=248
+     7 keys matching implementation (phase_2/metadata/builder.py)
+══════════════════════════════════════════════════ -->
+<rect x="80" y="458" width="710" height="138" rx="6" fill="#fffef0" stroke="#8B7000" stroke-width="1.5"/>
+<rect x="80" y="458" width="710" height="22" rx="6" fill="#f0e8b0"/>
+<rect x="80" y="468" width="710" height="12" fill="#f0e8b0"/>
+<text x="435" y="470" text-anchor="middle" fill="#5a4500" font-size="10" font-weight="bold">schema_metadata  dict  —  7 top-level keys</text>
+
+<!-- Column header -->
+<rect x="80" y="480" width="710" height="13" fill="#f8f2c8"/>
+<text x="160" y="491" fill="#7a5c00" font-size="8" font-weight="bold">KEY</text>
+<text x="248" y="491" fill="#7a5c00" font-size="8" font-weight="bold">VALUE TYPE / SHAPE</text>
+<!-- Key/value separator line -->
+<line x1="242" y1="480" x2="242" y2="596" stroke="#e0cc80" stroke-width="0.8"/>
+
+<!-- Row 1 -->
+<rect x="80" y="493" width="710" height="14" fill="#fffef0"/>
+<text x="94"  y="504" fill="#5a4500" font-size="8.5" font-weight="bold">"dimension_groups"</text>
+<text x="248" y="504" fill="#444"   font-size="8.5">{ group_name: {columns: [ … ], hierarchy: [ … ]} }</text>
+
+<!-- Row 2 (shaded) -->
+<rect x="80" y="507" width="710" height="14" fill="#faf8e8"/>
+<text x="94"  y="518" fill="#5a4500" font-size="8.5" font-weight="bold">"orthogonal_groups"</text>
+<text x="248" y="518" fill="#444"   font-size="8.5">[ {group_a, group_b, rationale} … ]</text>
+
+<!-- Row 3 -->
+<rect x="80" y="521" width="710" height="14" fill="#fffef0"/>
+<text x="94"  y="532" fill="#5a4500" font-size="8.5" font-weight="bold">"group_dependencies"</text>
+<text x="248" y="532" fill="#444"   font-size="8.5">[ {child_root, on, conditional_weights} … ]</text>
+
+<!-- Row 4 (shaded) -->
+<rect x="80" y="535" width="710" height="14" fill="#faf8e8"/>
+<text x="94"  y="546" fill="#5a4500" font-size="8.5" font-weight="bold">"columns"</text>
+<text x="248" y="546" fill="#444"   font-size="8.5">{ col_name: {type, values?, weights?, family?, param_model?, formula?, effects?, noise?} }</text>
+
+<!-- Row 5 -->
+<rect x="80" y="549" width="710" height="14" fill="#fffef0"/>
+<text x="94"  y="560" fill="#5a4500" font-size="8.5" font-weight="bold">"measure_dag_order"</text>
+<text x="248" y="560" fill="#444"   font-size="8.5">[ measure_name … ]   (topological sort of measure dependency graph)</text>
+
+<!-- Row 6 (shaded) -->
+<rect x="80" y="563" width="710" height="14" fill="#faf8e8"/>
+<text x="94"  y="574" fill="#5a4500" font-size="8.5" font-weight="bold">"patterns"</text>
+<text x="248" y="574" fill="#444"   font-size="8.5">[ {type, target, col, params} … ]</text>
+
+<!-- Row 7 -->
+<rect x="80" y="577" width="710" height="14" fill="#fffef0"/>
+<text x="94"  y="588" fill="#5a4500" font-size="8.5" font-weight="bold">"total_rows"</text>
+<text x="248" y="588" fill="#444"   font-size="8.5">int  (declared target_rows from §2.1 Constructor)</text>
+
+<!-- Arrow: schema_metadata → M5 -->
+<line x1="435" y1="596" x2="435" y2="612" stroke="#1a1a2e" stroke-width="1.5" marker-end="url(#aw)"/>
+
+<!-- ══════════════════════════════════════════════════
+     M5 VALIDATION  y=614..666
+══════════════════════════════════════════════════ -->
+<rect x="268" y="614" width="334" height="52" rx="5" fill="#fff4f4" stroke="#a01a1a" stroke-width="1.5"/>
+<rect x="268" y="614" width="334" height="22" rx="5" fill="#ffd8d8"/>
+<rect x="268" y="626" width="334" height="10" fill="#ffd8d8"/>
+<text x="435" y="627" text-anchor="middle" fill="#a01a1a" font-size="10.5" font-weight="bold">M5: Validation Engine  (Phase 3)</text>
+<text x="435" y="648" text-anchor="middle" fill="#555" font-size="9">Receives schema_metadata alongside Master DataFrame from M2</text>
+<text x="435" y="662" text-anchor="middle" fill="#666" font-size="8.5">Uses dict to drive L1 structural, L2 statistical, L3 pattern checks</text>
+
+<!-- ══════════════════════════════════════════════════
+     LEGEND  y=678..714
+══════════════════════════════════════════════════ -->
+<rect x="18" y="678" width="834" height="36" rx="4" fill="#f9f9f9" stroke="#cccccc" stroke-width="0.8"/>
+<line x1="18" y1="694" x2="852" y2="694" stroke="#eeeeee" stroke-width="0.6"/>
+
+<!-- Row 1 -->
+<text x="28" y="690" fill="#333" font-size="8.5" font-weight="bold">SYMBOLS:</text>
+<line x1="92" y1="687" x2="114" y2="687" stroke="#1a4fa0" stroke-width="1.5" marker-end="url(#aw)"/>
+<text x="119" y="691" fill="#333" font-size="8">required input</text>
+<line x1="200" y1="687" x2="222" y2="687" stroke="#888" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#ar)"/>
+<text x="227" y="691" fill="#333" font-size="8">optional input  (possibly unused)</text>
+<rect x="390" y="682" width="24" height="11" fill="#f8f8f8" stroke="#888" stroke-width="1.2" stroke-dasharray="6,3" rx="1"/>
+<text x="419" y="691" fill="#333" font-size="8">optional / conditional component</text>
+<text x="588" y="691" fill="#888" font-size="8">7 keys match implementation in metadata/builder.py</text>
+
+<!-- Row 2 -->
+<text x="28" y="709" fill="#444" font-size="8.5" font-weight="bold">Flow:</text>
+<text x="58" y="709" fill="#444" font-size="8">M1 decl store  →  §2.6 assembles schema_metadata dict (7 keys)  →  M5 Validation  (alongside M2 DataFrame)</text>
+
+</svg>
