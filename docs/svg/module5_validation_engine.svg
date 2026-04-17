@@ -1,4 +1,4 @@
-<svg viewBox="0 0 870 930" xmlns="http://www.w3.org/2000/svg"
+<svg viewBox="0 0 870 944" xmlns="http://www.w3.org/2000/svg"
      font-family="'Courier New', Courier, 'Lucida Console', monospace">
 
 <defs>
@@ -20,8 +20,8 @@
 </defs>
 
 <!-- ══ BACKGROUND + BORDER ══ -->
-<rect width="870" height="930" fill="#ffffff"/>
-<rect x="8" y="8" width="854" height="914" rx="10" fill="none" stroke="#cccccc" stroke-width="1.5"/>
+<rect width="870" height="944" fill="#ffffff"/>
+<rect x="8" y="8" width="854" height="928" rx="10" fill="none" stroke="#cccccc" stroke-width="1.5"/>
 
 <!-- ══ TITLE ══ -->
 <rect x="8" y="8" width="854" height="38" rx="10" fill="#fff4f4"/>
@@ -60,7 +60,7 @@
      generate_with_validation() WRAPPER
      y=162..806
 ══════════════════════════════════════════════════ -->
-<rect x="18" y="162" width="834" height="644" rx="6" fill="#fdfcfa" stroke="#888" stroke-width="1.5"/>
+<rect x="18" y="162" width="834" height="658" rx="6" fill="#fdfcfa" stroke="#888" stroke-width="1.5"/>
 <rect x="18" y="162" width="834" height="28" rx="6" fill="#eeeeee"/>
 <rect x="18" y="178" width="834" height="12" fill="#eeeeee"/>
 <text x="320" y="180" text-anchor="middle" fill="#1a1a2e" font-size="11" font-weight="bold">generate_with_validation()  wrapper</text>
@@ -68,7 +68,7 @@
 
 <!-- seed note -->
 <rect x="30" y="196" width="246" height="16" rx="3" fill="#f0f0f0" stroke="#aaaaaa" stroke-width="0.8"/>
-<text x="40" y="208" fill="#444" font-size="9">seed  =  42 + attempt    (attempt ∈ {0, 1, 2, 3})</text>
+<text x="40" y="208" fill="#444" font-size="9">seed  =  42 + attempt    (attempt ∈ {0, 1, 2})</text>
 
 <!-- Arrow: seed → build_fn -->
 <line x1="153" y1="212" x2="153" y2="224" stroke="#1a1a2e" stroke-width="1.2" marker-end="url(#aw)"/>
@@ -130,15 +130,15 @@
 <text x="520" y="449" text-anchor="end" fill="#1a5c6e" font-size="8.5" font-style="italic">checks distributions + relationships</text>
 <line x1="38" y1="458" x2="552" y2="458" stroke="#b0d8e8" stroke-width="0.6"/>
 <text x="40" y="472" fill="#333" font-size="9">•  ks_*_*                  —  Kolmogorov-Smirnov: column distribution fits declared family</text>
-<text x="40" y="486" fill="#333" font-size="9">•  structural_*_residual   —  structural formula residuals within declared tolerance</text>
+<text x="40" y="486" fill="#333" font-size="9">•  residual_*             —  structural formula residuals within declared tolerance</text>
 <text x="40" y="500" fill="#333" font-size="9">•  group_dep_*             —  cross-group dependency direction and strength as declared</text>
 
 <!-- Arrow List[Check] L2→L3 -->
 <line x1="295" y1="504" x2="295" y2="518" stroke="#1a1a2e" stroke-width="1.5" marker-end="url(#aw)"/>
 <text x="303" y="514" fill="#555" font-size="8">List[Check]</text>
 
-<!-- ─── L3: PATTERN CHECKS  y=518..598 ─── -->
-<rect x="30" y="518" width="530" height="80" rx="5" fill="#f8f4ff" stroke="#5c2d91" stroke-width="1.5"/>
+<!-- ─── L3: PATTERN CHECKS  y=518..612 ─── -->
+<rect x="30" y="518" width="530" height="94" rx="5" fill="#f8f4ff" stroke="#5c2d91" stroke-width="1.5"/>
 <rect x="30" y="518" width="530" height="22" rx="5" fill="#e8d8ff"/>
 <rect x="30" y="530" width="530" height="10" fill="#e8d8ff"/>
 <text x="40" y="531" fill="#3d1a6e" font-size="10" font-weight="bold">L3: Pattern Checks</text>
@@ -147,92 +147,93 @@
 <text x="40" y="554" fill="#333" font-size="9">•  outlier_*        —  declared outlier pattern is present / absent as specified</text>
 <text x="40" y="568" fill="#333" font-size="9">•  reversal_*_*     —  value reversal holds across declared column pairs</text>
 <text x="40" y="582" fill="#333" font-size="9">•  trend_*          —  monotone trend direction matches declaration</text>
-<text x="40" y="596" fill="#333" font-size="9">•  dominance        —  category dominance proportion within declared range</text>
+<text x="40" y="596" fill="#888" font-size="9">•  dominance        —  stub: returns passed=True  (not yet implemented)</text>
+<text x="40" y="610" fill="#888" font-size="9">•  convergence / seasonal_anomaly  —  stubs: return passed=True  (not yet implemented)</text>
 
 <!-- Arrow List[Check] L3→Merge -->
-<line x1="295" y1="598" x2="295" y2="612" stroke="#1a1a2e" stroke-width="1.5" marker-end="url(#aw)"/>
-<text x="303" y="608" fill="#555" font-size="8">List[Check]</text>
+<line x1="295" y1="612" x2="295" y2="626" stroke="#1a1a2e" stroke-width="1.5" marker-end="url(#aw)"/>
+<text x="303" y="622" fill="#555" font-size="8">List[Check]</text>
 
-<!-- ─── MERGE / ValidationReport  y=612..668 ─── -->
-<rect x="30" y="612" width="530" height="56" rx="5" fill="#f4faf4" stroke="#1a6e3a" stroke-width="1.5"/>
-<rect x="30" y="612" width="530" height="22" rx="5" fill="#c8f0d0"/>
-<rect x="30" y="624" width="530" height="10" fill="#c8f0d0"/>
-<text x="40" y="625" fill="#1a6e3a" font-size="10" font-weight="bold">Merge all checks  →  ValidationReport</text>
-<text x="40" y="645" fill="#333" font-size="9">Concatenate L1 + L2 + L3 check lists into a single ValidationReport object</text>
-<text x="40" y="659" fill="#555" font-size="8.5">ValidationReport exposes:  all_passed  (bool),  checks  (list),  summary  (per-layer counts)</text>
+<!-- ─── MERGE / ValidationReport  y=626..682 ─── -->
+<rect x="30" y="626" width="530" height="56" rx="5" fill="#f4faf4" stroke="#1a6e3a" stroke-width="1.5"/>
+<rect x="30" y="626" width="530" height="22" rx="5" fill="#c8f0d0"/>
+<rect x="30" y="638" width="530" height="10" fill="#c8f0d0"/>
+<text x="40" y="639" fill="#1a6e3a" font-size="10" font-weight="bold">Merge all checks  →  ValidationReport</text>
+<text x="40" y="659" fill="#333" font-size="9">Concatenate L1 + L2 + L3 check lists into a single ValidationReport object</text>
+<text x="40" y="673" fill="#555" font-size="8.5">ValidationReport exposes:  all_passed  (bool),  checks  (list),  summary  (per-layer counts)</text>
 
 <!-- Arrow Merge → Decision -->
-<line x1="295" y1="668" x2="295" y2="682" stroke="#1a1a2e" stroke-width="1.5" marker-end="url(#aw)"/>
+<line x1="295" y1="682" x2="295" y2="696" stroke="#1a1a2e" stroke-width="1.5" marker-end="url(#aw)"/>
 
-<!-- ─── DECISION  y=682..736 ─── -->
-<rect x="30" y="682" width="530" height="54" rx="5" fill="#f9f9f9" stroke="#555555" stroke-width="1.5"/>
-<text x="295" y="706" text-anchor="middle" fill="#1a1a2e" font-size="11" font-weight="bold">report.all_passed ?</text>
+<!-- ─── DECISION  y=696..750 ─── -->
+<rect x="30" y="696" width="530" height="54" rx="5" fill="#f9f9f9" stroke="#555555" stroke-width="1.5"/>
+<text x="295" y="720" text-anchor="middle" fill="#1a1a2e" font-size="11" font-weight="bold">report.all_passed ?</text>
 <!-- YES label left side -->
-<text x="80"  y="725" fill="#1a6e3a" font-size="10" font-weight="bold">YES ✓</text>
-<line x1="100" y1="736" x2="100" y2="752" stroke="#1a6e3a" stroke-width="1.5" marker-end="url(#ag)"/>
+<text x="80"  y="739" fill="#1a6e3a" font-size="10" font-weight="bold">YES ✓</text>
+<line x1="100" y1="750" x2="100" y2="766" stroke="#1a6e3a" stroke-width="1.5" marker-end="url(#ag)"/>
 <!-- NO label right side -->
-<text x="450" y="725" fill="#a01a1a" font-size="10" font-weight="bold">NO ✗</text>
-<line x1="560" y1="709" x2="572" y2="709" stroke="#a01a1a" stroke-width="1.5" marker-end="url(#ar)"/>
+<text x="450" y="739" fill="#a01a1a" font-size="10" font-weight="bold">NO ✗</text>
+<line x1="560" y1="723" x2="572" y2="723" stroke="#a01a1a" stroke-width="1.5" marker-end="url(#ar)"/>
 
-<!-- ─── AUTO_FIX box (right column)  y=682..792 ─── -->
-<rect x="572" y="682" width="260" height="110" rx="5" fill="#fff4f4" stroke="#a01a1a" stroke-width="1.5"/>
-<rect x="572" y="682" width="260" height="22" rx="5" fill="#ffd8d8"/>
-<rect x="572" y="694" width="260" height="10" fill="#ffd8d8"/>
-<text x="702" y="695" text-anchor="middle" fill="#a01a1a" font-size="10" font-weight="bold">AUTO_FIX dispatch</text>
-<line x1="580" y1="704" x2="824" y2="704" stroke="#f0b0b0" stroke-width="0.6"/>
-<text x="582" y="718" fill="#555" font-size="9">1.  Identify failed check(s) in report</text>
-<text x="582" y="732" fill="#555" font-size="9">2.  match_strategy  →  map to fix action</text>
-<text x="582" y="746" fill="#555" font-size="9">3.  mutate decl  (adjust param values)</text>
-<line x1="580" y1="754" x2="824" y2="754" stroke="#f0b0b0" stroke-width="0.6"/>
-<text x="582" y="768" fill="#a01a1a" font-size="9">4.  Loop B  →  new seed + mutated decl</text>
-<text x="582" y="782" fill="#666" font-size="8.5">    re-run build_fn()  (if attempt &lt; 3)</text>
+<!-- ─── AUTO_FIX box (right column)  y=696..806 ─── -->
+<rect x="572" y="696" width="260" height="110" rx="5" fill="#fff4f4" stroke="#a01a1a" stroke-width="1.5"/>
+<rect x="572" y="696" width="260" height="22" rx="5" fill="#ffd8d8"/>
+<rect x="572" y="708" width="260" height="10" fill="#ffd8d8"/>
+<text x="702" y="709" text-anchor="middle" fill="#a01a1a" font-size="10" font-weight="bold">AUTO_FIX dispatch</text>
+<line x1="580" y1="718" x2="824" y2="718" stroke="#f0b0b0" stroke-width="0.6"/>
+<text x="582" y="732" fill="#555" font-size="9">1.  Identify failed check(s) in report</text>
+<text x="582" y="746" fill="#555" font-size="9">2.  match_strategy  →  map to fix action</text>
+<text x="582" y="760" fill="#555" font-size="9">3.  mutate decl  (adjust param values)</text>
+<line x1="580" y1="768" x2="824" y2="768" stroke="#f0b0b0" stroke-width="0.6"/>
+<text x="582" y="782" fill="#a01a1a" font-size="9">4.  Loop B  →  new seed + mutated decl</text>
+<text x="582" y="796" fill="#666" font-size="8.5">    re-run build_fn()  (if attempt &lt; 3)</text>
 
 <!-- Loop B arc: AUTO_FIX right edge → up right margin → back to build_fn level -->
-<path d="M 832,737 L 856,737 L 856,200 L 278,200"
+<path d="M 832,751 L 856,751 L 856,200 L 278,200"
       fill="none" stroke="#a01a1a" stroke-width="1.5" stroke-dasharray="6,3"
       marker-end="url(#ar)"/>
-<text x="860" y="490" fill="#a01a1a" font-size="9" font-weight="bold"
-      transform="rotate(90,860,490)">Loop B  (max 3 attempts)</text>
+<text x="860" y="497" fill="#a01a1a" font-size="9" font-weight="bold"
+      transform="rotate(90,860,497)">Loop B  (max 3 attempts)</text>
 
-<!-- ─── RETURN box  y=752..804 ─── -->
-<rect x="30" y="752" width="530" height="52" rx="5" fill="#f4faf4" stroke="#1a6e3a" stroke-width="2"/>
-<rect x="30" y="752" width="530" height="22" rx="5" fill="#c8f0d0"/>
-<rect x="30" y="764" width="530" height="10" fill="#c8f0d0"/>
-<text x="295" y="765" text-anchor="middle" fill="#1a6e3a" font-size="10.5" font-weight="bold">RETURN</text>
-<text x="295" y="784" text-anchor="middle" fill="#333" font-size="9.5">( df,  schema_metadata,  ValidationReport )</text>
-<text x="295" y="798" text-anchor="middle" fill="#666" font-size="8.5">returned on first all_passed=True  or  after 3 failed AUTO_FIX attempts</text>
+<!-- ─── RETURN box  y=766..818 ─── -->
+<rect x="30" y="766" width="530" height="52" rx="5" fill="#f4faf4" stroke="#1a6e3a" stroke-width="2"/>
+<rect x="30" y="766" width="530" height="22" rx="5" fill="#c8f0d0"/>
+<rect x="30" y="778" width="530" height="10" fill="#c8f0d0"/>
+<text x="295" y="779" text-anchor="middle" fill="#1a6e3a" font-size="10.5" font-weight="bold">RETURN</text>
+<text x="295" y="798" text-anchor="middle" fill="#333" font-size="9.5">( df,  schema_metadata,  ValidationReport )</text>
+<text x="295" y="812" text-anchor="middle" fill="#666" font-size="8.5">returned on first all_passed=True  or  after 3 failed AUTO_FIX attempts</text>
 
 <!-- Arrow: RETURN → PHASE 3 -->
-<line x1="295" y1="806" x2="295" y2="822" stroke="#1a1a2e" stroke-width="1.5" marker-end="url(#aw)"/>
+<line x1="295" y1="820" x2="295" y2="836" stroke="#1a1a2e" stroke-width="1.5" marker-end="url(#aw)"/>
 
 <!-- ══════════════════════════════════════════════════
-     PHASE 3  y=822..872
+     PHASE 3  y=836..886
 ══════════════════════════════════════════════════ -->
-<rect x="168" y="822" width="390" height="50" rx="5" fill="#f0f4ff" stroke="#1a4fa0" stroke-width="1.5"/>
-<rect x="168" y="822" width="390" height="22" rx="5" fill="#d8e6ff"/>
-<rect x="168" y="834" width="390" height="10" fill="#d8e6ff"/>
-<text x="363" y="835" text-anchor="middle" fill="#1a4fa0" font-size="10.5" font-weight="bold">PHASE 3</text>
-<text x="363" y="855" text-anchor="middle" fill="#555" font-size="9">Receives validated (df, schema_metadata, ValidationReport)</text>
-<text x="363" y="868" text-anchor="middle" fill="#666" font-size="8.5">Downstream chart generation and annotation pipeline</text>
+<rect x="168" y="836" width="390" height="50" rx="5" fill="#f0f4ff" stroke="#1a4fa0" stroke-width="1.5"/>
+<rect x="168" y="836" width="390" height="22" rx="5" fill="#d8e6ff"/>
+<rect x="168" y="848" width="390" height="10" fill="#d8e6ff"/>
+<text x="363" y="849" text-anchor="middle" fill="#1a4fa0" font-size="10.5" font-weight="bold">PHASE 3</text>
+<text x="363" y="869" text-anchor="middle" fill="#555" font-size="9">Receives validated (df, schema_metadata, ValidationReport)</text>
+<text x="363" y="882" text-anchor="middle" fill="#666" font-size="8.5">Downstream chart generation and annotation pipeline</text>
 
 <!-- ══════════════════════════════════════════════════
-     LEGEND  y=882..918
+     LEGEND  y=896..932
 ══════════════════════════════════════════════════ -->
-<rect x="18" y="882" width="834" height="36" rx="4" fill="#f9f9f9" stroke="#cccccc" stroke-width="0.8"/>
-<line x1="18" y1="898" x2="852" y2="898" stroke="#eeeeee" stroke-width="0.6"/>
+<rect x="18" y="896" width="834" height="36" rx="4" fill="#f9f9f9" stroke="#cccccc" stroke-width="0.8"/>
+<line x1="18" y1="912" x2="852" y2="912" stroke="#eeeeee" stroke-width="0.6"/>
 
 <!-- Row 1: symbols -->
-<text x="28" y="894" fill="#333" font-size="8.5" font-weight="bold">SYMBOLS:</text>
-<line x1="92" y1="891" x2="114" y2="891" stroke="#1a1a2e" stroke-width="1.5" marker-end="url(#aw)"/>
-<text x="119" y="895" fill="#333" font-size="8">data flow</text>
-<line x1="178" y1="891" x2="200" y2="891" stroke="#a01a1a" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#ar)"/>
-<text x="205" y="895" fill="#333" font-size="8">Loop B / retry</text>
-<rect x="282" y="886" width="22" height="11" fill="#f8f8f8" stroke="#888" stroke-width="1.2" stroke-dasharray="6,3" rx="1"/>
-<text x="309" y="895" fill="#333" font-size="8">external module ref</text>
-<text x="418" y="895" fill="#888" font-size="8">L1=structural  L2=statistical  L3=pattern  |  * = wildcard matching check name family</text>
+<text x="28" y="908" fill="#333" font-size="8.5" font-weight="bold">SYMBOLS:</text>
+<line x1="92" y1="905" x2="114" y2="905" stroke="#1a1a2e" stroke-width="1.5" marker-end="url(#aw)"/>
+<text x="119" y="909" fill="#333" font-size="8">data flow</text>
+<line x1="178" y1="905" x2="200" y2="905" stroke="#a01a1a" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#ar)"/>
+<text x="205" y="909" fill="#333" font-size="8">Loop B / retry</text>
+<rect x="282" y="900" width="22" height="11" fill="#f8f8f8" stroke="#888" stroke-width="1.2" stroke-dasharray="6,3" rx="1"/>
+<text x="309" y="909" fill="#333" font-size="8">external module ref</text>
+<text x="418" y="909" fill="#888" font-size="8">L1=structural  L2=statistical  L3=pattern  |  * = wildcard matching check name family</text>
 
 <!-- Row 2: flow summary -->
-<text x="28" y="912" fill="#444" font-size="8.5" font-weight="bold">Flow:</text>
-<text x="58" y="912" fill="#444" font-size="8">Inputs  →  wrapper seeds build_fn()  →  df through L1→L2→L3  →  all_passed?  YES→RETURN  /  NO→AUTO_FIX→Loop B  →  PHASE 3</text>
+<text x="28" y="926" fill="#444" font-size="8.5" font-weight="bold">Flow:</text>
+<text x="58" y="926" fill="#444" font-size="8">Inputs  →  wrapper seeds build_fn()  →  df through L1→L2→L3  →  all_passed?  YES→RETURN  /  NO→AUTO_FIX→Loop B  →  PHASE 3</text>
 
 </svg>

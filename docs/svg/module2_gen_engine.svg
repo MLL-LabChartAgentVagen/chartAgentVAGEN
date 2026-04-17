@@ -68,12 +68,6 @@
 <text x="300" y="325" text-anchor="middle" fill="#1a1a2e" font-size="11" font-weight="bold">§2.8  generate()  Pipeline</text>
 <text x="600" y="325" text-anchor="middle" fill="#7a5000" font-size="8.5" font-style="italic">rng is a single stateful object passed stage-to-stage; each stage advances its draw sequence</text>
 
-<!-- ────────────────────────────────────────
-     HELPER: rng badge template (reused inline)
-     Green  [rng ✓]:  fill #eafaf0  stroke #1a6e3a  text #1a6e3a
-     Gray   [rng ✗]:  fill #f0f0f0  stroke #888     text #888
-──────────────────────────────────────────── -->
-
 <!-- ══════════════════════════════
      PRE-FLIGHT   y=336..404
 ══════════════════════════════ -->
@@ -88,13 +82,9 @@
 <text x="40" y="384" fill="#333" font-size="9.5">  seed        ──►  np.random.default_rng(seed)           ──►  rng</text>
 <text x="40" y="398" fill="#666" font-size="8.5">  Output: topo_order  +  rng object  (seeded, ready for first draw)</text>
 
-<!-- ═══ TRANSFER ZONE 1: Pre-flight → α   y=404..430  (26px) ════════════════
-     Left:  data (topo_order)
-     Right: rng passing down  -->
-<!-- data arrow -->
+<!-- ��══ TRANSFER ZONE 1: Pre-flight → α   y=404..430  ═══ -->
 <line x1="260" y1="404" x2="260" y2="430" stroke="#1a1a2e" stroke-width="1.5" marker-end="url(#aw)"/>
 <text x="270" y="413" fill="#333" font-size="8.5">topo_order</text>
-<!-- rng arrow -->
 <line x1="600" y1="404" x2="600" y2="430" stroke="#7a5000" stroke-width="1.5" stroke-dasharray="4,2" marker-end="url(#arn)"/>
 <text x="610" y="413" fill="#7a5000" font-size="8.5" font-weight="bold">rng</text>
 <text x="610" y="424" fill="#7a5000" font-size="7.5" font-style="italic">(state: initial)</text>
@@ -105,7 +95,7 @@
 <rect x="30" y="430" width="806" height="96" rx="5" fill="#f4faf4" stroke="#1a6e3a" stroke-width="1.5"/>
 <rect x="30" y="430" width="806" height="22" rx="5" fill="#c8f0d0"/>
 <rect x="30" y="442" width="806" height="10" fill="#c8f0d0"/>
-<text x="40" y="443" fill="#1a6e3a" font-size="10" font-weight="bold">Stage α  —  _build_skeleton(topo_order, rng)</text>
+<text x="40" y="443" fill="#1a6e3a" font-size="10" font-weight="bold">Stage α  —  build_skeleton(topo_order, rng)</text>
 <!-- rng badge: USES -->
 <rect x="730" y="432" width="94" height="14" rx="3" fill="#eafaf0" stroke="#1a6e3a" stroke-width="1"/>
 <text x="777" y="443" text-anchor="middle" fill="#1a6e3a" font-size="8.5" font-weight="bold">rng: USES ✓</text>
@@ -117,7 +107,7 @@
 <text x="40" y="521" fill="#444" font-size="9">    • temporal derived  →  extract from root  (no rng)</text>
 <text x="490" y="521" fill="#1a6e3a" font-size="8.5">Output: rows with all non-measure cols filled</text>
 
-<!-- ═══ TRANSFER ZONE 2: α → β   y=526..552  (26px) ════════════════ -->
+<!-- ═══ TRANSFER ZONE 2: α → β   y=526..552 ═══ -->
 <line x1="260" y1="526" x2="260" y2="552" stroke="#1a1a2e" stroke-width="1.5" marker-end="url(#aw)"/>
 <text x="270" y="535" fill="#333" font-size="8.5">rows</text>
 <text x="270" y="547" fill="#666" font-size="7.5">(partial — non-measure cols filled)</text>
@@ -126,9 +116,9 @@
 <text x="610" y="547" fill="#7a5000" font-size="7.5" font-style="italic">(state: advanced by α)</text>
 
 <!-- ══════════════════════════════
-     STAGE β   y=552..668
+     STAGE β   y=552..640
 ══════════════════════════════ -->
-<rect x="30" y="552" width="806" height="116" rx="5" fill="#fffaf2" stroke="#a05c00" stroke-width="1.5"/>
+<rect x="30" y="552" width="806" height="88" rx="5" fill="#fffaf2" stroke="#a05c00" stroke-width="1.5"/>
 <rect x="30" y="552" width="806" height="22" rx="5" fill="#fde8c2"/>
 <rect x="30" y="564" width="806" height="10" fill="#fde8c2"/>
 <text x="40" y="565" fill="#7a3d00" font-size="10" font-weight="bold">Stage β  —  Measure generation loop</text>
@@ -138,84 +128,96 @@
 <text x="40" y="582" fill="#555" font-size="8.5" font-style="italic">Inputs: topo_order, rows, rng, declarations</text>
 <line x1="38" y1="588" x2="828" y2="588" stroke="#dddddd" stroke-width="0.6"/>
 <text x="40" y="601" fill="#333" font-size="9">  For each measure col in topo_order:</text>
-<text x="40" y="615" fill="#444" font-size="9">    stochastic  →  _sample_stochastic(col, rows, rng)</text>
-<text x="230" y="629" fill="#666" font-size="8.5">params = intercept + Σ effects   →   draw from family(params)  [rng]</text>
-<text x="40" y="643" fill="#444" font-size="9">    structural  →  _eval_structural(col, rows, rng)</text>
-<text x="230" y="657" fill="#666" font-size="8.5">evaluate formula with upstream values   →   add noise term  [rng]</text>
-<text x="520" y="665" fill="#7a3d00" font-size="8.5">Output: rows — fully populated</text>
+<text x="40" y="615" fill="#444" font-size="9">    stochastic  →  _sample_stochastic(col, rows, rng)     params = intercept + Σ effects → draw from family(params) [rng]</text>
+<text x="40" y="629" fill="#444" font-size="9">    structural  →  _eval_structural(col, rows, rng)       evaluate formula with upstream values → add noise term [rng]</text>
+<text x="520" y="637" fill="#7a3d00" font-size="8.5">Output: rows — fully populated</text>
 
-<!-- ═══ TRANSFER ZONE 3: β → γ   y=668..694  (26px) ════════════════ -->
-<line x1="260" y1="668" x2="260" y2="694" stroke="#1a1a2e" stroke-width="1.5" marker-end="url(#aw)"/>
-<text x="270" y="677" fill="#333" font-size="8.5">rows</text>
-<text x="270" y="689" fill="#666" font-size="7.5">(complete — all cols populated)</text>
-<line x1="600" y1="668" x2="600" y2="694" stroke="#7a5000" stroke-width="1.5" stroke-dasharray="4,2" marker-end="url(#arn)"/>
-<text x="610" y="677" fill="#7a5000" font-size="8.5" font-weight="bold">rng</text>
-<text x="610" y="689" fill="#7a5000" font-size="7.5" font-style="italic">(state: advanced by β)</text>
-
-<!-- ══════════════════════════════
-     STAGE γ   y=694..766
-══════════════════════════════ -->
-<rect x="30" y="694" width="806" height="72" rx="5" fill="#f0fafa" stroke="#1a5c6e" stroke-width="1.5"/>
-<rect x="30" y="694" width="806" height="22" rx="5" fill="#c8e8f0"/>
-<rect x="30" y="706" width="806" height="10" fill="#c8e8f0"/>
-<text x="40" y="707" fill="#1a3d50" font-size="10" font-weight="bold">Stage γ  —  _inject_patterns(rows, rng)</text>
-<!-- rng badge -->
-<rect x="730" y="696" width="94" height="14" rx="3" fill="#eafaf0" stroke="#1a6e3a" stroke-width="1"/>
-<text x="777" y="707" text-anchor="middle" fill="#1a6e3a" font-size="8.5" font-weight="bold">rng: USES ✓</text>
-<text x="40" y="725" fill="#555" font-size="8.5" font-style="italic">Inputs: full DataFrame, patterns, rng</text>
-<line x1="38" y1="731" x2="828" y2="731" stroke="#dddddd" stroke-width="0.6"/>
-<text x="40" y="745" fill="#333" font-size="9">  For each pattern:  filter rows by target expression   →   apply pattern transformation  [rng for stochastic magnitudes]</text>
-<text x="40" y="759" fill="#1a3d50" font-size="8.5">  Output: DataFrame with patterns injected</text>
-
-<!-- ═══ TRANSFER ZONE 4: γ → δ   y=766..792  (26px) ════════════════ -->
-<line x1="260" y1="766" x2="260" y2="792" stroke="#1a1a2e" stroke-width="1.5" marker-end="url(#aw)"/>
-<text x="270" y="775" fill="#333" font-size="8.5">rows</text>
-<text x="270" y="787" fill="#666" font-size="7.5">(patterns injected)</text>
-<line x1="600" y1="766" x2="600" y2="792" stroke="#7a5000" stroke-width="1.5" stroke-dasharray="4,2" marker-end="url(#arn)"/>
-<text x="610" y="775" fill="#7a5000" font-size="8.5" font-weight="bold">rng</text>
-<text x="610" y="787" fill="#7a5000" font-size="7.5" font-style="italic">(state: advanced by γ)</text>
+<!-- ═══ TRANSFER ZONE 3: β → τ_post   y=640..662 ═══ -->
+<line x1="260" y1="640" x2="260" y2="662" stroke="#1a1a2e" stroke-width="1.5" marker-end="url(#aw)"/>
+<text x="270" y="649" fill="#333" font-size="8.5">rows</text>
+<text x="270" y="661" fill="#666" font-size="7.5">(complete — all cols populated)</text>
+<!-- rng does NOT flow into τ_post — show pass-through -->
+<line x1="600" y1="640" x2="600" y2="662" stroke="#7a5000" stroke-width="1.5" stroke-dasharray="4,2" marker-end="url(#arn)"/>
+<text x="610" y="649" fill="#7a5000" font-size="8.5" font-weight="bold">rng</text>
+<text x="610" y="661" fill="#7a5000" font-size="7.5" font-style="italic">(state: advanced by β — bypasses τ_post)</text>
 
 <!-- ══════════════════════════════
-     STAGE δ  (optional)   y=792..862
+     τ_post (to_dataframe)   y=662..720
 ══════════════════════════════ -->
-<rect x="30" y="792" width="806" height="70" rx="5" fill="#f8f8f8" stroke="#666666" stroke-width="1.5" stroke-dasharray="7,3"/>
-<rect x="30" y="792" width="806" height="22" rx="5" fill="#e8e8e8"/>
-<rect x="30" y="804" width="806" height="10" fill="#e8e8e8"/>
-<text x="40" y="805" fill="#444" font-size="10" font-weight="bold">Stage δ  —  _inject_realism(rows, rng)</text>
-<text x="270" y="805" fill="#888" font-size="9" font-style="italic">  ⟨ optional: only runs if realism_config is set ⟩</text>
-<!-- rng badge -->
-<rect x="730" y="794" width="94" height="14" rx="3" fill="#eafaf0" stroke="#1a6e3a" stroke-width="1"/>
-<text x="777" y="805" text-anchor="middle" fill="#1a6e3a" font-size="8.5" font-weight="bold">rng: USES ✓</text>
-<text x="40" y="823" fill="#555" font-size="8.5" font-style="italic">Inputs: DataFrame, realism_config, rng</text>
-<line x1="38" y1="829" x2="828" y2="829" stroke="#dddddd" stroke-width="0.6"/>
-<text x="40" y="843" fill="#555" font-size="9">  Randomly inject missing, dirty, and censored values  [rng selects which cells are affected]</text>
-<text x="40" y="857" fill="#666" font-size="8.5">  Output: DataFrame with controlled imperfections</text>
-
-<!-- ═══ TRANSFER ZONE 5: δ → Post   y=862..886  ════════════════
-     rng is NOT passed to Post — show termination clearly -->
-<line x1="260" y1="862" x2="260" y2="886" stroke="#1a1a2e" stroke-width="1.5" marker-end="url(#aw)"/>
-<text x="270" y="871" fill="#333" font-size="8.5">rows</text>
-<text x="270" y="883" fill="#666" font-size="7.5">(with imperfections)</text>
-<!-- rng stops: show X terminus -->
-<line x1="600" y1="862" x2="600" y2="874" stroke="#aaaaaa" stroke-width="1.2" stroke-dasharray="3,2"/>
-<line x1="592" y1="874" x2="608" y2="874" stroke="#aaaaaa" stroke-width="1.5"/>
-<text x="614" y="874" fill="#888" font-size="8">rng not passed</text>
-<text x="614" y="884" fill="#888" font-size="7.5">Post is deterministic</text>
-
-<!-- ══════════════════════════════
-     POST   y=886..940
-══════════════════════════════ -->
-<rect x="30" y="886" width="806" height="56" rx="5" fill="#f8f4ff" stroke="#5c2d91" stroke-width="1.5"/>
-<rect x="30" y="886" width="806" height="22" rx="5" fill="#e8d8ff"/>
-<rect x="30" y="898" width="806" height="10" fill="#e8d8ff"/>
-<text x="40" y="899" fill="#3d1a6e" font-size="10" font-weight="bold">Post  —  _post_process(rows)  +  _build_schema_metadata()</text>
+<rect x="30" y="662" width="806" height="58" rx="5" fill="#f8f4ff" stroke="#5c2d91" stroke-width="1.5"/>
+<rect x="30" y="662" width="806" height="22" rx="5" fill="#e8d8ff"/>
+<rect x="30" y="674" width="806" height="10" fill="#e8d8ff"/>
+<text x="40" y="675" fill="#3d1a6e" font-size="10" font-weight="bold">τ_post  —  to_dataframe(rows)</text>
 <!-- rng badge: NOT USED -->
-<rect x="720" y="888" width="108" height="14" rx="3" fill="#f0f0f0" stroke="#888" stroke-width="1"/>
-<text x="774" y="899" text-anchor="middle" fill="#888" font-size="8.5">rng: NOT USED ✗</text>
-<text x="40" y="919" fill="#444" font-size="9">  _post_process:          rows  →  pd.DataFrame  (type coercion, index reset)</text>
-<text x="40" y="933" fill="#444" font-size="9">  _build_schema_metadata: declarations  →  dict  (raw schema material for M4)</text>
+<rect x="720" y="664" width="108" height="14" rx="3" fill="#f0f0f0" stroke="#888" stroke-width="1"/>
+<text x="774" y="675" text-anchor="middle" fill="#888" font-size="8.5">rng: NOT USED ✗</text>
+<text x="40" y="695" fill="#444" font-size="9">  rows dict  →  pd.DataFrame  (column ordering by topo_order, dtype casting: categorical→object, temporal→datetime64, measure→float64)</text>
+<text x="40" y="712" fill="#3d1a6e" font-size="8.5">  Output: df : pd.DataFrame — typed, column-ordered.   Subsequent stages operate on DataFrame, not rows dict.</text>
 
-<!-- §2.8 bottom = 307 + 626 = 933 (Post ends at 942 — need to stretch §2.8 slightly) -->
+<!-- ═══ TRANSFER ZONE 4: τ_post → γ   y=720..742 ═══ -->
+<line x1="260" y1="720" x2="260" y2="742" stroke="#1a1a2e" stroke-width="1.5" marker-end="url(#aw)"/>
+<text x="270" y="729" fill="#333" font-size="8.5">df : pd.DataFrame</text>
+<text x="270" y="741" fill="#666" font-size="7.5">(typed, column-ordered)</text>
+<!-- rng resumes from β state (bypassed τ_post) -->
+<line x1="600" y1="720" x2="600" y2="742" stroke="#7a5000" stroke-width="1.5" stroke-dasharray="4,2" marker-end="url(#arn)"/>
+<text x="610" y="729" fill="#7a5000" font-size="8.5" font-weight="bold">rng</text>
+<text x="610" y="741" fill="#7a5000" font-size="7.5" font-style="italic">(state: advanced by β)</text>
+
+<!-- ══════════════════════════════
+     STAGE γ   y=742..810
+══════════════════════════════ -->
+<rect x="30" y="742" width="806" height="68" rx="5" fill="#f0fafa" stroke="#1a5c6e" stroke-width="1.5"/>
+<rect x="30" y="742" width="806" height="22" rx="5" fill="#c8e8f0"/>
+<rect x="30" y="754" width="806" height="10" fill="#c8e8f0"/>
+<text x="40" y="755" fill="#1a3d50" font-size="10" font-weight="bold">Stage γ  —  inject_patterns(df, patterns, columns, rng)</text>
+<!-- rng badge: PASSED but not consumed by current implementations -->
+<rect x="712" y="744" width="116" height="14" rx="3" fill="#fff8e6" stroke="#7a5000" stroke-width="1"/>
+<text x="770" y="755" text-anchor="middle" fill="#7a5000" font-size="8.5" font-weight="bold">rng: PASSED ⚠</text>
+<text x="40" y="773" fill="#555" font-size="8.5" font-style="italic">Inputs: df (pd.DataFrame), patterns, columns, rng.   Current pattern types (outlier_entity, trend_break) are deterministic — rng reserved for future types.</text>
+<line x1="38" y1="779" x2="828" y2="779" stroke="#dddddd" stroke-width="0.6"/>
+<text x="40" y="793" fill="#333" font-size="9">  For each pattern:  filter rows by target expression (df.eval)  →  apply pattern transformation  (mean-shift / scale factor)</text>
+<text x="40" y="807" fill="#1a3d50" font-size="8.5">  Output: df with patterns injected</text>
+
+<!-- ═══ TRANSFER ZONE 5: γ → δ   y=810..832 ═══ -->
+<line x1="260" y1="810" x2="260" y2="832" stroke="#1a1a2e" stroke-width="1.5" marker-end="url(#aw)"/>
+<text x="270" y="819" fill="#333" font-size="8.5">df</text>
+<text x="270" y="831" fill="#666" font-size="7.5">(patterns injected)</text>
+<line x1="600" y1="810" x2="600" y2="832" stroke="#7a5000" stroke-width="1.5" stroke-dasharray="4,2" marker-end="url(#arn)"/>
+<text x="610" y="819" fill="#7a5000" font-size="8.5" font-weight="bold">rng</text>
+<text x="610" y="831" fill="#7a5000" font-size="7.5" font-style="italic">(state: advanced by β)</text>
+
+<!-- ══════════════════════════════
+     STAGE δ  (optional)   y=832..898
+══════════════════════════════ -->
+<rect x="30" y="832" width="806" height="66" rx="5" fill="#f8f8f8" stroke="#666666" stroke-width="1.5" stroke-dasharray="7,3"/>
+<rect x="30" y="832" width="806" height="22" rx="5" fill="#e8e8e8"/>
+<rect x="30" y="844" width="806" height="10" fill="#e8e8e8"/>
+<text x="40" y="845" fill="#444" font-size="10" font-weight="bold">Stage δ  —  inject_realism(df, realism_config, columns, rng)</text>
+<text x="370" y="845" fill="#888" font-size="9" font-style="italic">  ⟨ optional: only runs if realism_config is set ⟩</text>
+<!-- rng badge -->
+<rect x="730" y="834" width="94" height="14" rx="3" fill="#eafaf0" stroke="#1a6e3a" stroke-width="1"/>
+<text x="777" y="845" text-anchor="middle" fill="#1a6e3a" font-size="8.5" font-weight="bold">rng: USES ✓</text>
+<text x="40" y="863" fill="#555" font-size="8.5" font-style="italic">Inputs: df (pd.DataFrame), realism_config, columns, rng</text>
+<line x1="38" y1="869" x2="828" y2="869" stroke="#dddddd" stroke-width="0.6"/>
+<text x="40" y="883" fill="#555" font-size="9">  Randomly inject missing (NaN) and dirty (char-perturbed) values  [rng selects which cells are affected]</text>
+<text x="40" y="895" fill="#666" font-size="8.5">  Output: df with controlled imperfections</text>
+
+<!-- ═══ TRANSFER ZONE 6: δ → metadata   y=898..916 ═══ -->
+<line x1="260" y1="898" x2="260" y2="916" stroke="#1a1a2e" stroke-width="1.5" marker-end="url(#aw)"/>
+<text x="270" y="907" fill="#333" font-size="8.5">df</text>
+<text x="270" y="915" fill="#666" font-size="7.5">(final)</text>
+<!-- rng terminated here -->
+<line x1="600" y1="898" x2="600" y2="908" stroke="#aaaaaa" stroke-width="1.2" stroke-dasharray="3,2"/>
+<line x1="592" y1="908" x2="608" y2="908" stroke="#aaaaaa" stroke-width="1.5"/>
+<text x="614" y="908" fill="#888" font-size="8">rng terminated</text>
+
+<!-- ══════════════════════════════
+     METADATA ASSEMBLY   y=916..942
+══════════════════════════════ -->
+<rect x="30" y="916" width="806" height="26" rx="5" fill="#fffef0" stroke="#8B7000" stroke-width="1"/>
+<text x="40" y="933" fill="#5a4500" font-size="9">  build_schema_metadata(groups, orthogonal_pairs, target_rows, measure_dag_order, columns, group_deps, patterns)  →  metadata dict (7 keys)</text>
+
+<!-- §2.8 pipeline ends -->
 
 <!-- ══════════════════════════════════════════
      OUTPUTS + FEEDBACK   y=950..1012
@@ -257,7 +259,6 @@
 <line x1="175" y1="1027" x2="197" y2="1027" stroke="#7a5000" stroke-width="1.5" stroke-dasharray="4,2" marker-end="url(#arn)"/>
 <text x="202" y="1031" fill="#7a5000" font-size="8">rng passed to next stage</text>
 <line x1="318" y1="1027" x2="330" y2="1027" stroke="#aaaaaa" stroke-width="1.2"/>
-<line x1="315" y1="1027" x2="322" y2="1027" stroke="#aaaaaa" stroke-width="1.2"/>
 <line x1="330" y1="1023" x2="330" y2="1031" stroke="#aaaaaa" stroke-width="1.5"/>
 <text x="336" y="1031" fill="#888" font-size="8">rng terminated</text>
 <rect x="418" y="1022" width="50" height="12" rx="3" fill="#eafaf0" stroke="#1a6e3a" stroke-width="1"/>
@@ -270,11 +271,9 @@
 <text x="657" y="1031" fill="#333" font-size="8">feedback/retry</text>
 <rect x="725" y="1022" width="26" height="12" fill="#fafafa" stroke="#888" stroke-width="1.2" stroke-dasharray="6,2" rx="1"/>
 <text x="757" y="1031" fill="#333" font-size="8">optional stage</text>
-<rect x="812" y="1022" width="26" height="12" fill="#fafafa" stroke="#888" stroke-width="1.2" stroke-dasharray="7,3" rx="1"/>
-<text x="840" y="1031" fill="#888" font-size="8">arch. spec</text>
 
 <!-- Row 2: rng explanation -->
 <text x="28" y="1046" fill="#333" font-size="8.5" font-weight="bold">rng:</text>
-<text x="52" y="1046" fill="#444" font-size="8">np.random.default_rng(seed) — NumPy Generator; stateful, deterministic. Same seed → identical output. One object passed α → β → γ → δ; each stage advances its draw sequence. Post does not consume rng.</text>
+<text x="52" y="1046" fill="#444" font-size="8">np.random.default_rng(seed) — NumPy Generator; stateful, deterministic. Same seed → identical output. One object passed α → β → γ → δ; τ_post does not consume rng. Pipeline order: α → β → τ_post → γ → δ → metadata.</text>
 
 </svg>

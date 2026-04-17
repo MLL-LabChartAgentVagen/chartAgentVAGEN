@@ -10,8 +10,8 @@
 
 The SVG uses two parallel vertical flows through a single-column pipeline:
 
-- **Left flow** (x≈260): Data — rows/DataFrame passing stage to stage
-- **Right flow** (x≈600): RNG — a single `np.random.Generator` object threaded α→β→γ→δ, then terminated before Post
+- **Left flow** (x≈260): Data — rows dict through α/β, then DataFrame through τ_post/γ/δ
+- **Right flow** (x≈600): RNG — a single `np.random.Generator` object threaded α→β→γ→δ (bypassing τ_post)
 
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
@@ -33,7 +33,7 @@ The SVG uses two parallel vertical flows through a single-column pipeline:
 │   ║          topo_order                    rng (initial)        ║   │
 │   ║               │                          │                  ║   │
 │   ║  ┌────────────▼──────────────────────────▼─────────────┐    ║   │
-│   ║  │  STAGE α — _build_skeleton()        rng: USES ✓     │    ║   │
+│   ║  │  STAGE α — build_skeleton()         rng: USES ✓     │    ║   │
 │   ║  └────────────┬──────────────────────────┬─────────────┘    ║   │
 │   ║          rows (partial)            rng (advanced by α)     ║   │
 │   ║               │                          │                  ║   │
@@ -41,20 +41,24 @@ The SVG uses two parallel vertical flows through a single-column pipeline:
 │   ║  │  STAGE β — Measure generation       rng: USES ✓     │    ║   │
 │   ║  └────────────┬──────────────────────────┬─────────────┘    ║   │
 │   ║          rows (complete)           rng (advanced by β)     ║   │
+│   ║               │                          ┊ (bypasses)      ║   │
+│   ║  ┌────────────▼─────────────────────────────────────────┐   ║   │
+│   ║  │  τ_post — to_dataframe(rows)        rng: NOT USED ✗  │   ║   │
+│   ║  └────────────┬─────────────────────────────────────────┘   ║   │
+│   ║          df : pd.DataFrame         rng (state from β)      ║   │
 │   ║               │                          │                  ║   │
 │   ║  ┌────────────▼──────────────────────────▼─────────────┐    ║   │
-│   ║  │  STAGE γ — _inject_patterns()       rng: USES ✓     │    ║   │
+│   ║  │  STAGE γ — inject_patterns(df)      rng: PASSED ⚠   │    ║   │
 │   ║  └────────────┬──────────────────────────┬─────────────┘    ║   │
-│   ║          rows (patterns injected)  rng (advanced by γ)     ║   │
+│   ║          df (patterns injected)    rng (from β)            ║   │
 │   ║               │                          │                  ║   │
 │   ║  ┌ ─ ─ ─ ─ ─ ▼ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─▼ ─ ─ ─ ─ ─ ─┐   ║   │
-│   ║  │  STAGE δ — _inject_realism()  ⟨optional⟩ rng: USES ✓│   ║   │
+│   ║  │  STAGE δ — inject_realism(df) ⟨optional⟩ rng: USES ✓│   ║   │
 │   ║  └ ─ ─ ─ ─ ─ ┬ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─┬─ ─ ─ ─ ─ ─ ┘   ║   │
-│   ║          rows (with imperfections)   rng ──┤ (terminated)  ║   │
+│   ║          df (with imperfections)     rng ──┤ (terminated)  ║   │
 │   ║               │                                             ║   │
 │   ║  ┌────────────▼────────────────────────────────────────┐    ║   │
-│   ║  │  POST — _post_process() + _build_schema_metadata()  │    ║   │
-│   ║  │                                     rng: NOT USED ✗  │    ║   │
+│   ║  │  METADATA — build_schema_metadata()                  │    ║   │
 │   ║  └────────────┬────────────────────────────────────────┘    ║   │
 │   ║               │                                             ║   │
 │   ╚═══════════════╪═════════════════════════════════════════════╝   │
@@ -256,7 +260,7 @@ _skeleton.build_skeleton(columns, target_rows, group_dependencies, topo_order, r
 
 ## 5. STAGE β — MEASURE GENERATION
 
-**SVG region:** Orange box (y=552..668), fill `#fffaf2`, stroke `#a05c00`. RNG badge: **"rng: USES ✓"**.
+**SVG region:** Orange box (y=552..640), fill `#fffaf2`, stroke `#a05c00`. RNG badge: **"rng: USES ✓"**.
 
 **What it represents:** Phase β generates all measure columns in topological order, dispatching each to either stochastic sampling (distribution family + per-row parameters) or structural formula evaluation (restricted AST + optional noise).
 
@@ -328,36 +332,25 @@ _measures.generate_measures(columns, topo_order, rows, rng, overrides)
   └─ Return rows (updated with measures)
 ```
 
-**Transfer zone (y=668..694):**
+**Transfer zone (y=640..662):**
 - Left: `rows` "(complete — all cols populated)"
-- Right: `rng` "(state: advanced by β)"
+- Right: `rng` "(state: advanced by β — bypasses τ_post)"
 
 ---
 
-## 6. POST-PROCESSING (DataFrame assembly)
+## 6. τ_post — POST-PROCESSING (DataFrame assembly)
 
-**Note:** In the SVG, Post appears at y=886..940 (after δ). However, in the implementation, `to_dataframe()` is called **between** Stage β and Stage γ (generator.py:93). The SVG groups Post visually at the end because its conceptual role is "final assembly", but the actual call happens earlier to provide a DataFrame for pattern/realism injection.
+**SVG region:** Purple box (y=662..720), fill `#f8f4ff`, stroke `#5c2d91`. RNG badge: **"rng: NOT USED ✗"** (gray).
 
-**SVG region:** Purple box (y=886..940), fill `#f8f4ff`, stroke `#5c2d91`. RNG badge: **"rng: NOT USED ✗"** (gray).
+**What it represents:** Converts the `rows` dict of numpy arrays into a typed `pd.DataFrame`. This runs **between** Stage β and Stage γ (generator.py:93), so that subsequent stages (pattern injection, realism injection) operate on a DataFrame rather than a raw dict. Metadata assembly occurs later, after all pipeline stages complete.
 
-**What it represents:** Converts the `rows` dict of numpy arrays into a typed `pd.DataFrame`, then assembles schema metadata from declarations.
-
-**Responsible files:**
-- `phase_2/engine/postprocess.py` — `to_dataframe()` (lines 19–82)
-- `phase_2/metadata/builder.py` — `build_schema_metadata()` (lines 23+)
+**Responsible file:** `phase_2/engine/postprocess.py` — `to_dataframe()` (lines 19–82)
 
 | | Detail |
 |---|---|
 | **Input** | `rows: dict[str, np.ndarray]`, `topo_order: list[str]`, `columns: dict`, `target_rows: int` |
-| **Output** | `df: pd.DataFrame` (typed, column-ordered) + `metadata: dict[str, Any]` (7-key schema metadata) |
+| **Output** | `df: pd.DataFrame` (typed, column-ordered) |
 | **Data flow** | `run_pipeline()` → `_postprocess.to_dataframe(rows, topo_order, columns, target_rows)` (generator.py:93) |
-
-**SVG content (2 lines) mapped to code:**
-
-| SVG line | Implementation |
-|----------|----------------|
-| `_post_process: rows → pd.DataFrame (type coercion, index reset)` | `to_dataframe()` — orders columns by `topo_order`, casts dtypes per column type |
-| `_build_schema_metadata: declarations → dict (raw schema material for M4)` | `build_schema_metadata()` — produces 7-key metadata dict |
 
 **Call order:**
 ```
@@ -372,24 +365,17 @@ _postprocess.to_dataframe(rows, topo_order, columns, target_rows)
      │  └─ others       → df[col].astype(np.int64)
      └─ measure      → (already float64 from numpy)
   └─ Return df: pd.DataFrame
-
-build_schema_metadata(groups, orthogonal_pairs, target_rows, measure_dag_order,
-                      columns, group_dependencies, patterns)
-  └─ Returns dict with 7 keys:
-     ├─ dimension_groups:    {group_name → {columns, hierarchy}}
-     ├─ orthogonal_groups:   [{group_a, group_b, rationale}, ...]
-     ├─ group_dependencies:  [{child_root, on, conditional_weights}, ...]
-     ├─ columns:             {col_name → type-discriminated descriptor}
-     ├─ measure_dag_order:   [measure_names in topo order]
-     ├─ patterns:            [{type, target, col, params}, ...]
-     └─ total_rows:          integer
 ```
+
+**Transfer zone (y=720..742):**
+- Left: `df : pd.DataFrame` "(typed, column-ordered)"
+- Right: `rng` "(state: advanced by β — rng bypasses τ_post)"
 
 ---
 
 ## 7. STAGE γ — PATTERN INJECTION
 
-**SVG region:** Teal box (y=694..766), fill `#f0fafa`, stroke `#1a5c6e`. RNG badge: **"rng: USES ✓"**.
+**SVG region:** Teal box (y=742..810), fill `#f0fafa`, stroke `#1a5c6e`. RNG badge: **"rng: PASSED ⚠"** — rng is accepted in the function signature but not consumed by current pattern implementations (`outlier_entity` and `trend_break` are deterministic). Reserved for future pattern types.
 
 **What it represents:** Phase γ applies declared analytical patterns (outlier entities, trend breaks) to the fully populated DataFrame. Patterns compose by sequential mutation — later patterns overwrite earlier ones on overlapping cells.
 
@@ -437,15 +423,15 @@ _patterns_mod.inject_patterns(df, patterns, columns, rng)
   └─ Return df
 ```
 
-**Transfer zone (y=766..792):**
-- Left: `rows` "(patterns injected)"
-- Right: `rng` "(state: advanced by γ)"
+**Transfer zone (y=810..832):**
+- Left: `df` "(patterns injected)"
+- Right: `rng` "(state: from β — current pattern types are deterministic)"
 
 ---
 
 ## 8. STAGE δ — REALISM INJECTION (optional)
 
-**SVG region:** Dashed-border gray box (y=792..862), fill `#f8f8f8`, stroke `#666666`, stroke-dasharray 7,3 — **dashed border indicates optional stage**. Label: "⟨ optional: only runs if realism_config is set ⟩". RNG badge: **"rng: USES ✓"**.
+**SVG region:** Dashed-border gray box (y=832..898), fill `#f8f8f8`, stroke `#666666`, stroke-dasharray 7,3 — **dashed border indicates optional stage**. Label: "⟨ optional: only runs if realism_config is set ⟩". RNG badge: **"rng: USES ✓"**.
 
 **What it represents:** Phase δ injects controlled imperfections — missing values (NaN) and dirty values (character-level perturbations on categoricals). Only runs if `realism_config` is provided.
 
@@ -485,7 +471,7 @@ _realism_mod.inject_realism(df, realism_config, columns, rng)
   └─ Return df
 ```
 
-**RNG termination (y=862..886):** The SVG shows the rng flow ending with a T-cap symbol (gray horizontal bar at y=874) and the labels "rng not passed" / "Post is deterministic". This marks the boundary: all stochastic operations are complete. Post-processing and metadata assembly are purely deterministic.
+**RNG termination (y=898..916):** The SVG shows the rng flow ending with a T-cap symbol after Stage δ. This marks the boundary: all stochastic operations are complete. Metadata assembly is purely deterministic.
 
 ---
 
@@ -529,10 +515,10 @@ The feedback arc in the SVG (right margin, red dashed, labeled "Loop B — max 3
 | 3. Pre-flight | `engine/generator.py` | `sdk/dag.py` (`build_full_dag`, `topological_sort`) |
 | 4. Stage α — Skeleton | `engine/skeleton.py` | `types.py` (`GroupDependency`), `exceptions.py` |
 | 5. Stage β — Measures | `engine/measures.py` | `exceptions.py` |
-| 6. Post-processing | `engine/postprocess.py` | `metadata/builder.py`, `sdk/dag.py` (`extract_measure_sub_dag`) |
+| 6. τ_post — Post-processing | `engine/postprocess.py` | — |
 | 7. Stage γ — Patterns | `engine/patterns.py` | `exceptions.py` (`PatternInjectionError`, `DegenerateDistributionError`) |
 | 8. Stage δ — Realism | `engine/realism.py` | `exceptions.py` |
-| 9. Module Outputs | `engine/generator.py` | `metadata/builder.py`, `types.py` (`OrthogonalPair`) |
+| 9. Module Outputs | `engine/generator.py` | `metadata/builder.py`, `sdk/dag.py` (`extract_measure_sub_dag`), `types.py` (`OrthogonalPair`) |
 | 9. Feedback Input | `pipeline.py` | `engine/generator.py` (re-invoked with `overrides`) |
 
 ---

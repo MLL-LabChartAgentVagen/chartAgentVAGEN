@@ -103,9 +103,9 @@ The SVG is divided into two columns:
 
 ## 2. generate_with_validation() WRAPPER
 
-**SVG region:** Large bounding box (x=18..852, y=162..806), grey border
+**SVG region:** Large bounding box (x=18..852, y=162..820), grey border
 
-**What it represents:** The outer retry orchestrator (Loop B). Contains all validation logic, the build_fn closure, and the auto-fix dispatch. Retries up to 3 times (configurable via `max_attempts`), returning on the first pass or after exhausting attempts.
+**What it represents:** The outer retry orchestrator (Loop B). Contains all validation logic, the build_fn closure, and the auto-fix dispatch. Retries up to `max_attempts` times (default 3), returning on the first pass or after exhausting attempts.
 
 **Responsible file:** `phase_2/validation/autofix.py` → `generate_with_validation()`
 
@@ -115,7 +115,7 @@ The SVG is divided into two columns:
 | **Output** | `tuple[pd.DataFrame, dict, ValidationReport]` |
 | **Data flow** | `pipeline._run_loop_b()` → `generate_with_validation(build_fn, meta, patterns, ...)` |
 
-**Seed note** (y=196..212): `seed = 42 + attempt` where `attempt ∈ {0, 1, 2, 3}`. Each retry uses a different random seed to vary the generation output.
+**Seed note** (y=196..212): `seed = 42 + attempt` where `attempt ∈ {0, 1, 2}` (3 total attempts via `range(max_attempts)`). Each retry uses a different random seed to vary the generation output.
 
 **Call order:**
 ```
@@ -234,7 +234,7 @@ SchemaAwareValidator._run_l1(df)
 | SVG label | Check function | Dispatch condition | Returns | Pass criterion |
 |-----------|---------------|--------------------|---------|----------------|
 | `ks_*_*` | `check_stochastic_ks(df, col_name, meta, patterns)` | `measure_type == "stochastic"` | `list[Check]`, one per predictor cell | `kstest p_value > 0.05` |
-| `structural_*_residual` | `check_structural_residuals(df, col_name, meta, patterns)` | `measure_type == "structural"` | Single `Check` | Deterministic: `residual_std < 1e-6`; noisy: `\|std - sigma\| / sigma < 0.2` |
+| `residual_*` | `check_structural_residuals(df, col_name, meta, patterns)` | `measure_type == "structural"` | Single `Check` | Deterministic: `residual_std < 1e-6`; noisy: `\|std - sigma\| / sigma < 0.2` |
 | `group_dep_*` | `check_group_dependency_transitions(df, meta)` | Always (for each group dependency) | `list[Check]`, one per dependency | `max_conditional_deviation < 0.10` |
 
 **KS test internal pipeline** (`check_stochastic_ks`):
@@ -288,7 +288,7 @@ SchemaAwareValidator._run_l2(df, patterns)
 
 ## 6. L3: PATTERN CHECKS
 
-**SVG region:** Left column (x=30..560, y=518..598), purple border
+**SVG region:** Left column (x=30..560, y=518..612), purple border
 
 **What it represents:** The third validation layer — checks that injected patterns (outliers, trends, reversals, etc.) are detectable in the generated data. Only runs if `patterns` is non-empty.
 
@@ -302,16 +302,16 @@ SchemaAwareValidator._run_l2(df, patterns)
 | **Output** | `list[Check]` — one Check per pattern in the spec list |
 | **Data flow** | `validator.validate(df, patterns)` → `self._run_l3(df, patterns)` (only if patterns truthy) → `report.add_checks(l3_checks)` |
 
-**The 4 check types + 3 stubs** (shown as bullet items in SVG):
+**The 3 implemented checks + 3 stubs** (shown as bullet items in SVG):
 
 | SVG label | Check function | Signature | Pass criterion | Status |
 |-----------|---------------|-----------|----------------|--------|
 | `outlier_*` | `check_outlier_entity(df, pattern)` | `(DataFrame, dict) → Check` | `z = \|subset_mean - ref_mean\| / ref_std >= 2.0` | Implemented |
 | `reversal_*_*` | `check_ranking_reversal(df, pattern, meta)` | `(DataFrame, dict, dict) → Check` | Spearman rank correlation `< 0` | Implemented |
 | `trend_*` | `check_trend_break(df, pattern, meta)` | `(DataFrame, dict, dict) → Check` | `\|after_mean - before_mean\| / \|before_mean\| > 0.15` | Implemented |
-| `dominance` | `check_dominance_shift(df, pattern, meta)` | `(DataFrame, dict, dict) → Check` | — | Stub (returns passed=True) |
-| — | `check_convergence(df, pattern, meta)` | `(DataFrame, dict, dict) → Check` | — | Stub (returns passed=True) |
-| — | `check_seasonal_anomaly(df, pattern, meta)` | `(DataFrame, dict, dict) → Check` | — | Stub (returns passed=True) |
+| `dominance` | `check_dominance_shift(df, pattern, meta)` | `(DataFrame, dict, dict) → Check` | — | **Stub** (returns passed=True) |
+| `convergence` | `check_convergence(df, pattern, meta)` | `(DataFrame, dict, dict) → Check` | — | **Stub** (returns passed=True) |
+| `seasonal_anomaly` | `check_seasonal_anomaly(df, pattern, meta)` | `(DataFrame, dict, dict) → Check` | — | **Stub** (returns passed=True) |
 
 **L3 dispatch logic** (in `_run_l3`):
 ```
@@ -336,13 +336,13 @@ SchemaAwareValidator._run_l3(df, patterns)
 - Computes per-entity means of two metrics via `df.groupby(entity_col)[[m1, m2]].mean()`.
 - Spearman rank correlation: `means[m1].rank().corr(means[m2].rank())`.
 
-**SVG arrow:** Downward arrow at y=598→612 labeled `List[Check]` flows into Merge.
+**SVG arrow:** Downward arrow at y=612→626 labeled `List[Check]` flows into Merge.
 
 ---
 
 ## 7. MERGE → ValidationReport
 
-**SVG region:** Left column (x=30..560, y=612..668), green border
+**SVG region:** Left column (x=30..560, y=626..682), green border
 
 **What it represents:** The aggregation of all L1, L2, and L3 check results into a single `ValidationReport` object. This is not a separate function — it's the accumulation pattern inside `SchemaAwareValidator.validate()`.
 
@@ -379,13 +379,13 @@ class Check:
     detail: Optional[str] = None           # e.g. "χ² p=0.34"
 ```
 
-**SVG arrow:** Downward arrow at y=668→682 flows into the decision diamond.
+**SVG arrow:** Downward arrow at y=682→696 flows into the decision diamond.
 
 ---
 
 ## 8. DECISION: report.all_passed?
 
-**SVG region:** Left column (x=30..560, y=682..736), grey border
+**SVG region:** Left column (x=30..560, y=696..750), grey border
 
 **What it represents:** The branching point inside the `generate_with_validation()` loop. If all checks passed, flow exits to RETURN. If any check failed and attempts remain, flow goes to AUTO_FIX.
 
@@ -398,14 +398,14 @@ class Check:
 | **Data flow** | `if report.all_passed: break` (YES path) / `for check in report.failures: ...` (NO path) |
 
 **SVG labels:**
-- **YES ✓** (left side, y=725): green arrow downward to RETURN box (y=736→752)
-- **NO ✗** (right side, y=725): red arrow rightward to AUTO_FIX box (y=709→572)
+- **YES ✓** (left side, y=739): green arrow downward to RETURN box (y=750→766)
+- **NO ✗** (right side, y=739): red arrow rightward to AUTO_FIX box (y=723→572)
 
 ---
 
 ## 9. AUTO_FIX DISPATCH
 
-**SVG region:** Right column (x=572..832, y=682..792), red/pink border
+**SVG region:** Right column (x=572..832, y=696..806), red/pink border
 
 **What it represents:** The auto-fix strategy matching and parameter override accumulation. When validation fails, each failed check is matched against a strategy map using glob patterns. Matched strategies mutate the `overrides` dict, which is passed to `build_fn()` on the next retry.
 
@@ -443,13 +443,13 @@ autofix.match_strategy(check_name, auto_fix)
   └─ return None                   ← no match, no override for this failure
 ```
 
-**Loop B arc:** The SVG shows a dashed red arc (y=737) from the AUTO_FIX right edge → up the right margin → back to `build_fn()` level at y=200. This represents `generate_with_validation()` continuing the `for attempt in range(max_attempts)` loop with updated overrides and a new seed.
+**Loop B arc:** The SVG shows a dashed red arc (y=751) from the AUTO_FIX right edge → up the right margin → back to `build_fn()` level at y=200. This represents `generate_with_validation()` continuing the `for attempt in range(max_attempts)` loop with updated overrides and a new seed.
 
 ---
 
 ## 10. RETURN
 
-**SVG region:** Left column (x=30..560, y=752..804), green border
+**SVG region:** Left column (x=30..560, y=766..818), green border
 
 **What it represents:** The output of `generate_with_validation()` — either on first `all_passed=True` or after exhausting all retry attempts (may still contain failures).
 
@@ -472,13 +472,13 @@ return df, meta, report
 
 **Key detail:** Realism is applied *after* all validation completes — the validation checks run against the "clean" DataFrame, and realism noise is layered on only at the end. This is the "validation-before-realism" ordering enforced by passing `realism_config=None` to `build_fn()`.
 
-**SVG arrow:** Downward arrow at y=806→822 flows to PHASE 3.
+**SVG arrow:** Downward arrow at y=820→836 flows to PHASE 3.
 
 ---
 
 ## 11. PHASE 3
 
-**SVG region:** Center box (x=168..558, y=822..872), blue border
+**SVG region:** Center box (x=168..558, y=836..886), blue border
 
 **What it represents:** The downstream consumer of the validated output. Phase 3 receives the validated `(df, schema_metadata, ValidationReport)` tuple for chart generation and annotation.
 
