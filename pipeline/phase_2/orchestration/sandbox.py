@@ -455,6 +455,7 @@ def execute_in_sandbox(
         dataframe=df_candidate,
         metadata=meta_candidate,
         raw_declarations=raw_declarations,
+        source_code=source_code,
     )
 
 
@@ -469,31 +470,46 @@ _FIX_INSTRUCTION: str = (
     "Return only the corrected Python script."
 )
 
+# Stronger instruction used when prior failures are available — tells the LLM
+# to avoid reintroducing any of the listed errors while fixing the current one.
+_FIX_INSTRUCTION_WITH_HISTORY: str = (
+    "The script above raised an error during sandbox execution. "
+    "Adjust parameters to resolve the CURRENT error while ALSO avoiding every "
+    "error listed under PRIOR FAILED ATTEMPTS. Return only the corrected Python script."
+)
+
 
 def format_error_feedback(
     original_code: str,
     exception: Exception,
     traceback_str: str,
+    prior_failures: list["SandboxResult"] | None = None,
 ) -> str:
     """Format error feedback for LLM retry prompt per §2.7 step 5.
 
     [Subtask 7.1.2]
 
-    Assembles the four components specified by the task hierarchy:
+    Assembles up to five components:
 
-    1. The original source code that failed.
-    2. The exception class name (e.g. ``CyclicDependencyError``).
-    3. The full traceback string.
-    4. A natural-language fix instruction directing the LLM to adjust
-       parameters.
+    1. (optional) A `PRIOR FAILED ATTEMPTS` section listing class + message
+       of each earlier failed attempt — used to prevent whack-a-mole retries
+       where the LLM fixes the shown error but reintroduces a previously-fixed one.
+    2. The original source code that failed.
+    3. The exception class name (e.g. ``CyclicDependencyError``).
+    4. The full traceback string.
+    5. A natural-language fix instruction directing the LLM to adjust parameters
+       (strengthened to reference prior failures when any are present).
 
     Args:
         original_code: The Python source code that raised the error.
-        exception: The captured exception object.
-        traceback_str: The formatted traceback string.
+        exception: The captured exception object (current attempt).
+        traceback_str: The formatted traceback string (current attempt).
+        prior_failures: Optional list of earlier failed SandboxResult objects.
+            Only `exception` is read from each; tracebacks are intentionally
+            omitted to save tokens.
 
     Returns:
-        A single formatted string containing all four components,
+        A single formatted string containing all present components,
         delimited by clear section headers for LLM readability.
 
     Raises:
@@ -526,15 +542,32 @@ def format_error_feedback(
             reason="traceback_str must be a non-empty string",
         )
 
-    # ===== Format the Four Components =====
+    # ===== Format the Components =====
 
     # Extract exception class name and message for the ERROR section
     exception_class = type(exception).__name__
     exception_message = str(exception)
 
+    # Optional PRIOR FAILED ATTEMPTS section — class + message per prior failure
+    prior_section = ""
+    prior_list = [p for p in (prior_failures or []) if p.exception is not None]
+    if prior_list:
+        lines = [
+            f"Attempt {i + 1}: {type(p.exception).__name__}: {p.exception}"
+            for i, p in enumerate(prior_list)
+        ]
+        prior_section = (
+            "=== PRIOR FAILED ATTEMPTS — DO NOT REINTRODUCE THESE ERRORS ===\n"
+            + "\n".join(lines)
+            + "\n\n"
+        )
+
+    instruction = _FIX_INSTRUCTION_WITH_HISTORY if prior_list else _FIX_INSTRUCTION
+
     # Structure the feedback with clear section headers so the LLM can
     # parse each component unambiguously
     feedback = (
+        f"{prior_section}"
         "=== ORIGINAL CODE ===\n"
         f"{original_code}\n"
         "\n"
@@ -545,13 +578,12 @@ def format_error_feedback(
         f"{traceback_str}\n"
         "\n"
         "=== INSTRUCTION ===\n"
-        f"{_FIX_INSTRUCTION}"
+        f"{instruction}"
     )
 
     logger.debug(
-        "Formatted error feedback for %s (%d chars)",
-        exception_class,
-        len(feedback),
+        "Formatted error feedback for %s (%d prior, %d chars)",
+        exception_class, len(prior_list), len(feedback),
     )
 
     return feedback
@@ -654,12 +686,6 @@ def run_retry_loop(
     # Resolve the namespace factory — default to the module-level builder
     ns_factory = sandbox_namespace_factory or _build_sandbox_namespace
 
-    # TODO [M3-NC-4]: Context window exhaustion — currently the full error
-    # feedback history is sent to the LLM on each retry (no truncation).
-    # For the default max_retries=3 this is acceptable. If max_retries is
-    # increased, add a token-budget check here to truncate or summarize
-    # earlier feedback payloads before they exceed the LLM context window.
-
     for attempt in range(1, max_retries + 1):
 
         logger.debug(
@@ -687,6 +713,7 @@ def run_retry_loop(
                 dataframe=result.dataframe,
                 metadata=result.metadata,
                 raw_declarations=result.raw_declarations,
+                source_code=result.source_code or current_code,
                 attempts=attempt,
                 history=history,
             )
@@ -696,11 +723,16 @@ def run_retry_loop(
         # Don't call the LLM after the final failed attempt — there is
         # no subsequent attempt to use the new code
         if attempt < max_retries:
+            # Build prior-failures list: every failed attempt except the current
+            # one (whose exception is already shown in the ERROR/TRACEBACK sections).
+            prior_failures = [h for h in history[:-1] if not h.success]
+
             # Format the §2.7 step-5 error feedback payload
             feedback_prompt = format_error_feedback(
                 original_code=current_code,
                 exception=result.exception or RuntimeError("Unknown sandbox failure"),
                 traceback_str=result.traceback_str or "No traceback available.",
+                prior_failures=prior_failures,
             )
 
             logger.debug(

@@ -147,7 +147,13 @@ def orchestrate(
             error_log=error_log or ["All retries exhausted without success."],
         )
 
-    # Success — return the triple expected by pipeline._run_loop_a.
+    # Success — return the 4-tuple expected by pipeline._run_loop_a.
     # raw_declarations carries live simulator registries when available,
     # falling back to metadata for backward compatibility.
-    return result.dataframe, result.metadata, result.raw_declarations or result.metadata
+    # source_code is the LLM-generated script string that produced this result.
+    return (
+        result.dataframe,
+        result.metadata,
+        result.raw_declarations or result.metadata,
+        result.source_code or "",
+    )

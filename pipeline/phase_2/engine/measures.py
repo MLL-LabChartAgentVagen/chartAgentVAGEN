@@ -16,6 +16,8 @@ from typing import Any
 
 import numpy as np
 
+from ..exceptions import InvalidParameterError
+
 logger = logging.getLogger(__name__)
 
 
@@ -248,7 +250,21 @@ def _eval_structural(
             if sym in rows:
                 context[sym] = float(rows[sym][i])
 
-        values[i] = _safe_eval_formula(formula, context)
+        try:
+            values[i] = _safe_eval_formula(formula, context)
+        except ZeroDivisionError:
+            zero_vars = sorted(k for k, v in context.items() if v == 0.0)
+            raise InvalidParameterError(
+                param_name="formula",
+                value=0.0,
+                reason=(
+                    f"Structural measure '{col_name}': formula '{formula}' "
+                    f"divided by zero at row {i}. "
+                    f"Zero-valued symbols in context: {zero_vars}. "
+                    f"Guard against zero in your effects or floor the "
+                    f"denominator (e.g., 'a / max(b, 1e-6)')."
+                ),
+            ) from None
 
     # Apply noise (P3-10: noise={} means zero noise / deterministic)
     if noise_config:

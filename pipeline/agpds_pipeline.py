@@ -8,7 +8,11 @@ import hashlib
 # Phase 0, 1, 2 AGPDS Imports
 from pipeline.phase_0.domain_pool import DomainSampler
 from pipeline.phase_1.scenario_contextualizer import ScenarioContextualizer
-from pipeline.phase_2.pipeline import run_phase2
+from pipeline.phase_2.pipeline import (
+    run_phase2,
+    run_loop_a,
+    run_loop_b_from_declarations,
+)
 from pipeline.phase_2.exceptions import SkipResult
 
 logger = logging.getLogger(__name__)
@@ -48,25 +52,14 @@ class AGPDSPipeline:
         self.domain_sampler = DomainSampler(pool_path=pool_path)
         self.contextualizer = ScenarioContextualizer(llm_client)
 
-    def run_single(self, category_id: int, constraints: Optional[Dict] = None) -> Dict[str, Any]:
-        """
-        Execute one full end-to-end generation pass.
-
-        Args:
-            category_id: ID of the category (1-30) to generate data for
-            constraints: Optional dictionary of constraints (avoid_concepts, etc.)
-
-        Returns:
-            Dictionary containing scenario, CSV, Metadata, and Charts
-        """
+    def _new_generation_id(self) -> str:
         start_time = datetime.now()
-        generation_id = f"agpds_{start_time.strftime('%Y%m%d_%H%M%S')}_{hashlib.md5(str(start_time).encode()).hexdigest()[:6]}"
+        return (
+            f"agpds_{start_time.strftime('%Y%m%d_%H%M%S')}_"
+            f"{hashlib.md5(str(start_time).encode()).hexdigest()[:6]}"
+        )
 
-        logger.info(f"[{generation_id}] Starting AGPDS Phase 0-3 Generation")
-
-        # Phase 0: Sample Domain
-        logger.info("  -> Phase 0: Sampling Domain...")
-
+    def _sample_domain(self, category_id: int) -> Dict[str, Any]:
         from pipeline.core.utils import get_category_by_id
         category_str = get_category_by_id(category_id)
         topic_filter = None
@@ -74,15 +67,12 @@ class AGPDSPipeline:
             topic_filter = category_str.split(" - ", 1)[1]
 
         sampled_list = self.domain_sampler.sample(n=1, topic=topic_filter)
-        domain_context = sampled_list[0] if sampled_list else {"id": f"fallback_{category_id}", "tier": "General Data"}
+        return sampled_list[0] if sampled_list else {
+            "id": f"fallback_{category_id}",
+            "tier": "General Data",
+        }
 
-        print(f"  -> Selected Subtopic: {domain_context.get('name', 'Unknown')}")
-
-        # Phase 1: Contextualize Scenario
-        logger.info("  -> Phase 1: Contextualizing Scenario...")
-        scenario = self.contextualizer.generate(domain_context)
-
-        # Persist Phase 1 scenario to disk for inspection / debugging
+    def _save_scenario(self, generation_id: str, scenario: Dict[str, Any]) -> str:
         scenario_dir = os.path.join(
             os.path.dirname(__file__), "..", "output", "agpds", "scenarios"
         )
@@ -91,25 +81,76 @@ class AGPDSPipeline:
         with open(scenario_path, "w", encoding="utf-8") as f:
             json.dump(scenario, f, indent=2, ensure_ascii=False)
         logger.info(f"  -> Scenario saved to {scenario_path}")
+        return scenario_path
 
-        # Phase 2: Sandbox Executor
-        logger.info("  -> Phase 2: Generating and Executing Sandbox Script...")
-        try:
-            result = run_phase2(
-                scenario_context=scenario,
-                api_key=self.llm.api_key,
-                model=self.llm.model,
-                provider=self.llm.provider,
-                max_loop_a_retries=5,
-                max_loop_b_retries=3,
+    def generate_artifacts(
+        self, category_id: int, constraints: Optional[Dict] = None,
+    ) -> Dict[str, Any]:
+        """Stage 1: Phase 0 + Phase 1 + Phase 2 Loop A only.
+
+        Produces the LLM-generated script and raw_declarations, but does NOT
+        run Loop B (validation/autofix) and does NOT persist CSV/metadata.
+        Intended for agpds_generate.py which writes scripts/ and declarations/
+        to disk so agpds_execute.py can replay them later.
+        """
+        generation_id = self._new_generation_id()
+        logger.info(f"[{generation_id}] Starting AGPDS Stage 1 (generate)")
+
+        logger.info("  -> Phase 0: Sampling Domain...")
+        domain_context = self._sample_domain(category_id)
+        print(f"  -> Selected Subtopic: {domain_context.get('name', 'Unknown')}")
+
+        logger.info("  -> Phase 1: Contextualizing Scenario...")
+        scenario = self.contextualizer.generate(domain_context)
+        self._save_scenario(generation_id, scenario)
+
+        logger.info("  -> Phase 2 Loop A: Generating LLM script...")
+        loop_a = run_loop_a(
+            scenario_context=scenario,
+            max_retries=5,
+            api_key=self.llm.api_key,
+            model=self.llm.model,
+            provider=self.llm.provider,
+        )
+        if isinstance(loop_a, SkipResult):
+            raise RuntimeError(
+                f"Loop A exhausted all retries: {'; '.join(loop_a.error_log)}"
             )
-        except Exception as e:
-            logger.error(f"Phase 2 Execution Failed: {e}")
-            raise RuntimeError(f"Sandbox executor failed to generate valid data: {e}")
 
+        _df, metadata, raw_declarations, source_code = loop_a
+
+        return {
+            "generation_id": generation_id,
+            "category_id": category_id,
+            "domain_context": domain_context,
+            "scenario": scenario,
+            "source_code": source_code,
+            "raw_declarations": raw_declarations,
+            "schema_metadata": metadata,
+        }
+
+    def execute_artifact(
+        self,
+        generation_id: str,
+        raw_declarations: Dict[str, Any],
+        category_id: Optional[int] = None,
+        domain_context: Optional[Dict[str, Any]] = None,
+        scenario: Optional[Dict[str, Any]] = None,
+    ) -> Dict[str, Any]:
+        """Stage 2: Phase 2 Loop B only — deterministic execution from declarations.
+
+        No LLM calls. Runs generate → validate → auto-fix and returns the
+        runner-style result dict (master_data_csv + schema_metadata).
+        """
+        logger.info(f"[{generation_id}] Starting AGPDS Stage 2 (execute)")
+
+        result = run_loop_b_from_declarations(
+            raw_declarations,
+            max_retries=3,
+        )
         if isinstance(result, SkipResult):
             raise RuntimeError(
-                f"Phase 2 exhausted all retries: {'; '.join(result.error_log)}"
+                f"Loop B exhausted all retries: {'; '.join(result.error_log)}"
             )
 
         df, schema_metadata, val_report = result
@@ -117,16 +158,29 @@ class AGPDSPipeline:
         if val_report.all_passed:
             logger.info("  -> Validation: all checks passed.")
         else:
-            failures_str = "\n".join(f"  - {c.name}: {c.detail}" for c in val_report.failures)
+            failures_str = "\n".join(
+                f"  - {c.name}: {c.detail}" for c in val_report.failures
+            )
             logger.warning(f"  -> Validation soft-failures (continuing):\n{failures_str}")
-
-        logger.info("  -> Phases 0-2 Complete. Master Table and Schema Metadata ready for Phase 3.")
 
         return {
             "generation_id": generation_id,
             "category_id": category_id,
-            "domain_context": domain_context,
-            "scenario": scenario,
+            "domain_context": domain_context or {},
+            "scenario": scenario or {},
             "master_data_csv": df.to_csv(index=False),
             "schema_metadata": schema_metadata,
         }
+
+    def run_single(self, category_id: int, constraints: Optional[Dict] = None) -> Dict[str, Any]:
+        """Execute one full end-to-end generation pass (Stage 1 + Stage 2)."""
+        stage1 = self.generate_artifacts(category_id, constraints)
+        result = self.execute_artifact(
+            generation_id=stage1["generation_id"],
+            raw_declarations=stage1["raw_declarations"],
+            category_id=stage1["category_id"],
+            domain_context=stage1["domain_context"],
+            scenario=stage1["scenario"],
+        )
+        logger.info("  -> Phases 0-2 Complete. Master Table and Schema Metadata ready for Phase 3.")
+        return result

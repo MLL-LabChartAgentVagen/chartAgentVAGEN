@@ -60,13 +60,15 @@ SYSTEM_PROMPT_TEMPLATE: Final[str] = (
     "  sim.add_group_dependency(child_root, on, conditional_weights)\n"
     "      # Cross-group dependency between ROOT columns only; must be DAG\n"
     "  sim.inject_pattern(type, target, col, params)\n"
-    "  sim.set_realism(missing_rate, dirty_rate, censoring=None)    # optional\n"
+    # TODO [M1-NC-7]: censoring kwarg deferred — re-add when engine/realism.py supports it.
+    "  sim.set_realism(missing_rate, dirty_rate)    # optional\n"
     "\n"
     'SUPPORTED DISTRIBUTIONS: "gaussian", "lognormal", "gamma", "beta", "uniform",\n'
     '                         "poisson", "exponential", "mixture"\n'
     "\n"
-    'PATTERN_TYPES: "outlier_entity", "trend_break", "ranking_reversal",\n'
-    '               "dominance_shift", "convergence", "seasonal_anomaly"\n'
+    # TODO [M1-NC-6]: re-add "ranking_reversal", "dominance_shift",
+    # "convergence", "seasonal_anomaly" when engine/patterns.py implements them.
+    'PATTERN_TYPES: "outlier_entity", "trend_break"\n'
     "\n"
     "HARD CONSTRAINTS — the script MUST satisfy ALL:\n"
     "1. ATOMIC_GRAIN: each row = one indivisible event.\n"

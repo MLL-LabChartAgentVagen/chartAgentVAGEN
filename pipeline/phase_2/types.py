@@ -436,6 +436,7 @@ class SandboxResult:
     dataframe: Optional[pd.DataFrame] = None
     metadata: Optional[dict[str, Any]] = None
     raw_declarations: Optional[dict[str, Any]] = None
+    source_code: Optional[str] = None
     exception: Optional[Exception] = None
     traceback_str: Optional[str] = None
 
@@ -456,5 +457,6 @@ class RetryLoopResult:
     dataframe: Optional[pd.DataFrame] = None
     metadata: Optional[dict[str, Any]] = None
     raw_declarations: Optional[dict[str, Any]] = None
+    source_code: Optional[str] = None
     attempts: int = 0
     history: list[SandboxResult] = field(default_factory=list)

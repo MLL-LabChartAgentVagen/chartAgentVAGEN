@@ -16,7 +16,7 @@ import numpy as np
 import pandas as pd
 import scipy.stats
 
-from phase_2.types import Check
+from ..types import Check
 
 logger = logging.getLogger(__name__)
 
@@ -333,7 +333,7 @@ def _get_formula_measure_deps(
     Returns:
         Set of measure column names that are direct formula dependencies.
     """
-    from phase_2.sdk.validation import extract_formula_symbols
+    from ..sdk.validation import extract_formula_symbols
 
     all_symbols = extract_formula_symbols(formula)
     dep_measures: set[str] = set()
@@ -374,7 +374,7 @@ def check_structural_residuals(
     Returns:
         Check named "residual_{col_name}".
     """
-    from phase_2.engine.measures import _safe_eval_formula, _resolve_effects
+    from ..engine.measures import _safe_eval_formula, _resolve_effects
 
     columns_meta = meta.get("columns", {})
     col_meta = columns_meta.get(col_name, {})
@@ -471,7 +471,7 @@ def check_group_dependency_transitions(
 ) -> list[Check]:
     """L2: Verify conditional weight distributions match declared weights.
 
-    Implements M5 SPEC_READY #9: L2 group dependency conditional transition check.
+    TODO [M5 SPEC_READY #9]: L2 group dependency conditional transition check.
 
     For each group dependency, computes the observed conditional distribution
     of the child_root column given each value of the parent (on[0]) column,

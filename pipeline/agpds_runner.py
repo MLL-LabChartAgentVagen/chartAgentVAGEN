@@ -50,51 +50,18 @@ class AGPDSRunner:
 
     def save_results(self, results: List[dict], output_dir: str):
         """Save results to JSON file and master data CSVs appropriately."""
-        os.makedirs(output_dir, exist_ok=True)
-        
-        csv_dir = os.path.join(output_dir, "master_tables")
-        schema_dir = os.path.join(output_dir, "schemas")
-        charts_dir = os.path.join(output_dir, "charts")
-        os.makedirs(csv_dir, exist_ok=True)
-        os.makedirs(schema_dir, exist_ok=True)
-        os.makedirs(charts_dir, exist_ok=True)
+        csv_dir, schema_dir, charts_dir = _ensure_output_dirs(output_dir)
 
         json_results = []
         csv_count = 0
         charts_count = 0
 
         for result in results:
-            gen_id = result.get("generation_id", "unknown")
-            
-            # Save CSV
-            csv_content = result.get("master_data_csv")
-            if csv_content:
-                csv_path = os.path.join(csv_dir, f"{gen_id}.csv")
-                with open(csv_path, 'w', encoding='utf-8') as f:
-                    f.write(csv_content)
-                result["master_data_csv_path"] = os.path.join("master_tables", f"{gen_id}.csv")
+            chart_record, saved = save_single_result(result, output_dir)
+            if saved.get("csv"):
                 csv_count += 1
-                
-            # Save Schema Metadata
-            schema_content = result.get("schema_metadata")
-            if schema_content:
-                schema_path = os.path.join(schema_dir, f"{gen_id}_metadata.json")
-                with open(schema_path, 'w', encoding='utf-8') as f:
-                    json.dump(schema_content, f, indent=2)
-                result["schema_metadata_path"] = os.path.join("schemas", f"{gen_id}_metadata.json")
-
-            # Save per-generation chart JSON — strip raw blobs, keep path references
-            chart_record = {
-                k: v for k, v in result.items()
-                if k not in ("master_data_csv", "schema_metadata")
-            }
-            chart_record["charts_path"] = os.path.join("charts", f"{gen_id}.json")
-            result["charts_path"] = chart_record["charts_path"]
-            charts_path = os.path.join(charts_dir, f"{gen_id}.json")
-            with open(charts_path, 'w', encoding='utf-8') as f:
-                json.dump(chart_record, f, indent=2)
-            charts_count += 1
-
+            if saved.get("chart"):
+                charts_count += 1
             json_results.append(chart_record)
 
         # Save main charts bundle (all generations combined)
@@ -108,6 +75,54 @@ class AGPDSRunner:
             self.log(f"Saved {csv_count} metadata schemas to {schema_dir}/")
         if charts_count:
             self.log(f"Saved {charts_count} chart JSONs to {charts_dir}/")
+
+
+def _ensure_output_dirs(output_dir: str) -> tuple:
+    os.makedirs(output_dir, exist_ok=True)
+    csv_dir = os.path.join(output_dir, "master_tables")
+    schema_dir = os.path.join(output_dir, "schemas")
+    charts_dir = os.path.join(output_dir, "charts")
+    os.makedirs(csv_dir, exist_ok=True)
+    os.makedirs(schema_dir, exist_ok=True)
+    os.makedirs(charts_dir, exist_ok=True)
+    return csv_dir, schema_dir, charts_dir
+
+
+def save_single_result(result: dict, output_dir: str) -> tuple:
+    """Persist one generation result (CSV + schema + chart JSON). Returns
+    (chart_record, {"csv": bool, "schema": bool, "chart": bool})."""
+    csv_dir, schema_dir, charts_dir = _ensure_output_dirs(output_dir)
+    gen_id = result.get("generation_id", "unknown")
+    saved = {"csv": False, "schema": False, "chart": False}
+
+    csv_content = result.get("master_data_csv")
+    if csv_content:
+        csv_path = os.path.join(csv_dir, f"{gen_id}.csv")
+        with open(csv_path, 'w', encoding='utf-8') as f:
+            f.write(csv_content)
+        result["master_data_csv_path"] = os.path.join("master_tables", f"{gen_id}.csv")
+        saved["csv"] = True
+
+    schema_content = result.get("schema_metadata")
+    if schema_content:
+        schema_path = os.path.join(schema_dir, f"{gen_id}_metadata.json")
+        with open(schema_path, 'w', encoding='utf-8') as f:
+            json.dump(schema_content, f, indent=2)
+        result["schema_metadata_path"] = os.path.join("schemas", f"{gen_id}_metadata.json")
+        saved["schema"] = True
+
+    chart_record = {
+        k: v for k, v in result.items()
+        if k not in ("master_data_csv", "schema_metadata")
+    }
+    chart_record["charts_path"] = os.path.join("charts", f"{gen_id}.json")
+    result["charts_path"] = chart_record["charts_path"]
+    charts_path = os.path.join(charts_dir, f"{gen_id}.json")
+    with open(charts_path, 'w', encoding='utf-8') as f:
+        json.dump(chart_record, f, indent=2)
+    saved["chart"] = True
+
+    return chart_record, saved
 
 
 class TeeLogger:
@@ -150,18 +165,22 @@ def main():
 
     parser = argparse.ArgumentParser(description="AGPDS Pipeline Execution")
     parser.add_argument("--api-key", help="LLM API Key (OpenAI/Gemini/Azure)")
-    parser.add_argument("--model", default="gemini-3.1-pro-preview", help="Model name")
-    parser.add_argument("--provider", default="gemini", choices=["openai", "gemini", "gemini-native", "azure", "auto"])
+    parser.add_argument("--model", default=None, help="Model name (overrides .env OPENAI_MODEL/GEMINI_MODEL)")
+    parser.add_argument("--provider", default=None, choices=["openai", "gemini", "gemini-native", "azure", "auto"],
+                        help="Provider (overrides .env LLM_PROVIDER)")
     parser.add_argument("--category", type=int, choices=range(1, 31), help="Specific Category ID (1-30)")
     parser.add_argument("--count", type=int, default=1, help="Number of generations to run")
     parser.add_argument("--output-dir", default="./output/agpds", help="Output directory path")
     args = parser.parse_args()
 
+    # Resolve provider: CLI flag > .env LLM_PROVIDER > "gemini"
+    provider = args.provider or os.environ.get("LLM_PROVIDER") or "gemini"
+
     if args.api_key:
         api_key = args.api_key
-    elif args.provider in ("openai", "azure"):
+    elif provider in ("openai", "azure"):
         api_key = os.environ.get("OPENAI_API_KEY")
-    elif args.provider in ("gemini", "gemini-native"):
+    elif provider in ("gemini", "gemini-native"):
         api_key = os.environ.get("GEMINI_API_KEY")
     else:  # auto / custom fallback
         api_key = os.environ.get("OPENAI_API_KEY") or os.environ.get("GEMINI_API_KEY")
@@ -170,16 +189,18 @@ def main():
         print("Error: API Key must be provided via --api-key or ENV variable.", file=sys.stderr)
         sys.exit(1)
 
-    # Resolve model: CLI flag > provider-specific ENV var > argument default
-    model = args.model
-    if not args.model or args.model == parser.get_default("model"):
-        if args.provider in ("openai", "azure"):
-            model = os.environ.get("OPENAI_MODEL") or args.model
-        elif args.provider in ("gemini", "gemini-native"):
-            model = os.environ.get("GEMINI_MODEL") or args.model
+    # Resolve model: CLI flag > provider-specific .env var > hardcoded fallback
+    if args.model:
+        model = args.model
+    elif provider in ("openai", "azure"):
+        model = os.environ.get("OPENAI_MODEL") or "gpt-4o-mini"
+    elif provider in ("gemini", "gemini-native"):
+        model = os.environ.get("GEMINI_MODEL") or "gemini-3.1-pro-preview"
+    else:
+        model = os.environ.get("OPENAI_MODEL") or os.environ.get("GEMINI_MODEL") or "gpt-4o-mini"
 
-    print(f"Initializing LLMClient ({args.provider}, {model})...")
-    llm = LLMClient(api_key=api_key, model=model, provider=args.provider)
+    print(f"Initializing LLMClient ({provider}, {model})...")
+    llm = LLMClient(api_key=api_key, model=model, provider=provider)
     
     runner = AGPDSRunner(llm_client=llm)
 

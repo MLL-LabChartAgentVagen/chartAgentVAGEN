@@ -24,19 +24,21 @@ from . import groups as _groups
 logger = logging.getLogger(__name__)
 
 # §2.1.2 pattern types
+# TODO [M1-NC-6]: re-add "ranking_reversal", "dominance_shift", "convergence",
+# "seasonal_anomaly" when engine/patterns.py implements them.
 VALID_PATTERN_TYPES: frozenset[str] = frozenset({
-    "outlier_entity", "trend_break", "ranking_reversal",
-    "dominance_shift", "convergence", "seasonal_anomaly",
+    "outlier_entity", "trend_break",
 })
 
 # Required params for fully-specified pattern types
+# TODO [M1-NC-6]: re-add entries for the deferred pattern types when implemented:
+#   "ranking_reversal": frozenset({"metrics", "entity_col"}),
+#   "dominance_shift":  frozenset({"entity_filter", "col", "split_point"}),
+#   "convergence":      no required params (fully unspecified)
+#   "seasonal_anomaly": no required params (fully unspecified)
 PATTERN_REQUIRED_PARAMS: dict[str, frozenset[str]] = {
     "outlier_entity": frozenset({"z_score"}),
     "trend_break": frozenset({"break_point", "magnitude"}),
-    "ranking_reversal": frozenset({"metrics", "entity_col"}),
-    "dominance_shift": frozenset({"entity_filter", "col", "split_point"}),
-    # convergence: no required params (fully unspecified)
-    # seasonal_anomaly: no required params (fully unspecified)
 }
 
 
