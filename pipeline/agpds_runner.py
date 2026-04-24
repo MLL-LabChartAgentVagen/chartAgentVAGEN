@@ -15,10 +15,20 @@ class AGPDSRunner:
     CLI Runner for the AGPDS Pipeline.
     Manages LLM client initialization, batch execution, and IO artifact generation.
     """
-    def __init__(self, llm_client: LLMClient, verbose: bool = True):
+    def __init__(
+        self,
+        llm_client: LLMClient,
+        verbose: bool = True,
+        scenario_source: str = "live",
+        scenario_pool_path: Optional[str] = None,
+    ):
         self.llm = llm_client
         self.verbose = verbose
-        self.pipeline = AGPDSPipeline(self.llm)
+        self.pipeline = AGPDSPipeline(
+            self.llm,
+            scenario_source=scenario_source,
+            scenario_pool_path=scenario_pool_path,
+        )
 
     def log(self, message: str):
         if self.verbose:
@@ -171,6 +181,20 @@ def main():
     parser.add_argument("--category", type=int, choices=range(1, 31), help="Specific Category ID (1-30)")
     parser.add_argument("--count", type=int, default=1, help="Number of generations to run")
     parser.add_argument("--output-dir", default="./output/agpds", help="Output directory path")
+    parser.add_argument(
+        "--scenario-source",
+        choices=["live", "cached", "cached_strict"],
+        default="live",
+        help="Phase 1 scenario source: 'live' (LLM per record), 'cached' (read "
+             "from scenario_pool.jsonl, fall back to live on miss), or "
+             "'cached_strict' (error on miss). Default: live.",
+    )
+    parser.add_argument(
+        "--scenario-pool-path",
+        default=None,
+        help="Override path to scenario_pool.jsonl "
+             "(default: pipeline/phase_1/scenario_pool.jsonl)",
+    )
     args = parser.parse_args()
 
     # Resolve provider: CLI flag > .env LLM_PROVIDER > "gemini"
@@ -202,7 +226,11 @@ def main():
     print(f"Initializing LLMClient ({provider}, {model})...")
     llm = LLMClient(api_key=api_key, model=model, provider=provider)
     
-    runner = AGPDSRunner(llm_client=llm)
+    runner = AGPDSRunner(
+        llm_client=llm,
+        scenario_source=args.scenario_source,
+        scenario_pool_path=args.scenario_pool_path,
+    )
 
     import random
     category_ids = [args.category] * args.count if args.category else [random.randint(1, 30) for _ in range(args.count)]

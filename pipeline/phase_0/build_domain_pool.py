@@ -8,10 +8,10 @@ compiled pool to metadata/domain_pool.json.
 
 Usage:
     # From the project root:
-    python scripts/build_domain_pool.py
+    python pipeline/phase_0/build_domain_pool.py
 
     # Force regeneration, even if domain_pool.json already exists:
-    python scripts/build_domain_pool.py --force
+    python pipeline/phase_0/build_domain_pool.py --force
 
 Requirements:
     - GEMINI_API_KEY (or OPENAI_API_KEY) set in .env or as an env var

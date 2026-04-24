@@ -129,6 +129,20 @@ def main() -> None:
     parser.add_argument("--count", type=int, default=1, help="Number of scripts to generate")
     parser.add_argument("--output-dir", default="./output/agpds",
                         help="Directory that will hold scripts/ declarations/ scenarios/")
+    parser.add_argument(
+        "--scenario-source",
+        choices=["live", "cached", "cached_strict"],
+        default="live",
+        help="Phase 1 scenario source: 'live' (LLM per record), 'cached' (read "
+             "from scenario_pool.jsonl, fall back to live on miss), or "
+             "'cached_strict' (error on miss). Default: live.",
+    )
+    parser.add_argument(
+        "--scenario-pool-path",
+        default=None,
+        help="Override path to scenario_pool.jsonl "
+             "(default: pipeline/phase_1/scenario_pool.jsonl)",
+    )
     args = parser.parse_args()
 
     provider = args.provider or os.environ.get("LLM_PROVIDER") or "gemini"
@@ -157,7 +171,11 @@ def main() -> None:
 
     print(f"Initializing LLMClient ({provider}, {model})...")
     llm = LLMClient(api_key=api_key, model=model, provider=provider)
-    pipeline = AGPDSPipeline(llm)
+    pipeline = AGPDSPipeline(
+        llm,
+        scenario_source=args.scenario_source,
+        scenario_pool_path=args.scenario_pool_path,
+    )
 
     category_ids = (
         [args.category] * args.count if args.category

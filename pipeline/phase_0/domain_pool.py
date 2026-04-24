@@ -128,11 +128,11 @@ class DomainPool:
     """Orchestrator that builds and caches the full domain taxonomy.
 
     Intended to be invoked via the build script (run once, offline):
-        python scripts/build_domain_pool.py
+        python pipeline/phase_0/build_domain_pool.py
 
-    The build script reads seed topics from metadata/taxonomy_seed.json,
+    The build script reads seed topics from pipeline/phase_0/taxonomy_seed.json,
     calls the LLM to generate subtopics for each topic, deduplicates,
-    and writes the result to metadata/domain_pool.json.
+    and writes the result to pipeline/phase_0/domain_pool.json.
     AGPDSPipeline then samples from that compiled pool at runtime.
     """
 

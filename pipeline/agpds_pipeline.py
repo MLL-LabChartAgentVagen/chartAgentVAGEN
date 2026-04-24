@@ -1,6 +1,7 @@
 import json
 import logging
 import os
+import random
 from typing import Optional, Dict, Any
 from datetime import datetime
 import hashlib
@@ -29,10 +30,25 @@ class AGPDSPipeline:
       3. Schema Mapping: Deterministic adapters project the dataset to Chart metadata
 
     Before running for the first time, generate the domain pool:
-        python scripts/build_domain_pool.py
+        python pipeline/phase_0/build_domain_pool.py
     """
 
-    def __init__(self, llm_client, pool_path: str = None):
+    def __init__(
+        self,
+        llm_client,
+        pool_path: str = None,
+        scenario_source: str = "live",
+        scenario_pool_path: str = None,
+    ):
+        """
+        Args:
+            llm_client: LLMClient used by Phase 1 (live mode) and Phase 2 Loop A.
+            pool_path: Override for phase_0/domain_pool.json.
+            scenario_source: "live" (default, calls LLM per record),
+                             "cached" (read from scenario_pool.jsonl; fall back
+                              to live on miss), or "cached_strict" (error on miss).
+            scenario_pool_path: Override for phase_1/scenario_pool.jsonl.
+        """
         self.llm = llm_client
 
         # Resolve the compiled domain pool path
@@ -46,11 +62,21 @@ class AGPDSPipeline:
             raise FileNotFoundError(
                 f"Domain pool not found at: {pool_path}\n"
                 "Run the build script first:\n"
-                "  python scripts/build_domain_pool.py"
+                "  python pipeline/phase_0/build_domain_pool.py"
             )
 
         self.domain_sampler = DomainSampler(pool_path=pool_path)
         self.contextualizer = ScenarioContextualizer(llm_client)
+
+        if scenario_source not in ("live", "cached", "cached_strict"):
+            raise ValueError(
+                f"Invalid scenario_source: {scenario_source!r}. "
+                "Expected 'live', 'cached', or 'cached_strict'."
+            )
+        self.scenario_source = scenario_source
+        self._scenario_cache: Optional[Dict[str, list]] = None
+        if scenario_source in ("cached", "cached_strict"):
+            self._scenario_cache = self._load_scenario_cache(scenario_pool_path)
 
     def _new_generation_id(self) -> str:
         start_time = datetime.now()
@@ -58,6 +84,54 @@ class AGPDSPipeline:
             f"agpds_{start_time.strftime('%Y%m%d_%H%M%S')}_"
             f"{hashlib.md5(str(start_time).encode()).hexdigest()[:6]}"
         )
+
+    def _load_scenario_cache(self, path: Optional[str]) -> Dict[str, list]:
+        """Load scenario_pool.jsonl into {domain_id: [scenario, ...]}."""
+        if path is None:
+            path = os.path.join(
+                os.path.dirname(__file__), "phase_1", "scenario_pool.jsonl"
+            )
+        path = os.path.abspath(path)
+        if not os.path.exists(path):
+            raise FileNotFoundError(
+                f"Scenario pool not found at: {path}\n"
+                "Run the build script first:\n"
+                "  python pipeline/phase_1/build_scenario_pool.py"
+            )
+        cache: Dict[str, list] = {}
+        with open(path, encoding="utf-8") as f:
+            for line in f:
+                if not line.strip():
+                    continue
+                rec = json.loads(line)
+                cache.setdefault(rec["domain_id"], []).append(rec["scenario"])
+        logger.info(
+            "Loaded scenario cache: %d domains, %d scenarios",
+            len(cache),
+            sum(len(v) for v in cache.values()),
+        )
+        return cache
+
+    def _get_scenario(self, domain_context: Dict[str, Any]) -> Dict[str, Any]:
+        """Return a scenario for the sampled domain.
+
+        Policy is controlled by self.scenario_source:
+          - live:           always call the LLM
+          - cached:         return a cached scenario; fall back to live on miss
+          - cached_strict:  return a cached scenario; raise KeyError on miss
+        """
+        if self._scenario_cache is None:
+            return self.contextualizer.generate(domain_context)
+
+        domain_id = domain_context.get("id")
+        bucket = self._scenario_cache.get(domain_id, [])
+        if not bucket:
+            msg = f"No cached scenario for domain_id={domain_id!r}"
+            if self.scenario_source == "cached_strict":
+                raise KeyError(msg)
+            logger.warning("%s; falling back to live generation", msg)
+            return self.contextualizer.generate(domain_context)
+        return random.choice(bucket)
 
     def _sample_domain(self, category_id: int) -> Dict[str, Any]:
         from pipeline.core.utils import get_category_by_id
@@ -100,8 +174,11 @@ class AGPDSPipeline:
         domain_context = self._sample_domain(category_id)
         print(f"  -> Selected Subtopic: {domain_context.get('name', 'Unknown')}")
 
-        logger.info("  -> Phase 1: Contextualizing Scenario...")
-        scenario = self.contextualizer.generate(domain_context)
+        logger.info(
+            "  -> Phase 1: Contextualizing Scenario (source=%s)...",
+            self.scenario_source,
+        )
+        scenario = self._get_scenario(domain_context)
         self._save_scenario(generation_id, scenario)
 
         logger.info("  -> Phase 2 Loop A: Generating LLM script...")
