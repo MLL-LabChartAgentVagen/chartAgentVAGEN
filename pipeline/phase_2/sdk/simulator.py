@@ -111,11 +111,10 @@ class FactTableSimulator:
         name: str,
         family: str,
         param_model: dict[str, Any],
-        scale: float | None = None,
     ) -> None:
         self._store._check_mutable()
         self._ensure_declaring_phase()
-        _columns_api.add_measure(self._columns, name, family, param_model, scale)
+        _columns_api.add_measure(self._columns, name, family, param_model)
 
     def add_measure_structural(
         self,

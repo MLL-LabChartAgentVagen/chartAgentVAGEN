@@ -3,7 +3,12 @@
 **System:** AGPDS Phase 2 — Agentic Data Simulator (SDK-Driven)
 **Source:** `stage4_implementation_anatomy.md` (blueprint), post-implementation state
 **Status:** All 36 NEEDS_CLAR items resolved. Remaining stubs documented in `docs/gaps.md`.
-**Reconciled:** 2026-04-15 — updated to match actual implementation per `anatomy_implementation_drift.md`.
+
+**Reconciliation log:**
+- 2026-04-15 — updated to match actual implementation per `anatomy_implementation_drift.md`.
+- 2026-04-22 — reconciled post-round-3 API surface: removed stale `scale` from the `ColumnDescriptor` field list (§Shared Infrastructure → `types.py`) and the `scale=None` kwarg from the `add_measure` signature (§M1 → `columns.py`) to match the round-3 `scale` kwarg removal; added the corresponding stub entry to §4.1. See `docs/fixes/GPT_FAILURE_ROUND_3_FIXES.md`.
+
+**Doc role:** This file tracks the *current* Phase 2 implementation. Despite §9.1 of `anatomy_implementation_drift.md` recommending the anatomy be preserved as the original spec-design record, the 2026-04-15 reconciliation cycle converted it to an implementation-tracking reference, and subsequent reconciliations (see log above) have extended that pattern. For original spec-design intent, consult the *anatomy-claim* column of `anatomy_implementation_drift.md` §1–§7 — that column records what the anatomy said *before* the 2026-04-15 reconciliation and is the only remaining record of the original spec-design wording. Note that the drift report itself is a 2026-04-15 snapshot; it does not reflect the 2026-04-22 round-3 changes.
 
 ---
 
@@ -198,7 +203,7 @@ phase_2/
 #### `types.py`
 - **Spec ref:** §2.1, §2.1.1, §2.1.2, §2.2
 - **Key classes:**
-  - `ColumnDescriptor` — Frozen dataclass with fields: `name`, `type` (categorical / temporal / measure), `group`, `parent`, `family`, `param_model`, `formula`, `effects`, `noise`, `derive`, `values`, `weights`, `scale`. Not all fields are populated for every column type; unused fields default to `None`. This is the canonical single-column representation flowing from M1 into M2 and M4.
+  - `ColumnDescriptor` — Frozen dataclass with fields: `name`, `type` (categorical / temporal / measure), `group`, `parent`, `family`, `param_model`, `formula`, `effects`, `noise`, `derive`, `values`, `weights`. Not all fields are populated for every column type; unused fields default to `None`. This is the canonical single-column representation flowing from M1 into M2 and M4. (The former `scale` field was removed in round-3 alongside the `add_measure(..., scale=...)` kwarg — see §4.1 "`scale` Kwarg on `add_measure`".)
   - `PatternSpec` — Dataclass: `type` (str enum), `target` (filter expression string), `col` (column name), `params` (dict).
   - `OrthogonalPair` — Dataclass: `group_a`, `group_b`, `rationale`.
   - `GroupDependency` — Dataclass: `child_root`, `on` (list of root column names), `conditional_weights` (nested dict).
@@ -311,7 +316,7 @@ phase_2/
 - **Key functions (delegated from `FactTableSimulator`):**
   - `add_category(name, values, weights, group, parent=None)` — Validates: `values` non-empty, column name unique, parent exists and in same group if specified, auto-normalizes weights (flat list or per-parent dict with full parent coverage). Appends `ColumnDescriptor(type="categorical")` and updates `group_graph`.
   - `add_temporal(name, start, end, freq, derive=[])` — Validates: `start < end`, `freq` is supported. Creates root temporal `ColumnDescriptor` plus one per derived feature (`day_of_week`, `month`, `quarter`, `is_weekend`). Derived columns have `type="temporal"`, `derived=True`.
-  - `add_measure(name, family, param_model, scale=None)` — Validates: `family` in `SUPPORTED_FAMILIES`, all effect predictor columns exist, all symbolic effects have numeric definitions. Creates `ColumnDescriptor(type="measure", measure_type="stochastic")`. No DAG edges (root measure).
+  - `add_measure(name, family, param_model)` — Validates: `family` in `SUPPORTED_FAMILIES`, all effect predictor columns exist, all symbolic effects have numeric definitions. Creates `ColumnDescriptor(type="measure", measure_type="stochastic")`. No DAG edges (root measure). (A `scale=None` kwarg existed previously but was removed in round-3 — passing it now raises `TypeError`; see §4.1.)
   - `add_measure_structural(name, formula, effects={}, noise={})` — Validates: every formula symbol resolves to a declared measure or effects key, no self-reference, DAG remains acyclic after adding edges. Creates `ColumnDescriptor(type="measure", measure_type="structural")` and adds edges to `measure_dag_edges`.
   - `_validate_phase_step1(self)` — Checks `_phase` is still `STEP_1`; raises if Step 2 methods have been called.
 - **Data flow:** Each method reads and modifies `DeclarationStore` via `simulator._get_store()`. `add_category` modifies `group_graph` + `column_registry`. `add_measure_structural` modifies `column_registry` + `measure_dag_edges`. Acyclicity validation calls `dag.py`.
@@ -532,7 +537,7 @@ phase_2/
 
 All 36 NEEDS_CLAR items have been resolved. The items below are **intentional stubs** per decisions in `decisions/blocker_resolutions.md` — each requires spec clarification or a design decision before implementation.
 
-### 4.1 Intentional Stubs (5)
+### 4.1 Intentional Stubs (6)
 
 #### Mixture Distribution Sampling (P1-1 / M1-NC-1)
 - **Location:** `phase_2/engine/measures.py:297-303`
@@ -557,6 +562,12 @@ All 36 NEEDS_CLAR items have been resolved. The items below are **intentional st
 - **Behavior:** Same as convergence — declaration succeeds, validation always passes.
 - **Blocked on:** Completely absent from spec. No params, no validation logic.
 - **To unstub:** Requires full spec definition: what constitutes a seasonal anomaly, which temporal features to check, detection thresholds.
+
+#### `scale` Kwarg on `add_measure` (M?-NC-scale)
+- **Location:** `phase_2/sdk/columns.py:214-215` (`TODO [M?-NC-scale]` marker), mirrored in `phase_2/orchestration/prompt.py`.
+- **Behavior:** `add_measure(name, family, param_model)` no longer accepts a `scale` keyword argument. Passing `scale=...` raises `TypeError: add_measure() got an unexpected keyword argument 'scale'`. The prompt no longer advertises the kwarg.
+- **History:** Previously accepted but silently no-op (emitted a "stored but has no effect" warning). Removed in round-3 GPT failure fixes (`docs/fixes/GPT_FAILURE_ROUND_3_FIXES.md`) because LLMs treated it as a meaningful knob and burned retry budget tuning a dead parameter — same advertising-a-nonfeature class as `censoring=` and the deferred pattern types removed in round 2.
+- **To unstub:** Implement a scaling mechanism (e.g., post-sampling multiplicative scaling of measure values), then restore the `scale` kwarg in `sdk/columns.py` and re-add it to the `add_measure` signature shown in `orchestration/prompt.py`. Grep for `TODO [M?-NC-scale]` to find both sites.
 
 #### M3 Context Window / Multi-Error (M3-NC-3, M3-NC-4)
 - **Location (NC-3):** `phase_2/sdk/simulator.py:32-36` — TODO comment noting one-error-at-a-time limitation.

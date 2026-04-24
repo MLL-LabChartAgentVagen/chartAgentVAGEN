@@ -211,12 +211,15 @@ def add_temporal(
     )
 
 
+# TODO [M?-NC-scale]: restore `scale` kwarg when a scaling implementation lands.
+# Previously `scale` was accepted but silently no-op, which misled LLMs into
+# tuning a knob that did nothing. Removed so Python raises a clear TypeError
+# if callers still pass it.
 def add_measure(
     columns: OrderedDict[str, dict[str, Any]],
     name: str,
     family: str,
     param_model: dict[str, Any],
-    scale: Optional[float] = None,
 ) -> None:
     """Declare a stochastic measure column.
 
@@ -227,7 +230,6 @@ def add_measure(
         name: Measure column name.
         family: Distribution family string.
         param_model: Distribution parameters dict.
-        scale: Optional scale factor (stored, not yet used).
     """
     _val.validate_column_name(name, columns)
     _val.validate_family(family)
@@ -239,13 +241,6 @@ def add_measure(
         "family": family,
         "param_model": dict(param_model),
     }
-    if scale is not None:
-        col_meta["scale"] = scale
-        logger.warning(
-            "add_measure: 'scale' parameter (%.4f) for '%s' is stored but "
-            "has no effect in the current implementation.",
-            scale, name,
-        )
 
     columns[name] = col_meta
 

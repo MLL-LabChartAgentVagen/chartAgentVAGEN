@@ -32,6 +32,12 @@ SUPPORTED_FAMILIES: frozenset[str] = frozenset({
     "uniform", "poisson", "exponential", "mixture",
 })
 
+# Temporal derive feature names — used to hint the LLM when a formula
+# references a derived feature before the temporal column declared it.
+TEMPORAL_DERIVE_NAMES: frozenset[str] = frozenset({
+    "day_of_week", "is_weekend", "month", "quarter",
+})
+
 # [A5] Only gaussian and lognormal have spec-defined param_model key names.
 VALIDATED_PARAM_KEYS: dict[str, frozenset[str]] = {
     "gaussian": frozenset({"mu", "sigma"}),
@@ -417,9 +423,17 @@ def validate_effects_in_param(
     """
     for col_name, val_map in effects.items():
         if col_name not in columns:
+            hint = ""
+            if col_name in TEMPORAL_DERIVE_NAMES:
+                hint = (
+                    f" (hint: '{col_name}' is a temporal derive feature — "
+                    f"declare it on the temporal column with "
+                    f"`add_temporal(..., derive=['{col_name}'])` before "
+                    f"referencing it in a formula)"
+                )
             raise UndefinedEffectError(
                 effect_name=col_name,
-                missing_value="(column not declared)",
+                missing_value=f"(column not declared){hint}",
             )
 
         col_meta = columns[col_name]

@@ -279,6 +279,53 @@ def _eval_structural(
 # Stochastic Measure Sampling (P0-2, P1-1, P3-1)
 # =====================================================================
 
+def _validate_distribution_params(
+    col_name: str,
+    family: str,
+    mu: np.ndarray,
+    sigma: np.ndarray,
+) -> None:
+    """Per-family pre-call validation of per-row distribution parameters.
+
+    Converts the bare numpy errors that would otherwise surface (e.g.
+    ``ValueError: a <= 0`` from ``rng.beta(0, ...)``) into a structured
+    ``InvalidParameterError`` carrying the column name, family, offending
+    parameter, first bad row, and a concrete fix hint. The sandbox retry
+    loop feeds this straight to the LLM via ``format_error_feedback()``.
+
+    Only covers conditions not already handled by the per-param clamp in
+    ``_compute_per_row_params`` (which floors ``sigma`` / ``scale`` / ``rate``
+    to ``1e-6``). That clamp makes sigma-based guards redundant for beta,
+    gamma, and lognormal; what remains is the ``mu`` axis those distributions
+    use as their first positional parameter.
+    """
+    if family in ("beta", "gamma"):
+        bad = np.where(mu <= 0)[0]
+        if len(bad) > 0:
+            raise InvalidParameterError(
+                param_name="mu",
+                value=float(mu[bad[0]]),
+                reason=(
+                    f"Measure '{col_name}' (family='{family}'): parameter "
+                    f"'mu' must be > 0 for all rows, got {float(mu[bad[0]])} "
+                    f"at row {int(bad[0])}. Raise the intercept or effect "
+                    f"values so every row has a positive mu."
+                ),
+            )
+    elif family == "poisson":
+        bad = np.where(mu < 0)[0]
+        if len(bad) > 0:
+            raise InvalidParameterError(
+                param_name="mu",
+                value=float(mu[bad[0]]),
+                reason=(
+                    f"Measure '{col_name}' (family='poisson'): parameter "
+                    f"'mu' must be >= 0, got {float(mu[bad[0]])} at row "
+                    f"{int(bad[0])}."
+                ),
+            )
+
+
 def _sample_stochastic(
     col_name: str,
     col_meta: dict[str, Any],
@@ -332,6 +379,10 @@ def _sample_stochastic(
 
     mu = params.get("mu", np.zeros(n_rows))
     sigma = params.get("sigma", np.ones(n_rows))
+
+    # Raise structured errors with column/family/param/row context BEFORE
+    # numpy would raise its own bare message (e.g. "a <= 0" for beta).
+    _validate_distribution_params(col_name, family, mu, sigma)
 
     if family == "gaussian":
         return rng.normal(mu, sigma)

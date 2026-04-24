@@ -134,13 +134,27 @@ class TestAddMeasure:
             name="cost",
             family="gaussian",
             param_model={"mu": 100, "sigma": 15},
-            scale=1.5
         )
-        
+
         assert "cost" in columns
         assert columns["cost"]["type"] == "measure"
         assert columns["cost"]["measure_type"] == "stochastic"
-        assert columns["cost"]["scale"] == 1.5
+        # `scale` kwarg was removed (TODO [M?-NC-scale]); no longer stored.
+        assert "scale" not in columns["cost"]
+
+    def test_add_measure_rejects_scale_kwarg(self):
+        """The removed kwarg should raise TypeError at call time so the
+        retry feedback can explain to the LLM that scale is not supported."""
+        import pytest
+        columns = OrderedDict()
+        with pytest.raises(TypeError, match="scale"):
+            add_measure(
+                columns=columns,
+                name="cost",
+                family="gaussian",
+                param_model={"mu": 100, "sigma": 15},
+                scale=1.5,
+            )
 
 
 class TestAddMeasureStructural:
