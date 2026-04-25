@@ -132,10 +132,10 @@ def main() -> None:
     parser.add_argument(
         "--scenario-source",
         choices=["live", "cached", "cached_strict"],
-        default="live",
+        default="cached_strict",
         help="Phase 1 scenario source: 'live' (LLM per record), 'cached' (read "
              "from scenario_pool.jsonl, fall back to live on miss), or "
-             "'cached_strict' (error on miss). Default: live.",
+             "'cached_strict' (error on miss). Default: cached_strict.",
     )
     parser.add_argument(
         "--scenario-pool-path",
@@ -143,7 +143,21 @@ def main() -> None:
         help="Override path to scenario_pool.jsonl "
              "(default: pipeline/phase_1/scenario_pool.jsonl)",
     )
+    parser.add_argument(
+        "--log-level",
+        choices=["DEBUG", "INFO", "WARNING", "ERROR"],
+        default="INFO",
+        help="Console logging level. Default INFO surfaces Phase 0/1/2 milestones "
+             "and scenario cache hits; WARNING silences routine pipeline chatter.",
+    )
     args = parser.parse_args()
+
+    import logging
+    logging.basicConfig(
+        level=getattr(logging, args.log_level),
+        format="[%(asctime)s] %(levelname)s %(name)s: %(message)s",
+        datefmt="%H:%M:%S",
+    )
 
     provider = args.provider or os.environ.get("LLM_PROVIDER") or "gemini"
 

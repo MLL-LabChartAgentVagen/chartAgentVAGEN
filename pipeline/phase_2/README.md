@@ -156,6 +156,9 @@ See §2 for the full resolution rules and the behavior when a required key is mi
 | `--input-dir` | path | `./output/agpds` | — | ✓ | — | Directory holding `declarations/` (and optional `manifest.jsonl`). |
 | `--workers` | int | `1` | — | ✓ | — | Parallel workers (`ProcessPoolExecutor`); `<= 1` runs sequentially. |
 | `--ids` | str (comma-separated) | — (all) | — | ✓ | — | Subset of `generation_id` values to execute. |
+| `--scenario-source` | `live \| cached \| cached_strict` | `cached_strict` | ✓ | — | ✓ | Phase 1 scenario source: `live` calls the LLM per record; `cached` reads from `scenario_pool.jsonl` and falls back to live on miss; `cached_strict` errors on miss. Default `cached_strict` keeps Phase 1 fully deterministic against the pre-built pool — it fails loudly rather than silently making an LLM call when a sampled domain has no cached entry. |
+| `--scenario-pool-path` | path | `pipeline/phase_1/scenario_pool.jsonl` | ✓ | — | ✓ | Override path to the pre-built scenario pool consumed when `--scenario-source` is `cached` or `cached_strict`. |
+| `--log-level` | `DEBUG \| INFO \| WARNING \| ERROR` | `INFO` | ✓ | — | ✓ | Console logging level. Default `INFO` surfaces Phase 0/1/2 milestones, scenario cache hits, and Loop A LLM-call tracking in both the terminal and the tee'd log file; `WARNING` silences routine pipeline chatter; `DEBUG` adds synthesis-engine internals (skeleton/patterns/realism, autofix steps, simulator init). |
 
 ### Programmatic API
 
