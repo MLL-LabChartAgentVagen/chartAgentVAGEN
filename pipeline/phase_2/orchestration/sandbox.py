@@ -478,6 +478,37 @@ _FIX_INSTRUCTION_WITH_HISTORY: str = (
     "error listed under PRIOR FAILED ATTEMPTS. Return only the corrected Python script."
 )
 
+# Per-error-class corrective hints surfaced to the LLM when the raw exception
+# message describes the symptom but not the schema fix. Each entry is
+# (predicate, hint_text); the first matching predicate wins. Keep this list
+# tight — broad predicates here mask real errors.
+_YEARLY_GRAIN_HINT: str = (
+    "HINT: For yearly-grain data, do NOT call add_temporal. "
+    "The SDK does not support freq='YS' or derive=['year']. "
+    "Declare year as a categorical column instead: "
+    "add_category('year', values=[2019, 2020, ...], group='time'). "
+    "Reference 'year' in measure effects like any other categorical."
+)
+_RESERVED_TIME_GROUP_HINT: str = (
+    "HINT: The group name 'time' is reserved for columns declared via "
+    "add_temporal. For a categorical year (or other calendar-like) column, "
+    "use a different group name such as group='calendar'."
+)
+_TARGETED_HINTS: list[tuple[Callable[[str], bool], str]] = [
+    (
+        lambda m: "Invalid derive features" in m and "'year'" in m,
+        _YEARLY_GRAIN_HINT,
+    ),
+    (
+        lambda m: "Unsupported freq 'YS'" in m,
+        _YEARLY_GRAIN_HINT,
+    ),
+    (
+        lambda m: "'time' is reserved" in m,
+        _RESERVED_TIME_GROUP_HINT,
+    ),
+]
+
 
 def format_error_feedback(
     original_code: str,
@@ -564,6 +595,14 @@ def format_error_feedback(
 
     instruction = _FIX_INSTRUCTION_WITH_HISTORY if prior_list else _FIX_INSTRUCTION
 
+    # Targeted corrective hint — matched against the exception message. Sits
+    # immediately above the INSTRUCTION block so the LLM sees it last.
+    hint_section = ""
+    for predicate, hint_text in _TARGETED_HINTS:
+        if predicate(exception_message):
+            hint_section = f"=== HINT ===\n{hint_text}\n\n"
+            break
+
     # Structure the feedback with clear section headers so the LLM can
     # parse each component unambiguously
     feedback = (
@@ -577,6 +616,7 @@ def format_error_feedback(
         "=== TRACEBACK ===\n"
         f"{traceback_str}\n"
         "\n"
+        f"{hint_section}"
         "=== INSTRUCTION ===\n"
         f"{instruction}"
     )

@@ -157,3 +157,69 @@ def test_run_retry_loop_passes_accumulated_history_to_llm():
     assert "PRIOR FAILED ATTEMPTS" in prompt_after_attempt_2
     assert "Attempt 1: ValueError: bug_attempt_1" in prompt_after_attempt_2
     assert "bug_after_retry_1" in prompt_after_attempt_2
+
+
+# ---------------------------------------------------------------------------
+# format_error_feedback — targeted hint section for known-class errors
+# ---------------------------------------------------------------------------
+
+def test_format_error_feedback_hint_for_year_derive_error():
+    """When add_temporal rejects derive=['year'], the formatter must inject
+    a HINT pointing the LLM toward the categorical-year idiom — the raw
+    'Supported: [...]' message alone has historically not been enough to
+    break the LLM out of the year-grain trap."""
+    out = format_error_feedback(
+        original_code="sim.add_temporal('y', '2019', '2024', 'YS', derive=['year'])",
+        exception=ValueError(
+            "Invalid derive features ['year'] for column 'application_year'. "
+            "Supported: ['day_of_week', 'is_weekend', 'month', 'quarter']"
+        ),
+        traceback_str="Traceback ...",
+    )
+    assert "=== HINT ===" in out
+    assert "add_category('year'" in out
+    # Hint sits above the INSTRUCTION block so the LLM weights it last.
+    assert out.index("=== HINT ===") < out.index("=== INSTRUCTION ===")
+
+
+def test_format_error_feedback_hint_for_freq_ys_error():
+    """If derive=['year'] is dropped but freq='YS' remains, the same hint
+    fires — same root cause (yearly grain), same remediation."""
+    out = format_error_feedback(
+        original_code="sim.add_temporal('y', '2019', '2024', 'YS')",
+        exception=ValueError(
+            "Unsupported freq 'YS' for temporal column 'y'. "
+            "Supported: ['D', 'MS', 'W-FRI', ...]"
+        ),
+        traceback_str="tb",
+    )
+    assert "=== HINT ===" in out
+    assert "add_category('year'" in out
+
+
+def test_format_error_feedback_no_hint_for_unrelated_error():
+    """Hints are scoped — a generic error does NOT get a HINT section.
+    Broad predicates here would mask real diagnostic signal."""
+    out = format_error_feedback(
+        original_code="x = 1",
+        exception=RuntimeError("something else entirely"),
+        traceback_str="tb",
+    )
+    assert "=== HINT ===" not in out
+
+
+def test_format_error_feedback_hint_for_reserved_time_group():
+    """When the LLM follows the YEARLY-GRAIN advice but uses group='time'
+    (reserved for add_temporal), surface a hint pointing to a different
+    group name like 'calendar'."""
+    out = format_error_feedback(
+        original_code="sim.add_category('year', values=[2019, 2020], group='time')",
+        exception=ValueError(
+            "Group name 'time' is reserved for temporal columns. "
+            "Use a different group name."
+        ),
+        traceback_str="tb",
+    )
+    assert "=== HINT ===" in out
+    assert "calendar" in out
+    assert "reserved" in out

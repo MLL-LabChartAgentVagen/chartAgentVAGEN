@@ -146,17 +146,6 @@ class AGPDSPipeline:
             "tier": "General Data",
         }
 
-    def _save_scenario(self, generation_id: str, scenario: Dict[str, Any]) -> str:
-        scenario_dir = os.path.join(
-            os.path.dirname(__file__), "..", "output", "agpds", "scenarios"
-        )
-        os.makedirs(scenario_dir, exist_ok=True)
-        scenario_path = os.path.join(scenario_dir, f"{generation_id}_scenario.json")
-        with open(scenario_path, "w", encoding="utf-8") as f:
-            json.dump(scenario, f, indent=2, ensure_ascii=False)
-        logger.info(f"  -> Scenario saved to {scenario_path}")
-        return scenario_path
-
     def generate_artifacts(
         self, category_id: int, constraints: Optional[Dict] = None,
     ) -> Dict[str, Any]:
@@ -179,7 +168,6 @@ class AGPDSPipeline:
             self.scenario_source,
         )
         scenario = self._get_scenario(domain_context)
-        self._save_scenario(generation_id, scenario)
 
         logger.info("  -> Phase 2 Loop A: Generating LLM script...")
         loop_a = run_loop_a(

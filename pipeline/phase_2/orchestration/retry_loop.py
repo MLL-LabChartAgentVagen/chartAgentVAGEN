@@ -19,14 +19,17 @@ from .sandbox import run_retry_loop
 logger = logging.getLogger(__name__)
 
 
-_CODE_GEN_MAX_TOKENS: int = 8192
+_CODE_GEN_MAX_TOKENS: int = 32768
 
 
 def _make_generate_fn(llm_client: LLMClient) -> Callable[[str, str], str]:
     """Return a generate callable that applies robust fence extraction.
 
     Wraps LLMClient.generate_code() with two improvements over the base call:
-      1. max_tokens=8192 — prevents truncation mid-bracket for large scripts.
+      1. max_tokens=32768 — prevents truncation mid-bracket for large scripts.
+         Sized for reasoning models (gpt-5.x, o1, o3) where this budget covers
+         both reasoning tokens and visible output; non-reasoning models are
+         billed per token used, so the headroom is free.
       2. extract_clean_code() — handles LLM responses where prose precedes the
          code block, which defeats generate_code()'s ^-anchored fence regex.
     """

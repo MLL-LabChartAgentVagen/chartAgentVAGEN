@@ -38,10 +38,21 @@ TEMPORAL_DERIVE_NAMES: frozenset[str] = frozenset({
     "day_of_week", "is_weekend", "month", "quarter",
 })
 
-# [A5] Only gaussian and lognormal have spec-defined param_model key names.
+# Param-model key contract per family. The engine's _sample_stochastic
+# (engine/measures.py) reads only `mu`/`sigma` (or just `mu` for poisson and
+# exponential); every other key is silently dropped. We enforce both
+# required-presence and unknown-key rejection at declaration time so that
+# misnamed keys (e.g. Beta with alpha/beta) fail loudly here instead of
+# producing the misleading "mu == 0.0" error during sampling.
+# Mixture (IS-1) is intentionally absent — its param_model schema is unspecified.
 VALIDATED_PARAM_KEYS: dict[str, frozenset[str]] = {
-    "gaussian": frozenset({"mu", "sigma"}),
-    "lognormal": frozenset({"mu", "sigma"}),
+    "gaussian":    frozenset({"mu", "sigma"}),
+    "lognormal":   frozenset({"mu", "sigma"}),
+    "gamma":       frozenset({"mu", "sigma"}),
+    "beta":        frozenset({"mu", "sigma"}),
+    "uniform":     frozenset({"mu", "sigma"}),
+    "poisson":     frozenset({"mu"}),
+    "exponential": frozenset({"mu"}),
 }
 
 # §2.1.1 whitelist: "Derived columns (day_of_week, month, quarter, is_weekend)"
@@ -316,8 +327,23 @@ def validate_param_model(
         columns: Column registry for effects validation.
     """
     if family in VALIDATED_PARAM_KEYS:
-        required = VALIDATED_PARAM_KEYS[family]
-        missing = required - set(param_model.keys())
+        allowed = VALIDATED_PARAM_KEYS[family]
+        # Unknown-key check fires before missing-required so that a misnamed-
+        # key case like {"alpha","beta"} for Beta produces the most actionable
+        # message ("alpha not recognized; expected mu, sigma") rather than
+        # "mu and sigma missing" (which doesn't tell the LLM to drop alpha/beta).
+        unknown = sorted(set(param_model.keys()) - allowed)
+        if unknown:
+            raise InvalidParameterError(
+                param_name=unknown[0],
+                value=0.0,
+                reason=(
+                    f"unrecognized param key '{unknown[0]}' for family "
+                    f"'{family}'. Expected keys: {sorted(allowed)}. "
+                    f"Common confusion: Beta uses mu/sigma, not alpha/beta."
+                ),
+            )
+        missing = allowed - set(param_model.keys())
         if missing:
             raise InvalidParameterError(
                 param_name=sorted(missing)[0],

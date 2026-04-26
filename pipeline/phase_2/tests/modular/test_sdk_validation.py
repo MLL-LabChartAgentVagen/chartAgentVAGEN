@@ -18,7 +18,9 @@ from pipeline.phase_2.sdk.validation import (
     validate_column_name,
     validate_family,
     validate_effects_in_param,
+    validate_param_model,
     SUPPORTED_FAMILIES,
+    VALIDATED_PARAM_KEYS,
 )
 
 
@@ -96,3 +98,81 @@ class TestUndefinedEffectHints:
         assert "foobar" in msg
         assert "derive" not in msg
         assert "add_temporal" not in msg
+
+
+class TestValidateParamModelKeySchema:
+    """validate_param_model rejects unknown keys for every family with a
+    declared schema in VALIDATED_PARAM_KEYS, and continues to accept the
+    canonical mu/sigma form. This is the fail-loud guard that previously
+    let Beta param_models with alpha/beta keys silently default mu→0.0
+    and crash deep inside the sampler."""
+
+    def test_beta_with_alpha_beta_keys_rejected(self):
+        """LLMs frequently write Beta as {'alpha': ..., 'beta': ...} (canonical
+        statistics convention). The SDK reads only mu/sigma, so unknown keys
+        must fail at declaration time with a descriptive message."""
+        with pytest.raises(InvalidParameterError) as exc:
+            validate_param_model(
+                name="acceptance_rate", family="beta",
+                param_model={"alpha": 1.0, "beta": 1.0}, columns={},
+            )
+        msg = str(exc.value)
+        assert "alpha" in msg
+        assert "beta" in msg  # the family name 'beta' should be in the message
+        assert "mu" in msg and "sigma" in msg
+
+    def test_beta_with_mu_sigma_scalars_accepted(self):
+        """Canonical Beta param_model with mu/sigma scalars passes."""
+        validate_param_model(
+            name="rate", family="beta",
+            param_model={"mu": 5.0, "sigma": 5.0}, columns={},
+        )
+
+    def test_beta_with_mu_sigma_intercept_effects_accepted(self):
+        """Canonical Beta param_model with intercept+effects dicts passes."""
+        validate_param_model(
+            name="rate", family="beta",
+            param_model={
+                "mu": {"intercept": 2.0, "effects": {}},
+                "sigma": {"intercept": 5.0, "effects": {}},
+            },
+            columns={},
+        )
+
+    def test_poisson_rejects_sigma(self):
+        """Poisson takes only mu; passing sigma is a key-schema error."""
+        with pytest.raises(InvalidParameterError) as exc:
+            validate_param_model(
+                name="count", family="poisson",
+                param_model={"mu": 3.0, "sigma": 1.0}, columns={},
+            )
+        assert "sigma" in str(exc.value)
+
+    def test_exponential_rejects_sigma(self):
+        """Exponential takes only mu; passing sigma is a key-schema error."""
+        with pytest.raises(InvalidParameterError) as exc:
+            validate_param_model(
+                name="lifetime", family="exponential",
+                param_model={"mu": 0.5, "sigma": 1.0}, columns={},
+            )
+        assert "sigma" in str(exc.value)
+
+    def test_gaussian_unknown_key_rejected(self):
+        """Pre-existing gaussian schema also gains unknown-key rejection."""
+        with pytest.raises(InvalidParameterError) as exc:
+            validate_param_model(
+                name="age", family="gaussian",
+                param_model={"mu": 35, "sigma": 10, "rate": 0.1}, columns={},
+            )
+        assert "rate" in str(exc.value)
+
+    def test_mixture_not_validated(self):
+        """Mixture (IS-1) is intentionally absent from VALIDATED_PARAM_KEYS;
+        unknown-key validation does not apply until its schema is defined."""
+        assert "mixture" not in VALIDATED_PARAM_KEYS
+        # Should not raise on schema check (sampling is stubbed elsewhere)
+        validate_param_model(
+            name="m", family="mixture",
+            param_model={"components": [{"family": "gaussian", "weight": 1.0}]},
+            columns={},
+        )

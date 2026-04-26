@@ -1,14 +1,17 @@
 """Stage 1 CLI: generate LLM scripts and save them to disk.
 
 Runs Phase 0 (domain) + Phase 1 (scenario) + Phase 2 Loop A (LLM → sandbox
-validation). Persists per generation:
-  - output/agpds/scenarios/{gen_id}_scenario.json  (via Phase 1)
-  - output/agpds/scripts/{gen_id}.py               (LLM source)
-  - output/agpds/declarations/{gen_id}.json        (replayable declarations)
-  - output/agpds/manifest.jsonl                    (append one line per gen)
+validation). Each invocation creates a per-command batch folder under
+--output-dir (default ./output/agpds/) named via --batch-name or
+batch_<timestamp>_<hash>. Persists per generation, inside the batch folder:
+  - scenarios/{gen_id}_scenario.json
+  - scripts/{gen_id}.py             (LLM source)
+  - declarations/{gen_id}.json      (replayable declarations)
+  - manifest.jsonl                  (append one line per gen)
 
-Stage 2 (pipeline/agpds_execute.py) reads these artifacts and runs Loop B
-deterministically without calling the LLM.
+Stage 2 (pipeline/agpds_execute.py) reads these artifacts (point its
+--input-dir at the batch folder) and runs Loop B deterministically without
+calling the LLM.
 """
 import argparse
 import json
@@ -20,7 +23,7 @@ from datetime import datetime
 from typing import Optional
 
 from pipeline.agpds_pipeline import AGPDSPipeline
-from pipeline.agpds_runner import TeeLogger
+from pipeline.agpds_runner import TeeLogger, resolve_batch_dir
 from pipeline.core.llm_client import LLMClient
 from pipeline.core.utils import META_CATEGORIES
 from pipeline.phase_2.serialization import declarations_to_json
@@ -28,6 +31,7 @@ from pipeline.phase_2.serialization import declarations_to_json
 
 SCRIPTS_SUBDIR = "scripts"
 DECLARATIONS_SUBDIR = "declarations"
+SCENARIOS_SUBDIR = "scenarios"
 MANIFEST_FILENAME = "manifest.jsonl"
 
 
@@ -43,8 +47,10 @@ def _save_stage1_artifacts(
 ) -> dict:
     scripts_dir = os.path.join(output_dir, SCRIPTS_SUBDIR)
     decl_dir = os.path.join(output_dir, DECLARATIONS_SUBDIR)
+    scenarios_dir = os.path.join(output_dir, SCENARIOS_SUBDIR)
     os.makedirs(scripts_dir, exist_ok=True)
     os.makedirs(decl_dir, exist_ok=True)
+    os.makedirs(scenarios_dir, exist_ok=True)
 
     gen_id = stage1["generation_id"]
 
@@ -56,6 +62,10 @@ def _save_stage1_artifacts(
     with open(decl_path, "w", encoding="utf-8") as f:
         json.dump(declarations_to_json(stage1["raw_declarations"]), f, indent=2)
 
+    scenario_path = os.path.join(scenarios_dir, f"{gen_id}_scenario.json")
+    with open(scenario_path, "w", encoding="utf-8") as f:
+        json.dump(stage1["scenario"], f, indent=2, ensure_ascii=False)
+
     manifest_entry = {
         "generation_id": gen_id,
         "category_id": stage1["category_id"],
@@ -65,6 +75,7 @@ def _save_stage1_artifacts(
         "timestamp": datetime.now().isoformat(timespec="seconds"),
         "script_path": os.path.relpath(script_path, output_dir),
         "declarations_path": os.path.relpath(decl_path, output_dir),
+        "scenario_path": os.path.relpath(scenario_path, output_dir),
     }
 
     manifest_path = os.path.join(output_dir, MANIFEST_FILENAME)
@@ -87,7 +98,7 @@ def run_generation_batch(
 
     for i, category_id in enumerate(category_ids):
         _log("=" * 50)
-        _log(f"Generation {i+1}/{total}  (category {category_id} — {META_CATEGORIES[category_id - 1]})")
+        _log(f"Generation {i+1}/{total}  (category {META_CATEGORIES[category_id - 1]})")
         _log("=" * 50)
 
         try:
@@ -128,7 +139,13 @@ def main() -> None:
     parser.add_argument("--category", type=int, choices=range(1, 31), help="Category ID (1-30)")
     parser.add_argument("--count", type=int, default=1, help="Number of scripts to generate")
     parser.add_argument("--output-dir", default="./output/agpds",
-                        help="Directory that will hold scripts/ declarations/ scenarios/")
+                        help="Parent directory; a per-command batch folder is created beneath it.")
+    parser.add_argument(
+        "--batch-name",
+        default=None,
+        help="Folder name for this batch under --output-dir. "
+             "Default: auto-generated batch_<timestamp>_<hash>.",
+    )
     parser.add_argument(
         "--scenario-source",
         choices=["live", "cached", "cached_strict"],
@@ -196,8 +213,11 @@ def main() -> None:
         else [random.randint(1, 30) for _ in range(args.count)]
     )
 
-    produced = run_generation_batch(pipeline, category_ids, args.output_dir, model, provider)
-    _log(f"Stage 1 complete: {len(produced)}/{len(category_ids)} generations saved to {args.output_dir}")
+    batch_dir = resolve_batch_dir(args.output_dir, args.batch_name)
+    produced = run_generation_batch(pipeline, category_ids, batch_dir, model, provider)
+    _log(f"Stage 1 complete: {len(produced)}/{len(category_ids)} generations saved.")
+    print(f"Batch folder: {os.path.abspath(batch_dir)}")
+    print(f"Stage 2: python -m pipeline.agpds_execute --input-dir '{batch_dir}' --output-dir '{batch_dir}'")
 
 
 if __name__ == "__main__":

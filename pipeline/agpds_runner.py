@@ -7,7 +7,7 @@ from datetime import datetime
 from typing import Optional, List
 
 from pipeline.core.llm_client import LLMClient
-from pipeline.core.utils import META_CATEGORIES
+from pipeline.core.utils import META_CATEGORIES, generate_unique_id
 from pipeline.agpds_pipeline import AGPDSPipeline
 
 class AGPDSRunner:
@@ -60,7 +60,7 @@ class AGPDSRunner:
 
     def save_results(self, results: List[dict], output_dir: str):
         """Save results to JSON file and master data CSVs appropriately."""
-        csv_dir, schema_dir, charts_dir = _ensure_output_dirs(output_dir)
+        csv_dir, schema_dir, charts_dir, scenarios_dir = _ensure_output_dirs(output_dir)
 
         json_results = []
         csv_count = 0
@@ -74,12 +74,9 @@ class AGPDSRunner:
                 charts_count += 1
             json_results.append(chart_record)
 
-        # Save main charts bundle (all generations combined)
-        output_path = os.path.join(output_dir, "charts.json")
-        with open(output_path, 'w', encoding='utf-8') as f:
-            json.dump(json_results, f, indent=2)
+        bundle_path = write_charts_bundle(json_results, output_dir)
 
-        self.log(f"Saved {len(results)} generations to {output_path}")
+        self.log(f"Saved {len(results)} generations to {bundle_path}")
         if csv_count:
             self.log(f"Saved {csv_count} master table CSVs to {csv_dir}/")
             self.log(f"Saved {csv_count} metadata schemas to {schema_dir}/")
@@ -92,18 +89,38 @@ def _ensure_output_dirs(output_dir: str) -> tuple:
     csv_dir = os.path.join(output_dir, "master_tables")
     schema_dir = os.path.join(output_dir, "schemas")
     charts_dir = os.path.join(output_dir, "charts")
+    scenarios_dir = os.path.join(output_dir, "scenarios")
     os.makedirs(csv_dir, exist_ok=True)
     os.makedirs(schema_dir, exist_ok=True)
     os.makedirs(charts_dir, exist_ok=True)
-    return csv_dir, schema_dir, charts_dir
+    os.makedirs(scenarios_dir, exist_ok=True)
+    return csv_dir, schema_dir, charts_dir, scenarios_dir
+
+
+def write_charts_bundle(records: List[dict], output_dir: str) -> str:
+    """Write the per-batch charts.json index. Returns the absolute path."""
+    os.makedirs(output_dir, exist_ok=True)
+    bundle_path = os.path.join(output_dir, "charts.json")
+    with open(bundle_path, 'w', encoding='utf-8') as f:
+        json.dump(records, f, indent=2)
+    return bundle_path
+
+
+def resolve_batch_dir(output_dir: str, batch_name: Optional[str]) -> str:
+    """Compute the per-command batch folder under output_dir."""
+    name = batch_name or generate_unique_id("batch")
+    batch_dir = os.path.join(output_dir, name)
+    os.makedirs(batch_dir, exist_ok=True)
+    return batch_dir
 
 
 def save_single_result(result: dict, output_dir: str) -> tuple:
-    """Persist one generation result (CSV + schema + chart JSON). Returns
-    (chart_record, {"csv": bool, "schema": bool, "chart": bool})."""
-    csv_dir, schema_dir, charts_dir = _ensure_output_dirs(output_dir)
+    """Persist one generation result (CSV + schema + chart JSON + scenario).
+    Returns (chart_record, {"csv": bool, "schema": bool, "chart": bool,
+    "scenario": bool})."""
+    csv_dir, schema_dir, charts_dir, scenarios_dir = _ensure_output_dirs(output_dir)
     gen_id = result.get("generation_id", "unknown")
-    saved = {"csv": False, "schema": False, "chart": False}
+    saved = {"csv": False, "schema": False, "chart": False, "scenario": False}
 
     csv_content = result.get("master_data_csv")
     if csv_content:
@@ -120,6 +137,14 @@ def save_single_result(result: dict, output_dir: str) -> tuple:
             json.dump(schema_content, f, indent=2)
         result["schema_metadata_path"] = os.path.join("schemas", f"{gen_id}_metadata.json")
         saved["schema"] = True
+
+    scenario_content = result.get("scenario")
+    if scenario_content:
+        scenario_path = os.path.join(scenarios_dir, f"{gen_id}_scenario.json")
+        with open(scenario_path, 'w', encoding='utf-8') as f:
+            json.dump(scenario_content, f, indent=2, ensure_ascii=False)
+        result["scenario_path"] = os.path.join("scenarios", f"{gen_id}_scenario.json")
+        saved["scenario"] = True
 
     chart_record = {
         k: v for k, v in result.items()
@@ -180,7 +205,13 @@ def main():
                         help="Provider (overrides .env LLM_PROVIDER)")
     parser.add_argument("--category", type=int, choices=range(1, 31), help="Specific Category ID (1-30)")
     parser.add_argument("--count", type=int, default=1, help="Number of generations to run")
-    parser.add_argument("--output-dir", default="./output/agpds", help="Output directory path")
+    parser.add_argument("--output-dir", default="./output/agpds", help="Parent directory for batch folders")
+    parser.add_argument(
+        "--batch-name",
+        default=None,
+        help="Folder name for this batch under --output-dir. "
+             "Default: auto-generated batch_<timestamp>_<hash>.",
+    )
     parser.add_argument(
         "--scenario-source",
         choices=["live", "cached", "cached_strict"],
@@ -251,7 +282,9 @@ def main():
     
     results = runner.run_batch(category_ids)
     if results:
-        runner.save_results(results, args.output_dir)
+        batch_dir = resolve_batch_dir(args.output_dir, args.batch_name)
+        runner.save_results(results, batch_dir)
+        print(f"Batch folder: {os.path.abspath(batch_dir)}")
 
 if __name__ == "__main__":
     main()

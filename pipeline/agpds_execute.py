@@ -16,7 +16,7 @@ from concurrent.futures import ProcessPoolExecutor, as_completed
 from datetime import datetime
 from typing import Optional
 
-from pipeline.agpds_runner import TeeLogger, save_single_result
+from pipeline.agpds_runner import TeeLogger, save_single_result, write_charts_bundle
 from pipeline.phase_2.exceptions import SkipResult
 from pipeline.phase_2.pipeline import run_loop_b_from_declarations
 from pipeline.phase_2.serialization import declarations_from_json
@@ -69,8 +69,24 @@ def _discover(input_dir: str, ids_filter: Optional[set]) -> list:
     return work
 
 
-def _execute_one(gen_id: str, declarations_path: str, output_dir: str,
-                 manifest_entry: Optional[dict]) -> dict:
+def _load_scenario(input_dir: str, manifest_entry: Optional[dict],
+                   gen_id: str) -> dict:
+    """Best-effort load of {gen_id}_scenario.json from input_dir."""
+    if manifest_entry and manifest_entry.get("scenario_path"):
+        path = os.path.join(input_dir, manifest_entry["scenario_path"])
+    else:
+        path = os.path.join(input_dir, "scenarios", f"{gen_id}_scenario.json")
+    if not os.path.exists(path):
+        return {}
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            return json.load(f)
+    except (json.JSONDecodeError, OSError):
+        return {}
+
+
+def _execute_one(gen_id: str, declarations_path: str, input_dir: str,
+                 output_dir: str, manifest_entry: Optional[dict]) -> dict:
     """Worker: load declarations, run Loop B, save CSV/metadata/chart."""
     try:
         with open(declarations_path, "r", encoding="utf-8") as f:
@@ -87,22 +103,25 @@ def _execute_one(gen_id: str, declarations_path: str, output_dir: str,
 
         df, schema_metadata, val_report = result
 
+        scenario = _load_scenario(input_dir, manifest_entry, gen_id)
+
         payload = {
             "generation_id": gen_id,
             "category_id": (manifest_entry or {}).get("category_id"),
             "domain_context": {"name": (manifest_entry or {}).get("subtopic")},
-            "scenario": {},
+            "scenario": scenario,
             "master_data_csv": df.to_csv(index=False),
             "schema_metadata": schema_metadata,
         }
 
-        save_single_result(payload, output_dir)
+        chart_record, _saved = save_single_result(payload, output_dir)
 
         return {
             "generation_id": gen_id,
             "status": "ok",
             "rows": len(df),
             "validation_passed": val_report.all_passed,
+            "chart_record": chart_record,
         }
     except Exception as exc:
         return {
@@ -149,11 +168,13 @@ def main() -> None:
     if args.workers <= 1:
         for gen_id, path in work:
             _log(f"  -> executing {gen_id}")
-            results.append(_execute_one(gen_id, path, args.output_dir, manifest.get(gen_id)))
+            results.append(_execute_one(gen_id, path, args.input_dir,
+                                        args.output_dir, manifest.get(gen_id)))
     else:
         with ProcessPoolExecutor(max_workers=args.workers) as pool:
             futures = {
-                pool.submit(_execute_one, gen_id, path, args.output_dir, manifest.get(gen_id)): gen_id
+                pool.submit(_execute_one, gen_id, path, args.input_dir,
+                            args.output_dir, manifest.get(gen_id)): gen_id
                 for gen_id, path in work
             }
             for fut in as_completed(futures):
@@ -171,6 +192,12 @@ def main() -> None:
     ok = sum(1 for r in results if r.get("status") == "ok")
     failed = len(results) - ok
     _log(f"Stage 2 complete: {ok} succeeded, {failed} failed.")
+
+    chart_records = [r["chart_record"] for r in results
+                     if r.get("status") == "ok" and r.get("chart_record")]
+    if chart_records:
+        bundle_path = write_charts_bundle(chart_records, args.output_dir)
+        _log(f"Wrote batch index: {bundle_path}")
 
     for r in results:
         if r.get("status") != "ok":
