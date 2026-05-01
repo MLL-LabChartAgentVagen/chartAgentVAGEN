@@ -188,13 +188,17 @@ class GroupDependency:
 
     Attributes:
         child_root: The dependent root column name (e.g. "payment_method").
-        on: List of parent root column names (e.g. ["severity"]).
-            Currently restricted to single-column conditioning per assumption A7
-            (Sprint 3), but stored as list for forward compatibility.
-        conditional_weights: Mapping of parent values to child weight distributions.
-            For single-column `on`: outer keys are values of the `on[0]` column,
-            inner dicts map child values to weights.
-            E.g. {"Mild": {"Insurance": 0.45, "Self-pay": 0.45, "Government": 0.10}}
+        on: List of parent root column names (e.g. ["severity"] or
+            ["severity", "hospital"]).  ``len(on) >= 1``; both single- and
+            multi-column conditioning are supported (DS-4).
+        conditional_weights: Nested mapping of parent values to child
+            weight distributions.  Nesting depth equals ``len(on)``; the
+            innermost dict maps child values to weights.
+            For ``on=["severity"]``: ``{"Mild": {"Insurance": 0.45, ...}, ...}``.
+            For ``on=["severity", "hospital"]``:
+            ``{"Mild": {"Xiehe": {"Insurance": 0.45, ...}, ...}, ...}``.
+            Full Cartesian coverage of parent values is required at every
+            level; weights are normalized at the leaf.
     """
 
     child_root: str

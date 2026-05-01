@@ -674,8 +674,9 @@ def run_retry_loop(
 
     Args:
         initial_code: First LLM-generated Python code string.
-        llm_generate_fn: Callable ``(system_prompt, user_prompt) -> str``
-            that calls the LLM and returns new code.  Typically
+        llm_generate_fn: Callable ``(system_prompt, user_prompt) -> LLMResponse``
+            that calls the LLM and returns a structured response carrying
+            the corrected code and optional token usage.  Typically
             ``LLMClient.generate_code`` (partially applied).
         system_prompt: The system prompt for retry LLM calls.
         max_retries: Maximum total attempts (default 3).  Must be > 0.
@@ -683,9 +684,26 @@ def run_retry_loop(
         sandbox_namespace_factory: Optional factory for sandbox
             namespaces.  Called once per attempt.  If ``None``, uses
             :func:`_build_sandbox_namespace`.
+        token_budget: Optional cumulative-across-retries token ceiling
+            (IS-6 token-budget half).  When set, the loop accumulates
+            ``response.token_usage.total_tokens`` after each LLM call
+            and short-circuits with
+            ``RetryLoopResult(success=False, skipped_reason="token_budget_exceeded (used/budget)")``
+            once ``tokens_used >= token_budget``.  ``None`` (default)
+            disables enforcement — identical to the pre-IS-6 behavior.
+        initial_token_usage: Optional ``TokenUsage`` seeding the
+            cumulative counter with the cost of the orchestrator's
+            initial-generation call (the call that produced
+            *initial_code*).  Required for the budget to be genuinely
+            per-scenario rather than per-retry-loop.  ``None`` (default)
+            seeds the counter at 0.  Providers that do not report token
+            counts surface ``None`` here and the budget never trips
+            (graceful degradation).
 
     Returns:
         :class:`RetryLoopResult` with the outcome and full history.
+        ``skipped_reason`` is set to ``"token_budget_exceeded ..."``
+        when the loop short-circuits on the budget; ``None`` otherwise.
 
     Raises:
         InvalidParameterError: If *initial_code*, *system_prompt*, or

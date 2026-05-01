@@ -42,7 +42,7 @@ conditional_weights = {
   recursive helper. Type hint for `conditional_weights` widened to
   `dict[Any, Any]` (depth depends on `len(on)`); docstring rewritten to
   spell out the nested-dict invariant with an example.
-- `_check_dependency_conflict` (~L385-410): now iterates `for parent_col
+- `_check_dependency_conflict` (L372-395): now iterates `for parent_col
   in dep.on` so multi-parent deps' non-first parent edges are not silently
   skipped during orthogonal declaration.
 - New `_validate_and_normalize_nested_weights(cw, parent_value_sets,
@@ -96,7 +96,9 @@ conditional_weights = {
   comprehension `{k: dict(v) for k, v in cw.items()}` is replaced by
   `copy.deepcopy(self.conditional_weights)` so downstream metadata
   consumers can mutate at any depth without aliasing back into the
-  store. The previous shape was correct only for depth-2 dicts.
+  store. The previous shallow form was correct for the only shape
+  that existed pre-DS-4 (depth-2: one parent level + leaf); deepcopy
+  is required for the new depth ≥ 3 shapes DS-4 enables.
 
 ### [pipeline/phase_2/tests/modular/test_sdk_relationships_multi_parent.py](pipeline/phase_2/tests/modular/test_sdk_relationships_multi_parent.py) (new)
 

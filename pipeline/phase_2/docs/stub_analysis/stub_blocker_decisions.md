@@ -286,9 +286,20 @@ column" graceful-fail behavior.
 ### [IS-4] Seasonal anomaly validation
 
 **Decision:** Adopt interpretation **(a)** — window-vs-baseline z-score.
-`anomaly_window=[start, end]` is **optional**; when omitted, defaults
-to the last 10% of the temporal range (`[tmin + (tmax - tmin) * 0.9, tmax]`).
-Default threshold `z >= 1.5`, configurable via `params["z_threshold"]`.
+`anomaly_window=[start, end]` is **mandatory at the SDK gate** (see
+[sdk/relationships.py PATTERN_REQUIRED_PARAMS](../../sdk/relationships.py)),
+so any `inject_pattern("seasonal_anomaly", ...)` call without it fails
+declaration-time validation. The validator additionally keeps a
+defensive last-10%-of-temporal-range fallback
+(`[tmin + (tmax - tmin) * 0.9, tmax]`) for the case where the validator
+is called outside the SDK gate (e.g. directly from a test fixture); under
+normal flow that fallback is unreachable. Default threshold `z >= 1.5`,
+configurable via `params["z_threshold"]`.
+
+This reconciles a contradiction in earlier drafts: the same parameter
+was described as "optional" here in §IS-4 and "mandatory" in §4.2
+Theme 2. The implementation chose mandatory + defensive fallback, and
+this section now matches.
 
 #### Blocker resolved
 - Operational definition. Candidates:
@@ -327,8 +338,9 @@ else:
     tmin, tmax = tval.min(), tval.max()
     win_start, win_end = tmin + (tmax - tmin) * 0.9, tmax
 ```
-- `anomaly_window=[start, end]` is **optional**; default is the last
-  10% of the temporal range.
+- `anomaly_window=[start, end]` is **mandatory at the SDK gate**;
+  validator keeps a defensive last-10%-of-temporal-range fallback for
+  out-of-gate use only.
 - Reuses `_find_temporal_column`.
 - Edges: empty window, `len(baseline) < 2`, `baseline_std == 0` → all
   return `passed=False` with a clear `detail`.

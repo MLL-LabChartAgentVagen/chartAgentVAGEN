@@ -105,7 +105,7 @@ to mark the `[0, 1]` clip as required (not optional) and document the
 "injector must agree with validator" rationale. Full writeup at
 [docs/fixes/M2_M3_DEFENSIVE_GUARDS.md](fixes/M2_M3_DEFENSIVE_GUARDS.md).
 
-### M4 — Mixture validator rejects `np.integer` weights but accepts `np.floating`
+### M4 — Mixture validator rejects `np.integer` weights but accepts `np.floating`  ✅ **RESOLVED** (commit pending)
 
 [sdk/validation.py:370](sdk/validation.py#L370):
 `not isinstance(w, (int, float, np.floating))` excludes `np.int64` /
@@ -114,62 +114,88 @@ to mark the `[0, 1]` clip as required (not optional) and document the
 dtype=float)`) would have accepted them. LLM-emitted code uses Python
 literals so this rarely fires, but it is an asymmetric contract.
 
-**Fix:** add `np.integer` to the isinstance tuple.
+**Resolution:** Added `np.integer` to the isinstance tuple. Added
+`test_numpy_integer_weight_accepted` to `TestValidateParamModelMixture`
+(mirrors the existing `test_numpy_float_weight_accepted`).
 
-### M5 — IS-6 token-budget: missing docstring + missing unit test for `_extract_token_usage` exception path
+### M5 — IS-6 token-budget: missing docstring + missing unit test for `_extract_token_usage` exception path  ✅ **RESOLVED** (commit pending)
 
-[sandbox.py:683-689](orchestration/sandbox.py#L683-L689) does not
+[sandbox.py:683-689](orchestration/sandbox.py#L683-L689) did not
 document the new `token_budget` / `initial_token_usage` kwargs in
 its `Args:` block. Separately,
 [llm_client.py:60-69](orchestration/llm_client.py#L60-L69)'s
-`except Exception: return None` branch is exercised only via
-integration; no unit test covers a getattr-raises shape.
+`except Exception: return None` branch was exercised only via
+integration; no unit test covered a getattr-raises shape.
 
-**Fix:** add docstring lines (matches the existing prose for
-`max_retries` / `timeout_seconds`) and a single unit test that
-mocks an LLM response whose `usage` attribute access raises.
+**Resolution:** Added `token_budget` and `initial_token_usage`
+entries to the `run_retry_loop` docstring's `Args:` block, plus a
+note on the `RetryLoopResult.skipped_reason` semantics in `Returns:`.
+Added 3 unit tests in `test_retry_loop_token_budget.py` covering
+the OpenAI-shape `response.usage` raise, the `usage.prompt_tokens`
+descriptor raise, and the Gemini-native `usage_metadata` field raise.
 
 ---
 
 ## LOW severity
 
-### L1 — `check_seasonal_anomaly` uses `.std(ddof=0)` (population)
+### L1 — `check_seasonal_anomaly` uses `.std(ddof=0)` (population)  ✅ **RESOLVED** (commit pending)
 
-[pattern_checks.py:489](validation/pattern_checks.py#L489) uses
+[pattern_checks.py:489](validation/pattern_checks.py#L489) used
 `ddof=0` while other variance computations in the same file default
 to `ddof=1` (sample). Inconsistent within file. Population std
 slightly inflates `z`; sample std would be more conservative.
 
-### L2 — `GroupDependency` docstring stale post-DS-4
+**Resolution:** Changed to default (`ddof=1`) for consistency with
+[L62, L66](validation/pattern_checks.py#L62) in the same file. No
+documented rationale was found in IS-4 summary or decisions doc;
+this was unintentional drift. All 8 `test_validation_pattern_checks_seasonal_anomaly.py`
+tests still pass.
 
-[types.py:191-197](types.py#L191-L197) still says "Currently
+### L2 — `GroupDependency` docstring stale post-DS-4  ✅ **RESOLVED** (commit pending)
+
+[types.py:191-197](types.py#L191-L197) still said "Currently
 restricted to single-column conditioning per assumption A7" — no
 longer true after DS-4 widened the contract to N-deep nested
-dicts. Behavior is fine; docstring is misleading.
+dicts. Behavior was fine; docstring was misleading.
 
-### L3 — `DS-4.md` mis-states the deepcopy rationale
+**Resolution:** Rewrote the `Attributes:` block to describe both
+single- and multi-column conditioning, with examples for both
+shapes. Documents the full Cartesian coverage requirement at every
+nesting level (DS-4 invariant).
+
+### L3 — `DS-4.md` mis-states the deepcopy rationale  ✅ **RESOLVED** (commit pending)
 
 [stub_implementation/DS-4.md L97-99](stub_implementation/DS-4.md#L97-L99)
-says the prior shape was "correct only for depth-2 dicts." Actually
+said the prior shape was "correct only for depth-2 dicts." Actually
 the prior `{k: dict(v) for k, v in cw.items()}` was correct for the
 single-parent shape that ever existed (depth-1 conditioning + leaf).
-The deepcopy fix is needed for the new depth ≥ 2 shapes only — the
-"only for depth-2" framing implies depth-3 was previously broken,
-when in fact depth-3 didn't exist before DS-4.
+The deepcopy fix is needed for the new depth ≥ 2 shapes only.
 
-### L4 — `DS-4.md` cites `_check_dependency_conflict` at wrong line span
+**Resolution:** Reworded to "the previous shallow form was correct
+for the only shape that existed pre-DS-4 (depth-2: one parent level
++ leaf); deepcopy is required for the new depth ≥ 3 shapes DS-4
+enables."
 
-DS-4.md says `~L385-410`; actual span is
+### L4 — `DS-4.md` cites `_check_dependency_conflict` at wrong line span  ✅ **RESOLVED** (commit pending)
+
+DS-4.md said `~L385-410`; actual span is
 [L372-395](sdk/relationships.py#L372-L395). Documentation drift only.
 
-### L5 — IS-4 `anomaly_window` contradiction in decisions doc
+**Resolution:** Updated the citation to `L372-395`.
+
+### L5 — IS-4 `anomaly_window` contradiction in decisions doc  ✅ **RESOLVED** (commit pending)
 
 [stub_blocker_decisions.md:288-292](stub_analysis/stub_blocker_decisions.md#L288-L292)
-marks `anomaly_window` as "**optional**" in §IS-4; §4.2 L892 says
+marked `anomaly_window` as "**optional**" in §IS-4; §4.2 L892 said
 "**mandatory**". The implementation chose mandatory + defensive
 last-10% fallback (the validator can still cope if the SDK gate is
-bypassed in a test). Both readings are honored, but the decisions
-doc itself is internally inconsistent.
+bypassed in a test). Both readings were honored, but the decisions
+doc itself was internally inconsistent.
+
+**Resolution:** Rewrote the §IS-4 paragraph to "mandatory at the SDK
+gate" with the defensive last-10% fallback explicitly scoped to
+out-of-gate use only. Now matches §4.2 Theme 2 and the live
+implementation. Closes the pre-existing contradiction.
 
 ### L6 — Confirmations (no bugs, recorded for completeness)
 

@@ -288,6 +288,25 @@ class TestValidateParamModelMixture:
             param_model={"components": comps}, columns={},
         )
 
+    def test_numpy_integer_weight_accepted(self):
+        """M4 regression: np.int64 / np.int32 weights must be accepted
+        symmetrically with np.floating. The sampler at engine/measures.py:448
+        already coerces with np.array(..., dtype=float), so the validator
+        rejecting np.integer was an asymmetric contract drift.
+        """
+        import numpy as np
+        comps = [{
+            "family": "gaussian", "weight": np.int64(1),
+            "param_model": {"mu": 0.0, "sigma": 1.0},
+        }, {
+            "family": "gaussian", "weight": np.int32(2),
+            "param_model": {"mu": 5.0, "sigma": 1.0},
+        }]
+        validate_param_model(
+            name="y", family="mixture",
+            param_model={"components": comps}, columns={},
+        )
+
     def test_missing_param_model_in_component_rejected(self):
         comps = [{"family": "gaussian", "weight": 1.0}]
         with pytest.raises(InvalidParameterError) as exc:

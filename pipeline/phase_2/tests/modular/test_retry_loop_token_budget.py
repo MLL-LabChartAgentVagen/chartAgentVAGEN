@@ -11,7 +11,11 @@ Covers the three test criteria from
 """
 from __future__ import annotations
 
-from pipeline.phase_2.orchestration.llm_client import LLMResponse, TokenUsage
+from pipeline.phase_2.orchestration.llm_client import (
+    LLMResponse,
+    TokenUsage,
+    _extract_token_usage,
+)
 from pipeline.phase_2.orchestration.sandbox import run_retry_loop
 
 
@@ -144,3 +148,65 @@ def test_initial_token_usage_seeds_counter():
     # First sandbox attempt fails, LLM gets called once (adding 0), and
     # the cumulative count (200 ≥ 150) trips immediately afterwards.
     assert result.attempts == 1
+
+
+# =====================================================================
+# M5: _extract_token_usage exception-path unit tests
+# =====================================================================
+#
+# The integration tests above exercise the happy "usage attr present"
+# and the "usage attr absent" paths. They do NOT cover the
+# `except Exception: return None` fallback that fires when usage-attr
+# access raises (older SDKs, partial responses, mock objects with
+# property descriptors that throw). These unit tests lock that
+# graceful-degradation contract in.
+
+
+class _RaisingUsage:
+    """Object whose `prompt_tokens` access raises — simulates a partial
+    SDK response or a mock with a faulty descriptor."""
+
+    @property
+    def prompt_tokens(self):
+        raise RuntimeError("simulated SDK glitch")
+
+    completion_tokens = 0
+    total_tokens = 0
+
+
+class _RaisingResponse:
+    """Provider response whose `usage` attribute access raises."""
+
+    @property
+    def usage(self):
+        raise RuntimeError("simulated SDK glitch")
+
+
+def test_extract_token_usage_returns_none_when_usage_access_raises():
+    """OpenAI-shape: response.usage access raises → graceful None."""
+    response = _RaisingResponse()
+    assert _extract_token_usage(response, provider="openai") is None
+
+
+def test_extract_token_usage_returns_none_when_usage_field_raises():
+    """OpenAI-shape: response.usage.prompt_tokens access raises → None."""
+    class _R:
+        usage = _RaisingUsage()
+    assert _extract_token_usage(_R(), provider="openai") is None
+
+
+def test_extract_token_usage_returns_none_when_gemini_metadata_field_raises():
+    """Gemini-native shape: usage_metadata field access raises → None.
+    Mirrors the OpenAI-shape graceful-degradation contract.
+    """
+    class _RaisingMeta:
+        @property
+        def prompt_token_count(self):
+            raise RuntimeError("simulated SDK glitch")
+        candidates_token_count = 0
+        total_token_count = 0
+
+    class _R:
+        usage_metadata = _RaisingMeta()
+
+    assert _extract_token_usage(_R(), provider="gemini-native") is None

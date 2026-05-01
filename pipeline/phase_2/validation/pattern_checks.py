@@ -486,7 +486,7 @@ def check_seasonal_anomaly(
             ),
         )
 
-    baseline_std = float(baseline_vals.std(ddof=0))
+    baseline_std = float(baseline_vals.std())
     if baseline_std == 0.0 or not np.isfinite(baseline_std):
         return Check(
             name=name, passed=False,

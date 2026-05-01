@@ -367,7 +367,9 @@ def validate_param_model(
                     ),
                 )
             w = comp.get("weight")
-            if isinstance(w, bool) or not isinstance(w, (int, float, np.floating)):
+            if isinstance(w, bool) or not isinstance(
+                w, (int, float, np.floating, np.integer)
+            ):
                 raise InvalidParameterError(
                     param_name=f"components[{i}].weight",
                     value=0.0,
