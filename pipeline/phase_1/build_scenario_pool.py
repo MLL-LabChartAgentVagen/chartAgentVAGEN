@@ -87,13 +87,31 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--skip-dedup",
         action="store_true",
-        help="Skip the final cross-scenario dedup step",
+        help="Skip the final scenario dedup step",
+    )
+    parser.add_argument(
+        "--dedup-scope",
+        choices=["global", "category", "domain"],
+        default="category",
+        help=(
+            "Scenario dedup comparison scope "
+            "(default: category; choices: global, category, domain)"
+        ),
     )
     parser.add_argument(
         "--dedup-threshold",
         type=float,
         default=0.85,
         help="Cosine-similarity threshold for dedup (default: 0.85)",
+    )
+    parser.add_argument(
+        "--min-scenarios-per-domain",
+        type=int,
+        default=1,
+        help=(
+            "Minimum cached scenarios to preserve per domain during dedup "
+            "(default: 1)"
+        ),
     )
     return parser.parse_args()
 
@@ -261,27 +279,32 @@ def main() -> None:
     # -----------------------------------------------------------------------
     if not args.skip_dedup and OUT_PATH.exists():
         sys.path.insert(0, str(PROJECT_ROOT))
-        from pipeline.phase_1 import deduplicate_scenarios
+        from pipeline.phase_1 import deduplicate_scenario_records
 
         with open(OUT_PATH) as f:
             records = [json.loads(ln) for ln in f if ln.strip()]
 
-        kept = deduplicate_scenarios(
-            [r["scenario"] for r in records], threshold=args.dedup_threshold
+        survivors = deduplicate_scenario_records(
+            records,
+            threshold=args.dedup_threshold,
+            scope=args.dedup_scope,
+            min_per_domain=args.min_scenarios_per_domain,
         )
-        kept_contexts = {s.get("data_context", "") for s in kept}
-        survivors = [
-            r for r in records
-            if r["scenario"].get("data_context", "") in kept_contexts
-        ]
         removed = len(records) - len(survivors)
+        covered_domains = {r["domain_id"] for r in survivors}
 
         # Rewrite only if dedup removed anything, to avoid gratuitous churn
         if removed:
             with open(OUT_PATH, "w", encoding="utf-8") as f:
                 for r in survivors:
                     f.write(json.dumps(r, ensure_ascii=False) + "\n")
-        log.info("Dedup: kept %d, removed %d", len(survivors), removed)
+        log.info(
+            "Dedup (%s): kept %d, removed %d, domains covered %d",
+            args.dedup_scope,
+            len(survivors),
+            removed,
+            len(covered_domains),
+        )
 
     # -----------------------------------------------------------------------
     # Summary
@@ -298,6 +321,8 @@ def main() -> None:
     print(f"  Total scenarios    : {final_count}")
     print(f"  Scenarios/domain   : {args.scenarios_per_domain}")
     print(f"  Dedup threshold    : {args.dedup_threshold if not args.skip_dedup else 'skipped'}")
+    print(f"  Dedup scope        : {args.dedup_scope if not args.skip_dedup else 'skipped'}")
+    print(f"  Min/domain kept    : {args.min_scenarios_per_domain if not args.skip_dedup else 'skipped'}")
     print("=" * 60 + "\n")
     print("Next step: construct AGPDSPipeline with scenario_source='cached'.")
 

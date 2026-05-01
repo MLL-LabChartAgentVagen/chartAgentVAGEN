@@ -7,6 +7,7 @@ Provides scenario generation from domain samples and deduplication.
 from .scenario_contextualizer import (
     ScenarioContextualizer,
     deduplicate_scenarios,
+    deduplicate_scenario_records,
     SCENARIO_SYSTEM_PROMPT,
     VALID_GRANULARITIES,
 )
@@ -14,6 +15,7 @@ from .scenario_contextualizer import (
 __all__ = [
     "ScenarioContextualizer",
     "deduplicate_scenarios",
+    "deduplicate_scenario_records",
     "SCENARIO_SYSTEM_PROMPT",
     "VALID_GRANULARITIES",
 ]

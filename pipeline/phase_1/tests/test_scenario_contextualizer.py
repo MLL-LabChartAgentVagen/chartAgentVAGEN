@@ -111,6 +111,7 @@ try:
     from pipeline.phase_1.scenario_contextualizer import (
         ScenarioContextualizer,
         deduplicate_scenarios,
+        deduplicate_scenario_records,
         SCENARIO_SYSTEM_PROMPT,
         SCENARIO_USER_PROMPT_TEMPLATE,
         VALID_GRANULARITIES,
@@ -120,6 +121,7 @@ except ImportError:
     from phase_1.scenario_contextualizer import (
         ScenarioContextualizer,
         deduplicate_scenarios,
+        deduplicate_scenario_records,
         SCENARIO_SYSTEM_PROMPT,
         SCENARIO_USER_PROMPT_TEMPLATE,
         VALID_GRANULARITIES,
@@ -840,14 +842,14 @@ print("Test 18: deduplicate_scenarios — edge cases and threshold behaviour")
 print("=" * 60)
 
 try:
-    # We mock check_overlap to isolate from the embedding model entirely.
+    # We mock the index-pair helper to isolate from the embedding model entirely.
     # Determine the correct patch path based on how the module was imported.
     try:
-        import pipeline.phase_0.domain_pool as _dp_module
-        patch_target = "pipeline.phase_0.domain_pool.check_overlap"
+        import pipeline.phase_1.scenario_contextualizer as _sc_module
+        patch_target = "pipeline.phase_1.scenario_contextualizer._overlap_index_pairs"
     except ImportError:
-        import phase_0.domain_pool as _dp_module
-        patch_target = "phase_0.domain_pool.check_overlap"
+        import phase_1.scenario_contextualizer as _sc_module
+        patch_target = "phase_1.scenario_contextualizer._overlap_index_pairs"
 
     METRO_A = {"data_context": "Shanghai Metro ridership daily log 2024 H1."}
     METRO_B = {"data_context": "Shanghai Metro ridership daily log 2024 H1 operations."}
@@ -866,8 +868,8 @@ try:
     print(f"  ✓ Single scenario → unchanged")
 
     # --- 18c: Two near-duplicates → only the EARLIER (first) is kept ---
-    #  overlap: (METRO_A.context, METRO_B.context, 0.93)
-    overlap_pair = [(METRO_A["data_context"], METRO_B["data_context"], 0.93)]
+    #  overlap: (index 0, index 1, 0.93)
+    overlap_pair = [(0, 1, 0.93)]
     with patch(patch_target, return_value=overlap_pair):
         result = deduplicate_scenarios([METRO_A, METRO_B], threshold=0.85)
     assert len(result) == 1, f"Expected 1 after dedup of pair, got {len(result)}"
@@ -877,7 +879,7 @@ try:
     print(f"  ✓ Near-duplicate pair: later entry dropped, earlier kept")
 
     # --- 18d: Below threshold → both kept ---
-    overlap_below = [(METRO_A["data_context"], METRO_B["data_context"], 0.60)]
+    overlap_below = [(0, 1, 0.60)]
     with patch(patch_target, return_value=overlap_below):
         result = deduplicate_scenarios([METRO_A, METRO_B], threshold=0.85)
     # check_overlap already filters by threshold internally; mock returns below-threshold
@@ -893,7 +895,7 @@ try:
     print(f"  ✓ No overlaps returned by check_overlap → all scenarios kept")
 
     # --- 18e: Three scenarios, one near-dup removed → 2 remain ---
-    overlap_metro = [(METRO_A["data_context"], METRO_B["data_context"], 0.91)]
+    overlap_metro = [(0, 1, 0.91)]
     with patch(patch_target, return_value=overlap_metro):
         result = deduplicate_scenarios([METRO_A, METRO_B, FINANCE], threshold=0.85)
     assert len(result) == 2, (
@@ -913,6 +915,130 @@ try:
     )
     print(f"  ✓ Default threshold=0.85 matches spec §1.3")
 
+    # --- 18g: Identical contexts still drop the later item by index ---
+    SAME_A = {"data_context": "Identical hospital operations context."}
+    SAME_B = {"data_context": "Identical hospital operations context."}
+    SAME_C = {"data_context": "Identical hospital operations context."}
+    with patch(patch_target, return_value=[(0, 1, 0.99), (1, 2, 0.99)]):
+        result = deduplicate_scenarios([SAME_A, SAME_B, SAME_C], threshold=0.85)
+    assert result == [SAME_A], (
+        "Identical data_context values should not confuse later-index deletion"
+    )
+    print(f"  ✓ Identical contexts: index-based deletion keeps only the earliest")
+
+except Exception as e:
+    print(f"  ✗ FAILED: {e}")
+    import traceback; traceback.print_exc()
+    sys.exit(1)
+
+print()
+
+
+# ================================================================
+# Test 19: deduplicate_scenario_records — scope and domain protection
+# ================================================================
+print("=" * 60)
+print("Test 19: deduplicate_scenario_records — scope and domain protection")
+print("=" * 60)
+
+try:
+    try:
+        import pipeline.phase_1.scenario_contextualizer as _sc_module
+        patch_target = "pipeline.phase_1.scenario_contextualizer._overlap_index_pairs"
+    except ImportError:
+        import phase_1.scenario_contextualizer as _sc_module
+        patch_target = "phase_1.scenario_contextualizer._overlap_index_pairs"
+
+    def make_record(domain_id, k, category_id, context):
+        return {
+            "domain_id": domain_id,
+            "k": k,
+            "category_id": category_id,
+            "scenario": {"data_context": context},
+        }
+
+    CAT_A0 = make_record("dom_a", 0, 1, "Hospital ER wait time log.")
+    CAT_A1 = make_record("dom_a", 1, 1, "Hospital ER waiting delay log.")
+    CAT_B0 = make_record("dom_b", 0, 2, "Clinic triage delay log.")
+
+    # --- 19a: Same category near-duplicates drop the later record.
+    with patch(patch_target, return_value=[(0, 1, 0.93)]):
+        result = deduplicate_scenario_records(
+            [CAT_A0, CAT_A1, CAT_B0],
+            threshold=0.85,
+            scope="category",
+            min_per_domain=1,
+        )
+    assert result == [CAT_A0, CAT_B0], (
+        "Category-scope dedup should drop later near-duplicates within a category"
+    )
+    print(f"  ✓ Same category near-duplicates: later record dropped")
+
+    # --- 19b: Different categories are deduped independently.
+    with patch(patch_target, return_value=[]):
+        result = deduplicate_scenario_records(
+            [CAT_A0, CAT_B0],
+            threshold=0.85,
+            scope="category",
+            min_per_domain=1,
+        )
+    assert result == [CAT_A0, CAT_B0], (
+        "Category-scope dedup must not compare records from different categories"
+    )
+    print(f"  ✓ Cross-category records are kept")
+
+    # --- 19c: Domain coverage is protected by min_per_domain=1.
+    DOM_A0 = make_record("dom_a", 0, 1, "Hospital emergency queue log.")
+    DOM_B0 = make_record("dom_b", 0, 1, "Clinic urgent-care queue log.")
+    with patch(patch_target, return_value=[(0, 1, 0.94)]):
+        result = deduplicate_scenario_records(
+            [DOM_A0, DOM_B0],
+            threshold=0.85,
+            scope="category",
+            min_per_domain=1,
+        )
+    assert result == [DOM_A0, DOM_B0], (
+        "min_per_domain=1 should prevent deleting a domain's only scenario"
+    )
+    print(f"  ✓ Domain coverage protected when each domain has one record")
+
+    # --- 19d: Scope='domain' compares only records inside each domain bucket.
+    DOM_A1 = make_record("dom_a", 1, 1, "Hospital emergency queue operations.")
+    with patch(patch_target, return_value=[(0, 1, 0.91)]):
+        result = deduplicate_scenario_records(
+            [DOM_A0, DOM_A1, DOM_B0],
+            threshold=0.85,
+            scope="domain",
+            min_per_domain=1,
+        )
+    assert result == [DOM_A0, DOM_B0], (
+        "Domain-scope dedup should drop only duplicates within the same domain"
+    )
+    print(f"  ✓ Domain scope only dedups inside domain buckets")
+
+    # --- 19e: Scope='global' can compare all records, subject to domain protection.
+    with patch(patch_target, return_value=[(0, 1, 0.96)]):
+        result = deduplicate_scenario_records(
+            [CAT_A0, CAT_A1, CAT_B0],
+            threshold=0.85,
+            scope="global",
+            min_per_domain=1,
+        )
+    assert result == [CAT_A0, CAT_B0], (
+        "Global-scope dedup should compare the whole record list"
+    )
+    print(f"  ✓ Global scope compares the whole pool")
+
+    # --- 19f: Invalid scope is rejected.
+    raised = False
+    try:
+        deduplicate_scenario_records([CAT_A0], scope="bad-scope")
+    except ValueError as ve:
+        raised = True
+        assert "scope" in str(ve)
+    assert raised, "Invalid dedup scope should raise ValueError"
+    print(f"  ✓ Invalid scope rejected")
+
 except Exception as e:
     print(f"  ✗ FAILED: {e}")
     import traceback; traceback.print_exc()
@@ -925,5 +1051,5 @@ print()
 # Summary
 # ================================================================
 print("=" * 60)
-print("All 18 tests passed! ✓")
+print("All 19 tests passed! ✓")
 print("=" * 60)
