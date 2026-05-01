@@ -328,11 +328,145 @@ This compatibility determines which views are useful and which multi-chart pairs
 
 ---
 
-### 3.3 Unified Generation Algorithm
+### 3.3 Question Generation Pipeline
+
+The abstract pipeline notation from §3.2.2 is realized by two concrete classes in `pipeline.py` — **`PipelineNode`** and **`Pipeline`** — and assembled by a composer factory that builds all four pipeline shapes.
+
+#### 3.3.1 PipelineNode — The Operator Tree
+
+A `PipelineNode` is a single node in a tree. It wraps one `Operator` and holds a list of child `PipelineNode` inputs:
+
+| Inputs list | Meaning | Example |
+|-------------|---------|---------|
+| `[]` (empty) | Leaf — operator runs on the raw base view | `PipelineNode(Filter(...), inputs=[])` |
+| `[n]` (single) | Unary/sequential — chain of one-after-another ops | `PipelineNode(Avg(...), inputs=[sort_node])` |
+| `[a, b]` (two+) | Binary/fork — combinator merging two branches | `PipelineNode(Union(), inputs=[branch_a, branch_b])` |
+
+This representation unifies all four pipeline shapes from §3.2.2 into a single recursive tree structure. Building a sequential chain simply produces a linked list of nodes; building a forked pipeline produces a tree with branching.
+
+**Core methods:**
+
+| Method | What it does |
+|--------|-------------|
+| `execute(view)` | Recursively executes the tree bottom-up. Leaf nodes call `operator.execute(view)`. Unary inner nodes pass their child's result. Binary nodes pass all child results as positional args. |
+| `render_question(**ctx)` | Recursively composes NL fragments inside-out — children render first, then the parent fragment is appended. |
+| `display(indent)` | Pretty-prints the tree for debugging with indentation showing depth. |
+| `type_check()` | Recursively verifies every child→parent connection is type-compatible (`V→V`, `V→S`, etc.). |
+| `depth` / `op_count` | Recursive properties — max tree depth and total operator count. |
+| `to_dict()` | Serializes the tree to a JSON-safe dict (no DataFrames). |
+
+**Execution walkthrough — sequential:** *"What is the average cost of the top-3 hospitals in the East?"*
+
+```
+Tree:          Avg("cost")                    ← root, V→S
+                 └── Limit(3)                 ← V→V
+                       └── Sort("cost", desc) ← V→V
+                             └── Filter(...)  ← leaf, V→V
+
+execute(view):
+  1. Avg  → recurses → Limit → recurses → Sort → recurses → Filter
+  2. Filter.execute(view)        → OperatorResult(V, east_rows_df)
+  3. Sort.execute(east_rows_df)  → OperatorResult(V, sorted_df)
+  4. Limit.execute(sorted_df)    → OperatorResult(V, top_3_df)
+  5. Avg.execute(top_3_df)       → OperatorResult(S, 5200.0)
+```
+
+Every node receives a **DataFrame** from its child, transforms it, and passes it up. The base view is touched once at the leaf.
+
+**Execution walkthrough — forked:** *"Average cost of the top-3 and bottom-2 hospitals?"*
+
+```
+Tree:          Avg("cost")                  ← root, V→S
+                 └── Union()                ← binary, (V,V)→V
+                       ├── Limit(3)         ← branch a
+                       │     └── Sort(desc) ← leaf a
+                       └── Limit(2)         ← branch b
+                             └── Sort(asc)  ← leaf b
+
+execute(view):
+  1. Union.execute calls both branches independently
+  2. Branch a: Sort(desc)(view) → Limit(3) → top-3 rows
+  3. Branch b: Sort(asc)(view) → Limit(2) → bottom-2 rows
+  4. Union merges both into a single DataFrame
+  5. Avg reduces to a scalar
+```
+
+**Execution walkthrough — nested:** *"How many hospitals have above-average cost?"*
+
+```
+Tree:          Count("cost")                          ← root, V→S
+                 └── Filter("cost", ">", threshold)   ← V→V (parameterized)
+                       └── Avg("cost")                ← leaf, V→S (inner sub-pipeline)
+
+execute(view):
+  1. Count → recurses → Filter → recurses → Avg
+  2. Avg.execute(view)             → OperatorResult(S, 4500.0)  ← scalar, not DataFrame!
+  3. Filter receives child_results[0].value = 4500.0
+     Filter uses 4500.0 as threshold, filters base view to rows where cost > 4500
+                                   → OperatorResult(V, above_avg_df)
+  4. Count.execute(above_avg_df)   → OperatorResult(S, 2)
+```
+
+**Why the tree looks "upside-down."** In §3.2.2 we wrote pipelines left-to-right in logical order — the way a human would describe the steps:
+
+```
+Original notation:   V → Filter → Sort → Limit → Avg → S
+                     ↑ first step               last step ↑
+```
+
+The `PipelineNode` tree reverses this visualization. Because execution is recursive, the **root** node is the *last* operator to run (it waits for its children), and the **leaf** is the *first* (it touches the raw view). So the same pipeline renders top-down as:
+
+```
+Tree (root = last op):   Avg           ← executes last, returns S
+                           └── Limit   ← executes third
+                                 └── Sort    ← executes second
+                                       └── Filter  ← executes first (leaf)
+```
+
+This is an artefact of the recursive data structure, not a change in semantics. The logical order of operations is unchanged — Filter still runs before Sort, Sort before Limit, Limit before Avg. The tree simply shows **containment** (who calls whom) rather than **temporal sequence**.
+
+**Sequential vs. nested — same recursion, different composition.** The `execute()` code path is identical in both cases — it always recurses into children, collects results, and passes them to the parent operator. The difference is entirely in how operators are **composed into the tree**:
+
+| | Sequential | Nested |
+|---|---|---|
+| **Tree shape** | Linear linked list | Branch at the nesting point |
+| **What flows between nodes** | DataFrame → DataFrame → … → Scalar | DataFrame → **Scalar** → DataFrame → Scalar |
+| **Base view touched by** | Leaf only | Leaf (inner scalar) **and** outer op (re-accesses view) |
+| **Key idea** | Each op transforms the previous result | Inner op produces a **reference value**; outer op uses it as a dynamic parameter |
+
+Whether a pipeline is sequential or nested is not a property of the runtime — it is a **composition problem determined by operator output types**. In a sequential pipeline, every intermediate operator outputs **V** (a DataFrame), so the chain flows V→V→V→…→S in a straight line. A nested pipeline arises when an intermediate operator outputs **S** (a scalar) and that scalar must be consumed by a downstream operator that still expects to produce a view. The inner operator's S-typed output cannot feed directly into a V→V set operator, so it is instead absorbed as a *parameter* — a filter threshold, a comparison target, a ratio denominator — by an outer operator that re-accesses the base view. The tree branches at exactly this point: one child computes the reference scalar, and the parent uses it to parameterize its own view transformation. The composer decides between sequential and nested composition by inspecting whether the sampled operator sequence requires an intermediate scalar to flow back into a view-producing context.
+
+#### 3.3.2 Pipeline — Wrapper with Metadata
+
+`Pipeline` is a thin dataclass wrapper around the root `PipelineNode`. It adds metadata and delegates all behavior to the root:
+
+```python
+@dataclass
+class Pipeline:
+    root: PipelineNode              # root of the operator tree
+    view_specs: List[ViewSpec]      # which view(s) this pipeline was built for
+    pipeline_type: str              # "sequential" | "forked" | "nested" | "multi_chart"
+    relationship: Optional[str]     # inter-chart relationship (multi-chart only)
+```
+
+All core methods (`execute`, `render_question`, `display`, `type_check`) are one-line delegates to `self.root`. Pipeline also provides:
+
+- **`op_count` / `depth`** — delegates to root's recursive properties (these determine difficulty per §3.6).
+- **`to_dict()` / `to_json()`** — serializes the full pipeline including metadata and the operator tree.
+
+The `pipeline_type` field classifies the tree's shape for logging, display, and downstream analysis.
+
+#### 3.3.3 Pipeline Composer
+
+TBD
+
+---
+
+### 3.4 Unified Generation Algorithm
 
 View enumeration, multi-chart composition, and QA generation are fused into **one loop** with operator compatibility as the single filter.
 
-#### 3.3.1 Inter-Chart Relationships
+#### 3.4.1 Inter-Chart Relationships
 Two views can be paired only if they have a semantic relationship. `candidate_pairs()` yields all `(va, vb)` from enumerated views, plus **split pairs**: for each temporal view, split by time midpoint → `(v_early, v_late)` to produce Comparative pairs.
 
 | Relationship | Predicate | Example |
@@ -345,7 +479,7 @@ Two views can be paired only if they have a semantic relationship. `candidate_pa
 | **Associative** | Measures linked by `add_correlation()` in schema | bar(hospital × cost) vs bar(hospital × satisfaction) |
 | **Causal Chain** | `va.measure → vb.measure` in dependency DAG | bar(marketing) → line(traffic) → bar(conversion) |
 
-#### 3.3.2 Bridge Selection
+#### 3.4.2 Bridge Selection
 
 A pair is kept **if and only if** the relationship allows a bridge AND both chart types support it. This single check fuses what used to be separate "composition" and "QA feasibility" stages.
 
@@ -370,7 +504,7 @@ def get_valid_bridges(relationship, chart_type_a, chart_type_b):
 | Associative | RankCompare, EntityTransfer |
 | Causal Chain | EntityTransfer, ValueTransfer |
 
-#### 3.3.3 The Algorithm
+#### 3.4.3 The Algorithm
 
 ```python
 def generate_tasks(master_table, schema):
@@ -410,7 +544,7 @@ def generate_tasks(master_table, schema):
     return single_tasks + multi_tasks
 ```
 
-#### 3.3.4 Pipeline Sampling
+#### 3.4.4 Pipeline Sampling
 
 ```python
 def sample_question(views, relationship, target_ops):
@@ -456,7 +590,7 @@ def sample_op(cur_type, budget, chart_type, can_bridge):
 
 ---
 
-### 3.4 Pattern-Seeded QA
+### 3.5 Pattern-Seeded QA
 
 Patterns injected in Phase 2 pre-fix certain operators in the pipeline. The remaining operators are randomly sampled. No special `PatternDetector` class is needed — patterns simply constrain which operators appear in the pipeline. The compatibility table ensures the fixed operators are valid for the view's chart type.
 
@@ -470,7 +604,7 @@ Patterns injected in Phase 2 pre-fix certain operators in the pipeline. The rema
 
 ---
 
-### 3.5 Difficulty = #Ops
+### 3.6 Difficulty = #Ops
 
 Difficulty is determined by a single, objective metric: the number of operators in the pipeline. No manual labeling, no heuristic scoring.
 
@@ -483,7 +617,7 @@ Difficulty is determined by a single, objective metric: the number of operators 
 
 ---
 
-### 3.6 Walkthrough Example
+### 3.7 Walkthrough Example
 
 **Setup:** Master Table with 500 rows, 7 columns. Three hospitals, three departments, 12 months of visits.
 
@@ -530,7 +664,7 @@ Pair (V2, V3):  different measure, no shared group_key pattern  →  None  →  
 
 ---
 
-### 3.7 End-to-End Summary
+### 3.8 End-to-End Summary
 
 ```
 Input:  Master Table + Schema Metadata
@@ -544,3 +678,4 @@ Step 3: Render charts + package QA
 
 Output: 10–30+ {chart_image(s), question, answer, operator_chain, difficulty}
 ```
+
