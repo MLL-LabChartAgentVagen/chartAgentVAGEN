@@ -71,7 +71,7 @@ class (3 tests) covering raw mixture, raw non-mixture, and
 explicit-partial paths. Full writeup at
 [docs/fixes/M1_WIDEN_VARIANCE_AUTO_BINDING.md](fixes/M1_WIDEN_VARIANCE_AUTO_BINDING.md).
 
-### M2 — `inject_dominance_shift` adds an undocumented "positive_floor"  ✅ **RESOLVED** (commit pending)
+### M2 — `inject_dominance_shift` adds an undocumented "positive_floor"  ✅ **RESOLVED** (commit `72ddb0f`)
 
 [engine/patterns.py:352-356](engine/patterns.py#L352-L356) adds
 `max(|peer_max|*0.1, 1.0)` when `peer_std<=0`, else `1e-9`. Decisions
@@ -89,7 +89,7 @@ document its rationale (strict dominance for deterministic rank-flip).
 Full writeup at
 [docs/fixes/M2_M3_DEFENSIVE_GUARDS.md](fixes/M2_M3_DEFENSIVE_GUARDS.md).
 
-### M3 — `inject_convergence` clips `factor` to `[0, 1]`  ✅ **RESOLVED** (commit pending)
+### M3 — `inject_convergence` clips `factor` to `[0, 1]`  ✅ **RESOLVED** (commit `72ddb0f`)
 
 [engine/patterns.py:615-617](engine/patterns.py#L615-L617) clips;
 spec pseudocode at
