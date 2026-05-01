@@ -103,6 +103,22 @@ def _find_temporal_column(meta: dict[str, Any]) -> Optional[str]:
     return hierarchy[0]
 
 
+def _resolve_first_dim_root(meta: dict[str, Any]) -> Optional[str]:
+    """Return the hierarchy root of the first dimension group in meta.
+
+    Shared entity-col fallback for IS-2/IS-3/IS-4 and check_ranking_reversal.
+    Iteration uses dict insertion order — metadata/builder.py inserts groups
+    in declaration order, so the first group is whichever the LLM declared
+    first.
+    """
+    dim_groups = meta.get("dimension_groups", {})
+    if not dim_groups:
+        return None
+    first_group = dim_groups[next(iter(dim_groups))]
+    hierarchy = first_group.get("hierarchy", [])
+    return hierarchy[0] if hierarchy else None
+
+
 def check_trend_break(
     df: pd.DataFrame,
     pattern: dict[str, Any],
@@ -191,25 +207,108 @@ def check_dominance_shift(
     pattern: dict[str, Any],
     meta: dict[str, Any],
 ) -> Check:
-    """L3: Dominance shift validation (stub).
+    """L3: Dominance shift — target entity's rank changes across split.
 
-    [P1-3]
+    [IS-2: pairs with inject_dominance_shift in engine/patterns.py]
 
-    TODO [M5-NC-4 / P1-3]: Define as rank change of entity across temporal
-    split. Expected params: entity_filter, col, split_point.
+    Algorithm (rank-change interpretation, locked in
+    docs/artifacts/phase_2_spec_decisions.md §IS-2):
+      1. Resolve entity_col (params["entity_col"] > first dim-group root
+         via _resolve_first_dim_root).
+      2. Resolve temporal_col via _find_temporal_column.
+      3. Split at params["split_point"]; group each side by entity_col
+         and compute mean of pattern["col"].
+      4. Rank entities descending by mean (largest mean = rank 1) on
+         each side.
+      5. Pass if |rank_after - rank_before| of params["entity_filter"]
+         >= params.get("rank_change", 1).
+
+    Failure modes return passed=False with a descriptive detail rather
+    than raising — the L3 dispatcher in validator.py wraps raises into
+    failed checks anyway, but graceful returns are easier to interpret
+    in ValidationReport.
 
     Args:
         df: Generated DataFrame.
-        pattern: Pattern spec dict with "col" key.
-        meta: Schema metadata.
+        pattern: Pattern spec dict with "col" and "params" keys.
+            params requires "entity_filter" and "split_point";
+            "entity_col" and "rank_change" optional.
+        meta: Schema metadata for entity_col / temporal_col lookup.
 
     Returns:
-        Check named "dominance_{col}" with passed=True (not yet implemented).
+        Check named "dominance_{col}".
     """
+    col = pattern["col"]
+    params = pattern.get("params", {})
+    target_entity = params.get("entity_filter")
+    split_point = params.get("split_point")
+    rank_threshold = params.get("rank_change", 1)
+    name = f"dominance_{col}"
+
+    if not target_entity or not split_point:
+        return Check(
+            name=name, passed=False,
+            detail=(
+                f"Missing entity_filter={target_entity!r} or "
+                f"split_point={split_point!r} in params."
+            ),
+        )
+
+    entity_col = params.get("entity_col") or _resolve_first_dim_root(meta)
+    temporal_col = _find_temporal_column(meta)
+    if entity_col is None or temporal_col is None:
+        return Check(
+            name=name, passed=False,
+            detail=(
+                f"Cannot resolve entity_col={entity_col!r} or "
+                f"temporal_col={temporal_col!r} from metadata."
+            ),
+        )
+
+    if entity_col not in df.columns or col not in df.columns:
+        return Check(
+            name=name, passed=False,
+            detail=(
+                f"Required column missing in DataFrame "
+                f"(entity_col={entity_col!r}, col={col!r})."
+            ),
+        )
+
+    if temporal_col not in df.columns:
+        return Check(
+            name=name, passed=False,
+            detail=f"Temporal column {temporal_col!r} not in DataFrame.",
+        )
+
+    sp = pd.to_datetime(split_point)
+    tval = pd.to_datetime(df[temporal_col], errors="coerce")
+    before_means = df[tval < sp].groupby(entity_col)[col].mean()
+    after_means = df[tval >= sp].groupby(entity_col)[col].mean()
+
+    if (
+        target_entity not in before_means.index
+        or target_entity not in after_means.index
+    ):
+        return Check(
+            name=name, passed=False,
+            detail=(
+                f"Target entity {target_entity!r} missing on one side "
+                f"of split_point={split_point}."
+            ),
+        )
+
+    # Descending rank: largest mean = rank 1 (matches spec_decisions
+    # §IS-2 "rank direction" decision and check_ranking_reversal).
+    rank_before = float(before_means.rank(ascending=False)[target_entity])
+    rank_after = float(after_means.rank(ascending=False)[target_entity])
+    delta = abs(rank_after - rank_before)
+    passed = bool(delta >= rank_threshold)
     return Check(
-        name=f"dominance_{pattern['col']}",
-        passed=True,
-        detail="dominance_shift validation not yet implemented",
+        name=name, passed=passed,
+        detail=(
+            f"rank_before={rank_before:.0f}, rank_after={rank_after:.0f}, "
+            f"delta={delta:.0f} (threshold={rank_threshold})"
+        ),
     )
 
 
@@ -218,24 +317,87 @@ def check_convergence(
     pattern: dict[str, Any],
     meta: dict[str, Any],
 ) -> Check:
-    """L3: Convergence validation (stub).
+    """L3: Convergence — variance of per-entity means decreases over time.
 
-    TODO [M5-NC-5 / P1-4]: Convergence validation not yet specified.
+    [IS-3: pairs with inject_convergence in engine/patterns.py]
 
-    [P1-4]
-
-    Args:
-        df: Generated DataFrame.
-        pattern: Pattern spec dict with "col" key.
-        meta: Schema metadata.
-
-    Returns:
-        Check named "convergence_{col}" with passed=True (not yet implemented).
+    Algorithm (locked in docs/stub_analysis/stub_blocker_decisions.md §IS-3):
+      1. Resolve entity_col (params["entity_col"] > _resolve_first_dim_root).
+      2. Resolve temporal_col via _find_temporal_column.
+      3. Split at params["split_point"] or tval.quantile(0.5).
+      4. Per side, compute per-entity mean of pattern["col"].
+      5. Compare variance-of-means: reduction = (early_var - late_var)/early_var.
+      6. Pass if reduction >= params.get("reduction", 0.3).
     """
+    col = pattern["col"]
+    params = pattern.get("params", {})
+    threshold = params.get("reduction", 0.3)
+    name = f"convergence_{col}"
+
+    entity_col = params.get("entity_col") or _resolve_first_dim_root(meta)
+    temporal_col = _find_temporal_column(meta)
+    if entity_col is None or temporal_col is None:
+        return Check(
+            name=name, passed=False,
+            detail=(
+                f"Cannot resolve entity_col={entity_col!r} or "
+                f"temporal_col={temporal_col!r} from metadata."
+            ),
+        )
+
+    if (
+        entity_col not in df.columns
+        or col not in df.columns
+        or temporal_col not in df.columns
+    ):
+        return Check(
+            name=name, passed=False,
+            detail=(
+                f"Required column missing in DataFrame "
+                f"(entity_col={entity_col!r}, col={col!r}, "
+                f"temporal_col={temporal_col!r})."
+            ),
+        )
+
+    tval = pd.to_datetime(df[temporal_col], errors="coerce")
+    sp = (
+        pd.to_datetime(params["split_point"])
+        if params.get("split_point")
+        else tval.quantile(0.5)
+    )
+
+    early_means = df[tval < sp].groupby(entity_col)[col].mean()
+    late_means = df[tval >= sp].groupby(entity_col)[col].mean()
+
+    if len(early_means) < 2 or len(late_means) < 2:
+        return Check(
+            name=name, passed=False,
+            detail=(
+                f"Need >=2 entities per side, got "
+                f"early={len(early_means)}, late={len(late_means)}."
+            ),
+        )
+
+    early_var = float(early_means.var())
+    late_var = float(late_means.var())
+
+    if early_var == 0.0 or not np.isfinite(early_var):
+        return Check(
+            name=name, passed=False,
+            detail=(
+                f"Early-period inter-group variance is {early_var}; "
+                f"reduction undefined."
+            ),
+        )
+
+    reduction = (early_var - late_var) / early_var
+    passed = bool(reduction >= threshold)
     return Check(
-        name=f"convergence_{pattern['col']}",
-        passed=True,
-        detail="convergence validation not yet implemented",
+        name=name, passed=passed,
+        detail=(
+            f"early_var={early_var:.4f}, late_var={late_var:.4f}, "
+            f"reduction={reduction:.3f} (threshold={threshold})"
+        ),
     )
 
 
@@ -244,24 +406,108 @@ def check_seasonal_anomaly(
     pattern: dict[str, Any],
     meta: dict[str, Any],
 ) -> Check:
-    """L3: Seasonal anomaly validation (stub).
+    """L3: Seasonal anomaly — window-vs-baseline z-score.
 
-    TODO [M5-NC-5 / P1-4]: Seasonal anomaly validation not yet specified.
+    [IS-4: pairs with inject_seasonal_anomaly in engine/patterns.py]
 
-    [P1-4]
+    Algorithm (locked in docs/stub_analysis/stub_blocker_decisions.md §IS-4,
+    interpretation (a)):
+      1. Resolve temporal_col via _find_temporal_column.
+      2. Determine [win_start, win_end] from params["anomaly_window"];
+         fall back to last 10% of temporal range. The fallback is
+         defensive — under normal flow the SDK gate
+         (PATTERN_REQUIRED_PARAMS) guarantees anomaly_window is present.
+      3. Compute window mean and out-of-window baseline mean+std on
+         pattern["col"].
+      4. z = |window_mean - baseline_mean| / baseline_std.
+      5. Pass if z >= params.get("z_threshold", 1.5).
 
-    Args:
-        df: Generated DataFrame.
-        pattern: Pattern spec dict with "col" key.
-        meta: Schema metadata.
-
-    Returns:
-        Check named "seasonal_{col}" with passed=True (not yet implemented).
+    Failure modes return passed=False with a descriptive detail rather
+    than raising.
     """
+    col = pattern["col"]
+    params = pattern.get("params", {})
+    z_threshold = params.get("z_threshold", 1.5)
+    name = f"seasonal_{col}"
+
+    temporal_col = _find_temporal_column(meta)
+    if temporal_col is None:
+        return Check(
+            name=name, passed=False,
+            detail="Cannot resolve temporal_col from metadata.",
+        )
+
+    if temporal_col not in df.columns or col not in df.columns:
+        return Check(
+            name=name, passed=False,
+            detail=(
+                f"Required column missing in DataFrame "
+                f"(temporal_col={temporal_col!r}, col={col!r})."
+            ),
+        )
+
+    tval = pd.to_datetime(df[temporal_col], errors="coerce")
+    window = params.get("anomaly_window")
+    if window is not None and len(window) == 2:
+        win_start = pd.to_datetime(window[0])
+        win_end = pd.to_datetime(window[1])
+    else:
+        # Defensive fallback — last 10% of temporal range.
+        tmin, tmax = tval.min(), tval.max()
+        if pd.isna(tmin) or pd.isna(tmax):
+            return Check(
+                name=name, passed=False,
+                detail=(
+                    f"Temporal column {temporal_col!r} has no parseable "
+                    f"values; cannot derive default anomaly_window."
+                ),
+            )
+        span = tmax - tmin
+        win_start = tmin + span * 0.9
+        win_end = tmax
+
+    in_win = (tval >= win_start) & (tval <= win_end)
+    window_vals = df.loc[in_win, col].dropna()
+    baseline_vals = df.loc[~in_win, col].dropna()
+
+    if len(window_vals) == 0:
+        return Check(
+            name=name, passed=False,
+            detail=(
+                f"Anomaly window [{win_start}..{win_end}] matches no rows."
+            ),
+        )
+    if len(baseline_vals) < 2:
+        return Check(
+            name=name, passed=False,
+            detail=(
+                f"Need >=2 baseline rows outside window, got "
+                f"{len(baseline_vals)}."
+            ),
+        )
+
+    baseline_std = float(baseline_vals.std(ddof=0))
+    if baseline_std == 0.0 or not np.isfinite(baseline_std):
+        return Check(
+            name=name, passed=False,
+            detail=(
+                f"Baseline std of {col!r} is {baseline_std}; "
+                f"z-score undefined."
+            ),
+        )
+
+    window_mean = float(window_vals.mean())
+    baseline_mean = float(baseline_vals.mean())
+    z = abs(window_mean - baseline_mean) / baseline_std
+    passed = bool(z >= z_threshold)
     return Check(
-        name=f"seasonal_{pattern['col']}",
-        passed=True,
-        detail="seasonal_anomaly validation not yet implemented",
+        name=name, passed=passed,
+        detail=(
+            f"z={z:.3f} (window_mean={window_mean:.4f}, "
+            f"baseline_mean={baseline_mean:.4f}, "
+            f"baseline_std={baseline_std:.4f}, "
+            f"threshold={z_threshold})"
+        ),
     )
 
 
@@ -299,14 +545,7 @@ def check_ranking_reversal(
 
     # Resolve entity column: prefer explicit param, fall back to first
     # dimension group root (matching spec pseudocode).
-    entity_col = params.get("entity_col")
-    if not entity_col:
-        dim_groups = meta.get("dimension_groups", {})
-        if dim_groups:
-            first_group = dim_groups[list(dim_groups.keys())[0]]
-            hierarchy = first_group.get("hierarchy", [])
-            if hierarchy:
-                entity_col = hierarchy[0]
+    entity_col = params.get("entity_col") or _resolve_first_dim_root(meta)
 
     if not entity_col:
         return Check(

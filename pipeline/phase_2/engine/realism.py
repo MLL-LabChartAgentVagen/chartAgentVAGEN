@@ -28,12 +28,13 @@ def inject_realism(
     columns: dict[str, dict[str, Any]],
     rng: np.random.Generator,
 ) -> pd.DataFrame:
-    """Phase δ: Apply missing-value and dirty-value realism injection.
+    """Phase δ: Apply censoring, missing-value, and dirty-value realism injection.
 
-    [Subtask 4.4.1, 4.4.2]
+    [Subtask 4.4.1, 4.4.2, 4.4.3]
 
-    Missing injection runs first, then dirty injection.  This ordering
-    avoids wasting work perturbing cells that will be NaN'd anyway.
+    Censoring runs first so missing_rate is computed against the post-censor
+    distribution; dirty injection runs last to avoid perturbing cells that
+    will be NaN'd by missing.
 
     Args:
         df: DataFrame after pattern injection.
@@ -47,6 +48,10 @@ def inject_realism(
     """
     missing_rate = realism_config.get("missing_rate", 0.0)
     dirty_rate = realism_config.get("dirty_rate", 0.0)
+    censoring = realism_config.get("censoring")
+
+    if censoring:
+        df = inject_censoring(df, censoring, rng)
 
     if missing_rate > 0.0:
         df = inject_missing_values(df, missing_rate, rng)
@@ -54,14 +59,63 @@ def inject_realism(
     if dirty_rate > 0.0:
         df = inject_dirty_values(df, columns, dirty_rate, rng)
 
-    censoring = realism_config.get("censoring")
-    if censoring is not None:
-        # TODO [M1-NC-7]: Censoring injection deferred.
-        raise NotImplementedError(
-            "Censoring injection not yet implemented. "
-            "See stage3 item M1-NC-7."
-        )
+    return df
 
+
+def inject_censoring(
+    df: pd.DataFrame,
+    censoring_config: dict[str, dict[str, Any]],
+    rng: np.random.Generator,  # unused; kept for signature symmetry with sibling injectors
+) -> pd.DataFrame:
+    """Apply per-column censoring by masking out-of-range values to NaN.
+
+    [Subtask 4.4.3]
+
+    Schema (CensoringSpec):
+        {"col": {"type": "right",    "threshold": <float>}}  -> values > threshold -> NaN
+        {"col": {"type": "left",     "threshold": <float>}}  -> values < threshold -> NaN
+        {"col": {"type": "interval", "low": <float>, "high": <float>}}  -> outside -> NaN
+
+    Missing columns are warned and skipped (no error).  Empty config is a no-op.
+    Unknown ``type`` raises ValueError.
+
+    Args:
+        df: DataFrame to censor.
+        censoring_config: Mapping of column name -> per-column spec dict.
+        rng: Unused; accepted for signature symmetry with the other injectors.
+
+    Returns:
+        DataFrame with censored cells set to NaN (modified in-place and returned).
+    """
+    if not censoring_config:
+        return df
+
+    total_censored = 0
+    for col, spec in censoring_config.items():
+        if col not in df.columns:
+            logger.warning(
+                "inject_censoring: column '%s' not in DataFrame; skipping.", col,
+            )
+            continue
+        c_type = spec["type"]
+        if c_type == "right":
+            mask = df[col] > spec["threshold"]
+        elif c_type == "left":
+            mask = df[col] < spec["threshold"]
+        elif c_type == "interval":
+            mask = (df[col] < spec["low"]) | (df[col] > spec["high"])
+        else:
+            raise ValueError(
+                f"Unknown censoring type '{c_type}' for column '{col}'. "
+                f"Expected one of: right, left, interval."
+            )
+        df.loc[mask, col] = np.nan
+        total_censored += int(mask.sum())
+
+    logger.debug(
+        "inject_censoring: censored %d cells across %d columns.",
+        total_censored, len(censoring_config),
+    )
     return df
 
 

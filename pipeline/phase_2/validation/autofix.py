@@ -77,6 +77,7 @@ def widen_variance(
     check: Check,
     overrides: ParameterOverrides,
     factor: float = 1.2,
+    columns: dict[str, dict[str, Any]] | None = None,
 ) -> ParameterOverrides:
     """Widen sigma/scale by a multiplicative factor in overrides.
 
@@ -89,15 +90,35 @@ def widen_variance(
     Called as strategy(check, overrides) when factor uses the default,
     or via functools.partial for custom factors.
 
+    Mixture opt-out (IS-1): when ``columns`` is provided and the resolved
+    column has family == "mixture", returns overrides unchanged. Mixtures
+    have no single sigma to widen — per-component widening is out of scope
+    for v1. Wire via:
+
+        from functools import partial
+        auto_fix = {"ks_*": partial(widen_variance, columns=meta["columns"]), ...}
+
     Args:
         check: The failing Check object.
         overrides: Current overrides dict (mutated and returned).
         factor: Multiplicative factor for sigma/scale.
+        columns: Optional column registry; enables the mixture opt-out check.
 
     Returns:
         Updated overrides dict.
     """
     col_name = _extract_col_from_check_name(check.name)
+
+    if columns is not None:
+        family = columns.get(col_name, {}).get("family")
+        if family == "mixture":
+            logger.debug(
+                "widen_variance: skip mixture column '%s' "
+                "(no single sigma to widen).",
+                col_name,
+            )
+            return overrides
+
     measures = overrides.setdefault("measures", {})
     col_ov = measures.setdefault(col_name, {})
 

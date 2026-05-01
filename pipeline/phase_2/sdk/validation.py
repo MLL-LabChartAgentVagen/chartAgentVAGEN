@@ -12,6 +12,8 @@ import logging
 import re
 from typing import Any
 
+import numpy as np
+
 from ..exceptions import (
     DuplicateColumnError,
     EmptyValuesError,
@@ -326,6 +328,70 @@ def validate_param_model(
         param_model: The param_model dict.
         columns: Column registry for effects validation.
     """
+    # Mixture (IS-1): validate the {"components": [...]} schema; recursively
+    # validate each component's param_model under its own family. Returns
+    # before the per-key validate_param_value loop, since "components" does
+    # not match the constant/intercept+effects shape that loop expects.
+    if family == "mixture":
+        components = param_model.get("components")
+        if not isinstance(components, list) or len(components) == 0:
+            raise InvalidParameterError(
+                param_name="components",
+                value=0.0,
+                reason=(
+                    f"mixture measure '{name}' requires a non-empty 'components' "
+                    f"list. Schema: {{'components': [{{'family': str, "
+                    f"'weight': float, 'param_model': {{...}}}}, ...]}}."
+                ),
+            )
+        non_mixture_families = sorted(SUPPORTED_FAMILIES - {"mixture"})
+        for i, comp in enumerate(components):
+            if not isinstance(comp, dict):
+                raise InvalidParameterError(
+                    param_name=f"components[{i}]",
+                    value=0.0,
+                    reason=(
+                        f"mixture component must be a dict, "
+                        f"got {type(comp).__name__}"
+                    ),
+                )
+            cf = comp.get("family")
+            if cf not in SUPPORTED_FAMILIES or cf == "mixture":
+                raise InvalidParameterError(
+                    param_name=f"components[{i}].family",
+                    value=0.0,
+                    reason=(
+                        f"mixture component family '{cf}' is invalid. "
+                        f"Must be one of {non_mixture_families}. "
+                        f"Nested mixtures are not supported."
+                    ),
+                )
+            w = comp.get("weight")
+            if isinstance(w, bool) or not isinstance(w, (int, float, np.floating)):
+                raise InvalidParameterError(
+                    param_name=f"components[{i}].weight",
+                    value=0.0,
+                    reason=(
+                        f"mixture component weight must be a number, "
+                        f"got {type(w).__name__}"
+                    ),
+                )
+            if float(w) <= 0:
+                raise InvalidParameterError(
+                    param_name=f"components[{i}].weight",
+                    value=float(w),
+                    reason="mixture component weight must be strictly positive",
+                )
+            sub_pm = comp.get("param_model")
+            if not isinstance(sub_pm, dict):
+                raise InvalidParameterError(
+                    param_name=f"components[{i}].param_model",
+                    value=0.0,
+                    reason="mixture component param_model must be a dict",
+                )
+            validate_param_model(f"{name}.components[{i}]", cf, sub_pm, columns)
+        return
+
     if family in VALIDATED_PARAM_KEYS:
         allowed = VALIDATED_PARAM_KEYS[family]
         # Unknown-key check fires before missing-required so that a misnamed-

@@ -68,6 +68,37 @@ class TestWidenVariance:
         assert overrides["measures"]["revenue"]["sigma"] == 2.0
         assert overrides["measures"]["cost"]["sigma"] == 3.0
 
+    def test_skips_mixture_column_when_columns_provided(self):
+        """IS-1 opt-out: mixture columns have no single sigma to widen."""
+        columns = {"revenue": {"family": "mixture"}}
+        overrides: dict = {}
+
+        result = widen_variance(
+            Check("ks_revenue", False), overrides, factor=2.0, columns=columns,
+        )
+
+        assert result is overrides
+        # No measures.revenue.sigma key written.
+        assert overrides == {}
+
+    def test_widens_non_mixture_column_when_columns_provided(self):
+        """columns kwarg only opts mixture out — non-mixture columns still widen."""
+        columns = {"revenue": {"family": "gaussian"}}
+        overrides: dict = {}
+
+        widen_variance(
+            Check("ks_revenue", False), overrides, factor=2.0, columns=columns,
+        )
+
+        assert overrides["measures"]["revenue"]["sigma"] == 2.0
+
+    def test_default_columns_none_preserves_legacy_behavior(self):
+        """When columns is omitted, mixture detection is skipped (legacy callers)."""
+        overrides: dict = {}
+        widen_variance(Check("ks_revenue", False), overrides, factor=2.0)
+        # Even though we don't know revenue's family, sigma is widened.
+        assert overrides["measures"]["revenue"]["sigma"] == 2.0
+
 
 class TestAmplifyMagnitude:
     def test_amplifies_z_score_on_matching_pattern(self):

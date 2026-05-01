@@ -69,8 +69,14 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--model",
-        default="gemini-2.5-pro",
-        help="LLM model to use (default: gemini-2.5-pro)",
+        default="gpt-5.4-mini-2026-03-17",
+        help="LLM model to use (default: gpt-5.4-mini-2026-03-17)",
+    )
+    parser.add_argument(
+        "--max-domains",
+        type=int,
+        default=None,
+        help="Only process the first N domains (smoke test)",
     )
     parser.add_argument(
         "--workers",
@@ -108,15 +114,12 @@ def load_api_key() -> str:
                         key, _, val = line.partition("=")
                         os.environ.setdefault(key.strip(), val.strip())
 
-    for var in ("GEMINI_API_KEY", "OPENAI_API_KEY"):
-        key = os.environ.get(var)
-        if key:
-            log.info("Using API key from %s", var)
-            return key
+    key = os.environ.get("OPENAI_API_KEY")
+    if key:
+        log.info("Using API key from OPENAI_API_KEY")
+        return key
 
-    log.error(
-        "No API key found. Set GEMINI_API_KEY or OPENAI_API_KEY in your .env file."
-    )
+    log.error("No API key found. Set OPENAI_API_KEY in your .env file.")
     sys.exit(1)
 
 
@@ -146,6 +149,9 @@ def main() -> None:
     with open(POOL_PATH) as f:
         pool = json.load(f)
     domains: list[dict] = pool["domains"]
+    if args.max_domains is not None:
+        domains = domains[: args.max_domains]
+        log.info("Limiting to first %d domains (smoke test)", len(domains))
     log.info("Domain pool has %d domains", len(domains))
 
     # -----------------------------------------------------------------------

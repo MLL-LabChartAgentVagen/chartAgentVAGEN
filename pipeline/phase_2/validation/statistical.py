@@ -22,13 +22,17 @@ logger = logging.getLogger(__name__)
 
 
 def max_conditional_deviation(
-    observed: dict[str, dict[str, float]],
-    declared: dict[str, dict[str, float]],
+    observed: dict[Any, Any],
+    declared: dict[Any, Any],
 ) -> float:
     """Compute the max absolute deviation between observed and declared
     conditional weight distributions.
 
-    [Subtask 8.3.7]
+    [Subtask 8.3.7; DS-4 multi-column on]
+
+    Recurses through arbitrarily nested dicts of equal depth. At a
+    leaf node the values are floats keyed by child value; at non-leaf
+    nodes the values are nested dicts keyed by parent value.
 
     Args:
         observed: Normalized conditional distribution (nested dict).
@@ -37,21 +41,36 @@ def max_conditional_deviation(
     Returns:
         Maximum absolute deviation across all cells.
     """
-    max_dev: float = 0.0
-    all_parent_keys = set(observed.keys()) | set(declared.keys())
+    all_keys = set(observed.keys()) | set(declared.keys())
+    if not all_keys:
+        return 0.0
 
-    for parent_key in all_parent_keys:
-        obs_inner = observed.get(parent_key, {})
-        decl_inner = declared.get(parent_key, {})
-        all_child_keys = set(obs_inner.keys()) | set(decl_inner.keys())
+    # Determine leaf vs recursive level by inspecting any present value.
+    sample_val: Any = None
+    for d in (observed, declared):
+        if d:
+            sample_val = next(iter(d.values()))
+            break
 
-        for child_key in all_child_keys:
-            obs_val = obs_inner.get(child_key, 0.0)
-            decl_val = decl_inner.get(child_key, 0.0)
+    if not isinstance(sample_val, dict):
+        # Leaf: {child_val: weight} on both sides.
+        max_dev = 0.0
+        for k in all_keys:
+            obs_val = float(observed.get(k, 0.0))
+            decl_val = float(declared.get(k, 0.0))
             dev = abs(obs_val - decl_val)
             if dev > max_dev:
                 max_dev = dev
+        return max_dev
 
+    # Recursive level: drill into each parent value.
+    max_dev = 0.0
+    for k in all_keys:
+        obs_inner = observed.get(k, {})
+        decl_inner = declared.get(k, {})
+        dev = max_conditional_deviation(obs_inner, decl_inner)
+        if dev > max_dev:
+            max_dev = dev
     return max_dev
 
 
@@ -86,14 +105,11 @@ def _iter_predictor_cells(
     """
     param_model = col_meta.get("param_model", {})
 
-    # Collect all categorical columns referenced in effects
+    # Collect all categorical columns referenced in effects.
+    # For mixture (IS-1) param_models the effects live inside per-component
+    # param_models, so walk recursively.
     predictor_cols: set[str] = set()
-    for param_key, param_spec in param_model.items():
-        effects = param_spec.get("effects", {})
-        for effect_col in effects:
-            cat_meta = columns_meta.get(effect_col, {})
-            if cat_meta.get("type") == "categorical":
-                predictor_cols.add(effect_col)
+    _collect_predictor_cols(param_model, columns_meta, predictor_cols)
 
     if not predictor_cols:
         # No predictors — single global cell
@@ -125,6 +141,45 @@ def _iter_predictor_cells(
     # Sort by cell size descending, cap at max_cells
     cells.sort(key=lambda x: len(x[1]), reverse=True)
     return cells[:max_cells]
+
+
+def _collect_predictor_cols(
+    param_model: dict[str, Any],
+    columns_meta: dict[str, Any],
+    out: set[str],
+) -> None:
+    """Walk a param_model (recursively for mixture) and collect categorical
+    predictor columns referenced in any `effects` block. Mutates `out`.
+    """
+    components = param_model.get("components")
+    if isinstance(components, list):
+        for comp in components:
+            sub_pm = comp.get("param_model") if isinstance(comp, dict) else None
+            if isinstance(sub_pm, dict):
+                _collect_predictor_cols(sub_pm, columns_meta, out)
+        return
+    for _param_key, param_spec in param_model.items():
+        if not isinstance(param_spec, dict):
+            continue
+        effects = param_spec.get("effects", {})
+        for effect_col in effects:
+            cat_meta = columns_meta.get(effect_col, {})
+            if cat_meta.get("type") == "categorical":
+                out.add(effect_col)
+
+
+class _MixtureFrozen:
+    """scipy frozen-dist-like adapter exposing .cdf() for kstest (DS-3).
+
+    For a mixture of K components with normalized weights w_k and frozen scipy
+    distributions D_k: cdf(x) = sum(w_k * D_k.cdf(x)).
+    """
+
+    def __init__(self, components: list[tuple[float, Any]]):
+        self.components = components  # list of (normalized_weight, frozen_dist)
+
+    def cdf(self, x):
+        return sum(w * d.cdf(x) for w, d in self.components)
 
 
 def _expected_cdf(family: str, params: dict[str, float]) -> Any:
@@ -163,18 +218,54 @@ def _expected_cdf(family: str, params: dict[str, float]) -> Any:
     elif family == "poisson":
         # KS test on discrete distributions is approximate
         return None
+    elif family == "mixture":
+        return _expected_cdf_mixture(params)
     return None
+
+
+def _expected_cdf_mixture(params: dict[str, Any]) -> _MixtureFrozen | None:
+    """Build a frozen mixture CDF from cell-resolved mixture params (DS-3).
+
+    `params` shape (from _compute_cell_params recursion):
+      {"components": [{"family": str, "weight": float, "params": {...}}, ...]}
+
+    Returns None if any component family is unsupported by _expected_cdf
+    (e.g. poisson) — the cell will then be soft-passed by the caller, matching
+    the existing per-family fallback semantics.
+    """
+    components = params.get("components")
+    if not components:
+        return None
+    frozen: list[tuple[float, Any]] = []
+    total = 0.0
+    for i, comp in enumerate(components):
+        sub = _expected_cdf(comp["family"], comp["params"])
+        if sub is None:
+            logger.debug(
+                "mixture KS skipped: component[%d] family='%s' has no scipy CDF.",
+                i, comp["family"],
+            )
+            return None
+        frozen.append((float(comp["weight"]), sub))
+        total += float(comp["weight"])
+    if total <= 0:
+        return None
+    return _MixtureFrozen([(w / total, d) for w, d in frozen])
 
 
 def _compute_cell_params(
     col_meta: dict[str, Any],
     predictor_values: dict[str, str],
     columns_meta: dict[str, Any],
-) -> dict[str, float]:
+) -> dict[str, Any]:
     """Compute expected distribution parameters for a predictor cell.
 
     For each param key in param_model, computes:
         theta = intercept + sum(effects for the cell's predictor values)
+
+    For mixture (DS-3) param_models, recurses per component and returns the
+    shape consumed by _expected_cdf_mixture:
+        {"components": [{"family", "weight", "params": <recursive>}, ...]}.
 
     Args:
         col_meta: Column metadata with param_model.
@@ -182,19 +273,40 @@ def _compute_cell_params(
         columns_meta: Full columns metadata.
 
     Returns:
-        Dict of param_key -> computed theta value.
+        Dict of param_key -> computed theta value, or the recursive mixture
+        shape described above.
     """
     param_model = col_meta.get("param_model", {})
-    result: dict[str, float] = {}
 
+    # Mixture (DS-3): recurse per component.
+    if "components" in param_model:
+        return {
+            "components": [
+                {
+                    "family": c["family"],
+                    "weight": float(c["weight"]),
+                    "params": _compute_cell_params(
+                        {"param_model": c.get("param_model", {})},
+                        predictor_values, columns_meta,
+                    ),
+                }
+                for c in param_model["components"]
+            ]
+        }
+
+    result: dict[str, float] = {}
     for param_key, param_spec in param_model.items():
-        intercept = param_spec.get("intercept", 0.0)
-        theta = intercept
-        effects = param_spec.get("effects", {})
-        for effect_col, effect_map in effects.items():
-            cell_val = predictor_values.get(effect_col)
-            if cell_val is not None and cell_val in effect_map:
-                theta += effect_map[cell_val]
+        # param_spec may be a dict (intercept + effects) or a numeric scalar.
+        if isinstance(param_spec, dict):
+            intercept = param_spec.get("intercept", 0.0)
+            theta = intercept
+            effects = param_spec.get("effects", {})
+            for effect_col, effect_map in effects.items():
+                cell_val = predictor_values.get(effect_col)
+                if cell_val is not None and cell_val in effect_map:
+                    theta += effect_map[cell_val]
+        else:
+            theta = float(param_spec)
         # Clamp positive-only params
         if param_key in ("sigma", "scale", "rate"):
             theta = max(theta, 1e-6)
@@ -254,13 +366,6 @@ def check_stochastic_ks(
             name=f"ks_{col_name}",
             passed=False,
             detail=f"No family found for stochastic measure '{col_name}'.",
-        )]
-
-    if family == "mixture":
-        return [Check(
-            name=f"ks_{col_name}",
-            passed=True,
-            detail="mixture distribution KS test not yet implemented",
         )]
 
     cells = _iter_predictor_cells(work_df, col_name, col_meta, columns_meta)
@@ -471,11 +576,14 @@ def check_group_dependency_transitions(
 ) -> list[Check]:
     """L2: Verify conditional weight distributions match declared weights.
 
-    TODO [M5 SPEC_READY #9]: L2 group dependency conditional transition check.
+    For each group dependency, computes the observed conditional
+    distribution of the child_root column given each combination of
+    parent (``on``) column values, then checks max absolute deviation
+    < 0.10 against declared ``conditional_weights``.
 
-    For each group dependency, computes the observed conditional distribution
-    of the child_root column given each value of the parent (on[0]) column,
-    then checks max absolute deviation < 0.10 against declared conditional_weights.
+    [DS-4 multi-column on]: walks the full ``on`` tuple (not just
+    ``on[0]``) so nested declared weights are compared against an
+    equally-nested observed distribution.
 
     Args:
         df: Generated DataFrame.
@@ -489,38 +597,51 @@ def check_group_dependency_transitions(
 
     for dep in group_deps:
         child_root = dep["child_root"]
-        on_cols = dep["on"]
+        on_cols = list(dep["on"])
         declared_cw = dep["conditional_weights"]
 
         if not on_cols:
             continue
 
-        parent_col = on_cols[0]
-
-        if parent_col not in df.columns or child_root not in df.columns:
+        missing_cols = [
+            c for c in on_cols + [child_root] if c not in df.columns
+        ]
+        if missing_cols:
             checks.append(Check(
                 name=f"group_dep_{child_root}",
                 passed=False,
                 detail=(
-                    f"Column '{parent_col}' or '{child_root}' "
-                    f"not found in DataFrame."
+                    f"Columns {missing_cols} not found in DataFrame "
+                    f"(group dep child='{child_root}', on={on_cols})."
                 ),
             ))
             continue
 
-        # Compute observed conditional distributions
-        observed: dict[str, dict[str, float]] = {}
-        for parent_val, group_df in df.groupby(parent_col):
-            parent_val_str = str(parent_val)
+        # Build observed nested dict at depth len(on_cols).
+        # pandas.groupby with a single string returns scalar keys; with
+        # a list of >=1 it returns tuple keys (even for length 1). We
+        # always pass a list to keep handling uniform.
+        observed: dict[str, Any] = {}
+        for raw_key, group_df in df.groupby(on_cols):
+            if not isinstance(raw_key, tuple):
+                raw_key = (raw_key,)
             child_counts = group_df[child_root].value_counts(normalize=True)
-            observed[parent_val_str] = {
+            inner_dict = {
                 str(k): float(v) for k, v in child_counts.items()
             }
+
+            node = observed
+            for level, kv in enumerate(raw_key):
+                kv_str = str(kv)
+                if level == len(on_cols) - 1:
+                    node[kv_str] = inner_dict
+                else:
+                    node = node.setdefault(kv_str, {})
 
         dev = max_conditional_deviation(observed, declared_cw)
         passed = bool(dev < 0.10)
         detail = (
-            f"parent='{parent_col}', child='{child_root}', "
+            f"parents={on_cols}, child='{child_root}', "
             f"max_deviation={dev:.4f} ({'<' if passed else '>='} 0.10)"
         )
         checks.append(Check(

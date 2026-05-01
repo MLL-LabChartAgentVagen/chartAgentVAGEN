@@ -434,10 +434,10 @@ def check_root_dag_acyclic(
     """
     adjacency: dict[str, list[str]] = {}
     for dep in group_dependencies:
-        parent = dep.on[0]
-        adjacency.setdefault(parent, [])
-        adjacency.setdefault(dep.child_root, [])
-        adjacency[parent].append(dep.child_root)
+        for parent in dep.on:
+            adjacency.setdefault(parent, [])
+            adjacency.setdefault(dep.child_root, [])
+            adjacency[parent].append(dep.child_root)
 
     adjacency.setdefault(new_parent, [])
     adjacency.setdefault(new_child, [])

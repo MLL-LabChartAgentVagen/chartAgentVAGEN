@@ -67,8 +67,9 @@ SYSTEM_PROMPT_TEMPLATE: Final[str] = (
     "  sim.add_group_dependency(child_root, on, conditional_weights)\n"
     "      # Cross-group dependency between ROOT columns only; must be DAG\n"
     "  sim.inject_pattern(type, target, col, params)\n"
-    # TODO [M1-NC-7]: censoring kwarg deferred — re-add when engine/realism.py supports it.
-    "  sim.set_realism(missing_rate, dirty_rate)    # optional\n"
+    "  sim.set_realism(missing_rate, dirty_rate, censoring=None)    # optional\n"
+    "      # censoring={\"col\": {\"type\": \"right\"|\"left\"|\"interval\", \"threshold\": float}}\n"
+    "      # interval form: {\"col\": {\"type\": \"interval\", \"low\": float, \"high\": float}}\n"
     "\n"
     "YEARLY-GRAIN HANDLING:\n"
     "For yearly data (e.g., annual cycles 2019–2024) do NOT use add_temporal.\n"
@@ -84,9 +85,7 @@ SYSTEM_PROMPT_TEMPLATE: Final[str] = (
     'SUPPORTED DISTRIBUTIONS: "gaussian", "lognormal", "gamma", "beta", "uniform",\n'
     '                         "poisson", "exponential", "mixture"\n'
     "\n"
-    # TODO [M1-NC-6]: re-add "ranking_reversal", "dominance_shift",
-    # "convergence", "seasonal_anomaly" when engine/patterns.py implements them.
-    'PATTERN_TYPES: "outlier_entity", "trend_break"\n'
+    'PATTERN_TYPES: "outlier_entity", "trend_break", "ranking_reversal", "dominance_shift", "convergence", "seasonal_anomaly"\n'
     "\n"
     "HARD CONSTRAINTS — the script MUST satisfy ALL:\n"
     "1. ATOMIC_GRAIN: each row = one indivisible event.\n"
@@ -212,6 +211,30 @@ SYSTEM_PROMPT_TEMPLATE: Final[str] = (
     '        target="hospital == \'Huashan\'",\n'
     '        col="wait_minutes",\n'
     '        params={"break_point": "2024-03-15", "magnitude": 0.4})\n'
+    "\n"
+    '    sim.inject_pattern("ranking_reversal",\n'
+    '        target="severity == \'Severe\'",\n'
+    '        col="wait_minutes",\n'
+    '        params={"metrics": ["wait_minutes", "satisfaction"],\n'
+    '                "entity_col": "hospital"})\n'
+    "\n"
+    '    sim.inject_pattern("dominance_shift",\n'
+    '        target="hospital == \'Xiehe\'",\n'
+    '        col="wait_minutes",\n'
+    '        params={"entity_filter": "Xiehe",\n'
+    '                "split_point": "2024-04-01",\n'
+    '                "entity_col": "hospital"})\n'
+    "\n"
+    '    sim.inject_pattern("convergence",\n'
+    '        target="severity == \'Severe\'",\n'
+    '        col="wait_minutes",\n'
+    '        params={"reduction": 0.4})\n'
+    "\n"
+    '    sim.inject_pattern("seasonal_anomaly",\n'
+    '        target="severity == \'Severe\'",\n'
+    '        col="wait_minutes",\n'
+    '        params={"anomaly_window": ["2024-05-15", "2024-06-30"],\n'
+    '                "magnitude": 0.5})\n'
     "\n"
     "    return sim.generate()\n"
     f"{_CODE_FENCE}\n"

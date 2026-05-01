@@ -352,18 +352,13 @@ def _sample_stochastic(
         ndarray of sampled values.
 
     Raises:
-        NotImplementedError: For mixture family (P1-1).
         ValueError: For unknown families.
     """
     family = col_meta.get("family", "")
 
-    # TODO [M1-NC-1 / P1-1]: mixture distribution sampling deferred.
+    # IS-1: dispatch to mixture sampler.
     if family == "mixture":
-        raise NotImplementedError(
-            "mixture distribution sampling not yet implemented. "
-            "Expected param_model schema: {'components': [{'family': str, "
-            "'weight': float, 'params': {...}}, ...]}"
-        )
+        return _sample_mixture(col_name, col_meta, rows, rng, overrides)
 
     # Determine row count
     n_rows = 0
@@ -376,7 +371,23 @@ def _sample_stochastic(
     params = _compute_per_row_params(
         col_name, col_meta, rows, n_rows, overrides,
     )
+    return _sample_family(col_name, family, params, n_rows, rng)
 
+
+def _sample_family(
+    col_name: str,
+    family: str,
+    params: dict[str, np.ndarray],
+    n_rows: int,
+    rng: np.random.Generator,
+) -> np.ndarray:
+    """Dispatch a per-row sample for one (already-resolved) distribution family.
+
+    `params` must contain the per-row arrays (mu, sigma) of length n_rows.
+    Calls _validate_distribution_params before dispatch so the column/family/
+    row-index error context is preserved (especially when called from
+    _sample_mixture on a masked subset).
+    """
     mu = params.get("mu", np.zeros(n_rows))
     sigma = params.get("sigma", np.ones(n_rows))
 
@@ -401,6 +412,72 @@ def _sample_stochastic(
         return rng.exponential(1.0 / rate)
     else:
         raise ValueError(f"Unknown distribution family: '{family}'")
+
+
+def _sample_mixture(
+    col_name: str,
+    col_meta: dict[str, Any],
+    rows: dict[str, np.ndarray],
+    rng: np.random.Generator,
+    overrides: dict | None = None,
+) -> np.ndarray:
+    """Sample from a mixture distribution (IS-1).
+
+    Algorithm:
+      1. Read components + weights, auto-normalize weights to sum to 1.
+      2. Per-row component assignment via rng.choice with normalized weights.
+      3. For each component k: build minimal sub_meta {"param_model": ...},
+         compute per-row params with the FULL n_rows (predictor effects need
+         the full rows dict), mask to the rows assigned to component k, and
+         call _sample_family on the masked subset.
+
+    Note: `overrides` is not propagated to per-component _compute_per_row_params
+    calls. Mixture is opted out of widen_variance autofix (see autofix.py).
+    The full-then-mask call to _compute_per_row_params is K-fold redundant on
+    intercept+effects arithmetic but is the only correct path: predictor-effect
+    masks are derived from rows[effect_col] which spans all n_rows.
+    """
+    del overrides  # Mixture is opted out of widen_variance; no per-component overrides.
+
+    components = col_meta.get("param_model", {}).get("components")
+    if not components:
+        raise ValueError(
+            f"mixture column '{col_name}' has no components in param_model"
+        )
+
+    weights = np.array([c["weight"] for c in components], dtype=float)
+    weight_sum = weights.sum()
+    if weight_sum <= 0:
+        raise ValueError(
+            f"mixture column '{col_name}' has non-positive weight sum {weight_sum}"
+        )
+    weights = weights / weight_sum
+
+    n_rows = 0
+    for v in rows.values():
+        n_rows = len(v)
+        break
+    if n_rows == 0:
+        return np.array([], dtype=np.float64)
+
+    component_idx = rng.choice(len(components), size=n_rows, p=weights)
+    out = np.zeros(n_rows, dtype=np.float64)
+
+    for k, comp in enumerate(components):
+        mask = component_idx == k
+        if not mask.any():
+            continue
+        sub_col_name = f"{col_name}[c{k}]"
+        sub_meta = {"param_model": comp["param_model"]}
+        full_params = _compute_per_row_params(
+            sub_col_name, sub_meta, rows, n_rows, overrides=None,
+        )
+        masked_params = {p: arr[mask] for p, arr in full_params.items()}
+        out[mask] = _sample_family(
+            sub_col_name, comp["family"], masked_params, int(mask.sum()), rng,
+        )
+
+    return out
 
 
 def _compute_per_row_params(

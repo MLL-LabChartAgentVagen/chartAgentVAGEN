@@ -166,13 +166,157 @@ class TestValidateParamModelKeySchema:
             )
         assert "rate" in str(exc.value)
 
-    def test_mixture_not_validated(self):
-        """Mixture (IS-1) is intentionally absent from VALIDATED_PARAM_KEYS;
-        unknown-key validation does not apply until its schema is defined."""
+    def test_mixture_absent_from_validated_param_keys(self):
+        """Mixture (IS-1) does not use the per-family key whitelist; its schema
+        is validated by a dedicated branch in validate_param_model."""
         assert "mixture" not in VALIDATED_PARAM_KEYS
-        # Should not raise on schema check (sampling is stubbed elsewhere)
+
+
+class TestValidateParamModelMixture:
+    """IS-1 mixture schema validation (validate_param_model dedicated branch)."""
+
+    def _good_components(self) -> list[dict]:
+        return [
+            {
+                "family": "gaussian", "weight": 0.6,
+                "param_model": {"mu": 0.0, "sigma": 1.0},
+            },
+            {
+                "family": "gaussian", "weight": 0.4,
+                "param_model": {"mu": 5.0, "sigma": 1.0},
+            },
+        ]
+
+    def test_well_formed_two_component_gaussian_accepted(self):
         validate_param_model(
-            name="m", family="mixture",
-            param_model={"components": [{"family": "gaussian", "weight": 1.0}]},
+            name="y", family="mixture",
+            param_model={"components": self._good_components()},
             columns={},
         )
+
+    def test_missing_components_rejected(self):
+        with pytest.raises(InvalidParameterError) as exc:
+            validate_param_model(
+                name="y", family="mixture",
+                param_model={"foo": "bar"},
+                columns={},
+            )
+        msg = str(exc.value)
+        assert "components" in msg
+        assert "non-empty" in msg
+
+    def test_empty_components_list_rejected(self):
+        with pytest.raises(InvalidParameterError) as exc:
+            validate_param_model(
+                name="y", family="mixture",
+                param_model={"components": []},
+                columns={},
+            )
+        assert "non-empty" in str(exc.value)
+
+    def test_components_not_a_list_rejected(self):
+        with pytest.raises(InvalidParameterError):
+            validate_param_model(
+                name="y", family="mixture",
+                param_model={"components": "not a list"},
+                columns={},
+            )
+
+    def test_nested_mixture_rejected(self):
+        comps = [{
+            "family": "mixture", "weight": 1.0,
+            "param_model": {"components": []},
+        }]
+        with pytest.raises(InvalidParameterError) as exc:
+            validate_param_model(
+                name="y", family="mixture",
+                param_model={"components": comps}, columns={},
+            )
+        msg = str(exc.value)
+        assert "components[0].family" in msg
+        assert "Nested mixtures" in msg
+
+    def test_unsupported_component_family_rejected(self):
+        comps = [{
+            "family": "weibull", "weight": 1.0,
+            "param_model": {"mu": 1.0},
+        }]
+        with pytest.raises(InvalidParameterError) as exc:
+            validate_param_model(
+                name="y", family="mixture",
+                param_model={"components": comps}, columns={},
+            )
+        assert "weibull" in str(exc.value)
+
+    @pytest.mark.parametrize("bad_weight", [0, -1.0, -0.5])
+    def test_non_positive_weight_rejected(self, bad_weight):
+        comps = [{
+            "family": "gaussian", "weight": bad_weight,
+            "param_model": {"mu": 0.0, "sigma": 1.0},
+        }]
+        with pytest.raises(InvalidParameterError) as exc:
+            validate_param_model(
+                name="y", family="mixture",
+                param_model={"components": comps}, columns={},
+            )
+        assert "strictly positive" in str(exc.value)
+
+    @pytest.mark.parametrize("bad_weight", ["1.0", None, True, False])
+    def test_non_numeric_weight_rejected(self, bad_weight):
+        comps = [{
+            "family": "gaussian", "weight": bad_weight,
+            "param_model": {"mu": 0.0, "sigma": 1.0},
+        }]
+        with pytest.raises(InvalidParameterError) as exc:
+            validate_param_model(
+                name="y", family="mixture",
+                param_model={"components": comps}, columns={},
+            )
+        assert "must be a number" in str(exc.value)
+
+    def test_numpy_float_weight_accepted(self):
+        import numpy as np
+        comps = [{
+            "family": "gaussian", "weight": np.float64(0.5),
+            "param_model": {"mu": 0.0, "sigma": 1.0},
+        }, {
+            "family": "gaussian", "weight": np.float32(0.5),
+            "param_model": {"mu": 5.0, "sigma": 1.0},
+        }]
+        validate_param_model(
+            name="y", family="mixture",
+            param_model={"components": comps}, columns={},
+        )
+
+    def test_missing_param_model_in_component_rejected(self):
+        comps = [{"family": "gaussian", "weight": 1.0}]
+        with pytest.raises(InvalidParameterError) as exc:
+            validate_param_model(
+                name="y", family="mixture",
+                param_model={"components": comps}, columns={},
+            )
+        assert "param_model" in str(exc.value)
+
+    def test_recursive_validation_catches_bad_component_param_model(self):
+        # Beta with alpha/beta keys must be caught by recursion into the
+        # component's per-family validator.
+        comps = [{
+            "family": "beta", "weight": 1.0,
+            "param_model": {"alpha": 1.0, "beta": 1.0},
+        }]
+        with pytest.raises(InvalidParameterError) as exc:
+            validate_param_model(
+                name="y", family="mixture",
+                param_model={"components": comps}, columns={},
+            )
+        msg = str(exc.value)
+        assert "alpha" in msg or "beta" in msg
+
+    def test_component_not_a_dict_rejected(self):
+        with pytest.raises(InvalidParameterError) as exc:
+            validate_param_model(
+                name="y", family="mixture",
+                param_model={"components": ["not a dict"]},
+                columns={},
+            )
+        assert "components[0]" in str(exc.value)

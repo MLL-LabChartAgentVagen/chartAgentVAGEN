@@ -24,21 +24,37 @@ from . import groups as _groups
 logger = logging.getLogger(__name__)
 
 # §2.1.2 pattern types
-# TODO [M1-NC-6]: re-add "ranking_reversal", "dominance_shift", "convergence",
-# "seasonal_anomaly" when engine/patterns.py implements them.
 VALID_PATTERN_TYPES: frozenset[str] = frozenset({
-    "outlier_entity", "trend_break",
+    "outlier_entity", "trend_break", "ranking_reversal", "dominance_shift",
+    "convergence", "seasonal_anomaly",
 })
 
 # Required params for fully-specified pattern types
-# TODO [M1-NC-6]: re-add entries for the deferred pattern types when implemented:
-#   "ranking_reversal": frozenset({"metrics", "entity_col"}),
-#   "dominance_shift":  frozenset({"entity_filter", "col", "split_point"}),
-#   "convergence":      no required params (fully unspecified)
-#   "seasonal_anomaly": no required params (fully unspecified)
 PATTERN_REQUIRED_PARAMS: dict[str, frozenset[str]] = {
     "outlier_entity": frozenset({"z_score"}),
     "trend_break": frozenset({"break_point", "magnitude"}),
+    # ranking_reversal: "metrics" required (list of 2 measure cols);
+    # "entity_col" optional — falls back to first categorical root in
+    # the columns registry inside engine.patterns.inject_ranking_reversal.
+    "ranking_reversal": frozenset({"metrics"}),
+    # dominance_shift: "entity_filter" (target entity value) and
+    # "split_point" (date) required; "entity_col" optional (falls back
+    # to first dim-group root via _resolve_first_dim_root); "rank_change"
+    # optional (default 1, validator threshold); "magnitude" optional
+    # (default 1.0, used by inject_dominance_shift to size the
+    # peer-relative shift).
+    "dominance_shift": frozenset({"entity_filter", "split_point"}),
+    # convergence: all params optional. "split_point" defaults to temporal
+    # median; "entity_col" falls back to first dim-group root via
+    # _resolve_first_dim_root; "reduction" defaults to 0.3 (validator
+    # threshold); "pull_strength" defaults to 1.0 (injector pull magnitude).
+    "convergence": frozenset(),
+    # seasonal_anomaly: "anomaly_window" ([start, end] date pair) and
+    # "magnitude" required at declaration time. "z_threshold" optional
+    # (default 1.5, validator threshold). The validator keeps a defensive
+    # "last 10% of temporal range" fallback for anomaly_window in case
+    # the gate is bypassed.
+    "seasonal_anomaly": frozenset({"anomaly_window", "magnitude"}),
 }
 
 
@@ -105,11 +121,27 @@ def add_group_dependency(
     orthogonal_pairs: list[OrthogonalPair],
     child_root: str,
     on: list[str],
-    conditional_weights: dict[str, dict[str, float]],
+    conditional_weights: dict[Any, Any],
 ) -> None:
     """Declare a cross-group root-level dependency.
 
-    [Subtask 1.7.1–1.7.4]
+    [Subtask 1.7.1–1.7.4; DS-4 multi-column on]
+
+    `conditional_weights` is a nested dict whose nesting depth equals
+    `len(on)`. Outer keys index `on[0]` values, the next level indexes
+    `on[1]` values, and so on. The innermost (leaf) dict maps child
+    values to weights. Full Cartesian coverage is required across all
+    parent value combinations; leaf weights are normalized per leaf
+    (same rule as the single-column case).
+
+    Example for `on=["severity", "hospital"]`:
+
+        conditional_weights = {
+            "Mild":     {"Xiehe": {"Insurance": 0.8, "Self-Pay": 0.2},
+                         "Mayo":  {"Insurance": 0.7, "Self-Pay": 0.3}},
+            "Moderate": {"Xiehe": {"Insurance": 0.6, "Self-Pay": 0.4},
+                         "Mayo":  {"Insurance": 0.5, "Self-Pay": 0.5}},
+        }
 
     Args:
         columns: Column registry.
@@ -118,17 +150,12 @@ def add_group_dependency(
         orthogonal_pairs: Orthogonal pairs list (for conflict check).
         child_root: Dependent root column name.
         on: List of parent root column names.
-        conditional_weights: Per-parent-value weight distributions.
+        conditional_weights: Nested per-parent-value weight distributions
+            (nesting depth = len(on)).
     """
-    # P2-4: Restrict to single-column `on` for v1
     if not on:
         raise ValueError(
             f"'on' must contain at least one column, got empty list."
-        )
-    if len(on) != 1:
-        raise NotImplementedError(
-            f"Multi-column 'on' is not supported in v1. "
-            f"Got on={on} (length {len(on)}). Use a single column."
         )
 
     # Validate child_root is a root
@@ -144,60 +171,36 @@ def add_group_dependency(
         if not _groups.is_group_root(parent_col, columns, groups):
             raise NonRootDependencyError(column_name=parent_col)
 
-    # Check orthogonal conflict
+    # Check orthogonal conflict against every parent
     child_group = _groups.get_group_for_column(child_root, columns)
-    parent_group = _groups.get_group_for_column(on[0], columns)
-    if child_group and parent_group:
-        _check_orthogonal_conflict(
-            child_group, parent_group, orthogonal_pairs,
-        )
-
-    # Check root DAG acyclicity
-    _dag.check_root_dag_acyclic(group_dependencies, child_root, on[0])
-
-    # Validate and normalize conditional weights
-    child_values = columns[child_root]["values"]
-    parent_values = columns[on[0]]["values"]
-
-    if not conditional_weights:
-        raise ValueError(
-            f"conditional_weights for '{child_root}' -> '{on[0]}' is empty."
-        )
-
-    # Validate all parent values are covered
-    provided_keys = set(conditional_weights.keys())
-    expected_keys = set(parent_values)
-    missing = expected_keys - provided_keys
-    if missing:
-        raise ValueError(
-            f"conditional_weights for '{child_root}' is missing keys "
-            f"for parent values: {sorted(missing)}."
-        )
-
-    extra = provided_keys - expected_keys
-    if extra:
-        raise ValueError(
-            f"conditional_weights for '{child_root}' contains keys "
-            f"not in parent '{on[0]}' values: {sorted(extra)}."
-        )
-
-    # Normalize each row
-    normalized_cw: dict[str, dict[str, float]] = {}
-    for parent_val, child_weight_map in conditional_weights.items():
-        # Validate child value coverage
-        child_provided = set(child_weight_map.keys())
-        child_expected = set(child_values)
-        child_missing = child_expected - child_provided
-        if child_missing:
-            raise ValueError(
-                f"conditional_weights['{parent_val}'] is missing child "
-                f"values: {sorted(child_missing)}."
+    for parent_col in on:
+        parent_group = _groups.get_group_for_column(parent_col, columns)
+        if child_group and parent_group:
+            _check_orthogonal_conflict(
+                child_group, parent_group, orthogonal_pairs,
             )
 
-        normalized_cw[parent_val] = _val.normalize_weight_dict_values(
-            label=f"conditional_weights['{parent_val}']",
-            weights=child_weight_map,
+    # Check root DAG acyclicity for every parent edge
+    for parent_col in on:
+        _dag.check_root_dag_acyclic(
+            group_dependencies, child_root, parent_col,
         )
+
+    # Validate + normalize the nested conditional_weights dict
+    if not conditional_weights:
+        raise ValueError(
+            f"conditional_weights for '{child_root}' -> {on} is empty."
+        )
+
+    parent_value_sets = [columns[p]["values"] for p in on]
+    child_values = columns[child_root]["values"]
+    normalized_cw = _validate_and_normalize_nested_weights(
+        cw=conditional_weights,
+        parent_value_sets=parent_value_sets,
+        parent_cols=list(on),
+        child_values=child_values,
+        path=[],
+    )
 
     # Register dependency
     dep = GroupDependency(
@@ -288,7 +291,8 @@ def set_realism(
         realism_config_holder: Single-element list to hold config (mutated).
         missing_rate: Fraction of cells to NaN.
         dirty_rate: Fraction of categorical cells to corrupt.
-        censoring: Optional censoring config (placeholder).
+        censoring: Optional per-column censoring config; see
+            engine.realism.inject_censoring.
 
     Returns:
         The realism config dict.
@@ -301,6 +305,35 @@ def set_realism(
         raise ValueError(
             f"dirty_rate must be in [0, 1], got {dirty_rate}."
         )
+
+    if censoring is not None:
+        if not isinstance(censoring, dict):
+            raise ValueError(
+                f"censoring must be a dict, got {type(censoring).__name__}."
+            )
+        for col, spec in censoring.items():
+            if not isinstance(spec, dict):
+                raise ValueError(
+                    f"censoring[{col!r}] must be a dict, got {type(spec).__name__}."
+                )
+            if "type" not in spec:
+                raise ValueError(
+                    f"censoring[{col!r}] missing required key 'type'."
+                )
+            c_type = spec["type"]
+            if c_type not in ("right", "left", "interval"):
+                raise ValueError(
+                    f"censoring[{col!r}].type must be one of "
+                    f"'right', 'left', 'interval'; got {c_type!r}."
+                )
+            if c_type in ("right", "left") and "threshold" not in spec:
+                raise ValueError(
+                    f"censoring[{col!r}] requires 'threshold' for type {c_type!r}."
+                )
+            if c_type == "interval" and ("low" not in spec or "high" not in spec):
+                raise ValueError(
+                    f"censoring[{col!r}] requires both 'low' and 'high' for interval."
+                )
 
     config: dict[str, Any] = {
         "missing_rate": missing_rate,
@@ -346,14 +379,109 @@ def _check_dependency_conflict(
     candidate_pair = frozenset((group_a, group_b))
     for dep in group_dependencies:
         dep_child_group = _groups.get_group_for_column(dep.child_root, columns)
-        dep_parent_group = _groups.get_group_for_column(dep.on[0], columns)
-        if dep_child_group is None or dep_parent_group is None:
+        if dep_child_group is None:
             continue
-        dep_pair = frozenset((dep_child_group, dep_parent_group))
-        if dep_pair == candidate_pair:
+        for parent_col in dep.on:
+            dep_parent_group = _groups.get_group_for_column(parent_col, columns)
+            if dep_parent_group is None:
+                continue
+            dep_pair = frozenset((dep_child_group, dep_parent_group))
+            if dep_pair == candidate_pair:
+                raise ValueError(
+                    f"Groups '{group_a}' and '{group_b}' already have a "
+                    f"group dependency (child_root='{dep.child_root}', "
+                    f"on={dep.on}). Cannot also declare them orthogonal "
+                    f"(mutual exclusion per §2.2)."
+                )
+
+
+def _validate_and_normalize_nested_weights(
+    cw: dict,
+    parent_value_sets: list[list[Any]],
+    parent_cols: list[str],
+    child_values: list[Any],
+    path: list[Any],
+) -> dict:
+    """Recursively validate that *cw* covers the Cartesian product of
+    *parent_value_sets* and that each leaf covers *child_values*. Leaf
+    weights are normalized via ``_val.normalize_weight_dict_values``.
+
+    Args:
+        cw: Nested conditional_weights dict at the current recursion level.
+        parent_value_sets: Remaining parent value sets (one per remaining
+            recursion level). Empty when ``cw`` is at the leaf.
+        parent_cols: Remaining parent column names (parallel to
+            *parent_value_sets*); used for error messages.
+        child_values: Allowed child values at the leaf.
+        path: Keys traversed so far (for error messages).
+
+    Returns:
+        New nested dict mirroring *cw* with leaves normalized to sum 1.0.
+
+    Raises:
+        ValueError: If any level is missing required keys, contains
+            extra keys, has a non-dict value at a non-leaf level, or a
+            leaf has a non-dict value / negative weight / all-zero
+            weights.
+    """
+    path_repr = "".join(f"[{k!r}]" for k in path)
+
+    # Leaf: cw should be {child_val: weight}
+    if not parent_value_sets:
+        if not isinstance(cw, dict):
             raise ValueError(
-                f"Groups '{group_a}' and '{group_b}' already have a "
-                f"group dependency (child_root='{dep.child_root}', "
-                f"on={dep.on}). Cannot also declare them orthogonal "
-                f"(mutual exclusion per §2.2)."
+                f"conditional_weights{path_repr} expected a "
+                f"{{child_value: weight}} dict at the leaf, got "
+                f"{type(cw).__name__}."
             )
+        provided = set(cw.keys())
+        expected = set(child_values)
+        missing = expected - provided
+        if missing:
+            raise ValueError(
+                f"conditional_weights{path_repr} is missing child "
+                f"values: {sorted(missing)}."
+            )
+        extra = provided - expected
+        if extra:
+            raise ValueError(
+                f"conditional_weights{path_repr} contains keys not "
+                f"in child values: {sorted(extra)}."
+            )
+        return _val.normalize_weight_dict_values(
+            label=f"conditional_weights{path_repr}",
+            weights=cw,
+        )
+
+    # Recursive level: cw should be {parent_val: <nested>}
+    if not isinstance(cw, dict):
+        raise ValueError(
+            f"conditional_weights{path_repr} expected a nested dict at "
+            f"depth {len(path)} (parent '{parent_cols[0]}'), got "
+            f"{type(cw).__name__}."
+        )
+    expected = set(parent_value_sets[0])
+    provided = set(cw.keys())
+    missing = expected - provided
+    if missing:
+        raise ValueError(
+            f"conditional_weights{path_repr} missing parent values "
+            f"at depth {len(path)} (parent '{parent_cols[0]}'): "
+            f"{sorted(missing)}."
+        )
+    extra = provided - expected
+    if extra:
+        raise ValueError(
+            f"conditional_weights{path_repr} contains keys not in "
+            f"parent '{parent_cols[0]}' values: {sorted(extra)}."
+        )
+    return {
+        k: _validate_and_normalize_nested_weights(
+            cw=cw[k],
+            parent_value_sets=parent_value_sets[1:],
+            parent_cols=parent_cols[1:],
+            child_values=child_values,
+            path=path + [k],
+        )
+        for k in cw
+    }

@@ -141,40 +141,68 @@ def sample_dependent_root(
 ) -> np.ndarray:
     """Sample a cross-group dependent root conditioned on parent root values.
 
-    [Subtask 4.1.2]
-    """
-    parent_col_name = dep.on[0]
-    parent_values = rows[parent_col_name]
+    [Subtask 4.1.2; DS-4 multi-column on]
 
+    Walks ``dep.conditional_weights`` to ``len(dep.on)`` levels deep.
+    For ``len(dep.on) == 1`` the original batched per-parent-value
+    path is retained so RNG draw ordering is byte-identical to before.
+    """
+    cw = dep.conditional_weights
     child_values = col_meta["values"]
     child_arr = np.array(child_values, dtype=object)
-
     result = np.empty(target_rows, dtype=object)
 
-    for parent_val, child_weight_map in dep.conditional_weights.items():
-        mask = parent_values == parent_val
-        n_matching = int(np.sum(mask))
+    # Single-parent fast path: byte-identical RNG draw sequence to v1
+    if len(dep.on) == 1:
+        parent_col_name = dep.on[0]
+        parent_values = rows[parent_col_name]
 
-        if n_matching == 0:
-            continue
+        for parent_val, child_weight_map in cw.items():
+            mask = parent_values == parent_val
+            n_matching = int(np.sum(mask))
 
-        weights_for_parent = np.array(
-            [child_weight_map.get(cv, 0.0) for cv in child_values],
+            if n_matching == 0:
+                continue
+
+            weights_for_parent = np.array(
+                [child_weight_map.get(cv, 0.0) for cv in child_values],
+                dtype=np.float64,
+            )
+
+            weight_sum = weights_for_parent.sum()
+            if weight_sum > 0:
+                weights_for_parent = weights_for_parent / weight_sum
+
+            sampled = rng.choice(
+                child_arr, size=n_matching, p=weights_for_parent,
+            )
+            result[mask] = sampled
+
+        logger.debug(
+            "sample_dependent_root: '%s' conditioned on '%s' → %d values.",
+            col_name, parent_col_name, target_rows,
+        )
+        return result
+
+    # Multi-parent: walk per-row through the nested dict
+    parent_arrays = [rows[p] for p in dep.on]
+    for i in range(target_rows):
+        node: Any = cw
+        for arr in parent_arrays:
+            node = node[arr[i]]
+        # node is {child_val: weight} (already normalized at decl time)
+        weights_for_row = np.array(
+            [node.get(cv, 0.0) for cv in child_values],
             dtype=np.float64,
         )
-
-        weight_sum = weights_for_parent.sum()
-        if weight_sum > 0:
-            weights_for_parent = weights_for_parent / weight_sum
-
-        sampled = rng.choice(
-            child_arr, size=n_matching, p=weights_for_parent,
-        )
-        result[mask] = sampled
+        s = weights_for_row.sum()
+        if s > 0:
+            weights_for_row = weights_for_row / s
+        result[i] = rng.choice(child_arr, p=weights_for_row)
 
     logger.debug(
-        "sample_dependent_root: '%s' conditioned on '%s' → %d values.",
-        col_name, parent_col_name, target_rows,
+        "sample_dependent_root: '%s' conditioned on %s → %d values.",
+        col_name, list(dep.on), target_rows,
     )
     return result
 

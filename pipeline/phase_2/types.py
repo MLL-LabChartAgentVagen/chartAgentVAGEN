@@ -12,10 +12,11 @@ Implements: §2.1, §2.1.1, §2.1.2, §2.2, §2.9 (Check/ValidationReport)
 """
 from __future__ import annotations
 
+import copy
 import logging
 from collections import OrderedDict
 from dataclasses import dataclass, field
-from typing import Any, Optional
+from typing import Any, Literal, Optional, TypedDict
 
 logger = logging.getLogger(__name__)
 
@@ -203,7 +204,7 @@ class GroupDependency:
     def to_metadata(self) -> dict[str, Any]:
         """Serialize to §2.6 metadata format for the group_dependencies block.
 
-        [Subtask 2.2.2]
+        [Subtask 2.2.2; DS-4 nested-weights deep copy]
 
         Returns:
             {"child_root": ..., "on": [...], "conditional_weights": {...}}
@@ -211,9 +212,7 @@ class GroupDependency:
         return {
             "child_root": self.child_root,
             "on": list(self.on),
-            "conditional_weights": {
-                k: dict(v) for k, v in self.conditional_weights.items()
-            },
+            "conditional_weights": copy.deepcopy(self.conditional_weights),
         }
 
     def __repr__(self) -> str:
@@ -361,6 +360,34 @@ class RealismConfig:
         }
 
 
+class CensoringSpec(TypedDict, total=False):
+    """Per-column censoring configuration. See engine.realism.inject_censoring.
+
+    [§2.1.2 — extension]
+
+    Schema:
+        {"type": "right",    "threshold": float}  -> values > threshold -> NaN
+        {"type": "left",     "threshold": float}  -> values < threshold -> NaN
+        {"type": "interval", "low": float, "high": float}  -> outside [low, high] -> NaN
+    """
+    type: Literal["right", "left", "interval"]
+    threshold: float
+    low: float
+    high: float
+
+
+class MixtureComponent(TypedDict):
+    """One component of a mixture-family stochastic measure (IS-1).
+
+    Schema: {"family": <non-mixture supported family>, "weight": <positive float>,
+             "param_model": <component-local param_model dict>}.
+    Weights are auto-normalized at sampling and KS-test time.
+    """
+    family: str
+    weight: float
+    param_model: dict[str, Any]
+
+
 class DeclarationStore:
     """Compound container for all declarations accumulated by the SDK.
 
@@ -460,3 +487,6 @@ class RetryLoopResult:
     source_code: Optional[str] = None
     attempts: int = 0
     history: list[SandboxResult] = field(default_factory=list)
+    # Set when the loop terminates without success for a reason other
+    # than retry exhaustion (e.g. ``"token_budget_exceeded (used/budget)"``).
+    skipped_reason: Optional[str] = None

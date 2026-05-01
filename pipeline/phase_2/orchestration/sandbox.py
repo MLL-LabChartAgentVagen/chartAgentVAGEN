@@ -36,6 +36,7 @@ import pandas as pd
 
 from ..exceptions import InvalidParameterError, SimulatorError
 from ..types import SandboxResult, RetryLoopResult
+from .llm_client import LLMResponse, TokenUsage
 
 logger: logging.Logger = logging.getLogger(__name__)
 
@@ -635,7 +636,7 @@ def format_error_feedback(
 
 def run_retry_loop(
     initial_code: str,
-    llm_generate_fn: Callable[[str, str], str],
+    llm_generate_fn: Callable[[str, str], "LLMResponse"],
     system_prompt: str,
     max_retries: int = DEFAULT_MAX_RETRIES,
     timeout_seconds: int = DEFAULT_TIMEOUT_SECONDS,
@@ -645,6 +646,12 @@ def run_retry_loop(
     # depends on phase_2.simulator not yet existing).  Defaults to None
     # (non-breaking).
     sandbox_namespace_factory: Callable[[], dict[str, Any]] | None = None,
+    # IS-6 token-budget half: cumulative-across-retries token guard.
+    # ``token_budget=None`` disables enforcement (no behavior change).
+    # ``initial_token_usage`` seeds the counter with the cost of the
+    # initial generation call, which happened in the orchestrator.
+    token_budget: int | None = None,
+    initial_token_usage: "TokenUsage | None" = None,
 ) -> RetryLoopResult:
     """Execute the §2.7 error feedback retry loop.
 
@@ -726,6 +733,12 @@ def run_retry_loop(
     # Resolve the namespace factory — default to the module-level builder
     ns_factory = sandbox_namespace_factory or _build_sandbox_namespace
 
+    # Cumulative token counter for the IS-6 token budget. Seed with the
+    # initial-generation usage so the budget is genuinely per-scenario.
+    tokens_used: int = (
+        initial_token_usage.total_tokens if initial_token_usage is not None else 0
+    )
+
     for attempt in range(1, max_retries + 1):
 
         logger.debug(
@@ -784,9 +797,14 @@ def run_retry_loop(
 
             # Call the LLM to generate corrected code.  The LLM
             # receives the system prompt and the error feedback as the
-            # user prompt.
+            # user prompt. The callable returns an ``LLMResponse``
+            # carrying optional token usage; we add the usage to the
+            # cumulative counter and trip the budget if exceeded.
             try:
-                current_code = llm_generate_fn(system_prompt, feedback_prompt)
+                response = llm_generate_fn(system_prompt, feedback_prompt)
+                current_code = response.code
+                if response.token_usage is not None:
+                    tokens_used += response.token_usage.total_tokens
             except Exception as llm_exc:
                 # If the LLM call itself fails, log and continue to the
                 # next iteration with the same (broken) code — degraded
@@ -795,6 +813,23 @@ def run_retry_loop(
                     "§2.7 retry loop: LLM call failed on attempt %d: %s",
                     attempt,
                     llm_exc,
+                )
+
+            # Token-budget guard: cumulative across the initial
+            # generation + every retry call. ``None`` disables.
+            if token_budget is not None and tokens_used >= token_budget:
+                logger.debug(
+                    "§2.7 retry loop: token budget exceeded after attempt %d "
+                    "(%d/%d) — short-circuiting",
+                    attempt, tokens_used, token_budget,
+                )
+                return RetryLoopResult(
+                    success=False,
+                    attempts=attempt,
+                    history=history,
+                    skipped_reason=(
+                        f"token_budget_exceeded ({tokens_used}/{token_budget})"
+                    ),
                 )
 
     # ===== Exhaustion =====

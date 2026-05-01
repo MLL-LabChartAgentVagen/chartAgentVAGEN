@@ -250,6 +250,16 @@ class MixtureComponent(TypedDict):
 type defs ~10 LOC + tests ~80 LOC ≈ 170 LOC. Comparable analog: the
 existing `_sample_stochastic` + `_compute_per_row_params` is ~150 LOC.
 
+**Autofix caveat (effective scope inflator).** The existing `ks_*`
+auto-fix strategy (`widen_variance`) indexes a single `sigma` field per
+measure — it does not naturally apply to mixture distributions, where
+each component has its own `sigma`. Co-implementing IS-1 + DS-3 also
+requires deciding whether to (a) opt mixture out of `widen_variance`
+(simplest), (b) widen the dominant-weight component, or (c) widen all
+components proportionally. Whichever is chosen, the autofix-side change
+is ~20-40 additional LOC plus tests, pushing the IS-1 + DS-3 + autofix
+combined surface above the ~300 LOC pair estimate.
+
 ---
 
 ## [IS-2] Dominance shift validation
@@ -805,20 +815,27 @@ def add_measure(
 
 ### Code span (orchestration — prompt no longer documents `scale`)
 ```python
-# pipeline/phase_2/orchestration/prompt.py:50-54
+# pipeline/phase_2/orchestration/prompt.py:53-54
 # TODO [M?-NC-scale]: re-add `scale=None` kwarg when sdk/columns.py::add_measure implements it.
 "  sim.add_measure(name, family, param_model)\n"
-"      # Stochastic ROOT measure: param_model uses {intercept, effects}\n"
-"      # Does NOT depend on any other measure\n"
+# (Lines L55-60 below describe param_model schema per family — unrelated to scale.)
 ```
 
 ### Spec references
-- §2.1.1 (L51–70): Specifies `add_measure(name, family, param_model, scale=None)`
-  signature; `scale` documented as a hint for log/linear scaling. **Spec
-  predates the runtime removal.**
-- §2.5 (L287): LLM prompt template's AVAILABLE SDK METHODS section in the
-  spec still shows `sim.add_measure(name, family, param_model, scale=None)`,
-  though the live `prompt.py` no longer emits the `scale` kwarg.
+- §2.1.1 (L51): Lists `add_measure(name, family, param_model, scale=None)`
+  in the signature line. The surrounding prose ("Stochastic root measure.
+  Sampled from a named distribution. Parameters may vary by categorical
+  context …") describes the method but **does not explain what `scale=`
+  means**. There is no log/linear/post-transform interpretation anywhere
+  in §2.1.1 or §2.3 — the kwarg is signature-only, semantics-empty.
+- §2.5 (L287): Prompt template's AVAILABLE SDK METHODS section shows
+  `sim.add_measure(name, family, param_model, scale=None)` — same
+  signature line, no behavioral description. Live `prompt.py` (L53-54)
+  no longer emits the `scale` kwarg.
+- **Spec/prompt/SDK status:** spec retains a vestigial signature line
+  with no semantics; live prompt and live SDK have both removed it. There
+  is no behavioral *claim* in the spec that the SDK contradicts — only a
+  ghost kwarg with empty semantics.
 
 ### Existing tests
 - `tests/modular/test_sdk_columns.py::TestAddMeasure::test_add_measure_rejects_scale_kwarg` —
@@ -832,14 +849,16 @@ def add_measure(
 
 ### Role in pipeline
 Was meant to be a §2.1.1 declaration-step parameter on stochastic
-measures, described in spec as a hint for log/linear scaling. Currently
-NOT in the live SDK: `add_measure` rejects the kwarg with `TypeError`,
-and the live
+measures, but the spec only lists the kwarg in the signature without ever
+documenting its semantics. Currently NOT in the live SDK: `add_measure`
+rejects the kwarg with `TypeError`, and the live
 [orchestration/prompt.py](pipeline/phase_2/orchestration/prompt.py) at
-L50-54 omits `scale=None` from the LLM-facing API documentation, even
-though spec §2.5 L287 still includes it. Net effect is a **3-way drift**:
-spec text, live LLM prompt, and live SDK disagree on whether `scale`
-exists.
+L53-54 omits `scale=None` from the LLM-facing API documentation. Spec
+§2.5 L287 still shows the kwarg in the signature line. Net effect:
+**spec, prompt, and SDK have all converged on omitting any behavior for
+`scale`** — but the spec retains a vestigial signature line as the only
+remaining mention of the parameter. This is closer to a "ghost kwarg"
+than a competing claim across the three documents.
 
 ### Gap analysis
 - **Spec defines:** §2.1.1 L51 lists `add_measure(name, family,
@@ -856,36 +875,40 @@ exists.
   `TypeError` so accidental LLM usage fails fast (good defensive choice).
   To restore: (a) decide what `scale` means, (b) wire it through
   `_compute_per_row_params` to interpret `mu`/`sigma` accordingly,
-  (c) update §2.1.1 with examples, (d) re-add to `prompt.py:50-54`. Until
+  (c) update §2.1.1 with examples, (d) re-add to `prompt.py:53-54`. Until
   (a) is settled, the absence-with-TypeError is correct behavior.
 
 ### Dependency chain
 - **Blocks:** nothing else in the inventory.
-- **Blocked by:** spec extension clarifying the semantics of `scale`.
-  This is the primary blocker — code can't be written until what
-  `scale=` means is decided.
-- **Co-dependent with:** the three drifted documents — spec §2.1.1 L51,
-  spec §2.5 L287, and live `prompt.py:50-54` — which must be re-aligned
-  together.
+- **Blocked by:** spec **addition** (not extension) defining what
+  `scale=` should mean. The spec contains no behavioral claim today —
+  this is a request to add semantics, not to clarify existing ones.
+- **Co-dependent with:** the three vestigial mentions — spec §2.1.1 L51
+  signature, spec §2.5 L287 signature, and (if restored) live
+  `prompt.py:53-54` — which must be aligned together.
 
 ### Blocking questions
-- **Spec:** what is the operational meaning of `scale=`? Two reasonable
-  interpretations: (a) per-family enum hint specifying parameter
-  interpretation (`scale="log"` → mu is log-scale; `scale="linear"` → mu
-  is on natural scale); (b) post-sampling transform applied to sampled
-  values. The spec text doesn't disambiguate.
+- **Spec (proposal, not interpretation):** since the spec gives no
+  behavioral content for `scale=`, *any* meaning would be a new
+  proposal, not a reading of existing text. Two candidate proposals:
+  (a) per-family enum hint (`scale="log"` → mu is log-scale;
+  `scale="linear"` → mu is on natural scale); (b) post-sampling transform
+  applied to sampled values. Neither is supported by spec prose; both are
+  fresh design.
 - **Architectural:** does restoring `scale` actually pull weight, given
   that lognormal already encodes log-scale via its family choice and
   gaussian/gamma/beta have their own natural scales? Risk of restoring a
   parameter that adds confusion without behavior.
 
 ### Proposed solution
-**Recommended: do not restore the kwarg.** Instead, fix the spec/prompt
-drift in the *other* direction — remove `scale=None` from the spec
-(§2.1.1 L51, §2.5 L287) and document the absence. The current
-"absent + TypeError" is the safest state and aligns with the M?-NC-scale
-TODO that says "restore when a scaling implementation lands" (i.e.,
-implementation should drive the spec, not the other way around).
+**Recommended: do not restore the kwarg.** Since the spec never said
+what `scale` did, removing it from the spec costs nothing — there is no
+behavioral claim to lose. Strip `scale=None` from §2.1.1 L51 and
+§2.5 L287, leaving spec, prompt, and SDK consistently omitting the
+kwarg. The current "absent + TypeError" is the safest state and aligns
+with the M?-NC-scale TODO that says "restore when a scaling
+implementation lands" (i.e., implementation should drive the spec, not
+the other way around).
 
 If a restoration is forced, the minimal safe path is interpretation (a)
 as a per-family hint:
@@ -917,7 +940,7 @@ example, so each family's interpretation is undocumented.
   family (most ignore it).
 - `validation/statistical.py::_expected_cdf` — match the sampling
   interpretation so KS test stays consistent.
-- `orchestration/prompt.py:50-54` — re-add `scale=None` documentation.
+- `orchestration/prompt.py:53-54` — re-add `scale=None` documentation.
 
 **New types:** none.
 
@@ -1175,6 +1198,18 @@ on the full DataFrame. Upstream: the `realism_config` dict from
 returned to Phase 3. Triggered only if `censoring is not None`; otherwise
 the realism stage proceeds with missing/dirty injection only.
 
+**Prompt-side gating (important):** while
+[sdk/relationships.py::set_realism](pipeline/phase_2/sdk/relationships.py#L281)
+still accepts `censoring=None`, the live LLM prompt at
+[orchestration/prompt.py:70-71](pipeline/phase_2/orchestration/prompt.py#L70-L71)
+no longer advertises the kwarg — it now reads
+`sim.set_realism(missing_rate, dirty_rate)` with a TODO comment marking
+`censoring=` as deferred. This is the same "double-gated out" pattern as
+the 4 deferred patterns in DS-2: SDK accepts it (so old scripts don't
+crash on import), but the LLM never sees it in normal flow. In effect
+the engine's `NotImplementedError` branch is unreachable from any
+prompt-driven generation today.
+
 ### Gap analysis
 - **Spec defines:** §2.1.2 L129 declares `set_realism(missing_rate,
   dirty_rate, censoring)` with `censoring` as an optional parameter; §2.8
@@ -1198,7 +1233,11 @@ the realism stage proceeds with missing/dirty injection only.
   indicator column (Phase 3 view extraction needs to know).
 - **Co-dependent with:** missing-value injection ordering (whether
   censored cells can also be NaN'd) — but missing injection itself is
-  already implemented, not another stub.
+  already implemented, not another stub. Also co-dependent with
+  `prompt.py:70-71` and the One-Shot Example, which today omit `censoring=`
+  and must be updated together with any restoration. Restoration cost is
+  thus **(a) define spec schema + (b) implement engine + (c) re-advertise
+  in prompt + (d) update One-Shot Example**, not just (a)+(b).
 
 ### Blocking questions
 - **Spec:** schema for the `censoring` config. Most natural extension of
@@ -1387,7 +1426,7 @@ text (§2.5 L304-305) is the only document that still lists all 6.
   for `dominance_shift` (and no injection algorithm anywhere).
 - **Spec is silent on:** the injection algorithm for any of the four
   types. For `ranking_reversal` the L3 verifier metric is sketched (rank
-  correlation between two metrics in §2.9 L656-661), but nothing about
+  correlation between two metrics in §2.9 L655-661), but nothing about
   how to *induce* the reversal. For `dominance_shift`, `convergence`,
   `seasonal_anomaly` the spec says only that they are valid type names.
   No params, no algorithm, no example.
@@ -1443,20 +1482,40 @@ non-empty, raise `PatternInjectionError` on degeneracy, log on success.
 # pipeline/phase_2/engine/patterns.py — replace the 4-way NotImplementedError
 # branch at L61-71 with explicit dispatch.
 
-def inject_ranking_reversal(df, pattern, columns):
-    """Reverse rank order between two metrics within target subset.
+def inject_ranking_reversal(df, pattern, columns, meta):
+    """Reverse rank order between two metrics at the *entity-mean* level.
 
-    Algorithm: rank target rows by m1 ascending, sort m2 values within
-    target descending, re-assign so rows with high m1 receive low m2.
+    The verifier (check_ranking_reversal) groups by entity, takes per-
+    entity means of m1 and m2, and checks rank correlation < 0. To
+    reliably trigger that, the injector must operate at the entity-mean
+    level — a row-level pairing of high-m1 with low-m2 is a heuristic
+    that may not always shift group means (especially when entities have
+    similar m1 distributions). The reliable algorithm:
+      1. Group target rows by entity_col.
+      2. Rank entities ascending by mean(m1) → rank_m1.
+      3. Compute desired mean(m2) per entity by *reversing* rank_m1
+         relative to the global mean(m2) distribution.
+      4. Per entity, additively shift m2 values so the entity mean lands
+         at the desired position (preserving within-entity variance).
     Pairs naturally with check_ranking_reversal (Spearman corr < 0).
     """
     m1, m2 = pattern["params"]["metrics"]
-    target_idx = df.index[df.eval(pattern["target"])]
-    if len(target_idx) < 2:
+    entity_col = pattern["params"].get("entity_col") or _resolve_first_dim_root(meta)
+    target_mask = df.eval(pattern["target"])
+    if target_mask.sum() < 2 or entity_col is None:
         raise PatternInjectionError(pattern_type="ranking_reversal", ...)
-    sorted_by_m1 = df.loc[target_idx, m1].sort_values().index
-    m2_descending = sorted(df.loc[target_idx, m2], reverse=True)
-    df.loc[sorted_by_m1, m2] = m2_descending
+    target_df = df.loc[target_mask]
+    entity_means_m1 = target_df.groupby(entity_col)[m1].mean()
+    entity_means_m2 = target_df.groupby(entity_col)[m2].mean()
+    # Rank reverse: entity with highest m1 gets lowest m2 mean target
+    rank_m1 = entity_means_m1.rank(ascending=True)
+    sorted_m2 = entity_means_m2.sort_values(ascending=False).values
+    desired_m2 = pd.Series(sorted_m2, index=rank_m1.sort_values().index)
+    # Apply additive per-entity shift
+    for entity, desired in desired_m2.items():
+        rows_e = target_mask & (df[entity_col] == entity)
+        shift = desired - df.loc[rows_e, m2].mean()
+        df.loc[rows_e, m2] = df.loc[rows_e, m2] + shift
     return df
 
 
@@ -1592,9 +1651,13 @@ strategy (`widen_variance`) but it doesn't naturally apply to mixture
   is undefined).
 - **Implementation gap:** returns a hard-coded `passed=True` Check.
   Cannot be implemented until IS-1's mixture `param_model` schema is
-  defined. Concretely: `_expected_cdf(family="mixture", params)` at
-  `validation/statistical.py:165` returns `None` — the gap is at both
-  the CDF-construction and kstest-orchestration levels.
+  defined. Concretely: `_expected_cdf` at
+  [validation/statistical.py:130-166](pipeline/phase_2/validation/statistical.py#L130-L166)
+  has no explicit `mixture` branch — the function falls through to the
+  bare `return None` on L166 for any unrecognized family — so mixture
+  ends up returning `None`, but via fall-through, not a dedicated branch.
+  The gap is at both the CDF-construction and kstest-orchestration
+  levels.
 
 ### Dependency chain
 - **Blocks:** nothing further.
@@ -1985,17 +2048,32 @@ replaces flat 2-level dict logic in three call sites.
   - IS-1 → DS-3 (mixture KS test depends on mixture sampling)
   - DS-2 → IS-2, IS-3, IS-4 (pattern validation cannot be exercised
     end-to-end until pattern injection is implemented)
+- **"Double-gated out" defensive pattern (cross-cutting).** Three stubs
+  follow the same SDK-accepted-but-prompt-omitted pattern: **IS-5**
+  (`scale=` removed from `add_measure` signature in
+  `prompt.py:53-54`), **DS-1** (`censoring=` removed from `set_realism`
+  signature in `prompt.py:70-71`), and **DS-2** (4 pattern types removed
+  from `prompt.py:89` PATTERN_TYPES list and from `VALID_PATTERN_TYPES`
+  in `sdk/relationships.py:29`). All three were defensively removed to
+  prevent LLMs from spending retry budget tuning dead parameters. Any
+  restoration requires updating all three sites plus the One-Shot
+  Example, not just the engine-side stub.
 
 ---
 
 # Phase B summary
 
-- **Spec gaps dominate over code gaps.** 8 of 10 stubs are blocked at
-  least partially by missing spec definitions, not just by missing
-  implementation.
+- **Spec gaps dominate over code gaps, with caveats.** 6-7 of 10 stubs
+  are blocked at least partially by missing spec definitions. Two
+  exceptions: **IS-6** is purely operational (multi-error / token
+  budget — explicitly noted as not a spec feature), and **DS-2's
+  `ranking_reversal` injector** could derive its contract from the
+  existing verifier (already specified in §2.9 L655-661), so it is not
+  strictly spec-blocked.
   - IS-3 (convergence) and IS-4 (seasonal_anomaly) have the thinnest
     spec coverage — neither has any pseudocode in §2.9 L3.
-  - IS-5 (`scale`) has a spec / prompt / SDK 3-way drift.
+  - IS-5 (`scale`) is a vestigial signature line in spec with no
+    behavioral content; spec/prompt/SDK have all converged on omission.
 - **Two clean co-dependent pairs:** `(IS-1, DS-3)` for mixture
   sampling/validation and `(DS-2, [IS-2, IS-3, IS-4])` for pattern
   injection/validation. Each pair must share an operational definition;
@@ -2027,7 +2105,7 @@ replaces flat 2-level dict logic in three call sites.
 | IS-2  | Implement as rank-change-across-split (interp. (a)) | Small | Spec decision on dominance metric |
 | IS-3  | Implement as group-mean variance reduction (interp. (b)) | Small | Spec decision on convergence metric |
 | IS-4  | Implement as window-vs-baseline z-score (interp. (a)) | Small | Spec decision on seasonal definition |
-| IS-5  | **Do not restore** — fix spec/prompt drift instead | Trivial | None (already correct state) |
+| IS-5  | **Do not restore** — strip vestigial signature from spec | Trivial | None (already correct state) |
 | IS-6  | Defer; ship token-budget half first if needed | Large | A/B test on multi-error feedback efficacy |
 | DS-1  | Implement as per-column NaN-marker censoring | Small | Spec decision on schema + marker |
 | DS-2  | Implement 4 injectors; `ranking_reversal` first | Large | Spec decision on each injection algorithm |
@@ -2040,8 +2118,9 @@ implementation + tests, dominated by IS-6 (~340 LOC) and DS-2
 
 **Recommended sequencing** if reducing risk + time-to-value:
 
-1. **IS-5 docs cleanup (trivial).** Resolve the 3-way drift before any
-   LLM is misled by it. No code changes.
+1. **IS-5 docs cleanup (trivial).** Strip the vestigial `scale=None`
+   signature line from spec §2.1.1 L51 and §2.5 L287 to match the
+   prompt and SDK, both of which already omit it. No code changes.
 2. **DS-1 censoring (small).** Leaf stub, isolated, decision is
    schema-only — spec it once and ship.
 3. **`ranking_reversal` reactivation (small).** Validator already

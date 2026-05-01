@@ -48,7 +48,7 @@ sim.add_temporal("visit_date",
 
 Derived columns (`day_of_week`, `month`, `quarter`, `is_weekend`) are automatically extracted and available as predictors for measures.
 
-**`add_measure(name, family, param_model, scale=None)`** — **Stochastic root measure.** Sampled from a named distribution. Parameters may vary by categorical context, but the measure does **not** depend on any other measure — it is a root node in the measure DAG.
+**`add_measure(name, family, param_model)`** — **Stochastic root measure.** Sampled from a named distribution. Parameters may vary by categorical context, but the measure does **not** depend on any other measure — it is a root node in the measure DAG.
 
 ```python
 # Simple: constant parameters
@@ -284,7 +284,7 @@ AVAILABLE SDK METHODS (declare columns FIRST, then relationships):
   sim.add_category(name, values, weights, group, parent=None)
       # weights: list (root/global) or dict-of-lists (per-parent conditional)
   sim.add_temporal(name, start, end, freq, derive=[])
-  sim.add_measure(name, family, param_model, scale=None)
+  sim.add_measure(name, family, param_model)
       # Stochastic ROOT measure: param_model uses {intercept, effects}
       # Does NOT depend on any other measure
   sim.add_measure_structural(name, formula, effects={}, noise={})

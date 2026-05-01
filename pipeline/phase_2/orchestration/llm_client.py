@@ -14,7 +14,59 @@ Supported providers:
 import json
 import re
 from dataclasses import dataclass
-from typing import Optional
+from typing import Any, NamedTuple, Optional
+
+
+# =============================================================================
+# Token Usage / Structured Response
+# =============================================================================
+
+class TokenUsage(NamedTuple):
+    """Per-call token accounting reported by the LLM provider."""
+    prompt_tokens: int
+    completion_tokens: int
+    total_tokens: int
+
+
+class LLMResponse(NamedTuple):
+    """Structured generation result carrying both text and token usage."""
+    code: str
+    token_usage: Optional[TokenUsage]
+
+
+def _extract_token_usage(response: Any, provider: str) -> Optional[TokenUsage]:
+    """Extract token counts from a provider response.
+
+    Returns None if the provider did not report usage (older SDK, mock
+    client, partial failure, etc.) — callers must treat None as a
+    graceful-degradation signal (counts as 0 against any budget).
+    """
+    try:
+        if provider == "gemini-native":
+            meta = getattr(response, "usage_metadata", None)
+            if meta is None:
+                return None
+            prompt = getattr(meta, "prompt_token_count", None) or 0
+            completion = getattr(meta, "candidates_token_count", None) or 0
+            total = getattr(meta, "total_token_count", None)
+            if total is None:
+                total = prompt + completion
+            return TokenUsage(int(prompt), int(completion), int(total))
+
+        # OpenAI / Azure / Gemini-via-OpenAI all expose `.usage` on the
+        # ChatCompletion result. Fields are prompt_tokens / completion_tokens
+        # / total_tokens.
+        usage = getattr(response, "usage", None)
+        if usage is None:
+            return None
+        prompt = getattr(usage, "prompt_tokens", None) or 0
+        completion = getattr(usage, "completion_tokens", None) or 0
+        total = getattr(usage, "total_tokens", None)
+        if total is None:
+            total = prompt + completion
+        return TokenUsage(int(prompt), int(completion), int(total))
+    except Exception:
+        return None
 
 
 # =============================================================================
@@ -284,28 +336,18 @@ class LLMClient:
                         "Please install openai SDK: pip install openai>=1.0.0"
                     )
 
-    def generate(
+    def _generate_with_usage(
         self,
         system: str,
         user: str,
         temperature: float = 0.7,
         max_tokens: int = 4096,
         response_format: str = "json"
-    ) -> str:
-        """
-        Generate text response using the configured LLM.
+    ) -> tuple[str, Optional[TokenUsage]]:
+        """Generate text and return (text, token_usage).
 
-        Parameters are automatically adapted to match provider capabilities.
-
-        Args:
-            system: System prompt
-            user: User prompt
-            temperature: Sampling temperature (0-2)
-            max_tokens: Maximum response length
-            response_format: "json" or "text"
-
-        Returns:
-            Generated text response
+        Internal helper used by both ``generate`` (which discards usage)
+        and ``generate_code`` (which packages usage into an LLMResponse).
         """
         self._ensure_client()
 
@@ -327,7 +369,7 @@ class LLMClient:
                 config=generation_config
             )
 
-            return response.text
+            return response.text, _extract_token_usage(response, self.provider)
         else:
             messages = [
                 {"role": "system", "content": system},
@@ -344,7 +386,34 @@ class LLMClient:
             kwargs["messages"] = modified_messages
 
             response = self._client.chat.completions.create(**kwargs)
-            return response.choices[0].message.content
+            return (
+                response.choices[0].message.content,
+                _extract_token_usage(response, self.provider),
+            )
+
+    def generate(
+        self,
+        system: str,
+        user: str,
+        temperature: float = 0.7,
+        max_tokens: int = 4096,
+        response_format: str = "json"
+    ) -> str:
+        """
+        Generate text response using the configured LLM.
+
+        Parameters are automatically adapted to match provider capabilities.
+
+        Returns:
+            Generated text response.
+        """
+        text, _usage = self._generate_with_usage(
+            system, user,
+            temperature=temperature,
+            max_tokens=max_tokens,
+            response_format=response_format,
+        )
+        return text
 
     def generate_json(self, system: str, user: str, **kwargs) -> dict:
         """Generate and parse JSON response."""
@@ -368,7 +437,7 @@ class LLMClient:
                 f"Response preview: {cleaned[:500]}"
             )
 
-    def generate_code(self, system: str, user: str, **kwargs) -> str:
+    def generate_code(self, system: str, user: str, **kwargs) -> LLMResponse:
         """
         Generate code response (text mode) with automatic fence stripping.
 
@@ -376,20 +445,21 @@ class LLMClient:
         Strips ```python ... ``` fences from the response.
 
         Returns:
-            Clean Python source code string
+            LLMResponse(code, token_usage). ``token_usage`` is ``None``
+            if the provider did not report counts.
         """
-        response = self.generate(
+        text, usage = self._generate_with_usage(
             system, user, response_format="text", **kwargs
         )
 
-        cleaned = response.strip()
+        cleaned = text.strip()
         # Strip ```python or ``` fences
         cleaned = re.sub(
             r"^```(?:python)?[ \t]*\n?", "", cleaned, count=1
         )
         cleaned = re.sub(r"\n```\s*$", "", cleaned, count=1)
 
-        return cleaned.strip()
+        return LLMResponse(code=cleaned.strip(), token_usage=usage)
 
 
 # =============================================================================

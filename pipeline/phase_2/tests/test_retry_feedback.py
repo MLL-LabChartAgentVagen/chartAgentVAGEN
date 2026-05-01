@@ -7,6 +7,7 @@ Covers:
 """
 from __future__ import annotations
 
+from pipeline.phase_2.orchestration.llm_client import LLMResponse
 from pipeline.phase_2.orchestration.sandbox import (
     format_error_feedback,
     run_retry_loop,
@@ -111,16 +112,19 @@ def test_run_retry_loop_passes_accumulated_history_to_llm():
     received_prompts: list[str] = []
     fail_count = {"n": 0}
 
-    def llm_generate_fn(system: str, user: str) -> str:
+    def llm_generate_fn(system: str, user: str) -> LLMResponse:
         # Capture what the LLM would see, then return a script that still fails
         # (so the loop keeps going through max_retries).
         received_prompts.append(user)
         fail_count["n"] += 1
         # Each retry's "fixed" code raises a distinct exception, simulating the
         # GPT 5.2 whack-a-mole pattern.
-        return (
-            "def build_fact_table():\n"
-            f"    raise ValueError('bug_after_retry_{fail_count['n']}')\n"
+        return LLMResponse(
+            code=(
+                "def build_fact_table():\n"
+                f"    raise ValueError('bug_after_retry_{fail_count['n']}')\n"
+            ),
+            token_usage=None,
         )
 
     initial_code = (
