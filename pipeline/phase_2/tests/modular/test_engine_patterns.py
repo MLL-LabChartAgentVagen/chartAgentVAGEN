@@ -19,6 +19,7 @@ from pipeline.phase_2.engine.patterns import (
     inject_patterns,
     inject_ranking_reversal,
     inject_seasonal_anomaly,
+    inject_trend_break,
 )
 from pipeline.phase_2.exceptions import PatternInjectionError
 from pipeline.phase_2.sdk.relationships import inject_pattern
@@ -970,3 +971,155 @@ class TestAllSixPatternsIntegration:
         result = inject_patterns(df, patterns, columns, rng)
         assert result is not None
         assert len(result) == len(df)
+
+
+# =====================================================================
+# H1 regression: temporal-coercion robustness across injectors
+# =====================================================================
+#
+# inject_convergence already coerces unparseable temporal cells to NaT
+# (engine/patterns.py L582-592) and skips them. inject_trend_break,
+# inject_dominance_shift, and inject_seasonal_anomaly historically did
+# not — they crashed with ValueError on bad cells while their paired
+# validators (which all coerce) silently skipped. These tests lock in
+# the symmetric "coerce + skip; raise PatternInjectionError when ALL
+# target rows are NaT" contract for every temporal-aware injector.
+
+def _build_garbled_temporal_df() -> pd.DataFrame:
+    """DataFrame mixing parseable and unparseable temporal cells.
+
+    Rows 0-7 carry valid ISO dates; rows 8-9 carry unparseable strings
+    ("not-a-date", "BAD"). Every temporal injector must coerce the bad
+    cells to NaT and exclude them from any downstream mutation, never
+    raising ValueError on these rows.
+    """
+    return pd.DataFrame({
+        "date": [
+            "2024-01-01", "2024-01-02", "2024-01-03", "2024-01-04",
+            "2024-01-05", "2024-01-06", "2024-01-07", "2024-01-08",
+            "not-a-date", "BAD",
+        ],
+        "entity": ["A", "B"] * 5,
+        "value": [1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0],
+    })
+
+
+def _temporal_columns_meta() -> dict[str, dict]:
+    """Column registry consistent with _build_garbled_temporal_df."""
+    return {
+        "date":   {"type": "temporal"},
+        "entity": {"type": "categorical", "group": "g", "values": ["A", "B"]},
+        "value":  {"type": "stochastic", "family": "gaussian"},
+    }
+
+
+class TestTemporalCoercionRobustness:
+    """H1 regression: every temporal injector must coerce unparseable
+    temporal cells to NaT and exclude them from the target subset
+    instead of raising ValueError. Mirrors inject_convergence's
+    canonical behavior.
+    """
+
+    def test_inject_trend_break_skips_nat_rows(self):
+        df = _build_garbled_temporal_df()
+        original_bad = df.loc[[8, 9], "value"].copy()
+        pattern = {
+            "type": "trend_break",
+            "target": "value > 0",
+            "col": "value",
+            "params": {"break_point": "2024-01-04", "magnitude": 0.5},
+        }
+        # Must not raise; NaT rows must not be mutated.
+        inject_trend_break(df, pattern, _temporal_columns_meta())
+        assert df.loc[8, "value"] == original_bad.loc[8]
+        assert df.loc[9, "value"] == original_bad.loc[9]
+        # And valid post-break rows ARE mutated (rows 3..7, indices 3-7
+        # have date >= 2024-01-04). Spot-check row 7: 8.0 * 1.5 == 12.0.
+        assert df.loc[7, "value"] == pytest.approx(12.0)
+
+    def test_inject_dominance_shift_skips_nat_rows(self):
+        df = _build_garbled_temporal_df()
+        original_bad = df.loc[8, "value"]   # entity=A, NaT
+        pattern = {
+            "type": "dominance_shift",
+            "target": "entity == 'A'",
+            "col": "value",
+            "params": {
+                "split_point": "2024-01-04",
+                "entity_filter": "A",
+                "entity_col": "entity",
+                "magnitude": 1.0,
+            },
+        }
+        inject_dominance_shift(df, pattern, _temporal_columns_meta())
+        # NaT row 8 (entity=A, date=not-a-date) must NOT be mutated.
+        assert df.loc[8, "value"] == original_bad
+
+    def test_inject_seasonal_anomaly_skips_nat_rows(self):
+        df = _build_garbled_temporal_df()
+        original_bad = df.loc[[8, 9], "value"].copy()
+        pattern = {
+            "type": "seasonal_anomaly",
+            "target": "value > 0",
+            "col": "value",
+            "params": {
+                "anomaly_window": ["2024-01-05", "2024-01-08"],
+                "magnitude": 0.5,
+            },
+        }
+        inject_seasonal_anomaly(df, pattern, _temporal_columns_meta())
+        # NaT rows 8, 9 are outside any window and must not be mutated.
+        assert df.loc[8, "value"] == original_bad.loc[8]
+        assert df.loc[9, "value"] == original_bad.loc[9]
+        # In-window valid rows ARE mutated. Row 4 (2024-01-05) is the
+        # first in-window row: 5.0 * 1.5 == 7.5.
+        assert df.loc[4, "value"] == pytest.approx(7.5)
+
+    @pytest.mark.parametrize(
+        "injector_fn,pattern_type,extra_params",
+        [
+            (
+                inject_trend_break,
+                "trend_break",
+                {"break_point": "2024-01-04", "magnitude": 0.5},
+            ),
+            (
+                inject_dominance_shift,
+                "dominance_shift",
+                {
+                    "split_point": "2024-01-04",
+                    "entity_filter": "A",
+                    "entity_col": "entity",
+                    "magnitude": 1.0,
+                },
+            ),
+            (
+                inject_seasonal_anomaly,
+                "seasonal_anomaly",
+                {
+                    "anomaly_window": ["2024-01-05", "2024-01-08"],
+                    "magnitude": 0.5,
+                },
+            ),
+        ],
+    )
+    def test_all_nat_target_raises(
+        self, injector_fn, pattern_type, extra_params
+    ):
+        """Defensive: when every target row has unparseable temporal,
+        the injector must raise PatternInjectionError with a clear
+        detail (mirrors inject_convergence's existing raise at L585-592).
+        """
+        df = pd.DataFrame({
+            "date":   ["bad1", "bad2", "bad3", "bad4"],
+            "entity": ["A"] * 4,
+            "value":  [1.0, 2.0, 3.0, 4.0],
+        })
+        pattern = {
+            "type": pattern_type,
+            "target": "value > 0",
+            "col": "value",
+            "params": extra_params,
+        }
+        with pytest.raises(PatternInjectionError, match="unparseable temporal"):
+            injector_fn(df, pattern, _temporal_columns_meta())

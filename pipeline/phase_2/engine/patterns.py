@@ -223,8 +223,17 @@ def inject_trend_break(
         )
         return df
 
-    temporal_values = pd.to_datetime(df[temporal_col])
-    post_break_mask = target_mask & (temporal_values >= break_point)
+    temporal_values = pd.to_datetime(df[temporal_col], errors="coerce")
+    valid_mask = temporal_values.notna()
+    if not (target_mask & valid_mask).any():
+        raise PatternInjectionError(
+            pattern_type="trend_break",
+            detail=(
+                f"All target rows have unparseable temporal values "
+                f"in column '{temporal_col}'."
+            ),
+        )
+    post_break_mask = target_mask & valid_mask & (temporal_values >= break_point)
     post_break_idx = df.index[post_break_mask]
 
     if len(post_break_idx) > 0:
@@ -319,9 +328,19 @@ def inject_dominance_shift(
         return df
 
     sp = pd.to_datetime(split_point_str)
-    temporal_values = pd.to_datetime(df[temporal_col])
+    temporal_values = pd.to_datetime(df[temporal_col], errors="coerce")
+    valid_mask = temporal_values.notna()
 
-    post_split_mask = temporal_values >= sp
+    if not (target_mask & valid_mask).any():
+        raise PatternInjectionError(
+            pattern_type="dominance_shift",
+            detail=(
+                f"All target rows have unparseable temporal values "
+                f"in column '{temporal_col}'."
+            ),
+        )
+
+    post_split_mask = valid_mask & (temporal_values >= sp)
     post_split_target_idx = df.index[target_mask & post_split_mask]
     peer_idx = df.index[(~target_mask) & post_split_mask]
 
@@ -703,9 +722,19 @@ def inject_seasonal_anomaly(
 
     win_start = pd.to_datetime(window[0])
     win_end = pd.to_datetime(window[1])
-    temporal_values = pd.to_datetime(df[temporal_col])
+    temporal_values = pd.to_datetime(df[temporal_col], errors="coerce")
+    valid_mask = temporal_values.notna()
+    if not (target_mask & valid_mask).any():
+        raise PatternInjectionError(
+            pattern_type="seasonal_anomaly",
+            detail=(
+                f"All target rows have unparseable temporal values "
+                f"in column '{temporal_col}'."
+            ),
+        )
     in_win = (
         target_mask
+        & valid_mask
         & (temporal_values >= win_start)
         & (temporal_values <= win_end)
     )
