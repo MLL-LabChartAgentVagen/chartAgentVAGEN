@@ -105,7 +105,7 @@ to mark the `[0, 1]` clip as required (not optional) and document the
 "injector must agree with validator" rationale. Full writeup at
 [docs/fixes/M2_M3_DEFENSIVE_GUARDS.md](fixes/M2_M3_DEFENSIVE_GUARDS.md).
 
-### M4 — Mixture validator rejects `np.integer` weights but accepts `np.floating`  ✅ **RESOLVED** (commit pending)
+### M4 — Mixture validator rejects `np.integer` weights but accepts `np.floating`  ✅ **RESOLVED** (commit `2dbec22`)
 
 [sdk/validation.py:370](sdk/validation.py#L370):
 `not isinstance(w, (int, float, np.floating))` excludes `np.int64` /
@@ -118,7 +118,7 @@ literals so this rarely fires, but it is an asymmetric contract.
 `test_numpy_integer_weight_accepted` to `TestValidateParamModelMixture`
 (mirrors the existing `test_numpy_float_weight_accepted`).
 
-### M5 — IS-6 token-budget: missing docstring + missing unit test for `_extract_token_usage` exception path  ✅ **RESOLVED** (commit pending)
+### M5 — IS-6 token-budget: missing docstring + missing unit test for `_extract_token_usage` exception path  ✅ **RESOLVED** (commit `2dbec22`)
 
 [sandbox.py:683-689](orchestration/sandbox.py#L683-L689) did not
 document the new `token_budget` / `initial_token_usage` kwargs in
@@ -138,7 +138,7 @@ descriptor raise, and the Gemini-native `usage_metadata` field raise.
 
 ## LOW severity
 
-### L1 — `check_seasonal_anomaly` uses `.std(ddof=0)` (population)  ✅ **RESOLVED** (commit pending)
+### L1 — `check_seasonal_anomaly` uses `.std(ddof=0)` (population)  ✅ **RESOLVED** (commit `2dbec22`)
 
 [pattern_checks.py:489](validation/pattern_checks.py#L489) used
 `ddof=0` while other variance computations in the same file default
@@ -151,7 +151,7 @@ documented rationale was found in IS-4 summary or decisions doc;
 this was unintentional drift. All 8 `test_validation_pattern_checks_seasonal_anomaly.py`
 tests still pass.
 
-### L2 — `GroupDependency` docstring stale post-DS-4  ✅ **RESOLVED** (commit pending)
+### L2 — `GroupDependency` docstring stale post-DS-4  ✅ **RESOLVED** (commit `2dbec22`)
 
 [types.py:191-197](types.py#L191-L197) still said "Currently
 restricted to single-column conditioning per assumption A7" — no
@@ -163,7 +163,7 @@ single- and multi-column conditioning, with examples for both
 shapes. Documents the full Cartesian coverage requirement at every
 nesting level (DS-4 invariant).
 
-### L3 — `DS-4.md` mis-states the deepcopy rationale  ✅ **RESOLVED** (commit pending)
+### L3 — `DS-4.md` mis-states the deepcopy rationale  ✅ **RESOLVED** (commit `2dbec22`)
 
 [stub_implementation/DS-4.md L97-99](stub_implementation/DS-4.md#L97-L99)
 said the prior shape was "correct only for depth-2 dicts." Actually
@@ -176,14 +176,14 @@ for the only shape that existed pre-DS-4 (depth-2: one parent level
 + leaf); deepcopy is required for the new depth ≥ 3 shapes DS-4
 enables."
 
-### L4 — `DS-4.md` cites `_check_dependency_conflict` at wrong line span  ✅ **RESOLVED** (commit pending)
+### L4 — `DS-4.md` cites `_check_dependency_conflict` at wrong line span  ✅ **RESOLVED** (commit `2dbec22`)
 
 DS-4.md said `~L385-410`; actual span is
 [L372-395](sdk/relationships.py#L372-L395). Documentation drift only.
 
 **Resolution:** Updated the citation to `L372-395`.
 
-### L5 — IS-4 `anomaly_window` contradiction in decisions doc  ✅ **RESOLVED** (commit pending)
+### L5 — IS-4 `anomaly_window` contradiction in decisions doc  ✅ **RESOLVED** (commit `2dbec22`)
 
 [stub_blocker_decisions.md:288-292](stub_analysis/stub_blocker_decisions.md#L288-L292)
 marked `anomaly_window` as "**optional**" in §IS-4; §4.2 L892 said
