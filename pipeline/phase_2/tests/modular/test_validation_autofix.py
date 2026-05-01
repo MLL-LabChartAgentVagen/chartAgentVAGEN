@@ -14,8 +14,15 @@ overrides dict that run_pipeline later merges into the engine's parameters.
 """
 from __future__ import annotations
 
-from pipeline.phase_2.types import Check
+import copy
+from functools import partial
+
+import pandas as pd
+import pytest
+
+from pipeline.phase_2.types import Check, ValidationReport
 from pipeline.phase_2.validation.autofix import (
+    generate_with_validation,
     match_strategy,
     widen_variance,
     amplify_magnitude,
@@ -167,3 +174,165 @@ class TestReshufflePair:
         reshuffle_pair(Check("ks_cost", False), overrides)
 
         assert overrides["reshuffle"] == ["revenue", "cost"]
+
+
+# =====================================================================
+# M1 regression: dispatch-time mixture opt-out auto-binding
+# =====================================================================
+#
+# Without the dispatch helper, the natural wiring
+# ``auto_fix={"ks_*": widen_variance}`` calls widen_variance with
+# columns=None on every retry. The mixture opt-out at autofix.py:112
+# never fires; widen_variance keeps writing
+# overrides["measures"][col]["sigma"] that _sample_mixture silently
+# drops. The retry loop spins for max_attempts without changing any
+# mixture parameter. These tests lock in the auto-binding contract.
+
+
+class _StubKSFailingValidator:
+    """Validator stub: always reports a single failing ks_revenue check.
+
+    Replaces ``SchemaAwareValidator`` via monkeypatch so the integration
+    tests don't need real fitted-distribution comparisons.
+    """
+
+    def __init__(self, _meta):
+        pass
+
+    def validate(self, _df, _patterns):
+        rpt = ValidationReport()
+        rpt.checks = [Check(name="ks_revenue", passed=False)]
+        return rpt
+
+
+def _make_meta_with_family(family: str) -> dict:
+    """Minimal meta dict with a single 'revenue' column of the given family."""
+    return {"columns": {"revenue": {"family": family}}}
+
+
+class TestGenerateWithValidationMixtureOptOut:
+    """M1 regression: when auto_fix is wired with raw widen_variance
+    (no functools.partial), the dispatch helper must auto-inject
+    columns=meta["columns"] so the mixture opt-out fires.
+    """
+
+    def test_mixture_optout_fires_through_raw_widen_variance(
+        self, monkeypatch
+    ):
+        """Mixture column + raw widen_variance → no sigma override
+        accumulates across retries (opt-out fires every attempt).
+        """
+        meta = _make_meta_with_family("mixture")
+        df = pd.DataFrame({"revenue": [1.0, 2.0, 3.0, 4.0, 5.0]})
+        seen_overrides: list = []
+
+        def build_fn(seed, overrides):
+            seen_overrides.append(
+                None if overrides is None else copy.deepcopy(overrides)
+            )
+            return df, meta
+
+        monkeypatch.setattr(
+            "pipeline.phase_2.validation.validator.SchemaAwareValidator",
+            _StubKSFailingValidator,
+        )
+
+        generate_with_validation(
+            build_fn=build_fn,
+            meta=meta,
+            patterns=[],
+            base_seed=42,
+            max_attempts=3,
+            auto_fix={"ks_*": widen_variance},  # raw, NOT partial
+        )
+
+        # Pre-fix: opt-out doesn't fire → sigma factor accumulates →
+        #   seen_overrides[1] == {"measures": {"revenue": {"sigma": 1.2}}}.
+        # Post-fix: opt-out fires → overrides stays empty {} →
+        #   build_fn at L282 passes `None` (the `if overrides else None`
+        #   shortcuts on empty-dict).
+        assert len(seen_overrides) == 3
+        assert seen_overrides[0] is None
+        assert seen_overrides[1] is None, (
+            "Mixture opt-out should have fired and prevented any sigma "
+            f"override; got {seen_overrides[1]!r}"
+        )
+        assert seen_overrides[2] is None
+
+    def test_non_mixture_widens_through_raw_widen_variance(
+        self, monkeypatch
+    ):
+        """Gaussian column + raw widen_variance → sigma override
+        accumulates as normal (auto-binding does not block legitimate
+        widening).
+        """
+        meta = _make_meta_with_family("gaussian")
+        df = pd.DataFrame({"revenue": [1.0, 2.0, 3.0, 4.0, 5.0]})
+        seen_overrides: list = []
+
+        def build_fn(seed, overrides):
+            seen_overrides.append(
+                None if overrides is None else copy.deepcopy(overrides)
+            )
+            return df, meta
+
+        monkeypatch.setattr(
+            "pipeline.phase_2.validation.validator.SchemaAwareValidator",
+            _StubKSFailingValidator,
+        )
+
+        generate_with_validation(
+            build_fn=build_fn,
+            meta=meta,
+            patterns=[],
+            base_seed=42,
+            max_attempts=3,
+            auto_fix={"ks_*": widen_variance},
+        )
+
+        # Default factor=1.2 → sigma compounds: 1.2 → 1.44 across attempts.
+        assert len(seen_overrides) == 3
+        assert seen_overrides[0] is None
+        assert seen_overrides[1]["measures"]["revenue"]["sigma"] == pytest.approx(1.2)
+        assert seen_overrides[2]["measures"]["revenue"]["sigma"] == pytest.approx(1.44)
+
+    def test_explicit_partial_binding_is_respected(self, monkeypatch):
+        """When the caller supplies partial(widen_variance, columns=...)
+        explicitly, the dispatch must NOT override their binding.
+        """
+        meta = _make_meta_with_family("mixture")  # meta says mixture
+        df = pd.DataFrame({"revenue": [1.0, 2.0, 3.0, 4.0, 5.0]})
+        # User explicitly binds a custom column registry that lies
+        # about the family. If our auto-binding leaks past explicit
+        # partials, the opt-out from meta would suppress widening —
+        # but the user's intent here is "trust my binding, widen anyway."
+        custom_columns = {"revenue": {"family": "gaussian"}}
+        seen_overrides: list = []
+
+        def build_fn(seed, overrides):
+            seen_overrides.append(
+                None if overrides is None else copy.deepcopy(overrides)
+            )
+            return df, meta
+
+        monkeypatch.setattr(
+            "pipeline.phase_2.validation.validator.SchemaAwareValidator",
+            _StubKSFailingValidator,
+        )
+
+        generate_with_validation(
+            build_fn=build_fn,
+            meta=meta,
+            patterns=[],
+            base_seed=42,
+            max_attempts=2,
+            auto_fix={
+                "ks_*": partial(widen_variance, columns=custom_columns),
+            },
+        )
+
+        # User's custom_columns says gaussian → widening proceeds
+        # despite meta["columns"] saying mixture.
+        assert len(seen_overrides) == 2
+        assert seen_overrides[0] is None
+        assert seen_overrides[1]["measures"]["revenue"]["sigma"] == pytest.approx(1.2)

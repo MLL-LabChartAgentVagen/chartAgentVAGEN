@@ -10,6 +10,7 @@ Implements: §2.9 auto-fix (Loop B), P0-3
 from __future__ import annotations
 
 import fnmatch
+import functools
 import logging
 from typing import Any, Callable, Optional
 
@@ -93,10 +94,16 @@ def widen_variance(
     Mixture opt-out (IS-1): when ``columns`` is provided and the resolved
     column has family == "mixture", returns overrides unchanged. Mixtures
     have no single sigma to widen — per-component widening is out of scope
-    for v1. Wire via:
+    for v1.
 
-        from functools import partial
-        auto_fix = {"ks_*": partial(widen_variance, columns=meta["columns"]), ...}
+    Auto-binding (M1): when invoked through ``generate_with_validation``
+    with the natural raw wiring ``auto_fix={"ks_*": widen_variance}``,
+    the dispatch helper ``_call_strategy`` auto-injects
+    ``columns=meta["columns"]`` so the mixture opt-out fires without
+    explicit caller wiring. Callers who need a different column registry
+    (e.g. tests) can still bind explicitly via
+    ``functools.partial(widen_variance, columns=...)``; the explicit
+    binding is respected and the auto-injection is suppressed.
 
     Args:
         check: The failing Check object.
@@ -229,6 +236,45 @@ def reshuffle_pair(
 
 
 # =====================================================================
+# Strategy Dispatch Helper (M1)
+# =====================================================================
+
+def _call_strategy(
+    strategy: Callable[..., ParameterOverrides],
+    check: Check,
+    overrides: ParameterOverrides,
+    meta: dict[str, Any],
+) -> ParameterOverrides:
+    """Invoke an auto_fix strategy, auto-binding ``columns`` from ``meta``
+    when the strategy is ``widen_variance`` (raw, or a ``functools.partial``
+    of it that did not already bind ``columns``).
+
+    Why: ``widen_variance``'s mixture opt-out is gated on the ``columns``
+    kwarg, but ``meta`` is built inside the retry loop (post-build_fn),
+    so callers wiring ``auto_fix`` upstream cannot bind ``columns`` at
+    construction time. Auto-binding here keeps the natural
+    ``auto_fix={"ks_*": widen_variance}`` wiring correct without leaking
+    the mixture opt-out detail to every caller. Custom user strategies
+    pass through unchanged.
+    """
+    target = (
+        strategy.func
+        if isinstance(strategy, functools.partial)
+        else strategy
+    )
+    if target is widen_variance:
+        already_bound = (
+            isinstance(strategy, functools.partial)
+            and "columns" in strategy.keywords
+        )
+        if not already_bound:
+            return strategy(
+                check, overrides, columns=meta.get("columns"),
+            )
+    return strategy(check, overrides)
+
+
+# =====================================================================
 # Loop B Orchestrator: generate_with_validation (P0-3)
 # =====================================================================
 
@@ -293,12 +339,15 @@ def generate_with_validation(
         if report.all_passed:
             break
 
-        # Accumulate overrides from failing checks
+        # Accumulate overrides from failing checks. Dispatch goes
+        # through ``_call_strategy`` so widen_variance auto-receives
+        # ``columns=meta["columns"]`` and the mixture opt-out fires
+        # without explicit caller wiring (M1).
         if auto_fix:
             for check in report.failures:
                 strategy = match_strategy(check.name, auto_fix)
                 if strategy is not None:
-                    overrides = strategy(check, overrides)
+                    overrides = _call_strategy(strategy, check, overrides, meta)
 
     # Apply realism post-validation (P0-3, P2-2, P2-3)
     if realism_config is not None and df is not None:

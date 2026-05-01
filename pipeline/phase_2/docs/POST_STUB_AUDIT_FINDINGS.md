@@ -45,7 +45,7 @@ class with garbled-temporal fixture. Full writeup at
 
 ## MEDIUM severity
 
-### M1 — Mixture `widen_variance` opt-out is inert in production
+### M1 — Mixture `widen_variance` opt-out is inert in production  ✅ **RESOLVED** (commit pending)
 
 [pipeline.py:27, 76, 138, 262](pipeline.py#L27) accepts `auto_fix`
 from the user but never auto-binds
@@ -60,14 +60,16 @@ silently `del`s at [engine/measures.py:440](engine/measures.py#L440).
 The retry loop spins for `max_attempts` without actually changing
 the mixture params.
 
-**Fix options:**
-- Bind the partial inside `pipeline.py` when assembling the default
-  `auto_fix` map.
-- OR change `widen_variance` to discover `columns` from `meta` itself
-  instead of via kwarg.
-
-**Priority:** address before mixture sees production traffic. Silent
-failure mode that's hard to diagnose at 3am.
+**Resolution:** Auto-bound `columns=meta["columns"]` at the dispatch
+site in `generate_with_validation` via a new `_call_strategy` helper
+that detects raw `widen_variance` (or unbound `functools.partial` of
+it) and injects columns automatically. User-supplied partials with
+explicit `columns=` bindings are respected. Strategy contract for
+`amplify_magnitude` / `reshuffle_pair` / custom user strategies is
+unchanged. Added `TestGenerateWithValidationMixtureOptOut` regression
+class (3 tests) covering raw mixture, raw non-mixture, and
+explicit-partial paths. Full writeup at
+[docs/fixes/M1_WIDEN_VARIANCE_AUTO_BINDING.md](fixes/M1_WIDEN_VARIANCE_AUTO_BINDING.md).
 
 ### M2 — `inject_dominance_shift` adds an undocumented "positive_floor"
 
@@ -186,3 +188,46 @@ doc itself is internally inconsistent.
    "spec said X, code does X+ε" drift.
 4. **M4, M5, all LOW** — opportunistic; bundle into a "doc + small
    fix" PR alongside any of the above.
+
+---
+
+## Origin classification — pre-existing vs. stub-introduced
+
+| # | Finding | Origin | Why |
+|---|---------|--------|-----|
+| **H1** | Temporal-coercion asymmetry (3 sites) | **Mixed** — `inject_trend_break` site pre-existed the workflow; `inject_dominance_shift` (IS-2) and `inject_seasonal_anomaly` (IS-4) sites inherited the gap via the "mirrors `inject_trend_break`" template | Already resolved (`6f64495`). |
+| **M1** | Mixture `widen_variance` opt-out is inert | **Introduced by IS-1+DS-3** (Step 6) | The opt-out kwarg + the mixture-skip branch were added BY the mixture stub; `pipeline.py`'s `auto_fix` plumbing was pre-existing but the new opt-out was never wired into it. The bug couldn't exist before mixture sampling was implemented. |
+| **M2** | `inject_dominance_shift` undocumented positive_floor | **Introduced by IS-2** (Step 3) | `inject_dominance_shift` is a net-new function from IS-2. The floor at [engine/patterns.py:352-356](engine/patterns.py#L352-L356) was added with no spec sanction. |
+| **M3** | `inject_convergence` clips `factor` | **Introduced by IS-3** (Step 4) | `inject_convergence` is net-new from IS-3. The clip at [:615-617](engine/patterns.py#L615-L617) was added (defensible defensive widening, unauthorized). |
+| **M4** | Mixture validator accepts `np.floating` but rejects `np.integer` | **Introduced by IS-1+DS-3** (Step 6) | The mixture branch of `validate_param_model` at [sdk/validation.py:370](sdk/validation.py#L370) is net-new from the mixture stub. The asymmetric `isinstance` check is new. |
+| **M5** | IS-6 token-budget docstring + missing `_extract_token_usage` exception-path test | **Introduced by IS-6 token-budget** (Step 8a) | The `token_budget` / `initial_token_usage` parameter surface and the `_extract_token_usage` helper are net-new from Step 8a. |
+| **L1** | `check_seasonal_anomaly` uses `.std(ddof=0)` | **Introduced by IS-4** (Step 5) | The previous stub returned `passed=True` unconditionally with no std calculation. The whole z-score formula is net-new from IS-4. |
+| **L2** | `GroupDependency` docstring stale | **Introduced by DS-4** (Step 7) | DS-4 widened the contract from single-column to N-deep nested dicts. The "Currently restricted to single-column" sentence was true before DS-4; the implementer didn't update it. |
+| **L3** | `DS-4.md` mis-states deepcopy rationale | **Introduced by DS-4** (Step 7) | The summary doc was authored as part of the DS-4 ship. |
+| **L4** | `DS-4.md` cites wrong line span | **Introduced by DS-4** (Step 7) | Same — summary drift authored at ship time, invalidated by surrounding edits. |
+| **L5** | IS-4 `anomaly_window` "optional vs mandatory" contradiction | **Pre-existing** | The contradiction lives in [stub_blocker_decisions.md](stub_analysis/stub_blocker_decisions.md) itself (between §IS-4 and §4.2 Theme 2), which is an INPUT to the stub workflow. The IS-4 implementer had to pick a reading; the contradiction in the source doc predates implementation. |
+
+### Distribution
+
+- **1 pre-existing finding** (L5 — contradiction in the decisions doc).
+- **1 mixed finding** (H1 — pre-existing seed in `inject_trend_break`,
+  propagated by IS-2 and IS-4 via copy-paste).
+- **9 introduced by stub implementations**, by step:
+  - IS-2 (Step 3): M2
+  - IS-3 (Step 4): M3
+  - IS-4 (Step 5): L1
+  - IS-1+DS-3 (Step 6): M1, M4
+  - DS-4 (Step 7): L2, L3, L4
+  - IS-6 token-budget (Step 8a): M5
+
+### Pattern observation
+
+Every stub-introduced finding is a **small unauthorized addition**
+(M1 wiring gap, M2 floor, M3 clip, M4 isinstance asymmetry, L1 ddof
+choice) or a **small documentation lag** (M5, L2, L3, L4) — no
+implementer made a behavioral spec violation that contradicts the
+decisions doc. The most expensive Mediums (M1, M2, M3) are all
+"implementer added defensive code beyond spec." That is a healthier
+failure mode than under-implementing the spec, but it does suggest
+the next round of decisions docs should have a "do not add helpers
+/ clips / floors not specified here" line.
