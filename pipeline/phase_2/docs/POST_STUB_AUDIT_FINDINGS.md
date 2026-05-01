@@ -45,7 +45,7 @@ class with garbled-temporal fixture. Full writeup at
 
 ## MEDIUM severity
 
-### M1 — Mixture `widen_variance` opt-out is inert in production  ✅ **RESOLVED** (commit pending)
+### M1 — Mixture `widen_variance` opt-out is inert in production  ✅ **RESOLVED** (commit `893e7e9`)
 
 [pipeline.py:27, 76, 138, 262](pipeline.py#L27) accepts `auto_fix`
 from the user but never auto-binds
