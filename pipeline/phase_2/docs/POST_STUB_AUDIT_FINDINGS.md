@@ -71,7 +71,7 @@ class (3 tests) covering raw mixture, raw non-mixture, and
 explicit-partial paths. Full writeup at
 [docs/fixes/M1_WIDEN_VARIANCE_AUTO_BINDING.md](fixes/M1_WIDEN_VARIANCE_AUTO_BINDING.md).
 
-### M2 — `inject_dominance_shift` adds an undocumented "positive_floor"
+### M2 — `inject_dominance_shift` adds an undocumented "positive_floor"  ✅ **RESOLVED** (commit pending)
 
 [engine/patterns.py:352-356](engine/patterns.py#L352-L356) adds
 `max(|peer_max|*0.1, 1.0)` when `peer_std<=0`, else `1e-9`. Decisions
@@ -81,12 +81,15 @@ specify only `shift = peer_max + magnitude*peer_std - mean(post_split)`.
 The floor materially changes results when `magnitude=0` or peers are
 constant.
 
-**Fix options:**
-- Remove the floor (spec-faithful behavior).
-- OR amend `stub_blocker_decisions.md §DS-2` to authorize and document
-  the floor.
+**Resolution:** Kept the floor (it prevents spurious validator failures
+in the two edge cases where the naive formula yields a tie:
+zero-variance peers and caller-supplied `magnitude=0`). Amended
+`stub_blocker_decisions.md §DS-2` to authorize the two-tier floor and
+document its rationale (strict dominance for deterministic rank-flip).
+Full writeup at
+[docs/fixes/M2_M3_DEFENSIVE_GUARDS.md](fixes/M2_M3_DEFENSIVE_GUARDS.md).
 
-### M3 — `inject_convergence` clips `factor` to `[0, 1]`
+### M3 — `inject_convergence` clips `factor` to `[0, 1]`  ✅ **RESOLVED** (commit pending)
 
 [engine/patterns.py:615-617](engine/patterns.py#L615-L617) clips;
 spec pseudocode at
@@ -94,8 +97,13 @@ spec pseudocode at
 does not. The clip is *safer* (prevents extrapolation past the mean
 for `pull_strength>1`) but unauthorized by the decisions doc.
 
-**Fix options:**
-- Same shape as M2 — pick "remove clip" or "amend decisions doc."
+**Resolution:** Kept the clip — without it the injector would push
+target rows to the opposite side of `global_mean` for `pull_strength>1`,
+*increasing* inter-group variance and undermining the paired
+`check_convergence` validator. Amended `stub_blocker_decisions.md §DS-2`
+to mark the `[0, 1]` clip as required (not optional) and document the
+"injector must agree with validator" rationale. Full writeup at
+[docs/fixes/M2_M3_DEFENSIVE_GUARDS.md](fixes/M2_M3_DEFENSIVE_GUARDS.md).
 
 ### M4 — Mixture validator rejects `np.integer` weights but accepts `np.floating`
 

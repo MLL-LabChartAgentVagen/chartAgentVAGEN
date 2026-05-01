@@ -618,16 +618,43 @@ already exists; only the injector is missing.
 `target_entity`'s mean exceeds peers'.
 - Resolve `temporal_col` (mirror `inject_trend_break`).
 - Compute `peer_max` and `peer_std` from non-target rows post-split.
-- `shift = peer_max + magnitude * peer_std - df.loc[post_split, col].mean()`
+- Compute `gap` with a two-tier strict-dominance floor:
+  - If `peer_std` is non-finite or `<= 0` (peers degenerate — all peers
+    identical, or single peer): `gap = max(|peer_max| * 0.1, 1.0)`.
+  - Else: `gap = max(magnitude * peer_std, 1e-9)`.
+- `shift = peer_max + gap - df.loc[post_split, col].mean()`
 - `df.loc[post_split, col] += shift`
+
+The floor exists because the naive `gap = magnitude * peer_std` formula
+produces `gap = 0` in two edge cases — peers with zero variance, or
+caller-supplied `magnitude = 0` — both of which leave the target mean
+exactly at `peer_max` (a tie). Ties do not flip rank reliably under
+stable sort, causing the paired `check_dominance_shift` validator to
+fail spuriously on otherwise-valid declarations. The floor enforces
+strict dominance (`target_mean > peer_max`) so the validator's rank
+check has a deterministic positive case. Authoritative implementation:
+[engine/patterns.py:369-374](../../engine/patterns.py#L369-L374).
 
 **`convergence`** — Pull target rows toward `global_mean` as time
 progresses; magnitude grows linearly with normalized time.
 ```
 for each target row:
-    factor = (t - tmin)/(tmax - tmin) * pull
+    factor = clip((t - tmin)/(tmax - tmin) * pull, 0.0, 1.0)
 df[col] = df[col] * (1 - factor) + global_mean * factor
 ```
+
+The `[0, 1]` clip on `factor` is required (not optional). Without it,
+`pull_strength > 1` produces `factor > 1` near `t = tmax`, which
+inverts the blend `(1 - factor) < 0` and pushes target rows to the
+*opposite* side of `global_mean`. The result is **increased**
+inter-group variance, not the convergence the paired
+`check_convergence` validator measures — the injector would actively
+undermine its validator. Symmetrically, negative `pull_strength` is
+clipped to 0 (no-op) rather than producing anti-convergence. The clip
+preserves the intuitive semantics ("larger `pull` = stronger
+convergence, capped at full collapse to the mean") that any caller
+would assume from the parameter name. Authoritative implementation:
+[engine/patterns.py:615-617](../../engine/patterns.py#L615-L617).
 
 **`seasonal_anomaly`** — Scale target values inside `anomaly_window`
 by `(1 + magnitude)`; mirrors `inject_trend_break` with a finite
