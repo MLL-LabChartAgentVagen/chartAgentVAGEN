@@ -88,6 +88,120 @@ class TestThreeComponentKS:
         stat, p_value = scipy.stats.kstest(sample, mixture_cdf.cdf)
         assert p_value > 0.05, f"KS test should pass, got p={p_value:.4f}, D={stat:.4f}"
 
+    # ---------------------------------------------------------------------
+    # T2.3 of TEST_AUDIT_2026-05-07.md.
+    #
+    # The pre-existing test uses a single weight configuration (0.3, 0.5, 0.2).
+    # A regression in `_sample_mixture` that handled balanced mixtures fine
+    # but mishandled skewed weights would slip through. The parametrized
+    # variants below cover the extremes.
+    # ---------------------------------------------------------------------
+
+    @pytest.mark.parametrize("weights", [
+        [0.1, 0.1, 0.8],   # heavily skewed toward one component
+        [0.34, 0.33, 0.33],  # near-uniform
+        [0.05, 0.475, 0.475],  # one tiny + two equal
+    ])
+    def test_self_ks_passes_across_weight_configurations(self, weights):
+        components = [
+            _gaussian_component(mu=-5.0, sigma=1.0, weight=weights[0]),
+            _gaussian_component(mu=0.0, sigma=0.5, weight=weights[1]),
+            _gaussian_component(mu=5.0, sigma=2.0, weight=weights[2]),
+        ]
+        col_meta = _mixture_meta(components)
+        rng = np.random.default_rng(123)
+        n = 5000
+        sample = _sample_mixture("y", col_meta, _rows(n), rng)
+
+        norm_weights = np.array(weights, dtype=float) / sum(weights)
+        frozen_components = [
+            (float(w), _expected_cdf(c["family"], {
+                "mu": c["param_model"]["mu"]["intercept"],
+                "sigma": c["param_model"]["sigma"]["intercept"],
+            }))
+            for w, c in zip(norm_weights, components)
+        ]
+        mixture_cdf = _MixtureFrozen(frozen_components)
+        stat, p_value = scipy.stats.kstest(sample, mixture_cdf.cdf)
+        assert p_value > 0.05, (
+            f"KS failed for weights={weights}: p={p_value:.4f}, D={stat:.4f}"
+        )
+
+
+class TestComponentProportions:
+    """T2.3 of TEST_AUDIT_2026-05-07.md.
+
+    Pre-existing `TestTwoComponentMean` verifies the weighted *mean* matches
+    expectation — but a sampler that always assigned every row to component
+    0 would still produce a mean close to expectation when the marginal
+    means are similar. The proportion check below directly verifies that
+    the COUNT of rows assigned to each component matches the declared
+    weights within a binomial 95% CI.
+
+    Trick: the per-component samplers use disjoint mu and tight sigma so
+    we can recover the latent component label from each sample's value.
+    Component 0: N(-100, 0.5) → values ≈ -100. Component 1: N(0, 0.5).
+    Component 2: N(+100, 0.5). With sigma=0.5 the components don't overlap.
+    """
+
+    def test_two_component_proportions_match_declared_weights(self):
+        # Disjoint means + tight sigma so component labels are recoverable
+        # from sample values via thresholding.
+        components = [
+            _gaussian_component(mu=-100.0, sigma=0.5, weight=0.6),
+            _gaussian_component(mu=100.0, sigma=0.5, weight=0.4),
+        ]
+        col_meta = _mixture_meta(components)
+        rng = np.random.default_rng(42)
+        n = 10_000
+        sample = _sample_mixture("y", col_meta, _rows(n), rng)
+
+        # Recover component labels: sign separates the two means cleanly.
+        n_comp0 = int((sample < 0).sum())
+        n_comp1 = int((sample > 0).sum())
+        assert n_comp0 + n_comp1 == n, "every sample must classify"
+
+        # Binomial 95% CI for n=10000, p=0.6 → ±~96. Allow ±200 for safety.
+        # Width chosen so a 50/50 sampler (broken) would fail loudly.
+        expected_comp0 = int(0.6 * n)
+        expected_comp1 = int(0.4 * n)
+        assert abs(n_comp0 - expected_comp0) < 200, (
+            f"Component 0 count {n_comp0} too far from expected "
+            f"{expected_comp0} (declared weight=0.6)"
+        )
+        assert abs(n_comp1 - expected_comp1) < 200, (
+            f"Component 1 count {n_comp1} too far from expected "
+            f"{expected_comp1} (declared weight=0.4)"
+        )
+
+    def test_three_component_proportions_match_declared_weights(self):
+        components = [
+            _gaussian_component(mu=-100.0, sigma=0.5, weight=0.5),
+            _gaussian_component(mu=0.0,    sigma=0.5, weight=0.3),
+            _gaussian_component(mu=100.0,  sigma=0.5, weight=0.2),
+        ]
+        col_meta = _mixture_meta(components)
+        rng = np.random.default_rng(42)
+        n = 10_000
+        sample = _sample_mixture("y", col_meta, _rows(n), rng)
+
+        # Three disjoint clusters; threshold at ±50 to recover labels.
+        n_low  = int((sample < -50).sum())
+        n_mid  = int((abs(sample) <= 50).sum())
+        n_high = int((sample > 50).sum())
+        assert n_low + n_mid + n_high == n
+
+        # Binomial 95% CI band ±200 for n=10k.
+        for observed, expected, weight in [
+            (n_low,  5000, 0.5),
+            (n_mid,  3000, 0.3),
+            (n_high, 2000, 0.2),
+        ]:
+            assert abs(observed - expected) < 200, (
+                f"Observed {observed} for weight={weight} differs from "
+                f"expected {expected} by more than 200 (n={n})"
+            )
+
 
 class TestWeightNormalization:
     def test_unnormalized_weights_match_normalized(self):

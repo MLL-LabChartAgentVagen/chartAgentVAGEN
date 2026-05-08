@@ -206,3 +206,96 @@ class TestAddMeasureStructural:
                 formula="100", # missing 'factor'
                 effects={"factor": {"A": 1.2}}
             )
+
+
+class TestAddCategoryWeightSafeguards:
+    """Spec §2.1.1 — `add_category` auto-normalizes weights and rejects
+    invalid weight vectors. Closes part of T1.9 in TEST_AUDIT_2026-05-07.md."""
+
+    def test_unnormalized_weights_are_stored_normalized(self):
+        """`weights=[1, 2, 1]` should be normalized to `[0.25, 0.5, 0.25]`
+        per the spec safeguard table. Pre-existing tests use `[0.6, 0.4]`
+        which is already normalized, so a regression where normalization
+        was dropped (and weights stored verbatim) would slip through."""
+        columns = OrderedDict()
+        groups = {}
+        add_category(
+            columns=columns, groups=groups, name="hospital",
+            values=["A", "B", "C"], weights=[1.0, 2.0, 1.0],
+            group="entity", parent=None,
+        )
+        stored = columns["hospital"]["weights"]
+        assert stored == pytest.approx([0.25, 0.5, 0.25]), (
+            f"weights should auto-normalize to sum=1; got {stored}"
+        )
+        assert sum(stored) == pytest.approx(1.0)
+
+    def test_all_zero_weights_rejected(self):
+        with pytest.raises(ValueError, match="zero|normaliz"):
+            add_category(
+                OrderedDict(), {}, "bad",
+                values=["A", "B"], weights=[0.0, 0.0],
+                group="entity",
+            )
+
+    def test_negative_weights_rejected(self):
+        with pytest.raises(ValueError, match="negative|>= 0"):
+            add_category(
+                OrderedDict(), {}, "bad",
+                values=["A", "B"], weights=[1.0, -0.5],
+                group="entity",
+            )
+
+    def test_weight_count_mismatch_rejected(self):
+        # Spec §2.1.1: weight vector length must match values list.
+        from pipeline.phase_2.exceptions import WeightLengthMismatchError
+        with pytest.raises(WeightLengthMismatchError):
+            add_category(
+                OrderedDict(), {}, "bad",
+                values=["A", "B", "C"], weights=[0.5, 0.5],
+                group="entity",
+            )
+
+
+class TestAddMeasureFamilySafeguard:
+    """Spec §2.1.1 — `add_measure` type-checks the `dist`/`family` argument
+    (`Type-checks dist; blocks degenerate params`). The SDK rejects unknown
+    families at declaration time so the LLM gets fast feedback rather than a
+    deferred sampling-time crash. Closes part of T1.9."""
+
+    def test_unknown_family_rejected_at_declaration(self):
+        columns = OrderedDict()
+        with pytest.raises(ValueError, match="Unsupported|family|Supported"):
+            add_measure(
+                columns=columns, name="x",
+                family="not_a_distribution",
+                param_model={"mu": 100.0, "sigma": 10.0},
+            )
+
+    def test_known_families_accepted(self):
+        # Sanity guard so the negative test above isn't hiding a generic
+        # "every family raises" behaviour. Limited to the two-param families
+        # that share `mu`/`sigma`; poisson/exponential have their own param
+        # keys covered elsewhere.
+        for family in ("gaussian", "lognormal"):
+            columns = OrderedDict()
+            add_measure(
+                columns=columns, name=f"m_{family}",
+                family=family,
+                param_model={"mu": 2.0, "sigma": 1.5},
+            )
+            assert columns[f"m_{family}"]["family"] == family
+
+
+class TestAddTemporalFrequencySafeguard:
+    """Spec §2.1.1 — `add_temporal` validates the frequency string. Closes
+    part of T1.9 — the existing tests cover invalid date format and
+    end-before-start, but not unsupported frequency tokens."""
+
+    def test_unsupported_freq_string_rejected(self):
+        with pytest.raises(ValueError):
+            add_temporal(
+                OrderedDict(), {}, name="d",
+                start="2024-01-01", end="2024-12-31",
+                freq="FORTNIGHTLY",  # not a valid pandas freq
+            )

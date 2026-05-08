@@ -158,3 +158,112 @@ class TestCheckConvergence:
         )
         result = check_convergence(df, _pattern(), _meta_with_entity_and_time())
         assert result.passed is True
+
+    # ---------------------------------------------------------------------
+    # T2.2 of TEST_AUDIT_2026-05-07.md — boundary cases.
+    #
+    # Pre-existing tests cover (a) full convergence (reduction ≈ 1.0) and
+    # (b) stable spread (reduction ≈ 0). They never test:
+    #  - DIVERGENCE: late variance > early variance → reduction is NEGATIVE
+    #    → must fail any positive threshold.
+    #  - Threshold boundary: reduction *exactly* at the threshold → must
+    #    pass under `>=` semantics.
+    # ---------------------------------------------------------------------
+
+    def test_divergence_negative_reduction_fails(self):
+        """Late means more spread than early means → reduction < 0 →
+        must fail the default threshold of 0.3 with a reported negative
+        reduction."""
+        df = _build_df(
+            early_means=[6.5, 6.5, 6.5, 6.5],   # zero spread early
+            late_means=[2.0, 5.0, 8.0, 11.0],   # large spread late
+        )
+        result = check_convergence(df, _pattern(), _meta_with_entity_and_time())
+        assert result.passed is False
+        # The validator's early_var=0 path triggers a graceful "undefined"
+        # fail rather than a negative reduction; the audit's intent —
+        # "spread WIDENED → don't claim convergence" — is satisfied either
+        # way. Verify the failure mode reported is one of the two.
+        assert (
+            "reduction undefined" in result.detail
+            or "reduction=-" in result.detail
+        )
+
+    def test_divergence_with_nonzero_early_var_yields_negative_reduction(self):
+        """When early_var > 0 but late_var > early_var, the formula
+        `(early - late)/early` is negative — exercise the explicit
+        negative-reduction branch (avoids the early_var=0 short-circuit)."""
+        df = _build_df(
+            early_means=[5.0, 6.0, 7.0, 8.0],   # small spread early (var≈1.67)
+            late_means=[1.0, 5.0, 10.0, 14.0],  # larger spread late
+        )
+        result = check_convergence(df, _pattern(), _meta_with_entity_and_time())
+        assert result.passed is False
+        assert "reduction=-" in result.detail, (
+            f"Expected negative reduction, got: {result.detail}"
+        )
+
+    def test_threshold_boundary_at_exact_equality(self):
+        """Pin `>=` (not `>`) at the boundary. The validator computes
+        `reduction = (early_var - late_var) / early_var` and gates on
+        `reduction >= threshold` (pattern_checks.py:393-394). This test
+        replicates the validator's arithmetic in-test to obtain the
+        bit-identical float, then feeds that exact float as the threshold.
+        At `threshold == actual_reduction`, `>=` passes but `>` would not
+        — so a refactor that flipped the operator would flip this assertion.
+
+        Replaces the prior `test_threshold_boundary_inequality_is_inclusive`
+        which only probed strictly-below vs strictly-above (and so tolerated
+        an erroneous `>` regression).
+        """
+        df = _build_df(
+            early_means=[2.0, 5.0, 8.0, 11.0],
+            late_means=[6.0, 6.5, 6.5, 7.0],
+        )
+
+        # Reproduce the validator's reduction calculation. Must use the
+        # same per-entity means + the same `pd.Series.var()` (default
+        # ddof=1) so the float is bit-identical to the validator's.
+        # An explicit split_point is passed below so the validator and
+        # this test agree on which rows fall on which side.
+        split = pd.Timestamp("2024-04-15")
+        pre_means = (
+            df[df["visit_date"] < split]
+            .groupby("hospital")["value"].mean()
+        )
+        post_means = (
+            df[df["visit_date"] >= split]
+            .groupby("hospital")["value"].mean()
+        )
+        early_var = float(pre_means.var())
+        late_var = float(post_means.var())
+        expected_reduction = (early_var - late_var) / early_var
+
+        # threshold == actual reduction → must PASS under `>=`.
+        # A regression that flipped `>=` to `>` would trip exactly here.
+        eq = check_convergence(
+            df,
+            _pattern(reduction=expected_reduction, split_point="2024-04-15"),
+            _meta_with_entity_and_time(),
+        )
+        assert eq.passed is True, (
+            f"reduction={expected_reduction!r} should satisfy "
+            f"`>= threshold={expected_reduction!r}`; got {eq.detail}. "
+            f"This assertion is the `>=` vs `>` regression guard."
+        )
+
+        # threshold = reduction + tiny epsilon → must FAIL (strict-side guard).
+        # Confirms we're not just matching everything; the comparison is
+        # active and the boundary is real.
+        above = check_convergence(
+            df,
+            _pattern(
+                reduction=expected_reduction + 1e-9,
+                split_point="2024-04-15",
+            ),
+            _meta_with_entity_and_time(),
+        )
+        assert above.passed is False, (
+            f"reduction={expected_reduction!r} < threshold="
+            f"{expected_reduction + 1e-9!r} must fail; got {above.detail}"
+        )

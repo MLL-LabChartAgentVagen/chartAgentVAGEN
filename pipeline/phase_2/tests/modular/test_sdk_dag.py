@@ -197,6 +197,98 @@ class TestBuildFullDag:
             GroupDependency("r1", ["r2"], {})
         ]
         columns = {"r1": {}, "r2": {}}
-        
+
         with pytest.raises(CyclicDependencyError):
             build_full_dag(columns, groups, deps, {})
+
+
+# =====================================================================
+# T2.5 of TEST_AUDIT_2026-05-07.md.
+#
+# Pre-existing test_cycle_detection hands `topological_sort` a *pre-formed*
+# cycle dict and asserts it raises. The realistic path — a cycle introduced
+# by an *incremental* third `add_measure_structural` call — is not exercised.
+# Diamond dependencies (X→{Y,Z}; Y,Z→W) are also untested; the
+# `build_full_dag` test only covers a direct chain.
+# =====================================================================
+
+
+class TestDiamondDependency:
+    """Diamond: x depends on y AND z; y and z both depend on w. Topological
+    order must respect all four edges simultaneously."""
+
+    def test_diamond_topological_order_respects_all_edges(self):
+        # Adjacency convention (per topological_sort docstring at
+        # `sdk/dag.py:117`): adj[node] = [successors]. The diamond is
+        # `w` (source) → {y, z} → `x` (sink), so:
+        adjacency = {
+            "w": ["y", "z"],   # w → y, w → z
+            "y": ["x"],        # y → x
+            "z": ["x"],        # z → x
+            "x": [],           # sink
+        }
+        result = topological_sort(adjacency)
+
+        # w is the source (in-degree 0) → appears FIRST.
+        assert result[0] == "w"
+        # y and z come after w but before x.
+        assert result.index("w") < result.index("y")
+        assert result.index("w") < result.index("z")
+        # x is the sink (in-degree 2) → appears LAST.
+        assert result.index("y") < result.index("x")
+        assert result.index("z") < result.index("x")
+        assert result[-1] == "x"
+
+    def test_diamond_cycle_at_apex_is_detected(self):
+        """A diamond with an extra back-edge x→w (closing the loop) must
+        raise CyclicDependencyError. Locks in cycle detection on richer
+        graphs than the existing pre-formed-cycle test."""
+        adjacency = {
+            "w": ["y", "z"],
+            "y": ["x"],
+            "z": ["x"],
+            "x": ["w"],   # back-edge — closes the loop x → w → y/z → x
+        }
+        with pytest.raises(CyclicDependencyError):
+            topological_sort(adjacency)
+
+
+class TestIncrementalCycleDetection:
+    """The realistic SDK path is `add_measure_structural` called multiple
+    times, each appending edges. A cycle introduced by a 3rd call must be
+    caught when the resulting adjacency is fed to `build_full_dag`/
+    `topological_sort`. Pre-existing tests use static cycle dicts, which
+    don't model the incremental construction path."""
+
+    def test_three_step_incremental_cycle_caught_by_topological_sort(self):
+        """Simulate three sequential `add_measure_structural` calls building
+        towards a cycle. Adjacency uses the docstring's successor convention.
+          1) measure_dag["a"] = ["b"]   # a → b
+          2) measure_dag["b"] = ["c"]   # b → c
+          3) measure_dag["c"] = ["a"]   # c → a — CLOSES THE CYCLE
+        After the third edge, topological_sort must raise."""
+        measure_dag = {}
+        measure_dag["a"] = ["b"]
+        measure_dag["b"] = ["c"]
+        measure_dag["c"] = ["a"]
+
+        with pytest.raises(CyclicDependencyError):
+            topological_sort(measure_dag)
+
+    def test_two_step_chain_remains_acyclic(self):
+        """Sanity-pair: two steps without a closing edge must NOT raise.
+        Catches a regression where cycle detection becomes overzealous."""
+        measure_dag = {"a": ["b"], "b": ["c"]}
+        result = topological_sort(measure_dag)
+        # adj[node]=[successors], so "a→b→c" — a is source, c is sink.
+        assert result.index("a") < result.index("b")
+        assert result.index("b") < result.index("c")
+
+    def test_self_loop_caught_immediately(self):
+        """A measure that references itself in its own formula creates a
+        self-loop. detect_cycle_in_adjacency must surface it."""
+        measure_dag = {"a": ["a"]}
+        result = detect_cycle_in_adjacency(measure_dag)
+        assert result is not None
+        # The cycle witness should mention the offending node.
+        assert "a" in str(result)

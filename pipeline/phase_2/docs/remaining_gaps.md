@@ -2,7 +2,7 @@
 
 All 36 NEEDS_CLAR items have been resolved. The items below are **intentional stubs** per decisions in `decisions/blocker_resolutions.md` — each requires spec clarification or a design decision before implementation.
 
-### 4.1 Intentional Stubs (6)
+### 4.1 Intentional Stubs (5)
 
 #### Mixture Distribution Sampling (P1-1 / M1-NC-1)
 - **Location:** `phase_2/engine/measures.py:360-366`
@@ -33,6 +33,10 @@ All 36 NEEDS_CLAR items have been resolved. The items below are **intentional st
 - **Behavior:** `add_measure(name, family, param_model)` no longer accepts a `scale` keyword argument. Passing `scale=...` raises `TypeError: add_measure() got an unexpected keyword argument 'scale'`. The prompt no longer advertises the kwarg.
 - **History:** Previously accepted but silently no-op (emitted a "stored but has no effect" warning). Removed in round-3 GPT failure fixes (`docs/fixes/GPT_FAILURE_ROUND_3_FIXES.md`) because LLMs treated it as a meaningful knob and burned retry budget tuning a dead parameter — same advertising-a-nonfeature class as `censoring=` and the deferred pattern types removed in round 2.
 - **To unstub:** Implement a scaling mechanism (e.g., post-sampling multiplicative scaling of measure values), then restore the `scale` kwarg in `sdk/columns.py` and re-add it to the `add_measure` signature shown in `orchestration/prompt.py`. Grep for `TODO [M?-NC-scale]` to find both sites.
+
+#### ~~Primary-Key Protection in `set_realism` (REM-realism-pk-protection)~~ — RESOLVED 2026-05-07
+- **Resolution:** `_primary_key_columns(columns)` helper in `engine/realism.py` identifies categorical roots (`type=='categorical'` AND `parent is None`); `inject_realism` forwards them as `protected_columns=` to `inject_missing_values`, which forces those columns' mask cells to `False` before applying. The xfail decorator on `tests/modular/test_realism.py::TestPrimaryKeyProtection::test_primary_key_categorical_root_never_nulled_at_rate_one` was removed; three complementary tests added (intermediate rate `0.5`, child categorical NOT protected, multiple group roots all protected) plus a regression guard that direct callers of `inject_missing_values` without `protected_columns` keep the all-cells-masked default.
+- **Out of scope (separate spec violation, not addressed by this resolution):** `inject_dirty_values` (`engine/realism.py:157`) iterates *all* categorical columns including roots and may character-perturb a PK string ("Xiehe" → "Xeihe") at `dirty_rate>0`. Spec §2.1.1 protects "primary key" without scoping to missing-only, so this is a remaining gap. Tracked for a future round; closing it requires the same skip-set threading into `inject_dirty_values`.
 
 #### M3 Context Window / Multi-Error (M3-NC-3, M3-NC-4)
 - **Location (NC-3):** `phase_2/sdk/simulator.py:32-36` — TODO comment noting one-error-at-a-time limitation.

@@ -9,6 +9,8 @@ Tested functions:
 """
 from __future__ import annotations
 
+import re
+
 import pytest
 import pandas as pd
 import numpy as np
@@ -19,6 +21,18 @@ from pipeline.phase_2.validation.structural import (
     check_orthogonal_independence,
     check_measure_dag_acyclic,
 )
+
+
+def _extract_chi2_p(detail: str) -> float:
+    """Pull the float p-value out of a `χ² p=0.4321 (...)` detail string.
+
+    The validator formats results as `χ² p={p_val:.4f} (>0.05 = independent)`
+    in `validation/structural.py:171`. Anchoring on this format lets failure-
+    side tests assert on the numeric p-value rather than just `passed`.
+    """
+    m = re.search(r"p=([\d.eE+-]+)", detail)
+    assert m is not None, f"Could not extract p-value from detail: {detail!r}"
+    return float(m.group(1))
 
 
 class TestCheckRowCount:
@@ -62,27 +76,55 @@ class TestCheckCategoricalCardinality:
 
 
 class TestCheckOrthogonalIndependence:
-    def test_independent_features(self):
-        # We need a large enough sample of independent distributions to avoid random failure of p-value >= 0.05
-        # 400 samples of purely random uniform choices
+    """Validate the §2.6 L1 chi-squared independence guarantee.
+
+    Spec: `p > 0.05` ⇒ independent ([validation/structural.py:170](../../validation/structural.py#L170)).
+    Both the passing and failing branches must have deterministic coverage —
+    no flaky `np.random.choice(...)` without a seed.
+    """
+
+    def test_passes_for_seeded_independent_data(self):
+        rng = np.random.default_rng(20260507)
         df = pd.DataFrame({
-            "root_a": np.random.choice(["X", "Y"], size=400),
-            "root_b": np.random.choice(["K", "L"], size=400)
+            "root_a": rng.choice(["X", "Y"], size=400),
+            "root_b": rng.choice(["K", "L"], size=400),
         })
         meta = {
             "dimension_groups": {
                 "g1": {"hierarchy": ["root_a"]},
-                "g2": {"hierarchy": ["root_b"]}
+                "g2": {"hierarchy": ["root_b"]},
             },
-            "orthogonal_groups": [
-                {"group_a": "g1", "group_b": "g2"}
-            ]
+            "orthogonal_groups": [{"group_a": "g1", "group_b": "g2"}],
         }
         checks = check_orthogonal_independence(df, meta)
         assert len(checks) == 1
-        # Random failures are possible but extremely rare with N=400 independent coinflips. 
-        # If it fails frequently we can seed the numpy array.
         assert checks[0].passed
+        # Lock down the threshold semantic: passing branch must have p > 0.05.
+        p_val = _extract_chi2_p(checks[0].detail)
+        assert p_val > 0.05
+
+    def test_fails_for_seeded_dependent_data(self):
+        # Hand-constructed strongly-dependent contingency: when root_a == "X",
+        # root_b is overwhelmingly "K"; when root_a == "Y", root_b is "L".
+        # Adds two off-diagonal entries to keep both shape dims ≥ 2 while
+        # still driving p far below 0.05.
+        rows = (
+            [("X", "K")] * 195 + [("X", "L")] * 5
+            + [("Y", "L")] * 195 + [("Y", "K")] * 5
+        )
+        df = pd.DataFrame(rows, columns=["root_a", "root_b"])
+        meta = {
+            "dimension_groups": {
+                "g1": {"hierarchy": ["root_a"]},
+                "g2": {"hierarchy": ["root_b"]},
+            },
+            "orthogonal_groups": [{"group_a": "g1", "group_b": "g2"}],
+        }
+        checks = check_orthogonal_independence(df, meta)
+        assert len(checks) == 1
+        assert not checks[0].passed
+        p_val = _extract_chi2_p(checks[0].detail)
+        assert p_val <= 0.05
 
     def test_degenerate_contingency_table(self):
         # Only 1 unique value in one of the columns

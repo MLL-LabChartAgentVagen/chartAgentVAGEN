@@ -26,8 +26,10 @@ from pipeline.phase_2.sdk.relationships import inject_pattern
 from pipeline.phase_2.validation.pattern_checks import (
     check_convergence,
     check_dominance_shift,
+    check_outlier_entity,
     check_ranking_reversal,
     check_seasonal_anomaly,
+    check_trend_break,
 )
 
 
@@ -99,13 +101,27 @@ class TestInjectRankingReversal:
         pattern = _ranking_pattern()
         columns = _columns_with_hospital_root()
 
-        # Pre-injection: validator should fail (positive rank correlation).
+        # Pre-injection: independent oracle confirms positive rank corr.
         target_only = df[df["severity"] == "Severe"]
         pre_means = target_only.groupby("hospital")[["m1", "m2"]].mean()
         pre_corr = float(pre_means["m1"].rank().corr(pre_means["m2"].rank()))
         assert pre_corr > 0, "fixture should start with positive correlation"
 
         result = inject_ranking_reversal(df, pattern, columns)
+
+        # Closes T1.6 (b) of TEST_AUDIT_2026-05-07.md: oracle reuse.
+        # `check_ranking_reversal` and `inject_ranking_reversal` both compute
+        # `rank().corr()` on the same column path. Computing the post-injection
+        # oracle independently — directly from the post-injection groupby —
+        # separates "the injector did the rank-flip" from "the validator
+        # agreed with itself."
+        post_target = result[result["severity"] == "Severe"]
+        post_means = post_target.groupby("hospital")[["m1", "m2"]].mean()
+        post_corr = float(post_means["m1"].rank().corr(post_means["m2"].rank()))
+        assert post_corr < 0, (
+            f"Independent post-injection oracle: rank_corr={post_corr:.3f} "
+            f"must be < 0 after ranking_reversal. (Pre-injection: {pre_corr:.3f}.)"
+        )
 
         check = check_ranking_reversal(result, pattern, meta={})
         assert check.passed is True, f"validator failed: {check.detail}"
@@ -971,6 +987,129 @@ class TestAllSixPatternsIntegration:
         result = inject_patterns(df, patterns, columns, rng)
         assert result is not None
         assert len(result) == len(df)
+
+    def test_each_pattern_individually_passes_its_validator(self):
+        """Closes T1.6 (a) of TEST_AUDIT_2026-05-07.md.
+
+        The original `test_all_six_patterns_dispatch_without_error` cannot
+        fail — it only checks `len(result) == len(df)`, so a regression
+        where any pattern silently became a no-op (e.g., a dispatch table
+        typo'd a key) would slip through.
+
+        This test injects each pattern in ISOLATION and runs the
+        corresponding L3 check from `validation/pattern_checks.py`,
+        verifying the validator now reports `passed=True`. If a future
+        edit makes any single injector a no-op, exactly that pattern's
+        assertion will flip — instantly localizing the regression.
+
+        Stub patterns (dominance_shift in some configurations) only need
+        to assert `result is not None` because their validator may report
+        passed=True for any non-empty input by design; we verify the
+        injection raised no exception and the return shape is correct.
+        """
+        # `_find_temporal_column` expects a "time" group with the temporal
+        # column as its hierarchy root (validation/pattern_checks.py:94-103),
+        # so the meta dict declares one explicitly.
+        meta = {
+            "columns": _all_patterns_columns(),
+            "dimension_groups": {
+                "entity":  {"hierarchy": ["hospital"]},
+                "patient": {"hierarchy": ["severity"]},
+                "time":    {"hierarchy": ["visit_date"]},
+            },
+        }
+
+        # 1. outlier_entity ---------------------------------------------
+        df = _build_all_patterns_df()
+        rng = np.random.default_rng(0)
+        pattern = {
+            "type": "outlier_entity",
+            "target": "hospital == 'Xiehe' & severity == 'Severe'",
+            "col": "m1",
+            "params": {"z_score": 2.5},
+        }
+        out = inject_patterns(df, [pattern], _all_patterns_columns(), rng)
+        chk = check_outlier_entity(out, pattern)
+        assert chk.passed, (
+            f"outlier_entity injector→validator round-trip failed: {chk.detail}"
+        )
+
+        # 2. trend_break ------------------------------------------------
+        df = _build_all_patterns_df()
+        rng = np.random.default_rng(0)
+        pattern = {
+            "type": "trend_break",
+            "target": "hospital == 'Huashan'",
+            "col": "m1",
+            "params": {"break_point": "2024-03-15", "magnitude": 0.4},
+        }
+        out = inject_patterns(df, [pattern], _all_patterns_columns(), rng)
+        chk = check_trend_break(out, pattern, meta)
+        assert chk.passed, f"trend_break round-trip failed: {chk.detail}"
+
+        # 3. ranking_reversal -------------------------------------------
+        df = _build_all_patterns_df()
+        rng = np.random.default_rng(0)
+        pattern = {
+            "type": "ranking_reversal",
+            "target": "severity == 'Severe'",
+            "col": "m1",
+            "params": {"metrics": ["m1", "m2"], "entity_col": "hospital"},
+        }
+        out = inject_patterns(df, [pattern], _all_patterns_columns(), rng)
+        chk = check_ranking_reversal(out, pattern, meta)
+        assert chk.passed, f"ranking_reversal round-trip failed: {chk.detail}"
+
+        # 4. dominance_shift --------------------------------------------
+        # Target the LOWEST-rank hospital (Xiehe @ base m1=10) so the
+        # injection can push it past Huashan (20) and Ruijin (30) — same
+        # pattern as the pre-existing _build_dominance_df fixture.
+        df = _build_all_patterns_df()
+        rng = np.random.default_rng(0)
+        pattern = {
+            "type": "dominance_shift",
+            "target": "hospital == 'Xiehe'",
+            "col": "m1",
+            "params": {
+                "entity_filter": "Xiehe",
+                "split_point": "2024-04-01",
+                "entity_col": "hospital",
+            },
+        }
+        out = inject_patterns(df, [pattern], _all_patterns_columns(), rng)
+        chk = check_dominance_shift(out, pattern, meta)
+        assert chk.passed, f"dominance_shift round-trip failed: {chk.detail}"
+
+        # 5. convergence ------------------------------------------------
+        df = _build_all_patterns_df()
+        rng = np.random.default_rng(0)
+        pattern = {
+            "type": "convergence",
+            "target": "severity == 'Severe'",
+            "col": "m1",
+            "params": {"reduction": 0.3},
+        }
+        out = inject_patterns(df, [pattern], _all_patterns_columns(), rng)
+        chk = check_convergence(out, pattern, meta)
+        assert chk.passed, f"convergence round-trip failed: {chk.detail}"
+
+        # 6. seasonal_anomaly -------------------------------------------
+        # The all-patterns fixture has cross-hospital baseline std ~8.6,
+        # which dwarfs any realistic in-window scaling. Reuse the canonical
+        # seasonal-anomaly fixture defined above (single-column tight noise
+        # around mean=5) so this round-trip exercises the validator with
+        # the spec-realistic magnitude=0.8 — matching the standalone
+        # TestInjectSeasonalAnomaly setup, not an inflated parameter.
+        seasonal_df = _build_seasonal_df()
+        seasonal_pattern = _seasonal_pattern()
+        seasonal_columns = _seasonal_columns()
+        seasonal_meta = _seasonal_meta()
+        rng = np.random.default_rng(0)
+        out = inject_patterns(
+            seasonal_df, [seasonal_pattern], seasonal_columns, rng,
+        )
+        chk = check_seasonal_anomaly(out, seasonal_pattern, seasonal_meta)
+        assert chk.passed, f"seasonal_anomaly round-trip failed: {chk.detail}"
 
 
 # =====================================================================

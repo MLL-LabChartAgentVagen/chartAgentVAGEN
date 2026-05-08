@@ -22,6 +22,25 @@ import pandas as pd
 logger = logging.getLogger(__name__)
 
 
+def _primary_key_columns(
+    columns: dict[str, dict[str, Any]],
+) -> list[str]:
+    """Return categorical-root column names — the spec §2.1.1 'primary key'
+    set that ``set_realism`` must shield from corruption.
+
+    A column is a primary key iff it is declared as a categorical column
+    (``type=='categorical'``) AND has no parent (``parent is None``), making
+    it the root of its dimension group. Roots are the analytical anchors
+    that downstream consumers (Phase 3 view extraction, QA generation) join
+    on; NaN'ing them at high ``missing_rate`` would corrupt the dataset's
+    identity layer, which is exactly what the spec safeguard rules out.
+    """
+    return [
+        name for name, meta in columns.items()
+        if meta.get("type") == "categorical" and meta.get("parent") is None
+    ]
+
+
 def inject_realism(
     df: pd.DataFrame,
     realism_config: dict[str, Any],
@@ -50,11 +69,16 @@ def inject_realism(
     dirty_rate = realism_config.get("dirty_rate", 0.0)
     censoring = realism_config.get("censoring")
 
+    # §2.1.1: set_realism protects primary keys from missing-value injection.
+    pk_cols = _primary_key_columns(columns)
+
     if censoring:
         df = inject_censoring(df, censoring, rng)
 
     if missing_rate > 0.0:
-        df = inject_missing_values(df, missing_rate, rng)
+        df = inject_missing_values(
+            df, missing_rate, rng, protected_columns=pk_cols,
+        )
 
     if dirty_rate > 0.0:
         df = inject_dirty_values(df, columns, dirty_rate, rng)
@@ -123,19 +147,29 @@ def inject_missing_values(
     df: pd.DataFrame,
     missing_rate: float,
     rng: np.random.Generator,
+    protected_columns: list[str] | None = None,
 ) -> pd.DataFrame:
     """Inject NaN values at the declared *missing_rate*.
 
-    [Subtask 4.4.1]
+    [Subtask 4.4.1; PK protection 2026-05-07]
 
     Creates a boolean mask of shape ``df.shape`` where each cell has
     independent probability *missing_rate* of being True, then sets
-    masked cells to NaN.
+    masked cells to NaN. Columns named in *protected_columns* are
+    forced to mask=False before applying so their cells are never
+    nullified — used by ``inject_realism`` to satisfy spec §2.1.1
+    primary-key protection.
 
     Args:
         df: DataFrame to inject into.
         missing_rate: Fraction of cells to nullify, in [0, 1].
         rng: Seeded generator.
+        protected_columns: Column names to exempt from injection. Cells
+            in these columns are never NaN'd regardless of *missing_rate*.
+            Default ``None`` preserves the pre-2026-05-07 behaviour of
+            masking every cell — the boundary tests at
+            ``test_realism.py::TestInjectMissingValuesBoundary`` depend
+            on this default.
 
     Returns:
         DataFrame with NaN values injected.
@@ -144,12 +178,24 @@ def inject_missing_values(
         return df
 
     mask = rng.random(size=df.shape) < missing_rate
+
+    if protected_columns:
+        # Lift the ndarray mask into a DataFrame so column-name indexing
+        # works, zero out protected columns, then back to ndarray for mask().
+        mask_df = pd.DataFrame(mask, index=df.index, columns=df.columns)
+        for col in protected_columns:
+            if col in mask_df.columns:
+                mask_df[col] = False
+        mask = mask_df.to_numpy()
+
     df = df.mask(mask)
 
     injected_count = mask.sum()
     logger.debug(
-        "inject_missing_values: rate=%.4f, injected %d / %d cells.",
+        "inject_missing_values: rate=%.4f, injected %d / %d cells "
+        "(%d columns protected).",
         missing_rate, injected_count, df.size,
+        len(protected_columns) if protected_columns else 0,
     )
     return df
 

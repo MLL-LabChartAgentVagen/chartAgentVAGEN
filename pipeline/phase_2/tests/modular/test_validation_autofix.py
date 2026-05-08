@@ -336,3 +336,134 @@ class TestGenerateWithValidationMixtureOptOut:
         assert len(seen_overrides) == 2
         assert seen_overrides[0] is None
         assert seen_overrides[1]["measures"]["revenue"]["sigma"] == pytest.approx(1.2)
+
+
+# =====================================================================
+# Loop B healing roundtrip (closes T1.4 in docs/TEST_AUDIT_2026-05-07.md)
+# =====================================================================
+#
+# Pre-existing tests in this file all use _StubKSFailingValidator, which
+# always reports failure. They verify that overrides ACCUMULATE — but not
+# that an override actually CHANGES the build_fn output enough that
+# attempt 2's *real* validator now PASSES. A sign-bug in widen_variance
+# (e.g., dividing sigma instead of multiplying) would slip through every
+# stub-based test. The test below closes that loop end-to-end with the
+# real SchemaAwareValidator — no monkeypatch.
+
+import numpy as np
+from pipeline.phase_2.validation.autofix import widen_variance as _widen_variance
+
+
+class TestGenerateWithValidationHealingRoundtrip:
+    """End-to-end Loop B: failure → strategy → next attempt PASSES."""
+
+    def _gaussian_meta_for_revenue(self) -> dict:
+        """Meta declaring revenue as a stochastic gaussian column with
+        intercept-only param model. KS test compares observed `revenue`
+        to gaussian(mu=100, sigma=10)."""
+        return {
+            "total_rows": 500,
+            "columns": {
+                "revenue": {
+                    "type": "measure",
+                    "measure_type": "stochastic",
+                    "family": "gaussian",
+                    "param_model": {
+                        "mu": {"intercept": 100.0, "effects": {}},
+                        "sigma": {"intercept": 10.0, "effects": {}},
+                    },
+                },
+            },
+            "dimension_groups": {},
+            "orthogonal_groups": [],
+            "group_dependencies": [],
+            "measure_dag_order": ["revenue"],
+            "patterns": [],
+        }
+
+    def test_widen_variance_actually_heals_ks_failure_on_retry(self):
+        """Attempt 1: build_fn returns a constant column → KS test fails
+        (zero variance vs declared σ=10).
+        Attempt 2: build_fn observes the override delivered by autofix,
+        switches to a well-fitted gaussian sample → KS test passes.
+
+        This closes T1.4. The pre-existing tests verify override
+        accumulation; this test verifies the override actually DELIVERS
+        and that the second attempt produces data passing the *real*
+        validator (no _StubKSFailingValidator).
+        """
+        meta = self._gaussian_meta_for_revenue()
+        state = {"attempt": 0, "overrides_seen": []}
+
+        def build_fn(seed, overrides):
+            state["attempt"] += 1
+            state["overrides_seen"].append(
+                None if overrides is None else copy.deepcopy(overrides)
+            )
+
+            if state["attempt"] == 1:
+                # Constant column → KS p ≈ 0 against gaussian(100, 10).
+                df = pd.DataFrame({"revenue": np.full(500, 100.0)})
+            else:
+                # Override arrived → emit a well-fitted gaussian sample
+                # so attempt 2's KS test passes with high p-value.
+                assert overrides is not None, \
+                    "Loop B must deliver override dict on retry; got None"
+                assert "measures" in overrides
+                rng = np.random.default_rng(seed)
+                df = pd.DataFrame({"revenue": rng.normal(100.0, 10.0, 500)})
+
+            return df, meta
+
+        df, _, report = generate_with_validation(
+            build_fn=build_fn,
+            meta=meta,
+            patterns=[],
+            base_seed=42,
+            max_attempts=3,
+            auto_fix={"ks_*": _widen_variance},
+        )
+
+        # Healed on second attempt — not on third.
+        assert state["attempt"] == 2, \
+            f"Expected healing on attempt 2; got {state['attempt']}"
+        # Real validator now passes with the well-fitted sample.
+        failed = [(c.name, c.detail) for c in report.failures]
+        assert report.all_passed, f"Expected all_passed; failures: {failed}"
+        # The override delivered to attempt 2 carries the widen_variance signature.
+        attempt2_overrides = state["overrides_seen"][1]
+        assert attempt2_overrides is not None
+        assert "measures" in attempt2_overrides
+        assert "revenue" in attempt2_overrides["measures"]
+        assert "sigma" in attempt2_overrides["measures"]["revenue"]
+
+    def test_loop_terminates_when_no_failure_on_first_attempt(self):
+        """Sanity: when attempt 1 already passes, the loop short-circuits
+        and never invokes the strategy. Guard against a regression where
+        the loop pre-applies overrides before validating."""
+        meta = self._gaussian_meta_for_revenue()
+        state = {"attempt": 0, "overrides_seen": []}
+
+        def build_fn(seed, overrides):
+            state["attempt"] += 1
+            state["overrides_seen"].append(
+                None if overrides is None else copy.deepcopy(overrides)
+            )
+            rng = np.random.default_rng(seed)
+            return (
+                pd.DataFrame({"revenue": rng.normal(100.0, 10.0, 500)}),
+                meta,
+            )
+
+        _, _, report = generate_with_validation(
+            build_fn=build_fn,
+            meta=meta,
+            patterns=[],
+            base_seed=42,
+            max_attempts=3,
+            auto_fix={"ks_*": _widen_variance},
+        )
+
+        assert report.all_passed
+        assert state["attempt"] == 1
+        assert state["overrides_seen"] == [None]

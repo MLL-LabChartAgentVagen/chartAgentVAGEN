@@ -8,6 +8,7 @@ from __future__ import annotations
 
 from collections import OrderedDict
 
+import pandas as pd
 import pytest
 
 from pipeline.phase_2.exceptions import CyclicDependencyError
@@ -643,3 +644,147 @@ class TestL2MultiParentDeviation:
         assert len(checks) == 1
         assert checks[0].passed is False
         assert "hospital" in checks[0].detail
+
+
+# =====================================================================
+# Closes T1.5 of docs/TEST_AUDIT_2026-05-07.md.
+#
+# Spec §2.1.2 headline: "If Group A ⊥ Group B, then ALL cross-group
+# pairs are automatically independent — no need to enumerate." With
+# entity = [hospital, department] and patient = [severity], a single
+# `declare_orthogonal("entity","patient")` must induce independence at
+# the *child* pair (department, severity) — not just the root pair.
+#
+# The pre-existing tests in this file cover orthogonal-vs-dependency
+# CONFLICT detection. There is no positive test verifying that, after a
+# successful declare_orthogonal, generated data actually exhibits
+# child-pair independence. A latent regression where the engine wired
+# orthogonality at root level only would slip through every existing
+# test. The end-to-end test below closes the gap.
+# =====================================================================
+
+
+class TestDeclareOrthogonalChildPropagation:
+    """Generate a 3000-row table with two hierarchical groups, declare
+    a single group-level orthogonality, then verify chi-squared
+    independence at each cross-group column pair (root×root, root×child,
+    child×child)."""
+
+    def test_independence_propagates_to_all_cross_group_pairs(self):
+        import scipy.stats
+        from pipeline.phase_2.sdk.simulator import FactTableSimulator
+
+        sim = FactTableSimulator(target_rows=3000, seed=42)
+
+        # entity group: hospital → department.
+        sim.add_category(
+            name="hospital",
+            values=["Xiehe", "Mayo", "Tongren"],
+            weights=[0.4, 0.4, 0.2],
+            group="entity",
+        )
+        sim.add_category(
+            name="department",
+            values=["Internal", "Surgery"],
+            # Within-parent weights — distinct per parent so the child's
+            # marginal varies with hospital. Spec §2.1.2 hierarchy.
+            weights={
+                "Xiehe":   [0.7, 0.3],
+                "Mayo":    [0.5, 0.5],
+                "Tongren": [0.2, 0.8],
+            },
+            group="entity",
+            parent="hospital",
+        )
+
+        # patient group: severity → acuity.
+        sim.add_category(
+            name="severity",
+            values=["Mild", "Severe"],
+            weights=[0.6, 0.4],
+            group="patient",
+        )
+        sim.add_category(
+            name="acuity",
+            values=["Low", "High"],
+            weights={
+                "Mild":   [0.8, 0.2],
+                "Severe": [0.2, 0.8],
+            },
+            group="patient",
+            parent="severity",
+        )
+
+        # SINGLE orthogonal declaration — spec promises this propagates
+        # automatically to every cross-group pair.
+        sim.declare_orthogonal(
+            "entity", "patient",
+            rationale="patient severity is independent of which hospital",
+        )
+
+        df, _ = sim.generate()
+
+        # Every cross-group pair must be independent (chi² p > 0.05).
+        cross_pairs = [
+            ("hospital", "severity"),    # root × root
+            ("hospital", "acuity"),      # root × child
+            ("department", "severity"),  # child × root
+            ("department", "acuity"),    # child × child
+        ]
+        for col_a, col_b in cross_pairs:
+            ct = pd.crosstab(df[col_a], df[col_b])
+            assert ct.shape[0] >= 2 and ct.shape[1] >= 2, \
+                f"degenerate contingency for ({col_a}, {col_b}): {ct.shape}"
+            _, p_val, _, _ = scipy.stats.chi2_contingency(ct)
+            assert p_val > 0.05, (
+                f"Cross-group pair ({col_a}, {col_b}) failed χ² independence: "
+                f"p={p_val:.4f} (expected p > 0.05). "
+                f"Spec §2.1.2 promises automatic propagation to ALL cross-group "
+                f"pairs after declare_orthogonal('entity', 'patient')."
+            )
+
+    def test_within_group_pairs_are_NOT_forced_independent(self):
+        """Sanity check that orthogonality is *cross-group only*. Within
+        the entity group, hospital→department has declared per-parent
+        weights, so χ² should reject independence (i.e., department
+        depends on hospital). If this passed independence too, the
+        engine would be over-applying orthogonality."""
+        import scipy.stats
+        from pipeline.phase_2.sdk.simulator import FactTableSimulator
+
+        sim = FactTableSimulator(target_rows=3000, seed=42)
+        sim.add_category(
+            name="hospital",
+            values=["Xiehe", "Mayo", "Tongren"],
+            weights=[0.4, 0.4, 0.2],
+            group="entity",
+        )
+        sim.add_category(
+            name="department",
+            values=["Internal", "Surgery"],
+            weights={
+                "Xiehe":   [0.7, 0.3],
+                "Mayo":    [0.5, 0.5],
+                "Tongren": [0.2, 0.8],
+            },
+            group="entity",
+            parent="hospital",
+        )
+        sim.add_category(
+            name="severity",
+            values=["Mild", "Severe"],
+            weights=[0.6, 0.4],
+            group="patient",
+        )
+        sim.declare_orthogonal("entity", "patient", rationale="indep")
+
+        df, _ = sim.generate()
+        ct = pd.crosstab(df["hospital"], df["department"])
+        _, p_val, _, _ = scipy.stats.chi2_contingency(ct)
+        # Within-entity: declared weights differ per parent, so we EXPECT
+        # dependency. Orthogonality must not have leaked into the entity
+        # group's internal hierarchy.
+        assert p_val <= 0.05, (
+            f"Within-group hospital→department dependency was wiped out "
+            f"(p={p_val:.4f}). Orthogonality must be cross-group only."
+        )

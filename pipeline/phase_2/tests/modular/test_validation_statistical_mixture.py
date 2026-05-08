@@ -224,3 +224,83 @@ class TestCheckStochasticKsMixture:
         checks = check_stochastic_ks(df, "y", meta)
         assert all(c.passed for c in checks)
         assert any("KS CDF not available" in (c.detail or "") for c in checks)
+
+
+class TestMixtureKsPValueExtraction:
+    """T2.3 of TEST_AUDIT_2026-05-07.md.
+
+    Pre-existing tests assert `c.passed` only — the threshold semantic
+    (`p > 0.05`, spec §2.6 L2) is invisible to tests. A regression that
+    inverted the comparison to `p > 0.95` (off by one in a refactor)
+    would still report `passed=True` for any well-fitted sample. Locking
+    in the p-value extraction makes the threshold explicit.
+    """
+
+    def _components(self):
+        return [
+            _gaussian_component(0.0, 1.0, 0.5),
+            _gaussian_component(8.0, 1.0, 0.5),
+        ]
+
+    def test_passing_check_has_p_value_above_005(self):
+        """A correctly-sampled mixture: every Check whose detail reports a
+        p-value must satisfy `p > 0.05`."""
+        import re
+        components = self._components()
+        meta = _build_meta("y", components)
+        col_meta = meta["columns"]["y"]
+        rng = np.random.default_rng(0)
+        sample = _sample_mixture(
+            "y", col_meta, {"_dummy": np.arange(3000)}, rng,
+        )
+        df = pd.DataFrame({"y": sample})
+
+        checks = check_stochastic_ks(df, "y", meta)
+        # Filter to checks that actually ran KS (excludes soft-pass cells).
+        p_value_checks = []
+        for c in checks:
+            m = re.search(r"p[=_]([\d.eE+-]+)", c.detail or "")
+            if m is not None:
+                p_value_checks.append((c, float(m.group(1))))
+
+        assert p_value_checks, (
+            f"Expected at least one KS check with extractable p-value; "
+            f"got details: {[c.detail for c in checks]}"
+        )
+        for c, p in p_value_checks:
+            assert c.passed
+            assert p > 0.05, (
+                f"Passing check '{c.name}' had p={p} (must be > 0.05)"
+            )
+
+    def test_failing_check_has_p_value_at_or_below_005(self):
+        """When sampled data does NOT match the declared mixture, at least
+        one cell's KS p-value should fall at or below 0.05."""
+        import re
+        components = self._components()
+        meta = _build_meta("y", components)
+        rng = np.random.default_rng(0)
+        # Sample from N(0, 1) only — not the declared bimodal mixture.
+        df = pd.DataFrame({"y": rng.normal(0.0, 1.0, size=3000)})
+
+        checks = check_stochastic_ks(df, "y", meta)
+        # At least one failing check must have p <= 0.05 in its detail.
+        failing = [c for c in checks if not c.passed]
+        assert failing, (
+            f"Expected at least one KS failure for mismatched sample; "
+            f"got: {[(c.name, c.passed) for c in checks]}"
+        )
+        any_with_p = False
+        for c in failing:
+            m = re.search(r"p[=_]([\d.eE+-]+)", c.detail or "")
+            if m is None:
+                continue
+            any_with_p = True
+            assert float(m.group(1)) <= 0.05, (
+                f"Failing check '{c.name}' should have p<=0.05; "
+                f"got detail: {c.detail}"
+            )
+        assert any_with_p, (
+            f"At least one failing check must include an extractable p-value "
+            f"in its detail; got: {[c.detail for c in failing]}"
+        )

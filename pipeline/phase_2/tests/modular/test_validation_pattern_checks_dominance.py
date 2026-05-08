@@ -161,3 +161,77 @@ class TestCheckDominanceShift:
             df, pattern, _meta_with_entity_and_time()
         )
         assert result.passed is False
+
+    # ---------------------------------------------------------------------
+    # T2.1 of TEST_AUDIT_2026-05-07.md.
+    #
+    # `check_dominance_shift` uses `abs(rank_after - rank_before)`
+    # (pattern_checks.py:304), so direction does NOT change the verdict —
+    # both upward (low→high) and downward (high→low) rank movements pass
+    # given sufficient magnitude. The pre-existing tests only cover the
+    # upward case (`target_pre_mean=5 → target_post_mean=20`, rank 5→1).
+    # The two tests below pin the symmetric behavior so any future change
+    # that adds direction-awareness (or breaks it) is caught.
+    # ---------------------------------------------------------------------
+
+    def test_downward_rank_movement_also_passes(self):
+        """Target moves from rank 1 (highest) to rank 5 (lowest) — should
+        pass since |delta|=4 ≥ threshold=1, regardless of direction."""
+        df = _build_df(target_pre_mean=20.0, target_post_mean=5.0)
+        result = check_dominance_shift(
+            df, _pattern(), _meta_with_entity_and_time()
+        )
+        assert result.passed is True
+        # Direction-agnostic: detail still reports delta=4.
+        assert "delta=4" in result.detail
+        # Specifically: rank_before=1 (highest), rank_after=5 (lowest).
+        assert "rank_before=1" in result.detail
+        assert "rank_after=5" in result.detail
+
+    def test_rank_change_threshold_boundary(self):
+        """Target moves from rank 5 to rank 4 (delta=1). With threshold=1 →
+        pass; with threshold=2 → fail. Locks in the `>=` boundary."""
+        # Pre: target=5 (rank 5). Post: target=10.05 vs peers at 10 (very
+        # close) — target ends just barely on top, but with shared peer
+        # mean=10, ranking ties make this fragile. Use a clean rank-1-step
+        # construction instead: pre target=5 (rank 5), post target=11
+        # (rank 1 — highest). That's delta=4, which is too large.
+        # Instead, use post target=9.5 against peers at [10, 10, 10, 10] →
+        # target still rank 5. So we need to construct intermediate ranks.
+        # Simplest reliable construction: per-peer different means.
+        rng = np.random.default_rng(0)
+        pre_dates = pd.date_range("2024-01-01", "2024-03-31", freq="D")[:30]
+        post_dates = pd.date_range("2024-04-01", "2024-06-30", freq="D")[:30]
+        rows = []
+        # Distinct peer means so ranks 1-4 are stable.
+        peer_means = {"Huashan": 14.0, "Ruijin": 13.0,
+                      "Tongren": 12.0, "Zhongshan": 11.0}
+        for h, m in peer_means.items():
+            for d in list(pre_dates) + list(post_dates):
+                rows.append({"hospital": h, "visit_date": d,
+                             "value": m + rng.normal(0, 0.01)})
+        # Target Xiehe: pre below all peers (rank 5), post just above
+        # Zhongshan and Tongren but below Ruijin/Huashan → rank 3 (delta=2).
+        for d in pre_dates:
+            rows.append({"hospital": "Xiehe", "visit_date": d,
+                         "value": 5.0 + rng.normal(0, 0.01)})
+        for d in post_dates:
+            rows.append({"hospital": "Xiehe", "visit_date": d,
+                         "value": 12.5 + rng.normal(0, 0.01)})
+        df = pd.DataFrame(rows)
+
+        # threshold=2 (matches actual delta) → pass
+        result_pass = check_dominance_shift(
+            df, _pattern(rank_change=2), _meta_with_entity_and_time()
+        )
+        assert result_pass.passed is True, (
+            f"delta=2 with threshold=2 must pass (>=); got {result_pass.detail}"
+        )
+
+        # threshold=3 (one above actual delta) → fail
+        result_fail = check_dominance_shift(
+            df, _pattern(rank_change=3), _meta_with_entity_and_time()
+        )
+        assert result_fail.passed is False, (
+            f"delta=2 with threshold=3 must fail; got {result_fail.detail}"
+        )

@@ -174,3 +174,108 @@ class TestDistributionParamGuards:
             "x", col_meta, self._rows(n=5), np.random.default_rng(0),
         )
         assert out.shape == (5,)
+
+
+class TestSafeEvalFormulaSecurityPayloads:
+    """Spec §2.1.1 + P0-2 (decisions/blocker_resolutions.md): formulas are
+    parsed by a restricted AST walker. Allowed nodes: Expression, BinOp
+    (+,-,*,/,**), UnaryOp (USub), Constant (numeric), Num, Name. Everything
+    else must raise.
+
+    Closes T1.7 in `docs/TEST_AUDIT_2026-05-07.md`. Pre-fix the only sandbox
+    tests were `division_by_zero` and `normal_division`; classic AST escape
+    payloads (`__import__`, `eval`, `open`, attribute chain, lambda, walrus,
+    list comp, disallowed binops) were untested.
+    """
+
+    @pytest.mark.parametrize("formula", [
+        "__import__('os').system('echo pwn')",
+        "__import__('subprocess').call(['rm', '-rf', '/'])",
+        "eval('1+1')",
+        "exec('x=1')",
+        "open('/etc/passwd')",
+        "getattr(int, '__class__')",
+    ])
+    def test_call_payloads_rejected(self, formula):
+        """Every Call node is rejected — covers __import__/eval/exec/open/getattr."""
+        with pytest.raises(ValueError, match="Disallowed AST node"):
+            _safe_eval_formula(formula, {})
+
+    def test_attribute_chain_subclass_escape_rejected(self):
+        """Classic Python sandbox-escape: `().__class__.__bases__[0].__subclasses__()`
+        relies on Attribute + Subscript + Call. Any of those three is enough
+        to reject; the walker hits Tuple/Attribute first."""
+        payload = "().__class__.__bases__[0].__subclasses__()"
+        with pytest.raises(ValueError, match="Disallowed AST node"):
+            _safe_eval_formula(payload, {})
+
+    def test_lambda_rejected(self):
+        with pytest.raises(ValueError, match="Disallowed AST node"):
+            _safe_eval_formula("(lambda: 1)()", {})
+
+    def test_list_comprehension_rejected(self):
+        with pytest.raises(ValueError, match="Disallowed AST node"):
+            _safe_eval_formula("[i for i in range(10)]", {})
+
+    def test_walrus_operator_rejected(self):
+        with pytest.raises(ValueError, match="Disallowed AST node"):
+            _safe_eval_formula("(x := 5) + 1", {})
+
+    def test_attribute_access_rejected(self):
+        # Even a benign-looking `a.b` is rejected — there is no Attribute path
+        # in the allow-list, so all attribute access is sealed off.
+        with pytest.raises(ValueError, match="Disallowed AST node"):
+            _safe_eval_formula("a.b", {"a": 1.0})
+
+    def test_subscript_rejected(self):
+        with pytest.raises(ValueError, match="Disallowed AST node"):
+            _safe_eval_formula("a[0]", {"a": 1.0})
+
+    def test_compare_node_rejected(self):
+        # `a < b` is a Compare node, not whitelisted.
+        with pytest.raises(ValueError, match="Disallowed AST node"):
+            _safe_eval_formula("a < b", {"a": 1.0, "b": 2.0})
+
+    def test_boolop_rejected(self):
+        with pytest.raises(ValueError, match="Disallowed AST node"):
+            _safe_eval_formula("a and b", {"a": 1.0, "b": 1.0})
+
+    def test_string_constant_rejected(self):
+        # The walker accepts only numeric Constants; raw string literal must fail.
+        with pytest.raises(ValueError, match="Non-numeric constant"):
+            _safe_eval_formula("'malicious'", {})
+
+    @pytest.mark.parametrize("op,formula", [
+        ("FloorDiv", "a // b"),
+        ("Mod",      "a % b"),
+        ("BitOr",    "a | b"),
+        ("BitAnd",   "a & b"),
+        ("BitXor",   "a ^ b"),
+        ("LShift",   "a << b"),
+        ("RShift",   "a >> b"),
+    ])
+    def test_disallowed_binops_rejected(self, op, formula):
+        """The allow-list permits only Add/Sub/Mult/Div/Pow. Every other
+        BinOp variant must raise with the operator class name in the message."""
+        with pytest.raises(ValueError, match=f"Disallowed binary operator: {op}"):
+            _safe_eval_formula(formula, {"a": 4.0, "b": 2.0})
+
+    def test_unary_not_rejected(self):
+        # Only USub is allowed; UAdd/Not/Invert must fail.
+        with pytest.raises(ValueError, match="Disallowed unary operator"):
+            _safe_eval_formula("not a", {"a": 1.0})
+
+    def test_undefined_symbol_named_in_error(self):
+        # When a symbol like `eval` is referenced as a Name (no Call yet),
+        # resolution fails before any execution. Verifies error message
+        # surfaces the symbol name rather than executing it.
+        with pytest.raises(ValueError, match="Undefined symbol 'evil'"):
+            _safe_eval_formula("evil + 1", {"a": 1.0})
+
+    def test_allowed_arithmetic_still_works(self):
+        """Regression guard: tightening the allow-list must not break the
+        spec-blessed arithmetic core (+,-,*,/,**, unary -, parens)."""
+        ctx = {"a": 4.0, "b": 2.0, "c": 3.0}
+        assert _safe_eval_formula("a + b * c", ctx) == 10.0
+        assert _safe_eval_formula("(a - b) ** c", ctx) == 8.0
+        assert _safe_eval_formula("-a + b", ctx) == -2.0

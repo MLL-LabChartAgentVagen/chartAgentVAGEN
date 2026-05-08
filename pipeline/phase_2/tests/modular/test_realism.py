@@ -217,3 +217,202 @@ class TestSetRealismCensoringValidation:
     def test_rejects_interval_without_bounds(self):
         with pytest.raises(ValueError, match="requires both 'low' and 'high'"):
             set_realism([], censoring={"x": {"type": "interval", "low": 0.0}})
+
+
+class TestSetRealismRateBounds:
+    """Spec §2.1.1 — `set_realism` enforces rate bounds. Verified at the SDK
+    layer (`relationships.py:300-307`).
+
+    Closes the rate-boundary half of T1.10 in `docs/TEST_AUDIT_2026-05-07.md`.
+    """
+
+    def test_rejects_missing_rate_above_one(self):
+        with pytest.raises(ValueError, match="missing_rate must be in"):
+            set_realism([], missing_rate=1.5)
+
+    def test_rejects_negative_missing_rate(self):
+        with pytest.raises(ValueError, match="missing_rate must be in"):
+            set_realism([], missing_rate=-0.1)
+
+    def test_rejects_dirty_rate_above_one(self):
+        with pytest.raises(ValueError, match="dirty_rate must be in"):
+            set_realism([], dirty_rate=2.0)
+
+    def test_accepts_rate_at_zero_boundary(self):
+        cfg = set_realism([], missing_rate=0.0, dirty_rate=0.0)
+        assert cfg["missing_rate"] == 0.0
+        assert cfg["dirty_rate"] == 0.0
+
+    def test_accepts_rate_at_one_boundary(self):
+        # Spec allows rate==1.0 inclusive; the engine then nulls every cell.
+        cfg = set_realism([], missing_rate=1.0)
+        assert cfg["missing_rate"] == 1.0
+
+
+class TestInjectMissingValuesBoundary:
+    """The boundary-rate behavior of `inject_missing_values` is what users
+    will see when an LLM script declares `missing_rate=1.0`. Lock it down
+    so a future change to the masking logic (e.g., off-by-one with `< vs <=`)
+    is caught."""
+
+    def test_missing_rate_one_nulls_substantially_all_cells(self):
+        # rng.random returns values in [0, 1); `< 1.0` is True for every
+        # draw, so the mask is all-True and every cell becomes NaN.
+        from pipeline.phase_2.engine.realism import inject_missing_values
+        df = pd.DataFrame({
+            "hospital": ["A", "B", "C"] * 50,
+            "revenue": np.arange(150, dtype=float),
+        })
+        rng = np.random.default_rng(0)
+        out = inject_missing_values(df.copy(), missing_rate=1.0, rng=rng)
+        assert out["revenue"].isna().all()
+        # `hospital` is object-typed; pandas mask sets to NaN equivalently.
+        assert out["hospital"].isna().all()
+
+    def test_missing_rate_zero_is_a_noop(self):
+        from pipeline.phase_2.engine.realism import inject_missing_values
+        df = pd.DataFrame({
+            "revenue": np.arange(100, dtype=float),
+        })
+        rng = np.random.default_rng(0)
+        out = inject_missing_values(df.copy(), missing_rate=0.0, rng=rng)
+        assert out["revenue"].isna().sum() == 0
+        np.testing.assert_array_equal(out["revenue"].values, df["revenue"].values)
+
+
+class TestPrimaryKeyProtection:
+    """Spec §2.1.1 — *"set_realism protects primary key"*.
+
+    `inject_realism` computes the categorical-root set
+    (`_primary_key_columns`) and forwards it to `inject_missing_values`
+    as `protected_columns`, ensuring those cells are never NaN'd
+    regardless of `missing_rate`. Resolved 2026-05-07; was previously
+    xfail-marked while tracked in `docs/remaining_gaps.md` §4.1.
+
+    Out of scope (separate spec violation): `inject_dirty_values` can
+    still string-perturb a PK at `dirty_rate>0`. Tracked for a future
+    round; the resolution note in `remaining_gaps.md` documents it.
+    """
+
+    def test_primary_key_categorical_root_never_nulled_at_rate_one(self):
+        from pipeline.phase_2.engine.realism import inject_realism
+        df = pd.DataFrame({
+            "hospital": ["A", "B", "C"] * 50,   # categorical root → spec PK
+            "revenue": np.arange(150, dtype=float),
+        })
+        columns = {
+            "hospital": {"type": "categorical", "parent": None, "group": "g1"},
+            "revenue":  {"type": "measure"},
+        }
+        rng = np.random.default_rng(0)
+        out = inject_realism(
+            df.copy(),
+            {"missing_rate": 1.0, "dirty_rate": 0.0, "censoring": None},
+            columns,
+            rng,
+        )
+        # SPEC promise: PK column is untouched even at extreme rate.
+        assert out["hospital"].isna().sum() == 0, \
+            "Spec §2.1.1: set_realism must protect the primary key column"
+        # Measure should be fully nulled at rate=1.0.
+        assert out["revenue"].isna().sum() == 150
+
+    def test_primary_key_protected_at_intermediate_rate(self):
+        """At missing_rate=0.5 the measure column has ~50% NaN, but the
+        categorical root stays at exactly 0 NaN. Catches a regression
+        where the protection only fires at the extreme rate=1.0."""
+        from pipeline.phase_2.engine.realism import inject_realism
+        df = pd.DataFrame({
+            "hospital": ["A", "B", "C"] * 100,
+            "revenue": np.arange(300, dtype=float),
+        })
+        columns = {
+            "hospital": {"type": "categorical", "parent": None, "group": "g1"},
+            "revenue":  {"type": "measure"},
+        }
+        rng = np.random.default_rng(0)
+        out = inject_realism(
+            df.copy(),
+            {"missing_rate": 0.5, "dirty_rate": 0.0, "censoring": None},
+            columns,
+            rng,
+        )
+        assert out["hospital"].isna().sum() == 0, (
+            f"PK column should never be nulled; got "
+            f"{out['hospital'].isna().sum()} NaN out of {len(out)}"
+        )
+        # Measure should be masked at roughly the declared rate.
+        # Binomial 95% CI on 300 trials at p=0.5 is ~150 ± 17.
+        rev_nans = int(out["revenue"].isna().sum())
+        assert 110 < rev_nans < 190, (
+            f"measure NaN count {rev_nans} far from expected ~150"
+        )
+
+    def test_child_categorical_NOT_protected(self):
+        """Only categorical ROOTS are PKs. A categorical with a `parent`
+        (e.g., department under hospital) is a drill-down, not an identity
+        column — it gets the normal missing rate treatment."""
+        from pipeline.phase_2.engine.realism import inject_realism
+        df = pd.DataFrame({
+            "hospital":   ["A", "B"] * 100,
+            "department": ["Internal", "Surgery"] * 100,
+            "revenue":    np.arange(200, dtype=float),
+        })
+        columns = {
+            "hospital":   {"type": "categorical", "parent": None,       "group": "g1"},
+            "department": {"type": "categorical", "parent": "hospital", "group": "g1"},
+            "revenue":    {"type": "measure"},
+        }
+        rng = np.random.default_rng(0)
+        out = inject_realism(
+            df.copy(),
+            {"missing_rate": 1.0, "dirty_rate": 0.0, "censoring": None},
+            columns,
+            rng,
+        )
+        # Only the root is protected; the child is fully NaN'd at rate=1.0.
+        assert out["hospital"].isna().sum() == 0
+        assert out["department"].isna().all()
+        assert out["revenue"].isna().all()
+
+    def test_multiple_group_roots_all_protected(self):
+        """With three groups, all three roots are protected
+        simultaneously."""
+        from pipeline.phase_2.engine.realism import inject_realism
+        df = pd.DataFrame({
+            "hospital":  ["A", "B", "C"] * 50,
+            "severity":  ["Mild", "Severe"] * 75,
+            "payment":   ["Cash", "Card"] * 75,
+            "revenue":   np.arange(150, dtype=float),
+        })
+        columns = {
+            "hospital": {"type": "categorical", "parent": None, "group": "g1"},
+            "severity": {"type": "categorical", "parent": None, "group": "g2"},
+            "payment":  {"type": "categorical", "parent": None, "group": "g3"},
+            "revenue":  {"type": "measure"},
+        }
+        rng = np.random.default_rng(0)
+        out = inject_realism(
+            df.copy(),
+            {"missing_rate": 1.0, "dirty_rate": 0.0, "censoring": None},
+            columns,
+            rng,
+        )
+        assert out["hospital"].isna().sum() == 0
+        assert out["severity"].isna().sum() == 0
+        assert out["payment"].isna().sum() == 0
+        assert out["revenue"].isna().all()
+
+    def test_inject_missing_values_direct_no_protection_default(self):
+        """Calling `inject_missing_values` directly without
+        `protected_columns` preserves the pre-fix all-cells-masked
+        behaviour — the boundary test at line 258 depends on this."""
+        from pipeline.phase_2.engine.realism import inject_missing_values
+        df = pd.DataFrame({
+            "hospital": ["A", "B"] * 50,
+            "revenue":  np.arange(100, dtype=float),
+        })
+        rng = np.random.default_rng(0)
+        out = inject_missing_values(df.copy(), missing_rate=1.0, rng=rng)
+        assert out["hospital"].isna().all()
+        assert out["revenue"].isna().all()
