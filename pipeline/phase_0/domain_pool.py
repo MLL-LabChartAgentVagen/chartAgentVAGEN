@@ -333,11 +333,12 @@ class DomainSampler:
         domains = sampler.sample(n=3, complexity="medium")
     """
 
-    def __init__(self, pool_path: str):
+    def __init__(self, pool_path: str, seed: int = 0):
         with open(pool_path) as f:
             data = json.load(f)
         self.pool: list[dict] = data["domains"]
         self.used_ids: set[str] = set()
+        self._rng = random.Random(seed)
 
     def sample(
         self, n: int = 1, complexity: Optional[str] = None, topic: Optional[str] = None
@@ -379,7 +380,7 @@ class DomainSampler:
             if complexity:
                 candidates = [d for d in candidates if d.get("complexity_tier") == complexity]
 
-        selected = random.sample(candidates, min(n, len(candidates)))
+        selected = self._rng.sample(candidates, min(n, len(candidates)))
         self.used_ids.update(d["id"] for d in selected)
         return selected
 

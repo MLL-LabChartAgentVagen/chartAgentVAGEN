@@ -6,8 +6,10 @@ import traceback
 from datetime import datetime
 from typing import Optional, List
 
+import random as _random_module
+
 from pipeline.core.llm_client import LLMClient
-from pipeline.core.utils import META_CATEGORIES, generate_unique_id
+from pipeline.core.utils import META_CATEGORIES
 from pipeline.agpds_pipeline import AGPDSPipeline
 
 class AGPDSRunner:
@@ -21,6 +23,7 @@ class AGPDSRunner:
         verbose: bool = True,
         scenario_source: str = "live",
         scenario_pool_path: Optional[str] = None,
+        seed: int = 42,
     ):
         self.llm = llm_client
         self.verbose = verbose
@@ -28,6 +31,7 @@ class AGPDSRunner:
             self.llm,
             scenario_source=scenario_source,
             scenario_pool_path=scenario_pool_path,
+            seed=seed,
         )
 
     def log(self, message: str):
@@ -108,7 +112,7 @@ def write_charts_bundle(records: List[dict], output_dir: str) -> str:
 
 def resolve_batch_dir(output_dir: str, batch_name: Optional[str]) -> str:
     """Compute the per-command batch folder under output_dir."""
-    name = batch_name or generate_unique_id("batch")
+    name = batch_name or f"batch_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
     batch_dir = os.path.join(output_dir, name)
     os.makedirs(batch_dir, exist_ok=True)
     return batch_dir
@@ -233,6 +237,11 @@ def main():
         help="Console logging level. Default INFO surfaces Phase 0/1/2 milestones "
              "and scenario cache hits; WARNING silences routine pipeline chatter.",
     )
+    parser.add_argument(
+        "--seed", type=int, default=42,
+        help="Pipeline seed. Drives DomainSampler, scenario pick, and category "
+             "fallback when --category is not given. Default: 42.",
+    )
     args = parser.parse_args()
 
     import logging
@@ -275,10 +284,14 @@ def main():
         llm_client=llm,
         scenario_source=args.scenario_source,
         scenario_pool_path=args.scenario_pool_path,
+        seed=args.seed,
     )
 
-    import random
-    category_ids = [args.category] * args.count if args.category else [random.randint(1, 30) for _ in range(args.count)]
+    _cli_rng = _random_module.Random(args.seed)
+    category_ids = (
+        [args.category] * args.count if args.category
+        else [_cli_rng.randint(1, 30) for _ in range(args.count)]
+    )
     
     results = runner.run_batch(category_ids)
     if results:

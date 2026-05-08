@@ -15,7 +15,6 @@ from .llm_client import (
 )
 from .utils import (
     META_CATEGORIES,
-    generate_unique_id,
     validate_category,
     get_category_by_id,
     get_available_categories,
@@ -30,7 +29,6 @@ __all__ = [
     "get_provider_capabilities",
     # Utilities
     "META_CATEGORIES",
-    "generate_unique_id",
     "validate_category",
     "get_category_by_id",
     "get_available_categories",

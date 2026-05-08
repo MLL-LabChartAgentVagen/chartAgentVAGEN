@@ -167,6 +167,11 @@ def main() -> None:
         help="Console logging level. Default INFO surfaces Phase 0/1/2 milestones "
              "and scenario cache hits; WARNING silences routine pipeline chatter.",
     )
+    parser.add_argument(
+        "--seed", type=int, default=42,
+        help="Pipeline seed. Drives DomainSampler, scenario pick, and category "
+             "fallback when --category is not given. Default: 42.",
+    )
     args = parser.parse_args()
 
     import logging
@@ -206,11 +211,13 @@ def main() -> None:
         llm,
         scenario_source=args.scenario_source,
         scenario_pool_path=args.scenario_pool_path,
+        seed=args.seed,
     )
 
+    _cli_rng = random.Random(args.seed)
     category_ids = (
         [args.category] * args.count if args.category
-        else [random.randint(1, 30) for _ in range(args.count)]
+        else [_cli_rng.randint(1, 30) for _ in range(args.count)]
     )
 
     batch_dir = resolve_batch_dir(args.output_dir, args.batch_name)

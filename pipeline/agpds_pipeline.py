@@ -3,10 +3,9 @@ import logging
 import os
 import random
 from typing import Optional, Dict, Any
-from datetime import datetime
-import hashlib
 
 # Phase 0, 1, 2 AGPDS Imports
+from pipeline.core.ids import generation_id
 from pipeline.phase_0.domain_pool import DomainSampler
 from pipeline.phase_1.scenario_contextualizer import ScenarioContextualizer
 from pipeline.phase_2.pipeline import (
@@ -39,6 +38,7 @@ class AGPDSPipeline:
         pool_path: str = None,
         scenario_source: str = "live",
         scenario_pool_path: str = None,
+        seed: int = 42,
     ):
         """
         Args:
@@ -48,8 +48,13 @@ class AGPDSPipeline:
                              "cached" (read from scenario_pool.jsonl; fall back
                               to live on miss), or "cached_strict" (error on miss).
             scenario_pool_path: Override for phase_1/scenario_pool.jsonl.
+            seed: Pipeline seed. Drives DomainSampler, cached-scenario picking,
+                  generation_id derivation, and FactTableSimulator default seed.
+                  Same `(seed, scenario_id)` → identical artifacts.
         """
         self.llm = llm_client
+        self.seed = seed
+        self._rng = random.Random(seed)
 
         # Resolve the compiled domain pool path
         if pool_path is None:
@@ -65,7 +70,7 @@ class AGPDSPipeline:
                 "  python pipeline/phase_0/build_domain_pool.py"
             )
 
-        self.domain_sampler = DomainSampler(pool_path=pool_path)
+        self.domain_sampler = DomainSampler(pool_path=pool_path, seed=seed)
         self.contextualizer = ScenarioContextualizer(llm_client)
 
         if scenario_source not in ("live", "cached", "cached_strict"):
@@ -78,12 +83,8 @@ class AGPDSPipeline:
         if scenario_source in ("cached", "cached_strict"):
             self._scenario_cache = self._load_scenario_cache(scenario_pool_path)
 
-    def _new_generation_id(self) -> str:
-        start_time = datetime.now()
-        return (
-            f"agpds_{start_time.strftime('%Y%m%d_%H%M%S')}_"
-            f"{hashlib.md5(str(start_time).encode()).hexdigest()[:6]}"
-        )
+    def _new_generation_id(self, scenario_id: str) -> str:
+        return generation_id(self.seed, scenario_id)
 
     def _load_scenario_cache(self, path: Optional[str]) -> Dict[str, list]:
         """Load scenario_pool.jsonl into {domain_id: [scenario, ...]}."""
@@ -131,7 +132,7 @@ class AGPDSPipeline:
                 raise KeyError(msg)
             logger.warning("%s; falling back to live generation", msg)
             return self.contextualizer.generate(domain_context)
-        return random.choice(bucket)
+        return self._rng.choice(bucket)
 
     def _sample_domain(self, category_id: int) -> Dict[str, Any]:
         from pipeline.core.utils import get_category_by_id
@@ -156,12 +157,15 @@ class AGPDSPipeline:
         Intended for agpds_generate.py which writes scripts/ and declarations/
         to disk so agpds_execute.py can replay them later.
         """
-        generation_id = self._new_generation_id()
-        logger.info(f"[{generation_id}] Starting AGPDS Stage 1 (generate)")
-
         logger.info("  -> Phase 0: Sampling Domain...")
         domain_context = self._sample_domain(category_id)
         print(f"  -> Selected Subtopic: {domain_context.get('name', 'Unknown')}")
+
+        # Scenario id is the deterministic input to generation_id. We don't yet
+        # track a per-domain scenario index k, so use k=0 — see Sprint C.
+        scenario_id = f"{domain_context.get('id', 'unknown')}/k=0"
+        gen_id = self._new_generation_id(scenario_id)
+        logger.info(f"[{gen_id}] Starting AGPDS Stage 1 (generate)")
 
         logger.info(
             "  -> Phase 1: Contextualizing Scenario (source=%s)...",
@@ -185,7 +189,7 @@ class AGPDSPipeline:
         _df, metadata, raw_declarations, source_code = loop_a
 
         return {
-            "generation_id": generation_id,
+            "generation_id": gen_id,
             "category_id": category_id,
             "domain_context": domain_context,
             "scenario": scenario,

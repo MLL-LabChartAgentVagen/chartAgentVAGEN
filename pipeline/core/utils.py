@@ -1,14 +1,11 @@
 """
 Shared utility functions and constants for the AGPDS pipeline.
 
-Salvaged from generation_pipeline.py — META_CATEGORIES, ID generation,
-category lookup helpers.
+Holds the legacy 30-category taxonomy + lookup helpers. Sprint C removes
+META_CATEGORIES along with the Phase 1 category_id bridge, after which this
+file should be empty and may be deleted.
 """
 
-import json
-import hashlib
-import random
-from datetime import datetime
 from typing import Optional
 
 
@@ -53,13 +50,6 @@ META_CATEGORIES = [
 # =============================================================================
 # Utility Functions
 # =============================================================================
-
-def generate_unique_id(prefix: str = "gen") -> str:
-    """Generate unique ID for tracking generations."""
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    random_suffix = hashlib.md5(str(random.random()).encode()).hexdigest()[:6]
-    return f"{prefix}_{timestamp}_{random_suffix}"
-
 
 def validate_category(category: str) -> bool:
     """Check if category is in valid taxonomy."""

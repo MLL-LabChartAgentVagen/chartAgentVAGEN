@@ -8,12 +8,10 @@ Run from the pipeline/ directory:
 
 def test_utils():
     from core.utils import (
-        META_CATEGORIES, generate_unique_id,
+        META_CATEGORIES,
         validate_category, get_category_by_id, get_available_categories,
     )
     assert len(META_CATEGORIES) == 30, f"Expected 30 categories, got {len(META_CATEGORIES)}"
-    uid = generate_unique_id("test")
-    assert uid.startswith("test_"), f"Unexpected ID prefix: {uid}"
     assert get_category_by_id(1) == "1 - Media & Entertainment"
     assert get_category_by_id(0) is None
     assert get_category_by_id(31) is None
