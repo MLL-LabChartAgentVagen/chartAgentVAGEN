@@ -1,5 +1,7 @@
 # AGPDS Phase 2 — Stub & Gap Inventory
 
+> **STATUS (2026-05-07):** This inventory was a 2026-04-06 snapshot. All listed SPEC_GAP_STUB and DEFERRED_STUB items have since shipped (IS-1..IS-4, IS-6 token half, DS-1..DS-4) per [`../decisions/blocker_resolutions.md`](../decisions/blocker_resolutions.md) and [`../stub_analysis/phase_2_spec_decisions.md`](../stub_analysis/phase_2_spec_decisions.md); see [`../stub_implementation/`](../stub_implementation/) for per-stub records and [`../POST_STUB_AUDIT_FINDINGS.md`](../POST_STUB_AUDIT_FINDINGS.md) for the post-implementation audit. Inline ✅ RESOLVED markers added below; body text preserved as historical record. Current state: [`../remaining_gaps.md`](../remaining_gaps.md).
+
 **Date:** 2026-04-06
 **Scanned against:** stage3_readiness_audit.md (80 items), stage4_implementation_anatomy.md (file tree), decisions/blocker_resolutions.md
 
@@ -23,7 +25,7 @@
 
 ## Stub Registry
 
-### SPEC_GAP_STUB: Mixture distribution sampling
+### SPEC_GAP_STUB: Mixture distribution sampling — ✅ RESOLVED (IS-1)
 
 - **Location:** engine/measures.py:299
 - **Stage3 Item:** M1-NC-1 — `mixture` distribution `param_model` schema
@@ -34,7 +36,7 @@
 
 ---
 
-### SPEC_GAP_STUB: Pattern injection — convergence
+### SPEC_GAP_STUB: Pattern injection — convergence — ✅ RESOLVED (DS-2 / IS-3)
 
 - **Location:** engine/patterns.py:68
 - **Stage3 Item:** M1-NC-6 — Under-specified pattern type param schemas
@@ -45,7 +47,7 @@
 
 ---
 
-### SPEC_GAP_STUB: Pattern injection — seasonal_anomaly
+### SPEC_GAP_STUB: Pattern injection — seasonal_anomaly — ✅ RESOLVED (DS-2 / IS-4)
 
 - **Location:** engine/patterns.py:68
 - **Stage3 Item:** M1-NC-6 — Under-specified pattern type param schemas
@@ -56,7 +58,7 @@
 
 ---
 
-### SPEC_GAP_STUB: Censoring injection
+### SPEC_GAP_STUB: Censoring injection — ✅ RESOLVED (DS-1)
 
 - **Location:** engine/realism.py:60
 - **Stage3 Item:** M1-NC-7 — `censoring` parameter semantics in `set_realism`
@@ -67,7 +69,7 @@
 
 ---
 
-### SPEC_GAP_STUB: check_dominance_shift L3 validation
+### SPEC_GAP_STUB: check_dominance_shift L3 validation — ✅ RESOLVED (IS-2)
 
 - **Location:** validation/pattern_checks.py:158–182
 - **Stage3 Item:** M5-NC-4 — L3 `dominance_shift` validation logic
@@ -78,7 +80,7 @@
 
 ---
 
-### SPEC_GAP_STUB: check_convergence L3 validation
+### SPEC_GAP_STUB: check_convergence L3 validation — ✅ RESOLVED (IS-3)
 
 - **Location:** validation/pattern_checks.py:185–208
 - **Stage3 Item:** M5-NC-5 — Missing validation for `convergence`
@@ -89,7 +91,7 @@
 
 ---
 
-### SPEC_GAP_STUB: check_seasonal_anomaly L3 validation
+### SPEC_GAP_STUB: check_seasonal_anomaly L3 validation — ✅ RESOLVED (IS-4)
 
 - **Location:** validation/pattern_checks.py:211–234
 - **Stage3 Item:** M5-NC-5 — Missing validation for `seasonal_anomaly`
@@ -100,7 +102,7 @@
 
 ---
 
-### SPEC_GAP_STUB: Mixture distribution KS test
+### SPEC_GAP_STUB: Mixture distribution KS test — ✅ RESOLVED (DS-3)
 
 - **Location:** validation/statistical.py:241–246
 - **Stage3 Item:** M5-SR-7 (L2 KS test — mixture case)
@@ -111,7 +113,7 @@
 
 ---
 
-### DEFERRED_STUB: Multi-column `on` in group dependency
+### DEFERRED_STUB: Multi-column `on` in group dependency — ✅ RESOLVED (DS-4)
 
 - **Location:** sdk/relationships.py:127
 - **Stage3 Item:** M1-NC-5
@@ -166,7 +168,7 @@
 
 ---
 
-### NO_OP: `scale` parameter on `add_measure`
+### NO_OP: `scale` parameter on `add_measure` — ⛔ NOT restored (IS-5; passing `scale=…` raises TypeError)
 
 - **Location:** sdk/columns.py:244
 - **Stage3 Item:** M1-NC-2
@@ -177,7 +179,7 @@
 
 ---
 
-### TODO_ENHANCEMENT: Batch error collection
+### TODO_ENHANCEMENT: Batch error collection — ⏸ deferred (M3-NC-3 multi-error half; token budget half ✅ shipped as IS-6)
 
 - **Location:** sdk/simulator.py:32
 - **Stage3 Item:** M3-NC-3
@@ -188,7 +190,7 @@
 
 ---
 
-### TODO_ENHANCEMENT: Context window exhaustion strategy
+### TODO_ENHANCEMENT: Context window exhaustion strategy — ✅ RESOLVED (IS-6 token budget; `run_retry_loop(token_budget=…)`)
 
 - **Location:** orchestration/sandbox.py:629
 - **Stage3 Item:** M3-NC-4

@@ -308,7 +308,7 @@ _measures.generate_measures(columns, topo_order, rows, rng, overrides)
   │  │        ├─ "uniform"     → rng.uniform(mu, sigma)
   │  │        ├─ "poisson"     → rng.poisson(mu).astype(float64)
   │  │        ├─ "exponential" → rng.exponential(1.0 / rate)
-  │  │        └─ "mixture"     → NotImplementedError (P1-1 deferred)
+  │  │        └─ "mixture"     → _sample_mixture (✅ IS-1 / DS-3 — see ../stub_implementation/IS-1_DS-3_mixture.md)
   │  │
   │  └─ elif measure_type=="structural":
   │     └─ _eval_structural(col_name, col_meta, rows, rng, columns, overrides)
@@ -393,10 +393,10 @@ _postprocess.to_dataframe(rows, topo_order, columns, target_rows)
 |-------------|----------|-------|--------|
 | `outlier_entity` | `inject_outlier_entity(df, pattern)` | 89–157 | Implemented |
 | `trend_break` | `inject_trend_break(df, pattern, columns)` | 160–241 | Implemented |
-| `ranking_reversal` | — | — | Deferred (M1-NC-6) |
-| `dominance_shift` | — | — | Deferred (M1-NC-6) |
-| `convergence` | — | — | Deferred (M1-NC-6) |
-| `seasonal_anomaly` | — | — | Deferred (M1-NC-6) |
+| `ranking_reversal` | `inject_ranking_reversal(df, pattern, columns)` | — | ✅ Implemented (DS-2) |
+| `dominance_shift` | `inject_dominance_shift(df, pattern, columns)` | — | ✅ Implemented (DS-2 + IS-2) |
+| `convergence` | `inject_convergence(df, pattern, columns)` | — | ✅ Implemented (DS-2 + IS-3) |
+| `seasonal_anomaly` | `inject_seasonal_anomaly(df, pattern, columns)` | — | ✅ Implemented (DS-2 + IS-4) |
 
 **Call order:**
 ```
@@ -466,7 +466,10 @@ _realism_mod.inject_realism(df, realism_config, columns, rng)
   │               └─ type 2: insert random letter  (rng.integers × 2)
   │
   └─ if censoring is not None:
-     └─ NotImplementedError (M1-NC-7 deferred)
+     └─ inject_censoring(df, censoring, rng) (✅ DS-1 — see ../stub_implementation/DS-1.md)
+        ├─ type "right":    df[col] > threshold → NaN
+        ├─ type "left":     df[col] < threshold → NaN
+        └─ type "interval": df[col] outside [low, high] → NaN
 
   └─ Return df
 ```

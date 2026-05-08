@@ -1,5 +1,7 @@
 # Blocker Resolutions — AGPDS Phase 2
 
+> **STATUS (2026-05-07):** All P0/P1/P2 blockers resolved. The "Decision" entries below remain authoritative for *what* shipped; the per-stub implementation walkthroughs in [`../stub_implementation/`](../stub_implementation/) document *how* it shipped, and [`../POST_STUB_AUDIT_FINDINGS.md`](../POST_STUB_AUDIT_FINDINGS.md) records the post-implementation adversarial audit (H1, M1–M5, L1–L5 — all closed). Body text below is preserved as the historical decision record from 2026-04-05; it describes the pre-resolution code state and is no longer current. For the current state see [`../remaining_gaps.md`](../remaining_gaps.md).
+
 **Date:** 2026-04-05
 **Author:** Decision Architect (Claude)
 **Source documents:** stage3_readiness_audit.md, stage4_implementation_anatomy.md
@@ -27,7 +29,7 @@ These three decisions must be locked before any implementation work starts. They
 
 ---
 
-### P0-1: Enrich `schema_metadata` beyond section 2.6 example
+### P0-1: Enrich `schema_metadata` beyond section 2.6 example  <!-- ✅ RESOLVED 2026-04-22 → 2026-05-07 -->
 
 **Modules:** M4, M5
 **Stage3 refs:** M4-NC-1 (lossy projection), M5-NC-1 (M5 data source)
@@ -74,7 +76,7 @@ Two L1 checks are missing from `validation/structural.py`. These are SPEC_READY 
 
 ---
 
-### P0-2: Formula evaluation mechanism for structural measures
+### P0-2: Formula evaluation mechanism for structural measures  <!-- ✅ RESOLVED — 受限 AST walker shipped -->
 
 **Modules:** M1 (validation), M2 (generation)
 **Stage3 refs:** M2-NC-1 (formula evaluation mechanism)
@@ -165,7 +167,7 @@ ast.parse(formula, mode='eval') -> walk tree
 
 ---
 
-### P0-3: Auto-fix mutation semantics
+### P0-3: Auto-fix mutation semantics  <!-- ✅ RESOLVED — Loop B shipped; mixture opt-out auto-binding M1 (`893e7e9`) -->
 
 **Modules:** M2, M5
 **Stage3 refs:** M5-NC-6 (strategy implementations), M5-NC-7 (mutation target)
@@ -249,7 +251,7 @@ Each strategy function must be updated to produce override entries rather than r
 
 ---
 
-### P1-1: `mixture` distribution `param_model` schema
+### P1-1: `mixture` distribution `param_model` schema  <!-- ✅ RESOLVED (IS-1) — see ../stub_implementation/IS-1_DS-3_mixture.md -->
 
 **ID:** M1-NC-1
 **Status:** STUB
@@ -268,7 +270,7 @@ raise NotImplementedError(
 
 ---
 
-### P1-2: Under-specified pattern type param schemas
+### P1-2: Under-specified pattern type param schemas  <!-- ✅ RESOLVED (DS-2 + IS-2/IS-3/IS-4) — see ../stub_implementation/DS-2.md & IS-{2,3,4}_*.md -->
 
 **ID:** M1-NC-6
 **Status:** DECIDE
@@ -299,7 +301,7 @@ Pattern injection in `engine/patterns.py` already raises `NotImplementedError` f
 
 ---
 
-### P1-3: `dominance_shift` L3 validation
+### P1-3: `dominance_shift` L3 validation  <!-- ✅ RESOLVED (IS-2) — see ../stub_implementation/IS-2_dominance_shift.md, ../fixes/H1_TEMPORAL_COERCION_ASYMMETRY.md, ../fixes/M2_M3_DEFENSIVE_GUARDS.md -->
 
 **ID:** M5-NC-4
 **Status:** STUB
@@ -324,7 +326,7 @@ Wire into `SchemaAwareValidator._run_l3()` dispatch.
 
 ---
 
-### P1-4: `convergence` and `seasonal_anomaly` L3 validation
+### P1-4: `convergence` and `seasonal_anomaly` L3 validation  <!-- ✅ RESOLVED (IS-3, IS-4) — see ../stub_implementation/IS-3_convergence.md, IS-4_seasonal_anomaly.md -->
 
 **ID:** M5-NC-5
 **Status:** STUB
@@ -348,7 +350,7 @@ Wire into `SchemaAwareValidator._run_l3()` dispatch.
 
 ---
 
-### P1-5: Sandbox semantics (M3, 6 items)
+### P1-5: Sandbox semantics (M3, 6 items)  <!-- ✅ RESOLVED — token budget half (IS-6) shipped; multi-error half deferred per spec_decisions §IS-6 -->
 
 **IDs:** M3-NC-1 through M3-NC-6
 **Status:** ALREADY_IMPLEMENTED (4 of 6), accept-as-is (2 of 6)
@@ -413,7 +415,7 @@ The pipeline ordering in `engine/generator.py` (patterns at stage gamma, realism
 
 ---
 
-### P2-4: Multi-column `on` in group dependency
+### P2-4: Multi-column `on` in group dependency  <!-- ✅ RESOLVED (DS-4) — N-deep nested dict; see ../stub_implementation/DS-4.md -->
 
 **ID:** M1-NC-5
 **Status:** DECIDE
@@ -438,7 +440,7 @@ Keep the `on: list[str]` parameter type for forward compatibility.
 
 ---
 
-### P2-5: `scale` parameter on `add_measure`
+### P2-5: `scale` parameter on `add_measure`  <!-- ⛔ NOT restored (IS-5 — doc-only; passing `scale=…` raises TypeError); see ../remaining_gaps.md §4.2, ../fixes/PROMPT_TRUTH_AND_DIVZERO_GUARD.md -->
 
 **ID:** M1-NC-2
 **Status:** DECIDE
@@ -460,7 +462,7 @@ if scale is not None:
 
 ---
 
-### P2-6: `censoring` parameter in `set_realism`
+### P2-6: `censoring` parameter in `set_realism`  <!-- ✅ RESOLVED (DS-1) — see ../stub_implementation/DS-1.md -->
 
 **ID:** M1-NC-7
 **Status:** ALREADY_IMPLEMENTED

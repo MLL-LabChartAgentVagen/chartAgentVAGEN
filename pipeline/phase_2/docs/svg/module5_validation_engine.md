@@ -302,16 +302,16 @@ SchemaAwareValidator._run_l2(df, patterns)
 | **Output** | `list[Check]` — one Check per pattern in the spec list |
 | **Data flow** | `validator.validate(df, patterns)` → `self._run_l3(df, patterns)` (only if patterns truthy) → `report.add_checks(l3_checks)` |
 
-**The 3 implemented checks + 3 stubs** (shown as bullet items in SVG):
+**All 6 L3 checks implemented** (shown as bullet items in SVG):
 
 | SVG label | Check function | Signature | Pass criterion | Status |
 |-----------|---------------|-----------|----------------|--------|
-| `outlier_*` | `check_outlier_entity(df, pattern)` | `(DataFrame, dict) → Check` | `z = \|subset_mean - ref_mean\| / ref_std >= 2.0` | Implemented |
-| `reversal_*_*` | `check_ranking_reversal(df, pattern, meta)` | `(DataFrame, dict, dict) → Check` | Spearman rank correlation `< 0` | Implemented |
-| `trend_*` | `check_trend_break(df, pattern, meta)` | `(DataFrame, dict, dict) → Check` | `\|after_mean - before_mean\| / \|before_mean\| > 0.15` | Implemented |
-| `dominance` | `check_dominance_shift(df, pattern, meta)` | `(DataFrame, dict, dict) → Check` | — | **Stub** (returns passed=True) |
-| `convergence` | `check_convergence(df, pattern, meta)` | `(DataFrame, dict, dict) → Check` | — | **Stub** (returns passed=True) |
-| `seasonal_anomaly` | `check_seasonal_anomaly(df, pattern, meta)` | `(DataFrame, dict, dict) → Check` | — | **Stub** (returns passed=True) |
+| `outlier_*` | `check_outlier_entity(df, pattern)` | `(DataFrame, dict) → Check` | `z = \|subset_mean - ref_mean\| / ref_std >= 2.0` | ✅ Implemented |
+| `reversal_*_*` | `check_ranking_reversal(df, pattern, meta)` | `(DataFrame, dict, dict) → Check` | Spearman rank correlation `< 0` | ✅ Implemented |
+| `trend_*` | `check_trend_break(df, pattern, meta)` | `(DataFrame, dict, dict) → Check` | `\|after_mean - before_mean\| / \|before_mean\| > 0.15` | ✅ Implemented |
+| `dominance` | `check_dominance_shift(df, pattern, meta)` | `(DataFrame, dict, dict) → Check` | `\|rank_after - rank_before\| ≥ params.get("rank_change", 1)` | ✅ Implemented (IS-2) |
+| `convergence` | `check_convergence(df, pattern, meta)` | `(DataFrame, dict, dict) → Check` | `(early_var − late_var) / early_var ≥ params.get("reduction", 0.3)` | ✅ Implemented (IS-3) |
+| `seasonal_anomaly` | `check_seasonal_anomaly(df, pattern, meta)` | `(DataFrame, dict, dict) → Check` | `\|win_mean − base_mean\| / base_std ≥ params.get("z_threshold", 1.5)` (sample std, ddof=1) | ✅ Implemented (IS-4) |
 
 **L3 dispatch logic** (in `_run_l3`):
 ```
@@ -569,9 +569,9 @@ pipeline.run_phase2(scenario_context, max_loop_b_retries, auto_fix, realism_conf
             │              ├─ trend_break       → pattern_checks.check_trend_break(df, pattern, meta)
             │              │                        └─ _find_temporal_column(meta)
             │              ├─ ranking_reversal  → pattern_checks.check_ranking_reversal(df, pattern, meta)
-            │              ├─ dominance_shift   → pattern_checks.check_dominance_shift(...)   [stub]
-            │              ├─ convergence       → pattern_checks.check_convergence(...)        [stub]
-            │              └─ seasonal_anomaly  → pattern_checks.check_seasonal_anomaly(...)   [stub]
+            │              ├─ dominance_shift   → pattern_checks.check_dominance_shift(...)   [✅ IS-2]
+            │              ├─ convergence       → pattern_checks.check_convergence(...)        [✅ IS-3]
+            │              └─ seasonal_anomaly  → pattern_checks.check_seasonal_anomaly(...)   [✅ IS-4]
             │
             ├─ report.all_passed?                                             ← Section 8
             │    ├─ YES → break                                               ← → Section 10

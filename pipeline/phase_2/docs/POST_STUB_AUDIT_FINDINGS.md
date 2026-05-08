@@ -1,5 +1,7 @@
 # Post-Stub Adversarial Audit — Findings
 
+**Status (2026-05-07):** All 11 findings (H1, M1–M5, L1–L5) closed. See per-finding ✅ RESOLVED markers and commit citations below. Cross-referenced from [docs/remaining_gaps.md §4.1](remaining_gaps.md) and [docs/artifacts/stage5_anatomy_summary.md §4.1](artifacts/stage5_anatomy_summary.md).
+
 Cross-check performed after the M1-NC-* and M3-NC-3 stub workflow
 shipped (DS-1, DS-2, IS-1, IS-2, IS-3, IS-4, DS-3, DS-4, IS-6
 token-budget). Three pre-shipping artifacts were compared against
@@ -212,16 +214,14 @@ implementation. Closes the pre-existing contradiction.
 
 ---
 
-## Recommended order of attack
+## Recommended order of attack — ✅ ALL CLOSED 2026-05-07
 
 1. **H1** — done (`6f64495`).
-2. **M1** — fix the autofix wiring before mixture sees production
-   traffic.
-3. **M2 / M3** — pick "remove floor & clip" or "amend decisions doc";
-   both are quick once the call is made. Coupled because both are
-   "spec said X, code does X+ε" drift.
-4. **M4, M5, all LOW** — opportunistic; bundle into a "doc + small
-   fix" PR alongside any of the above.
+2. **M1** — done (`893e7e9`); auto-binding wired in `generate_with_validation`.
+3. **M2 / M3** — done (`72ddb0f`); decisions doc amended to authorize the defensive guards.
+4. **M4, M5, all LOW (L1–L5)** — done (`2dbec22`); bundled into the audit-cleanup PR.
+
+Original ordering preserved above for historical reference.
 
 ---
 

@@ -145,9 +145,11 @@ simulator.add_temporal(name, start, end, freq, derive=None)
 ### 2c. `add_measure()`
 
 ```
-simulator.add_measure(name, family, param_model, scale=None)
+simulator.add_measure(name, family, param_model)
   └─ simulator._ensure_declaring_phase()
-       └─ columns.add_measure(self._columns, name, family, param_model, scale)
+       └─ columns.add_measure(self._columns, name, family, param_model)
+       # Note: `scale` kwarg removed in round-3 (IS-5 — see ../remaining_gaps.md §4.2);
+       # passing `scale=…` raises TypeError.
             ├─ validation.validate_column_name(name, columns)
             ├─ validation.validate_family(family)                     → raises ValueError
             ├─ validation.validate_param_model(name, family, param_model, columns)

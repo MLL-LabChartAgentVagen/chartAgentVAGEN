@@ -66,13 +66,15 @@ Validation at declaration time: auto-normalizes weights (so they sum to 1), reje
 
 Registers a temporal column. The `derive` parameter triggers automatic extraction of calendar features (`day_of_week`, `month`, `quarter`, `is_weekend`). These derived columns become available as predictors in measure `param_model` effects — they are real columns in the registry, not computed on-the-fly.
 
-**`add_measure(name, family, param_model, scale=None)`**
+**`add_measure(name, family, param_model)`**
 
 Registers a **stochastic root measure** — a DAG root node with no incoming measure edges. `param_model` is a nested dict where each distribution parameter (e.g., `mu`, `sigma`) has:
 - An `intercept` (base value).
 - An `effects` dict mapping categorical column names to value→offset dicts.
 
-At generation time, a parameter is computed as: θⱼ = β₀ + Σₘ βₘ(Xₘ). The `family` string selects the distribution. The optional `scale` parameter is mentioned in the signature but never explained further in the spec.
+At generation time, a parameter is computed as: θⱼ = β₀ + Σₘ βₘ(Xₘ). The `family` string selects the distribution.
+
+> **Note (IS-5):** A `scale=None` kwarg appeared in earlier drafts of the spec but was removed in round-3. The spec never gave `scale` semantics; passing `scale=…` now raises `TypeError`. See `../remaining_gaps.md §4.2`.
 
 **`add_measure_structural(name, formula, effects={}, noise={})`**
 

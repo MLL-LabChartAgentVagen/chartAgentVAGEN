@@ -360,7 +360,7 @@ phase_2_new/
 - **Key functions (attached to `FactTableSimulator` via delegation or mixin):**
   - `add_category(name, values, weights, group, parent=None)` — Validates: non-empty `values`, unique column name, if `parent` then parent exists in same group, auto-normalizes weights (flat list or per-parent dict). Appends a `ColumnDescriptor(type="categorical")` to `column_registry`. Updates `group_graph` with group membership and hierarchy pointers.
   - `add_temporal(name, start, end, freq, derive=[])` — Validates: `start < end`, `freq` is supported. Creates the root temporal `ColumnDescriptor` plus one `ColumnDescriptor` per derived feature (`day_of_week`, `month`, `quarter`, `is_weekend`). All enter the column registry and the temporal group. Derived columns have `type="temporal"` and `derived=True`.
-  - `add_measure(name, family, param_model, scale=None)` — Validates: `family` in `SUPPORTED_FAMILIES`, all effect predictor columns exist in registry, all symbolic effects have numeric definitions. Creates a `ColumnDescriptor(type="measure", measure_type="stochastic")`. No DAG edges (root measure).
+  - `add_measure(name, family, param_model, scale=None)` — Validates: `family` in `SUPPORTED_FAMILIES`, all effect predictor columns exist in registry, all symbolic effects have numeric definitions. Creates a `ColumnDescriptor(type="measure", measure_type="stochastic")`. No DAG edges (root measure). <!-- ⛔ scale kwarg NOT restored (IS-5 — see ../remaining_gaps.md §4.2); current signature is `add_measure(name, family, param_model)` -->
   - `add_measure_structural(name, formula, effects={}, noise={})` — Validates: every symbol in `formula` resolves to a declared measure or an effects key, no self-reference, DAG acyclicity after adding edges. Creates `ColumnDescriptor(type="measure", measure_type="structural")`. Adds edges to `measure_dag_edges`.
   - `_validate_phase_step1(self)` — Checks that `_phase` is `STEP_1`; raises if Step 2 methods have already been called.
 - **Internal data flow:** Each method reads and mutates the `DeclarationStore` via `simulator._get_store()`. `add_category` → `group_graph` + `column_registry`. `add_measure_structural` → `column_registry` + `measure_dag_edges`. Validation uses `dag.py` for acyclicity checks.
@@ -380,9 +380,9 @@ phase_2_new/
   - `_validate_phase_step2(self)` — Transitions `_phase` from `STEP_1` to `STEP_2` on first call. Subsequent Step 1 method calls are rejected.
 - **Internal data flow:** Each method reads and mutates the `DeclarationStore`. The `_phase` flag transition happens on the first call to any Step 2 method. `add_group_dependency` also uses `dag.py` for root-DAG acyclicity.
 - **NEEDS_CLAR items:**
-  - TODO: Multi-column `on` in `add_group_dependency` — the nested `conditional_weights` structure for 2+ conditioning roots is unspecified. Stub: support single-column only; raise `NotImplementedError` for multi-column.
-  - TODO: `censoring` parameter semantics — accept and store; stub in engine. Only `missing_rate` and `dirty_rate` are implemented.
-  - TODO: Four under-specified pattern type param schemas — `dominance_shift`, `convergence`, `seasonal_anomaly` have no defined params. `ranking_reversal` is partial. Accept any `params` dict; validate only `outlier_entity` and `trend_break` params.
+  - TODO: Multi-column `on` in `add_group_dependency` — the nested `conditional_weights` structure for 2+ conditioning roots is unspecified. Stub: support single-column only; raise `NotImplementedError` for multi-column. <!-- ✅ RESOLVED 2026-04-22 → 2026-05-07 (DS-4): N-deep nested dict; see ../stub_implementation/DS-4.md -->
+  - TODO: `censoring` parameter semantics — accept and store; stub in engine. Only `missing_rate` and `dirty_rate` are implemented. <!-- ✅ RESOLVED (DS-1): inject_censoring with right/left/interval, NaN marker; see ../stub_implementation/DS-1.md -->
+  - TODO: Four under-specified pattern type param schemas — `dominance_shift`, `convergence`, `seasonal_anomaly` have no defined params. `ranking_reversal` is partial. Accept any `params` dict; validate only `outlier_entity` and `trend_break` params. <!-- ✅ RESOLVED (DS-2 + IS-2/IS-3/IS-4): all 4 schemas defined and validated; see ../stub_implementation/IS-{2,3,4}_*.md and DS-2.md -->
   - TODO: `target` filter string syntax — no formal grammar specified. Implement a simple evaluator supporting `column == "value"` with `and`/`or`.
 
 #### `groups.py`
@@ -466,8 +466,8 @@ phase_2_new/
     - `_evaluate_formula(formula: str, bindings: dict) → float | np.ndarray` — The restricted AST-based expression evaluator. Parses via `ast.parse(formula, mode='eval')`, walks the tree accepting only `BinOp` (`+`, `-`, `*`, `/`, `Pow`), `UnaryOp` (`-`), `Num`/`Constant`, and `Name` nodes. `Name` nodes resolve from `bindings`. All other AST node types raise `ValueError`.
 - **Internal data flow:** Reads `rows` (from skeleton), reads `store.column_registry` for descriptors. Mutates `rows` dict in place, adding measure columns. The `rng` advances by one draw per stochastic measure per row, plus one noise draw per structural measure per row (if noise is specified).
 - **NEEDS_CLAR items:**
-  - TODO (P0): Formula evaluation mechanism — implement via `_evaluate_formula()` using restricted AST walker as described above.
-  - TODO: `mixture` distribution — stub: raise `NotImplementedError("mixture family not yet specified")`.
+  - TODO (P0): Formula evaluation mechanism — implement via `_evaluate_formula()` using restricted AST walker as described above. <!-- ✅ RESOLVED — `_safe_eval_formula` shipped (P0-2). -->
+  - TODO: `mixture` distribution — stub: raise `NotImplementedError("mixture family not yet specified")`. <!-- ✅ RESOLVED (IS-1): `_sample_mixture` implements per-component sampling; paired with DS-3 KS test. See ../stub_implementation/IS-1_DS-3_mixture.md -->
   - TODO: `noise={}` default — treat as zero noise; skip noise draw; no RNG consumption for this column.
   - TODO: Negative parameter clamping — `_clamp_params()` handles this at draw time with per-family valid ranges.
 

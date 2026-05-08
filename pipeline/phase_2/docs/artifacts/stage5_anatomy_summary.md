@@ -7,6 +7,7 @@
 **Reconciliation log:**
 - 2026-04-15 — updated to match actual implementation per `anatomy_implementation_drift.md`.
 - 2026-04-22 — reconciled post-round-3 API surface: removed stale `scale` from the `ColumnDescriptor` field list (§Shared Infrastructure → `types.py`) and the `scale=None` kwarg from the `add_measure` signature (§M1 → `columns.py`) to match the round-3 `scale` kwarg removal; added the corresponding stub entry to §4.1. See `docs/fixes/GPT_FAILURE_ROUND_3_FIXES.md`.
+- 2026-05-07 — reflected stub resolutions (IS-1..IS-4, IS-6 token half, DS-1..DS-4) in §3 module descriptions and §4 (mirrors `docs/remaining_gaps.md`). All 9 documented stubs shipped; full adversarial audit (`docs/POST_STUB_AUDIT_FINDINGS.md` — H1, M1–M5, L1–L5) closed. Per-stub records: `docs/stub_implementation/`.
 
 **Doc role:** This file tracks the *current* Phase 2 implementation. Despite §9.1 of `anatomy_implementation_drift.md` recommending the anatomy be preserved as the original spec-design record, the 2026-04-15 reconciliation cycle converted it to an implementation-tracking reference, and subsequent reconciliations (see log above) have extended that pattern. For original spec-design intent, consult the *anatomy-claim* column of `anatomy_implementation_drift.md` §1–§7 — that column records what the anatomy said *before* the 2026-04-15 reconciliation and is the only remaining record of the original spec-design wording. Note that the drift report itself is a 2026-04-15 snapshot; it does not reflect the 2026-04-22 round-3 changes.
 
@@ -109,16 +110,21 @@ phase_2/
 │   │   │                               #   sample_child_category, temporal sampling + derivation
 │   │   ├── measures.py                 # §2.8 stage β — _sample_stochastic(), _eval_structural()
 │   │   │                               #   Stochastic: intercept + Σ effects → family draw
-│   │   │                               #     (7 families: gaussian, lognormal, gamma, beta,
-│   │   │                               #      uniform, poisson, exponential)
+│   │   │                               #     (8 families: gaussian, lognormal, gamma, beta,
+│   │   │                               #      uniform, poisson, exponential, mixture);
+│   │   │                               #     mixture dispatches to _sample_mixture (IS-1/DS-3)
 │   │   │                               #   Structural: _safe_eval_formula (restricted AST) + noise
 │   │   │                               #   Per-row param computation: _compute_per_row_params
 │   │   ├── patterns.py                 # §2.8 stage γ — inject_patterns():
-│   │   │                               #   outlier_entity, trend_break (fully implemented)
+│   │   │                               #   all 6 patterns: outlier_entity, trend_break,
+│   │   │                               #   ranking_reversal, dominance_shift, convergence,
+│   │   │                               #   seasonal_anomaly (DS-2 + IS-2/IS-3/IS-4)
 │   │   │                               #   Pattern overlap: sequential mutation in declaration order
 │   │   │                               #   Target parsing via df.eval()
 │   │   ├── realism.py                  # §2.8 stage δ — inject_realism():
-│   │   │                               #   inject_missing_values (all columns, NaN),
+│   │   │                               #   inject_censoring (per-column left/right/interval, DS-1),
+│   │   │                               #   inject_missing_values (all columns, NaN; PK roots
+│   │   │                               #   protected via protected_columns=),
 │   │   │                               #   inject_dirty_values (categoricals)
 │   │   └── postprocess.py              # §2.8 — to_dataframe():
 │   │                                   #   dict → pd.DataFrame, RangeIndex, datetime64 cast,
@@ -147,9 +153,11 @@ phase_2/
 │       │                               #   conditional transition deviation (group deps)
 │       │                               #   Predictor cell enumeration: Cartesian product,
 │       │                               #   skip < 5 rows, cap at 100 cells
-│       ├── pattern_checks.py           # §2.9 L3 — outlier z-score, trend break magnitude,
-│       │                               #   ranking reversal correlation (fully implemented)
-│       │                               #   dominance_shift, convergence, seasonal_anomaly (stubs)
+│       ├── pattern_checks.py           # §2.9 L3 — all 6 pattern checks fully implemented:
+│       │                               #   outlier z-score, trend break magnitude,
+│       │                               #   ranking reversal correlation, dominance shift
+│       │                               #   rank-change (IS-2), convergence variance reduction
+│       │                               #   (IS-3), seasonal anomaly z-score (IS-4)
 │       └── autofix.py                  # §2.9 — generate_with_validation() Loop B wrapper:
 │                                       #   match_strategy() fnmatch dispatch to widen_variance,
 │                                       #   amplify_magnitude, reshuffle_pair; seed=base+attempt,
@@ -325,8 +333,8 @@ phase_2/
 - **Spec ref:** §2.1.2
 - **Key functions:**
   - `declare_orthogonal(group_a, group_b, rationale)` — Validates: both groups exist in `group_graph` and are different. Appends an `OrthogonalPair`.
-  - `add_group_dependency(child_root, on, conditional_weights)` — Validates: `child_root` and all `on` columns are roots (`parent=None`), root-level dependency DAG remains acyclic, `conditional_weights` keys cover all values of the `on` column. Single-column `on` only (multi-column raises `NotImplementedError`). Appends a `GroupDependency` and adds edges from each `on` column to `child_root` in the full column DAG.
-  - `inject_pattern(type, target, col, **params)` — Validates: `type` in `SUPPORTED_PATTERNS`, `col` exists and is a measure column, required params present for `outlier_entity` and `trend_break`. Appends a `PatternSpec`.
+  - `add_group_dependency(child_root, on, conditional_weights)` — Validates: `child_root` and all `on` columns are roots (`parent=None`), root-level dependency DAG remains acyclic, `conditional_weights` covers the full Cartesian product of `on` column values. Single- and multi-column `on` both supported; `conditional_weights` is a nested dict whose nesting depth equals `len(on)` (DS-4 — see `stub_implementation/DS-4.md`). Appends a `GroupDependency` and adds edges from each `on` column to `child_root` in the full column DAG.
+  - `inject_pattern(type, target, col, **params)` — Validates: `type` in `SUPPORTED_PATTERNS` (all 6: `outlier_entity`, `trend_break`, `ranking_reversal`, `dominance_shift`, `convergence`, `seasonal_anomaly`), `col` exists and is a measure column, required params present per type (per `PATTERN_REQUIRED_PARAMS`). Appends a `PatternSpec`.
   - `set_realism(missing_rate=0.0, dirty_rate=0.0, censoring=None)` — Stores a `RealismConfig` singleton. Overwrites on repeat calls.
   - `_validate_phase_step2(self)` — On first call, transitions `_phase` from `STEP_1` to `STEP_2`. Rejects Step 1 methods thereafter.
 - **Data flow:** Each method reads and modifies `DeclarationStore`. First call to any Step 2 method triggers the `_phase` transition. `add_group_dependency` also calls `dag.py` for root-level dependency DAG acyclicity check.
@@ -401,7 +409,8 @@ phase_2/
 - **Spec ref:** §2.8 stage β, §2.3
 - **Key functions:**
   - `generate_measures(columns, topo_order, rows, rng, overrides=None) → dict[str, np.ndarray]` — Iterates `topo_order`, processing only measure columns, dispatching by `measure_type`:
-    - `_sample_stochastic(col_name, col_meta, rows, rng, overrides=None) → np.ndarray` — Per-row parameter computation via `_compute_per_row_params()` (`intercept + Σ effects`), applies any `overrides` scaling, then samples from the specified family via `rng`. Dispatches to: `rng.normal()`, `rng.lognormal()`, `rng.gamma()`, `rng.beta()`, `rng.uniform()`, `rng.poisson()`, `rng.exponential()`.
+    - `_sample_stochastic(col_name, col_meta, rows, rng, overrides=None) → np.ndarray` — Per-row parameter computation via `_compute_per_row_params()` (`intercept + Σ effects`), applies any `overrides` scaling, then samples from the specified family via `rng`. Dispatches to: `rng.normal()`, `rng.lognormal()`, `rng.gamma()`, `rng.beta()`, `rng.uniform()`, `rng.poisson()`, `rng.exponential()`, or `_sample_mixture()` (mixture; IS-1 — see `stub_implementation/IS-1_DS-3_mixture.md`).
+    - `_sample_mixture(col_name, col_meta, rows, rng, overrides=None) → np.ndarray` — Mixture sampler (IS-1): per-row component assignment by normalized mixture weights, then masked subset sampling per component using its own `family` + `param_model`. Effects/intercepts resolved independently per component.
     - `_eval_structural(col_name, col_meta, rows, rng, overrides=None) → np.ndarray` — Evaluates formula string with variable bindings from row context (upstream measure values + resolved effects); adds noise if `noise != {}`.
     - `_resolve_effects(effects_dict, rows) → np.ndarray` — Vectorized effect resolution: per-row categorical context lookup and summation.
     - `_compute_per_row_params(col_meta, rows, overrides) → dict` — Computes distribution parameters per row, including inline clamping to legal intervals (e.g., `sigma = max(sigma, 1e-6)` for gaussian).
@@ -411,9 +420,13 @@ phase_2/
 #### `patterns.py`
 - **Spec ref:** §2.8 stage γ
 - **Key functions:**
-  - `inject_patterns(df, patterns, columns, rng) → pd.DataFrame` — Iterates `patterns` list in declaration order. Calls type-specific injectors. Returns modified DataFrame.
+  - `inject_patterns(df, patterns, columns, rng) → pd.DataFrame` — Iterates `patterns` list in declaration order. Dispatches to the 6 type-specific injectors (DS-2 + IS-2/IS-3/IS-4). Returns modified DataFrame.
   - `inject_outlier_entity(df, pattern) → pd.DataFrame` — Parses `target` filter via `df.eval()`, selects matching rows, scales `col` values to declared `z_score`.
-  - `inject_trend_break(df, pattern, columns) → pd.DataFrame` — Splits rows by temporal `break_point`, applies magnitude shift to `col` values after the break.
+  - `inject_trend_break(df, pattern, columns) → pd.DataFrame` — Splits rows by temporal `break_point`, applies magnitude shift to `col` values after the break. Uses `pd.to_datetime(..., errors="coerce")` (post-H1 audit fix).
+  - `inject_ranking_reversal(df, pattern, columns) → pd.DataFrame` — Per-entity additive shift on the two declared `metrics` columns: rank entities by `metrics[0]` mean, then shift `metrics[1]` so its rank order is reversed (Spearman ρ < 0 at validator).
+  - `inject_dominance_shift(df, pattern, columns) → pd.DataFrame` — Computes post-split `peer_max + magnitude × peer_std`, additively shifts target entity's post-split rows (with two-tier defensive floor for zero-variance peers / `magnitude=0`; see `fixes/M2_M3_DEFENSIVE_GUARDS.md`). Coerces temporal column with `errors="coerce"`.
+  - `inject_convergence(df, pattern, columns) → pd.DataFrame` — Linear time-pull toward `global_mean`: `val = val × (1-factor) + global_mean × factor`, where `factor = (t - tmin) / (tmax - tmin) × pull_strength`, clipped to `[0, 1]` (defensive; required to keep injector aligned with validator). Coerces temporal column.
+  - `inject_seasonal_anomaly(df, pattern, columns) → pd.DataFrame` — Multiplicative shift `(1 + magnitude)` on rows whose temporal value falls inside `anomaly_window=[start, end]`. Coerces temporal column.
   - Target parsing uses `df.eval()` directly (no separate `_parse_target_filter` function).
   - Pattern overlap: sequential mutation in declaration order.
 - **Data flow:** Reads `patterns` list and mutates `df` in-place.
@@ -421,9 +434,10 @@ phase_2/
 #### `realism.py`
 - **Spec ref:** §2.8 stage δ
 - **Key functions:**
-  - `inject_realism(df, realism_config, columns, rng) → pd.DataFrame` — Applies realism degradation per `realism_config`. Processes `missing_rate` first (higher precedence), then `dirty_rate`.
-  - `inject_missing_values(df, rate, rng) → pd.DataFrame` — For each column, randomly selects `rate` proportion of rows and replaces with `np.nan`.
-  - `inject_dirty_values(df, rate, columns, rng) → pd.DataFrame` — Categorical columns only: randomly replaces values with another valid value from the column's `values` list.
+  - `inject_realism(df, realism_config, columns, rng) → pd.DataFrame` — Applies realism degradation per `realism_config`. Order: `inject_censoring` (DS-1) → `inject_missing_values` (with PK protection) → `inject_dirty_values`.
+  - `inject_censoring(df, censoring_config, rng) → pd.DataFrame` — Per-column censoring (DS-1 — see `stub_implementation/DS-1.md`). Schema: `{col: {type: "right"|"left", threshold: float}}` or `{col: {type: "interval", low: float, high: float}}`. Out-of-range values masked to `NaN` (no separate indicator column). Unknown `type` raises `ValueError`; missing column logs warning and skips.
+  - `inject_missing_values(df, rate, rng, protected_columns=None) → pd.DataFrame` — For each column, randomly selects `rate` proportion of rows and replaces with `np.nan`. PK roots (categorical+`parent=None`) listed in `protected_columns` are forced to `False` in the mask before applying (REM-realism-pk-protection resolution).
+  - `inject_dirty_values(df, rate, columns, rng) → pd.DataFrame` — Categorical columns only: randomly replaces values with another valid value from the column's `values` list. **Open gap:** does not currently honor PK protection — see `docs/remaining_gaps.md §4.2`.
 - **Data flow:** Reads `realism_config` and `columns`, mutates `df` in-place. Random cell selection consumes `rng`.
 
 #### `postprocess.py`
@@ -509,9 +523,9 @@ phase_2/
   - `check_outlier_entity(df, pattern) → Check` ��� Filters target rows, computes z-score. Pass if z-score ≥ 2.0.
   - `check_trend_break(df, pattern, meta) → Check` — Splits by `break_point`, checks relative change magnitude > 15%.
   - `check_ranking_reversal(df, pattern, meta) → Check` — Groups by entity, computes rank correlation. Pass if `rank_corr < 0`.
-  - `check_dominance_shift(df, pattern, meta) → Check` — Stub: returns `Check(passed=True, detail="not yet implemented")`.
-  - `check_convergence(df, pattern, meta) → Check` — Stub: returns `Check(passed=True, detail="not yet implemented")`.
-  - `check_seasonal_anomaly(df, pattern, meta) → Check` — Stub: returns `Check(passed=True, detail="not yet implemented")`.
+  - `check_dominance_shift(df, pattern, meta) → Check` — Resolves entity & temporal cols, splits at `params["split_point"]`, ranks entities by `col` mean on each side (descending), passes if `|rank_after − rank_before| ≥ params.get("rank_change", 1)` (IS-2 — see `stub_implementation/IS-2_dominance_shift.md`).
+  - `check_convergence(df, pattern, meta) → Check` — Resolves entity & temporal cols, splits at `params["split_point"]` (default `quantile(0.5)`), computes per-entity means each side, passes if `(early_var − late_var) / early_var ≥ params.get("reduction", 0.3)` (IS-3 — see `stub_implementation/IS-3_convergence.md`).
+  - `check_seasonal_anomaly(df, pattern, meta) → Check` — Computes window mean inside `params["anomaly_window"]` and out-of-window baseline mean+std, passes if `|win_mean − base_mean| / base_std ≥ params.get("z_threshold", 1.5)` (IS-4 — see `stub_implementation/IS-4_seasonal_anomaly.md`). Uses `ddof=1` (sample std) per L1 audit fix.
 - **Data flow:** Reads `df` and pattern dicts. All checks are independent.
 
 #### `autofix.py`
@@ -535,69 +549,53 @@ phase_2/
 
 ## 4. Remaining Stubs & Known Limitations
 
-All 36 NEEDS_CLAR items have been resolved. The items below are **intentional stubs** per decisions in `decisions/blocker_resolutions.md` — each requires spec clarification or a design decision before implementation.
+This section mirrors `docs/remaining_gaps.md`. See that file for the canonical roll-up.
 
-### 4.1 Intentional Stubs (6)
+### 4.0 Status (2026-05-07)
 
-#### Mixture Distribution Sampling (P1-1 / M1-NC-1)
-- **Location:** `phase_2/engine/measures.py:297-303`
-- **Behavior:** `_sample_stochastic()` raises `NotImplementedError` when `family == "mixture"`. Declaration via `add_measure("x", "mixture", {...})` succeeds (family is in `SUPPORTED_FAMILIES`), but `generate()` fails.
-- **Blocked on:** The `param_model` schema for mixture distributions (component families, mixing weights, per-component parameters) is not defined in the spec.
-- **To unstub:** Define the schema (suggested: `{"components": [{"family": "gaussian", "weight": 0.6, "params": {"mu": {...}, "sigma": {...}}}, ...]}`). Implement weighted-component sampling. Implement the corresponding KS test in `statistical.py`.
+All 9 of the 10 documented Phase 2 stubs (IS-1..IS-4, IS-6 token-budget half, DS-1..DS-4) shipped between 2026-04-22 and 2026-05-07. The full adversarial audit in `docs/POST_STUB_AUDIT_FINDINGS.md` — H1, M1–M5, L1–L5 — is closed (commits `6f64495`, `893e7e9`, `72ddb0f`, `2dbec22`).
 
-#### Dominance Shift Validation (P1-3 / M5-NC-4)
-- **Location:** `phase_2/validation/pattern_checks.py:189-213`
-- **Behavior:** `check_dominance_shift()` returns `Check(passed=True, detail="dominance_shift validation not yet implemented")`. Patterns can be declared (params validated), but validation always passes.
-- **Blocked on:** The validation algorithm is not defined in the spec. The params schema (`entity_filter`, `col`, `split_point`) exists, but the rank-change-across-temporal-split logic is unspecified.
-- **To unstub:** Define the algorithm: filter to entity, compute metric rank before/after `split_point`, check rank changed as declared.
+Decisions and per-stub records:
+- Authoritative decisions: `docs/stub_analysis/phase_2_spec_decisions.md`, `docs/stub_analysis/stub_blocker_decisions.md`
+- Implementation walkthroughs: `docs/stub_implementation/` (one file per stub)
+- Post-implementation audit fixes: `docs/fixes/`
 
-#### Convergence Validation (P1-4 / M5-NC-5)
-- **Location:** `phase_2/validation/pattern_checks.py:216-239`
-- **Behavior:** `check_convergence()` returns `Check(passed=True, detail="convergence validation not yet implemented")`. Declaration succeeds (no required params), validation always passes.
-- **Blocked on:** Completely absent from spec §2.9. No params schema, no validation logic, no examples.
-- **To unstub:** Requires full spec definition: what converges, over what dimension, what threshold constitutes convergence.
+### 4.1 Resolved stubs
 
-#### Seasonal Anomaly Validation (P1-4 / M5-NC-5)
-- **Location:** `phase_2/validation/pattern_checks.py:242-265`
-- **Behavior:** Same as convergence — declaration succeeds, validation always passes.
-- **Blocked on:** Completely absent from spec. No params, no validation logic.
-- **To unstub:** Requires full spec definition: what constitutes a seasonal anomaly, which temporal features to check, detection thresholds.
+| ID | Feature | Source location | Resolution doc | Audit-fix doc |
+|----|---------|-----------------|----------------|---------------|
+| IS-1 | Mixture distribution sampling | `phase_2/engine/measures.py` `_sample_stochastic` dispatch + `_sample_mixture` | `docs/stub_implementation/IS-1_DS-3_mixture.md` | `docs/fixes/M1_WIDEN_VARIANCE_AUTO_BINDING.md` (`893e7e9`) |
+| IS-2 | Dominance shift validation | `phase_2/validation/pattern_checks.py` `check_dominance_shift` | `docs/stub_implementation/IS-2_dominance_shift.md` | `docs/fixes/H1_TEMPORAL_COERCION_ASYMMETRY.md` (`6f64495`), `docs/fixes/M2_M3_DEFENSIVE_GUARDS.md` (`72ddb0f`) |
+| IS-3 | Convergence validation | `phase_2/validation/pattern_checks.py` `check_convergence` | `docs/stub_implementation/IS-3_convergence.md` | `docs/fixes/M2_M3_DEFENSIVE_GUARDS.md` (`72ddb0f`) |
+| IS-4 | Seasonal anomaly validation | `phase_2/validation/pattern_checks.py` `check_seasonal_anomaly` | `docs/stub_implementation/IS-4_seasonal_anomaly.md` | `docs/fixes/H1_TEMPORAL_COERCION_ASYMMETRY.md` (`6f64495`), `docs/fixes/AUDIT_CLEANUP_M4_M5_L1_L5.md` (`2dbec22`) |
+| IS-6 (token budget) | Per-scenario token budget on retry loop | `phase_2/orchestration/sandbox.py` `run_retry_loop(token_budget=…)` + `phase_2/orchestration/llm_client.py` `LLMResponse.token_usage` | `docs/stub_implementation/IS-6_token_budget.md` | `docs/fixes/AUDIT_CLEANUP_M4_M5_L1_L5.md` (`2dbec22`) |
+| DS-1 | Censoring injection (left/right/interval, NaN marker) | `phase_2/engine/realism.py` `inject_censoring` | `docs/stub_implementation/DS-1.md` | — |
+| DS-2 | 4 pattern injectors (`ranking_reversal`, `dominance_shift`, `convergence`, `seasonal_anomaly`) | `phase_2/engine/patterns.py` `inject_*` (4 functions) | `docs/stub_implementation/DS-2.md`, `docs/stub_implementation/IS-2_dominance_shift.md`, `docs/stub_implementation/IS-3_convergence.md`, `docs/stub_implementation/IS-4_seasonal_anomaly.md` | `docs/fixes/H1_TEMPORAL_COERCION_ASYMMETRY.md`, `docs/fixes/M2_M3_DEFENSIVE_GUARDS.md` |
+| DS-3 | Mixture KS test | `phase_2/validation/statistical.py` `_MixtureFrozen` + `_expected_cdf_mixture` | `docs/stub_implementation/IS-1_DS-3_mixture.md` | — |
+| DS-4 | Multi-column group dependency `on` | `phase_2/sdk/relationships.py` (nested-dict spec) + `phase_2/engine/skeleton.py` `sample_dependent_root` (N-deep walker) | `docs/stub_implementation/DS-4.md` | `docs/fixes/AUDIT_CLEANUP_M4_M5_L1_L5.md` (`2dbec22`) |
 
-#### `scale` Kwarg on `add_measure` (M?-NC-scale)
-- **Location:** `phase_2/sdk/columns.py:214-215` (`TODO [M?-NC-scale]` marker), mirrored in `phase_2/orchestration/prompt.py`.
-- **Behavior:** `add_measure(name, family, param_model)` no longer accepts a `scale` keyword argument. Passing `scale=...` raises `TypeError: add_measure() got an unexpected keyword argument 'scale'`. The prompt no longer advertises the kwarg.
-- **History:** Previously accepted but silently no-op (emitted a "stored but has no effect" warning). Removed in round-3 GPT failure fixes (`docs/fixes/GPT_FAILURE_ROUND_3_FIXES.md`) because LLMs treated it as a meaningful knob and burned retry budget tuning a dead parameter — same advertising-a-nonfeature class as `censoring=` and the deferred pattern types removed in round 2.
-- **To unstub:** Implement a scaling mechanism (e.g., post-sampling multiplicative scaling of measure values), then restore the `scale` kwarg in `sdk/columns.py` and re-add it to the `add_measure` signature shown in `orchestration/prompt.py`. Grep for `TODO [M?-NC-scale]` to find both sites.
+### 4.2 Remaining limitations
 
-#### M3 Context Window / Multi-Error (M3-NC-3, M3-NC-4)
-- **Location (NC-3):** `phase_2/sdk/simulator.py:32-36` — TODO comment noting one-error-at-a-time limitation.
-- **Location (NC-4):** `phase_2/orchestration/sandbox.py:657` — TODO comment noting no token-budget check.
-- **Behavior:** (NC-3) The sandbox catches one exception per execution; multiple simultaneous SDK errors are surfaced one per retry. (NC-4) Full error history is sent to the LLM without truncation.
-- **Status:** Both are functional and acceptable within the default `max_retries=3` budget. These are accepted limitations, not broken functionality.
-- **To fix:** NC-3: Collect validation errors into a compound exception in M1. NC-4: Add token counting before each retry; truncate/summarize older failures if budget exceeded.
+The items below are intentional non-stubs or accepted limitations — none block production use.
 
-### 4.2 Dependent Stubs (4)
+#### `scale` Kwarg on `add_measure` (IS-5 / M?-NC-scale) — not restored
+- **Location:** `phase_2/sdk/columns.py` (`TODO [M?-NC-scale]` marker), mirrored by absence in `phase_2/orchestration/prompt.py`.
+- **Behavior:** `add_measure(name, family, param_model)` does not accept a `scale` keyword. Passing `scale=...` raises `TypeError`. The prompt does not advertise the kwarg.
+- **Decision:** Per `docs/stub_analysis/phase_2_spec_decisions.md §IS-5`, `scale` is **not restored**. The spec never defined `scale` semantics; the previous silent no-op misled LLMs into burning retry budget on a dead parameter. Current `TypeError` is the correct defensive behavior.
+- **Related fixes:** `docs/fixes/PROMPT_TRUTH_AND_DIVZERO_GUARD.md`, `docs/fixes/GPT_FAILURE_ROUND_3_FIXES.md`.
+- **To unstub (if ever required):** define a scaling mechanism, then restore the kwarg in `sdk/columns.py` and re-add it to the `add_measure` signature shown in `orchestration/prompt.py`. Grep `TODO [M?-NC-scale]` for both sites.
 
-These exist in other modules as consequences of the 5 intentional stubs above. They resolve automatically when their parent stub is resolved.
+#### M3 Multi-Error Compound Exception (M3-NC-3) — deferred
+- **Location:** `phase_2/sdk/simulator.py` (`TODO [M3-NC-3]` comment, ~lines 32–36).
+- **Behavior:** The sandbox catches one exception per execution; multiple simultaneous SDK validation errors (e.g. two bad effects + a cycle) are surfaced one per retry attempt.
+- **Status:** Functional and acceptable within the default `max_retries=3` budget — the **token-budget half of IS-6 has shipped** (see §4.1). Multi-error accumulation was deferred per `docs/stub_analysis/phase_2_spec_decisions.md §IS-6` pending A/B-test evidence that compound exceptions help LLM correction.
+- **To fix:** Collect validation errors into a compound exception in M1 (opt-in `ValidationContext(accumulate=True)` per the decisions doc).
 
-#### Censoring Injection (depends on M1-NC-7)
-- **Location:** `phase_2/engine/realism.py:59-62`
-- **Behavior:** `inject_realism()` raises `NotImplementedError` when `realism_config["censoring"]` is non-None. `set_realism(censoring=...)` accepts and stores the parameter, but the engine-side injection is deferred.
-- **Resolves when:** The spec defines what censoring means concretely (which columns, what mechanism).
+#### `inject_dirty_values` Primary-Key Protection Gap
+- **Location:** `phase_2/engine/realism.py` `inject_dirty_values`.
+- **Behavior:** `inject_dirty_values` iterates *all* categorical columns including roots and may character-perturb a PK string ("Xiehe" → "Xeihe") when `dirty_rate > 0`. The companion missing-injection path **does** protect PK roots (resolved 2026-05-07 — see immediately below).
+- **Status:** Open. Spec §2.1.1 protects "primary key" without scoping to missing-only, so this is a remaining spec violation. Tracked for a future round; closing it requires the same `protected_columns=` skip-set threading into `inject_dirty_values`.
 
-#### Four Pattern Type Injection (depends on M1-NC-6)
-- **Location:** `phase_2/engine/patterns.py:67-70`
-- **Behavior:** `inject_patterns()` raises `NotImplementedError` for `ranking_reversal`, `dominance_shift`, `convergence`, and `seasonal_anomaly`.
-- **Note:** These are **injection** stubs (M2 — how to modify the DataFrame to create the pattern), separate from the **validation** stubs above (M5 — how to check if the pattern exists). Ranking reversal validation is fully implemented, but ranking reversal injection is still stubbed.
-- **Resolves when:** The injection algorithms are defined (how to artificially create each pattern in generated data).
-
-#### Mixture KS Test (depends on P1-1)
-- **Location:** `phase_2/validation/statistical.py:259-264`
-- **Behavior:** `check_stochastic_ks()` returns `Check(passed=True)` when `family == "mixture"`.
-- **Resolves when:** Mixture distribution sampling is implemented.
-
-#### Multi-Column Group Dependency `on` (P2-4 / M1-NC-5)
-- **Location:** `phase_2/sdk/relationships.py:126-130`
-- **Behavior:** `add_group_dependency()` raises `NotImplementedError` when `len(on) != 1`. Single-column `on` works fully.
-- **Blocked on:** The nested `conditional_weights` structure for 2+ conditioning columns is not specified.
-- **Resolves when:** The spec defines the multi-column conditional_weights structure (e.g., Cartesian product keys vs. hierarchical nesting).
+#### ~~Primary-Key Protection in `set_realism` (REM-realism-pk-protection)~~ — RESOLVED 2026-05-07
+- **Resolution:** `_primary_key_columns(columns)` helper in `engine/realism.py` identifies categorical roots (`type=='categorical'` AND `parent is None`); `inject_realism` forwards them as `protected_columns=` to `inject_missing_values`, which forces those columns' mask cells to `False` before applying. The xfail decorator on `tests/modular/test_realism.py::TestPrimaryKeyProtection::test_primary_key_categorical_root_never_nulled_at_rate_one` was removed; three complementary tests added (intermediate rate `0.5`, child categorical NOT protected, multiple group roots all protected) plus a regression guard that direct callers of `inject_missing_values` without `protected_columns` keep the all-cells-masked default.
+- **Out of scope:** see "`inject_dirty_values` Primary-Key Protection Gap" above.

@@ -1,5 +1,7 @@
 # AGPDS Phase 2 — Completeness Certificate
 
+> **STATUS (2026-05-07):** This certificate is the 2026-04-07 snapshot. Of the 6 STUBBED items reported below, 5 of the 6 (IS-1..IS-4 plus the ranking_reversal-validation gap) have shipped between 2026-04-22 and 2026-05-07; the remaining one (IS-5 `scale` kwarg) was intentionally not restored. See [`../remaining_gaps.md`](../remaining_gaps.md) for current state, [`../stub_implementation/`](../stub_implementation/) for per-stub records, and [`../POST_STUB_AUDIT_FINDINGS.md`](../POST_STUB_AUDIT_FINDINGS.md) for the post-implementation audit. Inline ✅ RESOLVED markers below.
+
 ## Audit Date: 2026-04-07
 ## Audited Against: stage3_readiness_audit.md (80 items)
 
@@ -15,6 +17,8 @@
 | REGRESSED | 0 | 0 | 0 |
 
 **92.5% fully implemented. 7.5% intentionally stubbed (5 per decision, 1 unexpected).**
+
+> ✅ As of 2026-05-07: 5 of the 6 STUBBED items above are now DONE (IS-1..IS-4, plus ranking_reversal validation). The 1 remaining (IS-5 `scale` kwarg) was intentionally not restored — see `../remaining_gaps.md §4.2`.
 
 ---
 
@@ -147,13 +151,13 @@ Evidence:
 | SR-9 | L2 — Group dependency transition | SPEC_READY | DONE | statistical.py:425-489 — Conditional distribution deviation < 0.10 |
 | SR-10 | L3 — Outlier entity validation | SPEC_READY | DONE | pattern_checks.py:23-69 — z-score >= 2.0 |
 | SR-11 | L3 — Trend break validation | SPEC_READY | DONE | pattern_checks.py:84-164 — Magnitude ratio > 0.15 |
-| SR-12 | L3 — Ranking reversal validation | SPEC_READY | **STUBBED** | pattern_checks.py:246-269 — Returns `passed=True` with "not yet implemented". **Unexpected: this is SPEC_READY with pseudocode (`means[m1].rank().corr(means[m2].rank()) < 0`) but no decision authorizes stubbing.** |
+| SR-12 | L3 — Ranking reversal validation | SPEC_READY | ✅ DONE (was STUBBED 2026-04-07) | pattern_checks.py — `check_ranking_reversal` shipped (Spearman ρ < 0); paired injector `inject_ranking_reversal` shipped (DS-2). |
 | SR-13 | Loop B `generate_with_validation` | SPEC_READY | DONE | autofix.py:214-289 — seed=base_seed+attempt, max 3, ParameterOverrides, validate pre-realism |
 | NC-1 | M5 data source (metadata only) | NEEDS_CLAR | DONE | validator.py:40-46 — Constructor takes `meta: dict[str, Any]` only, no store. Per decision P3-14. |
 | NC-2 | L2 residual divide-by-zero guard | NEEDS_CLAR | DONE | statistical.py:402-420 — noise_sigma==0 → residual_std < 1e-6. Per decision P3-15. |
 | NC-3 | L2 KS predictor cell enumeration | NEEDS_CLAR | DONE | statistical.py:58-127 — _iter_predictor_cells: Cartesian product, min_rows=5, max_cells=100. Per decision P3-16. |
-| NC-4 | L3 — `dominance_shift` validation | NEEDS_CLAR | STUBBED | pattern_checks.py:167-191 — Returns passed=True with TODO. Per decision P1-3. |
-| NC-5 | L3 — `convergence` + `seasonal_anomaly` | NEEDS_CLAR | STUBBED | pattern_checks.py:194-243 — Both return passed=True with TODO. Per decision P1-4. |
+| NC-4 | L3 — `dominance_shift` validation | NEEDS_CLAR | ✅ DONE (was STUBBED 2026-04-07) | pattern_checks.py — `check_dominance_shift` shipped (IS-2 + DS-2 injector). See `../stub_implementation/IS-2_dominance_shift.md`. |
+| NC-5 | L3 — `convergence` + `seasonal_anomaly` | NEEDS_CLAR | ✅ DONE (was STUBBED 2026-04-07) | pattern_checks.py — `check_convergence` (IS-3) and `check_seasonal_anomaly` (IS-4) shipped along with paired injectors (DS-2). |
 | NC-6 | Auto-fix strategies (3 types) | NEEDS_CLAR | DONE | autofix.py:76-207 — widen_variance, amplify_magnitude, reshuffle_pair all implemented with ParameterOverrides accumulation. Per decision P0-3. |
 | NC-7 | Auto-fix mutation target | NEEDS_CLAR | DONE | autofix.py:19,255,261,280 — Strategies return ParameterOverrides dict, passed to build_fn. Per decision P0-3. |
 | NC-8 | Validation ordering (pre-realism) | NEEDS_CLAR | DONE | autofix.py:263,283-287 — Validation loop runs with realism_config=None; realism applied post-validation. Per decision P2-3. |
@@ -177,13 +181,11 @@ Evidence:
 
 ## Items Requiring Attention
 
-### 1. Ranking Reversal Validation — STUBBED (Unexpected)
+### 1. Ranking Reversal Validation — ✅ RESOLVED 2026-04-22 → 2026-05-07
 
 - **Item:** M5 SPEC_READY #12 — L3 ranking reversal
-- **Location:** pattern_checks.py:246-269
-- **Issue:** This item has clear pseudocode in the spec (`means[m1].rank().corr(means[m2].rank()) < 0`) and is classified SPEC_READY, yet it is stubbed with `passed=True`. No entry in `blocker_resolutions.md` authorizes this stub.
-- **Impact:** Low — stub returns `passed=True`, so it won't cause false failures, but ranking reversal patterns will not be validated.
-- **Recommended action:** Implement the ~15-line validation function per the spec pseudocode.
+- **Resolution:** `check_ranking_reversal` shipped per the SPEC_READY pseudocode (Spearman ρ < 0). Paired injector `inject_ranking_reversal` also shipped as part of DS-2.
+- Original concern (preserved for record): "This item has clear pseudocode in the spec (`means[m1].rank().corr(means[m2].rank()) < 0`) and is classified SPEC_READY, yet it is stubbed with `passed=True`. No entry in `blocker_resolutions.md` authorizes this stub."
 
 ### 2. DeclarationStore.freeze() Integration — Deferred
 

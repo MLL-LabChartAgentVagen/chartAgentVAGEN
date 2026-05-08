@@ -136,3 +136,13 @@ M2 and M3 have the highest drift counts. M4 is nearly aligned.
 2. **Add a disclaimer header to stage5_anatomy_summary.md** stating it reflects the original spec design and linking to this document for implementation-accurate details.
 
 3. **Treat the SVG flow diagram guides as the implementation-accurate reference.** The audit confirmed they overwhelmingly document the actual code correctly (with minor issues documented separately in the per-module audit findings).
+
+---
+
+## 10. Reconciliation Log
+
+| Date | Scope | Notes |
+|------|-------|-------|
+| 2026-04-15 | Initial drift snapshot | This report. Compared anatomy claim vs. implementation across 5 modules; identified 42 drift items. |
+| 2026-04-22 | Round-3 API surface | `scale=None` removed from `add_measure` signature and `ColumnDescriptor` field list — see `../fixes/GPT_FAILURE_ROUND_3_FIXES.md` and `stage5_anatomy_summary.md` reconciliation log. (This drift report itself is a 2026-04-15 snapshot; it does *not* reflect this change.) |
+| 2026-05-07 | Stub workflow shipped | All 9 documented Phase 2 stubs (IS-1..IS-4, IS-6 token half, DS-1..DS-4) shipped between 2026-04-22 and 2026-05-07. Adversarial audit (`../POST_STUB_AUDIT_FINDINGS.md`: H1, M1–M5, L1–L5) closed in commits `6f64495`, `893e7e9`, `72ddb0f`, `2dbec22`. The "anatomy-claim" entries in §1–§7 above that referenced stubs (e.g. mixture sampling, four pattern injectors, censoring, multi-column `on`, dominance/convergence/seasonal validators) describe the pre-resolution state and are now stale; current state is in `stage5_anatomy_summary.md §3` (module descriptions) and `../remaining_gaps.md §4`. Per-stub records: `../stub_implementation/`. This drift report itself is preserved as a historical snapshot. |
