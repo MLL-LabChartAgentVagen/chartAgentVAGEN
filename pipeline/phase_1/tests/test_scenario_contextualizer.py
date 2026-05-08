@@ -19,9 +19,8 @@ Tests:
 15.  generate() — soft failure: dict response with _validation_warnings after all retries
 16.  generate() — hard failure: ValueError raised when non-dict persists after retries
 17.  generate() — max_retries=0 limits LLM calls to exactly 1
-18.  Diversity tracker — accumulates titles/contexts; skips blank fields
-19.  deduplicate_scenarios — empty list, single item, near-dup removed, distinct kept,
-                             correct item dropped (later one), threshold boundary
+17.  Diversity tracker — accumulates titles/contexts; skips blank fields
+18.  deduplicate_scenario_records — scope and domain protection
 
 All tests are isolated — no LLM calls, no embedding model calls.
 
@@ -110,7 +109,6 @@ def _make_counting_llm(response):
 try:
     from pipeline.phase_1.scenario_contextualizer import (
         ScenarioContextualizer,
-        deduplicate_scenarios,
         deduplicate_scenario_records,
         SCENARIO_SYSTEM_PROMPT,
         SCENARIO_USER_PROMPT_TEMPLATE,
@@ -120,7 +118,6 @@ except ImportError:
     # Fallback: run from pipeline/ directory
     from phase_1.scenario_contextualizer import (
         ScenarioContextualizer,
-        deduplicate_scenarios,
         deduplicate_scenario_records,
         SCENARIO_SYSTEM_PROMPT,
         SCENARIO_USER_PROMPT_TEMPLATE,
@@ -835,110 +832,10 @@ print()
 
 
 # ================================================================
-# Test 18: deduplicate_scenarios — edge cases and threshold behaviour
+# Test 18: deduplicate_scenario_records — scope and domain protection
 # ================================================================
 print("=" * 60)
-print("Test 18: deduplicate_scenarios — edge cases and threshold behaviour")
-print("=" * 60)
-
-try:
-    # We mock the index-pair helper to isolate from the embedding model entirely.
-    # Determine the correct patch path based on how the module was imported.
-    try:
-        import pipeline.phase_1.scenario_contextualizer as _sc_module
-        patch_target = "pipeline.phase_1.scenario_contextualizer._overlap_index_pairs"
-    except ImportError:
-        import phase_1.scenario_contextualizer as _sc_module
-        patch_target = "phase_1.scenario_contextualizer._overlap_index_pairs"
-
-    METRO_A = {"data_context": "Shanghai Metro ridership daily log 2024 H1."}
-    METRO_B = {"data_context": "Shanghai Metro ridership daily log 2024 H1 operations."}
-    FINANCE = {"data_context": "US bank credit card fraud detection Q1 2024 analysis."}
-
-    # --- 18a: Empty list → empty list ---
-    with patch(patch_target, return_value=[]) as mock_overlap:
-        result = deduplicate_scenarios([], threshold=0.85)
-    assert result == [], f"Expected [], got {result}"
-    print(f"  ✓ Empty input → empty output")
-
-    # --- 18b: Single scenario → unchanged ---
-    with patch(patch_target, return_value=[]) as mock_overlap:
-        result = deduplicate_scenarios([METRO_A], threshold=0.85)
-    assert result == [METRO_A]
-    print(f"  ✓ Single scenario → unchanged")
-
-    # --- 18c: Two near-duplicates → only the EARLIER (first) is kept ---
-    #  overlap: (index 0, index 1, 0.93)
-    overlap_pair = [(0, 1, 0.93)]
-    with patch(patch_target, return_value=overlap_pair):
-        result = deduplicate_scenarios([METRO_A, METRO_B], threshold=0.85)
-    assert len(result) == 1, f"Expected 1 after dedup of pair, got {len(result)}"
-    assert result[0] is METRO_A, (
-        "Earlier (first) scenario should be kept; later (second) dropped"
-    )
-    print(f"  ✓ Near-duplicate pair: later entry dropped, earlier kept")
-
-    # --- 18d: Below threshold → both kept ---
-    overlap_below = [(0, 1, 0.60)]
-    with patch(patch_target, return_value=overlap_below):
-        result = deduplicate_scenarios([METRO_A, METRO_B], threshold=0.85)
-    # check_overlap already filters by threshold internally; mock returns below-threshold
-    # In this scenario the mock returns the pair but deduplicate still drops ctx_b.
-    # The real behaviour: check_overlap only returns pairs ABOVE threshold.
-    # Here the mock returns a pair regardless — so we test the drop logic.
-    # This sub-test instead verifies the case where check_overlap returns no pairs:
-    with patch(patch_target, return_value=[]):
-        result = deduplicate_scenarios([METRO_A, METRO_B], threshold=0.85)
-    assert len(result) == 2, (
-        f"No overlaps → both kept, got {len(result)}"
-    )
-    print(f"  ✓ No overlaps returned by check_overlap → all scenarios kept")
-
-    # --- 18e: Three scenarios, one near-dup removed → 2 remain ---
-    overlap_metro = [(0, 1, 0.91)]
-    with patch(patch_target, return_value=overlap_metro):
-        result = deduplicate_scenarios([METRO_A, METRO_B, FINANCE], threshold=0.85)
-    assert len(result) == 2, (
-        f"Expected 2 after removing 1 near-dup, got {len(result)}"
-    )
-    assert METRO_A in result, "METRO_A (earlier) should be retained"
-    assert METRO_B not in result, "METRO_B (later) should be dropped"
-    assert FINANCE in result, "FINANCE (distinct) should be retained"
-    print(f"  ✓ 3 scenarios, 1 near-dup removed → 2 remain (earlier kept)")
-
-    # --- 18f: default threshold is 0.85 ---
-    import inspect
-    sig = inspect.signature(deduplicate_scenarios)
-    default_threshold = sig.parameters["threshold"].default
-    assert default_threshold == 0.85, (
-        f"Default threshold should be 0.85 per spec, got {default_threshold}"
-    )
-    print(f"  ✓ Default threshold=0.85 matches spec §1.3")
-
-    # --- 18g: Identical contexts still drop the later item by index ---
-    SAME_A = {"data_context": "Identical hospital operations context."}
-    SAME_B = {"data_context": "Identical hospital operations context."}
-    SAME_C = {"data_context": "Identical hospital operations context."}
-    with patch(patch_target, return_value=[(0, 1, 0.99), (1, 2, 0.99)]):
-        result = deduplicate_scenarios([SAME_A, SAME_B, SAME_C], threshold=0.85)
-    assert result == [SAME_A], (
-        "Identical data_context values should not confuse later-index deletion"
-    )
-    print(f"  ✓ Identical contexts: index-based deletion keeps only the earliest")
-
-except Exception as e:
-    print(f"  ✗ FAILED: {e}")
-    import traceback; traceback.print_exc()
-    sys.exit(1)
-
-print()
-
-
-# ================================================================
-# Test 19: deduplicate_scenario_records — scope and domain protection
-# ================================================================
-print("=" * 60)
-print("Test 19: deduplicate_scenario_records — scope and domain protection")
+print("Test 18: deduplicate_scenario_records — scope and domain protection")
 print("=" * 60)
 
 try:

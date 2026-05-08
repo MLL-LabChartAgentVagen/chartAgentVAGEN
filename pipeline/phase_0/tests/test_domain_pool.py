@@ -2,13 +2,12 @@
 Test suite for Phase 0: Domain Pool (Subtask 2).
 
 Tests:
-1. Seed topics present
-2. check_overlap detects duplicates
-3. check_overlap allows distinct items
-4. Domain pool JSON schema validation
-5. DomainSampler basic sampling
-6. DomainSampler complexity filter
-7. DomainSampler exhaustion reset
+1. check_overlap detects duplicates
+2. check_overlap allows distinct items
+3. Domain pool JSON schema validation
+4. DomainSampler basic sampling
+5. DomainSampler complexity filter
+6. DomainSampler exhaustion reset
 
 All tests use pre-built fixtures — no LLM calls.
 
@@ -149,30 +148,9 @@ def _write_mini_pool(path: str) -> None:
         json.dump(MINI_POOL, f, indent=2)
 
 
-# ---- Test 1: Seed topics present ----
+# ---- Test 1: check_overlap detects duplicates ----
 print("=" * 60)
-print("Test 1: Seed topics present")
-print("=" * 60)
-
-try:
-    from phase_0.domain_pool import SEED_TOPICS
-
-    assert len(SEED_TOPICS) >= 5, f"Expected ≥5 seed topics, got {len(SEED_TOPICS)}"
-    assert isinstance(SEED_TOPICS, list)
-    assert all(isinstance(t, str) for t in SEED_TOPICS)
-    print(f"  ✓ {len(SEED_TOPICS)} seed topics: {SEED_TOPICS}")
-
-except Exception as e:
-    print(f"  ✗ FAILED: {e}")
-    import traceback; traceback.print_exc()
-    sys.exit(1)
-
-print()
-
-
-# ---- Test 2: check_overlap detects duplicates ----
-print("=" * 60)
-print("Test 2: check_overlap detects duplicates")
+print("Test 1: check_overlap detects duplicates")
 print("=" * 60)
 
 try:
@@ -210,9 +188,9 @@ except Exception as e:
 print()
 
 
-# ---- Test 3: check_overlap allows distinct items ----
+# ---- Test 2: check_overlap allows distinct items ----
 print("=" * 60)
-print("Test 3: check_overlap allows distinct items")
+print("Test 2: check_overlap allows distinct items")
 print("=" * 60)
 
 try:
@@ -244,9 +222,9 @@ except Exception as e:
 print()
 
 
-# ---- Test 4: Domain pool JSON schema ----
+# ---- Test 3: Domain pool JSON schema ----
 print("=" * 60)
-print("Test 4: Domain pool JSON schema validation")
+print("Test 3: Domain pool JSON schema validation")
 print("=" * 60)
 
 try:
@@ -284,9 +262,9 @@ except Exception as e:
 print()
 
 
-# ---- Test 5: DomainSampler basic sampling ----
+# ---- Test 4: DomainSampler basic sampling ----
 print("=" * 60)
-print("Test 5: DomainSampler basic sampling")
+print("Test 4: DomainSampler basic sampling")
 print("=" * 60)
 
 try:
@@ -337,9 +315,9 @@ except Exception as e:
 print()
 
 
-# ---- Test 6: DomainSampler complexity filter ----
+# ---- Test 5: DomainSampler complexity filter ----
 print("=" * 60)
-print("Test 6: DomainSampler complexity filter")
+print("Test 5: DomainSampler complexity filter")
 print("=" * 60)
 
 try:
@@ -374,9 +352,9 @@ except Exception as e:
 print()
 
 
-# ---- Test 7: DomainSampler exhaustion reset ----
+# ---- Test 6: DomainSampler exhaustion reset ----
 print("=" * 60)
-print("Test 7: DomainSampler exhaustion reset")
+print("Test 6: DomainSampler exhaustion reset")
 print("=" * 60)
 
 try:

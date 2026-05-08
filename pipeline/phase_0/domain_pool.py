@@ -23,19 +23,6 @@ import numpy as np
 
 
 # ================================================================
-# Seed Topics (§0.1)
-# ================================================================
-# Actually we are using /metadata/taxonomy_seed.json
-SEED_TOPICS: list[str] = [
-    "Healthcare",
-    "Finance",
-    "Retail & E-Commerce",
-    "Transportation & Logistics",
-    "Energy & Utilities",
-]
-
-
-# ================================================================
 # Prompts (§0.2 and §0.3)
 # ================================================================
 
@@ -143,8 +130,8 @@ class DomainPool:
             llm_client: LLMClient instance with generate_json() method.
             pool_path: Path to the cached domain pool JSON file.
             seed_path: Optional path to taxonomy_seed.json. If provided,
-                       seed topics are loaded from the file instead of
-                       the hardcoded SEED_TOPICS constant.
+                       seed topics are loaded from the file. Otherwise the
+                       LLM generates topics from scratch.
         """
         self.llm = llm_client
         self.pool_path = Path(pool_path)
@@ -195,12 +182,8 @@ class DomainPool:
                 seed_data = json.load(f)
             topics = [d["tier"] for d in seed_data["domains"]]
         else:
-            # Fallback to hardcoded seeds; expand with LLM if needed
-            topics = list(SEED_TOPICS)
-            n_new = max(0, n_topics - len(topics))
-            if n_new > 0:
-                new_topics = self._generate_topics(n_new, topics)
-                topics.extend(new_topics)
+            # No seed file: generate all topics from scratch via LLM
+            topics = self._generate_topics(n_topics, [])
 
         # Dedup topics
         overlaps = check_overlap(topics, threshold=overlap_threshold)

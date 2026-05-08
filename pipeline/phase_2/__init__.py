@@ -29,7 +29,6 @@ from .exceptions import (
     ParentNotFoundError,
     DuplicateGroupRootError,
     PatternInjectionError,
-    UndefinedPredictorError,
     SkipResult,
 )
 from .types import (
@@ -79,7 +78,6 @@ __all__ = [
     "ParentNotFoundError",
     "DuplicateGroupRootError",
     "PatternInjectionError",
-    "UndefinedPredictorError",
     "SkipResult",
     # Data types
     "DimensionGroup",

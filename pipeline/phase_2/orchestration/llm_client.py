@@ -460,17 +460,3 @@ class LLMClient:
         cleaned = re.sub(r"\n```\s*$", "", cleaned, count=1)
 
         return LLMResponse(code=cleaned.strip(), token_usage=usage)
-
-
-# =============================================================================
-# Backward Compatibility Alias
-# =============================================================================
-
-class GeminiClient(LLMClient):
-    """Backward-compatible Gemini client using native SDK."""
-    def __init__(self, api_key: str, model: str = "gemini-2.0-flash-lite"):
-        super().__init__(
-            api_key=api_key,
-            model=model,
-            provider="gemini-native"
-        )

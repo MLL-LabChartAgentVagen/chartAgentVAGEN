@@ -7,7 +7,7 @@ diverse, and domain-grounded.
 
 Components:
 - ScenarioContextualizer: LLM-driven scenario generation from domain samples
-- deduplicate_scenarios: Embedding-based scenario deduplication
+- deduplicate_scenario_records: Embedding-based JSONL record deduplication
 
 Reference: phase_1.md
 """
@@ -266,32 +266,6 @@ class ScenarioContextualizer:
 # ================================================================
 # Scenario Deduplication (§1.3)
 # ================================================================
-
-def deduplicate_scenarios(
-    scenarios: list[dict],
-    threshold: float = 0.85,
-) -> list[dict]:
-    """Remove near-duplicate scenarios based on data_context similarity.
-
-    Uses Phase 0's embedding utilities on data_context fields.
-
-    Args:
-        scenarios: List of scenario dicts (each must have "data_context").
-        threshold: Cosine similarity threshold for dedup.
-
-    Returns:
-        Filtered list with near-duplicates removed (keeps earlier scenario).
-    """
-    contexts = [s.get("data_context", "") for s in scenarios]
-    overlaps = _overlap_index_pairs(contexts, threshold=threshold)
-
-    # Collect indices to drop (keep the earlier-generated scenario)
-    drop_indices: set[int] = set()
-    for _idx_a, idx_b, _sim in overlaps:
-        drop_indices.add(idx_b)  # Drop the later one
-
-    return [s for i, s in enumerate(scenarios) if i not in drop_indices]
-
 
 def deduplicate_scenario_records(
     records: list[dict],

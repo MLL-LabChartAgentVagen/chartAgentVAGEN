@@ -8,12 +8,10 @@ from .domain_pool import (
     DomainPool,
     DomainSampler,
     check_overlap,
-    SEED_TOPICS,
 )
 
 __all__ = [
     "DomainPool",
     "DomainSampler",
     "check_overlap",
-    "SEED_TOPICS",
 ]

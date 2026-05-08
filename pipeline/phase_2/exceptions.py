@@ -336,33 +336,6 @@ class PatternInjectionError(SimulatorError):
         super().__init__(self.message)
 
 
-# ===== Predictor Reference Error =====
-
-class UndefinedPredictorError(SimulatorError):
-    """Raised when an effects key references an undeclared column.
-
-    [Target Architecture — M1 sdk/validation.py]
-
-    Raised during declaration-time validation when a param_model or
-    structural effects dict references a column name that has not been
-    declared via add_category() or add_temporal().
-
-    Args:
-        predictor_name: The undeclared predictor column name.
-        context: Description of where the reference was found.
-    """
-
-    def __init__(self, predictor_name: str, context: str = "") -> None:
-        self.predictor_name = predictor_name
-        self.context = context
-        self.message = (
-            f"Undefined predictor column '{predictor_name}'"
-            + (f": {context}" if context else "")
-            + ". Ensure the column is declared before referencing it in effects."
-        )
-        super().__init__(self.message)
-
-
 # ===== Skip Sentinel (Non-Exception) =====
 
 from dataclasses import dataclass, field
