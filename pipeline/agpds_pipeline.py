@@ -7,7 +7,7 @@ from typing import Optional, Dict, Any
 # Phase 0, 1, 2 AGPDS Imports
 from pipeline.core.ids import generation_id, parse_scenario_id
 from pipeline.phase_0.domain_pool import DomainSampler
-from pipeline.phase_1.scenario_contextualizer import ScenarioContextualizer
+from pipeline.phase_1 import ScenarioContext, ScenarioContextualizer, ScenarioRecord
 from pipeline.phase_2.pipeline import (
     run_phase2,
     run_loop_a,
@@ -79,8 +79,8 @@ class AGPDSPipeline:
                 "Expected 'live', 'cached', or 'cached_strict'."
             )
         self.scenario_source = scenario_source
-        self._scenario_cache: Optional[Dict[str, list]] = None
-        self._scenario_by_id: Optional[Dict[tuple, Dict[str, Any]]] = None
+        self._scenario_cache: Optional[Dict[str, list[ScenarioContext]]] = None
+        self._scenario_by_id: Optional[Dict[tuple, ScenarioContext]] = None
         if scenario_source in ("cached", "cached_strict"):
             self._scenario_cache, self._scenario_by_id = self._load_scenario_cache(
                 scenario_pool_path,
@@ -91,13 +91,19 @@ class AGPDSPipeline:
 
     def _load_scenario_cache(
         self, path: Optional[str],
-    ) -> tuple[Dict[str, list], Dict[tuple, Dict[str, Any]]]:
-        """Load scenario_pool.jsonl.
+    ) -> tuple[Dict[str, list[ScenarioContext]], Dict[tuple, ScenarioContext]]:
+        """Load scenario_pool.jsonl into typed in-memory indices.
+
+        Each JSONL line is parsed via :meth:`ScenarioContext.from_dict`, which
+        ignores legacy envelope fields (``category_id`` from pre-Sprint-C.2
+        records, ``_validation_warnings`` from pre-Sprint-C.4 records) — D2.
 
         Returns:
-            ``(by_domain, by_id)`` where ``by_domain`` is ``{domain_id: [scenario, ...]}``
-            (used by category_id path's random pick) and ``by_id`` is
-            ``{(domain_id, k): scenario}`` (used by scenario_id direct lookup).
+            ``(by_domain, by_id)`` where ``by_domain`` is
+            ``{domain_id: [ScenarioContext, ...]}`` (used by the category_id
+            path's random pick) and ``by_id`` is
+            ``{(domain_id, k): ScenarioContext}`` (used by scenario_id direct
+            lookup).
         """
         if path is None:
             path = os.path.join(
@@ -110,17 +116,18 @@ class AGPDSPipeline:
                 "Run the build script first:\n"
                 "  python pipeline/phase_1/build_scenario_pool.py"
             )
-        by_domain: Dict[str, list] = {}
-        by_id: Dict[tuple, Dict[str, Any]] = {}
+        by_domain: Dict[str, list[ScenarioContext]] = {}
+        by_id: Dict[tuple, ScenarioContext] = {}
         with open(path, encoding="utf-8") as f:
             for line in f:
                 if not line.strip():
                     continue
                 rec = json.loads(line)
-                by_domain.setdefault(rec["domain_id"], []).append(rec["scenario"])
+                ctx = ScenarioContext.from_dict(rec["scenario"])
+                by_domain.setdefault(rec["domain_id"], []).append(ctx)
                 k = rec.get("k")
                 if k is not None:
-                    by_id[(rec["domain_id"], int(k))] = rec["scenario"]
+                    by_id[(rec["domain_id"], int(k))] = ctx
         logger.info(
             "Loaded scenario cache: %d domains, %d scenarios",
             len(by_domain),
@@ -128,8 +135,8 @@ class AGPDSPipeline:
         )
         return by_domain, by_id
 
-    def _get_scenario(self, domain_context: Dict[str, Any]) -> Dict[str, Any]:
-        """Return a scenario for the sampled domain.
+    def _get_scenario(self, domain_context: Dict[str, Any]) -> ScenarioContext:
+        """Return a :class:`ScenarioContext` for the sampled domain.
 
         Policy is controlled by self.scenario_source:
           - live:           always call the LLM
@@ -164,7 +171,7 @@ class AGPDSPipeline:
 
     def _resolve_by_category_id(
         self, category_id: int,
-    ) -> tuple[str, str, Dict[str, Any], Dict[str, Any]]:
+    ) -> tuple[str, str, Dict[str, Any], ScenarioContext]:
         """Sample a domain in the category, pick a scenario, derive scenario_id.
 
         Returns:
@@ -187,7 +194,7 @@ class AGPDSPipeline:
 
     def _resolve_by_scenario_id(
         self, scenario_id: str,
-    ) -> tuple[str, str, Dict[str, Any], Dict[str, Any]]:
+    ) -> tuple[str, str, Dict[str, Any], ScenarioContext]:
         """Look up an exact cached scenario by ``scenario_id`` for replay.
 
         Returns:
@@ -242,6 +249,7 @@ class AGPDSPipeline:
         logger.info("  -> Phase 2 Loop A: Generating LLM script...")
         loop_a = run_loop_a(
             scenario_context=scenario,
+            scenario_id=sid,
             max_retries=5,
             api_key=self.llm.api_key,
             model=self.llm.model,

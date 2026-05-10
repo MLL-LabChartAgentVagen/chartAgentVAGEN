@@ -141,15 +141,6 @@ def load_api_key() -> str:
     sys.exit(1)
 
 
-def _category_id_for_topic(topic: str, categories: list[str]) -> int:
-    """Reverse-lookup category_id (1..30) from a META_CATEGORIES entry that
-    ends with ' - <topic>'. Returns -1 if not found."""
-    for i, c in enumerate(categories, start=1):
-        if c.endswith(f" - {topic}"):
-            return i
-    return -1
-
-
 def main() -> None:
     args = parse_args()
 
@@ -217,8 +208,7 @@ def main() -> None:
         sys.path.insert(0, str(PROJECT_ROOT))
 
         from pipeline.core.llm_client import LLMClient
-        from pipeline.core.utils import META_CATEGORIES
-        from pipeline.phase_1 import ScenarioContextualizer
+        from pipeline.phase_1 import ScenarioContextualizer, ScenarioRecord
 
         # Use thread-local clients: Gemini's httpx async client is not safe to
         # share across threads (raises "client has been closed").
@@ -235,17 +225,14 @@ def main() -> None:
         write_lock = threading.Lock()
 
         def gen_one(domain: dict, k: int) -> dict:
-            scenario = _get_ctx().generate(domain)
-            category_id = _category_id_for_topic(
-                domain.get("topic", ""), META_CATEGORIES
+            scenario_ctx = _get_ctx().generate(domain)
+            record = ScenarioRecord(
+                domain_id=domain["id"],
+                k=k,
+                scenario=scenario_ctx,
+                generated_at=datetime.now(timezone.utc).isoformat(),
             )
-            return {
-                "domain_id": domain["id"],
-                "k": k,
-                "category_id": category_id,
-                "generated_at": datetime.now(timezone.utc).isoformat(),
-                "scenario": scenario,
-            }
+            return record.to_dict()
 
         # Append-mode streaming: every finished record hits disk immediately
         # so a crash leaves the file resumable.

@@ -14,6 +14,8 @@ from typing import Any
 
 import pandas as pd
 
+from pipeline.phase_1 import ScenarioContext
+
 from .exceptions import SkipResult
 from .types import ParameterOverrides, ValidationReport
 
@@ -21,7 +23,8 @@ logger = logging.getLogger(__name__)
 
 
 def run_phase2(
-    scenario_context: dict[str, Any],
+    scenario_context: ScenarioContext,
+    scenario_id: str = "unknown",
     max_loop_a_retries: int = 3,
     max_loop_b_retries: int = 2,
     auto_fix: dict[str, Any] | None = None,
@@ -58,6 +61,7 @@ def run_phase2(
     # ===== Loop A: LLM Orchestration =====
     loop_a_result = run_loop_a(
         scenario_context,
+        scenario_id=scenario_id,
         max_retries=max_loop_a_retries,
         llm_client=llm_client,
         api_key=api_key,
@@ -81,7 +85,8 @@ def run_phase2(
 
 
 def run_loop_a(
-    scenario_context: dict[str, Any],
+    scenario_context: ScenarioContext,
+    scenario_id: str = "unknown",
     max_retries: int = 3,
     llm_client: "LLMClient | None" = None,
     api_key: str | None = None,
@@ -108,7 +113,9 @@ def run_loop_a(
             )
         llm_client = _LLMClient(api_key=api_key, model=model, provider=provider)
 
-    return _run_loop_a(scenario_context, max_retries, llm_client, seed=seed)
+    return _run_loop_a(
+        scenario_context, scenario_id, max_retries, llm_client, seed=seed,
+    )
 
 
 def run_loop_b_from_declarations(
@@ -148,7 +155,8 @@ def run_loop_b_from_declarations(
 
 
 def _run_loop_a(
-    scenario_context: dict[str, Any],
+    scenario_context: ScenarioContext,
+    scenario_id: str,
     max_retries: int,
     llm_client: Any,
     seed: int = 42,
@@ -166,6 +174,7 @@ def _run_loop_a(
 
     result = orchestrate(
         scenario_context,
+        scenario_id=scenario_id,
         llm_client=llm_client,
         max_retries=max_retries,
         seed=seed,

@@ -8,7 +8,10 @@ Implements: §2.7 Loop A
 from __future__ import annotations
 
 import logging
+from dataclasses import asdict
 from typing import Any, Callable
+
+from pipeline.phase_1 import ScenarioContext
 
 from ..exceptions import SkipResult
 from .code_validator import extract_clean_code
@@ -65,20 +68,20 @@ def _make_generate_fn(
     return _generate
 
 
-def _format_scenario_context(scenario_context: dict[str, Any]) -> str:
-    """Serialize scenario_context dict into the [SCENARIO] block text for the prompt.
+def _format_scenario_context(scenario_context: ScenarioContext) -> str:
+    """Serialize a ScenarioContext into the [SCENARIO] block text for the prompt.
 
-    Produces a multi-line key: value string. The result is injected into the
-    {scenario_context} placeholder in the §2.5 system prompt template.
+    Produces a multi-line ``key: value`` string from
+    ``dataclasses.asdict(scenario_context)`` so the rendered fields exactly
+    match the writer's JSONL surface. The result is injected into the
+    ``{scenario_context}`` placeholder in the §2.5 system prompt template.
     """
-    lines = []
-    for key, value in scenario_context.items():
-        lines.append(f"{key}: {value}")
-    return "\n".join(lines)
+    return "\n".join(f"{k}: {v}" for k, v in asdict(scenario_context).items())
 
 
 def orchestrate(
-    scenario_context: dict[str, Any],
+    scenario_context: ScenarioContext,
+    scenario_id: str,
     llm_client: LLMClient,
     max_retries: int = 3,
     token_budget: int | None = None,
@@ -99,8 +102,9 @@ def orchestrate(
       5. On exhaustion return SkipResult.
 
     Args:
-        scenario_context: Context dict for LLM prompt assembly. Must contain
-            at minimum the keys used in Phase 1 scenario output.
+        scenario_context: Typed Phase 1 output for prompt assembly.
+        scenario_id: Caller-supplied identifier (e.g. ``"dom_001/k=1"``)
+            propagated into log lines and SkipResult.
         llm_client: Configured LLMClient instance.
         max_retries: Maximum retry attempts before returning SkipResult.
 
@@ -108,8 +112,6 @@ def orchestrate(
         (DataFrame, metadata, raw_declarations) triple on success, or SkipResult
         if all retries are exhausted.
     """
-    scenario_id = scenario_context.get("scenario_id", "unknown")
-
     # ===== Step 1: Render system prompt =====
     scenario_str = _format_scenario_context(scenario_context)
     system_prompt = render_system_prompt(scenario_str)

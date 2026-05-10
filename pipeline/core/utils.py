@@ -1,17 +1,16 @@
 """
-Shared utility functions and constants for the AGPDS pipeline.
+Legacy 30-category taxonomy + the single lookup retained for the
+``--category-id`` CLI translation in agpds_pipeline._sample_domain
+(and for run/log strings in agpds_runner.py / agpds_generate.py).
 
-Holds the legacy 30-category taxonomy + lookup helpers. Sprint C removes
-META_CATEGORIES along with the Phase 1 category_id bridge, after which this
-file should be empty and may be deleted.
+Sprint C trimmed the unused validate_category / get_available_categories /
+print_available_categories helpers. The full file removal is gated on the
+agpds_*.py CLI rename (Sprint F.4) — once that lands, the runtime lookup
+moves with it and this file goes away.
 """
 
 from typing import Optional
 
-
-# =============================================================================
-# Domain Taxonomy (30 categories)
-# =============================================================================
 
 META_CATEGORIES = [
     "1 - Media & Entertainment",
@@ -47,36 +46,8 @@ META_CATEGORIES = [
 ]
 
 
-# =============================================================================
-# Utility Functions
-# =============================================================================
-
-def validate_category(category: str) -> bool:
-    """Check if category is in valid taxonomy."""
-    return category in META_CATEGORIES
-
-
 def get_category_by_id(category_id: int) -> Optional[str]:
-    """Get category name by ID (1-30)."""
+    """Get category name by ID (1-30); None if out of range."""
     if 1 <= category_id <= 30:
         return META_CATEGORIES[category_id - 1]
     return None
-
-
-def get_available_categories() -> list[str]:
-    """
-    Get list of all available categories for manual topic selection.
-
-    Returns:
-        List of 30 predefined category strings
-    """
-    return META_CATEGORIES.copy()
-
-
-def print_available_categories():
-    """Print all available categories in a formatted list."""
-    print("Available 30 topic categories:")
-    print("=" * 60)
-    for i, category in enumerate(META_CATEGORIES, 1):
-        print(f"{i:2d}. {category}")
-    print("=" * 60)

@@ -20,7 +20,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(PROJECT_ROOT))
 
 from pipeline.agpds_pipeline import AGPDSPipeline  # noqa: E402
-from pipeline.phase_1 import ScenarioContextualizer  # noqa: E402
+from pipeline.phase_1 import ScenarioContext, ScenarioContextualizer  # noqa: E402
 
 FIXTURE = Path(__file__).parent / "fixtures" / "scenario_pool_mini.jsonl"
 DOMAIN_POOL = PROJECT_ROOT / "pipeline" / "phase_0" / "domain_pool.json"
@@ -51,13 +51,18 @@ class TestScenarioCache(unittest.TestCase):
     def test_cache_hit_shape(self):
         pipe = _make_pipeline("cached")
         scenario = pipe._get_scenario({"id": "dom_015"})
-        ok, errors = ScenarioContextualizer.validate_output(scenario)
+        # _get_scenario now returns a typed ScenarioContext (Sprint C.3)
+        self.assertIsInstance(scenario, ScenarioContext)
+        # dom_015 fixture has target_rows=200 → tier "simple" matches (200-500)
+        ok, errors = ScenarioContextualizer.validate_output(
+            scenario.to_dict(), "simple",
+        )
         self.assertTrue(ok, f"validate_output errors: {errors}")
 
     def test_cache_hit_returns_one_of_bucket(self):
         pipe = _make_pipeline("cached")
         # dom_001 has 2 scenarios; repeated calls should always return one of them
-        titles = {pipe._get_scenario({"id": "dom_001"})["scenario_title"]
+        titles = {pipe._get_scenario({"id": "dom_001"}).scenario_title
                   for _ in range(20)}
         self.assertTrue(titles.issubset({
             "2024 H1 Shanghai Metro Ridership Log",

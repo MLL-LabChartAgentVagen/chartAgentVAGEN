@@ -15,10 +15,7 @@ from .llm_client import (
 )
 from .utils import (
     META_CATEGORIES,
-    validate_category,
     get_category_by_id,
-    get_available_categories,
-    print_available_categories,
 )
 
 __all__ = [
@@ -27,10 +24,7 @@ __all__ = [
     "ParameterAdapter",
     "ProviderCapabilities",
     "get_provider_capabilities",
-    # Utilities
+    # Legacy CLI taxonomy (gated on Sprint F.4 CLI rename)
     "META_CATEGORIES",
-    "validate_category",
     "get_category_by_id",
-    "get_available_categories",
-    "print_available_categories",
 ]

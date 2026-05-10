@@ -7,14 +7,13 @@ diverse, and domain-grounded.
 
 Components:
 - ScenarioContextualizer: LLM-driven scenario generation from domain samples
-- deduplicate_scenario_records: Embedding-based JSONL record deduplication
 
-Reference: phase_1.md
+Reference: phase_1.md (dedup helpers live in pipeline.phase_1.dedup)
 """
 
 import json
-from collections import defaultdict
-from typing import Optional
+
+from .types import ScenarioContext
 
 
 # ================================================================
@@ -38,7 +37,9 @@ Rules:
    correct unit and a realistic value range grounded in domain knowledge.
 5. "temporal_granularity": The data collection frequency (hourly | daily | weekly |
    monthly | quarterly | yearly).
-6. "target_rows": Recommended row count for the physical fact table (100-3000).
+6. "target_rows": Row count for the fact table, derived from complexity tier:
+   simple → 200-500, medium → 500-1000, complex → 1000-3000.
+   Adjust within range based on temporal span and entity count.
 7. Ground all numbers, entities, and time windows in plausible real-world conditions.
    The scenario must read as if it were a real dataset from a real organization.
 8. Output strictly valid JSON with no additional commentary."""
@@ -82,7 +83,7 @@ to optimize peak-hour scheduling and identify maintenance bottlenecks.",
     {{"name": "on_time_rate", "unit": "%", "range": [85.0, 99.9]}},
     {{"name": "equipment_failures", "unit": "count", "range": [0, 5]}}
   ],
-  "target_rows": 900
+  "target_rows": 1500
 }}
 
 === YOUR TASK ===
@@ -95,6 +96,13 @@ Output:"""
 
 VALID_GRANULARITIES = {
     "hourly", "daily", "weekly", "monthly", "quarterly", "yearly"
+}
+
+# target_rows ranges per Phase 0 complexity_tier (PLAN §C.1).
+TIER_TARGET_ROWS: dict[str, tuple[int, int]] = {
+    "simple":  (200, 500),
+    "medium":  (500, 1000),
+    "complex": (1000, 3000),
 }
 
 
@@ -113,23 +121,17 @@ class ScenarioContextualizer:
     def __init__(
         self,
         llm_client,
-        diversity_tracker: Optional[dict] = None,
         max_retries: int = 2,
     ):
         """
         Args:
             llm_client: LLMClient instance with generate_json() method.
-            diversity_tracker: Shared tracker dict for cross-batch dedup.
             max_retries: Number of LLM retries on validation failure.
         """
         self.llm = llm_client
-        self.diversity_tracker = diversity_tracker or {
-            "used_titles": [],
-            "used_contexts": [],
-        }
         self.max_retries = max_retries
 
-    def generate(self, domain_sample: dict) -> dict:
+    def generate(self, domain_sample: dict) -> ScenarioContext:
         """Generate a scenario context from a Phase 0 domain sample.
 
         Args:
@@ -137,8 +139,8 @@ class ScenarioContextualizer:
                 Must contain: name, topic, complexity_tier, and hint fields.
 
         Returns:
-            Scenario dict with: scenario_title, data_context, key_entities,
-            key_metrics, temporal_granularity, target_rows.
+            A frozen :class:`ScenarioContext` parsed from the validated LLM
+            response.
 
         Raises:
             ValueError: If all retries fail validation.
@@ -146,31 +148,21 @@ class ScenarioContextualizer:
         system_prompt = SCENARIO_SYSTEM_PROMPT
         user_prompt = self._build_user_prompt(domain_sample)
 
-        last_errors = []
-        for attempt in range(self.max_retries + 1):
+        last_errors: list[str] = []
+        for _attempt in range(self.max_retries + 1):
             response = self.llm.generate_json(
                 system=system_prompt,
                 user=user_prompt,
                 temperature=1.0,
             )
 
-            is_valid, errors = self.validate_output(response)
+            is_valid, errors = self.validate_output(
+                response, domain_sample["complexity_tier"]
+            )
             if is_valid:
-                self._update_tracker(response)
-                return response
+                return ScenarioContext.from_dict(response)
 
             last_errors = errors
-
-        # Soft failure — return last response with warnings
-        import warnings
-        warnings.warn(
-            f"Scenario validation warnings after {self.max_retries + 1} "
-            f"attempts: {last_errors}"
-        )
-        if isinstance(response, dict):
-            response["_validation_warnings"] = last_errors
-            self._update_tracker(response)
-            return response
 
         raise ValueError(
             f"Failed to generate valid scenario after "
@@ -185,11 +177,14 @@ class ScenarioContextualizer:
     @staticmethod
     def validate_output(
         response: dict,
+        complexity_tier: str,
     ) -> tuple[bool, list[str]]:
         """Validate scenario output structure and value ranges.
 
         Args:
             response: LLM response dict.
+            complexity_tier: Phase 0 tier ("simple" | "medium" | "complex");
+                gates the tier-specific target_rows range per §C.1.
 
         Returns:
             (is_valid, errors) tuple.
@@ -227,6 +222,31 @@ class ScenarioContextualizer:
             errors.append(
                 f"key_metrics: expected 2-5 items, got {len(metrics)}"
             )
+        else:
+            for i, m in enumerate(metrics):
+                if not isinstance(m, dict):
+                    errors.append(
+                        f"key_metrics[{i}]: must be a dict, got {type(m).__name__}"
+                    )
+                    continue
+                rng = m.get("range")
+                if not (
+                    isinstance(rng, (list, tuple))
+                    and len(rng) == 2
+                    and all(
+                        isinstance(v, (int, float)) and not isinstance(v, bool)
+                        for v in rng
+                    )
+                ):
+                    errors.append(
+                        f"key_metrics[{i}].range: must be a [low, high] numeric pair"
+                    )
+                    continue
+                low, high = rng
+                if not (low < high):
+                    errors.append(
+                        f"key_metrics[{i}].range: low must be < high (got [{low}, {high}])"
+                    )
 
         granularity = response["temporal_granularity"]
         if granularity not in VALID_GRANULARITIES:
@@ -236,12 +256,20 @@ class ScenarioContextualizer:
             )
 
         target_rows = response["target_rows"]
-        if not isinstance(target_rows, (int, float)):
-            errors.append(f"target_rows must be numeric, got {type(target_rows)}")
-        elif not (100 <= target_rows <= 3000):
+        if not isinstance(target_rows, (int, float)) or isinstance(target_rows, bool):
+            errors.append(f"target_rows must be numeric, got {type(target_rows).__name__}")
+        elif complexity_tier not in TIER_TARGET_ROWS:
             errors.append(
-                f"target_rows out of range: {target_rows} (expected 100-3000)"
+                f"Unknown complexity_tier {complexity_tier!r} "
+                f"(expected one of {sorted(TIER_TARGET_ROWS)})"
             )
+        else:
+            low, high = TIER_TARGET_ROWS[complexity_tier]
+            if not (low <= target_rows <= high):
+                errors.append(
+                    f"target_rows out of tier range '{complexity_tier}': "
+                    f"{target_rows} (expected {low}-{high})"
+                )
 
         # Scenario title should be non-empty
         if not response.get("scenario_title", "").strip():
@@ -252,106 +280,3 @@ class ScenarioContextualizer:
             errors.append("data_context is empty")
 
         return len(errors) == 0, errors
-
-    def _update_tracker(self, scenario: dict) -> None:
-        """Update diversity tracker with the generated scenario."""
-        title = scenario.get("scenario_title", "")
-        context = scenario.get("data_context", "")
-        if title:
-            self.diversity_tracker["used_titles"].append(title)
-        if context:
-            self.diversity_tracker["used_contexts"].append(context)
-
-
-# ================================================================
-# Scenario Deduplication (§1.3)
-# ================================================================
-
-def deduplicate_scenario_records(
-    records: list[dict],
-    threshold: float = 0.85,
-    scope: str = "category",
-    min_per_domain: int = 1,
-) -> list[dict]:
-    """Deduplicate JSONL scenario records while preserving cache coverage.
-
-    Args:
-        records: Scenario-pool envelopes containing domain_id, category_id,
-            and scenario.data_context.
-        threshold: Cosine similarity threshold for dedup.
-        scope: Comparison scope: "global", "category", or "domain".
-        min_per_domain: Minimum records to keep for each domain_id.
-
-    Returns:
-        Filtered records in their original order.
-    """
-    if scope not in {"global", "category", "domain"}:
-        raise ValueError(
-            f"Invalid dedup scope: {scope!r}. "
-            "Expected 'global', 'category', or 'domain'."
-        )
-    if min_per_domain < 0:
-        raise ValueError("min_per_domain must be >= 0")
-    if len(records) < 2:
-        return list(records)
-
-    domain_counts: dict[str, int] = defaultdict(int)
-    for rec in records:
-        domain_counts[rec.get("domain_id", "")] += 1
-
-    drop_indices: set[int] = set()
-    for group_indices in _record_groups(records, scope):
-        if len(group_indices) < 2:
-            continue
-
-        contexts = [
-            records[i].get("scenario", {}).get("data_context", "")
-            for i in group_indices
-        ]
-        for _local_a, local_b, _sim in _overlap_index_pairs(
-            contexts, threshold=threshold
-        ):
-            global_b = group_indices[local_b]
-            domain_id = records[global_b].get("domain_id", "")
-            if domain_counts[domain_id] <= min_per_domain:
-                continue
-            if global_b in drop_indices:
-                continue
-            drop_indices.add(global_b)
-            domain_counts[domain_id] -= 1
-
-    return [r for i, r in enumerate(records) if i not in drop_indices]
-
-
-def _record_groups(records: list[dict], scope: str) -> list[list[int]]:
-    """Return record index groups for the requested dedup scope."""
-    if scope == "global":
-        return [list(range(len(records)))]
-
-    key_name = "category_id" if scope == "category" else "domain_id"
-    buckets: dict[object, list[int]] = defaultdict(list)
-    for i, rec in enumerate(records):
-        buckets[rec.get(key_name)].append(i)
-    return list(buckets.values())
-
-
-def _overlap_index_pairs(
-    contexts: list[str],
-    threshold: float = 0.85,
-) -> list[tuple[int, int, float]]:
-    """Return index pairs whose data_context embeddings are near-duplicates."""
-    if len(contexts) < 2:
-        return []
-
-    from pipeline.phase_0.overlap_checker import get_embeddings, cosine_similarity
-
-    embeddings = get_embeddings(contexts)
-    sim_matrix = cosine_similarity(embeddings)
-
-    overlaps: list[tuple[int, int, float]] = []
-    for i in range(len(contexts)):
-        for j in range(i + 1, len(contexts)):
-            sim = float(sim_matrix[i][j])
-            if sim >= threshold:
-                overlaps.append((i, j, sim))
-    return overlaps
