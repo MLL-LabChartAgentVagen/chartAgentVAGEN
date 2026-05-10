@@ -20,7 +20,7 @@ from pipeline.phase_2.orchestration.sandbox import run_retry_loop
 
 
 _BROKEN_INITIAL = (
-    "def build_fact_table():\n"
+    "def build_fact_table(seed=42):\n"
     "    raise ValueError('bug_initial')\n"
 )
 
@@ -28,7 +28,7 @@ _BROKEN_INITIAL = (
 def _broken_retry_code(call_index: int) -> str:
     """Each retry returns a distinct still-failing script."""
     return (
-        "def build_fact_table():\n"
+        "def build_fact_table(seed=42):\n"
         f"    raise ValueError('bug_retry_{call_index}')\n"
     )
 

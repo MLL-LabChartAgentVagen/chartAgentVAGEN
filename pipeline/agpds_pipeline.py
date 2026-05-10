@@ -5,7 +5,7 @@ import random
 from typing import Optional, Dict, Any
 
 # Phase 0, 1, 2 AGPDS Imports
-from pipeline.core.ids import generation_id
+from pipeline.core.ids import generation_id, parse_scenario_id
 from pipeline.phase_0.domain_pool import DomainSampler
 from pipeline.phase_1.scenario_contextualizer import ScenarioContextualizer
 from pipeline.phase_2.pipeline import (
@@ -80,14 +80,25 @@ class AGPDSPipeline:
             )
         self.scenario_source = scenario_source
         self._scenario_cache: Optional[Dict[str, list]] = None
+        self._scenario_by_id: Optional[Dict[tuple, Dict[str, Any]]] = None
         if scenario_source in ("cached", "cached_strict"):
-            self._scenario_cache = self._load_scenario_cache(scenario_pool_path)
+            self._scenario_cache, self._scenario_by_id = self._load_scenario_cache(
+                scenario_pool_path,
+            )
 
     def _new_generation_id(self, scenario_id: str) -> str:
         return generation_id(self.seed, scenario_id)
 
-    def _load_scenario_cache(self, path: Optional[str]) -> Dict[str, list]:
-        """Load scenario_pool.jsonl into {domain_id: [scenario, ...]}."""
+    def _load_scenario_cache(
+        self, path: Optional[str],
+    ) -> tuple[Dict[str, list], Dict[tuple, Dict[str, Any]]]:
+        """Load scenario_pool.jsonl.
+
+        Returns:
+            ``(by_domain, by_id)`` where ``by_domain`` is ``{domain_id: [scenario, ...]}``
+            (used by category_id path's random pick) and ``by_id`` is
+            ``{(domain_id, k): scenario}`` (used by scenario_id direct lookup).
+        """
         if path is None:
             path = os.path.join(
                 os.path.dirname(__file__), "phase_1", "scenario_pool.jsonl"
@@ -99,19 +110,23 @@ class AGPDSPipeline:
                 "Run the build script first:\n"
                 "  python pipeline/phase_1/build_scenario_pool.py"
             )
-        cache: Dict[str, list] = {}
+        by_domain: Dict[str, list] = {}
+        by_id: Dict[tuple, Dict[str, Any]] = {}
         with open(path, encoding="utf-8") as f:
             for line in f:
                 if not line.strip():
                     continue
                 rec = json.loads(line)
-                cache.setdefault(rec["domain_id"], []).append(rec["scenario"])
+                by_domain.setdefault(rec["domain_id"], []).append(rec["scenario"])
+                k = rec.get("k")
+                if k is not None:
+                    by_id[(rec["domain_id"], int(k))] = rec["scenario"]
         logger.info(
             "Loaded scenario cache: %d domains, %d scenarios",
-            len(cache),
-            sum(len(v) for v in cache.values()),
+            len(by_domain),
+            sum(len(v) for v in by_domain.values()),
         )
-        return cache
+        return by_domain, by_id
 
     def _get_scenario(self, domain_context: Dict[str, Any]) -> Dict[str, Any]:
         """Return a scenario for the sampled domain.
@@ -147,32 +162,83 @@ class AGPDSPipeline:
             "tier": "General Data",
         }
 
-    def generate_artifacts(
-        self, category_id: int, constraints: Optional[Dict] = None,
-    ) -> Dict[str, Any]:
-        """Stage 1: Phase 0 + Phase 1 + Phase 2 Loop A only.
+    def _resolve_by_category_id(
+        self, category_id: int,
+    ) -> tuple[str, str, Dict[str, Any], Dict[str, Any]]:
+        """Sample a domain in the category, pick a scenario, derive scenario_id.
 
-        Produces the LLM-generated script and raw_declarations, but does NOT
-        run Loop B (validation/autofix) and does NOT persist CSV/metadata.
-        Intended for agpds_generate.py which writes scripts/ and declarations/
-        to disk so agpds_execute.py can replay them later.
+        Returns:
+            ``(scenario_id, gen_id, domain_context, scenario)`` — scenario_id uses
+            ``k=0`` since the category path does random selection, not k-indexed lookup.
         """
         logger.info("  -> Phase 0: Sampling Domain...")
         domain_context = self._sample_domain(category_id)
         print(f"  -> Selected Subtopic: {domain_context.get('name', 'Unknown')}")
-
-        # Scenario id is the deterministic input to generation_id. We don't yet
-        # track a per-domain scenario index k, so use k=0 — see Sprint C.
+        # k=0 sentinel for the random-sampling path; the scenario_id path
+        # uses real k>=1 from scenario_pool.jsonl per locked convention U1.
         scenario_id = f"{domain_context.get('id', 'unknown')}/k=0"
         gen_id = self._new_generation_id(scenario_id)
-        logger.info(f"[{gen_id}] Starting AGPDS Stage 1 (generate)")
-
         logger.info(
             "  -> Phase 1: Contextualizing Scenario (source=%s)...",
             self.scenario_source,
         )
         scenario = self._get_scenario(domain_context)
+        return scenario_id, gen_id, domain_context, scenario
 
+    def _resolve_by_scenario_id(
+        self, scenario_id: str,
+    ) -> tuple[str, str, Dict[str, Any], Dict[str, Any]]:
+        """Look up an exact cached scenario by ``scenario_id`` for replay.
+
+        Returns:
+            ``(scenario_id, gen_id, domain_context, scenario)``.
+
+        Raises:
+            ValueError: scenario_source is "live" (cached lookup is impossible).
+            KeyError: (domain_id, k) not present in scenario_pool.jsonl.
+        """
+        if self.scenario_source == "live" or self._scenario_by_id is None:
+            raise ValueError(
+                f"scenario_id requires scenario_source in ('cached','cached_strict'), "
+                f"got {self.scenario_source!r}"
+            )
+        domain_id, k = parse_scenario_id(scenario_id)
+        if (domain_id, k) not in self._scenario_by_id:
+            raise KeyError(
+                f"scenario_id {scenario_id!r} not found in scenario_pool "
+                f"(have {len(self._scenario_by_id)} records)"
+            )
+        scenario = self._scenario_by_id[(domain_id, k)]
+        domain_context = self.domain_sampler.get_by_id(domain_id)
+        gen_id = self._new_generation_id(scenario_id)
+        logger.info(f"  -> Phase 0+1: scenario_id={scenario_id} (skip sampling)")
+        return scenario_id, gen_id, domain_context, scenario
+
+    def generate_artifacts(
+        self, *,
+        category_id: Optional[int] = None,
+        scenario_id: Optional[str] = None,
+        constraints: Optional[Dict] = None,
+    ) -> Dict[str, Any]:
+        """Stage 1: Phase 0 + Phase 1 + Phase 2 Loop A only.
+
+        Pass exactly one of ``category_id`` (random sampling in that thematic
+        bucket) or ``scenario_id`` (deterministic replay of a specific cached
+        record). Returns LLM-generated source_code + raw_declarations; does
+        NOT run Loop B and does NOT persist CSV/metadata.
+        """
+        if (category_id is None) == (scenario_id is None):
+            raise ValueError(
+                "Provide exactly one of category_id= or scenario_id= "
+                "(got both or neither)"
+            )
+
+        if scenario_id is not None:
+            sid, gen_id, domain_context, scenario = self._resolve_by_scenario_id(scenario_id)
+        else:
+            sid, gen_id, domain_context, scenario = self._resolve_by_category_id(category_id)
+
+        logger.info(f"[{gen_id}] Starting AGPDS Stage 1 (generate)")
         logger.info("  -> Phase 2 Loop A: Generating LLM script...")
         loop_a = run_loop_a(
             scenario_context=scenario,
@@ -180,6 +246,7 @@ class AGPDSPipeline:
             api_key=self.llm.api_key,
             model=self.llm.model,
             provider=self.llm.provider,
+            seed=self.seed,
         )
         if isinstance(loop_a, SkipResult):
             raise RuntimeError(
@@ -190,7 +257,8 @@ class AGPDSPipeline:
 
         return {
             "generation_id": gen_id,
-            "category_id": category_id,
+            "scenario_id": sid,
+            "category_id": category_id,  # None in scenario_id-mode
             "domain_context": domain_context,
             "scenario": scenario,
             "source_code": source_code,
@@ -241,9 +309,22 @@ class AGPDSPipeline:
             "schema_metadata": schema_metadata,
         }
 
-    def run_single(self, category_id: int, constraints: Optional[Dict] = None) -> Dict[str, Any]:
-        """Execute one full end-to-end generation pass (Stage 1 + Stage 2)."""
-        stage1 = self.generate_artifacts(category_id, constraints)
+    def run_single(
+        self, *,
+        category_id: Optional[int] = None,
+        scenario_id: Optional[str] = None,
+        constraints: Optional[Dict] = None,
+    ) -> Dict[str, Any]:
+        """Execute one full end-to-end generation pass (Stage 1 + Stage 2).
+
+        Pass exactly one of ``category_id`` or ``scenario_id``; see
+        :meth:`generate_artifacts` for the difference between the two modes.
+        """
+        stage1 = self.generate_artifacts(
+            category_id=category_id,
+            scenario_id=scenario_id,
+            constraints=constraints,
+        )
         result = self.execute_artifact(
             generation_id=stage1["generation_id"],
             raw_declarations=stage1["raw_declarations"],
@@ -251,5 +332,6 @@ class AGPDSPipeline:
             domain_context=stage1["domain_context"],
             scenario=stage1["scenario"],
         )
+        result["scenario_id"] = stage1["scenario_id"]
         logger.info("  -> Phases 0-2 Complete. Master Table and Schema Metadata ready for Phase 3.")
         return result

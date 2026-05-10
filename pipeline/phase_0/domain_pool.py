@@ -387,3 +387,10 @@ class DomainSampler:
     def reset(self) -> None:
         """Manually reset sampling state."""
         self.used_ids.clear()
+
+    def get_by_id(self, domain_id: str) -> dict:
+        """Look up a domain dict by its ``"id"`` field. Raises KeyError if absent."""
+        for d in self.pool:
+            if d["id"] == domain_id:
+                return d
+        raise KeyError(f"domain_id not in pool: {domain_id!r}")

@@ -102,7 +102,7 @@ def run_generation_batch(
         _log("=" * 50)
 
         try:
-            stage1 = pipeline.generate_artifacts(category_id)
+            stage1 = pipeline.generate_artifacts(category_id=category_id)
             entry = _save_stage1_artifacts(output_dir, stage1, model, provider)
             produced.append(entry)
             _log(f"  -> Saved script: {entry['script_path']}")

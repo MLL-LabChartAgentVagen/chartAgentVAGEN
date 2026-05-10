@@ -121,14 +121,14 @@ def test_run_retry_loop_passes_accumulated_history_to_llm():
         # GPT 5.2 whack-a-mole pattern.
         return LLMResponse(
             code=(
-                "def build_fact_table():\n"
+                "def build_fact_table(seed=42):\n"
                 f"    raise ValueError('bug_after_retry_{fail_count['n']}')\n"
             ),
             token_usage=None,
         )
 
     initial_code = (
-        "def build_fact_table():\n"
+        "def build_fact_table(seed=42):\n"
         "    raise ValueError('bug_attempt_1')\n"
     )
 

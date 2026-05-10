@@ -40,7 +40,7 @@ class AGPDSRunner:
 
     def run_single(self, category_id: int, constraints: Optional[dict] = None) -> dict:
         self.log(f"Starting Generation. Category: {META_CATEGORIES[category_id - 1]}")
-        return self.pipeline.run_single(category_id, constraints)
+        return self.pipeline.run_single(category_id=category_id, constraints=constraints)
 
     def run_batch(self, category_ids: List[int], constraints_list: Optional[List[dict]] = None) -> List[dict]:
         results = []

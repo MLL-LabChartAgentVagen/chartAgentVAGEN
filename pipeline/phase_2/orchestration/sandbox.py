@@ -197,14 +197,14 @@ class _SandboxThread(threading.Thread):
     for server / async contexts.
     """
 
-    def __init__(self, source_code: str, namespace: dict[str, Any]) -> None:
+    def __init__(self, source_code: str, namespace: dict[str, Any], seed: int = 42) -> None:
         super().__init__(daemon=True)
-        # FIX: [self-review item 1] — added comment for this init block
         # Store script and namespace; initialize result/error slots to
         # None so the caller can distinguish "not yet run" from "ran
         # and produced None"
         self.source_code = source_code
         self.namespace = namespace
+        self.seed = seed
         self.result: Any = None
         self.exception: Exception | None = None
         self.traceback_str: str | None = None
@@ -225,8 +225,10 @@ class _SandboxThread(threading.Thread):
                     "§2.5 requires 'def build_fact_table(seed=...)'."
                 )
 
-            # Call the user-defined function to get the result tuple
-            self.result = build_fn()
+            # Call the user-defined function with the explicit seed so the
+            # AGPDSPipeline-level seed reaches FactTableSimulator. The LLM's
+            # default in the script signature is overridden here.
+            self.result = build_fn(seed=self.seed)
 
         except Exception as exc:
             # Capture both the exception and formatted traceback so the
@@ -237,11 +239,8 @@ class _SandboxThread(threading.Thread):
 def execute_in_sandbox(
     source_code: str,
     timeout_seconds: int = DEFAULT_TIMEOUT_SECONDS,
-    # FIX: [self-review item 2] — additive parameter not in the Message 1
-    # interface sketch; required because the default namespace builder
-    # imports phase_2.simulator.FactTableSimulator which doesn't exist yet.
-    # Defaults to None (non-breaking).
     sandbox_namespace: dict[str, Any] | None = None,
+    seed: int = 42,
 ) -> SandboxResult:
     """Execute LLM-generated code in a restricted sandbox.
 
@@ -318,7 +317,7 @@ def execute_in_sandbox(
 
     # ===== Threaded Execution =====
 
-    worker = _SandboxThread(source_code, namespace)
+    worker = _SandboxThread(source_code, namespace, seed=seed)
     worker.start()
 
     # Block until the worker finishes or the timeout expires
@@ -640,11 +639,6 @@ def run_retry_loop(
     system_prompt: str,
     max_retries: int = DEFAULT_MAX_RETRIES,
     timeout_seconds: int = DEFAULT_TIMEOUT_SECONDS,
-    # FIX: [self-review item 2] — additive parameter not in the Message 1
-    # interface sketch; required so tests can inject a namespace factory
-    # that provides full builtins instead of the restricted set (which
-    # depends on phase_2.simulator not yet existing).  Defaults to None
-    # (non-breaking).
     sandbox_namespace_factory: Callable[[], dict[str, Any]] | None = None,
     # IS-6 token-budget half: cumulative-across-retries token guard.
     # ``token_budget=None`` disables enforcement (no behavior change).
@@ -652,6 +646,7 @@ def run_retry_loop(
     # initial generation call, which happened in the orchestrator.
     token_budget: int | None = None,
     initial_token_usage: "TokenUsage | None" = None,
+    seed: int = 42,
 ) -> RetryLoopResult:
     """Execute the §2.7 error feedback retry loop.
 
@@ -770,6 +765,7 @@ def run_retry_loop(
             source_code=current_code,
             timeout_seconds=timeout_seconds,
             sandbox_namespace=sandbox_ns,
+            seed=seed,
         )
         history.append(result)
 

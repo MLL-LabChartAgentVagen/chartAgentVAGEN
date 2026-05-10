@@ -82,6 +82,7 @@ def orchestrate(
     llm_client: LLMClient,
     max_retries: int = 3,
     token_budget: int | None = None,
+    seed: int = 42,
 ) -> Any | SkipResult:
     """Execute Loop A: LLM generation → sandbox execution → validation.
 
@@ -142,6 +143,7 @@ def orchestrate(
         max_retries=max_retries,
         token_budget=token_budget,
         initial_token_usage=initial_response.token_usage,
+        seed=seed,
     )
 
     # ===== Step 4: Map result to pipeline contract =====

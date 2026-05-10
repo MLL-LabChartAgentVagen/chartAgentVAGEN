@@ -17,8 +17,8 @@ def main():
     print("\n=== Demo 2: Sandbox Environment Usage ===")
     
     sandbox_code = """
-def build_fact_table():
-    sim = FactTableSimulator(target_rows=3, seed=99)
+def build_fact_table(seed=99):
+    sim = FactTableSimulator(target_rows=3, seed=seed)
     sim.add_category("status", ["Active", "Inactive"], [0.8, 0.2], "accounts")
     return sim.generate()
 """

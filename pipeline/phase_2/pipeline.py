@@ -30,6 +30,7 @@ def run_phase2(
     api_key: str | None = None,
     model: str = "gemini-2.0-flash-lite",
     provider: str = "auto",
+    seed: int = 42,
 ) -> tuple[pd.DataFrame, dict[str, Any], ValidationReport] | SkipResult:
     """Execute the full Phase 2 pipeline for one scenario.
 
@@ -62,6 +63,7 @@ def run_phase2(
         api_key=api_key,
         model=model,
         provider=provider,
+        seed=seed,
     )
     if isinstance(loop_a_result, SkipResult):
         return loop_a_result
@@ -85,6 +87,7 @@ def run_loop_a(
     api_key: str | None = None,
     model: str = "gemini-2.0-flash-lite",
     provider: str = "auto",
+    seed: int = 42,
 ) -> tuple[pd.DataFrame, dict[str, Any], dict[str, Any], str] | SkipResult:
     """Execute Loop A only: LLM → sandbox → basic validation.
 
@@ -92,6 +95,10 @@ def run_loop_a(
     or SkipResult on exhaustion. The source_code string is the successful
     LLM-generated Python script — suitable for persisting to disk so that
     Stage 2 can re-execute it deterministically via run_loop_b_from_declarations.
+
+    The ``seed`` argument flows down to ``build_fact_table(seed=...)`` in the
+    sandbox so the LLM-instantiated FactTableSimulator uses the caller-chosen
+    seed instead of whatever default the LLM hardcoded.
     """
     from .orchestration.llm_client import LLMClient as _LLMClient
     if llm_client is None:
@@ -101,7 +108,7 @@ def run_loop_a(
             )
         llm_client = _LLMClient(api_key=api_key, model=model, provider=provider)
 
-    return _run_loop_a(scenario_context, max_retries, llm_client)
+    return _run_loop_a(scenario_context, max_retries, llm_client, seed=seed)
 
 
 def run_loop_b_from_declarations(
@@ -144,6 +151,7 @@ def _run_loop_a(
     scenario_context: dict[str, Any],
     max_retries: int,
     llm_client: Any,
+    seed: int = 42,
 ) -> tuple[pd.DataFrame, dict[str, Any], dict[str, Any], str] | SkipResult:
     """Execute Loop A: LLM → sandbox → basic validation.
 
@@ -156,7 +164,12 @@ def _run_loop_a(
     """
     from .orchestration.retry_loop import orchestrate
 
-    result = orchestrate(scenario_context, llm_client=llm_client, max_retries=max_retries)
+    result = orchestrate(
+        scenario_context,
+        llm_client=llm_client,
+        max_retries=max_retries,
+        seed=seed,
+    )
     if isinstance(result, SkipResult):
         return result
 

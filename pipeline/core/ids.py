@@ -13,7 +13,7 @@ def generation_id(seed: int, scenario_id: str, prefix: str = "agpds") -> str:
 
     Args:
         seed: The pipeline seed.
-        scenario_id: Identifier for the scenario (e.g. ``"dom_001/k=0"``).
+        scenario_id: Identifier for the scenario (e.g. ``"dom_001/k=1"``).
         prefix: String prepended to the hash. Defaults to ``"agpds"``.
 
     Returns:
@@ -22,3 +22,31 @@ def generation_id(seed: int, scenario_id: str, prefix: str = "agpds") -> str:
     """
     digest = hashlib.sha256(f"{seed}:{scenario_id}".encode()).hexdigest()[:10]
     return f"{prefix}_{digest}"
+
+
+def parse_scenario_id(scenario_id: str) -> tuple[str, int]:
+    """Inverse of :func:`format_scenario_id`.
+
+    scenario_pool.jsonl indexes scenarios by ``(domain_id, k)`` where ``k`` is
+    1-based. The canonical wire format joins them as ``"dom_NNN/k=N"``.
+
+    Raises:
+        ValueError on malformed input.
+    """
+    domain_id, sep, k_part = scenario_id.partition("/")
+    if not sep or not k_part.startswith("k="):
+        raise ValueError(
+            f"Malformed scenario_id: {scenario_id!r}; expected 'dom_NNN/k=N'"
+        )
+    try:
+        k = int(k_part[2:])
+    except ValueError as e:
+        raise ValueError(
+            f"Malformed scenario_id: {scenario_id!r}; k segment is not an integer"
+        ) from e
+    return domain_id, k
+
+
+def format_scenario_id(domain_id: str, k: int) -> str:
+    """Build a scenario_id string from its components."""
+    return f"{domain_id}/k={k}"

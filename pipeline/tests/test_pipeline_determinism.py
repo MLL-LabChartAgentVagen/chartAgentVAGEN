@@ -1,18 +1,23 @@
 """End-to-end determinism smoke for the AGPDS pipeline surface.
 
 Full `run_single` reproducibility requires LLM mocking (Loop A is non-deterministic
-by nature). This smoke instead exercises the deterministic spine: same
+by nature). This smoke exercises the deterministic spine: same
 `(seed, scenario_id)` → same `generation_id`, on both `core.ids.generation_id`
 directly and on the `AGPDSPipeline._new_generation_id` wrapper.
+
+The B.8 follow-up adds tests for the new `run_single(scenario_id=...)` API:
+format round-trip, malformed input rejection, live-mode rejection, and
+end-to-end deterministic generation_id under monkeypatched Loop A.
 """
 
 import json
 import os
 import tempfile
 
+import pandas as pd
 import pytest
 
-from pipeline.core.ids import generation_id
+from pipeline.core.ids import generation_id, parse_scenario_id, format_scenario_id
 
 
 _MINI_POOL = {
@@ -82,3 +87,123 @@ def test_pipeline_two_instances_same_seed_same_id(pool_path):
     a = AGPDSPipeline(llm_client=object(), pool_path=pool_path, seed=42)
     b = AGPDSPipeline(llm_client=object(), pool_path=pool_path, seed=42)
     assert a._new_generation_id("dom_001/k=0") == b._new_generation_id("dom_001/k=0")
+
+
+# ============================================================================
+# B.8 follow-up: scenario_id surface tests
+# ============================================================================
+
+
+_MINI_SCENARIO_POOL = [
+    {"domain_id": "dom_001", "k": 1, "category_id": 1, "generated_at": "x",
+     "scenario": {"scenario_title": "ScenarioA", "data_context": "ctx",
+                  "temporal_granularity": "daily", "key_entities": ["e1"],
+                  "key_metrics": [{"name": "m", "unit": "u", "range": [0, 1]}],
+                  "target_rows": 250}},
+    {"domain_id": "dom_002", "k": 1, "category_id": 1, "generated_at": "x",
+     "scenario": {"scenario_title": "ScenarioB", "data_context": "ctx2",
+                  "temporal_granularity": "daily", "key_entities": ["e2"],
+                  "key_metrics": [{"name": "m", "unit": "u", "range": [0, 1]}],
+                  "target_rows": 250}},
+]
+
+
+@pytest.fixture
+def scenario_pool_path():
+    fd, path = tempfile.mkstemp(suffix=".jsonl")
+    os.close(fd)
+    with open(path, "w", encoding="utf-8") as f:
+        for rec in _MINI_SCENARIO_POOL:
+            f.write(json.dumps(rec) + "\n")
+    yield path
+    os.unlink(path)
+
+
+def test_scenario_id_round_trip():
+    """format then parse is the identity; k stays 1-based per convention U1."""
+    assert format_scenario_id("dom_001", 1) == "dom_001/k=1"
+    assert format_scenario_id("dom_017", 3) == "dom_017/k=3"
+    assert parse_scenario_id("dom_001/k=1") == ("dom_001", 1)
+    assert parse_scenario_id(format_scenario_id("dom_007", 5)) == ("dom_007", 5)
+
+
+def test_parse_scenario_id_rejects_malformed():
+    """parse_scenario_id raises ValueError on anything that isn't `dom_NNN/k=N`."""
+    with pytest.raises(ValueError, match="Malformed"):
+        parse_scenario_id("dom_001")  # no separator
+    with pytest.raises(ValueError, match="Malformed"):
+        parse_scenario_id("dom_001/x=1")  # wrong key
+    with pytest.raises(ValueError, match="Malformed"):
+        parse_scenario_id("dom_001/k=abc")  # non-int k
+
+
+def test_live_mode_rejects_scenario_id(pool_path):
+    """U3: live + scenario_id raises ValueError (cached lookup impossible)."""
+    from pipeline.agpds_pipeline import AGPDSPipeline
+
+    pipe = AGPDSPipeline(
+        llm_client=object(),
+        pool_path=pool_path,
+        scenario_source="live",
+        seed=42,
+    )
+    with pytest.raises(ValueError, match="scenario_source"):
+        pipe.generate_artifacts(scenario_id="dom_001/k=1")
+
+
+def test_run_single_scenario_id_deterministic_gen_id(
+    monkeypatch, pool_path, scenario_pool_path,
+):
+    """Two run_single(scenario_id=...) calls with same seed produce same generation_id.
+
+    Loop A and Loop B are stubbed so no LLM is needed; this isolates the
+    deterministic spine that B.8+9 are responsible for.
+    """
+    from pipeline.agpds_pipeline import AGPDSPipeline
+    import pipeline.agpds_pipeline as agpds_mod
+    from pipeline.phase_2.types import ValidationReport
+
+    def fake_run_loop_a(**kwargs):
+        return (
+            pd.DataFrame({"x": [1, 2]}),
+            {"meta": "stub"},
+            {"columns": [], "groups": [], "group_dependencies": [],
+             "measure_dag": [], "target_rows": 2, "patterns": [],
+             "seed": kwargs.get("seed", 42), "orthogonal_pairs": []},
+            "stub source",
+        )
+
+    def fake_run_loop_b(raw_declarations, **kwargs):
+        # ValidationReport with no checks is vacuously all_passed
+        return (
+            pd.DataFrame({"x": [1, 2]}),
+            {"meta": "stub"},
+            ValidationReport(checks=[]),
+        )
+
+    monkeypatch.setattr(agpds_mod, "run_loop_a", fake_run_loop_a)
+    monkeypatch.setattr(agpds_mod, "run_loop_b_from_declarations", fake_run_loop_b)
+
+    class _StubLLM:
+        api_key = "stub"
+        model = "stub-model"
+        provider = "stub-provider"
+
+    def make_pipeline(seed=42):
+        return AGPDSPipeline(
+            llm_client=_StubLLM(),
+            pool_path=pool_path,
+            scenario_source="cached_strict",
+            scenario_pool_path=scenario_pool_path,
+            seed=seed,
+        )
+
+    a = make_pipeline().run_single(scenario_id="dom_001/k=1")
+    b = make_pipeline().run_single(scenario_id="dom_001/k=1")
+    assert a["generation_id"] == b["generation_id"]
+    assert a["scenario_id"] == "dom_001/k=1"
+    assert a["category_id"] is None  # scenario_id-mode does not carry category_id
+
+    # Different seed should yield different generation_id even for same scenario_id
+    c = make_pipeline(seed=43).run_single(scenario_id="dom_001/k=1")
+    assert a["generation_id"] != c["generation_id"]
