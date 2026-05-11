@@ -207,3 +207,56 @@ def test_run_single_scenario_id_deterministic_gen_id(
     # Different seed should yield different generation_id even for same scenario_id
     c = make_pipeline(seed=43).run_single(scenario_id="dom_001/k=1")
     assert a["generation_id"] != c["generation_id"]
+
+
+def test_generate_artifacts_scenario_field_is_json_serializable(
+    monkeypatch, pool_path, scenario_pool_path,
+):
+    """Sprint C.3 made `scenario` a ScenarioContext internally; the result
+    dict returned by generate_artifacts must still be plain JSON so that
+    agpds_generate._save_stage1_artifacts and agpds_runner._save_run_result
+    can `json.dump(result["scenario"], ...)` without a custom encoder.
+
+    Regression for the production crash:
+        TypeError: Object of type ScenarioContext is not JSON serializable
+    """
+    from pipeline.agpds_pipeline import AGPDSPipeline
+    import pipeline.agpds_pipeline as agpds_mod
+
+    def fake_run_loop_a(**kwargs):
+        return (
+            pd.DataFrame({"x": [1, 2]}),
+            {"meta": "stub"},
+            {"columns": [], "groups": [], "group_dependencies": [],
+             "measure_dag": [], "target_rows": 2, "patterns": [],
+             "seed": kwargs.get("seed", 42), "orthogonal_pairs": []},
+            "stub source",
+        )
+
+    monkeypatch.setattr(agpds_mod, "run_loop_a", fake_run_loop_a)
+
+    class _StubLLM:
+        api_key = "stub"
+        model = "stub-model"
+        provider = "stub-provider"
+
+    pipe = AGPDSPipeline(
+        llm_client=_StubLLM(),
+        pool_path=pool_path,
+        scenario_source="cached_strict",
+        scenario_pool_path=scenario_pool_path,
+        seed=42,
+    )
+    stage1 = pipe.generate_artifacts(scenario_id="dom_001/k=1")
+
+    # Exact crash site from production:
+    #   File "agpds_generate.py", line 67
+    #   json.dump(stage1["scenario"], f, ...)
+    serialized = json.dumps(stage1["scenario"])
+    round_tripped = json.loads(serialized)
+    assert round_tripped["scenario_title"] == "ScenarioA"
+    assert round_tripped["target_rows"] == 250
+    assert round_tripped["key_metrics"][0]["range"] == [0, 1]
+
+    # Whole stage1 must also dump (manifest entry path in agpds_generate)
+    json.dumps(stage1)

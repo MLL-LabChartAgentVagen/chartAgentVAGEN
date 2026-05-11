@@ -7,11 +7,13 @@ Covers:
   - Cache miss in "cached_strict" mode raises KeyError
   - Cache file not found raises FileNotFoundError
   - Invalid scenario_source raises ValueError
+  - Malformed records are skipped with a warning, not fatal
 """
 
 import json
 import os
 import sys
+import tempfile
 import unittest
 from pathlib import Path
 from unittest.mock import MagicMock, patch
@@ -111,6 +113,38 @@ class TestScenarioCache(unittest.TestCase):
                 pool_path=str(DOMAIN_POOL),
                 scenario_source="not-a-mode",
             )
+
+    def test_malformed_record_is_skipped_with_warning(self):
+        """One corrupt line must not take the whole pool down."""
+        good_lines = FIXTURE.read_text(encoding="utf-8").splitlines()
+        # Synthesize a record whose key_metrics[1] is missing "name" — same
+        # shape bug seen in production scenario_pool.jsonl line 17.
+        bad_rec = json.loads(good_lines[0])
+        bad_rec["domain_id"] = "dom_bad"
+        bad_rec["k"] = 0
+        bad_rec["scenario"]["key_metrics"][0] = {
+            "broken_key": "units", "unit": "units", "range": [1.0, 2.0],
+        }
+        with tempfile.NamedTemporaryFile(
+            "w", suffix=".jsonl", delete=False, encoding="utf-8",
+        ) as tf:
+            tf.write("\n".join(good_lines) + "\n")
+            tf.write(json.dumps(bad_rec) + "\n")
+            tmp_path = tf.name
+        try:
+            with self.assertLogs("pipeline.agpds_pipeline", level="WARNING") as cm:
+                pipe = _make_pipeline("cached", cache_path=tmp_path)
+            # All good records loaded; bad one absent
+            self.assertEqual(len(pipe._scenario_cache), 3)
+            self.assertNotIn("dom_bad", pipe._scenario_cache)
+            # Warning mentions the malformed record
+            self.assertTrue(
+                any("malformed" in m.lower() or "skipping" in m.lower()
+                    for m in cm.output),
+                f"expected skip warning, got: {cm.output}",
+            )
+        finally:
+            os.unlink(tmp_path)
 
 
 if __name__ == "__main__":

@@ -118,16 +118,31 @@ class AGPDSPipeline:
             )
         by_domain: Dict[str, list[ScenarioContext]] = {}
         by_id: Dict[tuple, ScenarioContext] = {}
+        skipped = 0
         with open(path, encoding="utf-8") as f:
-            for line in f:
+            for lineno, line in enumerate(f, 1):
                 if not line.strip():
                     continue
-                rec = json.loads(line)
-                ctx = ScenarioContext.from_dict(rec["scenario"])
-                by_domain.setdefault(rec["domain_id"], []).append(ctx)
+                try:
+                    rec = json.loads(line)
+                    ctx = ScenarioContext.from_dict(rec["scenario"])
+                    domain_id = rec["domain_id"]
+                except (json.JSONDecodeError, KeyError, TypeError, ValueError) as exc:
+                    skipped += 1
+                    logger.warning(
+                        "Skipping malformed scenario at %s:%d (%s: %s)",
+                        os.path.basename(path), lineno,
+                        type(exc).__name__, exc,
+                    )
+                    continue
+                by_domain.setdefault(domain_id, []).append(ctx)
                 k = rec.get("k")
                 if k is not None:
-                    by_id[(rec["domain_id"], int(k))] = ctx
+                    by_id[(domain_id, int(k))] = ctx
+        if skipped:
+            logger.warning(
+                "Scenario cache: skipped %d malformed record(s)", skipped,
+            )
         logger.info(
             "Loaded scenario cache: %d domains, %d scenarios",
             len(by_domain),
@@ -268,7 +283,11 @@ class AGPDSPipeline:
             "scenario_id": sid,
             "category_id": category_id,  # None in scenario_id-mode
             "domain_context": domain_context,
-            "scenario": scenario,
+            # Serialize ScenarioContext → dict at the API boundary so downstream
+            # callers (agpds_generate._save_stage1_artifacts, agpds_runner._save_run_result)
+            # can json.dump the result without a custom encoder. Inside the Phase 1 →
+            # Phase 2 wire it stays typed; outside generate_artifacts it's plain JSON.
+            "scenario": scenario.to_dict(),
             "source_code": source_code,
             "raw_declarations": raw_declarations,
             "schema_metadata": metadata,
