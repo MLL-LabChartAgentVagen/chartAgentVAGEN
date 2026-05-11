@@ -154,7 +154,7 @@ print("Test 1: check_overlap detects duplicates")
 print("=" * 60)
 
 try:
-    from phase_0.domain_pool import check_overlap
+    from pipeline.phase_0.domain_pool import check_overlap
     from unittest.mock import patch
     import numpy as np
 
@@ -172,7 +172,7 @@ try:
         [0.0, 1.0]
     ])
 
-    with patch('phase_0.overlap_checker.get_embeddings', return_value=mock_embeddings):
+    with patch('pipeline.phase_0.overlap_checker.get_embeddings', return_value=mock_embeddings):
         overlaps = check_overlap(items, threshold=0.4)
     assert len(overlaps) >= 1, (
         f"Expected at least 1 overlap between similar items, got {len(overlaps)}"
@@ -207,7 +207,7 @@ try:
         [0.0, 0.0, 1.0]
     ])
 
-    with patch('phase_0.overlap_checker.get_embeddings', return_value=mock_embeddings_distinct):
+    with patch('pipeline.phase_0.overlap_checker.get_embeddings', return_value=mock_embeddings_distinct):
         overlaps = check_overlap(items_distinct, threshold=0.80)
     assert len(overlaps) == 0, (
         f"Expected no overlaps for distinct items, got {len(overlaps)}: {overlaps}"
@@ -268,7 +268,7 @@ print("Test 4: DomainSampler basic sampling")
 print("=" * 60)
 
 try:
-    from phase_0.domain_pool import DomainSampler
+    from pipeline.phase_0.domain_pool import DomainSampler
 
     with tempfile.NamedTemporaryFile(
         mode="w", suffix=".json", delete=False

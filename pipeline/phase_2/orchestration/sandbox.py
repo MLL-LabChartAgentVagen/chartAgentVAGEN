@@ -1,9 +1,10 @@
 """
 Sprint 8 — Sandbox execution and error feedback loop.
 
-Subtask IDs covered: 7.1.1, 7.1.2, 7.1.3
+Subtask IDs covered: 7.1.1, 7.1.2 (the 7.1.3 retry driver lives in
+:mod:`pipeline.phase_2.orchestration.retry_loop` after Sprint D.2).
 
-This module implements the §2.7 execution-error feedback loop:
+This module implements the §2.7 execution-error feedback loop primitives:
 
 - ``execute_in_sandbox`` (7.1.1) compiles and executes LLM-generated
   Python code in a restricted ``exec()`` namespace, captures the
@@ -13,9 +14,9 @@ This module implements the §2.7 execution-error feedback loop:
   payload (original code, exception class, traceback, fix instruction)
   that is fed back to the LLM on retry.
 
-- ``run_retry_loop`` (7.1.3) orchestrates the full §2.7 loop: execute →
-  on failure, format feedback → call LLM for new code → retry, up to
-  ``max_retries`` times.
+The full retry driver — ``run_retry_loop`` — is in
+:mod:`pipeline.phase_2.orchestration.retry_loop`; it consumes the two
+primitives above. The seed parameter still flows through both modules.
 
 Security note (Finding A14):
     The sandbox uses a restricted ``__builtins__`` allowlist and injects
@@ -35,8 +36,7 @@ from typing import Any, Callable, Optional
 import pandas as pd
 
 from ..exceptions import InvalidParameterError, SimulatorError
-from ..types import SandboxResult, RetryLoopResult
-from .llm_client import LLMResponse, TokenUsage
+from ..types import SandboxResult
 
 logger: logging.Logger = logging.getLogger(__name__)
 
@@ -46,7 +46,6 @@ logger: logging.Logger = logging.getLogger(__name__)
 # =============================================================================
 
 DEFAULT_TIMEOUT_SECONDS: int = 30
-DEFAULT_MAX_RETRIES: int = 3
 
 # Builtins allowlist — enough for SDK scripts to function but blocking
 # dangerous primitives like __import__, eval, exec, open, compile.
@@ -628,233 +627,3 @@ def format_error_feedback(
 
     return feedback
 
-
-# =============================================================================
-# Retry Loop (7.1.3)
-# =============================================================================
-
-def run_retry_loop(
-    initial_code: str,
-    llm_generate_fn: Callable[[str, str], "LLMResponse"],
-    system_prompt: str,
-    max_retries: int = DEFAULT_MAX_RETRIES,
-    timeout_seconds: int = DEFAULT_TIMEOUT_SECONDS,
-    sandbox_namespace_factory: Callable[[], dict[str, Any]] | None = None,
-    # IS-6 token-budget half: cumulative-across-retries token guard.
-    # ``token_budget=None`` disables enforcement (no behavior change).
-    # ``initial_token_usage`` seeds the counter with the cost of the
-    # initial generation call, which happened in the orchestrator.
-    token_budget: int | None = None,
-    initial_token_usage: "TokenUsage | None" = None,
-    seed: int = 42,
-) -> RetryLoopResult:
-    """Execute the §2.7 error feedback retry loop.
-
-    [Subtask 7.1.3]
-
-    Algorithm:
-
-    1. Execute *initial_code* in the sandbox.
-    2. On success → return the result immediately (attempt 1).
-    3. On failure → format error feedback, call *llm_generate_fn* with
-       ``(system_prompt, feedback_prompt)`` to obtain new code.
-    4. Repeat from step 1 with the new code, up to *max_retries* total
-       attempts.
-    5. On exhaustion → log the failure and return an unsuccessful
-       :class:`RetryLoopResult` with the full attempt history.
-
-    This loop implements **only** the §2.7 execution-error path.  It
-    does not invoke §2.9 validation — that responsibility belongs to
-    the pipeline orchestrator (11.1.x, currently BLOCKED per C5).
-
-    Args:
-        initial_code: First LLM-generated Python code string.
-        llm_generate_fn: Callable ``(system_prompt, user_prompt) -> LLMResponse``
-            that calls the LLM and returns a structured response carrying
-            the corrected code and optional token usage.  Typically
-            ``LLMClient.generate_code`` (partially applied).
-        system_prompt: The system prompt for retry LLM calls.
-        max_retries: Maximum total attempts (default 3).  Must be > 0.
-        timeout_seconds: Per-attempt execution timeout in seconds.
-        sandbox_namespace_factory: Optional factory for sandbox
-            namespaces.  Called once per attempt.  If ``None``, uses
-            :func:`_build_sandbox_namespace`.
-        token_budget: Optional cumulative-across-retries token ceiling
-            (IS-6 token-budget half).  When set, the loop accumulates
-            ``response.token_usage.total_tokens`` after each LLM call
-            and short-circuits with
-            ``RetryLoopResult(success=False, skipped_reason="token_budget_exceeded (used/budget)")``
-            once ``tokens_used >= token_budget``.  ``None`` (default)
-            disables enforcement — identical to the pre-IS-6 behavior.
-        initial_token_usage: Optional ``TokenUsage`` seeding the
-            cumulative counter with the cost of the orchestrator's
-            initial-generation call (the call that produced
-            *initial_code*).  Required for the budget to be genuinely
-            per-scenario rather than per-retry-loop.  ``None`` (default)
-            seeds the counter at 0.  Providers that do not report token
-            counts surface ``None`` here and the budget never trips
-            (graceful degradation).
-
-    Returns:
-        :class:`RetryLoopResult` with the outcome and full history.
-        ``skipped_reason`` is set to ``"token_budget_exceeded ..."``
-        when the loop short-circuits on the budget; ``None`` otherwise.
-
-    Raises:
-        InvalidParameterError: If *initial_code*, *system_prompt*, or
-            *max_retries* fail validation.
-    """
-    # ===== Input Validation =====
-
-    # Validate initial_code
-    if initial_code is None or (isinstance(initial_code, str) and len(initial_code.strip()) == 0):
-        raise InvalidParameterError(
-            param_name="initial_code",
-            value=0.0,
-            reason="initial_code must be a non-empty string",
-        )
-
-    # Validate system_prompt
-    if system_prompt is None or (isinstance(system_prompt, str) and len(system_prompt.strip()) == 0):
-        raise InvalidParameterError(
-            param_name="system_prompt",
-            value=0.0,
-            reason="system_prompt must be a non-empty string",
-        )
-
-    # Validate max_retries is a positive integer
-    if not isinstance(max_retries, int) or max_retries <= 0:
-        raise InvalidParameterError(
-            param_name="max_retries",
-            value=float(max_retries) if isinstance(max_retries, (int, float)) else 0.0,
-            reason="max_retries must be a positive integer",
-        )
-
-    # Validate timeout_seconds is positive
-    if not isinstance(timeout_seconds, (int, float)) or timeout_seconds <= 0:
-        raise InvalidParameterError(
-            param_name="timeout_seconds",
-            value=float(timeout_seconds) if isinstance(timeout_seconds, (int, float)) else 0.0,
-            reason="timeout_seconds must be a positive number",
-        )
-
-    # ===== Retry Loop =====
-
-    current_code = initial_code
-    history: list[SandboxResult] = []
-
-    # Resolve the namespace factory — default to the module-level builder
-    ns_factory = sandbox_namespace_factory or _build_sandbox_namespace
-
-    # Cumulative token counter for the IS-6 token budget. Seed with the
-    # initial-generation usage so the budget is genuinely per-scenario.
-    tokens_used: int = (
-        initial_token_usage.total_tokens if initial_token_usage is not None else 0
-    )
-
-    for attempt in range(1, max_retries + 1):
-
-        logger.debug(
-            "§2.7 retry loop: attempt %d/%d", attempt, max_retries
-        )
-
-        # Execute the current code in a fresh sandbox namespace so that
-        # each attempt starts from a clean state
-        sandbox_ns = ns_factory()
-        result = execute_in_sandbox(
-            source_code=current_code,
-            timeout_seconds=timeout_seconds,
-            sandbox_namespace=sandbox_ns,
-            seed=seed,
-        )
-        history.append(result)
-
-        # ===== Early Exit on Success =====
-
-        if result.success:
-            logger.debug(
-                "§2.7 retry loop: succeeded on attempt %d", attempt
-            )
-            return RetryLoopResult(
-                success=True,
-                dataframe=result.dataframe,
-                metadata=result.metadata,
-                raw_declarations=result.raw_declarations,
-                source_code=result.source_code or current_code,
-                attempts=attempt,
-                history=history,
-            )
-
-        # ===== Prepare Feedback for Next Attempt =====
-
-        # Don't call the LLM after the final failed attempt — there is
-        # no subsequent attempt to use the new code
-        if attempt < max_retries:
-            # Build prior-failures list: every failed attempt except the current
-            # one (whose exception is already shown in the ERROR/TRACEBACK sections).
-            prior_failures = [h for h in history[:-1] if not h.success]
-
-            # Format the §2.7 step-5 error feedback payload
-            feedback_prompt = format_error_feedback(
-                original_code=current_code,
-                exception=result.exception or RuntimeError("Unknown sandbox failure"),
-                traceback_str=result.traceback_str or "No traceback available.",
-                prior_failures=prior_failures,
-            )
-
-            logger.debug(
-                "§2.7 retry loop: calling LLM for corrected code "
-                "(attempt %d failed with %s)",
-                attempt,
-                type(result.exception).__name__ if result.exception else "unknown",
-            )
-
-            # Call the LLM to generate corrected code.  The LLM
-            # receives the system prompt and the error feedback as the
-            # user prompt. The callable returns an ``LLMResponse``
-            # carrying optional token usage; we add the usage to the
-            # cumulative counter and trip the budget if exceeded.
-            try:
-                response = llm_generate_fn(system_prompt, feedback_prompt)
-                current_code = response.code
-                if response.token_usage is not None:
-                    tokens_used += response.token_usage.total_tokens
-            except Exception as llm_exc:
-                # If the LLM call itself fails, log and continue to the
-                # next iteration with the same (broken) code — degraded
-                # mode that avoids crashing the entire pipeline
-                logger.debug(
-                    "§2.7 retry loop: LLM call failed on attempt %d: %s",
-                    attempt,
-                    llm_exc,
-                )
-
-            # Token-budget guard: cumulative across the initial
-            # generation + every retry call. ``None`` disables.
-            if token_budget is not None and tokens_used >= token_budget:
-                logger.debug(
-                    "§2.7 retry loop: token budget exceeded after attempt %d "
-                    "(%d/%d) — short-circuiting",
-                    attempt, tokens_used, token_budget,
-                )
-                return RetryLoopResult(
-                    success=False,
-                    attempts=attempt,
-                    history=history,
-                    skipped_reason=(
-                        f"token_budget_exceeded ({tokens_used}/{token_budget})"
-                    ),
-                )
-
-    # ===== Exhaustion =====
-
-    logger.debug(
-        "§2.7 retry loop: all %d attempts exhausted — returning failure",
-        max_retries,
-    )
-
-    return RetryLoopResult(
-        success=False,
-        attempts=max_retries,
-        history=history,
-    )

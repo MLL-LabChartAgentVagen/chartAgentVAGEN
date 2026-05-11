@@ -11,12 +11,12 @@ Covers the three test criteria from
 """
 from __future__ import annotations
 
-from pipeline.phase_2.orchestration.llm_client import (
+from pipeline.core.llm_client import (
     LLMResponse,
     TokenUsage,
     _extract_token_usage,
 )
-from pipeline.phase_2.orchestration.sandbox import run_retry_loop
+from pipeline.phase_2.orchestration.retry_loop import run_retry_loop
 
 
 _BROKEN_INITIAL = (

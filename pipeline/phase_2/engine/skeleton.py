@@ -8,6 +8,14 @@ FactTableSimulator instance state.
 
 Extracted during the Sprint 6 post-completion refactoring.
 Original locations: FactTableSimulator._build_skeleton and its sub-methods.
+
+Note on declare_orthogonal:
+    Cross-group orthogonality is consumed by the L1 chi-squared validator
+    (validation/structural.py::check_orthogonal_independence) and Phase 3
+    view enumeration; it is a no-op for generation. The skeleton defaults
+    to independent sampling for any cross-group pair not explicitly linked
+    by add_group_dependency. This matches storyline §2.2:
+    "Cross-group independence is opt-in, not default."
 """
 from __future__ import annotations
 

@@ -7,11 +7,9 @@ Covers:
 """
 from __future__ import annotations
 
-from pipeline.phase_2.orchestration.llm_client import LLMResponse
-from pipeline.phase_2.orchestration.sandbox import (
-    format_error_feedback,
-    run_retry_loop,
-)
+from pipeline.core.llm_client import LLMResponse
+from pipeline.phase_2.orchestration.sandbox import format_error_feedback
+from pipeline.phase_2.orchestration.retry_loop import run_retry_loop
 from pipeline.phase_2.types import SandboxResult
 
 

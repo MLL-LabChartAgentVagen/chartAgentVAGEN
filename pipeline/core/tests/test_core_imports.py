@@ -7,7 +7,7 @@ Run from the pipeline/ directory:
 
 
 def test_utils():
-    from core.utils import META_CATEGORIES, get_category_by_id
+    from pipeline.core.utils import META_CATEGORIES, get_category_by_id
     assert len(META_CATEGORIES) == 30, f"Expected 30 categories, got {len(META_CATEGORIES)}"
     assert get_category_by_id(1) == "1 - Media & Entertainment"
     assert get_category_by_id(0) is None
@@ -16,7 +16,7 @@ def test_utils():
 
 
 def test_llm_client():
-    from core.llm_client import (
+    from pipeline.core.llm_client import (
         LLMClient, ParameterAdapter,
         ProviderCapabilities, get_provider_capabilities,
         PROVIDER_CAPABILITIES, MODEL_OVERRIDES,

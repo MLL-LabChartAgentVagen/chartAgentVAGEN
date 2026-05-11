@@ -9,8 +9,10 @@ Quick usage::
 
 from .llm_client import (
     LLMClient,
+    LLMResponse,
     ParameterAdapter,
     ProviderCapabilities,
+    TokenUsage,
     get_provider_capabilities,
 )
 from .utils import (
@@ -21,8 +23,10 @@ from .utils import (
 __all__ = [
     # LLM
     "LLMClient",
+    "LLMResponse",
     "ParameterAdapter",
     "ProviderCapabilities",
+    "TokenUsage",
     "get_provider_capabilities",
     # Legacy CLI taxonomy (gated on Sprint F.4 CLI rename)
     "META_CATEGORIES",

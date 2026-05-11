@@ -105,7 +105,7 @@ def run_loop_a(
     sandbox so the LLM-instantiated FactTableSimulator uses the caller-chosen
     seed instead of whatever default the LLM hardcoded.
     """
-    from .orchestration.llm_client import LLMClient as _LLMClient
+    from pipeline.core.llm_client import LLMClient as _LLMClient
     if llm_client is None:
         if api_key is None:
             raise ValueError(

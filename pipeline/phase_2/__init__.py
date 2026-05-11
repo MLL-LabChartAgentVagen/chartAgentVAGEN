@@ -60,8 +60,8 @@ from .validation.autofix import (
 from .orchestration.sandbox import (
     execute_in_sandbox,
     format_error_feedback,
-    run_retry_loop,
 )
+from .orchestration.retry_loop import run_retry_loop
 from .pipeline import run_phase2
 
 __all__ = [
