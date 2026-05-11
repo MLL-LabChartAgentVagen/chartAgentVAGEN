@@ -1,271 +1,159 @@
-# ChartAgentVAGEN
+# ChartAgent — Atomic-Grain Chart Understanding Benchmark
 
-A comprehensive chart generation system for creating charts with question-answer pairs, supporting various chart types with operator-based composition and masking capabilities.
+ChartAgent generates chart-understanding benchmark data with **Code-as-DGP**: an LLM writes a single Python script against the `FactTableSimulator` SDK to synthesize a Master Fact Table; deterministic SQL projection (**Table Amortization**) is intended to yield 10–30+ multi-chart QA tasks per table with cross-chart arithmetic consistency.
 
-## Overview
+The pipeline is split into four phases. The LLM participates only in Phases 0–2; Phase 3 is fully deterministic. The authoritative spec lives in [storyline/data_generation/](storyline/data_generation/) and is the source of truth for any design question.
 
-ChartAgentVAGEN generates charts (currently bar charts) with associated QA data using a flexible operator composition system. It supports generating original charts, masked charts, and corresponding mask files for training and evaluation purposes.
+---
 
-## System Architecture
+## Pipeline at a glance
 
-### Core Components
+| Phase | What it does | Where | Implementation status |
+|---|---|---|---|
+| **0 — Domain Pool** | 200+ fine-grained sub-topics, embedding-deduped, complexity-balanced. Built once offline, cached as JSON. | [pipeline/phase_0/](pipeline/phase_0/) | shipped |
+| **1 — Scenario Context** | Sample one domain → realistic `ScenarioContext` (entities, metrics with units/ranges, tier-aware `target_rows`). No chart-type binding here. | [pipeline/phase_1/](pipeline/phase_1/) | shipped |
+| **2 — Agentic Data Simulator (AGPDS)** | LLM writes a `FactTableSimulator` script → `(Master DataFrame, Schema Metadata)`. Execution-error feedback + three-layer validator with auto-fix. | [pipeline/phase_2/](pipeline/phase_2/) | shipped |
+| **3 — View Extraction & QA** | SQL projection enumerates `(chart_type, column_binding)` views; operator-algebra pipelines build single- and multi-chart questions. | — | **not yet implemented in `pipeline/`** — see [storyline/data_generation/phase_3.md](storyline/data_generation/phase_3.md) for the spec. |
+
+Schema Metadata (the dict returned by `FactTableSimulator.generate()`) is the Phase 2 ↔ Phase 3 contract.
+
+---
+
+## Repository layout
 
 ```
 chartAgentVAGEN/
-├── main.py                    # Main entry point for chart generation
-├── requirements.txt           # Python dependencies
-├── templates/                 # Base classes and abstractions
-│   ├── operator.py           # Operator base classes (Operator, OperatorResult)
-│   ├── parser.py             # Operation parsing and execution
-│   ├── question_generator.py  # Question generation base classes
-│   ├── chart_generator.py    # Chart generator base class
-│   └── run_draw.py           # Drawing pipeline base class
-├── chartGenerators/          # Chart type implementations
-│   └── bar_chart/           # Bar chart implementation
-│       ├── bar.py            # Main bar chart drawing and generation
-│       ├── bar_operator.py  # Bar chart operators (sum, mean, filter, etc.)
-│       ├── bar_parser.py     # Bar chart operation parser
-│       ├── bar_question_generator.py  # Bar chart question generators
-│       └── bar_chart_generator.py    # Bar chart QA data generator
-├── metadata/                 # Chart metadata and data
-│   └── metadata.py          # Predefined chart data across 30 categories
-├── utils/                     # Utility functions
-│   ├── logger.py            # Logging utilities
-│   ├── json_util.py          # JSON file operations
-│   └── masks/                # Mask generation utilities
-└── data/                      # Generated output (ignored by git)
-    ├── imgs/                 # Generated chart images
-    └── *__meta_qa_data.json  # Generated QA data files
+├── README.md
+├── storyline/data_generation/        # canonical spec for all four phases
+├── pipeline/                         # Phase 0–2 implementation
+│   ├── __init__.py                   # exports AGPDSPipeline
+│   ├── agpds_pipeline.py             # AGPDSPipeline (four-phase orchestrator)
+│   ├── agpds_runner.py               # single-shot CLI (LLM + execute, one process)
+│   ├── agpds_generate.py             # Stage 1 CLI: LLM → declarations on disk
+│   ├── agpds_execute.py              # Stage 2 CLI: declarations → CSV / schema / charts
+│   ├── core/                         # llm_client.py, ids.py, utils.py (META_CATEGORIES)
+│   ├── phase_0/                      # DomainPool / DomainSampler + build_domain_pool.py
+│   ├── phase_1/                      # ScenarioContextualizer + build_scenario_pool.py
+│   └── phase_2/                      # SDK + engine + orchestration + validation + metadata
+│       ├── README.md                 # phase-2 detail
+│       └── INTERFACES.md             # M1–M5 module contracts
+├── docs/phase_2_history/             # archived Phase 2 design notes (read-only)
+└── requirements.txt
 ```
 
-### System Flow
+---
 
-1. **Metadata Loading**: Loads chart data from `metadata/metadata.py` (30 categories)
-2. **Chart Generation**: Creates charts with various configurations (orientation, labels, legends, etc.)
-3. **Operator Composition**: Generates questions using compositional operators:
-   - **Zero-step operators**: `sum`, `mean`, `median`, `count`, `max`, `min`, `read`
-   - **One-step operators**: `threshold`, `kth`, `topk`, `all`
-   - **Composition**: Sequential (`h(f)`), Parallel (`h(f1, f2)`), Nested (`h(f1(f2))`)
-4. **Mask Generation**: Creates masked images and mask files for training
-5. **QA Data Export**: Saves question-answer pairs with reasoning steps
+## Setup
 
-## Installation
+1. Create a conda env (the project's dev workflow uses one named `chart`) and install dependencies:
 
-### Prerequisites
+   ```bash
+   conda create -n chart python=3.11 -y
+   conda activate chart
+   pip install -r requirements.txt
+   ```
 
-- Python 3.7+
-- pip
+2. Configure LLM credentials. Either export them or drop them in a `.env` file in the repo root (auto-loaded via `python-dotenv`):
 
-### Setup
+   ```bash
+   # .env
+   LLM_PROVIDER=gemini            # or "openai" / "azure" / "auto"
+   GEMINI_API_KEY=...
+   GEMINI_MODEL=gemini-2.5-pro    # optional; sane default is used otherwise
+   # OPENAI_API_KEY=...
+   # OPENAI_MODEL=gpt-4o-mini
+   ```
 
-1. Clone the repository:
-```bash
-git clone <repository-url>
-cd chartAgentVAGEN
-```
+3. Run the tests to confirm the install:
 
-2. Create and activate a virtual environment (recommended):
-```bash
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-```
+   ```bash
+   pytest pipeline/
+   ```
 
-3. Install dependencies:
-```bash
-pip install -r requirements.txt
-```
+---
 
-### Dependencies
+## Offline builds (run once, cached)
 
-The `requirements.txt` includes:
-- `numpy` - Numerical operations
-- `matplotlib` - Chart plotting
-- `pillow` - Image processing
-- `opencv-python` - Computer vision operations
-- `pandas` - Data manipulation
-- `scikit-learn` - Machine learning utilities
-- `scikit-image` - Image processing
-- `scipy` - Scientific computing
-- `statsmodels` - Statistical modeling
-- `seaborn` - Statistical visualization
-
-## Usage
-
-### Running the Main Pipeline
-
-The main entry point is `main.py`, which provides a command-line interface for chart generation.
-
-#### Basic Usage
-
-Run with default settings (all stages, all metadata):
-```bash
-python main.py
-```
-
-#### Command-Line Options
+Both build steps are idempotent and write deterministic artifacts that every later invocation reads from disk.
 
 ```bash
-python main.py [OPTIONS]
+# Phase 0 — build the domain pool (LLM-driven, then embedding-dedup).
+python -m pipeline.phase_0.build_domain_pool
+# → pipeline/phase_0/domain_pool.json
+
+# Phase 1 — build the scenario pool over all cached domains.
+python -m pipeline.phase_1.build_scenario_pool
+# → pipeline/phase_1/scenario_pool.jsonl
 ```
 
-**Options:**
+After these complete, the runtime CLIs below can run in fully cached mode without any further LLM calls in Phases 0 or 1.
 
-- `--chart-type {bar}`: Type of chart to generate (default: `bar`)
-- `--stages STAGES`: Stages to run (default: `0123` = all stages)
-  - `0`: Generate masked chart images
-  - `1`: Generate original chart images
-  - `2/3`: Generate mask files
-- `--data-path PATH`: Base path for saving generated data (default: `./data`)
-- `--chart-mode MODE`: Chart generation mode (default: `single`)
-- `--figsize WIDTH,HEIGHT`: Figure size (default: `10,6`)
-- `--gray-mask COLOR`: Gray color code for masking (default: `#CCCCCC`)
+---
 
-#### Examples
+## Running the pipeline — two-stage cached flow (canonical)
 
-**Run only original image generation:**
+The canonical workflow splits LLM work (**Stage 1**) from deterministic replay (**Stage 2**) so that scientific results can be re-derived from declarations alone.
+
+### Stage 1 — `pipeline.agpds_generate`
+
+The LLM writes simulator scripts against `FactTableSimulator`, the sandbox validates them, and successful declarations are persisted. Each invocation produces a `batch_<timestamp>_<hash>/` folder containing `scenarios/`, `scripts/`, `declarations/`, and a `manifest.jsonl`.
+
 ```bash
-python main.py --stages 1
+python -m pipeline.agpds_generate \
+    --scenario-source cached \
+    --scenario-pool-path pipeline/phase_1/scenario_pool.jsonl \
+    --count 4 \
+    --seed 42 \
+    --output-dir ./output/agpds \
+    --batch-name demo_run
 ```
 
-**Run original and masked images:**
+### Stage 2 — `pipeline.agpds_execute`
+
+Deterministic replay of saved declarations. Runs Phase 2 Loop B (generation + validation + auto-fix) without ever calling the LLM, parallelisable across declarations.
+
 ```bash
-python main.py --stages 0,1
+python -m pipeline.agpds_execute \
+    --input-dir ./output/agpds/demo_run \
+    --output-dir ./output/agpds/demo_run \
+    --workers 4
 ```
 
-**Custom data path:**
+Stage 2 writes the final `master_table.csv`, schema metadata JSON, and a charts bundle per generation alongside the existing declarations.
+
+### Single-shot alternative — `pipeline.agpds_runner`
+
+When a separate Stage 1 / Stage 2 split isn't needed (e.g. ad-hoc smoke runs), `agpds_runner` does both in one process:
+
 ```bash
-python main.py --data-path ./custom_data
+python -m pipeline.agpds_runner --category 5 --count 1 --seed 42
 ```
 
-**Run specific stages:**
-```bash
-python main.py --stages 0123  # All stages
-python main.py --stages 1     # Only original images
-python main.py --stages 0,1   # Original and masked images
-```
+The `--category` flag is an integer in `1..30` and maps to the 30-entry `META_CATEGORIES` taxonomy in [pipeline/core/utils.py](pipeline/core/utils.py) via `get_category_by_id`. Omit `--category` to draw from the cached scenario pool instead (`--scenario-source cached`).
 
-**View help:**
-```bash
-python main.py --help
-```
+---
 
-### Output Structure
+## Programmatic surface
 
-Generated files are saved in the `data/` directory:
+`AGPDSPipeline` is the only intentional re-export at the package root (per the surface declared in [pipeline/__init__.py](pipeline/__init__.py)). Everything else is addressed via fully-qualified subpackage paths.
 
-```
-data/
-├── imgs/
-│   └── bar/
-│       └── single/
-│           ├── bar__img_1__category1__angle30__vertical__labeled__w_legend__xtop__yleft.png
-│           ├── bar__img_1__category1__angle30__vertical__labeled__w_legend__xtop__yleft_qa1__mask_step_1__gray_mask.png
-│           └── ...
-└── bar__meta_qa_data.json
-```
-
-The JSON file contains QA data with:
-- `qa_id`: Unique question ID
-- `question`: Generated question
-- `answer`: Answer to the question
-- `reasoning`: Step-by-step reasoning
-- `mask`: Mask indices for each step
-- `img_path`: Path to original chart image
-- `mask_path`: Paths to masked chart images
-
-## Operator System
-
-### Zero-Step Operators (h)
-Operators that compute values from bar data:
-- `sum`: Sum of values
-- `mean`: Average of values
-- `median`: Median value
-- `count`: Count of bars
-- `max`: Maximum value
-- `min`: Minimum value
-- `read`: Read values from bars
-- `diff`: Difference between two values
-
-### One-Step Operators (f)
-Operators that filter/select bars:
-- `threshold`: Filter bars above/below threshold
-- `kth`: Get k-th highest/lowest bar
-- `topk`: Get top/bottom k bars
-- `all`: Select all bars
-
-### Composition Examples
-
-**Sequential**: `sum(threshold(...))` - Sum of filtered values
 ```python
-# What is sum of values of categories above 20?
+from pipeline import AGPDSPipeline
+
+pipeline = AGPDSPipeline(seed=42)
+result = pipeline.run_single(scenario_id="dom_001/k=1")  # k is 1-based
+# result fields: generation_id, master_table_path, schema_path, charts_path, ...
 ```
 
-**Parallel**: `diff(max(...), min(...))` - Difference between max and min
-```python
-# What is difference in values of largest values and smallest values?
-```
+**Determinism contract.** `(AGPDSPipeline(seed=S).run_single(scenario_id=ID))` is byte-deterministic: the `generation_id` and `master_table.csv` produced are bit-for-bit identical across runs. The wire format for `scenario_id` is `"dom_NNN/k=N"` (1-based `k`), constructed and parsed via [pipeline/core/ids.py](pipeline/core/ids.py). Passing both `scenario_id=` and a live `scenario_source` raises `ValueError`.
 
-**Nested**: `mean(topk(threshold(...)))` - Mean of top k filtered bars
-```python
-# What is mean values of top 3 categories of categories above 15?
-```
+---
 
-## Project Structure Details
+## Deeper reading
 
-### Templates (`templates/`)
-Base classes defining the framework:
-- **Operator**: Abstract base for all operators with composition support
-- **Parser**: Parses operation settings and executes operations
-- **QuestionGenerator**: Generates natural language questions
-- **ChartGenerator**: Generates QA data for charts
-
-### Chart Generators (`chartGenerators/`)
-Concrete implementations for each chart type:
-- **bar_chart/**: Complete bar chart implementation with operators, parsers, and generators
-
-### Metadata (`metadata/`)
-- Contains predefined chart data organized by 30 categories (Media & Entertainment, Geography, Education, etc.)
-- Each category has multiple chart entries with bar data, labels, colors, and descriptions
-
-### Utils (`utils/`)
-- **logger.py**: Logging system
-- **json_util.py**: JSON file operations
-- **masks/**: Mask generation for training data
-
-## Development
-
-### Adding New Chart Types
-
-1. Create a new directory in `chartGenerators/` (e.g., `pie_chart/`)
-2. Implement:
-   - Operators (`pie_operator.py`)
-   - Parser (`pie_parser.py`)
-   - Question Generator (`pie_question_generator.py`)
-   - Chart Generator (`pie_chart_generator.py`)
-   - Main drawing class (`pie.py`)
-3. Update `main.py` to support the new chart type
-
-### Extending Operators
-
-Operators are defined in `chartGenerators/{chart_type}/{chart_type}_operator.py`. They inherit from:
-- `ZeroStepOperator` for value-computing operators
-- `OneStepOperator` for filtering operators
-
-## License
-
-See `LICENSE` file for details.
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Submit a pull request
-
-## Notes
-
-- Generated data is saved to `data/` directory (ignored by git)
-- The system supports curriculum levels (1: simple, 2: moderate, 3: complex)
-- Questions are generated with reasoning steps for interpretability
-- Mask generation supports multi-step reasoning with individual masks per step
-
+- Phase 0 detail: [pipeline/phase_0/README.md](pipeline/phase_0/README.md)
+- Phase 1 detail: [pipeline/phase_1/README.md](pipeline/phase_1/README.md)
+- Phase 2 detail: [pipeline/phase_2/README.md](pipeline/phase_2/README.md) and module contracts in [pipeline/phase_2/INTERFACES.md](pipeline/phase_2/INTERFACES.md)
+- Canonical spec (start here for design questions): [storyline/data_generation/data_generation_pipeline.md](storyline/data_generation/data_generation_pipeline.md)
+- Project conventions: [CLAUDE.md](CLAUDE.md)
+- Phase 2 design history (read-only archive): [docs/phase_2_history/](docs/phase_2_history/)
