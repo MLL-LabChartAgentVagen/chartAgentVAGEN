@@ -5,7 +5,7 @@ Covers:
   - Mixture KS fails when samples come from a different distribution.
   - Mixture with an unsupported component family soft-passes.
   - _compute_cell_params recursion produces the {"components": [...]} shape.
-  - _MixtureFrozen.cdf is a valid CDF (monotone, [0,1]).
+  - MixtureFrozen.cdf is a valid CDF (monotone, [0,1]).
 """
 from __future__ import annotations
 
@@ -14,12 +14,14 @@ import pandas as pd
 import pytest
 import scipy.stats
 
+from pipeline.phase_2.engine.distributions import (
+    MixtureFrozen,
+    expected_cdf,
+    expected_cdf_mixture,
+)
 from pipeline.phase_2.engine.measures import _sample_mixture
 from pipeline.phase_2.validation.statistical import (
-    _MixtureFrozen,
     _compute_cell_params,
-    _expected_cdf,
-    _expected_cdf_mixture,
     check_stochastic_ks,
 )
 
@@ -99,7 +101,7 @@ class TestMixtureFrozenCDF:
     def test_cdf_is_monotone_and_in_unit_interval(self):
         d1 = scipy.stats.norm(loc=0.0, scale=1.0)
         d2 = scipy.stats.norm(loc=10.0, scale=1.0)
-        m = _MixtureFrozen([(0.6, d1), (0.4, d2)])
+        m = MixtureFrozen([(0.6, d1), (0.4, d2)])
         x = np.linspace(-5, 15, 200)
         y = m.cdf(x)
         assert (y >= 0).all() and (y <= 1).all()
@@ -108,7 +110,7 @@ class TestMixtureFrozenCDF:
     def test_cdf_matches_weighted_sum(self):
         d1 = scipy.stats.norm(loc=0.0, scale=1.0)
         d2 = scipy.stats.norm(loc=5.0, scale=2.0)
-        m = _MixtureFrozen([(0.7, d1), (0.3, d2)])
+        m = MixtureFrozen([(0.7, d1), (0.3, d2)])
         x = np.array([-2.0, 0.0, 2.5, 5.0, 8.0])
         expected = 0.7 * d1.cdf(x) + 0.3 * d2.cdf(x)
         np.testing.assert_allclose(m.cdf(x), expected)
@@ -122,31 +124,31 @@ class TestExpectedCdfMixture:
                 {"family": "gaussian", "weight": 0.5, "params": {"mu": 5.0, "sigma": 1.0}},
             ],
         }
-        m = _expected_cdf_mixture(params)
-        assert isinstance(m, _MixtureFrozen)
+        m = expected_cdf_mixture(params)
+        assert isinstance(m, MixtureFrozen)
 
-    def test_dispatches_through_expected_cdf(self):
+    def test_dispatches_throughexpected_cdf(self):
         params = {
             "components": [
                 {"family": "gaussian", "weight": 1.0, "params": {"mu": 0.0, "sigma": 1.0}},
             ],
         }
-        m = _expected_cdf("mixture", params)
-        assert isinstance(m, _MixtureFrozen)
+        m = expected_cdf("mixture", params)
+        assert isinstance(m, MixtureFrozen)
 
     def test_unsupported_component_returns_none(self):
-        # Poisson has no scipy CDF in _expected_cdf — disables the whole mixture.
+        # Poisson has no scipy CDF in expected_cdf — disables the whole mixture.
         params = {
             "components": [
                 {"family": "gaussian", "weight": 0.5, "params": {"mu": 0.0, "sigma": 1.0}},
                 {"family": "poisson", "weight": 0.5, "params": {"mu": 3.0}},
             ],
         }
-        assert _expected_cdf_mixture(params) is None
+        assert expected_cdf_mixture(params) is None
 
     def test_empty_components_returns_none(self):
-        assert _expected_cdf_mixture({"components": []}) is None
-        assert _expected_cdf_mixture({}) is None
+        assert expected_cdf_mixture({"components": []}) is None
+        assert expected_cdf_mixture({}) is None
 
     def test_zero_weight_total_returns_none(self):
         params = {
@@ -154,7 +156,7 @@ class TestExpectedCdfMixture:
                 {"family": "gaussian", "weight": 0.0, "params": {"mu": 0.0, "sigma": 1.0}},
             ],
         }
-        assert _expected_cdf_mixture(params) is None
+        assert expected_cdf_mixture(params) is None
 
     def test_normalizes_weights(self):
         d1 = scipy.stats.norm(loc=0.0, scale=1.0)
@@ -164,7 +166,7 @@ class TestExpectedCdfMixture:
                 {"family": "gaussian", "weight": 0.2, "params": {"mu": 0.0, "sigma": 1.0}},
             ],
         }
-        m = _expected_cdf_mixture(params)
+        m = expected_cdf_mixture(params)
         # Normalized to (0.6, 0.4) — both pointing to the same dist, so
         # cdf(x) should equal d1.cdf(x).
         x = np.array([-1.0, 0.0, 1.0])
@@ -207,7 +209,7 @@ class TestCheckStochasticKsMixture:
             f"Expected at least one KS failure; got {[(c.name, c.passed, c.detail) for c in checks]}"
 
     def test_unsupported_component_soft_passes(self):
-        # Mix gaussian with poisson — _expected_cdf_mixture returns None,
+        # Mix gaussian with poisson — expected_cdf_mixture returns None,
         # which makes the per-cell KS skip with a soft-pass detail.
         components = [
             _gaussian_component(0.0, 1.0, 0.5),

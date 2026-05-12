@@ -16,6 +16,7 @@ import numpy as np
 import pandas as pd
 import scipy.stats
 
+from ..engine.distributions import clamp_params, expected_cdf
 from ..types import Check
 
 logger = logging.getLogger(__name__)
@@ -168,91 +169,6 @@ def _collect_predictor_cols(
                 out.add(effect_col)
 
 
-class _MixtureFrozen:
-    """scipy frozen-dist-like adapter exposing .cdf() for kstest (DS-3).
-
-    For a mixture of K components with normalized weights w_k and frozen scipy
-    distributions D_k: cdf(x) = sum(w_k * D_k.cdf(x)).
-    """
-
-    def __init__(self, components: list[tuple[float, Any]]):
-        self.components = components  # list of (normalized_weight, frozen_dist)
-
-    def cdf(self, x):
-        return sum(w * d.cdf(x) for w, d in self.components)
-
-
-def _expected_cdf(family: str, params: dict[str, float]) -> Any:
-    """Build a scipy frozen distribution for KS testing.
-
-    Args:
-        family: Distribution family name.
-        params: Distribution parameters (mu, sigma, etc.).
-
-    Returns:
-        A scipy.stats frozen distribution, or None if unsupported.
-    """
-    mu = params.get("mu", 0.0)
-    sigma = params.get("sigma", 1.0)
-
-    if family == "gaussian":
-        return scipy.stats.norm(loc=mu, scale=sigma)
-    elif family == "lognormal":
-        return scipy.stats.lognorm(s=sigma, scale=np.exp(mu))
-    elif family == "exponential":
-        rate = max(mu, 1e-6)
-        return scipy.stats.expon(scale=1.0 / rate)
-    elif family == "gamma":
-        shape = max(mu, 1e-6)
-        scale = max(sigma, 1e-6)
-        return scipy.stats.gamma(a=shape, scale=scale)
-    elif family == "beta":
-        a = max(mu, 1e-6)
-        b = max(sigma, 1e-6)
-        return scipy.stats.beta(a, b)
-    elif family == "uniform":
-        low, high = mu, sigma
-        if high <= low:
-            return None
-        return scipy.stats.uniform(loc=low, scale=high - low)
-    elif family == "poisson":
-        # KS test on discrete distributions is approximate
-        return None
-    elif family == "mixture":
-        return _expected_cdf_mixture(params)
-    return None
-
-
-def _expected_cdf_mixture(params: dict[str, Any]) -> _MixtureFrozen | None:
-    """Build a frozen mixture CDF from cell-resolved mixture params (DS-3).
-
-    `params` shape (from _compute_cell_params recursion):
-      {"components": [{"family": str, "weight": float, "params": {...}}, ...]}
-
-    Returns None if any component family is unsupported by _expected_cdf
-    (e.g. poisson) — the cell will then be soft-passed by the caller, matching
-    the existing per-family fallback semantics.
-    """
-    components = params.get("components")
-    if not components:
-        return None
-    frozen: list[tuple[float, Any]] = []
-    total = 0.0
-    for i, comp in enumerate(components):
-        sub = _expected_cdf(comp["family"], comp["params"])
-        if sub is None:
-            logger.debug(
-                "mixture KS skipped: component[%d] family='%s' has no scipy CDF.",
-                i, comp["family"],
-            )
-            return None
-        frozen.append((float(comp["weight"]), sub))
-        total += float(comp["weight"])
-    if total <= 0:
-        return None
-    return _MixtureFrozen([(w / total, d) for w, d in frozen])
-
-
 def _compute_cell_params(
     col_meta: dict[str, Any],
     predictor_values: dict[str, str],
@@ -307,12 +223,10 @@ def _compute_cell_params(
                     theta += effect_map[cell_val]
         else:
             theta = float(param_spec)
-        # Clamp positive-only params
-        if param_key in ("sigma", "scale", "rate"):
-            theta = max(theta, 1e-6)
         result[param_key] = theta
 
-    return result
+    # Clamp positive-only params (sigma/scale/rate) before handing to scipy.
+    return clamp_params(result)
 
 
 def check_stochastic_ks(
@@ -379,7 +293,7 @@ def check_stochastic_ks(
     checks: list[Check] = []
     for predictor_values, cell_df in cells:
         cell_params = _compute_cell_params(col_meta, predictor_values, columns_meta)
-        dist = _expected_cdf(family, cell_params)
+        dist = expected_cdf(family, cell_params)
 
         cell_label = (
             ",".join(f"{k}={v}" for k, v in predictor_values.items())

@@ -17,6 +17,7 @@ from typing import Any
 import numpy as np
 
 from ..exceptions import InvalidParameterError
+from .distributions import clamp_params, sample_family
 
 logger = logging.getLogger(__name__)
 
@@ -279,53 +280,6 @@ def _eval_structural(
 # Stochastic Measure Sampling (P0-2, P1-1, P3-1)
 # =====================================================================
 
-def _validate_distribution_params(
-    col_name: str,
-    family: str,
-    mu: np.ndarray,
-    sigma: np.ndarray,
-) -> None:
-    """Per-family pre-call validation of per-row distribution parameters.
-
-    Converts the bare numpy errors that would otherwise surface (e.g.
-    ``ValueError: a <= 0`` from ``rng.beta(0, ...)``) into a structured
-    ``InvalidParameterError`` carrying the column name, family, offending
-    parameter, first bad row, and a concrete fix hint. The sandbox retry
-    loop feeds this straight to the LLM via ``format_error_feedback()``.
-
-    Only covers conditions not already handled by the per-param clamp in
-    ``_compute_per_row_params`` (which floors ``sigma`` / ``scale`` / ``rate``
-    to ``1e-6``). That clamp makes sigma-based guards redundant for beta,
-    gamma, and lognormal; what remains is the ``mu`` axis those distributions
-    use as their first positional parameter.
-    """
-    if family in ("beta", "gamma"):
-        bad = np.where(mu <= 0)[0]
-        if len(bad) > 0:
-            raise InvalidParameterError(
-                param_name="mu",
-                value=float(mu[bad[0]]),
-                reason=(
-                    f"Measure '{col_name}' (family='{family}'): parameter "
-                    f"'mu' must be > 0 for all rows, got {float(mu[bad[0]])} "
-                    f"at row {int(bad[0])}. Raise the intercept or effect "
-                    f"values so every row has a positive mu."
-                ),
-            )
-    elif family == "poisson":
-        bad = np.where(mu < 0)[0]
-        if len(bad) > 0:
-            raise InvalidParameterError(
-                param_name="mu",
-                value=float(mu[bad[0]]),
-                reason=(
-                    f"Measure '{col_name}' (family='poisson'): parameter "
-                    f"'mu' must be >= 0, got {float(mu[bad[0]])} at row "
-                    f"{int(bad[0])}."
-                ),
-            )
-
-
 def _sample_stochastic(
     col_name: str,
     col_meta: dict[str, Any],
@@ -371,47 +325,7 @@ def _sample_stochastic(
     params = _compute_per_row_params(
         col_name, col_meta, rows, n_rows, overrides,
     )
-    return _sample_family(col_name, family, params, n_rows, rng)
-
-
-def _sample_family(
-    col_name: str,
-    family: str,
-    params: dict[str, np.ndarray],
-    n_rows: int,
-    rng: np.random.Generator,
-) -> np.ndarray:
-    """Dispatch a per-row sample for one (already-resolved) distribution family.
-
-    `params` must contain the per-row arrays (mu, sigma) of length n_rows.
-    Calls _validate_distribution_params before dispatch so the column/family/
-    row-index error context is preserved (especially when called from
-    _sample_mixture on a masked subset).
-    """
-    mu = params.get("mu", np.zeros(n_rows))
-    sigma = params.get("sigma", np.ones(n_rows))
-
-    # Raise structured errors with column/family/param/row context BEFORE
-    # numpy would raise its own bare message (e.g. "a <= 0" for beta).
-    _validate_distribution_params(col_name, family, mu, sigma)
-
-    if family == "gaussian":
-        return rng.normal(mu, sigma)
-    elif family == "lognormal":
-        return rng.lognormal(mu, sigma)
-    elif family == "gamma":
-        return rng.gamma(shape=mu, scale=sigma)
-    elif family == "beta":
-        return rng.beta(mu, sigma)
-    elif family == "uniform":
-        return rng.uniform(mu, sigma)
-    elif family == "poisson":
-        return rng.poisson(mu).astype(np.float64)
-    elif family == "exponential":
-        rate = np.maximum(mu, 1e-6)
-        return rng.exponential(1.0 / rate)
-    else:
-        raise ValueError(f"Unknown distribution family: '{family}'")
+    return sample_family(col_name, family, params, n_rows, rng)
 
 
 def _sample_mixture(
@@ -423,19 +337,21 @@ def _sample_mixture(
 ) -> np.ndarray:
     """Sample from a mixture distribution (IS-1).
 
+    Composes engine per-row arithmetic (_compute_per_row_params) with the
+    family primitive (distributions.sample_family). Stays in measures.py
+    rather than distributions.py because it bridges engine-specific
+    intercept+effects resolution with the stateless per-family sampler.
+
     Algorithm:
       1. Read components + weights, auto-normalize weights to sum to 1.
       2. Per-row component assignment via rng.choice with normalized weights.
-      3. For each component k: build minimal sub_meta {"param_model": ...},
-         compute per-row params with the FULL n_rows (predictor effects need
-         the full rows dict), mask to the rows assigned to component k, and
-         call _sample_family on the masked subset.
+      3. For each component k: build minimal sub_meta, compute per-row params
+         with the FULL n_rows (predictor effects need the full rows dict),
+         mask to the rows assigned to component k, and call sample_family
+         on the masked subset.
 
     Note: `overrides` is not propagated to per-component _compute_per_row_params
     calls. Mixture is opted out of widen_variance autofix (see autofix.py).
-    The full-then-mask call to _compute_per_row_params is K-fold redundant on
-    intercept+effects arithmetic but is the only correct path: predictor-effect
-    masks are derived from rows[effect_col] which spans all n_rows.
     """
     del overrides  # Mixture is opted out of widen_variance; no per-component overrides.
 
@@ -473,7 +389,7 @@ def _sample_mixture(
             sub_col_name, sub_meta, rows, n_rows, overrides=None,
         )
         masked_params = {p: arr[mask] for p, arr in full_params.items()}
-        out[mask] = _sample_family(
+        out[mask] = sample_family(
             sub_col_name, comp["family"], masked_params, int(mask.sum()), rng,
         )
 
@@ -532,22 +448,11 @@ def _compute_per_row_params(
         if param_key in col_overrides:
             theta *= float(col_overrides[param_key])
 
-        # Clamp to valid ranges (P3-1)
-        if param_key in ("sigma", "scale"):
-            original = theta.copy()
-            theta = np.maximum(theta, 1e-6)
-            n_clamped = int((theta != original).sum())
-            if n_clamped > 0:
-                logger.warning(
-                    "Clamped %s.%s: %d values clamped to 1e-6.",
-                    col_name, param_key, n_clamped,
-                )
-        elif param_key == "rate":
-            theta = np.maximum(theta, 1e-6)
-
         params[param_key] = theta
 
-    return params
+    # Clamp positive-only params to 1e-6 (P3-1); logs per-column clamp counts
+    # for sigma/scale so the LLM retry loop sees them via format_error_feedback.
+    return clamp_params(params, col_name=col_name, log_clamps=True)
 
 
 # =====================================================================

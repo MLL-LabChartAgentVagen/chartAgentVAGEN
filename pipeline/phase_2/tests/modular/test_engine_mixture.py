@@ -14,12 +14,15 @@ import numpy as np
 import pytest
 import scipy.stats
 
+from pipeline.phase_2.engine.distributions import (
+    MixtureFrozen,
+    expected_cdf,
+    sample_family,
+)
 from pipeline.phase_2.engine.measures import (
-    _sample_family,
     _sample_mixture,
     _sample_stochastic,
 )
-from pipeline.phase_2.validation.statistical import _MixtureFrozen, _expected_cdf
 
 
 def _rows(n: int) -> dict[str, np.ndarray]:
@@ -79,11 +82,11 @@ class TestThreeComponentKS:
         weights = np.array([c["weight"] for c in components], dtype=float)
         weights /= weights.sum()
         frozen_components = [
-            (float(w), _expected_cdf(c["family"], {"mu": c["param_model"]["mu"]["intercept"],
+            (float(w), expected_cdf(c["family"], {"mu": c["param_model"]["mu"]["intercept"],
                                                     "sigma": c["param_model"]["sigma"]["intercept"]}))
             for w, c in zip(weights, components)
         ]
-        mixture_cdf = _MixtureFrozen(frozen_components)
+        mixture_cdf = MixtureFrozen(frozen_components)
 
         stat, p_value = scipy.stats.kstest(sample, mixture_cdf.cdf)
         assert p_value > 0.05, f"KS test should pass, got p={p_value:.4f}, D={stat:.4f}"
@@ -115,13 +118,13 @@ class TestThreeComponentKS:
 
         norm_weights = np.array(weights, dtype=float) / sum(weights)
         frozen_components = [
-            (float(w), _expected_cdf(c["family"], {
+            (float(w), expected_cdf(c["family"], {
                 "mu": c["param_model"]["mu"]["intercept"],
                 "sigma": c["param_model"]["sigma"]["intercept"],
             }))
             for w, c in zip(norm_weights, components)
         ]
-        mixture_cdf = _MixtureFrozen(frozen_components)
+        mixture_cdf = MixtureFrozen(frozen_components)
         stat, p_value = scipy.stats.kstest(sample, mixture_cdf.cdf)
         assert p_value > 0.05, (
             f"KS failed for weights={weights}: p={p_value:.4f}, D={stat:.4f}"
@@ -300,57 +303,57 @@ class TestDispatchThroughSampleStochastic:
 
 
 class TestSampleFamilyExtraction:
-    """Post-refactor: _sample_family is the single dispatch point for all
+    """Post-refactor: sample_family is the single dispatch point for all
     non-mixture families. Smoke-test each."""
 
     def test_gaussian(self):
         rng = np.random.default_rng(0)
         params = {"mu": np.zeros(100), "sigma": np.ones(100)}
-        out = _sample_family("x", "gaussian", params, 100, rng)
+        out = sample_family("x", "gaussian", params, 100, rng)
         assert out.shape == (100,)
 
     def test_lognormal(self):
         rng = np.random.default_rng(0)
         params = {"mu": np.zeros(100), "sigma": np.ones(100) * 0.5}
-        out = _sample_family("x", "lognormal", params, 100, rng)
+        out = sample_family("x", "lognormal", params, 100, rng)
         assert (out > 0).all()
 
     def test_gamma(self):
         rng = np.random.default_rng(0)
         params = {"mu": np.full(100, 2.0), "sigma": np.full(100, 1.0)}
-        out = _sample_family("x", "gamma", params, 100, rng)
+        out = sample_family("x", "gamma", params, 100, rng)
         assert (out >= 0).all()
 
     def test_beta(self):
         rng = np.random.default_rng(0)
         params = {"mu": np.full(100, 2.0), "sigma": np.full(100, 5.0)}
-        out = _sample_family("x", "beta", params, 100, rng)
+        out = sample_family("x", "beta", params, 100, rng)
         assert ((out >= 0) & (out <= 1)).all()
 
     def test_uniform(self):
         rng = np.random.default_rng(0)
         params = {"mu": np.zeros(100), "sigma": np.full(100, 10.0)}
-        out = _sample_family("x", "uniform", params, 100, rng)
+        out = sample_family("x", "uniform", params, 100, rng)
         assert ((out >= 0) & (out <= 10.0)).all()
 
     def test_poisson(self):
         rng = np.random.default_rng(0)
         params = {"mu": np.full(100, 3.0), "sigma": np.ones(100)}
-        out = _sample_family("x", "poisson", params, 100, rng)
+        out = sample_family("x", "poisson", params, 100, rng)
         assert (out >= 0).all()
         assert out.dtype == np.float64
 
     def test_exponential(self):
         rng = np.random.default_rng(0)
         params = {"mu": np.full(100, 2.0), "sigma": np.ones(100)}
-        out = _sample_family("x", "exponential", params, 100, rng)
+        out = sample_family("x", "exponential", params, 100, rng)
         assert (out >= 0).all()
 
     def test_unknown_family_raises(self):
         rng = np.random.default_rng(0)
         params = {"mu": np.zeros(10), "sigma": np.ones(10)}
         with pytest.raises(ValueError, match="Unknown distribution family"):
-            _sample_family("x", "weibull", params, 10, rng)
+            sample_family("x", "weibull", params, 10, rng)
 
 
 class TestEdgeCases:
