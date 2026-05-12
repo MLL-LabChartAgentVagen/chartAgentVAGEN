@@ -3,18 +3,20 @@
 Build Scenario Pool — One-Shot Offline Script
 
 Reads pipeline/phase_0/domain_pool.json, runs ScenarioContextualizer K times
-per domain in parallel, deduplicates, and writes the compiled scenarios to
-pipeline/phase_1/scenario_pool.jsonl (one JSON envelope per line).
+per domain in parallel (K varies by complexity_tier), deduplicates, and writes
+the compiled scenarios to pipeline/phase_1/scenario_pool.jsonl (one JSON
+envelope per line).
 
 Usage:
-    # From the project root (default: K=3 scenarios per domain, ~900 total):
+    # From the project root (default: simple=3 / medium=5 / complex=7, ~1500 total):
     python pipeline/phase_1/build_scenario_pool.py
 
     # Force regeneration from scratch:
     python pipeline/phase_1/build_scenario_pool.py --force
 
-    # Smaller pool (one scenario per domain, ~300 total):
-    python pipeline/phase_1/build_scenario_pool.py --scenarios-per-domain 1
+    # Override per-tier K explicitly:
+    python pipeline/phase_1/build_scenario_pool.py \\
+        --k-simple 2 --k-medium 3 --k-complex 4
 
 Requirements:
     - GEMINI_API_KEY (or OPENAI_API_KEY) set in .env or as an env var (generation)
@@ -61,11 +63,22 @@ def parse_args() -> argparse.Namespace:
         help="Delete existing scenario_pool.jsonl and rebuild from scratch",
     )
     parser.add_argument(
-        "--scenarios-per-domain",
+        "--k-simple",
         type=int,
         default=3,
-        metavar="K",
-        help="Scenarios generated per domain (default: 3)",
+        help="Scenarios per simple-tier domain (default: 3)",
+    )
+    parser.add_argument(
+        "--k-medium",
+        type=int,
+        default=5,
+        help="Scenarios per medium-tier domain (default: 5)",
+    )
+    parser.add_argument(
+        "--k-complex",
+        type=int,
+        default=7,
+        help="Scenarios per complex-tier domain (default: 7)",
     )
     parser.add_argument(
         "--model",
@@ -91,11 +104,11 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--dedup-scope",
-        choices=["global", "category", "domain"],
-        default="category",
+        choices=["global", "domain", "tier"],
+        default="domain",
         help=(
             "Scenario dedup comparison scope "
-            "(default: category; choices: global, category, domain)"
+            "(default: domain; choices: global, domain, tier)"
         ),
     )
     parser.add_argument(
@@ -177,27 +190,36 @@ def main() -> None:
                 if not line.strip():
                     continue
                 rec = json.loads(line)
-                existing.add((rec["domain_id"], rec.get("k", 0)))
+                existing.add((rec["domain_id"], int(rec["k"])))
         log.info("Resuming: %d scenarios already persisted", len(existing))
 
     # -----------------------------------------------------------------------
-    # Plan the work
+    # Plan the work — K per tier; k is 0-indexed (0..K-1)
     # -----------------------------------------------------------------------
+    K_BY_TIER: dict[str, int] = {
+        "simple":  args.k_simple,
+        "medium":  args.k_medium,
+        "complex": args.k_complex,
+    }
     targets: list[tuple[dict, int]] = [
         (d, k)
         for d in domains
-        for k in range(args.scenarios_per_domain)
+        for k in range(K_BY_TIER[d["complexity_tier"]])
         if (d["id"], k) not in existing
     ]
+    planned_total = sum(K_BY_TIER[d["complexity_tier"]] for d in domains)
     if not targets:
         log.info("Nothing to do — all (domain, k) pairs already persisted.")
     else:
         log.info(
-            "Generating %d scenarios (%d domains × K=%d, %d already done)",
+            "Generating %d scenarios (planned total %d, %d already done; "
+            "K simple=%d medium=%d complex=%d)",
             len(targets),
-            len(domains),
-            args.scenarios_per_domain,
+            planned_total,
             len(existing),
+            args.k_simple,
+            args.k_medium,
+            args.k_complex,
         )
 
     # -----------------------------------------------------------------------
@@ -229,6 +251,7 @@ def main() -> None:
             record = ScenarioRecord(
                 domain_id=domain["id"],
                 k=k,
+                complexity_tier=domain["complexity_tier"],
                 scenario=scenario_ctx,
                 generated_at=datetime.now(timezone.utc).isoformat(),
             )
@@ -306,7 +329,7 @@ def main() -> None:
     print("=" * 60)
     print(f"  Output file        : {OUT_PATH}")
     print(f"  Total scenarios    : {final_count}")
-    print(f"  Scenarios/domain   : {args.scenarios_per_domain}")
+    print(f"  K per tier         : simple={args.k_simple} medium={args.k_medium} complex={args.k_complex}")
     print(f"  Dedup threshold    : {args.dedup_threshold if not args.skip_dedup else 'skipped'}")
     print(f"  Dedup scope        : {args.dedup_scope if not args.skip_dedup else 'skipped'}")
     print(f"  Min/domain kept    : {args.min_scenarios_per_domain if not args.skip_dedup else 'skipped'}")

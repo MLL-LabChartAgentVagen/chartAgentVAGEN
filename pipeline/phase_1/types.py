@@ -1,16 +1,20 @@
 """
-AGPDS Phase 1 typed schemas (Sprint C.3).
+AGPDS Phase 1 typed schemas (Sprint C.3 + post-Sprint-C regeneration).
 
 Three frozen dataclasses replace the loose dicts that used to flow from
 Phase 1 generation through scenario_pool.jsonl into Phase 2:
 
   Metric          — one named measure with unit + (low, high) numeric range
   ScenarioContext — the six fields produced by ScenarioContextualizer.generate
-  ScenarioRecord  — the JSONL envelope (domain_id, k, scenario, generated_at)
+  ScenarioRecord  — the JSONL envelope
+                    (domain_id, k, complexity_tier, scenario, generated_at)
 
-`from_dict` constructors silently ignore unknown keys so legacy
-scenario_pool.jsonl records carrying ``category_id`` (Sprint C.2) or
-``_validation_warnings`` (Sprint C.4) load without modification.
+Compatibility:
+  * Unknown keys (e.g. legacy ``category_id`` / ``_validation_warnings``)
+    are silently ignored by ``from_dict``.
+  * ``complexity_tier`` is required — legacy records pre-dating the
+    post-Sprint-C regeneration will fail ``ScenarioRecord.from_dict`` with
+    a clear "regenerate scenario_pool.jsonl" message.
 """
 from __future__ import annotations
 
@@ -103,15 +107,23 @@ class ScenarioContext:
         }
 
 
+_VALID_TIERS = {"simple", "medium", "complex"}
+
+
 @dataclass(frozen=True)
 class ScenarioRecord:
     """Top-level envelope for one ``scenario_pool.jsonl`` line.
 
     ``scenario_id`` is derived from (domain_id, k) and never persisted —
-    matches the format helpers added in Sprint B.8.
+    matches the format helpers added in Sprint B.8. ``k`` is 0-indexed
+    (0..K_tier-1); there is no sentinel value.
+
+    ``complexity_tier`` is required (added post-Sprint-C) so downstream
+    consumers can filter / dedup by tier without joining domain_pool.json.
     """
     domain_id: str
     k: int
+    complexity_tier: str
     scenario: ScenarioContext
     generated_at: str = ""
 
@@ -125,14 +137,32 @@ class ScenarioRecord:
             raise TypeError(
                 f"ScenarioRecord must come from a dict, got {type(raw).__name__}"
             )
-        if "domain_id" not in raw or "k" not in raw or "scenario" not in raw:
+        required = ("domain_id", "k", "complexity_tier", "scenario")
+        missing = [k for k in required if k not in raw]
+        if missing:
             raise ValueError(
-                "ScenarioRecord requires domain_id, k, and scenario "
-                f"(got keys: {sorted(raw)})"
+                "ScenarioRecord missing fields "
+                f"{missing} (got keys: {sorted(raw)}). "
+                "If 'complexity_tier' is missing, this is a legacy pre-Sprint-C "
+                "record — regenerate scenario_pool.jsonl with "
+                "`python pipeline/phase_1/build_scenario_pool.py --force`."
+            )
+        tier = str(raw["complexity_tier"])
+        if tier not in _VALID_TIERS:
+            raise ValueError(
+                f"ScenarioRecord.complexity_tier must be one of {sorted(_VALID_TIERS)}, "
+                f"got {tier!r}"
+            )
+        k = int(raw["k"])
+        if k < 0:
+            raise ValueError(
+                f"ScenarioRecord.k must be >= 0 (got {k}); "
+                "k is 0-indexed and has no sentinel value"
             )
         return cls(
             domain_id=str(raw["domain_id"]),
-            k=int(raw["k"]),
+            k=k,
+            complexity_tier=tier,
             scenario=ScenarioContext.from_dict(raw["scenario"]),
             generated_at=str(raw.get("generated_at", "")),
         )
@@ -141,6 +171,7 @@ class ScenarioRecord:
         out: dict[str, Any] = {
             "domain_id": self.domain_id,
             "k": self.k,
+            "complexity_tier": self.complexity_tier,
             "scenario": self.scenario.to_dict(),
         }
         if self.generated_at:

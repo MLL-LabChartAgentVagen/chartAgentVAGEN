@@ -95,12 +95,14 @@ def test_pipeline_two_instances_same_seed_same_id(pool_path):
 
 
 _MINI_SCENARIO_POOL = [
-    {"domain_id": "dom_001", "k": 1, "category_id": 1, "generated_at": "x",
+    {"domain_id": "dom_001", "k": 0, "complexity_tier": "simple",
+     "generated_at": "x",
      "scenario": {"scenario_title": "ScenarioA", "data_context": "ctx",
                   "temporal_granularity": "daily", "key_entities": ["e1"],
                   "key_metrics": [{"name": "m", "unit": "u", "range": [0, 1]}],
                   "target_rows": 250}},
-    {"domain_id": "dom_002", "k": 1, "category_id": 1, "generated_at": "x",
+    {"domain_id": "dom_002", "k": 0, "complexity_tier": "simple",
+     "generated_at": "x",
      "scenario": {"scenario_title": "ScenarioB", "data_context": "ctx2",
                   "temporal_granularity": "daily", "key_entities": ["e2"],
                   "key_metrics": [{"name": "m", "unit": "u", "range": [0, 1]}],
@@ -120,10 +122,10 @@ def scenario_pool_path():
 
 
 def test_scenario_id_round_trip():
-    """format then parse is the identity; k stays 1-based per convention U1."""
-    assert format_scenario_id("dom_001", 1) == "dom_001/k=1"
+    """format then parse is the identity; k is 0-indexed (post-sentinel removal)."""
+    assert format_scenario_id("dom_001", 0) == "dom_001/k=0"
     assert format_scenario_id("dom_017", 3) == "dom_017/k=3"
-    assert parse_scenario_id("dom_001/k=1") == ("dom_001", 1)
+    assert parse_scenario_id("dom_001/k=0") == ("dom_001", 0)
     assert parse_scenario_id(format_scenario_id("dom_007", 5)) == ("dom_007", 5)
 
 
@@ -135,6 +137,19 @@ def test_parse_scenario_id_rejects_malformed():
         parse_scenario_id("dom_001/x=1")  # wrong key
     with pytest.raises(ValueError, match="Malformed"):
         parse_scenario_id("dom_001/k=abc")  # non-int k
+    with pytest.raises(ValueError, match="Malformed"):
+        parse_scenario_id("dom_001/k=-1")  # negative k (no sentinel)
+
+
+def test_parse_scenario_id_rejects_live_form():
+    """Live-namespace ids must NOT parse as cached-form (domain_id, k) tuples."""
+    with pytest.raises(ValueError, match="Malformed"):
+        parse_scenario_id("live:dom_001:3")
+
+
+def test_format_scenario_id_rejects_negative_k():
+    with pytest.raises(ValueError, match=">= 0"):
+        format_scenario_id("dom_001", -1)
 
 
 def test_live_mode_rejects_scenario_id(pool_path):
@@ -148,7 +163,7 @@ def test_live_mode_rejects_scenario_id(pool_path):
         seed=42,
     )
     with pytest.raises(ValueError, match="scenario_source"):
-        pipe.generate_artifacts(scenario_id="dom_001/k=1")
+        pipe.generate_artifacts(scenario_id="dom_001/k=0")
 
 
 def test_run_single_scenario_id_deterministic_gen_id(
@@ -198,15 +213,58 @@ def test_run_single_scenario_id_deterministic_gen_id(
             seed=seed,
         )
 
-    a = make_pipeline().run_single(scenario_id="dom_001/k=1")
-    b = make_pipeline().run_single(scenario_id="dom_001/k=1")
+    a = make_pipeline().run_single(scenario_id="dom_001/k=0")
+    b = make_pipeline().run_single(scenario_id="dom_001/k=0")
     assert a["generation_id"] == b["generation_id"]
-    assert a["scenario_id"] == "dom_001/k=1"
+    assert a["scenario_id"] == "dom_001/k=0"
     assert a["category_id"] is None  # scenario_id-mode does not carry category_id
 
     # Different seed should yield different generation_id even for same scenario_id
-    c = make_pipeline(seed=43).run_single(scenario_id="dom_001/k=1")
+    c = make_pipeline(seed=43).run_single(scenario_id="dom_001/k=0")
     assert a["generation_id"] != c["generation_id"]
+
+
+def test_resolve_by_category_id_picks_same_real_k_under_same_seed(
+    pool_path, scenario_pool_path,
+):
+    """Cached + category_id path: same (seed, domain) must pick the same k.
+
+    Validates that _resolve_by_category_id emits a real cached-form
+    scenario_id (NOT a ``live:`` sentinel) and that the seeded RNG yields
+    the same pick across two pipeline instances.
+    """
+    from pipeline.agpds_pipeline import AGPDSPipeline
+
+    class _StubLLM:
+        api_key = "stub"
+        model = "stub-model"
+        provider = "stub-provider"
+
+    fixed_domain = {"id": "dom_001", "name": "demo", "topic": "T",
+                    "complexity_tier": "simple"}
+
+    def make_pipeline(seed=42):
+        pipe = AGPDSPipeline(
+            llm_client=_StubLLM(),
+            pool_path=pool_path,
+            scenario_source="cached",
+            scenario_pool_path=scenario_pool_path,
+            seed=seed,
+        )
+        # Pin the domain so the test focuses on the cache-pick determinism
+        # rather than the (separately-seeded) DomainSampler.
+        pipe._sample_domain = lambda category_id: fixed_domain  # type: ignore[assignment]
+        return pipe
+
+    sid_a, gid_a, _dom_a, _sc_a = make_pipeline()._resolve_by_category_id(category_id=1)
+    sid_b, gid_b, _dom_b, _sc_b = make_pipeline()._resolve_by_category_id(category_id=1)
+
+    assert sid_a == sid_b, (sid_a, sid_b)
+    assert gid_a == gid_b
+    # Must be a cached-form id (parseable), NOT a live: sentinel
+    domain_id, k = parse_scenario_id(sid_a)
+    assert domain_id == "dom_001"
+    assert k >= 0
 
 
 def test_generate_artifacts_scenario_field_is_json_serializable(
@@ -247,7 +305,7 @@ def test_generate_artifacts_scenario_field_is_json_serializable(
         scenario_pool_path=scenario_pool_path,
         seed=42,
     )
-    stage1 = pipe.generate_artifacts(scenario_id="dom_001/k=1")
+    stage1 = pipe.generate_artifacts(scenario_id="dom_001/k=0")
 
     # Exact crash site from production:
     #   File "agpds_generate.py", line 67

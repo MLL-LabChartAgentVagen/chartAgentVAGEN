@@ -5,7 +5,11 @@ import random
 from typing import Optional, Dict, Any
 
 # Phase 0, 1, 2 AGPDS Imports
-from pipeline.core.ids import generation_id, parse_scenario_id
+from pipeline.core.ids import (
+    format_scenario_id,
+    generation_id,
+    parse_scenario_id,
+)
 from pipeline.phase_0.domain_pool import DomainSampler
 from pipeline.phase_1 import ScenarioContext, ScenarioContextualizer, ScenarioRecord
 from pipeline.phase_2.pipeline import (
@@ -55,6 +59,9 @@ class AGPDSPipeline:
         self.llm = llm_client
         self.seed = seed
         self._rng = random.Random(seed)
+        # Per-instance monotonic counter feeding the live-mode scenario_id
+        # namespace ``live:dom_NNN:<n>``. See `_resolve_by_category_id`.
+        self._live_counter = 0
 
         # Resolve the compiled domain pool path
         if pool_path is None:
@@ -79,7 +86,13 @@ class AGPDSPipeline:
                 "Expected 'live', 'cached', or 'cached_strict'."
             )
         self.scenario_source = scenario_source
-        self._scenario_cache: Optional[Dict[str, list[ScenarioContext]]] = None
+        # ``_scenario_cache`` holds (k, ScenarioContext) tuples so the
+        # category-id path can pick a real cached k and emit a replayable
+        # scenario_id. ``_scenario_by_id`` is the direct (domain_id, k) lookup
+        # for the scenario_id path.
+        self._scenario_cache: Optional[
+            Dict[str, list[tuple[int, ScenarioContext]]]
+        ] = None
         self._scenario_by_id: Optional[Dict[tuple, ScenarioContext]] = None
         if scenario_source in ("cached", "cached_strict"):
             self._scenario_cache, self._scenario_by_id = self._load_scenario_cache(
@@ -87,23 +100,33 @@ class AGPDSPipeline:
             )
 
     def _new_generation_id(self, scenario_id: str) -> str:
+        """Derive a deterministic ``agpds_<10-hex>`` from ``(seed, scenario_id)``.
+
+        ``scenario_id`` is one of two namespaces:
+          * Cached form ``dom_NNN/k=N`` (k is 0-indexed; parseable via
+            :func:`parse_scenario_id`).
+          * Live form ``live:dom_NNN:<counter>`` (not parseable; used only when
+            no cached entry was selected).
+
+        ``generation_id`` treats both as opaque strings — it just hashes them.
+        """
         return generation_id(self.seed, scenario_id)
 
     def _load_scenario_cache(
         self, path: Optional[str],
-    ) -> tuple[Dict[str, list[ScenarioContext]], Dict[tuple, ScenarioContext]]:
+    ) -> tuple[Dict[str, list[tuple[int, ScenarioContext]]], Dict[tuple, ScenarioContext]]:
         """Load scenario_pool.jsonl into typed in-memory indices.
 
         Each JSONL line is parsed via :meth:`ScenarioContext.from_dict`, which
         ignores legacy envelope fields (``category_id`` from pre-Sprint-C.2
-        records, ``_validation_warnings`` from pre-Sprint-C.4 records) — D2.
+        records, ``_validation_warnings`` from pre-Sprint-C.4 records).
 
         Returns:
             ``(by_domain, by_id)`` where ``by_domain`` is
-            ``{domain_id: [ScenarioContext, ...]}`` (used by the category_id
-            path's random pick) and ``by_id`` is
-            ``{(domain_id, k): ScenarioContext}`` (used by scenario_id direct
-            lookup).
+            ``{domain_id: [(k, ScenarioContext), ...]}`` (preserves real k so
+            the category-id path can produce a replayable scenario_id) and
+            ``by_id`` is ``{(domain_id, k): ScenarioContext}`` for direct
+            scenario_id lookup.
         """
         if path is None:
             path = os.path.join(
@@ -116,7 +139,7 @@ class AGPDSPipeline:
                 "Run the build script first:\n"
                 "  python pipeline/phase_1/build_scenario_pool.py"
             )
-        by_domain: Dict[str, list[ScenarioContext]] = {}
+        by_domain: Dict[str, list[tuple[int, ScenarioContext]]] = {}
         by_id: Dict[tuple, ScenarioContext] = {}
         skipped = 0
         with open(path, encoding="utf-8") as f:
@@ -127,6 +150,7 @@ class AGPDSPipeline:
                     rec = json.loads(line)
                     ctx = ScenarioContext.from_dict(rec["scenario"])
                     domain_id = rec["domain_id"]
+                    k = int(rec["k"])
                 except (json.JSONDecodeError, KeyError, TypeError, ValueError) as exc:
                     skipped += 1
                     logger.warning(
@@ -135,10 +159,8 @@ class AGPDSPipeline:
                         type(exc).__name__, exc,
                     )
                     continue
-                by_domain.setdefault(domain_id, []).append(ctx)
-                k = rec.get("k")
-                if k is not None:
-                    by_id[(domain_id, int(k))] = ctx
+                by_domain.setdefault(domain_id, []).append((k, ctx))
+                by_id[(domain_id, k)] = ctx
         if skipped:
             logger.warning(
                 "Scenario cache: skipped %d malformed record(s)", skipped,
@@ -149,27 +171,6 @@ class AGPDSPipeline:
             sum(len(v) for v in by_domain.values()),
         )
         return by_domain, by_id
-
-    def _get_scenario(self, domain_context: Dict[str, Any]) -> ScenarioContext:
-        """Return a :class:`ScenarioContext` for the sampled domain.
-
-        Policy is controlled by self.scenario_source:
-          - live:           always call the LLM
-          - cached:         return a cached scenario; fall back to live on miss
-          - cached_strict:  return a cached scenario; raise KeyError on miss
-        """
-        if self._scenario_cache is None:
-            return self.contextualizer.generate(domain_context)
-
-        domain_id = domain_context.get("id")
-        bucket = self._scenario_cache.get(domain_id, [])
-        if not bucket:
-            msg = f"No cached scenario for domain_id={domain_id!r}"
-            if self.scenario_source == "cached_strict":
-                raise KeyError(msg)
-            logger.warning("%s; falling back to live generation", msg)
-            return self.contextualizer.generate(domain_context)
-        return self._rng.choice(bucket)
 
     def _sample_domain(self, category_id: int) -> Dict[str, Any]:
         from pipeline.core.utils import get_category_by_id
@@ -184,27 +185,60 @@ class AGPDSPipeline:
             "tier": "General Data",
         }
 
+    def _pick_scenario(
+        self, domain_context: Dict[str, Any],
+    ) -> tuple[str, ScenarioContext]:
+        """Return ``(scenario_id, scenario)`` for the given domain.
+
+        Cached mode (``cached`` / ``cached_strict``): the seeded RNG picks one
+        ``(k, scenario)`` from the per-domain cache, so ``scenario_id``
+        (``dom_NNN/k=N``) points at a real cached entry and the whole run is
+        replayable via ``scenario_id=...``.
+
+        Live mode (or cached fallback on miss): a fresh scenario is generated
+        via LLM; ``scenario_id`` uses the ``live:dom_NNN:<counter>`` namespace
+        so it is visually distinct from cached references and is *not*
+        parseable as ``(domain_id, k)`` — this is the explicit signal that
+        the run cannot be replayed.
+        """
+        domain_id = domain_context.get("id", "unknown")
+        if self._scenario_cache is not None:
+            bucket = self._scenario_cache.get(domain_id, [])
+            if bucket:
+                idx = self._rng.randrange(len(bucket))
+                k, scenario = bucket[idx]
+                return format_scenario_id(domain_id, k), scenario
+            if self.scenario_source == "cached_strict":
+                raise KeyError(
+                    f"No cached scenarios for domain {domain_id!r} "
+                    f"(scenario_source={self.scenario_source!r})"
+                )
+            logger.warning(
+                "No cached scenarios for %s; falling back to live generation",
+                domain_id,
+            )
+        scenario = self.contextualizer.generate(domain_context)
+        self._live_counter += 1
+        return f"live:{domain_id}:{self._live_counter}", scenario
+
     def _resolve_by_category_id(
         self, category_id: int,
     ) -> tuple[str, str, Dict[str, Any], ScenarioContext]:
-        """Sample a domain in the category, pick a scenario, derive scenario_id.
+        """Sample a domain in the category and pick a scenario.
 
         Returns:
-            ``(scenario_id, gen_id, domain_context, scenario)`` — scenario_id uses
-            ``k=0`` since the category path does random selection, not k-indexed lookup.
+            ``(scenario_id, gen_id, domain_context, scenario)``. See
+            :meth:`_pick_scenario` for the cached / live scenario_id namespaces.
         """
         logger.info("  -> Phase 0: Sampling Domain...")
         domain_context = self._sample_domain(category_id)
         print(f"  -> Selected Subtopic: {domain_context.get('name', 'Unknown')}")
-        # k=0 sentinel for the random-sampling path; the scenario_id path
-        # uses real k>=1 from scenario_pool.jsonl per locked convention U1.
-        scenario_id = f"{domain_context.get('id', 'unknown')}/k=0"
-        gen_id = self._new_generation_id(scenario_id)
         logger.info(
             "  -> Phase 1: Contextualizing Scenario (source=%s)...",
             self.scenario_source,
         )
-        scenario = self._get_scenario(domain_context)
+        scenario_id, scenario = self._pick_scenario(domain_context)
+        gen_id = self._new_generation_id(scenario_id)
         return scenario_id, gen_id, domain_context, scenario
 
     def _resolve_by_scenario_id(

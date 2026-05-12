@@ -85,6 +85,7 @@ def test_scenario_record_round_trip():
     rec = ScenarioRecord(
         domain_id="dom_001",
         k=3,
+        complexity_tier="complex",
         scenario=ScenarioContext.from_dict(VALID_SCENARIO_DICT),
         generated_at="2026-05-10T00:00:00+00:00",
     )
@@ -93,6 +94,7 @@ def test_scenario_record_round_trip():
     out = rec.to_dict()
     assert out["domain_id"] == "dom_001"
     assert out["k"] == 3
+    assert out["complexity_tier"] == "complex"
     assert out["generated_at"] == "2026-05-10T00:00:00+00:00"
     assert "scenario_id" not in out  # never persisted
 
@@ -101,20 +103,39 @@ def test_scenario_record_round_trip():
     assert rec2.scenario_id == "dom_001/k=3"
 
 
-def test_scenario_record_grandfather_legacy_envelope():
-    """D2: existing scenario_pool.jsonl rows with category_id load fine."""
+def test_scenario_record_rejects_legacy_envelope_missing_tier():
+    """Pre-Sprint-C envelopes (no complexity_tier) must raise — regenerate signal."""
     legacy_envelope = {
         "domain_id": "dom_001",
         "k": 1,
-        "category_id": 23,             # legacy
+        "category_id": 23,             # legacy field; ignored even if present
         "generated_at": "2026-05-01T00:00:00+00:00",
         "scenario": VALID_SCENARIO_DICT,
     }
-    rec = ScenarioRecord.from_dict(legacy_envelope)
-    assert rec.domain_id == "dom_001"
-    assert rec.k == 1
-    out = rec.to_dict()
-    assert "category_id" not in out
+    with pytest.raises(ValueError, match="complexity_tier"):
+        ScenarioRecord.from_dict(legacy_envelope)
+
+
+def test_scenario_record_rejects_bad_tier():
+    bad = {
+        "domain_id": "dom_001",
+        "k": 0,
+        "complexity_tier": "huge",  # not in {simple,medium,complex}
+        "scenario": VALID_SCENARIO_DICT,
+    }
+    with pytest.raises(ValueError, match="complexity_tier"):
+        ScenarioRecord.from_dict(bad)
+
+
+def test_scenario_record_rejects_negative_k():
+    bad = {
+        "domain_id": "dom_001",
+        "k": -1,
+        "complexity_tier": "simple",
+        "scenario": VALID_SCENARIO_DICT,
+    }
+    with pytest.raises(ValueError, match=">= 0"):
+        ScenarioRecord.from_dict(bad)
 
 
 def test_load_real_scenario_pool_first_line():
@@ -126,5 +147,8 @@ def test_load_real_scenario_pool_first_line():
         first_raw = json.loads(f.readline())
     rec = ScenarioRecord.from_dict(first_raw)
     assert rec.scenario_id.startswith(rec.domain_id + "/k=")
-    # Re-serializing must drop category_id even though source had it
-    assert "category_id" not in rec.to_dict()
+    assert rec.complexity_tier in {"simple", "medium", "complex"}
+    # Re-serializing produces no leaked legacy fields
+    out = rec.to_dict()
+    assert "category_id" not in out
+    assert out["complexity_tier"] == rec.complexity_tier

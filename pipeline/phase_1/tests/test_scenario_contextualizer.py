@@ -879,52 +879,52 @@ try:
         import phase_1.dedup as _sc_module
         patch_target = "phase_1.dedup._overlap_index_pairs"
 
-    def make_record(domain_id, k, category_id, context):
+    def make_record(domain_id, k, complexity_tier, context):
         return {
             "domain_id": domain_id,
             "k": k,
-            "category_id": category_id,
+            "complexity_tier": complexity_tier,
             "scenario": {"data_context": context},
         }
 
-    CAT_A0 = make_record("dom_a", 0, 1, "Hospital ER wait time log.")
-    CAT_A1 = make_record("dom_a", 1, 1, "Hospital ER waiting delay log.")
-    CAT_B0 = make_record("dom_b", 0, 2, "Clinic triage delay log.")
+    TIER_A0 = make_record("dom_a", 0, "simple", "Hospital ER wait time log.")
+    TIER_A1 = make_record("dom_a", 1, "simple", "Hospital ER waiting delay log.")
+    TIER_B0 = make_record("dom_b", 0, "medium", "Clinic triage delay log.")
 
-    # --- 19a: Same category near-duplicates drop the later record.
+    # --- 19a: Same-tier near-duplicates drop the later record.
     with patch(patch_target, return_value=[(0, 1, 0.93)]):
         result = deduplicate_scenario_records(
-            [CAT_A0, CAT_A1, CAT_B0],
+            [TIER_A0, TIER_A1, TIER_B0],
             threshold=0.85,
-            scope="category",
+            scope="tier",
             min_per_domain=1,
         )
-    assert result == [CAT_A0, CAT_B0], (
-        "Category-scope dedup should drop later near-duplicates within a category"
+    assert result == [TIER_A0, TIER_B0], (
+        "Tier-scope dedup should drop later near-duplicates within a tier"
     )
-    print(f"  ✓ Same category near-duplicates: later record dropped")
+    print(f"  ✓ Same-tier near-duplicates: later record dropped")
 
-    # --- 19b: Different categories are deduped independently.
+    # --- 19b: Different tiers are deduped independently.
     with patch(patch_target, return_value=[]):
         result = deduplicate_scenario_records(
-            [CAT_A0, CAT_B0],
+            [TIER_A0, TIER_B0],
             threshold=0.85,
-            scope="category",
+            scope="tier",
             min_per_domain=1,
         )
-    assert result == [CAT_A0, CAT_B0], (
-        "Category-scope dedup must not compare records from different categories"
+    assert result == [TIER_A0, TIER_B0], (
+        "Tier-scope dedup must not compare records from different tiers"
     )
-    print(f"  ✓ Cross-category records are kept")
+    print(f"  ✓ Cross-tier records are kept")
 
     # --- 19c: Domain coverage is protected by min_per_domain=1.
-    DOM_A0 = make_record("dom_a", 0, 1, "Hospital emergency queue log.")
-    DOM_B0 = make_record("dom_b", 0, 1, "Clinic urgent-care queue log.")
+    DOM_A0 = make_record("dom_a", 0, "simple", "Hospital emergency queue log.")
+    DOM_B0 = make_record("dom_b", 0, "simple", "Clinic urgent-care queue log.")
     with patch(patch_target, return_value=[(0, 1, 0.94)]):
         result = deduplicate_scenario_records(
             [DOM_A0, DOM_B0],
             threshold=0.85,
-            scope="category",
+            scope="tier",
             min_per_domain=1,
         )
     assert result == [DOM_A0, DOM_B0], (
@@ -933,7 +933,7 @@ try:
     print(f"  ✓ Domain coverage protected when each domain has one record")
 
     # --- 19d: Scope='domain' compares only records inside each domain bucket.
-    DOM_A1 = make_record("dom_a", 1, 1, "Hospital emergency queue operations.")
+    DOM_A1 = make_record("dom_a", 1, "simple", "Hospital emergency queue operations.")
     with patch(patch_target, return_value=[(0, 1, 0.91)]):
         result = deduplicate_scenario_records(
             [DOM_A0, DOM_A1, DOM_B0],
@@ -949,12 +949,12 @@ try:
     # --- 19e: Scope='global' can compare all records, subject to domain protection.
     with patch(patch_target, return_value=[(0, 1, 0.96)]):
         result = deduplicate_scenario_records(
-            [CAT_A0, CAT_A1, CAT_B0],
+            [TIER_A0, TIER_A1, TIER_B0],
             threshold=0.85,
             scope="global",
             min_per_domain=1,
         )
-    assert result == [CAT_A0, CAT_B0], (
+    assert result == [TIER_A0, TIER_B0], (
         "Global-scope dedup should compare the whole record list"
     )
     print(f"  ✓ Global scope compares the whole pool")
@@ -962,7 +962,7 @@ try:
     # --- 19f: Invalid scope is rejected.
     raised = False
     try:
-        deduplicate_scenario_records([CAT_A0], scope="bad-scope")
+        deduplicate_scenario_records([TIER_A0], scope="bad-scope")
     except ValueError as ve:
         raised = True
         assert "scope" in str(ve)

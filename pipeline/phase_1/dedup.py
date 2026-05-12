@@ -1,36 +1,44 @@
 """
 AGPDS Phase 1: Scenario Pool Deduplication (§1.3)
 
-Embedding-based JSONL record deduplication, scoped global / category /
-domain. Extracted from scenario_contextualizer.py so generation and
+Embedding-based JSONL record deduplication, scoped global / domain /
+tier. Extracted from scenario_contextualizer.py so generation and
 dedup are independent modules.
+
+Note: the legacy ``"category"`` scope (keyed on ``category_id``) was
+removed post-Sprint-C — see :class:`~pipeline.phase_1.types.ScenarioRecord`
+for the new envelope. ``"tier"`` keys on ``complexity_tier`` and serves
+the same "group semantically related scenarios" role.
 """
 
 from collections import defaultdict
 
 
+_VALID_SCOPES = {"global", "domain", "tier"}
+
+
 def deduplicate_scenario_records(
     records: list[dict],
     threshold: float = 0.85,
-    scope: str = "category",
+    scope: str = "domain",
     min_per_domain: int = 1,
 ) -> list[dict]:
     """Deduplicate JSONL scenario records while preserving cache coverage.
 
     Args:
-        records: Scenario-pool envelopes containing domain_id, category_id,
-            and scenario.data_context.
+        records: Scenario-pool envelopes containing domain_id,
+            complexity_tier, and scenario.data_context.
         threshold: Cosine similarity threshold for dedup.
-        scope: Comparison scope: "global", "category", or "domain".
+        scope: Comparison scope: "global", "domain", or "tier".
         min_per_domain: Minimum records to keep for each domain_id.
 
     Returns:
         Filtered records in their original order.
     """
-    if scope not in {"global", "category", "domain"}:
+    if scope not in _VALID_SCOPES:
         raise ValueError(
             f"Invalid dedup scope: {scope!r}. "
-            "Expected 'global', 'category', or 'domain'."
+            f"Expected one of {sorted(_VALID_SCOPES)}."
         )
     if min_per_domain < 0:
         raise ValueError("min_per_domain must be >= 0")
@@ -70,7 +78,7 @@ def _record_groups(records: list[dict], scope: str) -> list[list[int]]:
     if scope == "global":
         return [list(range(len(records)))]
 
-    key_name = "category_id" if scope == "category" else "domain_id"
+    key_name = "complexity_tier" if scope == "tier" else "domain_id"
     buckets: dict[object, list[int]] = defaultdict(list)
     for i, rec in enumerate(records):
         buckets[rec.get(key_name)].append(i)
