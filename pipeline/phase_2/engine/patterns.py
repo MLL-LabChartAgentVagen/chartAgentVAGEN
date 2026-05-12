@@ -26,6 +26,85 @@ from ..exceptions import (
 logger = logging.getLogger(__name__)
 
 
+def _resolve_target(
+    df: pd.DataFrame,
+    pattern: dict[str, Any],
+    pattern_type: str,
+) -> tuple[pd.Series, pd.Index] | None:
+    """Compute target mask + index for a pattern, with the common guards.
+
+    Returns (target_mask, target_idx) on success.
+    Returns None if ``pattern["col"]`` is not yet in ``df.columns`` (soft-skip,
+    logged at WARNING).
+    Raises PatternInjectionError if the target expression matches zero rows.
+    """
+    target_expr = pattern["target"]
+    col = pattern["col"]
+
+    target_mask = df.eval(target_expr)
+    target_idx = df.index[target_mask]
+
+    if len(target_idx) == 0:
+        raise PatternInjectionError(
+            pattern_type=pattern_type,
+            detail=(
+                f"Target '{target_expr}' matched zero rows. "
+                f"Cannot inject {pattern_type} on an empty subset."
+            ),
+        )
+
+    if col not in df.columns:
+        logger.warning(
+            "inject_%s: column '%s' not in DataFrame "
+            "(measures may not be generated yet). Skipping injection.",
+            pattern_type, col,
+        )
+        return None
+
+    return target_mask, target_idx
+
+
+def _find_temporal_col(
+    columns: dict[str, dict[str, Any]],
+    pattern_type: str,
+) -> str:
+    """Resolve the (single) temporal column. Raises if none declared."""
+    for col_name, col_meta in columns.items():
+        if col_meta.get("type") == "temporal":
+            return col_name
+    raise PatternInjectionError(
+        pattern_type=pattern_type,
+        detail=(
+            f"No temporal column declared. {pattern_type} requires a "
+            f"temporal column."
+        ),
+    )
+
+
+def _coerce_temporal_values(
+    df: pd.DataFrame,
+    temporal_col: str,
+    target_mask: pd.Series,
+    pattern_type: str,
+) -> tuple[pd.Series, pd.Series]:
+    """Parse temporal_col as datetime. Returns (temporal_values, valid_mask).
+
+    Raises PatternInjectionError if every target row has an unparseable
+    temporal value.
+    """
+    temporal_values = pd.to_datetime(df[temporal_col], errors="coerce")
+    valid_mask = temporal_values.notna()
+    if not (target_mask & valid_mask).any():
+        raise PatternInjectionError(
+            pattern_type=pattern_type,
+            detail=(
+                f"All target rows have unparseable temporal values "
+                f"in column '{temporal_col}'."
+            ),
+        )
+    return temporal_values, valid_mask
+
+
 def inject_patterns(
     df: pd.DataFrame,
     patterns: list[dict[str, Any]],
@@ -107,29 +186,13 @@ def inject_outlier_entity(
     Returns:
         DataFrame with outlier values injected.
     """
-    target_expr = pattern["target"]
     col = pattern["col"]
     z_score = pattern["params"]["z_score"]
 
-    target_mask = df.eval(target_expr)
-    target_idx = df.index[target_mask]
-
-    if len(target_idx) == 0:
-        raise PatternInjectionError(
-            pattern_type="outlier_entity",
-            detail=(
-                f"Target '{target_expr}' matched zero rows. "
-                f"Cannot inject outlier pattern on an empty subset."
-            ),
-        )
-
-    if col not in df.columns:
-        logger.warning(
-            "inject_outlier_entity: column '%s' not in DataFrame "
-            "(measures may not be generated yet). Skipping injection.",
-            col,
-        )
+    resolved = _resolve_target(df, pattern, "outlier_entity")
+    if resolved is None:
         return df
+    _, target_idx = resolved
 
     global_mean = df[col].mean()
     global_std = df[col].std()
@@ -181,58 +244,21 @@ def inject_trend_break(
     Returns:
         DataFrame with trend break injected.
     """
-    target_expr = pattern["target"]
     col = pattern["col"]
     break_point_str = pattern["params"]["break_point"]
     magnitude = pattern["params"]["magnitude"]
 
-    temporal_col: str | None = None
-    for col_name, col_meta in columns.items():
-        if col_meta.get("type") == "temporal":
-            temporal_col = col_name
-            break
-
-    if temporal_col is None:
-        raise PatternInjectionError(
-            pattern_type="trend_break",
-            detail=(
-                "No temporal column declared. trend_break requires a "
-                "temporal column for the before/after break_point split."
-            ),
-        )
-
+    temporal_col = _find_temporal_col(columns, "trend_break")
     break_point = pd.to_datetime(break_point_str)
 
-    target_mask = df.eval(target_expr)
-    target_idx = df.index[target_mask]
-
-    if len(target_idx) == 0:
-        raise PatternInjectionError(
-            pattern_type="trend_break",
-            detail=(
-                f"Target '{target_expr}' matched zero rows. "
-                f"Cannot inject trend break on an empty subset."
-            ),
-        )
-
-    if col not in df.columns:
-        logger.warning(
-            "inject_trend_break: column '%s' not in DataFrame "
-            "(measures may not be generated yet). Skipping injection.",
-            col,
-        )
+    resolved = _resolve_target(df, pattern, "trend_break")
+    if resolved is None:
         return df
+    target_mask, target_idx = resolved
 
-    temporal_values = pd.to_datetime(df[temporal_col], errors="coerce")
-    valid_mask = temporal_values.notna()
-    if not (target_mask & valid_mask).any():
-        raise PatternInjectionError(
-            pattern_type="trend_break",
-            detail=(
-                f"All target rows have unparseable temporal values "
-                f"in column '{temporal_col}'."
-            ),
-        )
+    temporal_values, valid_mask = _coerce_temporal_values(
+        df, temporal_col, target_mask, "trend_break",
+    )
     post_break_mask = target_mask & valid_mask & (temporal_values >= break_point)
     post_break_idx = df.index[post_break_mask]
 
@@ -288,57 +314,22 @@ def inject_dominance_shift(
         PatternInjectionError: empty target subset, no temporal column,
             empty peer set post-split, or empty post-split target subset.
     """
-    target_expr = pattern["target"]
     col = pattern["col"]
     params = pattern["params"]
     split_point_str = params["split_point"]
     magnitude = params.get("magnitude", 1.0)
 
-    temporal_col: str | None = None
-    for col_name, col_meta in columns.items():
-        if col_meta.get("type") == "temporal":
-            temporal_col = col_name
-            break
+    temporal_col = _find_temporal_col(columns, "dominance_shift")
 
-    if temporal_col is None:
-        raise PatternInjectionError(
-            pattern_type="dominance_shift",
-            detail=(
-                "No temporal column declared. dominance_shift requires a "
-                "temporal column for the before/after split."
-            ),
-        )
-
-    target_mask = df.eval(target_expr)
-    if target_mask.sum() == 0:
-        raise PatternInjectionError(
-            pattern_type="dominance_shift",
-            detail=(
-                f"Target '{target_expr}' matched zero rows. "
-                f"Cannot inject dominance shift on an empty subset."
-            ),
-        )
-
-    if col not in df.columns:
-        logger.warning(
-            "inject_dominance_shift: column '%s' not in DataFrame "
-            "(measures may not be generated yet). Skipping injection.",
-            col,
-        )
+    resolved = _resolve_target(df, pattern, "dominance_shift")
+    if resolved is None:
         return df
+    target_mask, _ = resolved
 
     sp = pd.to_datetime(split_point_str)
-    temporal_values = pd.to_datetime(df[temporal_col], errors="coerce")
-    valid_mask = temporal_values.notna()
-
-    if not (target_mask & valid_mask).any():
-        raise PatternInjectionError(
-            pattern_type="dominance_shift",
-            detail=(
-                f"All target rows have unparseable temporal values "
-                f"in column '{temporal_col}'."
-            ),
-        )
+    temporal_values, valid_mask = _coerce_temporal_values(
+        df, temporal_col, target_mask, "dominance_shift",
+    )
 
     post_split_mask = valid_mask & (temporal_values >= sp)
     post_split_target_idx = df.index[target_mask & post_split_mask]
@@ -553,7 +544,6 @@ def inject_convergence(
             zero or non-finite temporal span, non-positive pull_strength,
             or all target rows have unparseable temporal values.
     """
-    target_expr = pattern["target"]
     col = pattern["col"]
     params = pattern.get("params", {})
     pull_strength = float(params.get("pull_strength", 1.0))
@@ -564,51 +554,17 @@ def inject_convergence(
             detail=f"pull_strength must be > 0, got {pull_strength!r}.",
         )
 
-    temporal_col: str | None = None
-    for col_name, col_meta in columns.items():
-        if col_meta.get("type") == "temporal":
-            temporal_col = col_name
-            break
+    temporal_col = _find_temporal_col(columns, "convergence")
 
-    if temporal_col is None:
-        raise PatternInjectionError(
-            pattern_type="convergence",
-            detail=(
-                "No temporal column declared. convergence requires a "
-                "temporal column to apply time-graded blending."
-            ),
-        )
-
-    target_mask = df.eval(target_expr)
-    target_idx = df.index[target_mask]
-    if len(target_idx) == 0:
-        raise PatternInjectionError(
-            pattern_type="convergence",
-            detail=(
-                f"Target '{target_expr}' matched zero rows. "
-                f"Cannot inject convergence on an empty subset."
-            ),
-        )
-
-    if col not in df.columns:
-        logger.warning(
-            "inject_convergence: column '%s' not in DataFrame "
-            "(measures may not be generated yet). Skipping injection.",
-            col,
-        )
+    resolved = _resolve_target(df, pattern, "convergence")
+    if resolved is None:
         return df
+    target_mask, target_idx = resolved
 
-    tval = pd.to_datetime(df[temporal_col], errors="coerce")
-    valid_mask = tval.notna()
+    tval, valid_mask = _coerce_temporal_values(
+        df, temporal_col, target_mask, "convergence",
+    )
     valid_target_idx = df.index[target_mask & valid_mask]
-    if len(valid_target_idx) == 0:
-        raise PatternInjectionError(
-            pattern_type="convergence",
-            detail=(
-                f"All target rows have unparseable temporal values "
-                f"in column '{temporal_col}'."
-            ),
-        )
 
     tmin = tval.min()
     tmax = tval.max()
@@ -679,59 +635,23 @@ def inject_seasonal_anomaly(
         PatternInjectionError: empty target subset, no temporal column,
             or anomaly_window matching no target rows.
     """
-    target_expr = pattern["target"]
     col = pattern["col"]
     params = pattern["params"]
     window = params["anomaly_window"]
     magnitude = params["magnitude"]
 
-    temporal_col: str | None = None
-    for col_name, col_meta in columns.items():
-        if col_meta.get("type") == "temporal":
-            temporal_col = col_name
-            break
+    temporal_col = _find_temporal_col(columns, "seasonal_anomaly")
 
-    if temporal_col is None:
-        raise PatternInjectionError(
-            pattern_type="seasonal_anomaly",
-            detail=(
-                "No temporal column declared. seasonal_anomaly requires a "
-                "temporal column to apply the anomaly_window mask."
-            ),
-        )
-
-    target_mask = df.eval(target_expr)
-    target_idx = df.index[target_mask]
-
-    if len(target_idx) == 0:
-        raise PatternInjectionError(
-            pattern_type="seasonal_anomaly",
-            detail=(
-                f"Target '{target_expr}' matched zero rows. "
-                f"Cannot inject seasonal anomaly on an empty subset."
-            ),
-        )
-
-    if col not in df.columns:
-        logger.warning(
-            "inject_seasonal_anomaly: column '%s' not in DataFrame "
-            "(measures may not be generated yet). Skipping injection.",
-            col,
-        )
+    resolved = _resolve_target(df, pattern, "seasonal_anomaly")
+    if resolved is None:
         return df
+    target_mask, target_idx = resolved
 
     win_start = pd.to_datetime(window[0])
     win_end = pd.to_datetime(window[1])
-    temporal_values = pd.to_datetime(df[temporal_col], errors="coerce")
-    valid_mask = temporal_values.notna()
-    if not (target_mask & valid_mask).any():
-        raise PatternInjectionError(
-            pattern_type="seasonal_anomaly",
-            detail=(
-                f"All target rows have unparseable temporal values "
-                f"in column '{temporal_col}'."
-            ),
-        )
+    temporal_values, valid_mask = _coerce_temporal_values(
+        df, temporal_col, target_mask, "seasonal_anomaly",
+    )
     in_win = (
         target_mask
         & valid_mask
