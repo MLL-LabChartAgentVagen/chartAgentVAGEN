@@ -278,7 +278,7 @@ def _run_loop_b(
     result_df, result_meta, report = generate_with_validation(
         build_fn=build_fn,
         meta=metadata,
-        patterns=metadata.get("patterns", []),
+        patterns=patterns,
         base_seed=base_seed,
         max_attempts=max_retries + 1,
         auto_fix=auto_fix,
