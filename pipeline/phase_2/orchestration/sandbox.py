@@ -627,3 +627,49 @@ def format_error_feedback(
 
     return feedback
 
+
+def format_calibration_feedback(
+    original_code: str,
+    failures: list,
+    prior_failures: "list | None" = None,
+) -> str:
+    """Format LLM feedback for a sigma-calibration failure.
+
+    Used by retry_loop when Loop A's sandbox exec succeeds but
+    check_sigma_calibration finds at least one measure with ratio >= 0.2.
+
+    Args:
+        original_code: The LLM script that produced the misfit.
+        failures: list[CalibrationFailure] from check_sigma_calibration.
+            Typed as plain ``list`` here to avoid a circular import with
+            orchestration.calibration.
+        prior_failures: Optional history of earlier SandboxResults (unused
+            today; accepted for signature parity with format_error_feedback).
+
+    Returns:
+        A user-prompt string the LLM should consume on the next retry.
+    """
+    if not failures:
+        return (
+            "Your script executed successfully and 0 measure(s) need "
+            "calibration adjustments. (No action required.)"
+        )
+    body_lines = []
+    for f in failures:
+        body_lines.append(
+            f"  - Measure `{f.measure}`: declared sigma={f.declared_sigma:.4f}, "
+            f"empirical residual std={f.empirical_residual_std:.4f}, "
+            f"ratio={f.ratio:.3f} (threshold=0.2). "
+            f"Suggested sigma ≈ {f.suggested_sigma:.4f}."
+        )
+    body = "\n".join(body_lines)
+    return (
+        f"Your script executed successfully, but the declared noise sigma is "
+        f"mis-calibrated for {len(failures)} measure(s):\n\n{body}\n\n"
+        f"Action: rewrite the script with sigma values close to the suggested "
+        f"empirical residual std (within ±10%). Do NOT change measure formulas, "
+        f"categorical structure, patterns, or seeds — ONLY adjust sigma in "
+        f"`noise=` / `noise_sigma=` arguments.\n\n"
+        f"Original code:\n```python\n{original_code}\n```"
+    )
+
