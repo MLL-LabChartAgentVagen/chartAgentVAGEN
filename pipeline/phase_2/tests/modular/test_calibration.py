@@ -22,3 +22,49 @@ class TestCalibrationDataclasses:
             suggested_sigma=337.0, ratio=66.4,
         )
         assert f.measure == "x" and f.suggested_sigma == 337.0
+
+
+import numpy as np
+import pandas as pd
+
+
+class TestCheckSigmaCalibration:
+    @staticmethod
+    def _minimal_declarations(noise_sigma: float):
+        """Build declarations via FactTableSimulator — same shape sandbox produces."""
+        from pipeline.phase_2.sdk.simulator import FactTableSimulator
+
+        sim = FactTableSimulator(target_rows=500, seed=42)
+        sim.add_category("region", values=["N", "S"], weights=[0.5, 0.5], group="geo")
+        sim.add_measure(
+            "applied",
+            family="gaussian",
+            param_model={
+                "mu": {"intercept": 1000.0},
+                "sigma": {"intercept": 100.0},
+            },
+        )
+        sim.add_measure_structural(
+            "accepted",
+            formula="applied * 0.5",
+            effects={},
+            noise={"sigma": noise_sigma},
+        )
+        return {
+            "columns": sim._columns,
+            "groups": sim._groups,
+            "group_dependencies": sim._group_dependencies,
+            "measure_dag": sim._measure_dag,
+            "target_rows": sim.target_rows,
+            "patterns": sim._patterns,
+            "seed": sim.seed,
+            "orthogonal_pairs": sim._orthogonal_pairs,
+        }
+
+    def test_passes_when_sigma_matches_empirical(self):
+        # accepted = applied * 0.5 + noise(sigma=50).
+        # The residual is just the gaussian noise → residual std ≈ 50.
+        # So declared sigma=50 should pass.
+        decls = self._minimal_declarations(noise_sigma=50.0)
+        result = check_sigma_calibration(decls, threshold=0.2)
+        assert result.passed, f"Unexpected failures: {result.failures}"
