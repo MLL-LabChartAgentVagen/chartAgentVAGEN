@@ -323,7 +323,11 @@ Loop A 的 LLM-in-loop dry-run sigma 校准。算法：
 应一致 pass、Loop B 的 `widen_variance` 不应触发——calibration 是 Stage 1
 的 correction layer，Loop B 仅作 safety net。
 
-实测数据：见 [§8](#8-实测数据3-way-对照) 的 -v3-calibrated 列（T8 完成后填入）。
+实测数据：见 [§8](#8-实测数据3-way-对照) 的 -v3-calibrated 列。
+关键指标：residual_* median ratio = 6.763 (was 2.49 in pathA);
+max ratio = 54.75 (was 28.74); count = 10 (was 15).
+校准降低了 residual count 和 ks_* 总量（-34 total failures），但 ratio magnitude
+反向恶化——机制 1 未被 Loop A 校准有效收敛，PARTIAL。
 
 ### 7.2 机制 3 没动
 
@@ -338,11 +342,12 @@ Loop A 的 LLM-in-loop dry-run sigma 校准。算法：
 为了精确测量 Path A 的净效应，做了 **同 model + 同 10 个 scenario** 的
 对照实验。三个批次都在 `output/agpds/` 下：
 
-| 批次目录 | 简称 | provider / model | Path A | 用途 |
-|---|---|---|---|---|
-| `pingyue-samples-openai-v1` | **v1** | openai / `gpt-5.5-2026-04-23` | 关 | 原始 production |
-| `pingyue-samples-gemini-baseline` | **-2** | gemini / `gemini-3.1-pro-preview` | 关 | **gemini baseline** |
-| `pingyue-samples-gemini-pathA` | **-v2** | gemini / `gemini-3.1-pro-preview` | **开** | 改造后跑 |
+| 批次目录 | 简称 | provider / model | Path A | 校准 | 用途 |
+|---|---|---|---|---|---|
+| `pingyue-samples-openai-v1` | **v1** | openai / `gpt-5.5-2026-04-23` | 关 | 关 | 原始 production |
+| `pingyue-samples-gemini-baseline` | **-2** | gemini / `gemini-3.1-pro-preview` | 关 | 关 | **gemini baseline** |
+| `pingyue-samples-gemini-pathA` | **-v2** | gemini / `gemini-3.1-pro-preview` | **开** | 关 | 改造后跑 |
+| `pingyue-samples-gemini-pathA-calibrated` | **-v3** | gemini / `gemini-3.1-pro-preview` | **开** | **开** | T1-T7 校准后跑 |
 
 scenarios 在三个批次间 byte-identical（content-addressed `generation_id` +
 `--scenario-source cached_strict --seed 42 --category 3`）。本节后续用
@@ -350,30 +355,36 @@ scenarios 在三个批次间 byte-identical（content-addressed `generation_id` 
 
 ### 8.1 失败计数（按 check 前缀）
 
-| 前缀 | v1 (openai, 无 A) | -2 (gemini, 无 A) | -v2 (gemini, +A) | Path A 净效应 |
-|---|---:|---:|---:|---|
-| `ks_*` | 95 | 64 | 76 | **+12** ⚠ |
-| `residual_*` count | 15 | 18 | 15 | -3 ✓ |
-| `group_dep_*` | 2 | 0 | 0 | = |
-| `orthogonal_*` | 1 | 1 | 1 | = |
-| `marginal_*` | 1 | 0 | 1 | +1 |
-| **TOTAL** | **114** | **83** | **93** | +10 |
-| errored | 2 | 0 | 0 | — |
+| 前缀 | v1 (openai, 无 A) | -2 (gemini, 无 A) | -v2 (gemini, +A) | -v3 (gemini, +A+cal) | cal 净效应 |
+|---|---:|---:|---:|---:|---|
+| `ks_*` | 95 | 64 | 76 | 48 | **-28** ✓ |
+| `residual_*` count | 15 | 18 | 15 | 10 | -5 ✓ |
+| `group_dep_*` | 2 | 0 | 0 | 1 | +1 ⚠ |
+| `orthogonal_*` | 1 | 1 | 1 | 0 | -1 ✓ |
+| `marginal_*` | 1 | 0 | 1 | 0 | -1 ✓ |
+| **TOTAL** | **114** | **83** | **93** | **59** | **-34** ✓ |
+| errored | 2 | 0 | 0 | 1 | — |
+| skipped (cal_unconverged) | — | — | — | 0 | — |
 
 ### 8.2 `residual_*` 偏差幅度（最关键指标）
 
 光看 count 看不出 Path A 的真实效果——要看 ratio magnitude。
-`ratio = (residual_std - declared_sigma) / declared_sigma`，validator
-阈值 0.2。
+`ratio = residual_std / noise_sigma`，validator 阈值 0.2。
 
 | 批次 | n | min | **median** | **max** |
 |---|---:|---:|---:|---:|
 | v1 (openai, 无 A) | 15 | 0.26 | 1.54 | 66× |
 | **-2 (gemini, 无 A)** | 18 | 0.49 | **19.25** | **9742×** |
 | **-v2 (gemini, +A)** | 15 | 0.29 | **2.49** | **29×** |
+| **-v3 (gemini, +A+cal)** | 10 | 0.27 | **6.76** | **55×** |
 
 **Path A 把 gemini 的 residual 偏差 median 压了 87%，max 压了 99.7%。**
 也就是 LLM 真的听懂了——它在某些 measure 上把 sigma 调高了 1–3 个数量级。
+
+**-v3 (校准) 的 residual count 减少（15→10），但 median 和 max 比 -v2 更差
+（median 2.49→6.76, max 29→55）**。这违反预期——校准 Loop 让 LLM 调高 sigma，
+但 empirical residual std 也跟着涨（某些 measure 的动态范围本身随新脚本变大），
+导致 ratio 不降反升。详见 §8.5 分析。
 
 ### 8.3 三个非平凡解读
 
@@ -413,15 +424,44 @@ effect map——纯运气。
 - 单元测试（`test_engine_measures.py::TestEvalStructuralUndefinedEffectGuard`）
   保证 B/C 的代码路径正确，但 production 端到端验证仍是缺口。
 
-### 8.5 下一步该做什么
+### 8.5 -v3 校准回退的根因分析
+
+-v3 vs -v2 的异常：residual count 下降（15→10）但 ratio magnitude 上升（median 2.49→6.76）。
+
+**为什么校准没压住 ratio？**
+
+Loop A 校准给 LLM 的反馈是 `suggested_sigma = empirical_residual_std`，
+要求 LLM 在下一轮把 `noise_sigma` 调高到这个值。LLM 确实听了——但校准
+反馈是在第一轮脚本的 declared sigma 上量的 empirical residual std。
+
+问题在于：**LLM 重写脚本后，公式结构也可能改变**（换参数值、换效应结构），
+导致新脚本的 empirical residual std 跟第一轮完全不同。观测到的具体案例：
+
+| gen_id | measure | 原 sigma | 校准后 sigma | 实际 residual std | ratio |
+|---|---|---:|---:|---:|---:|
+| agpds_8022981cf7 | pass_rate | 4.0 | — | 126.9 | 30.7× |
+| agpds_e9c40d0352 | absentee_count | 20.0 | — | 1115.0 | 54.7× |
+| agpds_503613ba96 | undergraduate_enrollment | 200.0 | — | 2221.6 | 10.1× |
+
+这些 measure 的 ratio 在 pathA 批次里应当不存在（不同脚本）——对比
+**不是同一份脚本加了校准后重跑**，而是 LLM 在新提示下从头重写了脚本。
+因此 -v2 和 -v3 的残差分布不可直接对比：它们是不同脚本、不同 seed 生成的
+**不同 DataFrame**，ratio 改变既可能来自校准，也可能来自公式结构改变。
+
+**结论**：Loop A in-loop sigma 校准的逻辑是正确的（代码路径通过单测；
+calibration_unconverged=0），但**对公式结构敏感的乘法域，校准收益被脚本
+重写的方差掩盖了**。要真正测量校准净效益，需要固定脚本（同一份声明 + 
+校准只改 sigma 参数）后对比 Stage 2 结果——目前的实测设计无法隔离这个变量。
+
+### 8.6 下一步该做什么
 
 按收益排序：
 
-1. **§7.1 dry-run sigma 校准**——Path A 把 residual median 压到 2.5×，
-   但 validator 阈值 0.2 还要再降一个量级。heuristic prompt 已到极限；
-   必须让 LLM 写完后跑 ~100 行 self-check 自调 sigma。
-2. **openai 重跑 v3** 验证 Path B/C 端到端——故意触发 zero-row pattern
+1. **固定脚本的 sigma-only 校准实验**——为了验证 §7.1 校准是否真的有效，
+   需要保持 declarations 不变、仅注入 suggested sigma，然后重跑 Stage 2 验证。
+   当前 Loop A 的校准路径会让 LLM 重写整个脚本，无法隔离校准效果。
+2. **机制 3 修复**——bonferroni 校正或 cell-size threshold，让 KS 检验
+   不在 n<30 的稀疏 cell 上轻易报警。-v3 的 ks_* 从 76 降到 48 是好消息
+   （不同脚本恰好更简洁），但仍有 0 个 scenario 全 pass。
+3. **openai 重跑 v3** 验证 Path B/C 端到端——故意触发 zero-row pattern
    或缺 effect key 的 scenario，看 Loop A 能否拿 typed feedback 修。
-3. **机制 3 修复**——bonferroni 校正或 cell-size threshold，让 KS 检验
-   不在 n<30 的稀疏 cell 上轻易报警。Path A 把 sigma 调对反而暴露了这个
-   问题更严重。
