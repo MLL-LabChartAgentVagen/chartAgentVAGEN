@@ -85,6 +85,27 @@ def _save_stage1_artifacts(
     return manifest_entry
 
 
+SKIPPED_FILENAME = "skipped.jsonl"
+
+
+def _save_skip_record(
+    output_dir: str,
+    skip_result,                # SkipResult; untyped to avoid eager import
+    gen_id: str,
+) -> None:
+    """Append a SkipResult record to skipped.jsonl in the batch folder."""
+    record = {
+        "generation_id": gen_id,
+        "scenario_id": skip_result.scenario_id,
+        "skip_reason": skip_result.skip_reason,
+        "error_log": list(skip_result.error_log),
+        "timestamp": datetime.now().isoformat(timespec="seconds"),
+    }
+    skip_path = os.path.join(output_dir, SKIPPED_FILENAME)
+    with open(skip_path, "a", encoding="utf-8") as f:
+        f.write(json.dumps(record) + "\n")
+
+
 def run_scenario_id_generation(
     pipeline: AGPDSPipeline,
     scenario_id: str,

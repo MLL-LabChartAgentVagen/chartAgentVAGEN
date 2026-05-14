@@ -355,6 +355,11 @@ class SkipResult:
     Attributes:
         scenario_id: Identifier of the scenario that was skipped.
         error_log: List of error messages from each failed attempt.
+        skip_reason: Why this scenario was skipped. One of:
+            - "exec_error" (default): the LLM script failed to execute
+            - "calibration_unconverged": script ran but sigma was mis-calibrated
+              past threshold for max_retries attempts
     """
     scenario_id: str = ""
     error_log: list[str] = field(default_factory=list)
+    skip_reason: str = "exec_error"

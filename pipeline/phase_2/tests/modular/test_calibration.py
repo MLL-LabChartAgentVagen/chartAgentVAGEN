@@ -183,3 +183,41 @@ class TestStochasticMeasuresSkipped:
         result = check_sigma_calibration(decls, threshold=0.2)
         assert result.passed
         assert result.failures == []
+
+
+from pipeline.phase_2.exceptions import SkipResult
+
+
+class TestSkipResultSkipReason:
+    def test_default_reason_is_exec_error(self):
+        s = SkipResult(scenario_id="foo")
+        assert s.skip_reason == "exec_error"
+
+    def test_can_set_calibration_unconverged(self):
+        s = SkipResult(
+            scenario_id="foo", error_log=["..."],
+            skip_reason="calibration_unconverged",
+        )
+        assert s.skip_reason == "calibration_unconverged"
+
+
+class TestSaveSkipRecord:
+    def test_appends_jsonl_with_skip_metadata(self, tmp_path):
+        from pipeline.agpds_generate import _save_skip_record
+        import json
+
+        skip = SkipResult(
+            scenario_id="dom_001/k=2", error_log=["err1", "err2"],
+            skip_reason="calibration_unconverged",
+        )
+        _save_skip_record(str(tmp_path), skip, gen_id="agpds_abc123")
+
+        skip_file = tmp_path / "skipped.jsonl"
+        assert skip_file.exists()
+        line = skip_file.read_text().strip()
+        rec = json.loads(line)
+        assert rec["generation_id"] == "agpds_abc123"
+        assert rec["scenario_id"] == "dom_001/k=2"
+        assert rec["skip_reason"] == "calibration_unconverged"
+        assert rec["error_log"] == ["err1", "err2"]
+        assert "timestamp" in rec
