@@ -64,7 +64,7 @@ class AGPDSRunner:
 
     def save_results(self, results: List[dict], output_dir: str):
         """Save results to JSON file and master data CSVs appropriately."""
-        csv_dir, schema_dir, charts_dir, scenarios_dir = _ensure_output_dirs(output_dir)
+        csv_dir, schema_dir, charts_dir, scenarios_dir, _validation_dir = _ensure_output_dirs(output_dir)
 
         json_results = []
         csv_count = 0
@@ -94,11 +94,13 @@ def _ensure_output_dirs(output_dir: str) -> tuple:
     schema_dir = os.path.join(output_dir, "schemas")
     charts_dir = os.path.join(output_dir, "charts")
     scenarios_dir = os.path.join(output_dir, "scenarios")
+    validation_dir = os.path.join(output_dir, "validation")
     os.makedirs(csv_dir, exist_ok=True)
     os.makedirs(schema_dir, exist_ok=True)
     os.makedirs(charts_dir, exist_ok=True)
     os.makedirs(scenarios_dir, exist_ok=True)
-    return csv_dir, schema_dir, charts_dir, scenarios_dir
+    os.makedirs(validation_dir, exist_ok=True)
+    return csv_dir, schema_dir, charts_dir, scenarios_dir, validation_dir
 
 
 def write_charts_bundle(records: List[dict], output_dir: str) -> str:
@@ -119,12 +121,13 @@ def resolve_batch_dir(output_dir: str, batch_name: Optional[str]) -> str:
 
 
 def save_single_result(result: dict, output_dir: str) -> tuple:
-    """Persist one generation result (CSV + schema + chart JSON + scenario).
-    Returns (chart_record, {"csv": bool, "schema": bool, "chart": bool,
-    "scenario": bool})."""
-    csv_dir, schema_dir, charts_dir, scenarios_dir = _ensure_output_dirs(output_dir)
+    """Persist one generation result (CSV + schema + chart JSON + scenario
+    + validation report). Returns (chart_record, {"csv": bool, "schema": bool,
+    "chart": bool, "scenario": bool, "validation": bool})."""
+    csv_dir, schema_dir, charts_dir, scenarios_dir, validation_dir = _ensure_output_dirs(output_dir)
     gen_id = result.get("generation_id", "unknown")
-    saved = {"csv": False, "schema": False, "chart": False, "scenario": False}
+    saved = {"csv": False, "schema": False, "chart": False, "scenario": False,
+             "validation": False}
 
     csv_content = result.get("master_data_csv")
     if csv_content:
@@ -150,9 +153,18 @@ def save_single_result(result: dict, output_dir: str) -> tuple:
         result["scenario_path"] = os.path.join("scenarios", f"{gen_id}_scenario.json")
         saved["scenario"] = True
 
+    val_report = result.get("validation_report")
+    if val_report is not None:
+        from dataclasses import asdict
+        val_path = os.path.join(validation_dir, f"{gen_id}_report.json")
+        with open(val_path, 'w', encoding='utf-8') as f:
+            json.dump(asdict(val_report), f, indent=2)
+        result["validation_report_path"] = os.path.join("validation", f"{gen_id}_report.json")
+        saved["validation"] = True
+
     chart_record = {
         k: v for k, v in result.items()
-        if k not in ("master_data_csv", "schema_metadata")
+        if k not in ("master_data_csv", "schema_metadata", "validation_report")
     }
     chart_record["charts_path"] = os.path.join("charts", f"{gen_id}.json")
     result["charts_path"] = chart_record["charts_path"]

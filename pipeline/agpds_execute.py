@@ -112,6 +112,7 @@ def _execute_one(gen_id: str, declarations_path: str, input_dir: str,
             "scenario": scenario,
             "master_data_csv": df.to_csv(index=False),
             "schema_metadata": schema_metadata,
+            "validation_report": val_report,
         }
 
         chart_record, _saved = save_single_result(payload, output_dir)
@@ -121,6 +122,9 @@ def _execute_one(gen_id: str, declarations_path: str, input_dir: str,
             "status": "ok",
             "rows": len(df),
             "validation_passed": val_report.all_passed,
+            "validation_failures": [
+                {"name": c.name, "detail": c.detail} for c in val_report.failures
+            ],
             "chart_record": chart_record,
         }
     except Exception as exc:
@@ -189,15 +193,37 @@ def main() -> None:
                     })
                 _log(f"  -> done {gen_id}")
 
-    ok = sum(1 for r in results if r.get("status") == "ok")
-    failed = len(results) - ok
-    _log(f"Stage 2 complete: {ok} succeeded, {failed} failed.")
+    passed = sum(1 for r in results
+                 if r.get("status") == "ok" and r.get("validation_passed"))
+    soft_failed = sum(1 for r in results
+                      if r.get("status") == "ok" and not r.get("validation_passed"))
+    errored = sum(1 for r in results if r.get("status") != "ok")
+    _log(f"Stage 2 complete: {passed} passed / {soft_failed} soft-failed / "
+         f"{errored} errored.")
 
     chart_records = [r["chart_record"] for r in results
                      if r.get("status") == "ok" and r.get("chart_record")]
     if chart_records:
         bundle_path = write_charts_bundle(chart_records, args.output_dir)
         _log(f"Wrote batch index: {bundle_path}")
+
+    summary_path = os.path.join(args.output_dir, "validation_summary.json")
+    summary = [
+        {
+            "generation_id": r["generation_id"],
+            "all_passed": r.get("validation_passed", False),
+            "failures": r.get("validation_failures", []),
+        }
+        for r in results if r.get("status") == "ok"
+    ]
+    with open(summary_path, "w", encoding="utf-8") as f:
+        json.dump(summary, f, indent=2)
+    _log(f"Wrote validation summary: {summary_path}")
+
+    for r in results:
+        if r.get("status") == "ok" and not r.get("validation_passed"):
+            nfail = len(r.get("validation_failures") or [])
+            _log(f"  ~ {r['generation_id']}: {nfail} check failure(s)")
 
     for r in results:
         if r.get("status") != "ok":

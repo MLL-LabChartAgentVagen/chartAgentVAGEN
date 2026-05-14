@@ -85,6 +85,29 @@ def _save_stage1_artifacts(
     return manifest_entry
 
 
+def run_scenario_id_generation(
+    pipeline: AGPDSPipeline,
+    scenario_id: str,
+    output_dir: str,
+    model: str,
+    provider: str,
+) -> list:
+    os.makedirs(output_dir, exist_ok=True)
+    _log("=" * 50)
+    _log(f"scenario_id={scenario_id}")
+    _log("=" * 50)
+    try:
+        stage1 = pipeline.generate_artifacts(scenario_id=scenario_id)
+        entry = _save_stage1_artifacts(output_dir, stage1, model, provider)
+        _log(f"  -> Saved script: {entry['script_path']}")
+        _log(f"  -> Saved declarations: {entry['declarations_path']}")
+        return [entry]
+    except Exception as exc:
+        _log(f"ERROR: Stage 1 failed for scenario_id {scenario_id!r}: {exc}")
+        traceback.print_exc()
+        return []
+
+
 def run_generation_batch(
     pipeline: AGPDSPipeline,
     category_ids,
@@ -136,6 +159,9 @@ def main() -> None:
     parser.add_argument("--model", default=None, help="Model name (overrides .env)")
     parser.add_argument("--provider", default=None,
                         choices=["openai", "gemini", "gemini-native", "azure", "auto"])
+    parser.add_argument("--scenario-id",
+                        help="Exact cached scenario to replay, e.g. dom_001/k=4. "
+                             "Mutually exclusive with --category/--count.")
     parser.add_argument("--category", type=int, choices=range(1, 31), help="Category ID (1-30)")
     parser.add_argument("--count", type=int, default=1, help="Number of scripts to generate")
     parser.add_argument("--output-dir", default="./output/agpds",
@@ -214,15 +240,24 @@ def main() -> None:
         seed=args.seed,
     )
 
-    _cli_rng = random.Random(args.seed)
-    category_ids = (
-        [args.category] * args.count if args.category
-        else [_cli_rng.randint(1, 30) for _ in range(args.count)]
-    )
+    if args.scenario_id and (args.category or args.count != 1):
+        print("Error: --scenario-id is mutually exclusive with --category and --count.",
+              file=sys.stderr)
+        sys.exit(1)
 
     batch_dir = resolve_batch_dir(args.output_dir, args.batch_name)
-    produced = run_generation_batch(pipeline, category_ids, batch_dir, model, provider)
-    _log(f"Stage 1 complete: {len(produced)}/{len(category_ids)} generations saved.")
+
+    if args.scenario_id:
+        produced = run_scenario_id_generation(pipeline, args.scenario_id, batch_dir, model, provider)
+        _log(f"Stage 1 complete: {len(produced)}/1 generations saved.")
+    else:
+        _cli_rng = random.Random(args.seed)
+        category_ids = (
+            [args.category] * args.count if args.category
+            else [_cli_rng.randint(1, 30) for _ in range(args.count)]
+        )
+        produced = run_generation_batch(pipeline, category_ids, batch_dir, model, provider)
+        _log(f"Stage 1 complete: {len(produced)}/{len(category_ids)} generations saved.")
     print(f"Batch folder: {os.path.abspath(batch_dir)}")
     print(f"Stage 2: python -m pipeline.agpds_execute --input-dir '{batch_dir}' --output-dir '{batch_dir}'")
 
