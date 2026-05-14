@@ -63,6 +63,54 @@ LLM 看每个因子时分别想："`application_count` 大概 0–5000，
 但 4 个分类列交叉成的 4D cell 内，实际散布远超 declared sigma →
 Kolmogorov-Smirnov 拒绝原假设，D 高达 0.97，p ≈ 0。
 
+### 2.5 为什么有些域感觉"没病"——域漂移决定了机制 1 的触发率
+
+机制 1 一直潜伏在 LLM 的认知模型里——但**只在乘法主导的域里发病**。
+
+实测对比（4 个 legacy 早期声明 vs 10 个 pingyue 教育域声明）：
+
+| 批次 | 域 | structural 公式数 | 平均 `*` | 多随机变量乘积 | per-scenario 失败 |
+|---|---|---:|---:|---|---:|
+| **legacy** | Spotify / Netflix / faculty workload | 11 | 1.0 | ❌ 几乎全是 "stochastic × **常数** + add" | **3.5** |
+| pingyue-v1 (openai) | 大学招生 / 留存 / 课程 | 19 | 1.8 | ✓ 含 5 个随机变量相乘的怪物 | 14.0 |
+| pingyue-gemini-baseline | 同上 | 20 | 1.3 | ✓ 含 3 个随机变量相乘 | 8.3 |
+| pingyue-gemini-pathA | 同上 | 19 | 1.5 | ✓（被 Path A 压缩了一些） | 9.3 |
+
+典型公式对比：
+
+```
+LEGACY (Spotify / faculty 域 —— 度量关系天然加法):
+  unique_listeners       = weekly_streams * 0.25 + region_adj           # 单随机 × 常数
+  total_credit_hours     = student_faculty_ratio * teaching_load * 120  # 双随机 × 常数
+
+PINGYUE (大学招生 funnel 域 —— 度量关系天然乘法):
+  enrollment_count = application_count * acceptance_fraction * major_yield
+                   * level_yield * school_enrollment_multiplier         # 五随机相乘！
+  enrolled_count   = applicant_count * acceptance_rate * yield_rate     # 三随机相乘
+```
+
+**为什么是这样**：
+
+- **Spotify/Netflix/faculty 域**的度量关系是"baseline + 线性效应 + 噪声"的
+  叠加结构。LLM 用 `A + B*const + effect` 建模——单随机变量×常数是低方差
+  操作，加法不放大方差。机制 1 几乎不发病。
+- **大学招生/留存域**本质上是漏斗模型：`P(accept | applied) × P(enroll | accept)`，
+  乘的是**条件概率**或**比率**。LLM 用 `A * B * C * D` 建模是数学上正确的
+  domain modeling——但这正好触发机制 1 的最坏路径。
+
+**实操含义**：
+
+1. **"用 `agpds_pipeline.py` 跑时几乎没 warning" 不是 baseline，是运气**——早期
+   `pingyue-samples-2`/`pingyue-samples-openai-v1` 之前的样本碰巧都是加法
+   主导的域。看到一份"干净"的 validation_summary 不代表声明没问题，可能
+   只是没踩到雷。
+2. **机制 1 的修复优先级取决于目标域分布**：如果项目以后大量产 funnel /
+   留存 / 转化类数据，§7.1 的 dry-run sigma 校准是必做项；如果主要还是
+   Spotify-like 加法域，Path A 的 heuristic 就够。
+3. **Validator 阈值 0.2 的合理性也跟域绑定**：加法域 LLM 易达成，乘法域
+   数学上 LLM 难以闭式算出 std。要么 dry-run 校准，要么 validator 按域
+   动态调阈值（后者更脏）。
+
 ---
 
 ## 3. 机制 2 — 联合分布盲区
@@ -255,16 +303,27 @@ Loop A 看到这种 typed exception 会写"effect 'major_yield' 缺值 'None'，
 
 ## 7. 没修的部分（坦白）
 
-### 7.1 机制 1 的根没动
+### 7.1 机制 1 的根（已修复 → 见 orchestration/calibration.py）
 
-Path A 加的是 heuristic——"sigma 应为 range 的 10–30%"——不是数学推导。
-如果 LLM 设计了 5 个因子的乘法链，10–30% 仍然偏小。
+Path A 的 heuristic prompt 是 prevention layer。**实际修复机制 1 的根**
+靠的是 [orchestration/calibration.py](orchestration/calibration.py)：
+Loop A 的 LLM-in-loop dry-run sigma 校准。算法：
 
-**根治需要**：在 Loop A 加一个 "先 dry-run 生成 ~100 行预估方差" 的
-self-check 步骤——让 LLM 在提交脚本前，用一小段 Python 自查一下乘积
-的实际 std，并自动调 sigma。
+1. Loop A exec 成功后，engine 用 `realism_config=None` 做 full-N replay。
+2. 对每个声明 sigma 的 structural measure，调用
+   [check_structural_residuals](validation/statistical.py) 量 empirical residual std。
+3. 若任一 measure 的 ratio ≥ 0.2，构造 typed feedback
+   ([sandbox.py::format_calibration_feedback](orchestration/sandbox.py)) 把
+   suggested sigma 送回 LLM。calibration retry budget 独立于 exec retry
+   budget（各 3 次），见 [retry_loop.py](orchestration/retry_loop.py)。
+4. 3 轮未收敛 → `SkipResult(skip_reason="calibration_unconverged")`，
+   每行写入 `output/agpds/<batch>/skipped.jsonl`（[agpds_generate.py::_save_skip_record](../agpds_generate.py)）。
 
-这是下一个 plan 的事，本次 plan 显式 out-of-scope。
+设计意图：Loop A 校准过的 declarations 进入 Stage 2 后，Stage 2 validator
+应一致 pass、Loop B 的 `widen_variance` 不应触发——calibration 是 Stage 1
+的 correction layer，Loop B 仅作 safety net。
+
+实测数据：见 [§8](#8-实测数据3-way-对照) 的 -v3-calibrated 列（T8 完成后填入）。
 
 ### 7.2 机制 3 没动
 
