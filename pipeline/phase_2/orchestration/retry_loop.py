@@ -19,12 +19,14 @@ from pipeline.phase_1 import ScenarioContext
 
 from ..exceptions import InvalidParameterError, SkipResult
 from ..types import RetryLoopResult, SandboxResult
+from .calibration import check_sigma_calibration
 from .code_check import extract_clean_code
 from .prompt import render_system_prompt
 from .sandbox import (
     DEFAULT_TIMEOUT_SECONDS,
     _build_sandbox_namespace,
     execute_in_sandbox,
+    format_calibration_feedback,
     format_error_feedback,
 )
 
@@ -103,6 +105,7 @@ def run_retry_loop(
     token_budget: int | None = None,
     initial_token_usage: "TokenUsage | None" = None,
     seed: int = 42,
+    scenario_id: str = "unknown",
 ) -> RetryLoopResult:
     """Execute the §2.7 error feedback retry loop.
 
@@ -111,17 +114,29 @@ def run_retry_loop(
     Algorithm:
 
     1. Execute *initial_code* in the sandbox.
-    2. On success → return the result immediately (attempt 1).
+    2. On success → run :func:`check_sigma_calibration`. If it passes,
+       return the result immediately. If it fails and the *separate*
+       calibration budget is not exhausted, build a calibration
+       feedback prompt, re-prompt the LLM, and re-execute. If the
+       calibration budget is exhausted, return an unsuccessful
+       :class:`RetryLoopResult` with
+       ``skipped_reason="calibration_unconverged (...)"``.
     3. On failure → format error feedback, call *llm_generate_fn* with
        ``(system_prompt, feedback_prompt)`` to obtain new code.
     4. Repeat from step 1 with the new code, up to *max_retries* total
-       attempts.
+       attempts for exec-error retries. Calibration retries have an
+       independent budget of *max_retries* attempts (F2 amendment).
     5. On exhaustion → log the failure and return an unsuccessful
        :class:`RetryLoopResult` with the full attempt history.
 
-    This loop implements **only** the §2.7 execution-error path.  It
-    does not invoke §2.9 validation — that responsibility belongs to
-    the pipeline orchestrator (11.1.x, currently BLOCKED per C5).
+    Loop A's calibration check produces declarations whose declared sigma
+    matches empirical residual std; Stage 2's Loop B ``widen_variance``
+    should therefore not trigger on these scenarios.
+
+    This loop implements **only** the §2.7 execution-error path plus
+    Loop A's sigma calibration. It does not invoke §2.9 validation —
+    that responsibility belongs to the pipeline orchestrator
+    (11.1.x, currently BLOCKED per C5).
 
     Args:
         initial_code: First LLM-generated Python code string.
@@ -150,11 +165,19 @@ def run_retry_loop(
             seeds the counter at 0.  Providers that do not report token
             counts surface ``None`` here and the budget never trips
             (graceful degradation).
+        scenario_id: Caller-supplied identifier used only for structured
+            logging of calibration attempts. Defaults to ``"unknown"``
+            for backwards compatibility with callers that don't plumb
+            a scenario id (notably the existing tests).
 
     Returns:
         :class:`RetryLoopResult` with the outcome and full history.
         ``skipped_reason`` is set to ``"token_budget_exceeded ..."``
-        when the loop short-circuits on the budget; ``None`` otherwise.
+        when the loop short-circuits on the budget,
+        ``"calibration_unconverged (...)"`` when the LLM cannot
+        produce declarations whose declared sigma matches the
+        empirical residual std within the calibration budget,
+        and ``None`` otherwise.
 
     Raises:
         InvalidParameterError: If *initial_code*, *system_prompt*, or
@@ -208,7 +231,17 @@ def run_retry_loop(
         initial_token_usage.total_tokens if initial_token_usage is not None else 0
     )
 
-    for attempt in range(1, max_retries + 1):
+    # Independent calibration retry budget (F2 amendment). The exec-error
+    # budget is the outer `attempt` counter (1..max_retries); calibration
+    # retries do NOT consume that budget — they have their own
+    # `calibration_attempts_used` budget of `max_retries`. Total worst
+    # case: 2 * max_retries LLM calls.
+    calibration_attempts_used: int = 0
+    calibration_max: int = max_retries
+
+    attempt = 0
+    while attempt < max_retries:
+        attempt += 1
 
         logger.debug(
             "§2.7 retry loop: attempt %d/%d", attempt, max_retries
@@ -225,23 +258,136 @@ def run_retry_loop(
         )
         history.append(result)
 
-        # ===== Early Exit on Success =====
+        # ===== Success Path — Calibration Check =====
 
         if result.success:
             logger.debug(
-                "§2.7 retry loop: succeeded on attempt %d", attempt
-            )
-            return RetryLoopResult(
-                success=True,
-                dataframe=result.dataframe,
-                metadata=result.metadata,
-                raw_declarations=result.raw_declarations,
-                source_code=result.source_code or current_code,
-                attempts=attempt,
-                history=history,
+                "§2.7 retry loop: sandbox succeeded on attempt %d, "
+                "running sigma calibration", attempt,
             )
 
-        # ===== Prepare Feedback for Next Attempt =====
+            # Build the calibration input. raw_declarations is the
+            # contract surface the calibration helper expects.
+            raw_decls = result.raw_declarations
+            if raw_decls is None:
+                # No simulator registry available (e.g. custom sandbox
+                # namespace or SDK not pre-injected). Treat as
+                # calibration-passed since we cannot replay; this matches
+                # the legacy behavior for non-tracking sandboxes.
+                logger.debug(
+                    "§2.7 retry loop: no raw_declarations available, "
+                    "skipping calibration on attempt %d", attempt,
+                )
+                return RetryLoopResult(
+                    success=True,
+                    dataframe=result.dataframe,
+                    metadata=result.metadata,
+                    raw_declarations=result.raw_declarations,
+                    source_code=result.source_code or current_code,
+                    attempts=attempt,
+                    history=history,
+                )
+
+            cal_result = check_sigma_calibration(raw_decls, threshold=0.2)
+
+            # F3.2: structured log line per calibration evaluation so
+            # downstream tooling can plot convergence trajectories.
+            logger.info(
+                "calibration_attempt scenario=%s attempt=%d cal_used=%d/%d failures=%s",
+                scenario_id, attempt, calibration_attempts_used, calibration_max,
+                [
+                    (
+                        f.measure,
+                        round(f.declared_sigma, 2),
+                        round(f.empirical_residual_std, 2),
+                        round(f.ratio, 3),
+                    )
+                    for f in cal_result.failures
+                ],
+            )
+
+            if cal_result.passed:
+                return RetryLoopResult(
+                    success=True,
+                    dataframe=result.dataframe,
+                    metadata=result.metadata,
+                    raw_declarations=result.raw_declarations,
+                    source_code=result.source_code or current_code,
+                    attempts=attempt,
+                    history=history,
+                )
+
+            # Calibration failed. If budget remains, re-prompt the LLM
+            # and retry (without bumping the exec-error counter).
+            if calibration_attempts_used < calibration_max:
+                calibration_attempts_used += 1
+
+                feedback_prompt = format_calibration_feedback(
+                    original_code=result.source_code or current_code,
+                    failures=cal_result.failures,
+                )
+
+                logger.debug(
+                    "§2.7 retry loop: calibration failed, requesting "
+                    "sigma fix (cal_attempt %d/%d)",
+                    calibration_attempts_used, calibration_max,
+                )
+
+                try:
+                    response = llm_generate_fn(system_prompt, feedback_prompt)
+                    current_code = response.code
+                    if response.token_usage is not None:
+                        tokens_used += response.token_usage.total_tokens
+                except Exception as llm_exc:
+                    logger.debug(
+                        "§2.7 retry loop: calibration LLM call failed "
+                        "(cal_attempt %d): %s",
+                        calibration_attempts_used, llm_exc,
+                    )
+
+                # Token-budget guard — mirror the exec-error branch so
+                # calibration retries can also short-circuit on token cost.
+                if token_budget is not None and tokens_used >= token_budget:
+                    logger.debug(
+                        "§2.7 retry loop: token budget exceeded after "
+                        "calibration retry (%d/%d) — short-circuiting",
+                        tokens_used, token_budget,
+                    )
+                    return RetryLoopResult(
+                        success=False,
+                        attempts=attempt,
+                        history=history,
+                        skipped_reason=(
+                            f"token_budget_exceeded ({tokens_used}/{token_budget})"
+                        ),
+                    )
+
+                # Re-execute the new code without consuming an exec
+                # attempt slot — calibration retries are independent.
+                attempt -= 1
+                continue
+
+            # Calibration budget exhausted — return with a typed reason.
+            failures_summary = "; ".join(
+                f"{f.measure}: declared {f.declared_sigma:.2f} vs "
+                f"empirical {f.empirical_residual_std:.2f} "
+                f"(ratio {f.ratio:.2f})"
+                for f in cal_result.failures
+            )
+            logger.info(
+                "calibration_unconverged scenario=%s failures=%s",
+                scenario_id, failures_summary,
+            )
+            return RetryLoopResult(
+                success=False,
+                attempts=attempt,
+                history=history,
+                skipped_reason=(
+                    f"calibration_unconverged ({failures_summary})"
+                ),
+            )
+
+        # ===== Exec-Error Path — Prepare Feedback for Next Attempt =====
 
         # Don't call the LLM after the final failed attempt — there is
         # no subsequent attempt to use the new code
@@ -383,6 +529,7 @@ def orchestrate(
         token_budget=token_budget,
         initial_token_usage=initial_response.token_usage,
         seed=seed,
+        scenario_id=scenario_id,
     )
 
     # ===== Step 4: Map result to pipeline contract =====
@@ -399,9 +546,19 @@ def orchestrate(
             "attempts=%d, skipped_reason=%s)",
             scenario_id, result.attempts, result.skipped_reason,
         )
+        # Map the typed `skipped_reason` prefix onto SkipResult.skip_reason.
+        # The default is "exec_error"; calibration failures get their own
+        # typed reason so downstream tooling (e.g. agpds_generate._save_skip_record)
+        # can bucket skip causes for diagnostics.
+        skip_reason = "exec_error"
+        if result.skipped_reason and result.skipped_reason.startswith(
+            "calibration_unconverged"
+        ):
+            skip_reason = "calibration_unconverged"
         return SkipResult(
             scenario_id=scenario_id,
             error_log=error_log or ["All retries exhausted without success."],
+            skip_reason=skip_reason,
         )
 
     # Success — return the 4-tuple expected by pipeline._run_loop_a.
