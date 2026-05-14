@@ -150,6 +150,36 @@ class TestParseResidualStd:
         d = "noise_sigma=5.0000, residual_std=337.6500, ratio=66.5 (>= 0.2)"
         assert _parse_residual_std_from_detail(d) == 337.65
 
-    def test_returns_none_for_malformed(self):
-        assert _parse_residual_std_from_detail(None) is None
-        assert _parse_residual_std_from_detail("nothing useful") is None
+    def test_raises_for_malformed(self):
+        with pytest.raises(RuntimeError, match="empty detail"):
+            _parse_residual_std_from_detail("")
+        with pytest.raises(RuntimeError, match="format unexpected"):
+            _parse_residual_std_from_detail("nothing useful")
+
+
+class TestStochasticMeasuresSkipped:
+    def test_stochastic_measure_with_underspecified_sigma_is_not_flagged(self):
+        """V1 contract: check_sigma_calibration only inspects structural measures.
+        Stochastic measures (e.g. with effects on intercept) are out of scope and
+        must not trigger CalibrationFailure even if their declared sigma is way off.
+        Future v2 may extend; this test will fail then and be updated intentionally."""
+        from pipeline.phase_2.sdk.simulator import FactTableSimulator
+        sim = FactTableSimulator(target_rows=500, seed=42)
+        sim.add_category("region", values=["N", "S"], weights=[0.5, 0.5], group="geo")
+        sim.add_measure(
+            "applied", family="gaussian",
+            param_model={"mu": {"intercept": 1000.0}, "sigma": {"intercept": 0.001}},
+        )
+        decls = {
+            "columns": sim._columns,
+            "groups": sim._groups,
+            "group_dependencies": sim._group_dependencies,
+            "measure_dag": sim._measure_dag,
+            "target_rows": sim.target_rows,
+            "patterns": sim._patterns,
+            "seed": sim.seed,
+            "orthogonal_pairs": sim._orthogonal_pairs,
+        }
+        result = check_sigma_calibration(decls, threshold=0.2)
+        assert result.passed
+        assert result.failures == []

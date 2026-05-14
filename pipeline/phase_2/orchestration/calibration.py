@@ -65,8 +65,6 @@ def check_sigma_calibration(
             patterns=raw_declarations.get("patterns", []),
         )
         empirical_std = _parse_residual_std_from_detail(check.detail)
-        if empirical_std is None:
-            continue
         ratio = abs(empirical_std - declared_sigma) / declared_sigma
         if ratio >= threshold:
             failures.append(CalibrationFailure(
@@ -88,13 +86,21 @@ def _extract_declared_sigma(col_spec: dict[str, Any]) -> float | None:
     return float(sigma)
 
 
-def _parse_residual_std_from_detail(detail: str | None) -> float | None:
-    """Extract residual_std from check_structural_residuals' detail string.
+def _parse_residual_std_from_detail(detail: str) -> float:
+    """Extract residual_std= from a check_structural_residuals detail string.
 
-    Extract residual_std= from any check_structural_residuals detail string,
-    regardless of whether the deterministic or stochastic branch produced it.
+    Raises RuntimeError if the detail is empty or has no parseable residual_std
+    field — this is a programming error (e.g. validator changed the detail
+    string format) and must not silently skip measures.
     """
     if not detail:
-        return None
+        raise RuntimeError(
+            "check_structural_residuals returned empty detail; cannot calibrate."
+        )
     m = re.search(r"residual_std=([\d.eE+-]+)", detail)
-    return float(m.group(1)) if m else None
+    if m is None:
+        raise RuntimeError(
+            f"check_structural_residuals.detail format unexpected — "
+            f"no 'residual_std=' field found: {detail!r}"
+        )
+    return float(m.group(1))
