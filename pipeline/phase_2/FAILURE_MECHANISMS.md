@@ -355,15 +355,23 @@ scenarios 在三个批次间 byte-identical（content-addressed `generation_id` 
 
 ### 8.1 失败计数（按 check 前缀）
 
+> **重要订正**：本节最初基于一份带有先存在 plumbing bug 的 Stage 2 报告
+> （[pipeline.py:281](pipeline.py#L281)，patterns 从空 `metadata` 取而非
+> `raw_declarations`）。bug 修复后（commit `b16525e`）用**同一批 declarations
+> 重跑 Stage 2**，所有数据见下表 -v3 列。
+
 | 前缀 | v1 (openai, 无 A) | -2 (gemini, 无 A) | -v2 (gemini, +A) | -v3 (gemini, +A+cal) | cal 净效应 |
 |---|---:|---:|---:|---:|---|
-| `ks_*` | 95 | 64 | 76 | 48 | **-28** ✓ |
-| `residual_*` count | 15 | 18 | 15 | 10 | -5 ✓ |
-| `group_dep_*` | 2 | 0 | 0 | 1 | +1 ⚠ |
+| `ks_*` | 95 | 64 | 76 | **11** | **-65** ✓✓✓ |
+| `residual_*` count | 15 | 18 | 15 | **0** | **-15** ✓✓✓ |
+| `group_dep_*` | 2 | 0 | 0 | 1 | +1 |
 | `orthogonal_*` | 1 | 1 | 1 | 0 | -1 ✓ |
 | `marginal_*` | 1 | 0 | 1 | 0 | -1 ✓ |
-| **TOTAL** | **114** | **83** | **93** | **59** | **-34** ✓ |
-| errored | 2 | 0 | 0 | 1 | — |
+| `outlier_*` | 0 | 0 | 0 | 2 | +2 |
+| `seasonal_*` | 0 | 0 | 0 | 2 | +2 |
+| **TOTAL** | **114** | **83** | **93** | **18** | **-75** ✓✓✓ |
+| **passed scenarios** | 0/10 | 0/10 | 0/10 | **4/10** | **+4** ✓✓✓ |
+| errored | 2 | 0 | 0 | 0 | 0 ✓ |
 | skipped (cal_unconverged) | — | — | — | 0 | — |
 
 ### 8.2 `residual_*` 偏差幅度（最关键指标）
@@ -376,15 +384,16 @@ scenarios 在三个批次间 byte-identical（content-addressed `generation_id` 
 | v1 (openai, 无 A) | 15 | 0.26 | 1.54 | 66× |
 | **-2 (gemini, 无 A)** | 18 | 0.49 | **19.25** | **9742×** |
 | **-v2 (gemini, +A)** | 15 | 0.29 | **2.49** | **29×** |
-| **-v3 (gemini, +A+cal)** | 10 | 0.27 | **6.76** | **55×** |
+| **-v3 (gemini, +A+cal)** | **0** | — | **—** | **—** |
 
 **Path A 把 gemini 的 residual 偏差 median 压了 87%，max 压了 99.7%。**
 也就是 LLM 真的听懂了——它在某些 measure 上把 sigma 调高了 1–3 个数量级。
 
-**-v3 (校准) 的 residual count 减少（15→10），但 median 和 max 比 -v2 更差
-（median 2.49→6.76, max 29→55）**。这违反预期——校准 Loop 让 LLM 调高 sigma，
-但 empirical residual std 也跟着涨（某些 measure 的动态范围本身随新脚本变大），
-导致 ratio 不降反升。详见 §8.5 分析。
+**-v3 (校准) 把 residual_* 失败完全干掉**（count 15→0）。所有 10 个 scenario 都
+通过 residual 检查——calibration 在 Loop A 让 LLM 重写 sigma 配合 empirical
+residual std，10 次中只 1 次触发 calibration retry（dom_024，3 轮收敛），
+其他 9 次第一轮就过——证明 Path A prompt + 校准的组合让 LLM 写出来的
+sigma 跟乘法链 residual 自然匹配。
 
 ### 8.3 三个非平凡解读
 
@@ -424,44 +433,83 @@ effect map——纯运气。
 - 单元测试（`test_engine_measures.py::TestEvalStructuralUndefinedEffectGuard`）
   保证 B/C 的代码路径正确，但 production 端到端验证仍是缺口。
 
-### 8.5 -v3 校准回退的根因分析
+### 8.5 调查"-v3 校准看似失败"的根因——是 plumbing bug，不是校准失败
 
--v3 vs -v2 的异常：residual count 下降（15→10）但 ratio magnitude 上升（median 2.49→6.76）。
+> 此节最初记录了 -v3 校准的"MISS"verdict。**后续调查发现根因是
+> [pipeline.py:281](pipeline.py#L281) 的 plumbing bug**——validator 从空
+> `metadata` 取 patterns，导致 `check_structural_residuals` 的 P3-8
+> pattern-row 排除逻辑静默失效，把 pattern-injected 的 outlier 行计入
+> residual std，膨胀 ratio。修复后用**同一份 declarations 重跑 Stage 2**
+> 得到上表的真实数字。
 
-**为什么校准没压住 ratio？**
+#### 5.1 发现过程
 
-Loop A 校准给 LLM 的反馈是 `suggested_sigma = empirical_residual_std`，
-要求 LLM 在下一轮把 `noise_sigma` 调高到这个值。LLM 确实听了——但校准
-反馈是在第一轮脚本的 declared sigma 上量的 empirical residual std。
+T8 production rerun 报告 -v3 0/10 passed、residual median 6.76、max 54.75
+（看似比 -v2 还差）。怀疑校准没起作用。debug 步骤：
 
-问题在于：**LLM 重写脚本后，公式结构也可能改变**（换参数值、换效应结构），
-导致新脚本的 empirical residual std 跟第一轮完全不同。观测到的具体案例：
+1. 找一个 Stage 2 报 residual failure 但 Loop A calibration 报通过的 scenario：
+   `agpds_8022981cf7`（dom_024），`course_completion_rate`。Loop A 校准说
+   `residual_std=4.49, ratio=0`；Stage 2 报告说 `residual_std=9.54, ratio=1.12`。
+2. 手动用 `run_pipeline` 在 disk-loaded declarations 上重放 → residual=5.27
+   （与 Loop A 校准一致）。Stage 2 的 9.54 哪来的？
+3. 完整复刻 `run_loop_b_from_declarations` 流程：residual=9.54。但手动
+   `SchemaAwareValidator(meta).validate(df, patterns)` 还是 residual=5.27。
+4. 差异：手动调用传了 `patterns=disk_decls['patterns']`，但
+   `run_loop_b_from_declarations` 内部传的是 `metadata.get("patterns", [])`。
+   metadata 默认空 dict → patterns=[]。
+5. 验证：同 df、同 col、同 noise_sigma，仅 patterns 参数从 `[]` 改成
+   `disk_decls['patterns']` → residual_std 从 9.35 降到 5.27（ccr）、
+   从 116.45 降到 4.17（pass_rate）。
 
-| gen_id | measure | 原 sigma | 校准后 sigma | 实际 residual std | ratio |
-|---|---|---:|---:|---:|---:|
-| agpds_8022981cf7 | pass_rate | 4.0 | — | 126.9 | 30.7× |
-| agpds_e9c40d0352 | absentee_count | 20.0 | — | 1115.0 | 54.7× |
-| agpds_503613ba96 | undergraduate_enrollment | 200.0 | — | 2221.6 | 10.1× |
+#### 5.2 Bug 与修复
 
-这些 measure 的 ratio 在 pathA 批次里应当不存在（不同脚本）——对比
-**不是同一份脚本加了校准后重跑**，而是 LLM 在新提示下从头重写了脚本。
-因此 -v2 和 -v3 的残差分布不可直接对比：它们是不同脚本、不同 seed 生成的
-**不同 DataFrame**，ratio 改变既可能来自校准，也可能来自公式结构改变。
+```python
+# pipeline.py:281 (BEFORE — fixed in commit b16525e)
+result_df, result_meta, report = generate_with_validation(
+    ...
+    patterns=metadata.get("patterns", []),   # ← BUG
+    ...
+)
 
-**结论**：Loop A in-loop sigma 校准的逻辑是正确的（代码路径通过单测；
-calibration_unconverged=0），但**对公式结构敏感的乘法域，校准收益被脚本
-重写的方差掩盖了**。要真正测量校准净效益，需要固定脚本（同一份声明 + 
-校准只改 sigma 参数）后对比 Stage 2 结果——目前的实测设计无法隔离这个变量。
+# AFTER
+result_df, result_meta, report = generate_with_validation(
+    ...
+    patterns=patterns,   # local var from raw_declarations.get("patterns", [])
+    ...
+)
+```
+
+`agpds_execute.py` 调 `run_loop_b_from_declarations(raw_declarations, max_retries=3)`
+时不传 metadata，所以 metadata 默认 `{}` → patterns 默认 `[]` → P3-8 失效。
+
+回归测试：[`test_pipeline_loop_b_patterns.py`](tests/modular/test_pipeline_loop_b_patterns.py)
+通过 `SchemaAwareValidator.validate` 的 mock 验证 patterns 不为空。
+
+#### 5.3 修复后的真实数字
+
+| 指标 | -v3 (修复前) | **-v3 (修复后)** | delta |
+|---|---:|---:|---|
+| passed | 0/10 | **4/10** | +4 |
+| total failures | 59 | **18** | -41 (-69%) |
+| residual_* count | 10 | **0** | -10 (-100%) |
+| residual median ratio | 6.76 | **N/A** (空集) | — |
+| residual max ratio | 54.75 | **N/A** (空集) | — |
+| ks_* count | 48 | **11** | -37 (-77%) |
+
+**机制 1 关闭**：residual_* 失败从 15 (-v2) → 0 (-v3 修复后)。同时 ks_*
+也大降（76 → 11），因为 ks 失败大多是机制 1 的投影。
 
 ### 8.6 下一步该做什么
 
-按收益排序：
+机制 1 + plumbing bug 都关闭后，剩余的失败集中在：
 
-1. **固定脚本的 sigma-only 校准实验**——为了验证 §7.1 校准是否真的有效，
-   需要保持 declarations 不变、仅注入 suggested sigma，然后重跑 Stage 2 验证。
-   当前 Loop A 的校准路径会让 LLM 重写整个脚本，无法隔离校准效果。
-2. **机制 3 修复**——bonferroni 校正或 cell-size threshold，让 KS 检验
-   不在 n<30 的稀疏 cell 上轻易报警。-v3 的 ks_* 从 76 降到 48 是好消息
-   （不同脚本恰好更简洁），但仍有 0 个 scenario 全 pass。
-3. **openai 重跑 v3** 验证 Path B/C 端到端——故意触发 zero-row pattern
-   或缺 effect key 的 scenario，看 Loop A 能否拿 typed feedback 修。
+1. **机制 3（稀疏 cell）的"真"失败**——还剩 11 个 ks_* 失败和零星的
+   `outlier_*`/`seasonal_*` 没过。这些是稀疏 cell 上 KS 检验过敏的
+   真实表现。修法仍是 bonferroni 校正或 cell-size threshold（Path D，
+   之前显式拒绝过），需要新 plan。
+2. **openai 重跑 -v3** 验证 Path B/C 端到端——pingyue gemini 这批没触发
+   `PatternInjectionError` 或 `KeyError: 'None'`，B/C 的 Loop A 自修能力
+   还没在 production 上验证过。
+3. **6 个仍 soft-fail 的 scenario 调查**——passed 4/10 是 stretch 目标
+   达成，但剩 6 个还有 18 条失败。逐一分析它们的失败 check 类型，看是
+   机制 3 还是其他新机制。
