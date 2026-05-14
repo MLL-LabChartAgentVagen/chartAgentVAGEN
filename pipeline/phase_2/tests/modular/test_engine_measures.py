@@ -12,7 +12,10 @@ from pipeline.phase_2.engine.measures import (
     _safe_eval_formula,
     _sample_stochastic,
 )
-from pipeline.phase_2.exceptions import InvalidParameterError
+from pipeline.phase_2.exceptions import (
+    InvalidParameterError,
+    UndefinedEffectError,
+)
 
 
 class TestSafeEvalFormula:
@@ -91,6 +94,94 @@ class TestEvalStructuralZeroDivisionGuard:
             columns={},
         )
         assert out.shape == (0,)
+
+
+class TestEvalStructuralUndefinedEffectGuard:
+    """Repro for pingyue-samples agpds_8180fe4e2c: a row's categorical value
+    was absent from the effect map, producing a bare KeyError('None') that
+    Loop A could not interpret. The guard converts it to UndefinedEffectError,
+    which is in the §2.7 typed-error taxonomy and routed through
+    format_error_feedback."""
+
+    def test_categorical_value_absent_from_effect_map_raises_typed_error(self):
+        col_meta = {
+            "formula": "base * region_mult",
+            "effects": {"region_mult": {"north": 1.0, "south": 2.0}},
+            "noise": {},
+        }
+        columns = {
+            "region": {"type": "categorical", "values": ["north", "south"]},
+        }
+        rows = {
+            "base": np.array([10.0, 20.0]),
+            "region": np.array(["north", "MARS"], dtype=object),  # MARS not in map
+        }
+        rng = np.random.default_rng(0)
+
+        with pytest.raises(UndefinedEffectError) as exc:
+            _eval_structural(
+                col_name="output",
+                col_meta=col_meta,
+                rows=rows,
+                rng=rng,
+                columns=columns,
+            )
+
+        assert exc.value.effect_name == "region_mult"
+        assert exc.value.missing_value == "MARS"
+
+    def test_none_value_surfaces_as_typed_error_not_bare_keyerror(self):
+        """The original pingyue repro: row contained Python None, which
+        str(None) == 'None' produced KeyError: 'None' at the dict lookup."""
+        col_meta = {
+            "formula": "base * region_mult",
+            "effects": {"region_mult": {"north": 1.0, "south": 2.0}},
+            "noise": {},
+        }
+        columns = {
+            "region": {"type": "categorical", "values": ["north", "south"]},
+        }
+        rows = {
+            "base": np.array([10.0]),
+            "region": np.array([None], dtype=object),
+        }
+        rng = np.random.default_rng(0)
+
+        with pytest.raises(UndefinedEffectError) as exc:
+            _eval_structural(
+                col_name="output",
+                col_meta=col_meta,
+                rows=rows,
+                rng=rng,
+                columns=columns,
+            )
+
+        assert exc.value.missing_value == "None"
+
+    def test_complete_effect_map_succeeds(self):
+        """Regression: when every row's categorical value is in the effect
+        map, the guard must not fire."""
+        col_meta = {
+            "formula": "base * region_mult",
+            "effects": {"region_mult": {"north": 1.0, "south": 2.0}},
+            "noise": {},
+        }
+        columns = {
+            "region": {"type": "categorical", "values": ["north", "south"]},
+        }
+        rows = {
+            "base": np.array([10.0, 20.0]),
+            "region": np.array(["north", "south"], dtype=object),
+        }
+        rng = np.random.default_rng(0)
+        out = _eval_structural(
+            col_name="output",
+            col_meta=col_meta,
+            rows=rows,
+            rng=rng,
+            columns=columns,
+        )
+        np.testing.assert_allclose(out, [10.0, 40.0])
 
 
 # ---------------------------------------------------------------------------

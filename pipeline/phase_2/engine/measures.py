@@ -16,7 +16,7 @@ from typing import Any
 
 import numpy as np
 
-from ..exceptions import InvalidParameterError
+from ..exceptions import InvalidParameterError, UndefinedEffectError
 from .distributions import clamp_params, sample_family
 
 logger = logging.getLogger(__name__)
@@ -244,6 +244,11 @@ def _eval_structural(
         # Resolve effects from categorical predictor values
         for effect_name, (cat_col, val_map) in effect_col_map.items():
             cat_val = str(rows[cat_col][i])
+            if cat_val not in val_map:
+                raise UndefinedEffectError(
+                    effect_name=effect_name,
+                    missing_value=cat_val,
+                )
             context[effect_name] = float(val_map[cat_val])
 
         # Add referenced measure values (already computed per topo order)

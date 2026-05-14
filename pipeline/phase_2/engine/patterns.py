@@ -48,8 +48,17 @@ def _resolve_target(
         raise PatternInjectionError(
             pattern_type=pattern_type,
             detail=(
-                f"Target '{target_expr}' matched zero rows. "
-                f"Cannot inject {pattern_type} on an empty subset."
+                f"Target '{target_expr}' matched zero rows in the generated "
+                f"DataFrame. Cannot inject {pattern_type} on an empty subset. "
+                f"Common causes: (a) AND-conjoined filter on a rare value "
+                f"combination (e.g. a sub-population that statistically does "
+                f"not co-occur — check your group dependencies and conditional "
+                f"weights); (b) the value name does not match a declared "
+                f"category exactly (case, whitespace, punctuation). "
+                f"Fix: choose a less restrictive `target`, verify each value "
+                f"exists in the relevant `add_category(values=...)` "
+                f"declaration, and ensure the target's expected support is "
+                f"at least a few rows."
             ),
         )
 
