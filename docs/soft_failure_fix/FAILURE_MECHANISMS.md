@@ -6,8 +6,8 @@ soft-failed / 2 errored）暴露出来的根本病因，并解释三条修复路
 
 > **配套阅读**：
 > - 持久化层：[VALIDATION_PERSISTENCE.md](VALIDATION_PERSISTENCE.md)
-> - Loop B 自动修复策略：[validation/autofix.py](validation/autofix.py)
-> - M3 prompt 装配：[orchestration/prompt.py](orchestration/prompt.py)
+> - Loop B 自动修复策略：[validation/autofix.py](../../pipeline/phase_2/validation/autofix.py)
+> - M3 prompt 装配：[orchestration/prompt.py](../../pipeline/phase_2/orchestration/prompt.py)
 
 ---
 
@@ -139,7 +139,7 @@ P(both) ≈ 720 × 0.2 × 0.01 × P(International) ≈ < 1 row
 
 ### 现象 B：`KeyError: 'None'`
 
-`agpds_8180fe4e2c` 在 [engine/measures.py:247](engine/measures.py#L247) 抛
+`agpds_8180fe4e2c` 在 [engine/measures.py:247](../../pipeline/phase_2/engine/measures.py#L247) 抛
 `KeyError: 'None'`。根因是 `major` 是 `school_college` 的子列，条件分布在
 某些 `(school_college, major)` 组合下的权重和未归一化到 1，sampling 回退
 出 `None`，然后 effect map 查不到 `'None'` 这个键。
@@ -202,9 +202,9 @@ Loop B 的四把工具：
 
 | 路径 | 治哪条机制 | 治法 | 代码位点 |
 |---|---|---|---|
-| **A. Prompt 加 noise + None 约束** | 机制 1 + 机制 2 | 在 LLM 写代码前**告诉它复合方差和 None 陷阱存在**，让它在 declaration 时就算清楚 | [orchestration/prompt.py:103-118](orchestration/prompt.py#L103-L118) |
-| **B. PatternInjectionError 详化** | 机制 2 | 在第一次写错后，**给 LLM 显式的修复指引**：检查值组合的边际频率 | [engine/patterns.py:47-63](engine/patterns.py#L47-L63) |
-| **C. `KeyError → UndefinedEffectError`** | 机制 2 | 把哑错变成会话——Loop A 收到 typed feedback，能 surgical 修 effect map | [engine/measures.py:245-251](engine/measures.py#L245-L251) |
+| **A. Prompt 加 noise + None 约束** | 机制 1 + 机制 2 | 在 LLM 写代码前**告诉它复合方差和 None 陷阱存在**，让它在 declaration 时就算清楚 | [orchestration/prompt.py:103-118](../../pipeline/phase_2/orchestration/prompt.py#L103-L118) |
+| **B. PatternInjectionError 详化** | 机制 2 | 在第一次写错后，**给 LLM 显式的修复指引**：检查值组合的边际频率 | [engine/patterns.py:47-63](../../pipeline/phase_2/engine/patterns.py#L47-L63) |
+| **C. `KeyError → UndefinedEffectError`** | 机制 2 | 把哑错变成会话——Loop A 收到 typed feedback，能 surgical 修 effect map | [engine/measures.py:245-251](../../pipeline/phase_2/engine/measures.py#L245-L251) |
 
 ### 6.1 Path A：预防——在声明阶段就别犯错
 
@@ -235,13 +235,13 @@ Target '...' matched zero rows. Cannot inject ... on an empty subset.
 ```
 
 扩展为带两个常见原因 + 三步修复指引的可操作信息。这条 detail 会原样
-被 [orchestration/sandbox.py:579](orchestration/sandbox.py#L579) 的
+被 [orchestration/sandbox.py:579](../../pipeline/phase_2/orchestration/sandbox.py#L579) 的
 `format_error_feedback` 转发给 LLM 的下一轮——也就是说 LLM 看到的不是
 一个谜，而是一份带"怎么改"的工单。
 
 ### 6.3 Path C：把哑错变成 typed exception
 
-原 [engine/measures.py:247](engine/measures.py#L247) 直接 `val_map[cat_val]`
+原 [engine/measures.py:247](../../pipeline/phase_2/engine/measures.py#L247) 直接 `val_map[cat_val]`
 查字典，遇到 `'None'` 抛 `KeyError`——这是个**裸异常**，Loop A 的
 `format_error_feedback` 只能转发一条不知所云的 traceback。
 
@@ -256,7 +256,7 @@ if cat_val not in val_map:
 context[effect_name] = float(val_map[cat_val])
 ```
 
-`UndefinedEffectError` 早已存在于 [exceptions.py:77](exceptions.py#L77)——
+`UndefinedEffectError` 早已存在于 [exceptions.py:77](../../pipeline/phase_2/exceptions.py#L77)——
 它是 §2.7 typed-error 分类法里的一员，原本就是为这种情况设计的，只是
 没在引擎层用上。**复用现有类型，不新增**。
 
@@ -306,18 +306,18 @@ Loop A 看到这种 typed exception 会写"effect 'major_yield' 缺值 'None'，
 ### 7.1 机制 1 的根（已修复 → 见 orchestration/calibration.py）
 
 Path A 的 heuristic prompt 是 prevention layer。**实际修复机制 1 的根**
-靠的是 [orchestration/calibration.py](orchestration/calibration.py)：
+靠的是 [orchestration/calibration.py](../../pipeline/phase_2/orchestration/calibration.py)：
 Loop A 的 LLM-in-loop dry-run sigma 校准。算法：
 
 1. Loop A exec 成功后，engine 用 `realism_config=None` 做 full-N replay。
 2. 对每个声明 sigma 的 structural measure，调用
-   [check_structural_residuals](validation/statistical.py) 量 empirical residual std。
+   [check_structural_residuals](../../pipeline/phase_2/validation/statistical.py) 量 empirical residual std。
 3. 若任一 measure 的 ratio ≥ 0.2，构造 typed feedback
-   ([sandbox.py::format_calibration_feedback](orchestration/sandbox.py)) 把
+   ([sandbox.py::format_calibration_feedback](../../pipeline/phase_2/orchestration/sandbox.py)) 把
    suggested sigma 送回 LLM。calibration retry budget 独立于 exec retry
-   budget（各 3 次），见 [retry_loop.py](orchestration/retry_loop.py)。
+   budget（各 3 次），见 [retry_loop.py](../../pipeline/phase_2/orchestration/retry_loop.py)。
 4. 3 轮未收敛 → `SkipResult(skip_reason="calibration_unconverged")`，
-   每行写入 `output/agpds/<batch>/skipped.jsonl`（[agpds_generate.py::_save_skip_record](../agpds_generate.py)）。
+   每行写入 `output/agpds/<batch>/skipped.jsonl`（[agpds_generate.py::_save_skip_record](../../pipeline/agpds_generate.py)）。
 
 设计意图：Loop A 校准过的 declarations 进入 Stage 2 后，Stage 2 validator
 应一致 pass、Loop B 的 `widen_variance` 不应触发——calibration 是 Stage 1
@@ -356,7 +356,7 @@ scenarios 在三个批次间 byte-identical（content-addressed `generation_id` 
 ### 8.1 失败计数（按 check 前缀）
 
 > **重要订正**：本节最初基于一份带有先存在 plumbing bug 的 Stage 2 报告
-> （[pipeline.py:281](pipeline.py#L281)，patterns 从空 `metadata` 取而非
+> （[pipeline.py:281](../../pipeline/phase_2/pipeline.py#L281)，patterns 从空 `metadata` 取而非
 > `raw_declarations`）。bug 修复后（commit `b16525e`）用**同一批 declarations
 > 重跑 Stage 2**，所有数据见下表 -v3 列。
 
@@ -436,7 +436,7 @@ effect map——纯运气。
 ### 8.5 调查"-v3 校准看似失败"的根因——是 plumbing bug，不是校准失败
 
 > 此节最初记录了 -v3 校准的"MISS"verdict。**后续调查发现根因是
-> [pipeline.py:281](pipeline.py#L281) 的 plumbing bug**——validator 从空
+> [pipeline.py:281](../../pipeline/phase_2/pipeline.py#L281) 的 plumbing bug**——validator 从空
 > `metadata` 取 patterns，导致 `check_structural_residuals` 的 P3-8
 > pattern-row 排除逻辑静默失效，把 pattern-injected 的 outlier 行计入
 > residual std，膨胀 ratio。修复后用**同一份 declarations 重跑 Stage 2**
@@ -482,7 +482,7 @@ result_df, result_meta, report = generate_with_validation(
 `agpds_execute.py` 调 `run_loop_b_from_declarations(raw_declarations, max_retries=3)`
 时不传 metadata，所以 metadata 默认 `{}` → patterns 默认 `[]` → P3-8 失效。
 
-回归测试：[`test_pipeline_loop_b_patterns.py`](tests/modular/test_pipeline_loop_b_patterns.py)
+回归测试：[`test_pipeline_loop_b_patterns.py`](../../pipeline/phase_2/tests/modular/test_pipeline_loop_b_patterns.py)
 通过 `SchemaAwareValidator.validate` 的 mock 验证 patterns 不为空。
 
 #### 5.3 修复后的真实数字

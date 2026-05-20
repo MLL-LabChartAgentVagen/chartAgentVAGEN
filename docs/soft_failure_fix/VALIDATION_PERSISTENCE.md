@@ -7,7 +7,7 @@ final attempt still fails, the scenario is **soft-failed**: the produced
 `(DataFrame, schema_metadata, ValidationReport)` is kept, not discarded.
 
 Previously, those soft warnings only surfaced through `logger.warning(...)` in
-[agpds_pipeline.py:362](../agpds_pipeline.py#L362) — once a batch finished,
+[agpds_pipeline.py:362](../../pipeline/agpds_pipeline.py#L362) — once a batch finished,
 nothing on disk recorded which scenarios had passed validation and which had
 shipped with a red flag. This doc describes the persistence layer added to
 close that gap.
@@ -31,7 +31,7 @@ from disk by checking `all_passed` in either the per-scenario report
 (`any(not c["passed"] for c in r["checks"])`) or the batch summary.
 
 `ValidationReport`/`Check` are plain `@dataclass` objects (defined in
-[types.py:235](phase_2/types.py#L235)), so no custom serializer is needed —
+[types.py:235](../../pipeline/phase_2/types.py#L235)), so no custom serializer is needed —
 `dataclasses.asdict` covers them.
 
 ---
@@ -134,16 +134,16 @@ indent=2)` produces a fixed byte layout. Re-running
 
 | File                                                    | Change                                                                 |
 |---------------------------------------------------------|------------------------------------------------------------------------|
-| [agpds_runner.py:91-101](../agpds_runner.py#L91-L101)   | `_ensure_output_dirs` creates `validation/` and returns 5-tuple        |
-| [agpds_runner.py:67](../agpds_runner.py#L67)            | `AGPDSRunner.save_results` destructures the new tuple (unused locally) |
-| [agpds_runner.py:121-172](../agpds_runner.py#L121-L172) | `save_single_result` serialises `validation_report` via `asdict`, adds `validation_report_path` to result, excludes `validation_report` from `chart_record` |
-| [agpds_execute.py:108-127](../agpds_execute.py#L108-L127) | `_execute_one` passes `val_report` into the save payload and returns `validation_failures` for the batch summary |
-| [agpds_execute.py:192-225](../agpds_execute.py#L192-L225) | `main()` writes `validation_summary.json` and prints the 3-way + per-soft-fail summary |
+| [agpds_runner.py:91-101](../../pipeline/agpds_runner.py#L91-L101)   | `_ensure_output_dirs` creates `validation/` and returns 5-tuple        |
+| [agpds_runner.py:67](../../pipeline/agpds_runner.py#L67)            | `AGPDSRunner.save_results` destructures the new tuple (unused locally) |
+| [agpds_runner.py:121-172](../../pipeline/agpds_runner.py#L121-L172) | `save_single_result` serialises `validation_report` via `asdict`, adds `validation_report_path` to result, excludes `validation_report` from `chart_record` |
+| [agpds_execute.py:108-127](../../pipeline/agpds_execute.py#L108-L127) | `_execute_one` passes `val_report` into the save payload and returns `validation_failures` for the batch summary |
+| [agpds_execute.py:192-225](../../pipeline/agpds_execute.py#L192-L225) | `main()` writes `validation_summary.json` and prints the 3-way + per-soft-fail summary |
 
 No changes were required in
-[phase_2/types.py](types.py),
-[phase_2/validation/validator.py](validation/validator.py), or
-[phase_2/validation/autofix.py](validation/autofix.py) — the existing dataclass
+[phase_2/types.py](../../pipeline/phase_2/types.py),
+[phase_2/validation/validator.py](../../pipeline/phase_2/validation/validator.py), or
+[phase_2/validation/autofix.py](../../pipeline/phase_2/validation/autofix.py) — the existing dataclass
 shapes were already sufficient.
 
 ---
@@ -157,5 +157,5 @@ shapes were already sufficient.
   the batch index will see new per-record fields (`validation_report_path`)
   but no removed fields.
 - **No new dependencies.** Uses only `dataclasses.asdict`, which is already
-  used in [serialization.py:35-37](serialization.py#L35-L37) for declarations
+  used in [serialization.py:35-37](../../pipeline/phase_2/serialization.py#L35-L37) for declarations
   export.
