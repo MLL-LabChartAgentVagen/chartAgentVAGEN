@@ -578,14 +578,16 @@ def check_group_dependency_transitions(
 ) -> list[Check]:
     """L2: Verify conditional weight distributions match declared weights.
 
-    For each group dependency, computes the observed conditional
-    distribution of the child_root column given each combination of
-    parent (``on``) column values, then checks max absolute deviation
-    < 0.10 against declared ``conditional_weights``.
+    Per (leaf cell, child_level), checks the empirical-vs-declared
+    deviation against an n-aware Wald 95% CI threshold:
+    ``threshold = 0.10 + 1.96·√(p̂(1-p̂)/n_cell)``. Cells with
+    ``n_cell < GROUP_DEP_MIN_CELL_SIZE`` are skipped as untestable for
+    proportion drift. All-pass aggregation: one offending (cell, level)
+    fails the whole Check. See PINGYUE_OPENAI_CAL_ANALYSIS.md §6 + §8.1.
 
     [DS-4 multi-column on]: walks the full ``on`` tuple (not just
     ``on[0]``) so nested declared weights are compared against an
-    equally-nested observed distribution.
+    equally-nested observed distribution at the leaf level.
 
     Args:
         df: Generated DataFrame.
@@ -619,33 +621,86 @@ def check_group_dependency_transitions(
             ))
             continue
 
-        # Build observed nested dict at depth len(on_cols).
-        # pandas.groupby with a single string returns scalar keys; with
-        # a list of >=1 it returns tuple keys (even for length 1). We
-        # always pass a list to keep handling uniform.
-        observed: dict[str, Any] = {}
+        # Walk groupby at the leaf level of `on_cols`. pandas.groupby with
+        # a list returns tuple keys even for length 1 — normalize uniformly.
+        # For each leaf cell: walk declared_cw down cell_key to its
+        # child→weight dict, then test each declared child_level against
+        # its empirical frequency under the per-cell Wald threshold.
+        per_cell_levels: list[tuple[tuple[str, ...], str, int, float, float]] = []
+        # ^ (cell_path, child_level, n_cell, p_hat_declared, dev)
+        skipped_cells: list[tuple[tuple[str, ...], int]] = []
+        n_decl_lookups_missed = 0
+
         for raw_key, group_df in df.groupby(on_cols):
-            if not isinstance(raw_key, tuple):
-                raw_key = (raw_key,)
-            child_counts = group_df[child_root].value_counts(normalize=True)
-            inner_dict = {
-                str(k): float(v) for k, v in child_counts.items()
-            }
+            cell_key_raw = raw_key if isinstance(raw_key, tuple) else (raw_key,)
+            cell_key = tuple(str(k) for k in cell_key_raw)
+            n_cell = len(group_df)
 
-            node = observed
-            for level, kv in enumerate(raw_key):
-                kv_str = str(kv)
-                if level == len(on_cols) - 1:
-                    node[kv_str] = inner_dict
+            # Walk declared_cw down to the leaf child→weight dict.
+            node: Any = declared_cw
+            lookup_ok = True
+            for k in cell_key_raw:
+                if isinstance(node, dict):
+                    if str(k) in node:
+                        node = node[str(k)]
+                    elif k in node:
+                        node = node[k]
+                    else:
+                        lookup_ok = False
+                        break
                 else:
-                    node = node.setdefault(kv_str, {})
+                    lookup_ok = False
+                    break
+            if not lookup_ok or not isinstance(node, dict):
+                n_decl_lookups_missed += 1
+                continue
 
-        dev = max_conditional_deviation(observed, declared_cw)
-        passed = bool(dev < 0.10)
-        detail = (
+            if n_cell < GROUP_DEP_MIN_CELL_SIZE:
+                skipped_cells.append((cell_key, n_cell))
+                continue
+
+            empirical = group_df[child_root].value_counts(normalize=True)
+            emp_lookup = {str(k): float(v) for k, v in empirical.items()}
+            for child_level, p_hat in node.items():
+                emp = emp_lookup.get(str(child_level), 0.0)
+                dev = abs(emp - float(p_hat))
+                per_cell_levels.append(
+                    (cell_key, str(child_level), n_cell, float(p_hat), dev)
+                )
+
+        offenders: list[
+            tuple[tuple[str, ...], str, int, float, float, float]
+        ] = []
+        for cell_key, lvl, n_cell, p_hat, dev in per_cell_levels:
+            t = _wald_dev_threshold(n_cell, p_hat)
+            if dev >= t:
+                offenders.append((cell_key, lvl, n_cell, p_hat, dev, t))
+
+        passed = not offenders
+
+        summary = (
             f"parents={on_cols}, child='{child_root}', "
-            f"max_deviation={dev:.4f} ({'<' if passed else '>='} 0.10)"
+            f"tested={len(per_cell_levels)} (cell,level), "
+            f"skipped_cells={len(skipped_cells)} "
+            f"(n<{GROUP_DEP_MIN_CELL_SIZE}), offenders={len(offenders)}"
         )
+        if offenders:
+            head = offenders[:GROUP_DEP_DETAIL_CELL_CAP]
+            lines = [
+                f"{'>'.join(ck)}->{lvl}: n={n}, "
+                f"p_hat={ph:.3f}, dev={dv:.4f}, thresh={th:.4f}"
+                for (ck, lvl, n, ph, dv, th) in head
+            ]
+            if len(offenders) > GROUP_DEP_DETAIL_CELL_CAP:
+                lines.append(
+                    f"...+{len(offenders) - GROUP_DEP_DETAIL_CELL_CAP} more"
+                )
+            detail = summary + " | " + "; ".join(lines)
+        else:
+            detail = summary
+        if n_decl_lookups_missed:
+            detail += f" | declaration lookup misses: {n_decl_lookups_missed}"
+
         checks.append(Check(
             name=f"group_dep_{child_root}",
             passed=passed,
