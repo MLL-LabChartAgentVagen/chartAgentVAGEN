@@ -297,12 +297,15 @@ diff <(jq -r '.[].generation_id' output/agpds/pingyue-samples-openai-calibrated-
 # 期望: 无输出
 ```
 
-> **注意 Loop B 非完全 bit-determinstic**：Phase A doc
+> **关于 master_tables 字节一致**：Phase A doc
 > [MECHANISM_4 §5.2](MECHANISM_4_PROPORTION_DRIFT_DEEP_DIVE.md#52-llm-完全没改任何东西)
-> 声称 master_table "字节一致"——实测当前 pipeline 下，Loop B re-execution
-> 在同 seed 下会有 stochastic noise（cell-level value 不一致、但 row count
-> 与失败族归属保持一致）。这不影响 Phase B "validator-only" 的本质：本次未触
-> 任何数据生成代码，validator 行为差异是 deviation 的唯一原因。
+> 早期版本声称 master_table 跨 phase "字节一致"，已修正：master_tables 跨 phase
+> 字节**不**一致，因为 validator 决定 Loop B 的 retry trajectory（详 §6.4 + 实证）。
+> 同 base_seed=42 下，Phase A validator 让某些 attempt 通过、Phase B validator
+> 让另一些 attempt 通过——持久化的 df 来自不同 attempt 的不同 `seed=base_seed+attempt`。
+> validator-only 的本质证据是：(a) declarations 跨 phase 字节一致；
+> (b) scenario IDs / 行数跨 phase 一致；(c) 同代码两次跑 master_tables 字节一致
+> (Stage 2 deterministic 实证)；(d) 本次未触任何数据生成代码。
 
 ### 5.3 3 条原失败的 Phase B 处理表
 
@@ -395,27 +398,77 @@ single-value scenario 上滥发 `declare_orthogonal`，可在 prompt 端拦下�
 - 比 fail 更诚实：在统计学没 power 的 regime 上 fail 会污染下游分析
   对"validator 假阳性 vs 真 LLM 错"的判断
 
-### 6.4 Loop B 非完全 bit-deterministic 是本次的发现
+### 6.4 跨 phase master_tables 不必字节一致：validator 驱动 retry trajectory
 
-Phase A doc 声称 master_tables "字节一致"，本次 Phase B 实测发现 Loop B
-re-execution 在同 seed 下会产生 cell-value 级别的 stochastic noise（行数、
-scenario IDs 一致）。可能原因：
+**Phase B 验证过程中发现并已 root-cause** 的子机制：Stage 2 在同代码下 deterministic，但跨 phase（不同 validator 代码）master_tables 不必字节一致。Phase A doc [§5.2](MECHANISM_4_PROPORTION_DRIFT_DEEP_DIVE.md#52-llm-完全没改任何东西) 早期版本曾把这点说错——已在 doc 同步修正。
 
-- 多线程 worker 执行顺序非确定（`--workers 4`）
-- numpy / scipy default_rng 与全局状态的 fall-back 路径在不同环境略有
-  差异
-- SDK 内 `add_measure_structural` 或 `inject_pattern` 中存在未完全
-  seed-fed 的 stochastic 步骤
+#### 6.4.1 机制：Loop B 是 retry loop，每个 attempt 用 `base_seed + attempt`
 
-Phase B 的 validator-only 本质不受影响——因为：
-- 行数对齐 + scenario IDs 对齐 → 同一 scenario 在两批跑出"统计意义上
-  同一份数据"
-- 失败族归属与计数对齐 → 没有数据生成层逻辑变化
-- 触动代码仅在 `structural.py` validator 内
+[`autofix.py:326-340`](../../../pipeline/phase_2/validation/autofix.py#L326-L340)：
 
-**未来：**Phase 2 的 reproducibility audit 应当成为独立 plan——跨 batch
-比较 master_table 应该是 row-by-row 等价，不应有 cell-value drift。如果
-出现，那是另一个机制。
+```python
+for attempt in range(max_attempts):       # max_retries+1 = 4 次
+    seed = base_seed + attempt            # ← seed = 42, 43, 44, 45
+    df, meta = build_fn(seed, overrides if overrides else None)
+    report = SchemaAwareValidator(meta).validate(df, patterns)
+    if report.all_passed:
+        break                             # ← 持久化这次 attempt 的 df
+```
+
+每个 attempt 调 [`engine/generator.py:74`](../../../pipeline/phase_2/engine/generator.py#L74) 里的 `rng = np.random.default_rng(seed)`——**新建一个 RNG**，丢弃上一个 attempt 的 RNG 状态。所以是字面意义上的"换 seed 重抽整张 df"。DeclarationStore 本身不动（[engine/README §5](../../../pipeline/phase_2/engine/README.md) "frozen, autofix 是 perturbation 层"）。
+
+[engine/README §2](../../../pipeline/phase_2/engine/README.md) 给这事一个官方名字 **"Loop B's `seed + attempt` trick"**——同一 base_seed 下，validator 拒就换 seed 重抽，直到通过或 max_attempts 耗尽。production 路径下 [`agpds_execute.py:95`](../../../pipeline/agpds_execute.py#L95) 不传 `auto_fix`（即 `auto_fix=None`），attempt 之间**仅 seed 不同**、overrides 始终为空。
+
+#### 6.4.2 Validator 改 → 通过 attempt 改 → 持久化 seed 改 → df 改
+
+具体到 `agpds_33d84d2c9b`（campus×year 1×1，本机制的 case 1）：
+
+| 批次 | attempt 0 (seed=42) | attempt 1 (seed=43) | attempt 2 (seed=44) | attempt 3 (seed=45) | 持久化 |
+|---|---|---|---|---|---|
+| `pingyue-...-pathD-revalidation` | orthogonal fail | orthogonal fail | orthogonal fail | orthogonal fail (max 用尽) | df_45 |
+| `pingyue-...-pathA-rev` | orthogonal fail | orthogonal fail | orthogonal fail | orthogonal fail (max 用尽) | df_45 |
+| `pingyue-...-pathB-rev` | **all_passed ✓** (degenerate skip) | (never run) | (never run) | (never run) | **df_42** |
+
+scenario 是 single-campus（marginal declared `["UC Berkeley"]`），换 seed 也改不了 contingency table shape 是 1×1——所以前两个批次 4 个 attempt 全 fail、持久化最后一个（df_45）；Phase B 让 attempt 0 就通过，持久化 seed=42 的 df。不同 seed 的 df **完全不一样**（每个 cell value 独立采样），所以 cell-level diff 满屏；但 `target_rows` 不变，所以行数和 scenario ID 一致。
+
+#### 6.4.3 实证：Stage 2 在同代码下完全 deterministic
+
+```bash
+# 两次跑同代码、同 input-dir、不同 output-dir
+PYTHONNOUSERSITE=1 PYTHONPATH=. python -m pipeline.agpds_execute \
+  --input-dir output/agpds/pingyue-samples-openai-calibrated \
+  --output-dir /tmp/rerun-A
+PYTHONNOUSERSITE=1 PYTHONPATH=. python -m pipeline.agpds_execute \
+  --input-dir output/agpds/pingyue-samples-openai-calibrated \
+  --output-dir /tmp/rerun-B
+diff -r /tmp/rerun-A/master_tables /tmp/rerun-B/master_tables
+# → 无输出 = 字节一致 ✓
+```
+
+Phase B 验证时实测：上面两次 rerun 字节一致；`/tmp/rerun-A/master_tables` 与 `output/agpds/pingyue-samples-openai-calibrated-pathB-rev/master_tables` 也字节一致。所以 Stage 2 **没有**任何隐藏的非确定性来源（多线程、unseeded RNG、numpy fall-back 都不是问题）。差异源全部在 retry trajectory。
+
+#### 6.4.4 "Stage 2 deterministic" 的精确含义
+
+旧表述："`(declarations, seed)` → bit-identical df"——容易被误读为"两个 phase 间也字节一致"。
+
+精确表述：
+- `(declarations, base_seed, validator 代码, retry_logic)` → bit-identical df
+- "validator 代码"是输入的一部分——validator 改 ⇒ 持久化的 attempt-index 改 ⇒ effective seed 改 ⇒ cell-level df 全变
+- 行数 / scenario IDs / declarations / 失败族归属：跨 phase 仍一致（这些不依赖 validator）
+
+#### 6.4.5 validator-only 改造的正确证据组
+
+由 §6.4.2 / §6.4.3 推出，跨 phase 比较 master_tables 字节一致**不是**合适的 validator-only 证据。取代品（Phase B 用的）：
+
+| 证据 | 跨 phase 期望 | 实测 |
+|---|---|:-:|
+| declarations 字节一致 | yes | ✓ |
+| scenario IDs 对齐 | yes | ✓ |
+| 行数一致（target_rows 不变） | yes | ✓ |
+| 失败族归属可解释（仅 orthogonal_* 翻 pass） | yes | ✓ |
+| 同代码 master_tables 字节一致 | yes | ✓ |
+| 触动代码仅在 validator 内（`git diff --stat`）| yes | ✓ |
+| master_tables 跨 phase 字节一致 | **NO（by design）** | by design 不一致 |
 
 ### 6.5 仍未修
 

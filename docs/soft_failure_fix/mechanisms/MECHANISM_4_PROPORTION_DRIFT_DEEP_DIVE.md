@@ -310,16 +310,33 @@ per-offender 三件套 `(n, p_hat, dev, thresh)`——可直接 cross-check 是�
 
 ### 5.2 LLM 完全没改任何东西
 
-这是 validator-only 改造的最大特征：**declarations + master_tables 字节一致**，没有 LLM regeneration。同一份 `agpds_e9c40d0352::intervention_program` 的 conditional_weights JSON 在两个批次里逐字节相同，validator 一边报 dev=0.3029 fail、一边报 offenders=0 pass。差异完全可归因于 threshold 算法。
+这是 validator-only 改造的最大特征：**declarations + base_seed + scenario IDs 一致**，没有 LLM regeneration。同一份 `agpds_e9c40d0352::intervention_program` 的 conditional_weights JSON 在两个批次里逐字节相同，validator 一边报 dev=0.3029 fail、一边报 offenders=0 pass。差异完全可归因于 threshold 算法。
 
-可用以下命令验证字节一致：
+> **关于 master_tables 跨 phase 是否字节一致**：本节早期版本曾声称 "declarations + master_tables 字节一致"——经 Phase B 验证后修正：只有 declarations 字节一致。master_tables 跨 phase **不必**字节一致，因为 Loop B 是 retry loop（[`autofix.py:326-340`](../../../pipeline/phase_2/validation/autofix.py#L326-L340)）：每个 attempt 用 `seed = base_seed + attempt`（42 / 43 / 44 / 45），validator 首次放行的那个 attempt 决定持久化的 df。validator 改了 → 通过的 attempt 改 → 持久化 seed 改 → cell value 全变。同代码两次跑仍然字节一致（实测 ✓），所以 Stage 2 deterministic 不受影响——只是 deterministic 是相对 `(declarations, base_seed, validator 代码, retry_logic)` 全套输入而言。详 [MECHANISM_5 §6.4](MECHANISM_5_ORTHOGONAL_DEGENERACY_DEEP_DIVE.md#64-跨-phase-master_tables-不必字节一致validator-驱动-retry-trajectory)。
+
+可用以下命令验证 declaration 字节一致 + 同代码 master_tables 字节一致：
 
 ```bash
-diff -r output/agpds/pingyue-samples-openai-calibrated-pathD-revalidation/declarations \
-       output/agpds/pingyue-samples-openai-calibrated-pathA-rev/declarations
-diff -r output/agpds/pingyue-samples-openai-calibrated-pathD-revalidation/master_tables \
-       output/agpds/pingyue-samples-openai-calibrated-pathA-rev/master_tables
-# (无输出 = 字节一致)
+# (a) declarations 跨 phase 字节一致（Loop A 未重跑）
+diff -r output/agpds/pingyue-samples-openai-calibrated/declarations \
+       output/agpds/pingyue-samples-openai-calibrated-pathD-revalidation/declarations
+# 期望: 无输出 = 字节一致
+
+# (b) 同代码下 Stage 2 仍 deterministic（持久化 seed 不变）
+PYTHONNOUSERSITE=1 PYTHONPATH=. python -m pipeline.agpds_execute \
+  --input-dir output/agpds/pingyue-samples-openai-calibrated \
+  --output-dir /tmp/rerun-A && \
+PYTHONNOUSERSITE=1 PYTHONPATH=. python -m pipeline.agpds_execute \
+  --input-dir output/agpds/pingyue-samples-openai-calibrated \
+  --output-dir /tmp/rerun-B && \
+diff -r /tmp/rerun-A/master_tables /tmp/rerun-B/master_tables
+# 期望: 无输出 = 字节一致（Stage 2 deterministic 实证）
+
+# (c) 跨 phase（不同 validator）master_tables 字节**不**一致——这是 by design
+diff -q output/agpds/pingyue-samples-openai-calibrated-pathD-revalidation/master_tables \
+        output/agpds/pingyue-samples-openai-calibrated-pathA-rev/master_tables \
+        | head -3
+# 期望: 大量 "differ"——validator 改 retry trajectory 的预期表现
 ```
 
 ### 5.3 7 条原失败的 Wald 阈值表
