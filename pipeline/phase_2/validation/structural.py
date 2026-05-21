@@ -16,6 +16,11 @@ import pandas as pd
 import scipy.stats
 
 from ..types import Check
+from .statistical import (
+    GROUP_DEP_DETAIL_CELL_CAP,
+    GROUP_DEP_MIN_CELL_SIZE,
+    _wald_dev_threshold,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -214,12 +219,18 @@ def check_marginal_weights(
     df: pd.DataFrame,
     meta: dict[str, Any],
 ) -> list[Check]:
-    """L1: Observed value frequencies match declared weights within 0.10.
+    """L1: Observed value frequencies match declared weights under Wald CI.
 
     [P0-1 M5 gap]
 
-    For each root categorical column (has weights, no parent), compute
-    observed frequencies and check max absolute deviation < 0.10.
+    For each root categorical column (has weights, no parent), checks
+    each declared category's empirical-vs-declared deviation against the
+    n-aware Wald 95% CI threshold ``0.10 + 1.96·√(p̂(1-p̂)/N)`` where
+    ``N = len(df)``. Tables with ``N < GROUP_DEP_MIN_CELL_SIZE`` are
+    skipped as untestable. All-pass aggregation across declared values.
+
+    See docs/soft_failure_fix/validation/PINGYUE_OPENAI_CAL_ANALYSIS.md §6
+    and §8.1 for the Phase A motivation.
 
     Args:
         df: Generated DataFrame.
@@ -246,16 +257,45 @@ def check_marginal_weights(
         if not values or col_name not in df.columns:
             continue
 
-        observed = df[col_name].value_counts(normalize=True)
-        max_dev = 0.0
-        for value, declared_weight in zip(values, weights):
-            obs_freq = observed.get(value, 0.0)
-            dev = abs(obs_freq - declared_weight)
-            if dev > max_dev:
-                max_dev = dev
+        total_n = len(df)
+        if total_n < GROUP_DEP_MIN_CELL_SIZE:
+            checks.append(Check(
+                name=f"marginal_weights_{col_name}",
+                passed=True,
+                detail=(
+                    f"skipped (n={total_n} < {GROUP_DEP_MIN_CELL_SIZE})"
+                ),
+            ))
+            continue
 
-        passed = bool(max_dev < 0.10)
-        detail = f"max_deviation={max_dev:.4f} ({'<' if passed else '>='} 0.10)"
+        observed = df[col_name].value_counts(normalize=True)
+        offenders: list[tuple[Any, float, float, float]] = []
+        for value, declared_weight in zip(values, weights):
+            obs_freq = float(observed.get(value, 0.0))
+            p_hat = float(declared_weight)
+            dev = abs(obs_freq - p_hat)
+            t = _wald_dev_threshold(total_n, p_hat)
+            if dev >= t:
+                offenders.append((value, p_hat, dev, t))
+
+        passed = not offenders
+        summary = (
+            f"n={total_n}, categories={len(values)}, "
+            f"offenders={len(offenders)}"
+        )
+        if offenders:
+            head = offenders[:GROUP_DEP_DETAIL_CELL_CAP]
+            lines = [
+                f"value={v}: p_hat={ph:.3f}, dev={dv:.4f}, thresh={th:.4f}"
+                for (v, ph, dv, th) in head
+            ]
+            if len(offenders) > GROUP_DEP_DETAIL_CELL_CAP:
+                lines.append(
+                    f"...+{len(offenders) - GROUP_DEP_DETAIL_CELL_CAP} more"
+                )
+            detail = summary + " | " + "; ".join(lines)
+        else:
+            detail = summary
         logger.debug("check_marginal_weights[%s]: %s", col_name, detail)
         checks.append(Check(
             name=f"marginal_weights_{col_name}",

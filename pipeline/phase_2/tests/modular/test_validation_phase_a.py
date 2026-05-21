@@ -224,3 +224,74 @@ class TestGroupDepDetailString:
         # Surfaces both the empirical deviation and the per-cell threshold
         assert "dev=" in detail
         assert "thresh=" in detail or "threshold=" in detail
+
+
+# --------------------------------------------------------------------------
+# check_marginal_weights — per-category Wald CI on total table n
+# --------------------------------------------------------------------------
+
+def _marginal_meta(col_name: str, values: list, weights: list) -> dict:
+    """Minimal meta for check_marginal_weights — columns is a dict keyed by name."""
+    return {
+        "columns": {
+            col_name: {
+                "type": "categorical",
+                "values": values,
+                "weights": weights,
+            },
+        },
+    }
+
+
+class TestMarginalSmallTableSkipped:
+    """Marginal check skips when total table n < GROUP_DEP_MIN_CELL_SIZE."""
+
+    def test_below_threshold_table_passes(self):
+        # n=9 < 10: marginal check should silent-pass for this column.
+        df = pd.DataFrame({"x": ["A"] * 9})
+        meta = _marginal_meta("x", ["A", "B"], [0.5, 0.5])
+        checks = check_marginal_weights(df, meta)
+        target = [c for c in checks if c.name == "marginal_weights_x"]
+        assert len(target) == 1
+        assert target[0].passed is True
+
+
+class TestMarginalWaldClears:
+    """The §6 marginal target: n=420 dev=0.10 should pass under Wald."""
+
+    def test_n420_dev_010_passes(self):
+        # Declared weights [0.5, 0.3, 0.2]; produce 252/126/42 → empirical
+        # 0.60/0.30/0.10 → devs [0.10, 0.00, 0.10]. At n=420, p̂=0.5:
+        # Wald threshold = 0.10 + 1.96·√(0.25/420) ≈ 0.148 → PASS.
+        df = pd.DataFrame({"x": ["A"] * 252 + ["B"] * 126 + ["C"] * 42})
+        meta = _marginal_meta("x", ["A", "B", "C"], [0.5, 0.3, 0.2])
+        checks = check_marginal_weights(df, meta)
+        target = [c for c in checks if c.name == "marginal_weights_x"]
+        assert target[0].passed is True
+
+
+class TestMarginalMagnitudeFails:
+    """Marginal still fails when dev clears Wald CI at large n."""
+
+    def test_all_one_value_at_n_1000_fails(self):
+        # n=1000 p̂=0.5: Wald threshold ≈ 0.10 + 1.96·0.0158 = 0.131
+        # All "A" → dev = 0.5 → FAIL.
+        df = pd.DataFrame({"x": ["A"] * 1000})
+        meta = _marginal_meta("x", ["A", "B"], [0.5, 0.5])
+        checks = check_marginal_weights(df, meta)
+        target = [c for c in checks if c.name == "marginal_weights_x"]
+        assert target[0].passed is False
+        assert "n=1000" in target[0].detail
+
+
+class TestMarginalDetailString:
+    """Detail must surface per-category n / dev / threshold."""
+
+    def test_detail_lists_offenders(self):
+        df = pd.DataFrame({"x": ["A"] * 1000})
+        meta = _marginal_meta("x", ["A", "B"], [0.5, 0.5])
+        checks = check_marginal_weights(df, meta)
+        detail = [c for c in checks if c.name == "marginal_weights_x"][0].detail
+        assert "n=1000" in detail
+        assert "dev=" in detail
+        assert "thresh=" in detail or "threshold=" in detail
