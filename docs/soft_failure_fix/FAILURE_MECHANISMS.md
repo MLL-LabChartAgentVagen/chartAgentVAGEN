@@ -5,7 +5,7 @@ soft-failed / 2 errored）暴露出来的根本病因，并解释三条修复路
 （A + B + C）为什么能管用。结论是评估其他批次时也适用的通用机制。
 
 > **配套阅读**：
-> - 持久化层：[VALIDATION_PERSISTENCE.md](VALIDATION_PERSISTENCE.md)
+> - 持久化层：[VALIDATION_PERSISTENCE.md](subsystems/VALIDATION_PERSISTENCE.md)
 > - Loop B 自动修复策略：[validation/autofix.py](../../pipeline/phase_2/validation/autofix.py)
 > - M3 prompt 装配：[orchestration/prompt.py](../../pipeline/phase_2/orchestration/prompt.py)
 
@@ -152,7 +152,7 @@ group dependency 是隐式条件 AND）。
 
 ---
 
-## 4. 机制 3 — 稀疏 cell 脆弱性
+## 4. 机制 3 — 稀疏 cell 脆弱性 (Path D, 2026-05-20 已修)
 
 LLM 喜欢声明多维分类结构（`tier × program × year × residency`），交叉后
 cell 大小 n=5–35。KS 检验在 n<30 时对单个噪声样本非常敏感——一个 outlier
@@ -161,8 +161,15 @@ cell 大小 n=5–35。KS 检验在 n<30 时对单个噪声样本非常敏感—
 这部分**不全是 LLM 的错**：多因子设计下，给定 `target_rows=300–1000`，
 cell 必然稀疏。但 LLM 没考虑"我的 `target_rows` 够不够喂这个 cell 结构"。
 
-这一机制不在本次修复范围（Path D 已显式拒绝），但被机制 1 放大——
-如果 LLM 的 noise 估错了，稀疏 cell 是最先暴露的地方。
+修复采用双手术（详见 [PATH_D_KS_SPARSE_CELLS.md](subsystems/PATH_D_KS_SPARSE_CELLS.md) §2）：
+
+- **Validator**：`n<30` skip + Bonferroni α = 0.05 / K + 单 measure 聚合成单
+  Check（pass-rate ≥ 0.9 才通过）。
+- **Prompt**：HARD CONSTRAINT 13 让 LLM 在声明阶段算 cell_count，调 K 或
+  target_rows。
+
+实测对 pingyue 10 个 scenario 把 `ks_*` 失败 11→0，passed 4→5（0 regression）。
+详细数据见 §7.2 + [PATH_D_KS_SPARSE_CELLS.md §3](subsystems/PATH_D_KS_SPARSE_CELLS.md)。
 
 ---
 
@@ -329,11 +336,27 @@ max ratio = 54.75 (was 28.74); count = 10 (was 15).
 校准降低了 residual count 和 ks_* 总量（-34 total failures），但 ratio magnitude
 反向恶化——机制 1 未被 Loop A 校准有效收敛，PARTIAL。
 
-### 7.2 机制 3 没动
+### 7.2 机制 3 已修（2026-05-20，Path D） → 见 [PATH_D_KS_SPARSE_CELLS.md](subsystems/PATH_D_KS_SPARSE_CELLS.md)
 
-稀疏 cell + KS 过敏（Path D）被用户拒了。短期靠 Path A 让 LLM 别再
-压低 sigma 来侧面缓解；长期需要 validator 上做 small-n 修正
-（bonferroni 校正或 cell-size threshold）。
+之前显式拒过的 Path D 在 2026-05-20 与用户重新对齐后实施。变更：
+
+- [statistical.py::check_stochastic_ks](../../pipeline/phase_2/validation/statistical.py) 加 `n<30` skip + Bonferroni
+  alpha (`α = 0.05 / K`) + 聚合到单 `ks_<col>` Check（pass-rate ≥ 0.9 才算 measure
+  通过）。Detail 字符串保留所有 cell 的 `(n, D, p)`，可观测性不丢。
+- [prompt.py](../../pipeline/phase_2/orchestration/prompt.py) HARD CONSTRAINT 13 — 让 LLM 在声明阶段
+  预谋 cell 密度（`target_rows ≥ 30 × cell_count`，否则 K ≤ 2）。
+
+实测（pingyue-samples 10 scenario, validator-only rerun, declarations bit-for-bit identical 到 -v3）：
+
+| metric | -v3 (baseline) | Path D | delta |
+|---|---:|---:|---|
+| `ks_*` 失败 | 11 | **0** | -11 (-100%) |
+| total 失败 | 18 | 7 | -11 (-61%) |
+| passed | 4/10 | 5/10 | +1 |
+| regressions | — | 0 | ✓ |
+
+Path D 在其设计范围内 **完全收敛**。剩 5 个未通过 scenario 全是非 KS 类失败
+（`group_dep_*` / `seasonal_*` / `outlier_*` / `reversal_*`），属机制 4+，单独 plan。
 
 ---
 

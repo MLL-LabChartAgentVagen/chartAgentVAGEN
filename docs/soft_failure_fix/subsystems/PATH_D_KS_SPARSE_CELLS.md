@@ -1,7 +1,7 @@
 # Path D — KS 稀疏 cell + 多重检验过敏修复
 
 > Status: 实施完成 (2026-05-20)
-> Code: [`pipeline/phase_2/validation/statistical.py`](../../pipeline/phase_2/validation/statistical.py) + [`pipeline/phase_2/orchestration/prompt.py`](../../pipeline/phase_2/orchestration/prompt.py)
+> Code: [`pipeline/phase_2/validation/statistical.py`](../../../pipeline/phase_2/validation/statistical.py) + [`pipeline/phase_2/orchestration/prompt.py`](../../../pipeline/phase_2/orchestration/prompt.py)
 > Tests: 387 (was 378) — 全部通过
 > 实测: pingyue-samples 10 个 scenario, `ks_*` 失败 **11 → 0**, passed **4 → 5**
 
@@ -11,7 +11,7 @@
 
 ## 1. 问题：小样本 KS + 多重检验
 
-机制 3 在 [FAILURE_MECHANISMS.md §4](FAILURE_MECHANISMS.md) 已经诊断过——LLM 喜欢声明
+机制 3 在 [FAILURE_MECHANISMS.md §4](../FAILURE_MECHANISMS.md) 已经诊断过——LLM 喜欢声明
 `tier × program × year × residency` 这种 4D 分类交叉。给定典型 `target_rows=500–1000`
 后，cell 大小 n=5–35。在这个 regime 下，validator 的 KS 检验有两个独立的统计学
 病：
@@ -60,7 +60,7 @@ n=5/6 的 cell 上做 KS 推断本身就没有 power，这两条"失败"是统�
 
 ## 2. 设计：三件套 + Prompt Constraint 13
 
-**Validator 端**（[`statistical.py:check_stochastic_ks`](../../pipeline/phase_2/validation/statistical.py)）：
+**Validator 端**（[`statistical.py:check_stochastic_ks`](../../../pipeline/phase_2/validation/statistical.py)）：
 
 1. **n<30 skip**：cell 样本量低于 `KS_MIN_CELL_SIZE=30` 直接跳过，不生成 Check，
    不进入下游 pass-rate 分母。
@@ -70,7 +70,7 @@ n=5/6 的 cell 上做 KS 推断本身就没有 power，这两条"失败"是统�
    `passed iff per-cell pass-rate ≥ KS_AGGREGATE_PASS_RATE = 0.9`。Detail 字符串列
    出 α / K / 失败 cell / 通过 cell 的 (n, D, p) 元组——保留可观测性。
 
-**Prompt 端**（[`prompt.py`](../../pipeline/phase_2/orchestration/prompt.py) HARD CONSTRAINT 13）：
+**Prompt 端**（[`prompt.py`](../../../pipeline/phase_2/orchestration/prompt.py) HARD CONSTRAINT 13）：
 
 > 13. KS-CELL DENSITY: ... cell_count ≈ product of distinct values across
 >     predictor dims. Set target_rows ≥ 30 × cell_count for full coverage.
@@ -102,7 +102,7 @@ n=5/6 的 cell 上做 KS 推断本身就没有 power，这两条"失败"是统�
 
 ### 2.3 与机制 1 (calibration) 的关系
 
-机制 1 通过 [calibration.py](../../pipeline/phase_2/orchestration/calibration.py) 在 Loop A 内
+机制 1 通过 [calibration.py](../../../pipeline/phase_2/orchestration/calibration.py) 在 Loop A 内
 LLM 重写 sigma 收敛——这影响 KS 测的"declared distribution"。机制 3 是验证侧，与
 calibration 正交。可同时启用，互不消耗 retry budget。
 
@@ -279,7 +279,7 @@ PYTHONPATH=. python -m pipeline.agpds_execute \
 
 ## 配套阅读
 
-- [ANALYSIS.md](ANALYSIS.md) — 全局摘要（含 Path D 后的更新）
-- [FAILURE_MECHANISMS.md](FAILURE_MECHANISMS.md) §4 + §7.2 — 机制 3 诊断
+- [ANALYSIS.md](../ANALYSIS.md) — 全局摘要（含 Path D 后的更新）
+- [FAILURE_MECHANISMS.md](../FAILURE_MECHANISMS.md) §4 + §7.2 — 机制 3 诊断
 - [SIGMA_CALIBRATION.md](SIGMA_CALIBRATION.md) — 机制 1 修复（同级技术参考）
 - [SKIP_PERSISTENCE.md](SKIP_PERSISTENCE.md) — `_save_skip_record` 接入（前置 wiring 修复）
