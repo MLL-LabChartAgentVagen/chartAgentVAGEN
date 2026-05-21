@@ -275,13 +275,23 @@ class AGPDSPipeline:
         category_id: Optional[int] = None,
         scenario_id: Optional[str] = None,
         constraints: Optional[Dict] = None,
-    ) -> Dict[str, Any]:
+    ) -> Dict[str, Any] | SkipResult:
         """Stage 1: Phase 0 + Phase 1 + Phase 2 Loop A only.
 
         Pass exactly one of ``category_id`` (random sampling in that thematic
         bucket) or ``scenario_id`` (deterministic replay of a specific cached
-        record). Returns LLM-generated source_code + raw_declarations; does
-        NOT run Loop B and does NOT persist CSV/metadata.
+        record).
+
+        Returns either:
+        - a dict with LLM-generated source_code + raw_declarations + metadata
+          (success path), or
+        - a ``SkipResult`` with ``generation_id`` stamped, when Loop A exhausts
+          its retry budget (exec errors) or its calibration budget
+          (``skip_reason="calibration_unconverged"``). Batch runners detect this
+          via ``isinstance`` and persist via
+          ``pipeline.agpds_generate._save_skip_record``.
+
+        Does NOT run Loop B and does NOT persist CSV/metadata.
         """
         if (category_id is None) == (scenario_id is None):
             raise ValueError(
@@ -306,9 +316,12 @@ class AGPDSPipeline:
             seed=self.seed,
         )
         if isinstance(loop_a, SkipResult):
-            raise RuntimeError(
-                f"Loop A exhausted all retries: {'; '.join(loop_a.error_log)}"
+            loop_a.generation_id = gen_id
+            logger.info(
+                f"[{gen_id}] Loop A skipped (reason={loop_a.skip_reason!r}); "
+                f"returning SkipResult to caller for persistence."
             )
+            return loop_a
 
         _df, metadata, raw_declarations, source_code = loop_a
 
@@ -386,6 +399,11 @@ class AGPDSPipeline:
             scenario_id=scenario_id,
             constraints=constraints,
         )
+        if isinstance(stage1, SkipResult):
+            raise RuntimeError(
+                f"Loop A exhausted in run_single: scenario_id={stage1.scenario_id}, "
+                f"reason={stage1.skip_reason}; {'; '.join(stage1.error_log)}"
+            )
         result = self.execute_artifact(
             generation_id=stage1["generation_id"],
             raw_declarations=stage1["raw_declarations"],

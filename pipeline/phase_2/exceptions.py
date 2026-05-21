@@ -354,6 +354,12 @@ class SkipResult:
 
     Attributes:
         scenario_id: Identifier of the scenario that was skipped.
+        generation_id: Generation ID of this attempt. Stamped by
+            ``AGPDSPipeline.generate_artifacts`` before returning the
+            SkipResult to the batch runner, so ``_save_skip_record`` can
+            persist a complete record without taking gen_id as a separate
+            argument. Empty string when constructed inside Loop A before
+            the outer pipeline layer assigns it.
         error_log: List of error messages from each failed attempt.
         skip_reason: Why this scenario was skipped. One of:
             - "exec_error" (default): the LLM script failed to execute
@@ -361,5 +367,6 @@ class SkipResult:
               past threshold for max_retries attempts
     """
     scenario_id: str = ""
+    generation_id: str = ""
     error_log: list[str] = field(default_factory=list)
     skip_reason: str = "exec_error"

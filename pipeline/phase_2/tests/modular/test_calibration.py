@@ -207,10 +207,12 @@ class TestSaveSkipRecord:
         import json
 
         skip = SkipResult(
-            scenario_id="dom_001/k=2", error_log=["err1", "err2"],
+            scenario_id="dom_001/k=2",
+            generation_id="agpds_abc123",
+            error_log=["err1", "err2"],
             skip_reason="calibration_unconverged",
         )
-        _save_skip_record(str(tmp_path), skip, gen_id="agpds_abc123")
+        _save_skip_record(str(tmp_path), skip)
 
         skip_file = tmp_path / "skipped.jsonl"
         assert skip_file.exists()
@@ -221,3 +223,62 @@ class TestSaveSkipRecord:
         assert rec["skip_reason"] == "calibration_unconverged"
         assert rec["error_log"] == ["err1", "err2"]
         assert "timestamp" in rec
+
+
+class TestRunGenerationBatchPersistsSkipped:
+    """End-to-end wiring: when generate_artifacts returns SkipResult, the batch
+    runner persists it to skipped.jsonl via _save_skip_record. This is the test
+    that would have caught the original calibration T5/T6 wiring gap.
+    """
+
+    def test_run_generation_batch_writes_skipped_jsonl_on_loop_a_skip(self, tmp_path):
+        from unittest.mock import Mock
+        from pipeline.agpds_generate import run_generation_batch
+        import json
+
+        fake_pipeline = Mock()
+        fake_pipeline.generate_artifacts.return_value = SkipResult(
+            scenario_id="scn_42",
+            generation_id="agpds_xyz",
+            error_log=["calibration ratio 28.7x after 3 retries"],
+            skip_reason="calibration_unconverged",
+        )
+
+        produced = run_generation_batch(
+            fake_pipeline, [1], str(tmp_path), "gemini", "google",
+        )
+
+        assert produced == []
+        skip_file = tmp_path / "skipped.jsonl"
+        assert skip_file.exists()
+        rec = json.loads(skip_file.read_text().splitlines()[0])
+        assert rec["generation_id"] == "agpds_xyz"
+        assert rec["scenario_id"] == "scn_42"
+        assert rec["skip_reason"] == "calibration_unconverged"
+        assert "calibration ratio 28.7x" in rec["error_log"][0]
+
+    def test_run_scenario_id_generation_writes_skipped_jsonl_on_loop_a_skip(
+        self, tmp_path,
+    ):
+        from unittest.mock import Mock
+        from pipeline.agpds_generate import run_scenario_id_generation
+        import json
+
+        fake_pipeline = Mock()
+        fake_pipeline.generate_artifacts.return_value = SkipResult(
+            scenario_id="scn_replay",
+            generation_id="agpds_replay01",
+            error_log=["exec failed 3x"],
+            skip_reason="exec_error",
+        )
+
+        produced = run_scenario_id_generation(
+            fake_pipeline, "scn_replay", str(tmp_path), "gemini", "google",
+        )
+
+        assert produced == []
+        skip_file = tmp_path / "skipped.jsonl"
+        assert skip_file.exists()
+        rec = json.loads(skip_file.read_text().splitlines()[0])
+        assert rec["generation_id"] == "agpds_replay01"
+        assert rec["skip_reason"] == "exec_error"

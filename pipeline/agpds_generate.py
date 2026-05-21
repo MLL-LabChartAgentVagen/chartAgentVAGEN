@@ -26,6 +26,7 @@ from pipeline.agpds_pipeline import AGPDSPipeline
 from pipeline.agpds_runner import TeeLogger, resolve_batch_dir
 from pipeline.core.llm_client import LLMClient
 from pipeline.core.utils import META_CATEGORIES
+from pipeline.phase_2.exceptions import SkipResult
 from pipeline.phase_2.serialization import declarations_to_json
 
 
@@ -90,12 +91,17 @@ SKIPPED_FILENAME = "skipped.jsonl"
 
 def _save_skip_record(
     output_dir: str,
-    skip_result,                # SkipResult; untyped to avoid eager import
-    gen_id: str,
+    skip_result: SkipResult,
 ) -> None:
-    """Append a SkipResult record to skipped.jsonl in the batch folder."""
+    """Append a SkipResult record to skipped.jsonl in the batch folder.
+
+    Reads ``generation_id`` from the SkipResult dataclass (stamped by
+    ``AGPDSPipeline.generate_artifacts``). Empty string when the caller
+    constructs SkipResult outside the pipeline layer — acceptable since no
+    other production site does so.
+    """
     record = {
-        "generation_id": gen_id,
+        "generation_id": skip_result.generation_id,
         "scenario_id": skip_result.scenario_id,
         "skip_reason": skip_result.skip_reason,
         "error_log": list(skip_result.error_log),
@@ -119,6 +125,13 @@ def run_scenario_id_generation(
     _log("=" * 50)
     try:
         stage1 = pipeline.generate_artifacts(scenario_id=scenario_id)
+        if isinstance(stage1, SkipResult):
+            _save_skip_record(output_dir, stage1)
+            _log(
+                f"  -> SKIP {stage1.scenario_id} "
+                f"(reason={stage1.skip_reason}, gen_id={stage1.generation_id})"
+            )
+            return []
         entry = _save_stage1_artifacts(output_dir, stage1, model, provider)
         _log(f"  -> Saved script: {entry['script_path']}")
         _log(f"  -> Saved declarations: {entry['declarations_path']}")
@@ -147,6 +160,13 @@ def run_generation_batch(
 
         try:
             stage1 = pipeline.generate_artifacts(category_id=category_id)
+            if isinstance(stage1, SkipResult):
+                _save_skip_record(output_dir, stage1)
+                _log(
+                    f"  -> SKIP {stage1.scenario_id} "
+                    f"(reason={stage1.skip_reason}, gen_id={stage1.generation_id})"
+                )
+                continue
             entry = _save_stage1_artifacts(output_dir, stage1, model, provider)
             produced.append(entry)
             _log(f"  -> Saved script: {entry['script_path']}")
