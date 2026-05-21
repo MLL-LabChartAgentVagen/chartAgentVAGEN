@@ -21,6 +21,13 @@ from ..types import Check
 
 logger = logging.getLogger(__name__)
 
+# Path D — sparse-cell + KS over-sensitivity tunables. See
+# docs/soft_failure_fix/PATH_D_KS_SPARSE_CELLS.md for the why.
+KS_MIN_CELL_SIZE = 30          # KS unreliable below n=30
+KS_BASE_ALPHA = 0.05
+KS_AGGREGATE_PASS_RATE = 0.9   # ≥90% of tested cells must pass for aggregate to pass
+KS_DETAIL_CELL_CAP = 10        # max number of per-cell entries listed in detail string
+
 
 def max_conditional_deviation(
     observed: dict[Any, Any],
@@ -237,17 +244,24 @@ def check_stochastic_ks(
 ) -> list[Check]:
     """L2: KS test for stochastic measure distribution fit.
 
-    [P3-16]
+    [P3-16; Path D — sparse-cell + multiple-testing correction]
 
     Enumerates predictor cells via Cartesian product of categorical
     columns referenced in param_model effects. For each cell:
-    - Skip if fewer than 5 rows
-    - Cap at 100 cells (largest first)
-    - Run scipy.stats.kstest with expected distribution parameters
-    - Pass threshold: p_value > 0.05
+    - Skip if fewer than ``KS_MIN_CELL_SIZE`` rows (KS unreliable for small n).
+    - Skip if the family's expected CDF is unavailable.
+    - Cap at 100 cells via ``_iter_predictor_cells``.
+
+    For cells that pass the gate, KS p-values are compared against a
+    Bonferroni-corrected alpha (``KS_BASE_ALPHA / K`` where K is the count
+    of tested cells). The result is collapsed into a SINGLE aggregate
+    Check named ``ks_<col>``: passed iff the per-cell pass rate meets
+    ``KS_AGGREGATE_PASS_RATE``. The detail string lists per-cell stats
+    so the original semantic (threshold, D, p) remains observable.
 
     Rows matching pattern targets on this column are excluded before
-    testing, since pattern injection deliberately distorts the distribution.
+    testing (T9 fix), since pattern injection deliberately distorts the
+    distribution.
 
     Args:
         df: Generated DataFrame.
@@ -257,7 +271,7 @@ def check_stochastic_ks(
             column are excluded from KS testing.
 
     Returns:
-        List of Checks, one per tested predictor cell.
+        List containing exactly one aggregate Check named ``ks_<col>``.
     """
     # Exclude pattern-targeted rows (same logic as check_structural_residuals)
     work_df = df
@@ -290,7 +304,11 @@ def check_stochastic_ks(
             detail="No predictor cells with sufficient rows to test.",
         )]
 
-    checks: list[Check] = []
+    # Stage 1: enumerate cells, skip those below the n threshold or with
+    # no usable CDF. ``per_cell`` collects raw KS results pre-Bonferroni.
+    per_cell: list[tuple[str, float, float, int]] = []  # (label, D, p, n)
+    skipped_no_cdf = 0
+    skipped_small = 0
     for predictor_values, cell_df in cells:
         cell_params = _compute_cell_params(col_meta, predictor_values, columns_meta)
         dist = expected_cdf(family, cell_params)
@@ -301,36 +319,75 @@ def check_stochastic_ks(
         )
 
         if dist is None:
-            checks.append(Check(
-                name=f"ks_{col_name}",
-                passed=True,
-                detail=f"[{cell_label}] family='{family}' — KS CDF not available, skipped.",
-            ))
+            skipped_no_cdf += 1
             continue
 
         sample = cell_df[col_name].dropna().values.astype(float)
-        if len(sample) < 5:
+        if len(sample) < KS_MIN_CELL_SIZE:
+            skipped_small += 1
             continue
 
         stat, p_value = scipy.stats.kstest(sample, dist.cdf)
-        passed = bool(p_value > 0.05)
-        checks.append(Check(
-            name=f"ks_{col_name}",
-            passed=passed,
-            detail=(
-                f"[{cell_label}] n={len(sample)}, D={stat:.4f}, "
-                f"p={p_value:.4f} ({'>' if passed else '<='} 0.05)"
-            ),
-        ))
+        per_cell.append((cell_label, float(stat), float(p_value), len(sample)))
 
-    if not checks:
-        checks.append(Check(
+    # Stage 2: Bonferroni + aggregate into a single Check.
+    skipped_total = skipped_no_cdf + skipped_small
+    K = len(per_cell)
+    if K == 0:
+        return [Check(
             name=f"ks_{col_name}",
             passed=True,
-            detail="No testable predictor cells.",
-        ))
+            detail=(
+                f"No testable cells "
+                f"(all n<{KS_MIN_CELL_SIZE} or family CDF unavailable). "
+                f"{skipped_total} cell(s) skipped "
+                f"({skipped_small} small-n, {skipped_no_cdf} no-CDF)."
+            ),
+        )]
 
-    return checks
+    alpha = KS_BASE_ALPHA / K
+    finalized: list[tuple[str, bool, float, float, int]] = [
+        (label, p > alpha, D, p, n) for (label, D, p, n) in per_cell
+    ]
+    passed_cnt = sum(1 for r in finalized if r[1])
+    rate = passed_cnt / K
+    overall_passed = rate >= KS_AGGREGATE_PASS_RATE
+
+    # Build observable detail: header + failed cells (capped) + leading
+    # passed cells (capped) so a downstream reader can extract any
+    # per-cell (n, D, p) for spot-checking the threshold semantic.
+    parts = [
+        f"{passed_cnt}/{K} cells passed @ α={alpha:.4f} "
+        f"(Bonferroni K={K}, threshold {KS_AGGREGATE_PASS_RATE:.0%}); "
+        f"{skipped_total} cells skipped "
+        f"({skipped_small} small-n, {skipped_no_cdf} no-CDF)."
+    ]
+    failed = [r for r in finalized if not r[1]]
+    if failed:
+        head = "; ".join(
+            f"{label} (n={n}, D={D:.4f}, p={p:.4f})"
+            for (label, _ok, D, p, n) in failed[:KS_DETAIL_CELL_CAP]
+        )
+        more = max(0, len(failed) - KS_DETAIL_CELL_CAP)
+        parts.append(
+            f"Failed cells: {head}" + (f"; (+{more} more)" if more else "")
+        )
+    passed_examples = [r for r in finalized if r[1]]
+    if passed_examples:
+        head = "; ".join(
+            f"{label} (n={n}, D={D:.4f}, p={p:.4f})"
+            for (label, _ok, D, p, n) in passed_examples[:KS_DETAIL_CELL_CAP]
+        )
+        more = max(0, len(passed_examples) - KS_DETAIL_CELL_CAP)
+        parts.append(
+            f"Passed cells: {head}" + (f"; (+{more} more)" if more else "")
+        )
+
+    return [Check(
+        name=f"ks_{col_name}",
+        passed=overall_passed,
+        detail=" ".join(parts),
+    )]
 
 
 def _get_formula_measure_deps(

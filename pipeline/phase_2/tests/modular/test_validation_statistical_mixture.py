@@ -210,7 +210,8 @@ class TestCheckStochasticKsMixture:
 
     def test_unsupported_component_soft_passes(self):
         # Mix gaussian with poisson — expected_cdf_mixture returns None,
-        # which makes the per-cell KS skip with a soft-pass detail.
+        # which makes the cell skip and surface as a "no testable cells"
+        # aggregate Check (silent-pass, intentional under Path D).
         components = [
             _gaussian_component(0.0, 1.0, 0.5),
             {
@@ -224,18 +225,20 @@ class TestCheckStochasticKsMixture:
         df = pd.DataFrame({"y": rng.normal(0.0, 1.0, size=200)})
 
         checks = check_stochastic_ks(df, "y", meta)
-        assert all(c.passed for c in checks)
-        assert any("KS CDF not available" in (c.detail or "") for c in checks)
+        assert len(checks) == 1
+        assert checks[0].passed
+        assert "no-CDF" in (checks[0].detail or "")
 
 
 class TestMixtureKsPValueExtraction:
-    """T2.3 of TEST_AUDIT_2026-05-07.md.
+    """T2.3 of TEST_AUDIT_2026-05-07.md (adapted for Path D aggregate Check).
 
-    Pre-existing tests assert `c.passed` only — the threshold semantic
-    (`p > 0.05`, spec §2.6 L2) is invisible to tests. A regression that
-    inverted the comparison to `p > 0.95` (off by one in a refactor)
-    would still report `passed=True` for any well-fitted sample. Locking
-    in the p-value extraction makes the threshold explicit.
+    Pre-existing tests asserted `c.passed` only — the threshold semantic
+    (`p > 0.05`, spec §2.6 L2) was invisible to tests. A regression that
+    inverted the comparison to `p > 0.95` would still report `passed=True`
+    for any well-fitted sample. After Path D the threshold becomes a
+    Bonferroni-corrected alpha, listed in the aggregate detail alongside
+    per-cell (n, D, p) tuples — extraction below re-locks the semantic.
     """
 
     def _components(self):
@@ -244,9 +247,9 @@ class TestMixtureKsPValueExtraction:
             _gaussian_component(8.0, 1.0, 0.5),
         ]
 
-    def test_passing_check_has_p_value_above_005(self):
-        """A correctly-sampled mixture: every Check whose detail reports a
-        p-value must satisfy `p > 0.05`."""
+    def test_passing_check_has_p_value_above_alpha(self):
+        """A correctly-sampled mixture: the aggregate Check passes, and
+        every per-cell p in the detail is above the reported alpha."""
         import re
         components = self._components()
         meta = _build_meta("y", components)
@@ -258,26 +261,31 @@ class TestMixtureKsPValueExtraction:
         df = pd.DataFrame({"y": sample})
 
         checks = check_stochastic_ks(df, "y", meta)
-        # Filter to checks that actually ran KS (excludes soft-pass cells).
-        p_value_checks = []
-        for c in checks:
-            m = re.search(r"p[=_]([\d.eE+-]+)", c.detail or "")
-            if m is not None:
-                p_value_checks.append((c, float(m.group(1))))
+        assert len(checks) == 1
+        c = checks[0]
+        assert c.passed
 
-        assert p_value_checks, (
-            f"Expected at least one KS check with extractable p-value; "
-            f"got details: {[c.detail for c in checks]}"
+        # Extract alpha and per-cell p-values from detail.
+        m_alpha = re.search(r"α=([\d.eE+-]+)", c.detail or "")
+        assert m_alpha is not None, f"alpha not in detail: {c.detail}"
+        alpha = float(m_alpha.group(1))
+        assert alpha > 0 and alpha <= 0.05, (
+            f"alpha {alpha} should be in (0, 0.05]"
         )
-        for c, p in p_value_checks:
-            assert c.passed
-            assert p > 0.05, (
-                f"Passing check '{c.name}' had p={p} (must be > 0.05)"
+
+        p_values = [float(s) for s in re.findall(r"p=([\d.eE+-]+)", c.detail or "")]
+        assert p_values, (
+            f"Expected per-cell p-values in detail; got: {c.detail}"
+        )
+        for p in p_values:
+            assert p > alpha, (
+                f"Per-cell p={p} should exceed alpha={alpha} in a passing aggregate"
             )
 
-    def test_failing_check_has_p_value_at_or_below_005(self):
-        """When sampled data does NOT match the declared mixture, at least
-        one cell's KS p-value should fall at or below 0.05."""
+    def test_failing_check_has_p_value_at_or_below_alpha(self):
+        """When sampled data does NOT match the declared mixture, the
+        aggregate Check fails and at least one per-cell p in detail is
+        ≤ alpha."""
         import re
         components = self._components()
         meta = _build_meta("y", components)
@@ -286,23 +294,28 @@ class TestMixtureKsPValueExtraction:
         df = pd.DataFrame({"y": rng.normal(0.0, 1.0, size=3000)})
 
         checks = check_stochastic_ks(df, "y", meta)
-        # At least one failing check must have p <= 0.05 in its detail.
-        failing = [c for c in checks if not c.passed]
-        assert failing, (
-            f"Expected at least one KS failure for mismatched sample; "
-            f"got: {[(c.name, c.passed) for c in checks]}"
+        assert len(checks) == 1
+        c = checks[0]
+        assert not c.passed
+
+        m_alpha = re.search(r"α=([\d.eE+-]+)", c.detail or "")
+        assert m_alpha is not None
+        alpha = float(m_alpha.group(1))
+
+        # detail format separates "Failed cells:" and "Passed cells:" sections.
+        failed_section = re.search(r"Failed cells:(.*?)(Passed cells:|$)", c.detail or "")
+        assert failed_section is not None, (
+            f"Expected a 'Failed cells:' section in failing aggregate; "
+            f"got: {c.detail}"
         )
-        any_with_p = False
-        for c in failing:
-            m = re.search(r"p[=_]([\d.eE+-]+)", c.detail or "")
-            if m is None:
-                continue
-            any_with_p = True
-            assert float(m.group(1)) <= 0.05, (
-                f"Failing check '{c.name}' should have p<=0.05; "
-                f"got detail: {c.detail}"
+        failed_p_values = [
+            float(s)
+            for s in re.findall(r"p=([\d.eE+-]+)", failed_section.group(1))
+        ]
+        assert failed_p_values, (
+            f"Expected at least one failed cell p-value; got: {c.detail}"
+        )
+        for p in failed_p_values:
+            assert p <= alpha, (
+                f"Failed cell p={p} should be ≤ alpha={alpha}"
             )
-        assert any_with_p, (
-            f"At least one failing check must include an extractable p-value "
-            f"in its detail; got: {[c.detail for c in failing]}"
-        )
