@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import itertools
 import logging
+import math
 from typing import Any
 
 import numpy as np
@@ -27,6 +28,36 @@ KS_MIN_CELL_SIZE = 30          # KS unreliable below n=30
 KS_BASE_ALPHA = 0.05
 KS_AGGREGATE_PASS_RATE = 0.9   # ≥90% of tested cells must pass for aggregate to pass
 KS_DETAIL_CELL_CAP = 10        # max number of per-cell entries listed in detail string
+
+# Phase A — n-aware group_dep / marginal weight thresholds. See
+# docs/soft_failure_fix/validation/PINGYUE_OPENAI_CAL_ANALYSIS.md §6 + §8.1.
+# Per (cell, child_level): threshold = 0.10 + 1.96·√(p̂(1-p̂)/n)
+# Skip cells with n < GROUP_DEP_MIN_CELL_SIZE (untestable for proportion drift).
+# Used by check_group_dependency_transitions and check_marginal_weights.
+GROUP_DEP_MIN_CELL_SIZE = 10
+GROUP_DEP_BASE_DELTA = 0.10
+GROUP_DEP_Z_95 = 1.96
+GROUP_DEP_DETAIL_CELL_CAP = 10
+
+
+def _wald_dev_threshold(
+    n: int,
+    p_hat: float,
+    base: float = GROUP_DEP_BASE_DELTA,
+    z: float = GROUP_DEP_Z_95,
+) -> float:
+    """Per-cell n-aware deviation threshold for proportion drift checks.
+
+    threshold = base + z · √(p̂(1-p̂)/n)
+
+    The base floor catches real magnitude errors that survive at n→∞;
+    the Wald term absorbs binomial sampling noise at small n. See
+    docs/soft_failure_fix/validation/PINGYUE_OPENAI_CAL_ANALYSIS.md §6.
+    """
+    if n <= 0:
+        return base
+    wald = z * math.sqrt(max(p_hat * (1.0 - p_hat), 0.0) / n)
+    return base + wald
 
 
 def max_conditional_deviation(
