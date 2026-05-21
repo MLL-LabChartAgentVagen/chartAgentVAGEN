@@ -126,8 +126,11 @@ class TestCheckOrthogonalIndependence:
         p_val = _extract_chi2_p(checks[0].detail)
         assert p_val <= 0.05
 
-    def test_degenerate_contingency_table(self):
-        # Only 1 unique value in one of the columns
+    def test_degenerate_contingency_table_soft_passes(self):
+        # Phase B: degenerate (min(shape)<2) tables soft-pass with "skipped"
+        # detail rather than hard-fail. chi² needs ≥2×2 for non-zero d.f.,
+        # so a 1×N / N×1 / 1×1 table has no statistical signal to test.
+        # Behavior locked by tests/modular/test_validation_phase_b.py.
         df = pd.DataFrame({
             "root_a": ["X", "X", "X"],
             "root_b": ["K", "L", "K"]
@@ -142,8 +145,9 @@ class TestCheckOrthogonalIndependence:
             ]
         }
         checks = check_orthogonal_independence(df, meta)
-        assert not checks[0].passed
-        assert "Degenerate contingency table" in str(checks[0].detail)
+        assert checks[0].passed
+        assert "skipped" in str(checks[0].detail).lower()
+        assert "(1, 2)" in str(checks[0].detail)
 
 
 class TestCheckMeasureDagAcyclic:

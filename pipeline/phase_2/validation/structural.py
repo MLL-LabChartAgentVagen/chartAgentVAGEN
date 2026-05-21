@@ -24,6 +24,13 @@ from .statistical import (
 
 logger = logging.getLogger(__name__)
 
+# Phase B: chi-squared independence test requires a ≥2×2 contingency table
+# for non-zero degrees of freedom (dof = (r-1)*(c-1)). When sampling collapses
+# either marginal to a single value, the test is statistically undefined —
+# soft-pass with a `skipped` detail string rather than hard-fail. See
+# docs/soft_failure_fix/mechanisms/MECHANISM_5_ORTHOGONAL_DEGENERACY_DEEP_DIVE.md
+ORTHOGONAL_MIN_DIM = 2
+
 
 def check_row_count(
     df: pd.DataFrame,
@@ -151,13 +158,14 @@ def check_orthogonal_independence(
 
         ct = pd.crosstab(df[root_a], df[root_b])
 
-        if ct.shape[0] < 2 or ct.shape[1] < 2:
+        if ct.shape[0] < ORTHOGONAL_MIN_DIM or ct.shape[1] < ORTHOGONAL_MIN_DIM:
             checks.append(Check(
                 name=f"orthogonal_{root_a}_{root_b}",
-                passed=False,
+                passed=True,
                 detail=(
-                    f"Degenerate contingency table shape={ct.shape}; "
-                    f"chi-squared requires at least 2×2."
+                    f"skipped (degenerate shape={ct.shape}; "
+                    f"chi² requires >="
+                    f"{ORTHOGONAL_MIN_DIM}x{ORTHOGONAL_MIN_DIM})"
                 ),
             ))
             continue

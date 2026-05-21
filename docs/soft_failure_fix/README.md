@@ -13,6 +13,7 @@ Phase 2 soft-failure 分析、修复、子系统手册、批次实测的合集�
 | 第一次接触、想 catch-up | [ANALYSIS.md](ANALYSIS.md) — 一页综述 |
 | 想知道某条 `residual_*` / `ks_*` 失败属哪条机制 | [FAILURE_MECHANISMS.md](FAILURE_MECHANISMS.md) — 三机制 + Path A/B/C + 实测 |
 | 想知道某条 `group_dep_*` / `marginal_*` 失败的根因 | [mechanisms/MECHANISM_4_PROPORTION_DRIFT_DEEP_DIVE.md](mechanisms/MECHANISM_4_PROPORTION_DRIFT_DEEP_DIVE.md) — 小样本 binomial 包络 + Phase A 修复 |
+| 想知道某条 `orthogonal_*` 失败的根因 | [mechanisms/MECHANISM_5_ORTHOGONAL_DEGENERACY_DEEP_DIVE.md](mechanisms/MECHANISM_5_ORTHOGONAL_DEGENERACY_DEEP_DIVE.md) — 退化 contingency table + Phase B 修复 |
 | 改 `pipeline/phase_2/orchestration/calibration.py` | [subsystems/SIGMA_CALIBRATION.md](subsystems/SIGMA_CALIBRATION.md) |
 | 改 `pipeline/phase_2/validation/statistical.py` 里的 KS 部分 | [subsystems/PATH_D_KS_SPARSE_CELLS.md](subsystems/PATH_D_KS_SPARSE_CELLS.md) |
 | 改 `pipeline/phase_2/validation/statistical.py` 里的 group_dep / marginal 阈值 | [mechanisms/MECHANISM_4_PROPORTION_DRIFT_DEEP_DIVE.md §4](mechanisms/MECHANISM_4_PROPORTION_DRIFT_DEEP_DIVE.md#4-解决方案n-aware-wald-95-ci-per-cell-child_level) |
@@ -34,6 +35,7 @@ docs/soft_failure_fix/
 │   ├── MECHANISM_1_DEEP_DIVE.md         M1 复合方差 — 根因/算法/实测
 │   ├── MECHANISM_3_DEEP_DIVE.md         M3 稀疏 cell — 根因/Path D/实测
 │   ├── MECHANISM_4_PROPORTION_DRIFT_DEEP_DIVE.md  M4 小样本比例漂移误判 — 根因/Phase A/实测
+│   ├── MECHANISM_5_ORTHOGONAL_DEGENERACY_DEEP_DIVE.md  M5 正交声明在退化列上误判 — 根因/Phase B/实测
 │   └── M1_RATIO_OPERATOR_STRAGGLER.md   M1 在除法算子上的长尾分支
 ├── subsystems/                        🔧 子系统手册（改代码前读）
 │   ├── SIGMA_CALIBRATION.md             Loop A in-loop sigma calibration
@@ -73,8 +75,13 @@ docs/soft_failure_fix/
   └─ 修复：Phase A — n-aware Wald 95% CI per (cell, child_level) + n<10 skip
   └─ 验证：MECHANISM_4_PROPORTION_DRIFT_DEEP_DIVE.md §5（7 → 0, 13 → 6, 0 regressions）
 
-非 M4 长尾（机制 5+）    orthogonal / seasonal / outlier / reversal
-  └─ 当前状态：未归类 / 未修（Phase B/C/D 待启）
+机制 5 (M5)              正交声明在退化列上误判（orthogonal_*）
+  └─ 诊断：validation/PINGYUE_OPENAI_CAL_ANALYSIS.md §4.2 + mechanisms/MECHANISM_5_ORTHOGONAL_DEGENERACY_DEEP_DIVE.md
+  └─ 修复：Phase B — strict min(shape)<2 skip（ORTHOGONAL_MIN_DIM=2）
+  └─ 验证：MECHANISM_5_ORTHOGONAL_DEGENERACY_DEEP_DIVE.md §5（3 → 0, 6 → 3, 6/10 → 8/10, 0 regressions）
+
+非 M5 长尾（机制 6+）    seasonal / outlier / reversal
+  └─ 当前状态：未归类 / 未修（Phase C/D 待启）
   └─ 见 FAILURE_MECHANISMS.md §7.2 / validation/OPENAI_VALIDATION.md §7.4
 ```
 
@@ -95,3 +102,5 @@ docs/soft_failure_fix/
 | 2026-05-20 | Path D 在 openai-cal 验证 `ks_*` 39→0 | (uncommitted)|
 | 2026-05-21 | Phase A 实施（n-aware Wald CI for group_dep / marginal）| `50098aa` `e9de06f` `c5561be` |
 | 2026-05-21 | Phase A 在 openai-cal 验证 `group_dep_*` 6→0, `marginal_*` 1→0, total 13→6, 0 regressions | `MECHANISM_4_PROPORTION_DRIFT_DEEP_DIVE.md` §5 |
+| 2026-05-21 | Phase B 实施（`ORTHOGONAL_MIN_DIM=2` strict-degenerate skip）| (Phase B commit) |
+| 2026-05-21 | Phase B 在 openai-cal 验证 `orthogonal_*` 3→0, total 6→3, 6/10→8/10 passing, 0 regressions | `MECHANISM_5_ORTHOGONAL_DEGENERACY_DEEP_DIVE.md` §5 |
