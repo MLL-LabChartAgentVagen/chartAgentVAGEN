@@ -500,13 +500,21 @@ def check_seasonal_anomaly(
     baseline_mean = float(baseline_vals.mean())
     z = abs(window_mean - baseline_mean) / baseline_std
     passed = bool(z >= z_threshold)
+
+    declared_magnitude = params.get("magnitude")
+    extra = ""
+    if declared_magnitude is not None:
+        extra = f", declared_magnitude={declared_magnitude}"
+        if abs(baseline_mean) > 1e-9:
+            required = z_threshold * baseline_std / abs(baseline_mean)
+            extra += f", required_magnitude_at_threshold>={required:.3f}"
     return Check(
         name=name, passed=passed,
         detail=(
             f"z={z:.3f} (window_mean={window_mean:.4f}, "
             f"baseline_mean={baseline_mean:.4f}, "
             f"baseline_std={baseline_std:.4f}, "
-            f"threshold={z_threshold})"
+            f"threshold={z_threshold}{extra})"
         ),
     )
 
