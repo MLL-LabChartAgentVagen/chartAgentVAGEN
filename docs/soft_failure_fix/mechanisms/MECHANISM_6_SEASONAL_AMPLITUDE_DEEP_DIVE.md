@@ -23,18 +23,38 @@
 
 ## 1. 一页总结
 
-| 维度 | Phase A/B 基线（pathB-rev）| **Phase D**（pathD-llm）|
-|---|:-:|:-:|
-| validated scenarios | 10/10 | **9/10**（1 PatternInjectionError，详 §5.5）|
-| passed | 8/10 | **6/9** = **66%** |
-| `seasonal_*` count | 1 | **0** ✓ |
-| `reversal_*` count | 1 | 3（详 §5.4——LLM regen variance，非 Constraint 17）|
-| `residual_*` count | 1 | 0（LLM 自修了 M1 ratio formula，§5.4）|
-| `orthogonal_*` / `group_dep_*` / `marginal_*` count | 0 / 0 / 0 | 0 / 0 / 0（Phase A/B 已闭合）|
-| total **soft-fail** count | 3 | **3**（族变了但总数同）|
-| LLM behavioral assertion: 14b7 跳过 seasonal_anomaly | — | ✓ 切到 `trend_break`（§5.2）|
-| 新单测 | — | **+13**（6 validator detail · 7 prompt constraint）|
-| 既有单测调整 | — | 0 |
+> Phase D 主修 cat-3（pingyue-samples-openai-calibrated, 1 seasonal failure）。
+> Phase D.2 在 cat-3 复测基础上**额外用 cat-4**
+> （pingyue-samples-openai-catagory4-1, **8 seasonal failures** in baseline）做 stress test，
+> 因 cat-4 baseline 上 8/10 scenario 同时 fail seasonal_*，是更严格的 D + D.2 联合验证。
+
+| 维度 | cat-3 baseline (pathB-rev) | **cat-3 D** (pathD-llm) | **cat-3 D.2** (pathD2-llm) | cat-4 baseline | **cat-4 D.2** (catagory4-pathD2-llm) |
+|---|:-:|:-:|:-:|:-:|:-:|
+| passing | 8/10 | 6/9 (1 hard err) | **6/10** ✓ | 1/10 | **6/10** ✓✓ |
+| `seasonal_*` | 1 | 0 | **0** | **8** | **2** (-6) |
+| `reversal_*` | 1 | 3 | 1 | 1 | 0 |
+| `residual_*` | 1 | 0 | 0 | 0 | 0 |
+| `orthogonal_*` | 0 | 0 | 0 | 1 | 0 |
+| `dominance_*` | 0 | 0 | 0 | 1 | 0 |
+| `ks_*` | 0 | 0 | 1 (Path D 真抓 LLM mis-fit) | 0 | 3 (Path D 真抓 LLM mis-fit) |
+| `outlier_*` / `marginal_*` | 0 / 0 | 0 / 0 | 2 / 1 (LLM 新犯错) | 0 / 0 | 0 / 0 |
+| `PatternInjectionError` (hard) | 0 | **1** | **0** ✓ | 0 | 0 |
+| 总 soft-fail 数 | 3 | 3 | 4 | 11 | 5 (-55%) |
+| 新单测 | — | +13 | **+6 (row-count guardrail)** | — | — |
+| 既有单测调整 | — | 0 | 0 | — | — |
+
+**Headline**：
+- **Phase D 主目标**：cat-3 上 `seasonal_*` 1→0 ✓，cat-4 上 `seasonal_*` 8→2（-75%）✓
+- **Phase D.2 主目标**：cat-3 上 `PatternInjectionError` 1→0 ✓（e9c4 hard error 修复）
+- **联合 headline**：cat-4 从 1/10 passing → 6/10 passing（D + D.2 联手把 8 个 seasonal failures
+  里的 6 个清掉，剩 2 个属"realized z << expected z"的下一阶段 mechanism，详 §5.6）
+
+LLM 在 D + D.2 prompt 下的行为变化（cat-4 上最显著）：8 个 baseline `seasonal_anomaly`
+声明里，**6 个主动切换到 `trend_break`**（同 D 在 14b7 上的行为），只剩 2 个 scenario
+（6dbb + ac54）坚持声明 seasonal_anomaly——但那 2 个 magnitude 都已正确选成 >
+required_magnitude_at_threshold，failure 根因转移到了**「realized window_mean 远低于
+(1+M)·baseline_mean，因为 measure 本身有内嵌的月/季效应」**——这是 Constraint 17 §
+month/quarter effects 已经警示但 LLM 未充分照做的边界情况（详 §5.6 + §6.4）。
 
 **Headline**：Phase D **主目标达成**——`seasonal_*` 失败族 1 → **0**，14b7
 LLM 在 Constraint 17 指引下把 `inject_pattern("seasonal_anomaly", ..., magnitude=0.35)`
@@ -423,10 +443,11 @@ admission/checkout/research funnel 这种**结构性正相关**的 metric 对来
 "LLM 在 ranking_reversal 声明上选错 metric 对"的 prompt 或 validator 问题，
 但那是另一个 PR。
 
-### 5.5 1 个 hard error：agpds_e9c40d0352 PatternInjectionError
+### 5.5 1 个 hard error：agpds_e9c40d0352 PatternInjectionError（D 时观测）+ Phase D.2 解决
 
-`agpds_e9c40d0352` 在 Stage 2 执行时抛 `PatternInjectionError`，没进
-validation_summary.json（hard error，非 soft fail）。错误日志：
+`agpds_e9c40d0352` 在 **Phase D rerun**（pathD-llm）的 Stage 2 执行时抛
+`PatternInjectionError`，没进 validation_summary.json（hard error，非 soft
+fail）。错误日志：
 
 ```
 agpds_e9c40d0352: PatternInjectionError:
@@ -440,22 +461,137 @@ LLM 在 e9c4 选了 `target="grade_level == '9'"` + `anomaly_window=["2025-02-03
 multiple intervention/school cross-classification 后，9 年级 × 2 周窗口的
 样本量塌缩到 0。SDK 引擎拒绝注入。
 
-这条**不是 Constraint 17 的责任**——Constraint 17 只规范 `magnitude` 与
+**这条不是 Constraint 17 的责任**——Constraint 17 只规范 `magnitude` 与
 `baseline_std` 的关系，没说"target + anomaly_window 必须 match ≥1 row"。
-这是一类独立的 LLM declaration bug（Phase E+ 范畴：可能加 Constraint 18 "anomaly
-window 必须有 ≥ 30 行 target match"，或在 SDK 端做 dry-run 检查）。
 
-### 5.6 失败类型分类（Phase D 后）
+#### Phase D.2 解决：Constraint 17 加 row-count guardrail
 
-| 失败族 | Phase B 基线 | Phase D 实测 | 责任层 | 修复路径 |
-|---|:-:|:-:|---|---|
-| `seasonal_*`（季节振幅 < 2·CV）| 1 | **0** ✓ | LLM ↦ Constraint 17（本机制）| **闭合** |
-| `residual_*`（M1 ratio long tail）| 1 | 0 | LLM ratio operator 长尾 | LLM 自修，被动闭合 |
-| `reversal_*`（ranking_reversal 在正相关 metric 对上声明）| 1 | 3 | LLM 公式骨架 sign/中介错 | **Phase C 范围** |
-| `orthogonal_*` / `group_dep_*` / `marginal_*` | 0 | 0 | — | Phase A/B 已闭合 |
-| `PatternInjectionError`（hard）| 0 | 1 | LLM 选无效 target × anomaly_window | **Phase E+ 候选** |
+[Phase D.2 commit `fad9d8b`](../../../pipeline/phase_2/orchestration/prompt.py)
+在 Constraint 17 末尾追加 sub-clause 教 LLM 自验：
 
-### 5.7 教训：prompt-side fix 必带 LLM regen variance；不要承诺 "0 regressions"
+```
+expected_rows ≈ target_rows × (anomaly_window_days / temporal_range_days)
+              × P(target filter matches a row)
+hard floor: expected_rows ≥ 5   (Poisson reliability)
+soft floor: expected_rows ≥ 10  (z stability)
+```
+
+附 14b7-derived counter-example（420 × 12/290 × 0.095 ≈ 1.6 → fix: widen 至
+≥ 90 days）。详 [§4.5 代码位点](#45-代码位点)。
+
+**Phase D.2 rerun（pathD2-llm, cat-3）实测结果**：
+
+| 指标 | Phase D (pathD-llm) | **Phase D.2** (pathD2-llm) |
+|---|:-:|:-:|
+| `agpds_e9c40d0352` master_table | **MISSING**（PatternInjectionError）| ✓ exists |
+| skipped.jsonl entries | 1（e9c4 hard error）| **0** ✓ |
+| `seasonal_*` count | 0 | 0（仍是 0）|
+| LLM 在 e9c4 重选 pattern | seasonal_anomaly + trend_break | trend_break 单独（去掉 seasonal）|
+| 10 个 declaration 中含 seasonal_anomaly 的数量 | 2 | **0**——LLM 在 cat-3 上完全 abandon seasonal_anomaly |
+
+**LLM behavioral evidence**：D.2 prompt 让 LLM 在 cat-3 上**完全放弃**
+seasonal_anomaly（10 个 declarations 里 0 个 seasonal）——把所有"季节性"行为
+转移到 `trend_break`。这是比 D 更激进的 prompt 响应。
+
+#### Phase D.2 cat-4 stress test：8 baseline seasonal failures
+
+cat-4 (`pingyue-samples-openai-catagory4-1`) baseline 是 Phase D 主要修复
+目标的"放大镜"——10 个 scenario 里 **8 个 seasonal_* fail**，1/10 passing。
+D.2 prompt 下重新生成 + 执行：
+
+| 指标 | cat-4 baseline | **cat-4 D.2** (catagory4-pathD2-llm) | Δ |
+|---|:-:|:-:|---|
+| passing | 1/10 | **6/10** ✓ | **+5** |
+| `seasonal_*` | 8 | 2 | **-6**（75% reduction）|
+| `orthogonal_*` | 1 | 0 | -1 |
+| `dominance_*` | 1 | 0 | -1 |
+| `reversal_*` | 1 | 0 | -1 |
+| `ks_*` | 0 | 3 | +3（详 §5.7）|
+| `PatternInjectionError` | 0 | **0** | 0 |
+| 总 soft-fail | 11 | 5 | **-6**（-55%）|
+
+**LLM behavioral evidence (cat-4)**：8 个 baseline `seasonal_anomaly`
+声明里，**6 个主动切换到 `trend_break`**——和 D 在 14b7 上的行为一致：
+
+| Scenario | baseline pattern on metric | D.2 pattern on metric | 切换? |
+|---|---|---|:-:|
+| 1f66 | seasonal_anomaly on stockout_rate | trend_break | ✓ |
+| 3b2d | seasonal_anomaly on units_sold | trend_break | ✓ |
+| 4756 | seasonal_anomaly on attrition_rate | trend_break | ✓ |
+| 7630 | seasonal_anomaly on conversions | trend_break | ✓ |
+| 8585 | seasonal_anomaly on defect_rate | trend_break | ✓ |
+| e021 | seasonal_anomaly on ticket_volume | trend_break | ✓ |
+| **6dbb** | seasonal_anomaly on feature_adoption_rate | **kept seasonal_anomaly** | ✗ |
+| **ac54** | seasonal_anomaly on sessions | **kept seasonal_anomaly** (on different col: add_to_cart_rate) | ✗ |
+
+### 5.6 cat-4 D.2 残留：2 个 seasonal failure 暴露 §6.4 子机制
+
+剩 2 个 cat-4 seasonal failure（6dbb + ac54）非常有诊断价值。它们都是
+**LLM 在 D.2 prompt 下**选 magnitude **超过** Constraint 17 公式要求的——
+但 validator 实测 z 仍 < 1.5：
+
+| Scenario | declared magnitude | required_magnitude_at_threshold | expected z = M·μ/σ | **realized z** | passed? |
+|---|---:|---:|---:|---:|:-:|
+| `agpds_6dbb1c20db` | 0.45 | 0.342 ✓ above req | 1.97 ✓ above 1.5 | **0.639** | ✗ |
+| `agpds_ac54f076fc` | 0.55 | 0.296 ✓ above req | 2.79 ✓ above 1.5 | **1.115** | ✗ |
+
+**根因**：realized window_mean 远低于 (1+M)·baseline_mean——因为 `feature_adoption_rate`
+和 `add_to_cart_rate` measure 本身有**内嵌的月/季效应**（LLM 通过 `param_model`
+里的 month effects 已经声明了），window 期（Mar-Apr / Nov 20-Dec 5）的 measure
+baseline 本身就**低于**年度平均，所以 (1+M)·μ 是基于**年度均值**计算，但
+realized window 实际 mean 是基于 window 期均值（更低）。
+
+**Constraint 17 已经警示过这条**：
+
+> "If the measure has month/quarter effects, baseline_std is inflated by
+> between-period variation — bump |M| another 20–30%, or narrow the
+> `anomaly_window` to a single peak season."
+
+但 LLM 在 6dbb / ac54 上**没充分应用 20-30% bump**。这不是 D.2 row-count
+guardrail 的责任范围，是 Constraint 17 原文里**month/quarter effect bump**
+建议的 LLM compliance 问题。属新 Phase D.3 / D.4 候选（详 §6.4）。
+
+### 5.7 cat-3 + cat-4 共有：M7/M8 新机制候选浮现
+
+cat-3 D.2 出现 3 条新失败（之前 baselines 没有的 family）：
+- `outlier_yield_rate` × 2 (33d8 + 503613ba96): LLM 声明的 outlier z_score
+  vs realized 之间的不匹配
+- `marginal_weights_grade_band` (e9c4): LLM 声明的 marginal weights 与
+  `add_group_dependency` 链 induced joint marginal 不一致（详 [§Q&A discussion above](#)）
+- `ks_withdrawal_rate` (8022): n=42 cell 上 D=0.46 的 distributional drift
+  (Path D Bonferroni 后真抓)
+
+cat-4 D.2 出现 3 条新失败：
+- `ks_supplier_lead_time` (1f66): Path D 真抓 LLM cell-level distribution mis-fit
+- `ks_feature_adoption_rate` (6dbb): 同上
+- `ks_total_assets` (9ec5): 同上
+
+**关键诊断**：这些 `ks_*` 在两个 cat 都重复出现——n>>30、D>>threshold、
+Bonferroni 修正后的 α 仍触发——**不是 Path D false positive**，而是
+LLM 在 `param_model` cell-level 分布上的真实声明错误。属新 mechanism 候选：
+
+- **M7 候选**：`marginal × group_dep 链 induced shift`——LLM 不会预测 conditional
+  weights 对 marginal 的反推
+- **M8 候选**：`param_model cell-level mis-fit`——LLM 写的 measure family 参数
+  在 cross-classification 某些 cell 上的 realized distribution 上对不齐
+
+详 [§6.5 未来候选 mechanism](#65-未来候选-mechanism7-cat-3--cat-4-d2-共有的新失败族)。
+
+### 5.8 失败类型分类（Phase D.2 后，cat-3 + cat-4 联合）
+
+| 失败族 | cat-3 baseline | cat-3 D.2 | cat-4 baseline | cat-4 D.2 | 责任层 | 修复路径 |
+|---|:-:|:-:|:-:|:-:|---|---|
+| `seasonal_*`（季节振幅 < 2·CV）| 1 | 0 | 8 | 2 | LLM ↦ Constraint 17 | **D / D.2 主修闭合**（剩 2 条转 month-effect bump）|
+| `seasonal_*` (realized z << expected z) | 0 | 0 | 0 | 2 | LLM ↦ Constraint 17 month-effect | **D.3 候选**（详 §6.4）|
+| `PatternInjectionError`（hard）| 0 | 0 ← D 时 1 → D.2 0 ✓ | 0 | 0 | LLM ↦ row-count guardrail | **D.2 修闭合** |
+| `reversal_*` | 1 | 1 | 1 | 0 | LLM 公式骨架 sign/中介错 | Phase C 范围 |
+| `residual_*`（M1 ratio long tail）| 1 | 0 | 0 | 0 | LLM ratio operator 长尾 | LLM 自修，被动闭合 |
+| `outlier_*` (declared z_score vs realized) | 0 | 2 | 0 | 0 | LLM 选 z_score vs realized 不匹配 | **M9 候选** |
+| `marginal_*` (group_dep induced shift) | 0 | 1 | 0 | 0 | LLM 没预测 group_dep 链 | **M7 候选** |
+| `ks_*` (cell-level mis-fit) | 0 | 1 | 0 | 3 | LLM 选错 param_model | **M8 候选** |
+| `orthogonal_*` / `group_dep_*` / `dominance_*` | 0 | 0 | 1+1 | 0 | — | Phase A/B 已闭合 |
+
+### 5.9 教训：prompt-side fix 必带 LLM regen variance；不要承诺 "0 regressions"
 
 [Phase A doc §5.2](MECHANISM_4_PROPORTION_DRIFT_DEEP_DIVE.md#52-llm-完全没改任何东西)
 说："validator-only 改造的最大特征是 declarations + base_seed + scenario IDs
@@ -506,7 +642,11 @@ Constraint 17 在 CV<0.1 时建议 `|M| ≥ 0.3` 是经验阈。**理论上** CV
 未来触发条件：production batch 出现 CV<0.05 的域且 |M|=0.3 让 in-window
 分布偏离 domain realism。
 
-### 6.3 Phase D.1（validator-side 兜底）暂未做
+### 6.3 Phase D.x 树形结构：D.1 / D.2 / D.3 / D.4
+
+Phase D 的 follow-up 工作按"实测发现 → 修复"循环演进：
+
+#### Phase D.1（validator-side underspecified-skip 兜底）— **仍 deferred**
 
 跟 Phase A 的 Constraint 14 / Phase B 的 Constraint 15 同精神（都是
 prompt-side 已 sufficient，validator 兜底是 backup）：让 validator 在
@@ -522,16 +662,85 @@ if declared_magnitude is not None and abs(baseline_mean) > 1e-9:
         )
 ```
 
-本次没做，原因：
-- Phase D prompt-only 已达成 1/1 → 0 → 不需要 validator 协同（待 §5.2 验证）
-- LLM 不听话的 case 在 §5.2 没观测到（待验证）
+未做，原因：
+- Phase D + D.2 prompt-only 已达成 `seasonal_*` cat-3 1→0, cat-4 8→2 — 主目标
+  family 大幅闭合
+- LLM 不听话的 case 只剩 cat-4 6dbb/ac54 — 详 §5.6，不是"declared < required"
+  类型（declared **already exceeds** required），属 §6.4 的 month-effect 问题
 - 加 validator 兜底等于"silently pass on LLM mistake"，违反 transparency 原则
-  （Phase A/B 的 skip 是对 validator 不可判 regime 的，本质不同）
 
-未来触发条件：production batch 出现 ≥1 scenario where LLM 仍写 `magnitude <
-2·CV` 而 validator 仍 fail；说明 LLM 系统性不读 Constraint 17，可加 validator 兜底。
+#### Phase D.2（row-count guardrail）— **本次完成 ✓**
 
-### 6.4 silent-pass + transparency
+加 Constraint 17 末尾的 row-count sub-clause（详 §4.5）。e9c4 `PatternInjectionError`
+1→0 ✓，cat-4 上 8 seasonal failures 6 个被切到 `trend_break`、2 个降级为 §6.4
+problem。详 §5.5 + §5.6。
+
+#### Phase D.3（month/quarter-effect bump 强化）— **新候选**
+
+cat-4 残留的 2 个 seasonal failure（6dbb + ac54）暴露了 Constraint 17 §month/quarter
+effects 的 LLM compliance 问题：LLM 选了 `magnitude > required` 但没 bump
+20–30%。修法选项：
+
+- **prompt 端强化**：把"bump 20–30%"从可选建议升级为**显式公式** `|M| ≥
+  2.5 × baseline_std / |baseline_mean|` 当 measure 有 month/quarter effects
+- **validator 端**：增加 detail 字段 `realized_z` vs `expected_z`，让 LLM 在
+  retry 时看到差距数字
+- **SDK 端 dry-run helper**：`_estimate_z_given_magnitude(...)` 在 inject 前
+  计算理论 z，warn if `expected_z > 2 × realized_z` (说明有 measure-internal
+  attenuation)
+
+#### Phase D.4（generalize row-count guardrail 到其他 pattern types）— **未来**
+
+Phase D.2 row-count guardrail 只覆盖 `seasonal_anomaly`。同样的 `len(in_window)
+== 0` 失败模式存在于 `outlier_entity` / `trend_break` / `dominance_shift` /
+`ranking_reversal`（详 [engine/patterns.py:48/348/357/464](../../../pipeline/phase_2/engine/patterns.py)）。
+未触发条件：production batch 出现非-seasonal pattern type 的 `PatternInjectionError`。
+
+未来触发条件：production batch 出现 outlier/trend_break/dominance/reversal
+任一 pattern 的 0-row 注入失败。
+
+### 6.4 cat-4 残留 2 条 seasonal failure 的根因：realized z << expected z
+
+cat-4 D.2 上 LLM 在 6dbb / ac54 都正确把 magnitude 选成 > required_magnitude_at_threshold，
+但 validator 仍 fail。详 §5.6 表格——expected z = 1.97 / 2.79（皆 > 1.5）但
+realized z = 0.639 / 1.115（皆 < 1.5）。
+
+**根因机理**：
+
+`expected_z = |M| × baseline_mean / baseline_std` 隐含假设 in-window 行**未注入前**
+分布等同于 baseline（即年度均值）。但 LLM 在 `param_model` 里声明的 month/quarter
+effects 让某些月份的 measure baseline 本身偏低（如 6dbb 的 `feature_adoption_rate`
+在 Mar-Apr 比年度均值低；ac54 的 `add_to_cart_rate` 在 Nov 20-Dec 5 比年度均值低）。
+所以 `(1 + M) × E[X | in_window, pre-injection]` < `(1 + M) × baseline_mean`，
+realized z 被压低。
+
+Constraint 17 已警示过这条（详 §1 一页总结的引言部分），但仅作建议性"bump 20–30%"，
+LLM 没充分照做。Phase D.3 候选解决方案见 §6.3。
+
+### 6.5 未来候选 mechanism（cat-3 + cat-4 D.2 共有的新失败族）
+
+cat-3 + cat-4 D.2 一起跑出了**3 个新失败族**（在 baseline 上**未观测到**或观测形式
+不同的）。这些不是 D / D.2 的 bug，而是 LLM regen variance 暴露的**之前没看到的
+LLM 行为缺陷**：
+
+| 失败族 | 出现 scenario(s) | failure detail 节选 | 候选 mechanism 名 | 根因假设 |
+|---|---|---|---|---|
+| `marginal_*` (large n, n=420) | cat-3 e9c4 grade_band | `dev=0.2157, thresh=0.1472` | **M7：marginal × group_dep 链 induced shift** | LLM 没预测 `add_group_dependency` 反推 marginal |
+| `ks_*` (n=42, n=110, n=70+) | cat-3 8022, cat-4 1f66+6dbb+9ec5 | Bonferroni 后失败 cell n≥30, D≥0.17, p<α | **M8：param_model cell-level mis-fit** | LLM 写的 measure family 参数在 cross-classification 某些 cell 上对不齐 realized |
+| `outlier_*` (z_score 不符 realized) | cat-3 33d8 yield_rate, 8022 withdrawal_rate, 503613 student_faculty_ratio | `z=1.7242 (subset_mean=11.0116, ref_mean=5.8447, ref_std=2.9967)` | **M9：outlier_entity z_score 声明 vs realized 不匹配** | LLM 选的 z_score 在 realized 子集均值上不能 produce |
+
+**关键诊断**（已在 §5.7 阐述）：这些**不是** Phase A / Path D 的 false-positive 漏抓——
+Phase A 的 Wald CI 在 n=420 上 threshold 0.147，绝不该 silent-pass dev=0.22 的真错；
+Path D 的 Bonferroni 在 n≥30 cell 上**就是设计来抓**真 D>>threshold 的 distributional
+drift。所以这些是 prompt-side LLM 缺陷，validator 工作得**完全正确**。
+
+**未来归类**：
+
+- 若再有 1-2 个 batch 重现 → 写 MECHANISM_7 / MECHANISM_8 / MECHANISM_9 deep dive
+  doc + 对应 Phase E / F / G prompt-side 修复
+- 若只在 cat-3/cat-4 出现 → 留作"已知 LLM 缺陷"标签，不优先修
+
+### 6.6 silent-pass + transparency
 
 Phase D 与 Path D / Phase A / Phase B 的 silent-pass 决定有质的差别：
 
@@ -541,7 +750,7 @@ Phase D 与 Path D / Phase A / Phase B 的 silent-pass 决定有质的差别：
 这样的好处：validator 永远不 white-wash，所有 false positive 必须由 LLM 端
 修正——明确的责任分层。
 
-### 6.5 跨 phase master_tables 一定不字节一致：LLM regen 改 declarations
+### 6.7 跨 phase master_tables 一定不字节一致：LLM regen 改 declarations
 
 **Phase A/B 是 validator-only**（[MECHANISM_5 §6.4](MECHANISM_5_ORTHOGONAL_DEGENERACY_DEEP_DIVE.md#64-跨-phase-master_tables-不必字节一致validator-驱动-retry-trajectory)
 已证 retry-trajectory 决定 effective seed）。Phase D 是 prompt-side：
@@ -566,16 +775,20 @@ Phase D 与 Path D / Phase A / Phase B 的 silent-pass 决定有质的差别：
 | 同代码 rerun master_tables 字节一致 | yes | Stage 2 deterministic 实证仍成立 |
 | **master_tables 跨 phase 字节一致** | **NO by design** | LLM regen 改 declarations → engine sample 路径 100% 改 |
 
-### 6.6 仍未修
+### 6.8 仍未修
 
-Phase D 已经关闭季节振幅误判机制。Phase B 后 3 条 → Phase D 后 2 条，剩 2 条
-按 [PINGYUE_OPENAI_CAL_ANALYSIS.md §8](../validation/PINGYUE_OPENAI_CAL_ANALYSIS.md#8-下一步修改计划) 分发：
+Phase D + D.2 已经关闭季节振幅误判机制（cat-3 1→0, cat-4 8→2，剩 2 条转 §6.4
+month-effect 子机制）。Phase B 后剩余非-seasonal failure 中：
 
-1. **Phase C**：`reversal_*` 1 条（agpds_503613ba96）— LLM 公式骨架共享上
-   游变量造成结构性正相关。修法：跟 M1 ratio straggler 一起治。
-2. **接受**：`residual_*` 1 条（agpds_503613ba96）— [M1 ratio operator 长尾](M1_RATIO_OPERATOR_STRAGGLER.md)，已决定不修。
+1. **Phase C**：`reversal_*` 在 cat-3 baseline 1 条（agpds_503613ba96）+ D rerun
+   时新撞出的 8180/65ef/14b7 都是 LLM 公式骨架共享上游变量造成结构性正相关。
+   修法：跟 M1 ratio straggler 一起治。cat-4 D.2 上没再出现（LLM 这次没在 funnel
+   pair 上声明 reversal）。
+2. **接受**：`residual_*` 在 cat-3 baseline 1 条（agpds_503613ba96）— [M1 ratio
+   operator 长尾](M1_RATIO_OPERATOR_STRAGGLER.md)，已决定不修。Phase D regen 后
+   LLM 自修了公式，cat-3 D.2 上未重现。
 
-### 6.7 教训：validator 教 LLM 比 validator 自修更可持续
+### 6.9 教训：validator 教 LLM 比 validator 自修更可持续
 
 跟 Phase A §6.6 / Phase B §6.6 的教训形成对比：
 
@@ -612,5 +825,10 @@ loop 蒙猜。
 | 2026-05-21 | doc §3.1 + §8.4 诊断 seasonal_* 是 LLM 没估 CV | [PINGYUE_OPENAI_CAL_ANALYSIS.md §3.1](../validation/PINGYUE_OPENAI_CAL_ANALYSIS.md#31-agpds_14b7f7487e--boston-public-library-借阅) |
 | 2026-05-21 | Phase D Task 1：validator detail enrichment（`declared_magnitude` + `required_magnitude_at_threshold`）| `38c99e8` |
 | 2026-05-21 | Phase D Task 2：Constraint 17 prompt（amplitude vs baseline_std）| `4a68905` |
-| 2026-05-21 | Phase D LLM regen 在 openai-cal 验证：`seasonal_*` 1→0 ✓（14b7 切到 trend_break），但 LLM regen variance 让 `reversal_*` 1→3（Phase C scope），总 soft-fail 3→3，1 hard PatternInjectionError | `pingyue-samples-openai-calibrated-pathD-llm/` |
-| 2026-05-21 | 本文档定稿 | (this file) |
+| 2026-05-21 | Phase D LLM regen 在 openai-cal 验证：`seasonal_*` 1→0 ✓（14b7 切到 trend_break），但 LLM regen variance 让 `reversal_*` 1→3（Phase C scope），总 soft-fail 3→3，**1 hard PatternInjectionError** | `pingyue-samples-openai-calibrated-pathD-llm/` |
+| 2026-05-21 | Phase D 文档首版定稿 | `73767d5` |
+| 2026-05-21 | Phase D.2 Constraint 17 row-count guardrail prompt 添加 | `fad9d8b` |
+| 2026-05-21 | Phase D.2 tests landed | `a4350b0` |
+| 2026-05-21 | Phase D.2 cat-3 LLM regen 验证：e9c4 hard error 1→0 ✓；LLM 在 cat-3 上完全 abandon seasonal_anomaly（10 个 declarations 0 个 seasonal）| `pingyue-samples-openai-calibrated-pathD2-llm/` |
+| 2026-05-21 | Phase D.2 cat-4 stress test：`seasonal_*` 8→2（-75%），passing 1/10→6/10，0 PatternInjectionError；6 个 baseline seasonal_anomaly 主动切到 trend_break | `pingyue-samples-openai-catagory4-pathD2-llm/` |
+| 2026-05-21 | 本文档 D.2 增量定稿 | (this commit) |

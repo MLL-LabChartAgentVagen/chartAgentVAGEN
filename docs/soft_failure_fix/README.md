@@ -85,7 +85,9 @@ docs/soft_failure_fix/
 机制 6 (M6)              季节振幅未对齐 baseline 噪声（seasonal_*）
   └─ 诊断：validation/PINGYUE_OPENAI_CAL_ANALYSIS.md §3.1 + mechanisms/MECHANISM_6_SEASONAL_AMPLITUDE_DEEP_DIVE.md
   └─ 修复：Phase D — Constraint 17 prompt（amplitude vs baseline_std）+ validator fail-detail enrichment
-  └─ 验证：MECHANISM_6_SEASONAL_AMPLITUDE_DEEP_DIVE.md §5（seasonal_* 1 → 0；prompt-side fix 引入 LLM regen variance，详 §5.7）
+  └─ 修复：Phase D.2 — Constraint 17 row-count guardrail sub-clause（避免 anomaly_window × target 0-row → PatternInjectionError）
+  └─ 验证（cat-3）：MECHANISM_6 §5（seasonal_* 1 → 0；D.2 进一步把 D 时的 e9c4 hard error 修掉）
+  └─ 验证（cat-4 stress test）：MECHANISM_6 §5.5（seasonal_* 8 → 2，passing 1/10 → 6/10，0 PatternInjectionError）
 
 非 M6 长尾（机制 7+）    reversal / outlier (未归类)
   └─ 当前状态：未归类 / 未修（Phase C/E 待启）
@@ -113,5 +115,10 @@ docs/soft_failure_fix/
 | 2026-05-21 | Phase B 在 openai-cal 验证 `orthogonal_*` 3→0, total 6→3, 6/10→8/10 passing, 0 regressions | `MECHANISM_5_ORTHOGONAL_DEGENERACY_DEEP_DIVE.md` §5 |
 | 2026-05-21 | Phase D 实施 Task 1（validator detail enrichment：`declared_magnitude` + `required_magnitude_at_threshold`）| `38c99e8` |
 | 2026-05-21 | Phase D 实施 Task 2（Constraint 17 — amplitude vs baseline_std）| `4a68905` |
-| 2026-05-21 | Phase D LLM regen 在 openai-cal 验证 `seasonal_*` 1→0 ✓（14b7 切到 trend_break），但 LLM regen variance 让 `reversal_*` 1→3（Phase C scope）| `pingyue-samples-openai-calibrated-pathD-llm/` |
-| 2026-05-21 | MECHANISM_6 定稿 | (this commit) |
+| 2026-05-21 | Phase D LLM regen 在 openai-cal 验证 `seasonal_*` 1→0 ✓（14b7 切到 trend_break），但 LLM regen variance 让 `reversal_*` 1→3（Phase C scope），1 hard PatternInjectionError 暴露 | `pingyue-samples-openai-calibrated-pathD-llm/` |
+| 2026-05-21 | MECHANISM_6 首版定稿 | `73767d5` |
+| 2026-05-21 | Phase D.2 Constraint 17 row-count guardrail prompt 添加 | `fad9d8b` |
+| 2026-05-21 | Phase D.2 tests landed | `a4350b0` |
+| 2026-05-21 | Phase D.2 cat-3 LLM regen：e9c4 hard error 1→0 ✓；LLM 在 cat-3 上完全 abandon seasonal_anomaly（10 个 declarations 0 个 seasonal）| `pingyue-samples-openai-calibrated-pathD2-llm/` |
+| 2026-05-21 | Phase D.2 cat-4 stress test：8 baseline seasonal failures 中 6 个主动切到 trend_break，`seasonal_*` 8→2，passing 1/10→6/10，0 PatternInjectionError | `pingyue-samples-openai-catagory4-pathD2-llm/` |
+| 2026-05-21 | MECHANISM_6 D.2 增量定稿 | (this commit) |
