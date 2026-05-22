@@ -62,3 +62,68 @@ class TestConstraint17Placement:
                 f"Constraint {n} should be reserved for Phase A/B/C; "
                 "current Phase D uses 17 to leave the gap"
             )
+
+
+class TestConstraint17RowCountGuardrail:
+    """Phase D.2: anomaly_window × target row-count guardrail sub-clause."""
+
+    def _c17_block(self) -> str:
+        rendered = render_system_prompt("dummy scenario")
+        c17_start = rendered.index("17. SEASONAL AMPLITUDE")
+        c17_end = rendered.index("SOFT GUIDELINES", c17_start)
+        return rendered[c17_start:c17_end]
+
+    def test_subclause_mentions_expected_rows_formula(self):
+        block = self._c17_block()
+        assert "expected_rows" in block
+
+    def test_subclause_mentions_hard_floor_5_and_soft_floor_10(self):
+        """Phase D.2 design: hard floor 5 (Poisson reliability), soft 10
+        (z stability) — explicitly chosen over Constraint 13's KS ≥ 30."""
+        block = self._c17_block()
+        b = block.lower()
+        # The sub-clause must label its two floors
+        assert "hard floor" in b
+        assert "soft floor" in b
+        # The chosen thresholds must appear adjacent to expected_rows
+        assert "expected_rows ≥ 5" in block or "expected_rows >= 5" in block
+        assert "expected_rows ≥ 10" in block or "expected_rows >= 10" in block
+
+    def test_subclause_advises_widen_or_drop_target(self):
+        block = self._c17_block()
+        b = block.lower()
+        assert "widen" in b
+        assert "remove" in b or "drop" in b or "broaden" in b
+
+    def test_subclause_includes_e9c4_counter_example(self):
+        """Worked numeric example matches the actual production failure
+        (target_rows=420, temporal_range=290 days, weights[9]=0.095,
+        anomaly_window=12 days, expected_rows≈1.6)."""
+        block = self._c17_block()
+        assert "420" in block
+        assert "290" in block
+        assert "1.6" in block or "12" in block
+
+    def test_subclause_appears_after_trend_break_example(self):
+        """Logical flow: amplitude/CV math → trend_break fallback → row
+        guardrail. The guardrail limits the 'narrow window' advice given
+        earlier; it must come after the magnitude/CV/trend_break section."""
+        block = self._c17_block()
+        trend_break_idx = block.index("trend_break")
+        guardrail_idx = block.index("expected_rows")
+        assert trend_break_idx < guardrail_idx, (
+            "Row-count guardrail must follow the trend_break fallback "
+            "(it limits the 'narrow window' advice given earlier)"
+        )
+
+    def test_no_new_constraint_18_introduced(self):
+        """D.2 keeps the guardrail INSIDE Constraint 17 — must not
+        accidentally introduce a 'Constraint 18' header."""
+        rendered = render_system_prompt("dummy scenario")
+        hard = rendered.index("HARD CONSTRAINTS")
+        soft = rendered.index("SOFT GUIDELINES")
+        block = rendered[hard:soft]
+        assert "\n18. " not in block, (
+            "Phase D.2 sub-clause must live inside Constraint 17; "
+            "spawning Constraint 18 reflects an unintended scope leak."
+        )
