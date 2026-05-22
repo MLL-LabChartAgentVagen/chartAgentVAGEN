@@ -11,6 +11,7 @@ Phase 2 soft-failure 分析、修复、子系统手册、批次实测的合集�
 | 你的场景 | 读这份 |
 |---|---|
 | 第一次接触、想 catch-up | [ANALYSIS.md](ANALYSIS.md) — 一页综述 |
+| **想知道下一步该修什么 / 还有哪些 deferred items** | [**BACKLOG.md**](BACKLOG.md) — **deferred queue + 推荐顺序**（拾起新 session 的入口）|
 | 想知道某条 `residual_*` / `ks_*` 失败属哪条机制 | [FAILURE_MECHANISMS.md](FAILURE_MECHANISMS.md) — 三机制 + Path A/B/C + 实测 |
 | 想知道某条 `group_dep_*` / `marginal_*` 失败的根因 | [mechanisms/MECHANISM_4_PROPORTION_DRIFT_DEEP_DIVE.md](mechanisms/MECHANISM_4_PROPORTION_DRIFT_DEEP_DIVE.md) — 小样本 binomial 包络 + Phase A 修复 |
 | 想知道某条 `orthogonal_*` 失败的根因 | [mechanisms/MECHANISM_5_ORTHOGONAL_DEGENERACY_DEEP_DIVE.md](mechanisms/MECHANISM_5_ORTHOGONAL_DEGENERACY_DEEP_DIVE.md) — 退化 contingency table + Phase B 修复 |
@@ -31,6 +32,7 @@ Phase 2 soft-failure 分析、修复、子系统手册、批次实测的合集�
 ```
 docs/soft_failure_fix/
 ├── README.md                          ← 本文件
+├── BACKLOG.md                         📋 入口：deferred queue + 推荐顺序
 ├── ANALYSIS.md                        🌐 入口：一页综述
 ├── FAILURE_MECHANISMS.md              🌐 入口：三机制全景
 ├── mechanisms/                        🔬 机制纵深
@@ -91,9 +93,12 @@ docs/soft_failure_fix/
   └─ 验证（cat-3）：MECHANISM_6 §5（seasonal_* 1 → 0；D.2 进一步把 D 时的 e9c4 hard error 修掉）
   └─ 验证（cat-4 stress test）：MECHANISM_6 §5.5（seasonal_* 8 → 2，passing 1/10 → 6/10，0 PatternInjectionError）
 
-非 M6 长尾（机制 7+）    reversal / outlier (未归类)
-  └─ 当前状态：未归类 / 未修（Phase C/E 待启）
-  └─ 见 FAILURE_MECHANISMS.md §7.2 / validation/OPENAI_VALIDATION.md §7.4
+非 M6 长尾（机制 7+ / Phase C/D.3/D.4 等）   待修 queue
+  └─ 完整列表 + 推荐顺序：[BACKLOG.md](BACKLOG.md)
+  └─ Tier 1 (immediate)：Phase D.3 (realized z << expected z) — 设计完毕
+  └─ Tier 2 (mechanism 候选)：M8 (param_model cell mis-fit) / M7 (marginal × group_dep) / M9 (outlier z_score)
+  └─ Tier 3 (高成本)：Phase C (reversal_*) / D.4 (其他 pattern row-count) / D.1 (validator 兜底)
+  └─ Tier 4 (accepted)：M1 ratio straggler — 不修
 ```
 
 ---
