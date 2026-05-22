@@ -15,6 +15,7 @@ Phase 2 soft-failure 分析、修复、子系统手册、批次实测的合集�
 | 想知道某条 `group_dep_*` / `marginal_*` 失败的根因 | [mechanisms/MECHANISM_4_PROPORTION_DRIFT_DEEP_DIVE.md](mechanisms/MECHANISM_4_PROPORTION_DRIFT_DEEP_DIVE.md) — 小样本 binomial 包络 + Phase A 修复 |
 | 想知道某条 `orthogonal_*` 失败的根因 | [mechanisms/MECHANISM_5_ORTHOGONAL_DEGENERACY_DEEP_DIVE.md](mechanisms/MECHANISM_5_ORTHOGONAL_DEGENERACY_DEEP_DIVE.md) — 退化 contingency table + Phase B 修复 |
 | 想知道某条 `seasonal_*` 失败的根因 | [mechanisms/MECHANISM_6_SEASONAL_AMPLITUDE_DEEP_DIVE.md](mechanisms/MECHANISM_6_SEASONAL_AMPLITUDE_DEEP_DIVE.md) — 季节振幅 vs baseline_std + Phase D Constraint 17 |
+| 想拾起 Phase D.3（realized z << expected z；6dbb/ac54 实测）| [mechanisms/M6_PHASE_D3_REALIZED_Z_GAP.md](mechanisms/M6_PHASE_D3_REALIZED_Z_GAP.md) — **DEFERRED**，等候新 session |
 | 改 `pipeline/phase_2/orchestration/calibration.py` | [subsystems/SIGMA_CALIBRATION.md](subsystems/SIGMA_CALIBRATION.md) |
 | 改 `pipeline/phase_2/validation/statistical.py` 里的 KS 部分 | [subsystems/PATH_D_KS_SPARSE_CELLS.md](subsystems/PATH_D_KS_SPARSE_CELLS.md) |
 | 改 `pipeline/phase_2/validation/statistical.py` 里的 group_dep / marginal 阈值 | [mechanisms/MECHANISM_4_PROPORTION_DRIFT_DEEP_DIVE.md §4](mechanisms/MECHANISM_4_PROPORTION_DRIFT_DEEP_DIVE.md#4-解决方案n-aware-wald-95-ci-per-cell-child_level) |
@@ -38,6 +39,7 @@ docs/soft_failure_fix/
 │   ├── MECHANISM_4_PROPORTION_DRIFT_DEEP_DIVE.md  M4 小样本比例漂移误判 — 根因/Phase A/实测
 │   ├── MECHANISM_5_ORTHOGONAL_DEGENERACY_DEEP_DIVE.md  M5 正交声明在退化列上误判 — 根因/Phase B/实测
 │   ├── MECHANISM_6_SEASONAL_AMPLITUDE_DEEP_DIVE.md  M6 季节振幅未对齐 baseline 噪声 — Constraint 17/实测
+│   ├── M6_PHASE_D3_REALIZED_Z_GAP.md       M6 子机制：realized z << expected z（Phase D.3 候选，**未修**）
 │   └── M1_RATIO_OPERATOR_STRAGGLER.md   M1 在除法算子上的长尾分支
 ├── subsystems/                        🔧 子系统手册（改代码前读）
 │   ├── SIGMA_CALIBRATION.md             Loop A in-loop sigma calibration
