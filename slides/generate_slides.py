@@ -1,1824 +1,2049 @@
-"""Generate ChartAgent proposal slides as editable .pptx.
-
-All diagrams are built from native python-pptx shapes, so every element
-remains editable in PowerPoint. No embedded images, no rasterization.
 """
+Generate chartagent_slides.pptx — 26 slides, 16:9, English-only.
+
+Clean academic style, plain researcher voice: pure white background,
+one Stanford-red accent, oversized centered titles in Avenir-heavy,
+soft-shadow cards replacing all bullet points. No detective metaphor,
+no eyebrow breadcrumbs, no page numbers, no title-page red strip,
+no pink-tinted highlight cards. Mirrors slides/chartagent_slides.html.
+
+Two contributions:
+  C1 — Synthetic data generation (atomic-grain Master Table, Code-as-DGP, SQL projection)
+  C2 — Active Chart Reasoning   (budgeted protocol, bbox grounding, four investigation moves)
+
+The SwiftEats 31 → 18 minute example runs through the deck.
+"""
+
+from pathlib import Path
 
 from pptx import Presentation
 from pptx.util import Inches, Pt, Emu
+from pptx.enum.shapes import MSO_SHAPE, MSO_CONNECTOR
 from pptx.dml.color import RGBColor
-from pptx.enum.shapes import MSO_SHAPE
-from pptx.enum.text import PP_ALIGN, MSO_ANCHOR
+from pptx.enum.text import PP_ALIGN, MSO_ANCHOR, MSO_AUTO_SIZE
 from pptx.oxml.ns import qn
 from lxml import etree
 
 
-# ─────────────────────────── Design tokens ───────────────────────────
+# ---------------------------------------------------------------------------
+# PALETTE — academic-clean: white + one Stanford red accent
+# ---------------------------------------------------------------------------
+INK         = RGBColor(0x1A, 0x1A, 0x1A)
+MUTED       = RGBColor(0x6B, 0x6B, 0x6B)
+HAIR        = RGBColor(0xE6, 0xE6, 0xE6)
+WHITE       = RGBColor(0xFF, 0xFF, 0xFF)
+ACCENT      = RGBColor(0x8C, 0x15, 0x15)   # Stanford red
+ACCENT_SOFT = RGBColor(0xFB, 0xED, 0xED)
+GOOD        = RGBColor(0x2E, 0x7D, 0x4F)
+GOOD_SOFT   = RGBColor(0xEA, 0xF4, 0xEC)
+BAD         = RGBColor(0xB2, 0x3A, 0x3A)
+BAD_SOFT    = RGBColor(0xF8, 0xEC, 0xEC)
+CODE_BG     = RGBColor(0xFA, 0xFA, 0xFA)
+CODE_KEY    = RGBColor(0x8C, 0x15, 0x15)   # = accent
+CODE_STR    = RGBColor(0x2E, 0x7D, 0x4F)
+CODE_NUM    = RGBColor(0x1A, 0x1A, 0x1A)
+CODE_COM    = RGBColor(0x9A, 0x9A, 0x9A)
 
-NAVY       = RGBColor(0x0F, 0x3A, 0x5F)   # primary
-NAVY_DARK  = RGBColor(0x08, 0x25, 0x3E)
-ACCENT     = RGBColor(0xD9, 0x72, 0x1E)   # highlight orange
-TEAL       = RGBColor(0x2C, 0x8C, 0x8A)   # secondary
-TEXT_DARK  = RGBColor(0x1F, 0x25, 0x37)
-TEXT_MID   = RGBColor(0x55, 0x5F, 0x6E)
-TEXT_MUTED = RGBColor(0x8A, 0x94, 0xA6)
-BORDER     = RGBColor(0xD8, 0xDE, 0xE8)
-SOFT_BG    = RGBColor(0xF6, 0xF8, 0xFB)
-CARD_BG    = RGBColor(0xFF, 0xFF, 0xFF)
-CHIP_BG    = RGBColor(0xE8, 0xEF, 0xF7)
-GRAY_BG    = RGBColor(0xF0, 0xF2, 0xF5)
-CODE_BG    = RGBColor(0x11, 0x1B, 0x2E)
-CODE_FG    = RGBColor(0xE6, 0xED, 0xF6)
-CODE_KEY   = RGBColor(0xFF, 0xB3, 0x6B)   # keywords
-CODE_STR   = RGBColor(0x9F, 0xE5, 0xA0)   # strings
-WHITE      = RGBColor(0xFF, 0xFF, 0xFF)
+FONT = "Avenir Next"
+MONO = "JetBrains Mono"
 
-FONT = "Calibri"
-MONO = "Consolas"
-
-SLIDE_W = Inches(13.333)
-SLIDE_H = Inches(7.5)
-
-
-# ─────────────────────────── Helpers ───────────────────────────
-
-def _set_fill(shape, color, transparent=False):
-    if transparent:
-        shape.fill.background()
-    else:
-        shape.fill.solid()
-        shape.fill.fore_color.rgb = color
+prs = Presentation()
+prs.slide_width = Inches(13.333)
+prs.slide_height = Inches(7.5)
+SW, SH = 13.333, 7.5
 
 
-def _set_line(shape, color=None, width_pt=0.75, invisible=False):
-    if invisible:
-        shape.line.fill.background()
+# ---------------------------------------------------------------------------
+# LOW-LEVEL HELPERS
+# ---------------------------------------------------------------------------
+def blank():
+    return prs.slides.add_slide(prs.slide_layouts[6])
+
+
+def _strip_style(shape):
+    """Remove theme-derived effects so cards render identically everywhere."""
+    el = shape._element
+    style = el.find(qn("p:style"))
+    if style is not None:
+        el.remove(style)
+
+
+def _set_effect(shape, soft_shadow=False):
+    """Replace effectLst — empty by default, or soft outer shadow."""
+    el = shape._element
+    spPr = el.find(qn("p:spPr"))
+    if spPr is None:
         return
-    shape.line.color.rgb = color if color else BORDER
-    shape.line.width = Pt(width_pt)
+    for old in spPr.findall(qn("a:effectLst")):
+        spPr.remove(old)
+    effectLst = etree.SubElement(spPr, qn("a:effectLst"))
+    if soft_shadow:
+        sh = etree.SubElement(effectLst, qn("a:outerShdw"))
+        # blur 22pt, distance 6pt, downward, ~10% black
+        sh.set("blurRad", str(int(22 * 12700)))
+        sh.set("dist",    str(int(6  * 12700)))
+        sh.set("dir",     "5400000")   # 90° (downward)
+        sh.set("algn",    "ctr")
+        sh.set("rotWithShape", "0")
+        srgb = etree.SubElement(sh, qn("a:srgbClr"))
+        srgb.set("val", "000000")
+        a = etree.SubElement(srgb, qn("a:alpha"))
+        a.set("val", "11000")          # 11% alpha
 
 
-def add_rect(slide, x, y, w, h, *, fill=WHITE, line=BORDER, line_w=0.75,
-             rounded=False, shadow=False):
-    shape_type = MSO_SHAPE.ROUNDED_RECTANGLE if rounded else MSO_SHAPE.RECTANGLE
-    shp = slide.shapes.add_shape(shape_type, x, y, w, h)
-    if rounded:
-        shp.adjustments[0] = 0.08
-    _set_fill(shp, fill, transparent=(fill is None))
-    if line is None:
-        _set_line(shp, invisible=True)
+def shape_at(slide, x, y, w, h, fill=None, line=None, line_w=0.75,
+             shape=MSO_SHAPE.RECTANGLE, soft_shadow=False):
+    s = slide.shapes.add_shape(shape, Inches(x), Inches(y), Inches(w), Inches(h))
+    if fill is None:
+        s.fill.background()
     else:
-        _set_line(shp, line, line_w)
-    if not shadow:
-        shp.shadow.inherit = False
-        # disable default shadow via XML
-        sppr = shp.fill._xPr
-        for eff in sppr.findall(qn('a:effectLst')):
-            sppr.remove(eff)
-        eff_lst = etree.SubElement(sppr, qn('a:effectLst'))
-    return shp
+        s.fill.solid(); s.fill.fore_color.rgb = fill
+    if line is None:
+        s.line.fill.background()
+    else:
+        s.line.color.rgb = line
+        s.line.width = Pt(line_w)
+    _strip_style(s)
+    _set_effect(s, soft_shadow=soft_shadow)
+    s.text_frame.word_wrap = True
+    s.text_frame.margin_left = Inches(0.10)
+    s.text_frame.margin_right = Inches(0.10)
+    s.text_frame.margin_top = Inches(0.05)
+    s.text_frame.margin_bottom = Inches(0.05)
+    return s
 
 
-def add_text(slide, x, y, w, h, text, *, size=12, bold=False, italic=False,
-             color=TEXT_DARK, align=PP_ALIGN.LEFT, anchor=MSO_ANCHOR.TOP,
-             font=FONT, line_spacing=1.15):
-    tb = slide.shapes.add_textbox(x, y, w, h)
+def rect(slide, x, y, w, h, **kw):
+    return shape_at(slide, x, y, w, h, shape=MSO_SHAPE.RECTANGLE, **kw)
+
+
+def rounded(slide, x, y, w, h, **kw):
+    return shape_at(slide, x, y, w, h, shape=MSO_SHAPE.ROUNDED_RECTANGLE, **kw)
+
+
+def card(slide, x, y, w, h, fill=WHITE):
+    """Soft-shadow card — no border, gentle drop shadow."""
+    s = shape_at(slide, x, y, w, h, fill=fill, line=None,
+                 shape=MSO_SHAPE.ROUNDED_RECTANGLE, soft_shadow=True)
+    # Bump radius up a touch
+    return s
+
+
+def oval(slide, x, y, w, h, **kw):
+    return shape_at(slide, x, y, w, h, shape=MSO_SHAPE.OVAL, **kw)
+
+
+def textbox(slide, x, y, w, h, runs, align=PP_ALIGN.LEFT,
+            anchor=MSO_ANCHOR.TOP, margin=0.04):
+    """runs is either [(text, size, bold, color [, italic [, font]]), ...]
+    for one paragraph, or a list of paragraphs."""
+    tb = slide.shapes.add_textbox(Inches(x), Inches(y), Inches(w), Inches(h))
     tf = tb.text_frame
+    tf.auto_size = MSO_AUTO_SIZE.NONE
     tf.word_wrap = True
-    tf.margin_left = Emu(0)
-    tf.margin_right = Emu(0)
-    tf.margin_top = Emu(0)
-    tf.margin_bottom = Emu(0)
     tf.vertical_anchor = anchor
-    lines = text.split("\n") if isinstance(text, str) else text
-    for i, line in enumerate(lines):
-        p = tf.paragraphs[0] if i == 0 else tf.add_paragraph()
+    tf.margin_left = Inches(margin); tf.margin_right = Inches(margin)
+    tf.margin_top = Inches(margin); tf.margin_bottom = Inches(margin)
+    _strip_style(tb)
+    _set_effect(tb, soft_shadow=False)
+
+    if runs and not isinstance(runs[0], list):
+        paragraphs = [runs]
+    else:
+        paragraphs = runs
+
+    for pi, para in enumerate(paragraphs):
+        p = tf.paragraphs[0] if pi == 0 else tf.add_paragraph()
         p.alignment = align
-        p.line_spacing = line_spacing
-        r = p.add_run()
-        r.text = line
-        f = r.font
-        f.name = font
-        f.size = Pt(size)
-        f.bold = bold
-        f.italic = italic
-        f.color.rgb = color
-    return tb
-
-
-def add_runs(slide, x, y, w, h, runs, *, align=PP_ALIGN.LEFT,
-             anchor=MSO_ANCHOR.TOP, line_spacing=1.2):
-    """runs = list of (text, dict(size, bold, italic, color, font))."""
-    tb = slide.shapes.add_textbox(x, y, w, h)
-    tf = tb.text_frame
-    tf.word_wrap = True
-    for m in ("left", "right", "top", "bottom"):
-        setattr(tf, f"margin_{m}", Emu(0))
-    tf.vertical_anchor = anchor
-    p = tf.paragraphs[0]
-    p.alignment = align
-    p.line_spacing = line_spacing
-    first = True
-    for text, style in runs:
-        if text == "\n":
-            p = tf.add_paragraph()
-            p.alignment = align
-            p.line_spacing = line_spacing
-            first = True
-            continue
-        r = p.add_run()
-        r.text = text
-        f = r.font
-        f.name = style.get("font", FONT)
-        f.size = Pt(style.get("size", 12))
-        f.bold = style.get("bold", False)
-        f.italic = style.get("italic", False)
-        f.color.rgb = style.get("color", TEXT_DARK)
-        first = False
-    return tb
-
-
-def add_arrow_right(slide, x, y, w, h, *, fill=NAVY, line=None):
-    shp = slide.shapes.add_shape(MSO_SHAPE.RIGHT_ARROW, x, y, w, h)
-    # slimmer arrowhead: adj1 = head width, adj2 = head length
-    shp.adjustments[0] = 0.50
-    shp.adjustments[1] = 0.30
-    _set_fill(shp, fill)
-    _set_line(shp, invisible=True) if line is None else _set_line(shp, line, 0.75)
-    return shp
-
-
-def add_line(slide, x1, y1, x2, y2, *, color=TEXT_MID, width_pt=1.25,
-             dashed=False, arrow_end=False, arrow_start=False):
-    connector = slide.shapes.add_connector(1, x1, y1, x2, y2)  # STRAIGHT
-    connector.line.color.rgb = color
-    connector.line.width = Pt(width_pt)
-    ln = connector.line._get_or_add_ln()
-    if dashed:
-        prstDash = etree.SubElement(ln, qn('a:prstDash'))
-        prstDash.set('val', 'dash')
-    if arrow_end:
-        tail = etree.SubElement(ln, qn('a:tailEnd'))
-        tail.set('type', 'triangle')
-        tail.set('w', 'med')
-        tail.set('len', 'med')
-    if arrow_start:
-        head = etree.SubElement(ln, qn('a:headEnd'))
-        head.set('type', 'triangle')
-        head.set('w', 'med')
-        head.set('len', 'med')
-    return connector
-
-
-def add_chip(slide, x, y, text, *, size=10, fill=CHIP_BG, color=NAVY,
-             pad_x=0.12, height=0.32, bold=False):
-    w = Inches(max(0.7, 0.10 * len(text) + 0.30))
-    shp = slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, x, y, w, Inches(height))
-    shp.adjustments[0] = 0.5
-    _set_fill(shp, fill)
-    _set_line(shp, invisible=True)
-    tf = shp.text_frame
-    tf.margin_left = Inches(pad_x); tf.margin_right = Inches(pad_x)
-    tf.margin_top = Emu(0); tf.margin_bottom = Emu(0)
-    tf.vertical_anchor = MSO_ANCHOR.MIDDLE
-    p = tf.paragraphs[0]
-    p.alignment = PP_ALIGN.CENTER
-    r = p.add_run()
-    r.text = text
-    r.font.name = FONT
-    r.font.size = Pt(size)
-    r.font.bold = bold
-    r.font.color.rgb = color
-    return shp, w
-
-
-def fill_shape_text(shape, text, *, size=12, bold=False, color=TEXT_DARK,
-                    align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE,
-                    font=FONT, italic=False):
-    tf = shape.text_frame
-    tf.margin_left = Inches(0.10); tf.margin_right = Inches(0.10)
-    tf.margin_top = Inches(0.05); tf.margin_bottom = Inches(0.05)
-    tf.word_wrap = True
-    tf.vertical_anchor = anchor
-    tf.paragraphs[0].alignment = align
-    r = tf.paragraphs[0].add_run()
-    r.text = text
-    r.font.name = font
-    r.font.size = Pt(size)
-    r.font.bold = bold
-    r.font.italic = italic
-    r.font.color.rgb = color
-
-
-def slide_bg(slide, color=WHITE):
-    bg = slide.background
-    fill = bg.fill
-    fill.solid()
-    fill.fore_color.rgb = color
-
-
-def add_title_bar(slide, title, subtitle=None, accent=True):
-    # page title
-    add_text(slide, Inches(0.55), Inches(0.35), Inches(11.5), Inches(0.55),
-             title, size=26, bold=True, color=NAVY)
-    if subtitle:
-        add_text(slide, Inches(0.55), Inches(0.90), Inches(11.5), Inches(0.35),
-                 subtitle, size=13, color=TEXT_MID, italic=True)
-    # accent underline
-    if accent:
-        bar = add_rect(slide, Inches(0.55), Inches(1.25), Inches(0.5), Inches(0.05),
-                       fill=ACCENT, line=None)
-
-
-def add_footer(slide, page, total=15, tag="ChartAgent · Atomic-Grain Programmatic Data Synthesis"):
-    add_text(slide, Inches(0.55), Inches(7.10), Inches(10.0), Inches(0.3),
-             tag, size=9, color=TEXT_MUTED)
-    add_text(slide, Inches(11.5), Inches(7.10), Inches(1.3), Inches(0.3),
-             f"{page} / {total}", size=9, color=TEXT_MUTED, align=PP_ALIGN.RIGHT)
-
-
-def blank_slide(prs):
-    slide = prs.slides.add_slide(prs.slide_layouts[6])  # blank
-    slide_bg(slide, WHITE)
-    return slide
-
-
-# ─────────────────────────── Slide 1 — Title ───────────────────────────
-
-def slide_title(prs):
-    s = blank_slide(prs)
-
-    # left accent column
-    add_rect(s, Inches(0), Inches(0), Inches(0.4), SLIDE_H, fill=NAVY, line=None)
-    add_rect(s, Inches(0.4), Inches(0), Inches(0.08), SLIDE_H, fill=ACCENT, line=None)
-
-    # eyebrow
-    add_text(s, Inches(1.0), Inches(1.8), Inches(11.5), Inches(0.3),
-             "RESEARCH PROPOSAL", size=12, bold=True, color=ACCENT)
-
-    # main title
-    add_text(s, Inches(1.0), Inches(2.2), Inches(11.5), Inches(1.3),
-             "ChartAgent", size=62, bold=True, color=NAVY)
-
-    add_text(s, Inches(1.0), Inches(3.25), Inches(11.5), Inches(0.9),
-             "Atomic-Grain Programmatic Data Synthesis\nfor Chart Understanding Benchmarks",
-             size=26, color=TEXT_DARK, line_spacing=1.2)
-
-    # underline
-    add_rect(s, Inches(1.0), Inches(4.55), Inches(1.6), Inches(0.04),
-             fill=ACCENT, line=None)
-
-    # three pillar chips
-    pillars = ["Operator Algebra", "Agentic Data Simulator", "Table Amortization"]
-    x = Inches(1.0); y = Inches(4.9)
-    for i, p in enumerate(pillars):
-        shp, w = add_chip(s, x, y, p, size=13, fill=NAVY, color=WHITE,
-                          height=0.46, pad_x=0.22, bold=True)
-        x = x + w + Inches(0.20)
-
-    # tagline
-    add_text(s, Inches(1.0), Inches(5.85), Inches(11.5), Inches(0.45),
-             "One Master Table  →  10–30+ Coherent Multi-Chart Tasks",
-             size=16, color=TEXT_MID, italic=True)
-
-    # corner meta
-    add_text(s, Inches(1.0), Inches(6.6), Inches(11.5), Inches(0.35),
-             "Deterministic · Type-Safe · Cross-Chart Consistent by Construction",
-             size=11, color=TEXT_MUTED)
-
-
-# ─────────────────────────── Slide 2 — Motivation ───────────────────────────
-
-def slide_motivation(prs):
-    s = blank_slide(prs)
-    add_title_bar(s, "Why existing chart QA benchmarks fall short",
-                  "Three structural deficits shared by ChartQA, PlotQA, ChartBench")
-
-    card_w, card_h = Inches(3.95), Inches(5.0)
-    gap = Inches(0.20)
-    y = Inches(1.65)
-    xs = [Inches(0.55), Inches(0.55) + card_w + gap, Inches(0.55) + 2*(card_w + gap)]
-
-    cards = [
-        {
-            "num": "01",
-            "title": "Shallow data depth",
-            "body": "Public datasets store only the 5-row aggregate shown in the chart.",
-            "visual": "agg_table",
-            "pain": "No drill-down, no provenance, no long-tail statistics.",
-        },
-        {
-            "num": "02",
-            "title": "Arithmetic hallucinations",
-            "body": "LLM-written JSON introduces numbers that don't add up.",
-            "visual": "broken_math",
-            "pain": "Validation catches syntax — not semantic impossibility.",
-        },
-        {
-            "num": "03",
-            "title": "No cross-chart consistency",
-            "body": "A pie and a bar from the same domain disagree on totals.",
-            "visual": "mismatch",
-            "pain": "Multi-chart reasoning becomes impossible to evaluate.",
-        },
-    ]
-
-    for x, c in zip(xs, cards):
-        # card
-        add_rect(s, x, y, card_w, card_h, fill=CARD_BG, line=BORDER,
-                 line_w=0.75, rounded=True)
-        # big number
-        add_text(s, x + Inches(0.25), y + Inches(0.18), Inches(1.2), Inches(0.7),
-                 c["num"], size=36, bold=True, color=ACCENT)
-        # title
-        add_text(s, x + Inches(0.25), y + Inches(0.85), card_w - Inches(0.5), Inches(0.5),
-                 c["title"], size=18, bold=True, color=NAVY)
-        # body
-        add_text(s, x + Inches(0.25), y + Inches(1.45), card_w - Inches(0.5), Inches(0.9),
-                 c["body"], size=12, color=TEXT_DARK, line_spacing=1.3)
-
-        # visual zone
-        vx = x + Inches(0.35); vy = y + Inches(2.4)
-        vw = card_w - Inches(0.7); vh = Inches(1.7)
-        if c["visual"] == "agg_table":
-            # mini table: 3 rows × 2 cols
-            tw, th = vw, Inches(1.35)
-            tx, ty = vx, vy + Inches(0.15)
-            headers = ["region", "revenue"]
-            rows = [("North", "$4.2M"), ("South", "$3.1M"), ("East", "$2.8M")]
-            h_each = th / 4
-            # header row
-            add_rect(s, tx, ty, tw, h_each, fill=NAVY, line=None)
-            for i, htx in enumerate(headers):
-                add_text(s, tx + i*(tw/2) + Inches(0.12), ty + Inches(0.04),
-                         tw/2 - Inches(0.2), h_each, htx,
-                         size=10, bold=True, color=WHITE)
-            for r_i, (a, b) in enumerate(rows, start=1):
-                add_rect(s, tx, ty + h_each*r_i, tw, h_each,
-                         fill=WHITE if r_i % 2 else SOFT_BG, line=BORDER, line_w=0.5)
-                add_text(s, tx + Inches(0.12), ty + h_each*r_i + Inches(0.04),
-                         tw/2 - Inches(0.2), h_each, a, size=10, color=TEXT_DARK)
-                add_text(s, tx + tw/2 + Inches(0.12), ty + h_each*r_i + Inches(0.04),
-                         tw/2 - Inches(0.2), h_each, b, size=10, color=TEXT_DARK)
-            add_text(s, vx, vy + th + Inches(0.25), vw, Inches(0.3),
-                     "only aggregates — no atomic events",
-                     size=9, italic=True, color=TEXT_MUTED, align=PP_ALIGN.CENTER)
-        elif c["visual"] == "broken_math":
-            # show "10 + 15 ≠ 30" with crossed-out result
-            add_runs(s, vx, vy + Inches(0.35), vw, Inches(0.7),
-                     [("10  +  15  =  ", {"size": 26, "bold": True, "color": TEXT_DARK, "font": MONO}),
-                      ("30", {"size": 26, "bold": True, "color": ACCENT, "font": MONO})],
-                     align=PP_ALIGN.CENTER)
-            # red cross line
-            add_line(s, vx + vw/2 + Inches(0.6), vy + Inches(0.55),
-                     vx + vw/2 + Inches(1.2), vy + Inches(0.95),
-                     color=ACCENT, width_pt=2.0)
-            add_text(s, vx, vy + Inches(1.25), vw, Inches(0.35),
-                     "LLM-produced numbers silently break arithmetic",
-                     size=9, italic=True, color=TEXT_MUTED, align=PP_ALIGN.CENTER)
-        else:  # mismatch
-            # two mini charts with mismatched totals
-            b1x = vx + Inches(0.15); b1y = vy + Inches(0.1)
-            add_text(s, b1x, b1y, Inches(1.1), Inches(0.3),
-                     "Pie  →  $10.0M", size=10, color=TEXT_DARK, bold=True)
-            # circle
-            pie = s.shapes.add_shape(MSO_SHAPE.OVAL, b1x + Inches(0.15),
-                                      b1y + Inches(0.35), Inches(0.8), Inches(0.8))
-            _set_fill(pie, NAVY); _set_line(pie, invisible=True)
-            b2x = vx + Inches(1.95); b2y = vy + Inches(0.1)
-            add_text(s, b2x, b2y, Inches(1.1), Inches(0.3),
-                     "Bar  →  $11.4M", size=10, color=TEXT_DARK, bold=True)
-            # bars
-            for i, hgt in enumerate([0.35, 0.55, 0.70]):
-                add_rect(s, b2x + Inches(0.1 + i*0.28), b2y + Inches(1.15 - hgt),
-                         Inches(0.22), Inches(hgt), fill=TEAL, line=None)
-            # mismatch label
-            add_text(s, vx, vy + Inches(1.3), vw, Inches(0.3),
-                     "same data  ·  totals disagree", size=9, italic=True,
-                     color=ACCENT, align=PP_ALIGN.CENTER, bold=True)
-
-        # bottom pain quote
-        add_rect(s, x + Inches(0.25), y + card_h - Inches(0.85),
-                 card_w - Inches(0.5), Inches(0.65),
-                 fill=SOFT_BG, line=None, rounded=True)
-        add_text(s, x + Inches(0.35), y + card_h - Inches(0.75),
-                 card_w - Inches(0.7), Inches(0.5),
-                 c["pain"], size=10, italic=True, color=TEXT_MID, line_spacing=1.25)
-
-    add_footer(s, 2)
-
-
-# ─────────────────────────── Slide 3 — Prior work ───────────────────────────
-
-def slide_prior_work(prs):
-    s = blank_slide(prs)
-    add_title_bar(s, "Comparison with prior work",
-                  "Every prior benchmark fails ≥ 4 of the 7 axes we care about")
-
-    headers = ["Dimension", "ChartQA", "PlotQA", "ChartBench", "Ours"]
-    rows = [
-        ["Data source",             "Web-crawled",   "Templates",       "Hybrid",         "LLM-authored SDK programs"],
-        ["Data depth",              "Aggregates",    "Aggregates",      "Aggregates",     "Atomic-grain fact tables"],
-        ["Distribution control",    "None",          "Uniform/Normal",  "Semi-fixed",     "Mixtures / copulas / conditional"],
-        ["Cross-chart consistency", "✗",             "✗",               "✗",              "✓  (shared Master Table)"],
-        ["Error correction",        "Manual",        "None",            "Heuristic",      "Code-execution feedback loop"],
-        ["Multi-chart reasoning",   "None",          "None",            "Limited",        "Dashboard-level cross-chart QA"],
-        ["Reproducibility",         "✗",             "✓",               "Partial",        "✓  (SDK + seed)"],
-    ]
-
-    col_xs = [Inches(0.55), Inches(3.8), Inches(5.6), Inches(7.4), Inches(9.4)]
-    col_ws = [Inches(3.20), Inches(1.75), Inches(1.75), Inches(1.95), Inches(3.35)]
-    row_h = Inches(0.60)
-    y = Inches(1.75)
-
-    # Header
-    for i, (cx, cw, ht) in enumerate(zip(col_xs, col_ws, headers)):
-        fill = NAVY_DARK if i == 4 else NAVY
-        add_rect(s, cx, y, cw, row_h, fill=fill, line=None)
-        add_text(s, cx + Inches(0.12), y, cw - Inches(0.2), row_h,
-                 ht, size=13, bold=True, color=WHITE, anchor=MSO_ANCHOR.MIDDLE,
-                 align=PP_ALIGN.LEFT if i == 0 else PP_ALIGN.CENTER)
-
-    for r_i, row in enumerate(rows):
-        ry = y + row_h * (r_i + 1)
-        for i, (cx, cw, val) in enumerate(zip(col_xs, col_ws, row)):
-            is_ours = (i == 4)
-            fill = CHIP_BG if is_ours else (SOFT_BG if r_i % 2 == 0 else WHITE)
-            add_rect(s, cx, ry, cw, row_h, fill=fill, line=BORDER, line_w=0.5)
-            color = NAVY if is_ours else TEXT_DARK
-            bold = True if is_ours or i == 0 else False
-            align = PP_ALIGN.LEFT if i == 0 else PP_ALIGN.CENTER
-            size = 11 if i > 0 else 11.5
-            add_text(s, cx + Inches(0.12), ry, cw - Inches(0.2), row_h,
-                     val, size=size, bold=bold, color=color,
-                     anchor=MSO_ANCHOR.MIDDLE, align=align)
-
-    # caption
-    add_text(s, Inches(0.55), Inches(6.55), Inches(12), Inches(0.4),
-             "Key difference: we control data depth, distribution, and cross-chart semantics — not just the surface image.",
-             size=12, italic=True, color=TEXT_MID)
-
-    add_footer(s, 3)
-
-
-# ─────────────────────────── Slide 4 — Three contributions ───────────────────────────
-
-def slide_contributions(prs):
-    s = blank_slide(prs)
-    add_title_bar(s, "Three interlocking contributions",
-                  "A formal substrate → a programmable simulator → a deterministic amortizer")
-
-    card_w, card_h = Inches(4.0), Inches(4.9)
-    gap = Inches(0.15)
-    y = Inches(1.75)
-    xs = [Inches(0.55), Inches(0.55) + card_w + gap, Inches(0.55) + 2*(card_w + gap)]
-
-    items = [
-        {
-            "num": "1",
-            "tag": "FORMAL",
-            "title": "Operator Algebra",
-            "body": "Every question is a typed pipeline over Set / Scalar / Bridge operators.",
-            "bullets": ["16 operators, 2 types (V, S)",
-                        "Difficulty = # ops",
-                        "Composable multi-hop reasoning"],
-        },
-        {
-            "num": "2",
-            "tag": "EXECUTABLE",
-            "title": "Agentic Data Simulator",
-            "body": "LLM writes Python calling a type-safe SDK — not JSON, not raw numbers.",
-            "bullets": ["Closed-form DGP per measure",
-                        "Code-execution feedback loop",
-                        "3-layer validator, no LLM re-call"],
-        },
-        {
-            "num": "3",
-            "tag": "AMORTIZED",
-            "title": "Table Amortization",
-            "body": "One Master Table → 10–30+ charts with arithmetic consistency guaranteed.",
-            "bullets": ["16 chart types × 7 relationships",
-                        "Deterministic SQL projection",
-                        "Cross-chart QA by construction"],
-        },
-    ]
-    accent_colors = [TEAL, NAVY, ACCENT]
-
-    for x, c, ac in zip(xs, items, accent_colors):
-        add_rect(s, x, y, card_w, card_h, fill=CARD_BG, line=BORDER,
-                 line_w=0.75, rounded=True)
-        # top accent bar
-        add_rect(s, x, y, card_w, Inches(0.12), fill=ac, line=None, rounded=False)
-
-        # giant number
-        add_text(s, x + Inches(0.35), y + Inches(0.35), Inches(0.9), Inches(1.4),
-                 c["num"], size=66, bold=True, color=ac)
-        # tag
-        add_text(s, x + Inches(1.30), y + Inches(0.55), Inches(2.5), Inches(0.3),
-                 c["tag"], size=10, bold=True, color=TEXT_MUTED)
-        # title (on one line now)
-        add_text(s, x + Inches(1.30), y + Inches(0.85), card_w - Inches(1.55), Inches(0.9),
-                 c["title"], size=19, bold=True, color=NAVY, line_spacing=1.1)
-        # body
-        add_text(s, x + Inches(0.35), y + Inches(2.0), card_w - Inches(0.7), Inches(1.0),
-                 c["body"], size=13, color=TEXT_DARK, line_spacing=1.35)
-
-        # divider
-        add_line(s, x + Inches(0.35), y + Inches(3.10),
-                 x + card_w - Inches(0.35), y + Inches(3.10),
-                 color=BORDER, width_pt=0.75)
-
-        # bullets
-        by = y + Inches(3.30)
-        for bi, b in enumerate(c["bullets"]):
-            # bullet dot
-            dot = s.shapes.add_shape(MSO_SHAPE.OVAL,
-                                     x + Inches(0.4), by + Inches(0.12),
-                                     Inches(0.09), Inches(0.09))
-            _set_fill(dot, ac); _set_line(dot, invisible=True)
-            add_text(s, x + Inches(0.60), by + Inches(0.01),
-                     card_w - Inches(0.9), Inches(0.35),
-                     b, size=12, color=TEXT_DARK)
-            by = by + Inches(0.45)
-
-    add_footer(s, 4)
-
-
-# ─────────────────────────── Slide 5 — 4-Phase Pipeline ───────────────────────────
-
-def slide_pipeline(prs):
-    s = blank_slide(prs)
-    add_title_bar(s, "The 4-phase pipeline",
-                  "LLM called only in phases 0 – 2.  Phase 3 is fully deterministic.")
-
-    # Four stage boxes
-    stage_y = Inches(2.2)
-    stage_h = Inches(2.3)
-    sw = Inches(2.7)
-    gap = Inches(0.35)
-    xs = [Inches(0.55) + i*(sw + gap) for i in range(4)]
-
-    stages = [
-        ("PHASE 0", "Domain Pool\nConstruction",
-         "200+ fine-grained\ndomains, cached",
-         "LLM · one-time", NAVY),
-        ("PHASE 1", "Scenario\nContextualization",
-         "Entities, metrics,\ntemporal grain",
-         "LLM · per-sample", NAVY),
-        ("PHASE 2", "Agentic Data\nSimulator (SDK)",
-         "Master Fact Table\n+ Schema Metadata",
-         "LLM · per-sample", ACCENT),
-        ("PHASE 3", "View Amortization\n+ QA Generation",
-         "10–30+ coherent\nmulti-chart tasks",
-         "Deterministic", TEAL),
-    ]
-
-    for x, (tag, title, out, llm, col) in zip(xs, stages):
-        # main card
-        add_rect(s, x, stage_y, sw, stage_h, fill=CARD_BG, line=BORDER,
-                 line_w=0.75, rounded=True)
-        # top color bar
-        add_rect(s, x, stage_y, sw, Inches(0.45), fill=col, line=None)
-        add_text(s, x + Inches(0.2), stage_y + Inches(0.08),
-                 sw - Inches(0.4), Inches(0.3),
-                 tag, size=11, bold=True, color=WHITE)
-        # title
-        add_text(s, x + Inches(0.2), stage_y + Inches(0.6),
-                 sw - Inches(0.4), Inches(0.75),
-                 title, size=15, bold=True, color=NAVY, line_spacing=1.15)
-        # divider
-        add_line(s, x + Inches(0.3), stage_y + Inches(1.35),
-                 x + sw - Inches(0.3), stage_y + Inches(1.35),
-                 color=BORDER)
-        # output
-        add_text(s, x + Inches(0.2), stage_y + Inches(1.40),
-                 sw - Inches(0.4), Inches(0.65),
-                 out, size=11, color=TEXT_DARK, line_spacing=1.25, italic=True)
-        # llm badge
-        badge_y = stage_y + stage_h - Inches(0.45)
-        llm_fill = GRAY_BG if "Deterministic" in llm else CHIP_BG
-        llm_color = TEAL if "Deterministic" in llm else NAVY
-        add_rect(s, x + Inches(0.2), badge_y,
-                 sw - Inches(0.4), Inches(0.3),
-                 fill=llm_fill, line=None, rounded=True)
-        add_text(s, x + Inches(0.2), badge_y, sw - Inches(0.4), Inches(0.3),
-                 llm, size=10, bold=True, color=llm_color,
-                 anchor=MSO_ANCHOR.MIDDLE, align=PP_ALIGN.CENTER)
-
-    # Connecting arrows
-    for i in range(3):
-        ax = xs[i] + sw + Inches(0.02)
-        ay = stage_y + stage_h / 2 - Inches(0.15)
-        aw = gap - Inches(0.04)
-        add_arrow_right(s, ax, ay, aw, Inches(0.3), fill=NAVY)
-
-    # Feedback loop on phase 2 (curve shown as two segments)
-    p2_x = xs[2]; p2_w = sw
-    loop_y = Inches(4.85)
-    add_line(s, p2_x + p2_w - Inches(0.7), stage_y + stage_h,
-             p2_x + p2_w - Inches(0.7), loop_y,
-             color=ACCENT, width_pt=1.5, dashed=True)
-    add_line(s, p2_x + p2_w - Inches(0.7), loop_y,
-             p2_x + Inches(0.5), loop_y,
-             color=ACCENT, width_pt=1.5, dashed=True)
-    add_line(s, p2_x + Inches(0.5), loop_y,
-             p2_x + Inches(0.5), stage_y + stage_h,
-             color=ACCENT, width_pt=1.5, dashed=True, arrow_end=True)
-    add_text(s, p2_x + Inches(0.0), loop_y + Inches(0.04),
-             p2_w, Inches(0.35),
-             "Code-execution feedback  (max 3 retries)",
-             size=10, italic=True, bold=True, color=ACCENT,
-             align=PP_ALIGN.CENTER)
-
-    # Output band at the bottom
-    out_y = Inches(5.55)
-    add_rect(s, Inches(0.55), out_y, Inches(12.22), Inches(1.0),
-             fill=SOFT_BG, line=BORDER, line_w=0.5, rounded=True)
-    add_text(s, Inches(0.8), out_y + Inches(0.10),
-             Inches(12), Inches(0.35),
-             "OUTPUT", size=10, bold=True, color=ACCENT)
-    add_text(s, Inches(0.8), out_y + Inches(0.38),
-             Inches(12), Inches(0.55),
-             "{ Chart Images, Questions, Answers, Reasoning Chains }  ×  N",
-             size=16, bold=True, color=NAVY, font=MONO)
-
-    add_footer(s, 5)
-
-
-# ─────────────────────────── Slide 6 — Phase 0 + 1 ───────────────────────────
-
-def slide_phase_01(prs):
-    s = blank_slide(prs)
-    add_title_bar(s, "Phase 0 & 1:  From domain pool to scenario",
-                  "Chart types are never mentioned — data is born from business needs.")
-
-    # two columns
-    col_w = Inches(6.0)
-    left_x = Inches(0.55); right_x = Inches(6.78)
-    y = Inches(1.75)
-    col_h = Inches(5.1)
-
-    # LEFT — Phase 0
-    add_rect(s, left_x, y, col_w, col_h, fill=CARD_BG, line=BORDER,
-             line_w=0.75, rounded=True)
-    add_rect(s, left_x, y, col_w, Inches(0.55), fill=NAVY, line=None)
-    add_text(s, left_x + Inches(0.25), y + Inches(0.12),
-             col_w - Inches(0.5), Inches(0.35),
-             "PHASE 0  ·  Domain Pool  (one-time, cached)",
-             size=14, bold=True, color=WHITE)
-
-    # topic chips
-    ty = y + Inches(0.8)
-    add_text(s, left_x + Inches(0.25), ty, col_w - Inches(0.5), Inches(0.3),
-             "15+ super-sectors", size=11, bold=True, color=TEXT_MID)
-    topics = ["Healthcare", "Finance", "Retail", "Transportation",
-              "Energy", "Manufacturing", "Education", "Agriculture"]
-    cx = left_x + Inches(0.25); cy = ty + Inches(0.4)
-    for t in topics:
-        shp, cw = add_chip(s, cx, cy, t, size=10, fill=CHIP_BG, color=NAVY, height=0.32)
-        cx = cx + cw + Inches(0.08)
-        if cx > left_x + col_w - Inches(1.5):
-            cx = left_x + Inches(0.25); cy = cy + Inches(0.42)
-
-    # stats row
-    stat_y = y + Inches(2.35)
-    add_line(s, left_x + Inches(0.25), stat_y - Inches(0.15),
-             left_x + col_w - Inches(0.25), stat_y - Inches(0.15),
-             color=BORDER)
-    stat_items = [("213", "domains"), ("15+", "topics"),
-                  ("3", "complexity tiers"), ("0.82", "diversity score")]
-    sw = (col_w - Inches(0.5)) / 4
-    for i, (num, lab) in enumerate(stat_items):
-        sx = left_x + Inches(0.25) + sw * i
-        add_text(s, sx, stat_y, sw, Inches(0.45),
-                 num, size=26, bold=True, color=ACCENT,
-                 align=PP_ALIGN.CENTER)
-        add_text(s, sx, stat_y + Inches(0.50), sw, Inches(0.3),
-                 lab, size=10, color=TEXT_MID, align=PP_ALIGN.CENTER)
-
-    # complexity bar
-    bar_y = y + Inches(3.5)
-    add_text(s, left_x + Inches(0.25), bar_y, col_w - Inches(0.5), Inches(0.3),
-             "Complexity-balanced stratification",
-             size=11, bold=True, color=TEXT_MID)
-    seg_y = bar_y + Inches(0.4)
-    seg_h = Inches(0.35)
-    parts = [("simple", 71, NAVY), ("medium", 72, TEAL), ("complex", 70, ACCENT)]
-    total = sum(p[1] for p in parts)
-    sx = left_x + Inches(0.25)
-    max_w = col_w - Inches(0.5)
-    for name, cnt, c in parts:
-        pw = max_w * (cnt / total)
-        add_rect(s, sx, seg_y, pw, seg_h, fill=c, line=None)
-        add_text(s, sx, seg_y, pw, seg_h,
-                 f"{name} · {cnt}", size=10, bold=True, color=WHITE,
-                 align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE)
-        sx = sx + pw
-
-    # RIGHT — Phase 1
-    add_rect(s, right_x, y, col_w, col_h, fill=CARD_BG, line=BORDER,
-             line_w=0.75, rounded=True)
-    add_rect(s, right_x, y, col_w, Inches(0.55), fill=TEAL, line=None)
-    add_text(s, right_x + Inches(0.25), y + Inches(0.12),
-             col_w - Inches(0.5), Inches(0.35),
-             "PHASE 1  ·  Scenario Contextualization",
-             size=14, bold=True, color=WHITE)
-
-    # Sample domain → scenario flow
-    add_text(s, right_x + Inches(0.25), y + Inches(0.8),
-             col_w - Inches(0.5), Inches(0.3),
-             "Sampled domain  →  concrete realistic scenario",
-             size=11, bold=True, color=TEXT_MID)
-
-    # JSON preview card (code block)
-    jy = y + Inches(1.2)
-    jh = Inches(3.70)
-    add_rect(s, right_x + Inches(0.25), jy, col_w - Inches(0.5), jh,
-             fill=CODE_BG, line=None, rounded=True)
-    json_lines = [
-        ('{', CODE_FG),
-        ('  "scenario_title":', CODE_KEY),
-        ('    "2024 H1 Shanghai Metro Ridership Log",', CODE_STR),
-        ('  "data_context":', CODE_KEY),
-        ('    "Shanghai Transport Commission collected ... ",', CODE_STR),
-        ('  "temporal_granularity":', CODE_KEY),
-        ('    "daily",', CODE_STR),
-        ('  "key_entities": [', CODE_KEY),
-        ('     "Line 1", "Line 2", "Line 8", ...', CODE_STR),
-        ('  ],', CODE_FG),
-        ('  "key_metrics": [', CODE_KEY),
-        ('     { "name": "daily_ridership",', CODE_STR),
-        ('       "unit": "10k passengers",', CODE_STR),
-        ('       "range": [5, 120] },', CODE_STR),
-        ('     { "name": "on_time_rate", ... }', CODE_STR),
-        ('  ],', CODE_FG),
-        ('  "target_rows": 900', CODE_KEY),
-        ('}', CODE_FG),
-    ]
-    ly = jy + Inches(0.15)
-    for text, col in json_lines:
-        add_text(s, right_x + Inches(0.45), ly, col_w - Inches(0.7), Inches(0.22),
-                 text, size=10.5, color=col, font=MONO, line_spacing=1.0)
-        ly = ly + Inches(0.195)
-
-    # caption
-    add_text(s, Inches(0.55), Inches(6.95), Inches(12.2), Inches(0.3),
-             "Chart-type isolation is the key to breaking “template disease” in existing benchmarks.",
-             size=11, italic=True, color=TEXT_MUTED, align=PP_ALIGN.CENTER)
-
-    add_footer(s, 6)
-
-
-# ─────────────────────────── Slide 7 — Paradigm shift ───────────────────────────
-
-def slide_paradigm(prs):
-    s = blank_slide(prs)
-    add_title_bar(s, "Phase 2 paradigm shift:  code-as-DGP",
-                  "From brittle JSON configs to executable, type-safe Python.")
-
-    # Two columns
-    left_x, right_x = Inches(0.55), Inches(6.92)
-    col_w = Inches(5.85)
-    y = Inches(1.75)
-    h = Inches(5.1)
-
-    # LEFT — old way (faded)
-    add_rect(s, left_x, y, col_w, h, fill=SOFT_BG, line=BORDER,
-             line_w=0.75, rounded=True)
-    add_text(s, left_x + Inches(0.3), y + Inches(0.3),
-             col_w - Inches(0.6), Inches(0.35),
-             "BEFORE", size=11, bold=True, color=TEXT_MUTED)
-    add_text(s, left_x + Inches(0.3), y + Inches(0.6),
-             col_w - Inches(0.6), Inches(0.6),
-             "LLM-as-Data-Generator", size=20, bold=True, color=TEXT_MID)
-    add_text(s, left_x + Inches(0.3), y + Inches(1.15),
-             col_w - Inches(0.6), Inches(0.4),
-             "writes JSON configs or raw numbers",
-             size=12, italic=True, color=TEXT_MUTED)
-
-    # JSON snippet with issues highlighted
-    jy = y + Inches(1.70)
-    jh = Inches(2.2)
-    add_rect(s, left_x + Inches(0.3), jy, col_w - Inches(0.6), jh,
-             fill=CODE_BG, line=None, rounded=True)
-    json_bad = [
-        ('{ "columns": [', CODE_FG),
-        ('    { "name": "sales",', CODE_KEY),
-        ('      "values": [42, 73, 61, 88]  },', CODE_STR),
-        ('    { "name": "profit_margin",', CODE_KEY),
-        ('      "values": [0.12, 0.21, 0.18,', CODE_STR),
-        ('                 1.34]  ← ', CODE_STR),
-        ('      }', CODE_FG),
-        ('  ], "correlation": 0.9 }', CODE_FG),
-    ]
-    ly = jy + Inches(0.15)
-    for text, col in json_bad:
-        add_text(s, left_x + Inches(0.5), ly, col_w - Inches(0.9), Inches(0.22),
-                 text, size=11, color=col, font=MONO, line_spacing=1.0)
-        ly = ly + Inches(0.24)
-
-    # problems list
-    py = jy + jh + Inches(0.25)
-    probs = [
-        "✗  Numeric impossibilities slip through",
-        "✗  Correlations infeasible to enforce",
-        "✗  Only syntactic validation possible",
-    ]
-    for p in probs:
-        add_text(s, left_x + Inches(0.4), py, col_w - Inches(0.8), Inches(0.28),
-                 p, size=11, color=ACCENT, bold=True)
-        py = py + Inches(0.30)
-
-    # big arrow in the middle (between the two cards)
-    arr_x = Inches(6.45)
-    add_arrow_right(s, arr_x, y + h/2 - Inches(0.25), Inches(0.45), Inches(0.5),
-                    fill=NAVY)
-
-    # RIGHT — new way (featured)
-    add_rect(s, right_x, y, col_w, h, fill=CARD_BG, line=NAVY, line_w=1.5, rounded=True)
-    add_rect(s, right_x, y, col_w, Inches(0.12), fill=ACCENT, line=None)
-    add_text(s, right_x + Inches(0.3), y + Inches(0.3),
-             col_w - Inches(0.6), Inches(0.35),
-             "AFTER", size=11, bold=True, color=ACCENT)
-    add_text(s, right_x + Inches(0.3), y + Inches(0.6),
-             col_w - Inches(0.6), Inches(0.6),
-             "LLM-as-Data-Programmer", size=20, bold=True, color=NAVY)
-    add_text(s, right_x + Inches(0.3), y + Inches(1.15),
-             col_w - Inches(0.6), Inches(0.4),
-             "writes Python calling a type-safe SDK",
-             size=12, italic=True, color=TEXT_MID)
-
-    cy = y + Inches(1.70)
-    ch = Inches(2.2)
-    add_rect(s, right_x + Inches(0.3), cy, col_w - Inches(0.6), ch,
-             fill=CODE_BG, line=None, rounded=True)
-    code_good = [
-        ('sim.add_category("hospital",', CODE_FG, False),
-        ('    values=["Xiehe","Huashan",...],', CODE_FG, False),
-        ('    group="entity")', CODE_FG, False),
-        ('', CODE_FG, False),
-        ('sim.add_measure("wait_minutes",', CODE_FG, False),
-        ('    family="lognormal",', CODE_FG, False),
-        ('    param_model={...})', CODE_FG, False),
-        ('', CODE_FG, False),
-        ('sim.declare_orthogonal(', CODE_KEY, True),
-        ('    "entity", "patient")', CODE_KEY, True),
-    ]
-    ly = cy + Inches(0.15)
-    for text, col, bold in code_good:
-        add_text(s, right_x + Inches(0.5), ly, col_w - Inches(0.9), Inches(0.22),
-                 text, size=11, color=col, font=MONO, bold=bold, line_spacing=1.0)
-        ly = ly + Inches(0.19)
-
-    # benefits list
-    by = cy + ch + Inches(0.25)
-    bens = [
-        "✓  Semantic errors caught at execution",
-        "✓  Typed exceptions → targeted LLM repair",
-        "✓  3-layer validator runs in milliseconds",
-    ]
-    for b in bens:
-        add_text(s, right_x + Inches(0.4), by, col_w - Inches(0.8), Inches(0.28),
-                 b, size=11, color=TEAL, bold=True)
-        by = by + Inches(0.30)
-
-    add_footer(s, 7)
-
-
-# ─────────────────────────── Slide 8 — SDK Cheatsheet ───────────────────────────
-
-def slide_sdk(prs):
-    s = blank_slide(prs)
-    add_title_bar(s, "The FactTableSimulator SDK",
-                  "Minimal, strongly-typed API — everything an LLM needs, nothing it doesn't.")
-
-    # LEFT — API table
-    left_x = Inches(0.55); col_w = Inches(6.3)
-    y = Inches(1.75); h = Inches(5.1)
-    add_rect(s, left_x, y, col_w, h, fill=CARD_BG, line=BORDER, line_w=0.75, rounded=True)
-    add_text(s, left_x + Inches(0.25), y + Inches(0.20),
-             col_w - Inches(0.5), Inches(0.4),
-             "SDK methods", size=15, bold=True, color=NAVY)
-
-    # Step 1 group
-    sy = y + Inches(0.70)
-    add_text(s, left_x + Inches(0.25), sy, col_w - Inches(0.5), Inches(0.22),
-             "STEP 1  ·  Column declarations",
-             size=10, bold=True, color=ACCENT)
-    api_step1 = [
-        ("add_category",            "cat col  •  group  •  hierarchy via parent"),
-        ("add_temporal",            "time col  •  auto-derive DOW / month"),
-        ("add_measure",             "stochastic root  •  dist + effects"),
-        ("add_measure_structural",  "formula of other measures + noise"),
-    ]
-    row_h = Inches(0.37)
-    row_step = Inches(0.42)
-    ly = sy + Inches(0.28)
-    for name, desc in api_step1:
-        add_rect(s, left_x + Inches(0.25), ly, col_w - Inches(0.5), row_h,
-                 fill=SOFT_BG, line=None, rounded=True)
-        add_text(s, left_x + Inches(0.40), ly, Inches(2.4), row_h,
-                 name, size=11, bold=True, color=NAVY, font=MONO,
-                 anchor=MSO_ANCHOR.MIDDLE)
-        add_text(s, left_x + Inches(2.85), ly, col_w - Inches(3.2), row_h,
-                 desc, size=10.5, color=TEXT_MID, anchor=MSO_ANCHOR.MIDDLE)
-        ly = ly + row_step
-
-    # Step 2
-    sy = ly + Inches(0.10)
-    add_text(s, left_x + Inches(0.25), sy, col_w - Inches(0.5), Inches(0.22),
-             "STEP 2  ·  Relationships & patterns",
-             size=10, bold=True, color=ACCENT)
-    api_step2 = [
-        ("declare_orthogonal",    "group ⊥ group  →  propagates to pairs"),
-        ("add_group_dependency",  "root-level DAG across groups"),
-        ("inject_pattern",        "outlier / trend_break / reversal / ..."),
-        ("set_realism",           "missing / dirty / censoring  (optional)"),
-    ]
-    ly = sy + Inches(0.28)
-    for name, desc in api_step2:
-        add_rect(s, left_x + Inches(0.25), ly, col_w - Inches(0.5), row_h,
-                 fill=SOFT_BG, line=None, rounded=True)
-        add_text(s, left_x + Inches(0.40), ly, Inches(2.4), row_h,
-                 name, size=11, bold=True, color=NAVY, font=MONO,
-                 anchor=MSO_ANCHOR.MIDDLE)
-        add_text(s, left_x + Inches(2.85), ly, col_w - Inches(3.2), row_h,
-                 desc, size=10.5, color=TEXT_MID, anchor=MSO_ANCHOR.MIDDLE)
-        ly = ly + row_step
-
-    # RIGHT — code example
-    right_x = Inches(7.05); col2_w = Inches(6.0)
-    add_rect(s, right_x, y, col2_w, h, fill=CODE_BG, line=None, rounded=True)
-    add_text(s, right_x + Inches(0.3), y + Inches(0.2),
-             col2_w - Inches(0.6), Inches(0.3),
-             "emergency_records.py", size=10, bold=True, color=CODE_KEY, font=MONO)
-
-    code_lines = [
-        ('sim = FactTableSimulator(target_rows=500)', CODE_FG),
-        ('', CODE_FG),
-        ('# Step 1 — declare columns', CODE_KEY),
-        ('sim.add_category("hospital",', CODE_FG),
-        ('   values=["Xiehe","Huashan","Ruijin",...],', CODE_FG),
-        ('   group="entity")', CODE_FG),
-        ('', CODE_FG),
-        ('sim.add_category("severity",', CODE_FG),
-        ('   values=["Mild","Moderate","Severe"],', CODE_FG),
-        ('   group="patient")', CODE_FG),
-        ('', CODE_FG),
-        ('sim.add_measure("wait_minutes",', CODE_FG),
-        ('   family="lognormal",', CODE_FG),
-        ('   param_model={', CODE_FG),
-        ('     "mu": {"intercept": 2.8,', CODE_FG),
-        ('       "effects": {"severity": {...}}}})', CODE_FG),
-        ('', CODE_FG),
-        ('sim.add_measure_structural("cost",', CODE_FG),
-        ('   formula="wait_minutes*12 + surcharge",', CODE_FG),
-        ('   noise={"family":"gaussian","sigma":30})', CODE_FG),
-        ('', CODE_FG),
-        ('# Step 2 — relationships & patterns', CODE_KEY),
-        ('sim.declare_orthogonal("entity","patient")', CODE_STR),
-        ('sim.inject_pattern("outlier_entity", ...)', CODE_STR),
-        ('', CODE_FG),
-        ('df, meta = sim.generate()', CODE_STR),
-    ]
-    ly = y + Inches(0.55)
-    for text, col in code_lines:
-        add_text(s, right_x + Inches(0.35), ly, col2_w - Inches(0.7), Inches(0.2),
-                 text, size=10.5, color=col, font=MONO, line_spacing=1.0)
-        ly = ly + Inches(0.168)
-
-    add_footer(s, 8)
-
-
-# ─────────────────────────── Slide 9 — Dimension Groups ───────────────────────────
-
-def slide_groups(prs):
-    s = blank_slide(prs)
-    add_title_bar(s, "Dimension groups & orthogonality",
-                  "One abstraction unifies categorical, temporal, cross-group semantics.")
-
-    # Three group boxes
-    y = Inches(1.85)
-    gh = Inches(3.4)
-    gw = Inches(3.7)
-    gap = Inches(0.25)
-    xs = [Inches(0.55) + i*(gw + gap) for i in range(3)]
-
-    groups = [
-        {
-            "name": "entity",
-            "color": NAVY,
-            "items": [("hospital",   "root, 5 vals"),
-                      ("department", "child, 4 vals"),
-                      ("ward",       "grand-child")],
-        },
-        {
-            "name": "patient",
-            "color": TEAL,
-            "items": [("severity",     "root, 3 vals"),
-                      ("acuity_level", "child, 4 vals")],
-        },
-        {
-            "name": "time",
-            "color": ACCENT,
-            "items": [("visit_date",  "root (temporal)"),
-                      ("day_of_week", "derived"),
-                      ("month",       "derived")],
-        },
-    ]
-
-    for x, g in zip(xs, groups):
-        add_rect(s, x, y, gw, gh, fill=CARD_BG, line=BORDER, line_w=0.75, rounded=True)
-        # header
-        add_rect(s, x, y, gw, Inches(0.55), fill=g["color"], line=None)
-        add_text(s, x + Inches(0.25), y + Inches(0.12),
-                 gw - Inches(0.5), Inches(0.35),
-                 f'group  "{g["name"]}"', size=14, bold=True, color=WHITE, font=MONO)
-
-        # items as nested boxes (hierarchy)
-        ix = x + Inches(0.35); iy = y + Inches(0.85)
-        for depth, (name, note) in enumerate(g["items"]):
-            offset = Inches(0.28 * depth)
-            # vertical connector line
-            if depth > 0:
-                add_line(s, ix + offset - Inches(0.15), iy - Inches(0.10),
-                         ix + offset - Inches(0.15), iy + Inches(0.22),
-                         color=BORDER, width_pt=1.0)
-                add_line(s, ix + offset - Inches(0.15), iy + Inches(0.22),
-                         ix + offset, iy + Inches(0.22),
-                         color=BORDER, width_pt=1.0)
-            bw = gw - offset - Inches(0.5)
-            add_rect(s, ix + offset, iy, bw, Inches(0.55),
-                     fill=SOFT_BG, line=BORDER, line_w=0.5, rounded=True)
-            add_text(s, ix + offset + Inches(0.15), iy + Inches(0.04),
-                     bw - Inches(0.25), Inches(0.3),
-                     name, size=12, bold=True, color=NAVY, font=MONO)
-            add_text(s, ix + offset + Inches(0.15), iy + Inches(0.28),
-                     bw - Inches(0.25), Inches(0.25),
-                     note, size=9, italic=True, color=TEXT_MUTED)
-            iy = iy + Inches(0.68)
-
-    # orthogonality line between group 1 and group 2
-    g1_cx = xs[0] + gw / 2
-    g2_cx = xs[1] + gw / 2
-    y_orth = Inches(5.50)
-    add_line(s, g1_cx, y + gh, g1_cx, y_orth, color=ACCENT, width_pt=1.5, dashed=True)
-    add_line(s, g2_cx, y + gh, g2_cx, y_orth, color=ACCENT, width_pt=1.5, dashed=True)
-    add_line(s, g1_cx, y_orth, g2_cx, y_orth, color=ACCENT, width_pt=1.5, dashed=True)
-    # orth label bubble
-    bubble_w = Inches(2.8)
-    add_rect(s, (g1_cx + g2_cx)/2 - bubble_w/2, y_orth - Inches(0.24),
-             bubble_w, Inches(0.48), fill=CARD_BG, line=ACCENT, line_w=1.5, rounded=True)
-    add_text(s, (g1_cx + g2_cx)/2 - bubble_w/2, y_orth - Inches(0.24),
-             bubble_w, Inches(0.48),
-             "entity  ⊥  patient   (declare_orthogonal)",
-             size=12, bold=True, color=ACCENT, font=MONO,
-             align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE)
-
-    # bottom callouts
-    c_y = Inches(6.25)
-    add_text(s, Inches(0.55), c_y, Inches(12.2), Inches(0.3),
-             "Declare once at group level  →  propagates to all cross-group pairs  →  validated by χ² test",
-             size=12, italic=True, color=TEXT_MID, align=PP_ALIGN.CENTER)
-    add_text(s, Inches(0.55), c_y + Inches(0.35), Inches(12.2), Inches(0.3),
-             "→  Enables Orthogonal-Slice dashboards & independence-based multi-chart QA",
-             size=11, color=TEXT_MUTED, italic=True, align=PP_ALIGN.CENTER)
-
-    add_footer(s, 9)
-
-
-# ─────────────────────────── Slide 10 — DAG-ordered generation ───────────────────────────
-
-def slide_dag(prs):
-    s = blank_slide(prs)
-    add_title_bar(s, "DAG-ordered event-level generation",
-                  "Every row is one atomic event.  No cross-product, no repetition.")
-
-    # Four layers
-    layer_x = Inches(0.55)
-    layer_w = Inches(12.22)
-    y0 = Inches(1.75)
-    layer_h = Inches(1.02)
-    gap = Inches(0.12)
-
-    layers = [
-        {
-            "tag": "LAYER 0",
-            "sub": "Independent roots",
-            "color": NAVY,
-            "cols": [("hospital",    "Cat"),
-                     ("severity",    "Cat"),
-                     ("visit_date",  "Temp")],
-        },
-        {
-            "tag": "LAYER 1",
-            "sub": "Dependent non-measures",
-            "color": TEAL,
-            "cols": [("department",  "Cat | hospital"),
-                     ("payment",     "Cat | severity"),
-                     ("day_of_week", "derive(visit_date)"),
-                     ("month",       "derive(visit_date)")],
-        },
-        {
-            "tag": "LAYER 2",
-            "sub": "Stochastic measure",
-            "color": ACCENT,
-            "cols": [("wait_minutes", "LogNormal(μ(sev, hosp), σ(sev))")],
-        },
-        {
-            "tag": "LAYER 3",
-            "sub": "Structural measures",
-            "color": RGBColor(0x7B, 0x3F, 0xA0),
-            "cols": [("cost",         "12·wait + surcharge(sev) + ε"),
-                     ("satisfaction", "9 − 0.04·wait + adj(sev) + ε")],
-        },
-    ]
-
-    # dim col widths
-    for i, L in enumerate(layers):
-        ly = y0 + (layer_h + gap) * i
-        add_rect(s, layer_x, ly, layer_w, layer_h, fill=CARD_BG,
-                 line=BORDER, line_w=0.5, rounded=True)
-        # left tag band
-        add_rect(s, layer_x, ly, Inches(1.8), layer_h, fill=L["color"], line=None)
-        add_text(s, layer_x + Inches(0.15), ly + Inches(0.15),
-                 Inches(1.55), Inches(0.32),
-                 L["tag"], size=11, bold=True, color=WHITE)
-        add_text(s, layer_x + Inches(0.15), ly + Inches(0.45),
-                 Inches(1.55), Inches(0.45),
-                 L["sub"], size=10, color=WHITE, italic=True, line_spacing=1.1)
-
-        # columns as chips
-        ccx = layer_x + Inches(2.0)
-        cols = L["cols"]
-        n = len(cols)
-        avail_w = layer_w - Inches(2.15) - Inches(0.15)
-        cw = (avail_w - Inches(0.15) * (n - 1)) / n if n > 0 else avail_w
-        for i, (name, rhs) in enumerate(cols):
-            cx = ccx + (cw + Inches(0.15)) * i
-            add_rect(s, cx, ly + Inches(0.14), cw, layer_h - Inches(0.28),
-                     fill=SOFT_BG, line=BORDER, line_w=0.5, rounded=True)
-            add_text(s, cx + Inches(0.15), ly + Inches(0.18),
-                     cw - Inches(0.25), Inches(0.3),
-                     name, size=11.5, bold=True, color=NAVY, font=MONO)
-            add_text(s, cx + Inches(0.15), ly + Inches(0.45),
-                     cw - Inches(0.25), Inches(0.4),
-                     rhs, size=10, italic=True, color=TEXT_MID, font=MONO,
-                     line_spacing=1.15)
-
-    # down arrows between layers
-    for i in range(3):
-        ax = Inches(0.55) + Inches(0.9) - Inches(0.08)
-        ay = y0 + (layer_h + gap) * i + layer_h - Inches(0.02)
-        add_arrow_right(
-            s,
-            Inches(0.55) + Inches(0.9) - Inches(0.10),
-            y0 + (layer_h + gap) * i + layer_h - Inches(0.02),
-            Inches(0.20), Inches(0.18), fill=TEXT_MID,
-        )
-        # replace with downward arrow using shape rotation
-    # Use a plain down-arrow shape at center of tag band between layers
-    # (we already added small right arrows; remove and add proper downward ones)
-
-    # bottom callout: post-generation
-    pg_y = Inches(6.4)
-    add_rect(s, Inches(0.55), pg_y, Inches(12.22), Inches(0.55),
-             fill=GRAY_BG, line=None, rounded=True)
-    add_text(s, Inches(0.75), pg_y + Inches(0.1),
-             Inches(12), Inches(0.35),
-             "After DAG-ordered sampling:  γ  pattern injection  →  δ  realism (optional)  →  τ  post-process",
-             size=12, bold=True, color=TEXT_DARK, font=MONO)
-
-    add_footer(s, 10)
-
-
-# ─────────────────────────── Slide 11 — Three-layer validation ───────────────────────────
-
-def slide_validation(prs):
-    s = blank_slide(prs)
-    add_title_bar(s, "Three-layer validation  +  code-execution feedback",
-                  "Semantic errors, not just syntactic ones.  Auto-fix without LLM re-call.")
-
-    # Top horizontal flow: LLM → Sandbox → Validator → Fix
-    fy = Inches(1.85)
-    fh = Inches(0.9)
-    node_w = Inches(2.7)
-    gap = Inches(0.3)
-    total_w = node_w * 4 + gap * 3
-    start_x = (SLIDE_W - total_w) / 2
-
-    nodes = [
-        ("LLM", "writes Python\ncalling the SDK", NAVY),
-        ("Sandbox", "executes\nbuild_fact_table()", TEAL),
-        ("Validator", "L1 · L2 · L3\ndeterministic checks", ACCENT),
-        ("Auto-fix", "parameter tweak\nno LLM re-call", RGBColor(0x7B, 0x3F, 0xA0)),
-    ]
-    for i, (title, body, col) in enumerate(nodes):
-        nx = start_x + (node_w + gap) * i
-        add_rect(s, nx, fy, node_w, fh, fill=CARD_BG, line=col, line_w=1.5, rounded=True)
-        add_rect(s, nx, fy, node_w, Inches(0.24), fill=col, line=None)
-        add_text(s, nx + Inches(0.15), fy + Inches(0.02),
-                 node_w - Inches(0.3), Inches(0.25),
-                 title, size=11, bold=True, color=WHITE)
-        add_text(s, nx + Inches(0.15), fy + Inches(0.30),
-                 node_w - Inches(0.3), Inches(0.55),
-                 body, size=11, color=TEXT_DARK, line_spacing=1.2)
-        if i < 3:
-            ax = nx + node_w + Inches(0.02)
-            add_arrow_right(s, ax, fy + fh/2 - Inches(0.10),
-                            gap - Inches(0.04), Inches(0.2), fill=NAVY)
-
-    # Feedback arc from Auto-fix back to Sandbox (below the flow)
-    af_cx = start_x + (node_w + gap) * 3 + node_w / 2
-    sb_cx = start_x + (node_w + gap) * 1 + node_w / 2
-    arc_y = fy + fh + Inches(0.35)
-    add_line(s, af_cx, fy + fh, af_cx, arc_y, color=ACCENT, width_pt=1.5, dashed=True)
-    add_line(s, af_cx, arc_y, sb_cx, arc_y, color=ACCENT, width_pt=1.5, dashed=True)
-    add_line(s, sb_cx, arc_y, sb_cx, fy + fh, color=ACCENT, width_pt=1.5, dashed=True, arrow_end=True)
-    add_text(s, (sb_cx + af_cx)/2 - Inches(2), arc_y + Inches(0.03),
-             Inches(4), Inches(0.3),
-             "re-execute  (max 3 retries)",
-             size=10, italic=True, bold=True, color=ACCENT,
-             align=PP_ALIGN.CENTER)
-
-    # Failure feedback to LLM (further below, shown separately)
-    llm_cx = start_x + node_w / 2
-    val_cx = start_x + (node_w + gap) * 2 + node_w / 2
-    arc_y2 = arc_y + Inches(0.40)
-    add_line(s, val_cx, arc_y, val_cx, arc_y2, color=TEXT_MUTED, width_pt=1.2, dashed=True)
-    add_line(s, val_cx, arc_y2, llm_cx, arc_y2, color=TEXT_MUTED, width_pt=1.2, dashed=True)
-    add_line(s, llm_cx, arc_y2, llm_cx, fy + fh, color=TEXT_MUTED, width_pt=1.2, dashed=True, arrow_end=True)
-    add_text(s, (llm_cx + val_cx)/2 - Inches(2.3), arc_y2 + Inches(0.03),
-             Inches(4.6), Inches(0.3),
-             "typed exception + traceback  →  LLM repair",
-             size=10, italic=True, color=TEXT_MUTED, align=PP_ALIGN.CENTER)
-
-    # Three validation layer cards
-    cy = Inches(3.95)
-    ch = Inches(2.95)
-    cw = Inches(4.0)
-    cgap = Inches(0.11)
-    cxs = [Inches(0.55) + i*(cw + cgap) for i in range(3)]
-    layers = [
-        {
-            "label": "L1",
-            "title": "Structural",
-            "color": NAVY,
-            "checks": [
-                "Row count within 10%",
-                "Categorical cardinality",
-                "Finite measures",
-                "χ²  for orthogonal pairs",
-                "Measure DAG acyclicity",
-            ],
-        },
-        {
-            "label": "L2",
-            "title": "Statistical",
-            "color": TEAL,
-            "checks": [
-                "KS test per predictor cell",
-                "Structural residual mean",
-                "Structural residual σ",
-                "Conditional transitions",
-                "Correlation ± 0.15",
-            ],
-        },
-        {
-            "label": "L3",
-            "title": "Pattern",
-            "color": ACCENT,
-            "checks": [
-                "Outlier z ≥ 2.0",
-                "Trend-break magnitude",
-                "Ranking reversal sign",
-                "Dominance-shift check",
-                "Seasonal anomaly",
-            ],
-        },
-    ]
-    for x, L in zip(cxs, layers):
-        add_rect(s, x, cy, cw, ch, fill=CARD_BG, line=BORDER, line_w=0.75, rounded=True)
-        # big tag
-        add_rect(s, x + Inches(0.25), cy + Inches(0.22), Inches(0.75), Inches(0.75),
-                 fill=L["color"], line=None, rounded=True)
-        add_text(s, x + Inches(0.25), cy + Inches(0.22), Inches(0.75), Inches(0.75),
-                 L["label"], size=22, bold=True, color=WHITE,
-                 align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE)
-        add_text(s, x + Inches(1.15), cy + Inches(0.32),
-                 cw - Inches(1.35), Inches(0.4),
-                 L["title"], size=17, bold=True, color=NAVY)
-        # checks
-        ly = cy + Inches(1.20)
-        for chk in L["checks"]:
-            # check glyph
-            dot = s.shapes.add_shape(MSO_SHAPE.OVAL,
-                                     x + Inches(0.35), ly + Inches(0.10),
-                                     Inches(0.10), Inches(0.10))
-            _set_fill(dot, L["color"]); _set_line(dot, invisible=True)
-            add_text(s, x + Inches(0.55), ly, cw - Inches(0.8), Inches(0.3),
-                     chk, size=11, color=TEXT_DARK)
-            ly = ly + Inches(0.33)
-
-    add_footer(s, 11)
-
-
-# ─────────────────────────── Slide 12 — Table amortization ───────────────────────────
-
-def slide_amortization(prs):
-    s = blank_slide(prs)
-    add_title_bar(s, "Table amortization: one table → many tasks",
-                  "Every derived chart shares the same ground-truth arithmetic by construction.")
-
-    # Center: Master Table node (left)
-    mx, my, mw, mh = Inches(0.7), Inches(2.7), Inches(3.4), Inches(2.3)
-    add_rect(s, mx, my, mw, mh, fill=NAVY, line=None, rounded=True)
-    add_rect(s, mx, my, mw, Inches(0.5), fill=NAVY_DARK, line=None)
-    add_text(s, mx + Inches(0.3), my + Inches(0.10), mw - Inches(0.6), Inches(0.3),
-             "MASTER FACT TABLE", size=12, bold=True, color=WHITE)
-    # rows illustration
-    for i in range(6):
-        add_rect(s, mx + Inches(0.3), my + Inches(0.75) + Inches(0.22)*i,
-                 mw - Inches(0.6), Inches(0.15),
-                 fill=WHITE if i % 2 else CHIP_BG, line=None)
-    # caption
-    add_text(s, mx, my + mh + Inches(0.1), mw, Inches(0.3),
-             "atomic events  ·  500–3000 rows",
-             size=11, italic=True, color=TEXT_MID,
-             align=PP_ALIGN.CENTER)
-
-    # Formula
-    fy = Inches(1.80)
-    add_rect(s, Inches(0.7), fy, Inches(3.4), Inches(0.75),
-             fill=GRAY_BG, line=BORDER, line_w=0.5, rounded=True)
-    add_text(s, Inches(0.7), fy + Inches(0.10), Inches(3.4), Inches(0.25),
-             "VIEW  =", size=11, bold=True, color=ACCENT,
-             align=PP_ALIGN.CENTER)
-    add_text(s, Inches(0.7), fy + Inches(0.36), Inches(3.4), Inches(0.35),
-             "σ ∘ γ ∘ π  (M)",
-             size=20, bold=True, color=NAVY, font=MONO,
-             align=PP_ALIGN.CENTER)
-
-    # Arrows fanning out from master
-    hub_x = mx + mw
-    hub_y = my + mh / 2
-
-    # Right panel: 6 chart families
-    right_x = Inches(5.0)
-    fam_w = Inches(3.95)
-    fam_h = Inches(0.72)
-    fam_gap = Inches(0.12)
-    right_y = Inches(1.75)
-    families = [
-        ("Comparison",  "bar  ·  grouped_bar",                          NAVY),
-        ("Trend",       "line  ·  area",                                TEAL),
-        ("Distribution","histogram  ·  box  ·  violin",                 ACCENT),
-        ("Composition", "pie  ·  donut  ·  stacked_bar  ·  treemap",    RGBColor(0x7B, 0x3F, 0xA0)),
-        ("Relationship","scatter  ·  bubble  ·  heatmap  ·  radar",     RGBColor(0x1B, 0x6F, 0x4E)),
-        ("Flow",        "waterfall  ·  funnel",                         RGBColor(0xB5, 0x41, 0x48)),
-    ]
-    for i, (name, types, col) in enumerate(families):
-        fy = right_y + (fam_h + fam_gap) * i
-        add_rect(s, right_x, fy, fam_w, fam_h, fill=CARD_BG, line=BORDER, line_w=0.5, rounded=True)
-        # color tab
-        add_rect(s, right_x, fy, Inches(0.12), fam_h, fill=col, line=None)
-        add_text(s, right_x + Inches(0.3), fy + Inches(0.08),
-                 fam_w - Inches(0.5), Inches(0.3),
-                 name, size=12, bold=True, color=NAVY)
-        add_text(s, right_x + Inches(0.3), fy + Inches(0.38),
-                 fam_w - Inches(0.45), Inches(0.3),
-                 types, size=9.5, color=TEXT_MID, font=MONO)
-        # fan arrow from master
-        add_line(s, hub_x, hub_y, right_x - Inches(0.02),
-                 fy + fam_h / 2, color=TEXT_MUTED, width_pt=0.75, arrow_end=True)
-
-    # Right-rightmost: relationship types & count badge
-    far_x = Inches(9.3)
-    far_y = Inches(1.75)
-    far_w = Inches(3.48)
-    far_h = Inches(5.1)
-    add_rect(s, far_x, far_y, far_w, far_h, fill=SOFT_BG, line=BORDER, line_w=0.75, rounded=True)
-    add_text(s, far_x + Inches(0.25), far_y + Inches(0.15),
-             far_w - Inches(0.5), Inches(0.4),
-             "7 inter-chart relationships",
-             size=14, bold=True, color=NAVY)
-    rels = [
-        "Drill-down",
-        "Orthogonal Slice",
-        "Comparative",
-        "Dual-Metric",
-        "Part-Whole",
-        "Associative",
-        "Causal Chain",
-    ]
-    ly = far_y + Inches(0.70)
-    for r in rels:
-        # bullet
-        dot = s.shapes.add_shape(MSO_SHAPE.OVAL,
-                                 far_x + Inches(0.35), ly + Inches(0.10),
-                                 Inches(0.10), Inches(0.10))
-        _set_fill(dot, ACCENT); _set_line(dot, invisible=True)
-        add_text(s, far_x + Inches(0.55), ly, far_w - Inches(0.8), Inches(0.3),
-                 r, size=12, color=TEXT_DARK)
-        ly = ly + Inches(0.38)
-
-    # big output number
-    oy = ly + Inches(0.3)
-    add_rect(s, far_x + Inches(0.35), oy, far_w - Inches(0.7), Inches(1.1),
-             fill=NAVY, line=None, rounded=True)
-    add_text(s, far_x + Inches(0.35), oy + Inches(0.05), far_w - Inches(0.7), Inches(0.5),
-             "10 – 30+", size=30, bold=True, color=WHITE,
-             align=PP_ALIGN.CENTER)
-    add_text(s, far_x + Inches(0.35), oy + Inches(0.60), far_w - Inches(0.7), Inches(0.4),
-             "coherent tasks per table",
-             size=11, color=WHITE, align=PP_ALIGN.CENTER, italic=True)
-
-    # bottom quote
-    add_text(s, Inches(0.55), Inches(6.95), Inches(12.2), Inches(0.3),
-             "1 LLM call  →  1 script  →  1 Master Table  →  16 chart types × 7 relationships",
-             size=11, italic=True, color=TEXT_MUTED, align=PP_ALIGN.CENTER)
-
-    add_footer(s, 12)
-
-
-# ─────────────────────────── Slide 13 — Operator algebra ───────────────────────────
-
-def slide_algebra(prs):
-    s = blank_slide(prs)
-    add_title_bar(s, "Operator algebra: a question is a typed pipeline",
-                  "Two types  (V, S).  Four operator families.  Difficulty = # ops.")
-
-    # Four operator family cards
-    y = Inches(1.75)
-    ch = Inches(2.0)
-    cw = Inches(3.05)
-    cgap = Inches(0.11)
-    xs = [Inches(0.55) + i*(cw + cgap) for i in range(4)]
-    fams = [
-        {
-            "tag": "SET  (V → V)",
-            "color": NAVY,
-            "ops": ["Filter", "Sort", "Limit", "GroupBy"],
-        },
-        {
-            "tag": "SCALAR  (V → S)",
-            "color": TEAL,
-            "ops": ["Max", "Min", "Avg", "Sum", "Count", "ArgMax", "ArgMin", "ValueAt"],
-        },
-        {
-            "tag": "COMBINATOR  (S,S → S)",
-            "color": RGBColor(0x7B, 0x3F, 0xA0),
-            "ops": ["Diff", "Ratio"],
-        },
-        {
-            "tag": "BRIDGE  (S,V → V | V,V → S)",
-            "color": ACCENT,
-            "ops": ["EntityTransfer", "ValueTransfer", "TrendCompare", "RankCompare"],
-        },
-    ]
-    for x, f in zip(xs, fams):
-        add_rect(s, x, y, cw, ch, fill=CARD_BG, line=BORDER, line_w=0.75, rounded=True)
-        add_rect(s, x, y, cw, Inches(0.45), fill=f["color"], line=None)
-        add_text(s, x + Inches(0.15), y + Inches(0.08),
-                 cw - Inches(0.3), Inches(0.35),
-                 f["tag"], size=10.5, bold=True, color=WHITE, font=MONO)
-        # op chips
-        is_bridge = (f["tag"].startswith("BRIDGE"))
-        chip_size = 9 if is_bridge else 10
-        chip_h = 0.30 if is_bridge else 0.32
-        wrap_step = Inches(0.36) if is_bridge else Inches(0.38)
-        ox = x + Inches(0.18); oy = y + Inches(0.6)
-        for op in f["ops"]:
-            if is_bridge:
-                # render each bridge op on its own row, full card width
-                bw = cw - Inches(0.36)
-                add_rect(s, ox, oy, bw, Inches(chip_h),
-                         fill=SOFT_BG, line=None, rounded=True)
-                tf_shape = s.shapes[-1]
-                tf_shape.adjustments[0] = 0.5
-                add_text(s, ox, oy, bw, Inches(chip_h),
-                         op, size=chip_size, bold=False,
-                         color=NAVY, align=PP_ALIGN.CENTER,
-                         anchor=MSO_ANCHOR.MIDDLE)
-                oy = oy + wrap_step
+        p.space_after = Pt(0)
+        for run_def in para:
+            if len(run_def) == 4:
+                text, size, bold, color = run_def
+                italic = False; f_override = None
+            elif len(run_def) == 5:
+                text, size, bold, color, italic = run_def
+                f_override = None
             else:
-                shp, ow = add_chip(s, ox, oy, op, size=chip_size,
-                                   fill=SOFT_BG, color=NAVY, height=chip_h)
-                ox = ox + ow + Inches(0.06)
-                if ox + Inches(0.7) > x + cw - Inches(0.15):
-                    ox = x + Inches(0.18); oy = oy + wrap_step
+                text, size, bold, color, italic, f_override = run_def
+            r = p.add_run()
+            r.text = text
+            r.font.name = f_override or FONT
+            r.font.size = Pt(size)
+            r.font.bold = bold
+            r.font.italic = italic
+            r.font.color.rgb = color
+    return tb
 
-    # Pipeline example
-    py = Inches(4.0)
-    add_text(s, Inches(0.55), py, Inches(12.2), Inches(0.35),
-             "Example pipeline  (3 ops, MEDIUM)",
-             size=12, bold=True, color=ACCENT)
 
-    # Pipeline boxes + arrows
-    pipe_y = Inches(4.5)
-    pipe_h = Inches(0.8)
-    # order: V  →  Sort  →  V  →  Limit(3)  →  V  →  Avg  →  S
-    items = [
-        ("V",        NAVY,   True),
-        ("Sort",     WHITE,  False),
-        ("V",        NAVY,   True),
-        ("Limit(3)", WHITE,  False),
-        ("V",        NAVY,   True),
-        ("Avg",      WHITE,  False),
-        ("S",        ACCENT, True),
-    ]
-    total_items = len(items)
-    # widths: types narrower, ops wider
-    ws = [Inches(0.7) if is_type else Inches(1.4) for (_, _, is_type) in items]
-    arr_w = Inches(0.45)
-    tot = sum(w.emu for w in ws) + arr_w.emu * (total_items - 1)
-    start_x = (SLIDE_W.emu - tot) // 2
-    cur_x = Emu(start_x)
-    for i, ((lbl, col, is_type), w) in enumerate(zip(items, ws)):
-        if is_type:
-            add_rect(s, cur_x, pipe_y, w, pipe_h, fill=col, line=None, rounded=True)
-            add_text(s, cur_x, pipe_y, w, pipe_h,
-                     lbl, size=20, bold=True, color=WHITE,
-                     align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE, font=MONO)
+def set_text_in(shape, runs, align=PP_ALIGN.LEFT, anchor=MSO_ANCHOR.MIDDLE):
+    tf = shape.text_frame
+    tf.word_wrap = True
+    tf.vertical_anchor = anchor
+    if runs and not isinstance(runs[0], list):
+        paragraphs = [runs]
+    else:
+        paragraphs = runs
+    tf.text = ""
+    for pi, para in enumerate(paragraphs):
+        p = tf.paragraphs[0] if pi == 0 else tf.add_paragraph()
+        p.alignment = align
+        p.space_after = Pt(0)
+        for run_def in para:
+            if len(run_def) == 4:
+                text, size, bold, color = run_def
+                italic = False; f_override = None
+            elif len(run_def) == 5:
+                text, size, bold, color, italic = run_def
+                f_override = None
+            else:
+                text, size, bold, color, italic, f_override = run_def
+            r = p.add_run()
+            r.text = text
+            r.font.name = f_override or FONT
+            r.font.size = Pt(size)
+            r.font.bold = bold
+            r.font.italic = italic
+            r.font.color.rgb = color
+
+
+def line_seg(slide, x1, y1, x2, y2, color=MUTED, weight=1.0,
+             dash=False, arrow_end=False, arrow_start=False):
+    c = slide.shapes.add_connector(MSO_CONNECTOR.STRAIGHT,
+                                   Inches(x1), Inches(y1),
+                                   Inches(x2), Inches(y2))
+    c.line.color.rgb = color
+    c.line.width = Pt(weight)
+    ln = c.line._get_or_add_ln()
+    if dash:
+        prstDash = etree.SubElement(ln, qn("a:prstDash"))
+        prstDash.set("val", "dash")
+    if arrow_end:
+        tail = etree.SubElement(ln, qn("a:tailEnd"))
+        tail.set("type", "triangle"); tail.set("w", "med"); tail.set("len", "med")
+    if arrow_start:
+        head = etree.SubElement(ln, qn("a:headEnd"))
+        head.set("type", "triangle"); head.set("w", "med"); head.set("len", "med")
+    _strip_style(c)
+    _set_effect(c, soft_shadow=False)
+    return c
+
+
+# ---------------------------------------------------------------------------
+# CHROME — eyebrow and pageno are intentional no-ops in the clean style
+# (callers retained for backward compatibility with existing slide functions).
+# ---------------------------------------------------------------------------
+def eyebrow(slide, text):  # noqa: ARG001
+    return
+
+
+def pageno(slide, n, total=26):  # noqa: ARG001
+    return
+
+
+def title_centered(slide, runs, y=0.85, size=36):
+    """runs = [(text, color, bold?), ...] or a list of (text, color) pairs."""
+    paras = []
+    para = []
+    for r in runs:
+        if r == "\n":
+            paras.append(para); para = []
+            continue
+        if len(r) == 2:
+            text, color = r; bold = True
         else:
-            add_rect(s, cur_x, pipe_y, w, pipe_h, fill=col,
-                     line=NAVY, line_w=1.2, rounded=True)
-            add_text(s, cur_x, pipe_y, w, pipe_h,
-                     lbl, size=14, bold=True, color=NAVY,
-                     align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE, font=MONO)
-        cur_x = Emu(cur_x.emu + w.emu)
-        if i < total_items - 1:
-            add_arrow_right(s, cur_x, pipe_y + pipe_h/2 - Inches(0.12),
-                            arr_w, Inches(0.24), fill=TEXT_MID)
-            cur_x = Emu(cur_x.emu + arr_w.emu)
-
-    # Question box
-    qy = Inches(5.85)
-    add_rect(s, Inches(1.5), qy, Inches(10.3), Inches(0.95),
-             fill=SOFT_BG, line=BORDER, line_w=0.75, rounded=True)
-    add_text(s, Inches(1.7), qy + Inches(0.10), Inches(10), Inches(0.35),
-             "QUESTION", size=10, bold=True, color=ACCENT)
-    add_text(s, Inches(1.7), qy + Inches(0.38), Inches(10), Inches(0.5),
-             "“What is the average wait time of the top-3 hospitals?”",
-             size=16, italic=True, color=NAVY, bold=True)
-
-    add_footer(s, 13)
+            text, color, bold = r
+        para.append((text, size, bold, color))
+    paras.append(para)
+    textbox(slide, 0.55, y, SW - 1.10, 1.6, paras,
+            align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.TOP)
 
 
-# ─────────────────────────── Slide 14 — Multi-chart bridges ───────────────────────────
+def subtitle_centered(slide, text, y=1.65, size=15):
+    textbox(slide, 0.55, y, SW - 1.10, 0.5,
+            [(text, size, False, MUTED, True)],
+            align=PP_ALIGN.CENTER)
 
-def slide_bridges(prs):
-    s = blank_slide(prs)
-    add_title_bar(s, "Cross-chart reasoning via bridge operators",
-                  "A multi-chart question chains two pipelines through a typed bridge.")
 
-    # LEFT — relationships + bridges table
-    lx, ly, lw, lh = Inches(0.55), Inches(1.75), Inches(5.4), Inches(5.1)
-    add_rect(s, lx, ly, lw, lh, fill=CARD_BG, line=BORDER, line_w=0.75, rounded=True)
-    add_text(s, lx + Inches(0.25), ly + Inches(0.15),
-             lw - Inches(0.5), Inches(0.4),
-             "7 relationships  →  valid bridges",
-             size=13, bold=True, color=NAVY)
+# ---------------------------------------------------------------------------
+# CARD HELPERS
+# ---------------------------------------------------------------------------
+def card_label(slide, x, y, w, label, color=MUTED, size=10):
+    textbox(slide, x + 0.20, y + 0.18, w - 0.40, 0.28,
+            [(label.upper(), size, True, color)])
 
-    rows = [
-        ("Drill-down",        "EntityTransfer · ValueTransfer"),
-        ("Orthogonal Slice",  "EntityTransfer · RankCompare"),
-        ("Comparative",       "ValueTransfer · TrendCompare"),
-        ("Dual-Metric",       "EntityTransfer · RankCompare · ValueTransfer"),
-        ("Part-Whole",        "EntityTransfer · ValueTransfer"),
-        ("Associative",       "RankCompare · EntityTransfer"),
-        ("Causal Chain",      "EntityTransfer · ValueTransfer"),
+
+def labelled_card(slide, x, y, w, h, label, body_runs,
+                  label_color=ACCENT, fill=WHITE):
+    """Card with small uppercase label + body text below."""
+    c = card(slide, x, y, w, h, fill=fill)
+    card_label(slide, x, y, w, label, color=label_color, size=11)
+    textbox(slide, x + 0.20, y + 0.55, w - 0.40, h - 0.65,
+            body_runs, anchor=MSO_ANCHOR.TOP)
+    return c
+
+
+def stat_card(slide, x, y, w, h, big, lbl, sub):
+    card(slide, x, y, w, h)
+    # big number occupies the top half
+    textbox(slide, x, y + 0.20, w, 1.00,
+            [(big, 56, True, ACCENT, False, MONO)],
+            align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE)
+    # label
+    textbox(slide, x + 0.20, y + 1.35, w - 0.40, 0.32,
+            [(lbl, 13, True, INK)], align=PP_ALIGN.CENTER)
+    # sub fully inside the card (multi-line OK)
+    textbox(slide, x + 0.25, y + 1.75, w - 0.50, h - 1.90,
+            [(sub, 10.5, False, MUTED, True)], align=PP_ALIGN.CENTER)
+
+
+def contrib_tag(slide, x, y, w, h, label):
+    """Plain uppercase monospace label in muted gray (no red pill)."""
+    textbox(slide, x, y, w, h,
+            [(label.upper(), 12, True, MUTED, False, MONO)],
+            align=PP_ALIGN.LEFT, anchor=MSO_ANCHOR.MIDDLE)
+
+
+def badge_circle(slide, cx, cy, d, label, fill=None, txt=INK, size=14):
+    """Neutral pill: light gray fill, dark text. ``fill`` defaults to #f1f1f1."""
+    if fill is None:
+        fill = RGBColor(0xF1, 0xF1, 0xF1)
+    oval(slide, cx - d/2, cy - d/2, d, d, fill=fill)
+    textbox(slide, cx - d/2, cy - d/2, d, d,
+            [(label, size, True, txt, False, MONO)],
+            align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE)
+
+
+# ---------------------------------------------------------------------------
+# CODE BLOCK — render colored Python/JSON inside a soft card
+# ---------------------------------------------------------------------------
+def code_block(slide, x, y, w, h, lines, size=11.0, line_h=0.20):
+    """lines: list of (segments, ) where segments=[(text, kind), ...]
+    kind in {'k','s','n','c','t'}: k=keyword(accent), s=string(green),
+    n=number/normal, c=comment(gray), t=text(ink)."""
+    card(slide, x, y, w, h, fill=CODE_BG)
+    yy = y + 0.18
+    for segs in lines:
+        runs = []
+        for text, kind in segs:
+            if kind == 'k':
+                runs.append((text, size, True, CODE_KEY, False, MONO))
+            elif kind == 's':
+                runs.append((text, size, False, CODE_STR, False, MONO))
+            elif kind == 'n':
+                runs.append((text, size, False, CODE_NUM, False, MONO))
+            elif kind == 'c':
+                runs.append((text, size, False, CODE_COM, True, MONO))
+            else:
+                runs.append((text, size, False, INK, False, MONO))
+        textbox(slide, x + 0.20, yy, w - 0.40, line_h + 0.05, runs)
+        yy += line_h
+
+
+# ===========================================================================
+# SLIDE 1 — TITLE
+# ===========================================================================
+def slide_title():
+    s = blank()
+
+    textbox(s, 0, 2.80, SW, 1.20,
+            [[("The ", 60, True, INK),
+              ("Latent", 60, True, ACCENT),
+              (" Data World", 60, True, INK)]],
+            align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE)
+
+    textbox(s, 0, 4.20, SW, 0.55,
+            [("Evaluating VLM agents on charts as projections of a hidden table.",
+              19, False, MUTED, True)],
+            align=PP_ALIGN.CENTER)
+
+    textbox(s, 0, SH - 0.85, SW, 0.35,
+            [("Pingyue Zhang  ·  Northwestern University  ·  chartAgent / VAGEN",
+              12, True, MUTED)],
+            align=PP_ALIGN.CENTER)
+    return s
+
+
+# ===========================================================================
+# SLIDE 2 — THE PUZZLE  (SwiftEats 31→18 setup)
+# ===========================================================================
+def slide_puzzle():
+    s = blank()
+    title_centered(s, [("A delivery dashboard reports ", INK),
+                       ("31 → 18 min", ACCENT), (".", INK)],
+                   y=0.85, size=36)
+    subtitle_centered(s,
+        "SwiftEats rolls out a new dispatcher. Average delivery time falls in one week.",
+        y=1.65, size=15)
+
+    # Three stacked shadow cards
+    cw = SW - 3.20
+    cx = (SW - cw) / 2
+    ch = 1.20
+    gap = 0.30
+
+    cy = 2.50
+    card(s, cx, cy, cw, ch)
+    textbox(s, cx + 0.40, cy + 0.18, cw - 0.80, 0.30,
+            [("HEADLINE METRIC", 11, True, MUTED)])
+    textbox(s, cx + 0.40, cy + 0.55, cw - 0.80, 0.55,
+            [("Average pickup-to-drop time: ", 19, True, INK),
+             ("31", 19, True, INK, False, MONO),
+             (" min (old) → ", 19, True, INK),
+             ("18", 19, True, INK, False, MONO),
+             (" min (new).", 19, True, INK)],
+            anchor=MSO_ANCHOR.MIDDLE)
+
+    cy += ch + gap
+    card(s, cx, cy, cw, ch)
+    textbox(s, cx + 0.40, cy + 0.18, cw - 0.80, 0.30,
+            [("SAME WEEK, SAME DASHBOARD", 11, True, MUTED)])
+    textbox(s, cx + 0.40, cy + 0.55, cw - 0.80, 0.55,
+            [("Refunds, cancellations, and timeouts all ", 19, True, INK),
+             ("rise", 19, True, ACCENT),
+             (".", 19, True, INK)],
+            anchor=MSO_ANCHOR.MIDDLE)
+
+    cy += ch + gap
+    card(s, cx, cy, cw, ch)
+    textbox(s, cx, cy, cw, ch,
+            [("An agent must reconcile both facts from the chart alone.",
+              17, True, INK)],
+            align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE)
+    return s
+
+
+# ===========================================================================
+# SLIDE 3 — FOUR CANDIDATE EXPLANATIONS  (h₁–h₄ hook for the investigation)
+# ===========================================================================
+def slide_suspects():
+    s = blank()
+    title_centered(s, [("Four candidate explanations for the ", INK),
+                       ("31 → 18", ACCENT), (" gap.", INK)],
+                   y=0.85, size=30)
+    subtitle_centered(s,
+        "Each is testable from charts derived from the same underlying table.",
+        y=1.55, size=15)
+
+    suspects = [
+        ("h₁", "Genuine speedup",
+         "The new dispatcher shortens routes across every order, every zone, every time of day."),
+        ("h₂", "Zone selection",
+         "The platform stops accepting orders in distant or low-density zones. Only easy orders remain."),
+        ("h₃", "Denominator change",
+         "The 18-minute figure averages only successful deliveries. Cancellations and timeouts are excluded."),
+        ("h₄", "Metric boundary",
+         "The 18 minutes covers pickup-to-drop only. Click-to-pickup waiting falls outside the window."),
     ]
-    rh = Inches(0.52)
-    ry = ly + Inches(0.70)
-    for i, (rel, br) in enumerate(rows):
-        bgc = SOFT_BG if i % 2 else WHITE
-        add_rect(s, lx + Inches(0.25), ry, lw - Inches(0.5), rh,
-                 fill=bgc, line=BORDER, line_w=0.4, rounded=False)
-        add_text(s, lx + Inches(0.4), ry, Inches(1.9), rh,
-                 rel, size=11.5, bold=True, color=NAVY,
-                 anchor=MSO_ANCHOR.MIDDLE)
-        add_text(s, lx + Inches(2.3), ry, lw - Inches(2.6), rh,
-                 br, size=10.5, color=TEXT_DARK, anchor=MSO_ANCHOR.MIDDLE, font=MONO)
-        ry = ry + rh
+    cy = 2.30
+    ch = 2.10
+    cw = (SW - 1.10 - 0.40) / 2
+    gap = 0.40
+    for i, (hid, name, body) in enumerate(suspects):
+        x0 = 0.55 + (i % 2) * (cw + gap)
+        yy = cy + (i // 2) * (ch + 0.30)
+        card(s, x0, yy, cw, ch)
+        badge_circle(s, x0 + 0.55, yy + 0.55, 0.50, hid, size=13)
+        textbox(s, x0 + 1.20, yy + 0.32, cw - 1.40, 0.45,
+                [(name, 17, True, INK)])
+        textbox(s, x0 + 0.30, yy + 1.00, cw - 0.60, 1.00,
+                [(body, 13, False, MUTED, True)])
 
-    # RIGHT — concrete example
-    rx = Inches(6.20); rw = Inches(6.58); ry0 = Inches(1.75); rh0 = Inches(5.1)
-    add_rect(s, rx, ry0, rw, rh0, fill=CARD_BG, line=NAVY, line_w=1.2, rounded=True)
-    add_rect(s, rx, ry0, rw, Inches(0.12), fill=ACCENT, line=None)
-    add_text(s, rx + Inches(0.25), ry0 + Inches(0.2),
-             rw - Inches(0.5), Inches(0.35),
-             "EXAMPLE  ·  Dual-Metric with EntityTransfer",
-             size=11, bold=True, color=ACCENT)
+    # Bottom card — plain shadow
+    bx, by, bw, bh = 1.40, 6.95, SW - 2.80, 0.50
+    card(s, bx, by, bw, bh)
+    textbox(s, bx, by, bw, bh,
+            [("The Master Table fixes the truth. Each chart is one projection of it.",
+              14, True, INK)],
+            align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE)
+    return s
 
-    # Two mini chart cards
-    chart_h = Inches(1.35)
-    chart_w = Inches(2.6)
-    ca_x = rx + Inches(0.4); cb_x = rx + rw - Inches(0.4) - chart_w
-    cay = ry0 + Inches(0.8)
 
-    # Chart A: bar hospital × wait
-    add_rect(s, ca_x, cay, chart_w, chart_h, fill=SOFT_BG, line=BORDER, line_w=0.75, rounded=True)
-    add_text(s, ca_x + Inches(0.15), cay + Inches(0.1),
-             chart_w - Inches(0.3), Inches(0.3),
-             "Chart A: hospital × wait", size=10, bold=True, color=NAVY)
-    bars_a = [0.55, 0.85, 0.45, 0.65]
-    for i, hgt in enumerate(bars_a):
-        bx = ca_x + Inches(0.25 + i*0.5)
-        by = cay + chart_h - Inches(0.18) - Inches(hgt)
-        col = ACCENT if hgt == max(bars_a) else NAVY
-        add_rect(s, bx, by, Inches(0.35), Inches(hgt), fill=col, line=None)
-    # labels
-    add_text(s, ca_x + Inches(0.25 + 1*0.5) - Inches(0.25), cay + chart_h - Inches(0.17),
-             Inches(0.8), Inches(0.18),
-             "Xiehe", size=8, bold=True, color=ACCENT, align=PP_ALIGN.CENTER)
+# ===========================================================================
+# SLIDE 4 — THE TRAP  (chart vs latent data world)
+# ===========================================================================
+def slide_trap():
+    s = blank()
+    title_centered(s, [("A chart is a ", INK), ("projection", ACCENT),
+                       (" of a hidden table.", INK)],
+                   y=0.85, size=36)
+    subtitle_centered(s,
+        "Each rendered chart is a deterministic SQL query over a Master Table M.",
+        y=1.70, size=15)
 
-    # Chart B: bar hospital × cost
-    add_rect(s, cb_x, cay, chart_w, chart_h, fill=SOFT_BG, line=BORDER, line_w=0.75, rounded=True)
-    add_text(s, cb_x + Inches(0.15), cay + Inches(0.1),
-             chart_w - Inches(0.3), Inches(0.3),
-             "Chart B: hospital × cost", size=10, bold=True, color=NAVY)
-    bars_b = [0.50, 0.70, 0.40, 0.55]
-    for i, hgt in enumerate(bars_b):
-        bx = cb_x + Inches(0.25 + i*0.5)
-        by = cay + chart_h - Inches(0.18) - Inches(hgt)
-        col = ACCENT if i == 1 else TEAL
-        add_rect(s, bx, by, Inches(0.35), Inches(hgt), fill=col, line=None)
-    add_text(s, cb_x + Inches(0.25 + 1*0.5) - Inches(0.25), cay + chart_h - Inches(0.17),
-             Inches(0.8), Inches(0.18),
-             "Xiehe", size=8, bold=True, color=ACCENT, align=PP_ALIGN.CENTER)
+    # Two-column cards
+    cy = 2.45
+    ch = 3.00
+    gap = 0.40
+    cw = (SW - 1.10 - gap) / 2
 
-    # Pipeline chain — rendered compactly inside the card
-    py2 = cay + chart_h + Inches(0.30)
-    chain_items = [
-        ("V_a",             NAVY,   True),
-        ("ArgMax",          WHITE,  False),
-        ("'Xiehe'",         ACCENT, True),
-        ("Bridge",          WHITE,  False),
-        ("V_b",             NAVY,   True),
-        ("ValueAt",         WHITE,  False),
-        ("6200",            ACCENT, True),
+    # Visible — what the agent sees
+    labelled_card(s, 0.55, cy, cw, ch, "Visible · what the agent sees",
+                  [[("Two bars. One number. ", 20, True, INK)],
+                   [("No information about what was filtered out.",
+                     15, False, MUTED, True)]],
+                  label_color=MUTED)
+
+    # Hidden — what the Master Table holds
+    rx = 0.55 + cw + gap
+    labelled_card(s, rx, cy, cw, ch, "Hidden · what the Master Table holds",
+                  [[("A DAG of typed columns over atomic rows.",
+                     20, True, INK)]],
+                  label_color=MUTED)
+    cols = ["order_id", "zone_id", "algorithm", "outcome", "pickup→drop", "click→door"]
+    cyy = cy + 1.30
+    cxx = rx + 0.30
+    cur_x = cxx
+    cur_y = cyy
+    chip_fill = RGBColor(0xF5, 0xF5, 0xF5)
+    for tok in cols:
+        chip_w = 0.18 + 0.085 * len(tok)
+        if cur_x + chip_w > rx + cw - 0.30:
+            cur_y += 0.42
+            cur_x = cxx
+        rounded(s, cur_x, cur_y, chip_w, 0.32, fill=chip_fill)
+        textbox(s, cur_x, cur_y, chip_w, 0.32,
+                [(tok, 10, True, INK, False, MONO)],
+                align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE)
+        cur_x += chip_w + 0.10
+
+    # bottom conclusion card
+    bx, by, bw, bh = 2.50, 5.95, SW - 5.00, 0.55
+    card(s, bx, by, bw, bh)
+    textbox(s, bx, by, bw, bh,
+            [("The truth has structure. The chart shows one slice of it.",
+              16, True, INK)],
+            align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE)
+    return s
+
+
+# ===========================================================================
+# SLIDE 4 — BENCHMARK GAP
+# ===========================================================================
+def slide_benchmark_gap():
+    s = blank()
+    eyebrow(s, "§ 1 · Why this is hard")
+    title_centered(s, [("Benchmarks test ", INK), ("reading", ACCENT),
+                       (", not investigation.", INK)],
+                   y=0.85, size=30)
+    subtitle_centered(s,
+        "Models must answer from one given chart. They cannot decide to look again.",
+        y=1.55, size=15)
+
+    cy = 2.20
+    ch = 2.30
+    cw = (SW - 1.10 - 0.40) / 3
+    gap = 0.20
+    stats = [
+        ("−30",  "pts on real reasoning",
+         "ChartMuseum 2025 — human 93% vs top VLM 63%."),
+        ("2–3",  "charts ⇒ collapse",
+         "InterChart 2025 — accuracy falls across multi-chart splits."),
+        ("×",    "ungrounded answers",
+         "ChartPoint 2025 — models fail to point to correct elements."),
     ]
-    # compact widths based on text length
-    ws = [Inches(max(0.48, 0.095 * len(lbl) + 0.28)) for (lbl, _, _) in chain_items]
-    arr_w = Inches(0.18)
-    box_h = Inches(0.48)
-    tot = sum(w.emu for w in ws) + arr_w.emu * (len(chain_items) - 1)
-    # center within the example card with small safety margin
-    avail = rw.emu - Inches(0.5).emu
-    if tot > avail:
-        # uniformly scale down widths
-        scale = avail / tot
-        ws = [Emu(int(w.emu * scale)) for w in ws]
-        arr_w = Emu(int(arr_w.emu * scale))
-        tot = sum(w.emu for w in ws) + arr_w.emu * (len(chain_items) - 1)
-    cx = Emu(rx.emu + (rw.emu - tot) // 2)
-    for i, ((lbl, col, is_t), w) in enumerate(zip(chain_items, ws)):
-        if is_t:
-            add_rect(s, cx, py2, w, box_h,
-                     fill=col, line=None, rounded=True)
-            add_text(s, cx, py2, w, box_h,
-                     lbl, size=10.5, bold=True, color=WHITE,
-                     align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE, font=MONO)
-        else:
-            add_rect(s, cx, py2, w, box_h,
-                     fill=WHITE, line=NAVY, line_w=1.0, rounded=True)
-            add_text(s, cx, py2, w, box_h,
-                     lbl, size=9.5, bold=True, color=NAVY,
-                     align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE, font=MONO)
-        cx = Emu(cx.emu + w.emu)
-        if i < len(chain_items) - 1:
-            add_arrow_right(s, cx, py2 + Inches(0.13),
-                            arr_w, Inches(0.22), fill=TEXT_MID)
-            cx = Emu(cx.emu + arr_w.emu)
+    for i, (big, lbl, sub) in enumerate(stats):
+        x0 = 0.55 + i * (cw + gap)
+        stat_card(s, x0, cy, cw, ch, big, lbl, sub)
 
-    # Question box
-    qy = py2 + Inches(0.75)
-    add_rect(s, rx + Inches(0.35), qy, rw - Inches(0.7), Inches(0.85),
-             fill=SOFT_BG, line=BORDER, line_w=0.5, rounded=True)
-    add_text(s, rx + Inches(0.5), qy + Inches(0.08), rw - Inches(1), Inches(0.3),
-             "QUESTION  ·  difficulty = 3 ops", size=10, bold=True, color=ACCENT)
-    add_text(s, rx + Inches(0.5), qy + Inches(0.35), rw - Inches(1), Inches(0.45),
-             "“The hospital with the longest wait — what is its cost?”",
-             size=13, italic=True, color=NAVY, bold=True)
-
-    add_footer(s, 14)
+    # Existing protocol vs this work
+    cy2 = 4.80
+    ch2 = 2.00
+    cw2 = (SW - 1.10 - 0.40) / 2
+    labelled_card(s, 0.55, cy2, cw2, ch2,
+                  "Existing protocol",
+                  [[("[chart] → answer", 20, True, INK, False, MONO)],
+                   [("single-shot, no follow-up, no grounding",
+                     14, False, MUTED, True)]],
+                  label_color=MUTED)
+    labelled_card(s, 0.55 + cw2 + 0.40, cy2, cw2, ch2,
+                  "This work",
+                  [[("[D₀] ↻ request more views → answer + bbox",
+                     17, True, INK, False, MONO)],
+                   [("budgeted, grounded, multi-step",
+                     14, False, MUTED, True)]],
+                  label_color=MUTED)
+    return s
 
 
-# ─────────────────────────── Slide 15 — Summary ───────────────────────────
+# ===========================================================================
+# SLIDE 5 — TWO CONTRIBUTIONS
+# ===========================================================================
+def slide_contributions():
+    s = blank()
+    title_centered(s, [("Two contributions.", INK)],
+                   y=0.95, size=44)
+    subtitle_centered(s,
+        "A hidden Master Table to probe, and a protocol that probes it through charts.",
+        y=1.95, size=15)
 
-def slide_summary(prs):
-    s = blank_slide(prs)
-    add_title_bar(s, "Summary",
-                  "One formal substrate — programmable, amortized, deterministic.")
+    cy = 2.90
+    ch = 3.30
+    cw = (SW - 1.10 - 0.50) / 2
 
-    # Four layer cards in a row
-    y = Inches(1.85)
-    h = Inches(4.2)
-    w = Inches(3.0)
-    gap = Inches(0.12)
-    xs = [Inches(0.55) + i*(w + gap) for i in range(4)]
+    x0 = 0.55
+    card(s, x0, cy, cw, ch)
+    contrib_tag(s, x0 + 0.40, cy + 0.40, cw - 0.80, 0.30, "C1 · synthetic data")
+    textbox(s, x0 + 0.40, cy + 0.90, cw - 0.80, 0.55,
+            [("Builds the world.", 22, True, INK)])
+    textbox(s, x0 + 0.40, cy + 1.70, cw - 0.80, 1.40,
+            [("An LLM writes Python over a typed SDK. The output is a Master Table; deterministic SQL projection yields 10–30+ chart QA tasks per table.",
+              14, False, MUTED, True)])
+
+    x1 = x0 + cw + 0.50
+    card(s, x1, cy, cw, ch)
+    contrib_tag(s, x1 + 0.40, cy + 0.40, cw - 0.80, 0.30, "C2 · active chart reasoning")
+    textbox(s, x1 + 0.40, cy + 0.90, cw - 0.80, 0.55,
+            [("Investigates the world.", 22, True, INK)])
+    textbox(s, x1 + 0.40, cy + 1.70, cw - 0.80, 1.40,
+            [("A budgeted protocol with five actions and bbox grounding. Four investigation moves: Read, Reveal, Reconcile, Debunk.",
+              14, False, MUTED, True)])
+
+    # Bottom plain card
+    cx, cy2, cw2, ch2 = 1.60, 6.55, SW - 3.20, 0.50
+    card(s, cx, cy2, cw2, ch2)
+    textbox(s, cx, cy2, cw2, ch2,
+            [("C1 builds the world. ", 14, True, INK),
+             ("C2 lets the agent investigate it.", 14, True, ACCENT)],
+            align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE)
+    return s
+
+
+# ===========================================================================
+# SLIDE 6 — PIPELINE OVERVIEW
+# ===========================================================================
+def slide_overview():
+    s = blank()
+    title_centered(s, [("Four phases. Phase 3 is ", INK),
+                       ("deterministic", ACCENT), (".", INK)],
+                   y=0.85, size=30)
+    subtitle_centered(s,
+        "No LLM touches the chart or the questions. The Master Table is the contract.",
+        y=1.55, size=15)
+
+    # Top row
+    top_y = 2.25
+    step_h = 1.40
+    n = 4
+    gap = 0.20
+    step_w = (SW - 1.10 - (n - 1) * gap - (n - 1) * 0.20) / n   # leave room for arrows
+    cur_x = 0.55
+    phases = [
+        ("Phase 0", "Domain Pool",       "200+ sub-topics · cached, deduped",   WHITE),
+        ("Phase 1", "Scenario",          "Realistic study · entities · metrics", WHITE),
+        ("Phase 2", "SDK Script",        "Code-as-DGP · execution-error loop",  WHITE),
+        ("Output",     "Master Table", "Atomic rows · typed schema metadata",  WHITE),
+    ]
+    for i, (ph, name, sub, fill) in enumerate(phases):
+        card(s, cur_x, top_y, step_w, step_h, fill=fill)
+        textbox(s, cur_x + 0.10, top_y + 0.18, step_w - 0.20, 0.25,
+                [(ph.upper(), 9, True, MUTED, False, MONO)],
+                align=PP_ALIGN.CENTER)
+        textbox(s, cur_x + 0.10, top_y + 0.48, step_w - 0.20, 0.40,
+                [(name, 18, True, INK)], align=PP_ALIGN.CENTER)
+        textbox(s, cur_x + 0.10, top_y + 0.90, step_w - 0.20, 0.45,
+                [(sub, 10, False, MUTED, True)], align=PP_ALIGN.CENTER)
+        if i < n - 1:
+            ax = cur_x + step_w + gap / 2
+            textbox(s, ax - 0.20, top_y + step_h / 2 - 0.20, 0.40, 0.40,
+                    [("→", 22, True, MUTED)], align=PP_ALIGN.CENTER,
+                    anchor=MSO_ANCHOR.MIDDLE)
+        cur_x += step_w + gap + 0.20
+
+    # Down arrow
+    textbox(s, 0, top_y + step_h + 0.05, SW, 0.50,
+            [("↓", 28, True, MUTED)], align=PP_ALIGN.CENTER)
+
+    # Bottom row
+    bot_y = 4.85
+    bphases = [
+        ("Phase 3",        "SQL Projection",      "10–30+ chart views per table",    WHITE),
+        ("Runtime",        "Investigation Loop",  "request_view, point, commit, answer",  WHITE),
+        ("Cases",      "Charts, QA, bbox trails", "One Master Table yields N cases", WHITE),
+    ]
+    nb = 3
+    step_w_b = (SW - 1.10 - (nb - 1) * gap - (nb - 1) * 0.20) / nb
+    cur_x = 0.55
+    for i, (ph, name, sub, fill) in enumerate(bphases):
+        card(s, cur_x, bot_y, step_w_b, step_h, fill=fill)
+        textbox(s, cur_x + 0.10, bot_y + 0.18, step_w_b - 0.20, 0.25,
+                [(ph.upper(), 9, True, MUTED, False, MONO)],
+                align=PP_ALIGN.CENTER)
+        textbox(s, cur_x + 0.10, bot_y + 0.48, step_w_b - 0.20, 0.40,
+                [(name, 18, True, INK)], align=PP_ALIGN.CENTER)
+        textbox(s, cur_x + 0.10, bot_y + 0.90, step_w_b - 0.20, 0.45,
+                [(sub, 10, False, MUTED, True)], align=PP_ALIGN.CENTER)
+        if i < nb - 1:
+            ax = cur_x + step_w_b + gap / 2
+            textbox(s, ax - 0.20, bot_y + step_h / 2 - 0.20, 0.40, 0.40,
+                    [("→", 22, True, MUTED)], align=PP_ALIGN.CENTER,
+                    anchor=MSO_ANCHOR.MIDDLE)
+        cur_x += step_w_b + gap + 0.20
+    return s
+
+
+# ===========================================================================
+# SLIDE 7 — SECTION TRANSITION: C1
+# ===========================================================================
+def slide_section_c1():
+    s = blank()
+    textbox(s, 0, 2.85, SW, 1.20,
+            [[("C1 · Building the ", 50, True, INK),
+              ("Master Table", 50, True, ACCENT),
+              (".", 50, True, INK)]],
+            align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE)
+    textbox(s, 0, 4.30, SW, 0.55,
+            [("Phases 0 through 3, walked through on one example.",
+              19, False, MUTED, True)],
+            align=PP_ALIGN.CENTER)
+    return s
+
+
+# ===========================================================================
+# SLIDE 8 — PHASE 0 (3 concrete domain examples)
+# ===========================================================================
+def slide_phase0():
+    s = blank()
+    title_centered(s, [("Phase 0 — ", INK), ("domain pool", ACCENT), (".", INK)],
+                   y=0.85, size=32)
+    subtitle_centered(s,
+        "200+ fine-grained sub-topics, embedding-deduplicated and complexity-balanced. Generated once.",
+        y=1.65, size=15)
+
+    cy = 2.40
+    ch = 3.70
+    cw = (SW - 1.10 - 0.50) / 3
+    gap = 0.25
+    examples = [
+        ("simple", [
+            [("{", "n")],
+            [('  "name": ',  "n"), ('"Coffee shop POS"', "s"), (",", "n")],
+            [('  "topic": ', "n"), ('"Retail & Services"', "s"), (",", "n")],
+            [('  "tier": ',  "n"), ('"simple"', "s"), (",", "n")],
+            [('  "entities": [', "n"), ('"drink"', "s"), (', ', "n"),
+             ('"hour"', "s"), ('],', "n")],
+            [('  "metrics": [', "n"), ('"revenue"', "s"), ('],', "n")],
+            [('  "grain": ',  "n"), ('"hourly"', "s")],
+            [("}", "n")],
+        ]),
+        ("medium", [
+            [("{", "n")],
+            [('  "name": ',  "n"), ('"Urban food delivery"', "s"), (",", "n")],
+            [('  "topic": ', "n"), ('"Logistics"', "s"), (",", "n")],
+            [('  "tier": ',  "n"), ('"medium"', "s"), (",", "n")],
+            [('  "entities": [', "n"), ('"order"', "s"), (', ', "n"),
+             ('"zone"', "s"), ('],', "n")],
+            [('  "metrics": [', "n"), ('"delivery_min"', "s"), ('],', "n")],
+            [('  "grain": ',  "n"), ('"per order"', "s")],
+            [("}", "n")],
+        ]),
+        ("complex", [
+            [("{", "n")],
+            [('  "name": ',  "n"), ('"Urban rail scheduling"', "s"), (",", "n")],
+            [('  "topic": ', "n"), ('"Transportation"', "s"), (",", "n")],
+            [('  "tier": ',  "n"), ('"complex"', "s"), (",", "n")],
+            [('  "entities": [', "n"), ('"line"', "s"), (', ', "n"),
+             ('"station"', "s"), ('],', "n")],
+            [('  "metrics": [', "n"), ('"ridership"', "s"), (', ', "n"),
+             ('"on_time"', "s"), ('],', "n")],
+            [('  "grain": ',  "n"), ('"daily"', "s")],
+            [("}", "n")],
+        ]),
+    ]
+    for i, (label, lines) in enumerate(examples):
+        x0 = 0.55 + i * (cw + gap)
+        textbox(s, x0 + 0.10, cy, cw - 0.20, 0.30,
+                [(label.upper(), 11, True, MUTED)])
+        code_block(s, x0, cy + 0.35, cw, ch - 0.35, lines,
+                   size=10, line_h=0.30)
+
+    # Bottom callout
+    bx, by, bw, bh = 1.80, 6.30, SW - 3.60, 0.55
+    card(s, bx, by, bw, bh)
+    textbox(s, bx, by, bw, bh,
+            [("Generated once and cached. Stratified sampling preserves complexity balance.",
+              14, True, INK)],
+            align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE)
+    return s
+
+
+# ===========================================================================
+# SLIDE 9 — PHASE 1 (Shanghai Metro scenario)
+# ===========================================================================
+def slide_phase1():
+    s = blank()
+    title_centered(s, [("Phase 1 — domain to ", INK),
+                       ("scenario", ACCENT), (".", INK)],
+                   y=0.85, size=32)
+    subtitle_centered(s,
+        "Sample one domain. Instantiate entities, metrics, time grain, target rows. No chart type bound yet.",
+        y=1.65, size=15)
+
+    cy = 2.30
+    ch = 3.95
+    lw = (SW - 1.10) * 0.42
+    rw = (SW - 1.10) * 0.55
+    gap = SW - 1.10 - lw - rw
+
+    # LEFT — input domain
+    x0 = 0.55
+    textbox(s, x0 + 0.10, cy, lw - 0.20, 0.30,
+            [("INPUT · DOMAIN", 11, True, MUTED)])
+    in_lines = [
+        [("{", "n")],
+        [('  "name": ', "n"), ('"Urban rail scheduling"', "s"), (",", "n")],
+        [('  "tier": ', "n"), ('"complex"', "s"), (",", "n")],
+        [('  "entity_hint": [', "n"), ('"line"', "s"), (", ", "n"),
+         ('"station"', "s"), ("],", "n")],
+        [('  "metric_hint": [', "n")],
+        [('    {', "n"), ('"name"', "k"), (':', "n"), ('"ridership"', "s"), (",", "n")],
+        [('     ', "n"), ('"unit"', "k"), (':', "n"), ('"10k pax"', "s"), ("},", "n")],
+        [('    {', "n"), ('"name"', "k"), (':', "n"), ('"on_time_rate"', "s"), (",", "n")],
+        [('     ', "n"), ('"unit"', "k"), (':', "n"), ('"%"', "s"), ("}", "n")],
+        [("  ]", "n")],
+        [("}", "n")],
+    ]
+    code_block(s, x0, cy + 0.35, lw, ch - 0.35, in_lines, size=10.5, line_h=0.28)
+
+    # RIGHT — output scenario
+    x1 = x0 + lw + gap
+    textbox(s, x1 + 0.10, cy, rw - 0.20, 0.30,
+            [("OUTPUT · SCENARIO  (LLM)", 11, True, MUTED)])
+    out_lines = [
+        [("{", "n")],
+        [('  "title": ',   "n"), ('"2024 H1 Shanghai Metro Ridership Log"', "s"), (",", "n")],
+        [('  "context": ', "n"), ('"Shanghai Transport Commission collected', "s")],
+        [('               daily ridership and operational data..."', "s"), (",", "n")],
+        [('  "entities": [', "n")],
+        [('    ', "n"), ('"Line 1 (Xinzhuang–Fujin Rd)"', "s"), (",", "n")],
+        [('    ', "n"), ('"Line 2 (Pudong Airport–Xujing)"', "s"), (", ...", "n")],
+        [('  ],', "n")],
+        [('  "metrics": [', "n")],
+        [('    {', "n"), ('"name"', "k"), (':', "n"), ('"daily_ridership"', "s"),
+         (', ', "n"), ('"range"', "k"), (': [5, 120]},', "n")],
+        [('    {', "n"), ('"name"', "k"), (':', "n"), ('"on_time_rate"', "s"),
+         (', ', "n"), ('"range"', "k"), (': [85.0, 99.9]}', "n")],
+        [('  ],', "n")],
+        [('  "target_rows": 900', "n")],
+        [("}", "n")],
+    ]
+    code_block(s, x1, cy + 0.35, rw, ch - 0.35, out_lines, size=10.5, line_h=0.25)
+
+    # Bottom callout
+    bx, by, bw, bh = 1.60, 6.40, SW - 3.20, 0.55
+    card(s, bx, by, bw, bh)
+    textbox(s, bx, by, bw, bh,
+            [("Scenarios are ", 14, True, INK),
+             ("domain-driven", 14, True, ACCENT),
+             (", not visualization-driven.", 14, True, INK)],
+            align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE)
+    return s
+
+
+# ===========================================================================
+# SLIDE 10 — PHASE 2 SDK INTRO  (8 calls)
+# ===========================================================================
+def slide_phase2_intro():
+    s = blank()
+    title_centered(s, [("Phase 2 — the LLM writes ", INK),
+                       ("Python", ACCENT), (", not JSON.", INK)],
+                   y=0.85, size=30)
+    subtitle_centered(s,
+        "Two ordered steps. Eight call types. Every column declares its own data-generating program.",
+        y=1.65, size=15)
+
+    cy = 2.40
+    ch = 3.85
+    cw = (SW - 1.10 - 0.50) / 2
+
+    # LEFT — Step 1
+    x0 = 0.55
+    card(s, x0, cy, cw, ch)
+    textbox(s, x0 + 0.30, cy + 0.25, cw - 0.60, 0.30,
+            [("STEP 1 · COLUMN DECLARATIONS", 12, True, MUTED)])
+    step1 = [
+        ("add_category",           "categorical · group · parent"),
+        ("add_temporal",           "time grain · derived calendar"),
+        ("add_measure",            "stochastic root · y ~ Dist(θ)"),
+        ("add_measure_structural", "DAG-derived · closed-form"),
+    ]
+    for i, (call, desc) in enumerate(step1):
+        yy = cy + 0.75 + i * 0.78
+        textbox(s, x0 + 0.30, yy, cw - 0.60, 0.34,
+                [(call, 15, True, ACCENT, False, MONO)])
+        textbox(s, x0 + 0.30, yy + 0.34, cw - 0.60, 0.34,
+                [(desc, 13, False, MUTED, True)])
+
+    # RIGHT — Step 2
+    x1 = x0 + cw + 0.50
+    card(s, x1, cy, cw, ch)
+    textbox(s, x1 + 0.30, cy + 0.25, cw - 0.60, 0.30,
+            [("STEP 2 · RELATIONSHIPS AND PATTERNS", 12, True, MUTED)])
+    step2 = [
+        ("declare_orthogonal",    "independence across groups"),
+        ("add_group_dependency",  "root-only DAG cross-group dep"),
+        ("inject_pattern",        "trend · outlier · ranking reversal"),
+        ("set_realism",           "noise · missingness · censoring"),
+    ]
+    for i, (call, desc) in enumerate(step2):
+        yy = cy + 0.75 + i * 0.78
+        textbox(s, x1 + 0.30, yy, cw - 0.60, 0.34,
+                [(call, 15, True, ACCENT, False, MONO)])
+        textbox(s, x1 + 0.30, yy + 0.34, cw - 0.60, 0.34,
+                [(desc, 13, False, MUTED, True)])
+
+    # Bottom callout
+    bx, by, bw, bh = 1.60, 6.40, SW - 3.20, 0.55
+    card(s, bx, by, bw, bh)
+    textbox(s, bx, by, bw, bh,
+            [("Each measure is declared ", 14, True, INK),
+             ("once", 14, True, ACCENT),
+             (". No patching across calls.", 14, True, INK)],
+            align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE)
+    return s
+
+
+# ===========================================================================
+# SLIDE 11 — PHASE 2 EXAMPLE A: SWIFTEATS SDK CODE
+# ===========================================================================
+def slide_phase2_swift():
+    s = blank()
+    title_centered(s, [("SwiftEats — ", INK), ("zone × algorithm", ACCENT),
+                       (" drives both outcomes.", INK)],
+                   y=0.85, size=28)
+    subtitle_centered(s,
+        "Acceptance and delivery time both depend on the interaction of zone and algorithm.",
+        y=1.45, size=14)
+
+    lines = [
+        [("# Step 1: columns", "c")],
+        [("sim.", "n"), ("add_category", "k"),
+         ('("zone_tier", values=["downtown","mid","peripheral"], group="geo")', "s")],
+        [("sim.", "n"), ("add_category", "k"),
+         ('("algorithm", values=["old","new"], group="system")', "s")],
+        [("sim.", "n"), ("add_measure", "k"),
+         ('("distance_km", family="lognormal",', "s")],
+        [('                 param_model={"mu": 1.5, "sigma": 0.6})', "n")],
+        [("# Step 2: zone × algorithm drives accept; both drive p→d", "c")],
+        [("sim.", "n"), ("add_group_dependency", "k"),
+         ('("accepted", on=["zone_tier","algorithm"],', "s")],
+        [('    conditional_weights={', "n")],
+        [('       ("peripheral","new"): {"yes":0.41, "no":0.59},', "s")],
+        [('       ("peripheral","old"): {"yes":0.82, "no":0.18}, ', "s"),
+         ("# ...", "c")],
+        [('    })', "n")],
+        [("sim.", "n"), ("add_measure_structural", "k"),
+         ('("pickup_to_dropoff_min",', "s")],
+        [('    formula="8 + 3.5*distance_km - 4*(algorithm==\'new\')",', "s")],
+        [('    noise={"sigma":2.0})', "s")],
+        [("# zone-selection trick: new algo silently drops the periphery", "c")],
+        [("sim.", "n"), ("inject_pattern", "k"),
+         ('("dominance_shift",', "s")],
+        [('    target="algorithm==\'new\' & zone_tier==\'peripheral\'",', "s")],
+        [('    col="accepted", params={"drop_rate":0.43})', "s")],
+    ]
+    code_block(s, 0.80, 1.95, SW - 1.60, 4.50, lines, size=11.0, line_h=0.245)
+
+    bx, by, bw, bh = 1.80, 6.60, SW - 3.60, 0.50
+    card(s, bx, by, bw, bh)
+    textbox(s, bx, by, bw, bh,
+            [("Every behavior the agent must discover is declared once in the script.",
+              13, True, INK)],
+            align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE)
+    return s
+
+
+# ===========================================================================
+# SLIDE 12 — PHASE 2 EXAMPLE B: HOSPITAL WAIT MINUTES
+# ===========================================================================
+def slide_phase2_hospital():
+    s = blank()
+    eyebrow(s, "§ 3 · C1 · Phase 2 · Example B · Hospital ER")
+    title_centered(s, [("Hospital ER — ", INK),
+                       ("severity × hospital", ACCENT),
+                       (" → wait.", INK)],
+                   y=0.85, size=28)
+
+    lines = [
+        [("# Step 1: nested hierarchy and conditional severity", "c")],
+        [("sim.", "n"), ("add_category", "k"),
+         ('("hospital", values=["Xiehe","Huashan","Ruijin","Tongren"],', "s")],
+        [("                  weights=[0.30,0.25,0.25,0.20], group=", "n"),
+         ('"entity"', "s"), (")", "n")],
+        [("sim.", "n"), ("add_category", "k"),
+         ('("department", values=["Internal","Surgery","ER","Peds"],', "s")],
+        [("                  weights=[0.35,0.25,0.25,0.15], group=", "n"),
+         ('"entity"', "s"), (", parent=", "n"), ('"hospital"', "s"), (")", "n")],
+        [("sim.", "n"), ("add_category", "k"),
+         ('("severity", values=["Mild","Moderate","Severe"],', "s")],
+        [('                  weights=[0.50,0.35,0.15], group="patient")', "n")],
+        [("", "n")],
+        [("# wait_minutes — parameters vary by categorical context", "c")],
+        [("sim.", "n"), ("add_measure", "k"),
+         ('("wait_minutes", family="lognormal",', "s")],
+        [("    param_model={", "n")],
+        [('        "mu": {"intercept":2.8, "effects":{', "s")],
+        [('            "severity": {"Mild":0.0, "Moderate":0.4, "Severe":0.9},', "s")],
+        [('            "hospital": {"Xiehe":0.2, "Huashan":-0.1, "Ruijin":0.0, "Tongren":0.1}', "s")],
+        [("        }},", "n")],
+        [('        "sigma": {"intercept":0.35}', "s")],
+        [("    })", "n")],
+        [("sim.", "n"), ("declare_orthogonal", "k"),
+         ('("entity", "patient",', "s")],
+        [('    rationale="Severity is independent of which hospital a patient picks.")', "s")],
+    ]
+    code_block(s, 0.80, 1.55, SW - 1.60, 4.95, lines, size=10.5, line_h=0.25)
+
+    bx, by, bw, bh = 1.30, 6.55, SW - 2.60, 0.55
+    card(s, bx, by, bw, bh)
+    textbox(s, bx, by, bw, bh,
+            [("Closed-form: ", 13, True, INK),
+             ("μ = 2.8 + 0.9 (severe) + 0.2 (Xiehe) = 3.9", 13, True, ACCENT, False, MONO),
+             (" — verifiable, not chained.", 13, True, INK)],
+            align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE)
+
+    pageno(s, 13)
+    return s
+
+
+# ===========================================================================
+# SLIDE 13 — SELF-CORRECTING LOOP
+# ===========================================================================
+def slide_self_correct():
+    s = blank()
+    title_centered(s, [("Validation runs at the ", INK),
+                       ("SDK level", ACCENT),
+                       (", before any chart.", INK)],
+                   y=0.85, size=30)
+    subtitle_centered(s,
+        "Typed exceptions feed back to the LLM. Three validator layers run after every build. Up to three retries.",
+        y=1.65, size=14)
+
+    # LEFT — try/catch story
+    lx = 0.55
+    lw = (SW - 1.10) * 0.58
+    rx = lx + lw + 0.40
+    rw = SW - 1.10 - lw - 0.40
+
+    # Attempt 1 (bad)
+    a1_y = 2.40
+    a1_h = 1.85
+    card(s, lx, a1_y, lw, a1_h, fill=BAD_SOFT)
+    textbox(s, lx + 0.30, a1_y + 0.15, lw - 0.60, 0.30,
+            [("ATTEMPT 1 · UNBOUNDED SPEEDUP", 11, True, BAD)])
+    a1_lines = [
+        [("sim.", "n"), ("add_measure_structural", "k"),
+         ('("pickup_to_dropoff_min",', "s")],
+        [('   formula="5 - 30*(algorithm==\'new\')")', "s")],
+    ]
+    yy = a1_y + 0.55
+    for segs in a1_lines:
+        runs = []
+        for text, kind in segs:
+            col = CODE_KEY if kind == 'k' else (CODE_STR if kind == 's' else INK)
+            bold = (kind == 'k')
+            runs.append((text, 11, bold, col, False, MONO))
+        textbox(s, lx + 0.30, yy, lw - 0.60, 0.28, runs)
+        yy += 0.27
+    textbox(s, lx + 0.30, a1_y + a1_h - 0.45, lw - 0.60, 0.35,
+            [("Validator L2: ", 12, True, BAD),
+             ("min(p→d) = −25 < 0", 12, True, INK, False, MONO),
+             (" ⇒ SDKException", 12, True, BAD)],
+            anchor=MSO_ANCHOR.MIDDLE)
+
+    # Arrow
+    textbox(s, lx, a1_y + a1_h + 0.05, lw, 0.40,
+            [("↓  feedback to LLM, up to 3 retries", 12, True, MUTED, True)],
+            align=PP_ALIGN.CENTER)
+
+    # Attempt 2 (good)
+    a2_y = a1_y + a1_h + 0.55
+    a2_h = 1.85
+    card(s, lx, a2_y, lw, a2_h, fill=GOOD_SOFT)
+    textbox(s, lx + 0.30, a2_y + 0.15, lw - 0.60, 0.30,
+            [("ATTEMPT 2 · BOUNDED, DISTANCE-AWARE", 11, True, GOOD)])
+    a2_lines = [
+        [("sim.", "n"), ("add_measure_structural", "k"),
+         ('("pickup_to_dropoff_min",', "s")],
+        [('   formula="8 + 3.5*distance_km - 4*(algorithm==\'new\')",', "s")],
+        [('   noise={"sigma":2.0})', "s")],
+    ]
+    yy = a2_y + 0.55
+    for segs in a2_lines:
+        runs = []
+        for text, kind in segs:
+            col = CODE_KEY if kind == 'k' else (CODE_STR if kind == 's' else INK)
+            bold = (kind == 'k')
+            runs.append((text, 11, bold, col, False, MONO))
+        textbox(s, lx + 0.30, yy, lw - 0.60, 0.28, runs)
+        yy += 0.27
+    textbox(s, lx + 0.30, a2_y + a2_h - 0.45, lw - 0.60, 0.35,
+            [("All three layers pass. ", 12, True, GOOD),
+             ("1000 atomic rows written.", 12, False, INK)],
+            anchor=MSO_ANCHOR.MIDDLE)
+
+    # RIGHT — 3-layer validator
+    val_y = 2.40
+    val_h = a2_y + a2_h - val_y
+    card(s, rx, val_y, rw, val_h)
+    textbox(s, rx + 0.30, val_y + 0.20, rw - 0.60, 0.30,
+            [("THREE VALIDATOR LAYERS", 11, True, MUTED)])
     layers = [
-        {
-            "tag": "LAYER 1",
-            "color": NAVY,
-            "title": "Operator Algebra",
-            "idea": "Formalizes every chart QA as a typed pipeline.",
-            "mech": "Set · Scalar · Combinator · Bridge  (16 ops, 2 types)",
-        },
-        {
-            "tag": "LAYER 2",
-            "color": TEAL,
-            "title": "Agentic Simulator",
-            "idea": "LLM writes executable SDK code — not JSON, not raw numbers.",
-            "mech": "Type-safe API · DAG measures · Orthogonality · Pattern injection",
-        },
-        {
-            "tag": "LAYER 3",
-            "color": ACCENT,
-            "title": "Table Amortization",
-            "idea": "One Master Table serves 10–30+ coherent tasks.",
-            "mech": "16 chart types  ×  7 inter-chart relationships",
-        },
-        {
-            "tag": "LAYER 4",
-            "color": RGBColor(0x7B, 0x3F, 0xA0),
-            "title": "Rule-Based QA",
-            "idea": "Deterministic, template-free generation with pattern-seeded hard QA.",
-            "mech": "Intra-view · Inter-view · Pattern-triggered · Difficulty = # ops",
-        },
+        ("L1", "Structural", "Schema valid. Types compatible. Every DAG acyclic."),
+        ("L2", "Statistical", "Moments in range. Correlations feasible. Bounds respected."),
+        ("L3", "Pattern",     "Injected trends, drop-outs, and outliers are recoverable."),
     ]
-
-    for x, L in zip(xs, layers):
-        add_rect(s, x, y, w, h, fill=CARD_BG, line=BORDER, line_w=0.75, rounded=True)
-        add_rect(s, x, y, w, Inches(0.10), fill=L["color"], line=None)
-        add_text(s, x + Inches(0.25), y + Inches(0.25),
-                 w - Inches(0.5), Inches(0.3),
-                 L["tag"], size=10, bold=True, color=L["color"])
-        add_text(s, x + Inches(0.25), y + Inches(0.55),
-                 w - Inches(0.5), Inches(0.7),
-                 L["title"], size=18, bold=True, color=NAVY, line_spacing=1.1)
-        # divider
-        add_line(s, x + Inches(0.25), y + Inches(1.45),
-                 x + w - Inches(0.25), y + Inches(1.45),
-                 color=BORDER)
-        # idea
-        add_text(s, x + Inches(0.25), y + Inches(1.60),
-                 w - Inches(0.5), Inches(1.3),
-                 L["idea"], size=12, color=TEXT_DARK, line_spacing=1.35)
-        # mechanism label
-        add_text(s, x + Inches(0.25), y + Inches(2.95),
-                 w - Inches(0.5), Inches(0.3),
-                 "MECHANISM", size=9, bold=True, color=TEXT_MUTED)
-        add_text(s, x + Inches(0.25), y + Inches(3.25),
-                 w - Inches(0.5), Inches(0.9),
-                 L["mech"], size=10.5, italic=True, color=TEXT_MID,
-                 line_spacing=1.3, font=MONO)
-
-    # Bottom banner
-    by = Inches(6.3)
-    add_rect(s, Inches(0.55), by, Inches(12.22), Inches(0.75),
-             fill=NAVY, line=None, rounded=True)
-    add_text(s, Inches(0.55), by + Inches(0.05), Inches(12.22), Inches(0.35),
-             "CORE GUARANTEE",
-             size=10, bold=True, color=ACCENT,
-             align=PP_ALIGN.CENTER)
-    add_text(s, Inches(0.55), by + Inches(0.33), Inches(12.22), Inches(0.45),
-             "Every chart view shares the same ground-truth arithmetic by construction.",
-             size=15, bold=True, color=WHITE,
-             align=PP_ALIGN.CENTER, italic=True)
-
-    add_footer(s, 15)
+    for i, (tag, name, body) in enumerate(layers):
+        yy = val_y + 0.75 + i * 1.15
+        badge_circle(s, rx + 0.50, yy + 0.30, 0.50, tag, size=12)
+        textbox(s, rx + 0.95, yy + 0.05, rw - 1.10, 0.30,
+                [(name, 16, True, INK)])
+        textbox(s, rx + 0.95, yy + 0.35, rw - 1.10, 0.60,
+                [(body, 11, False, MUTED, True)])
+    return s
 
 
-# ─────────────────────────── Main ───────────────────────────
+# ===========================================================================
+# SLIDE 13 — MASTER TABLE (DAG + rows)
+# ===========================================================================
+def slide_master_table():
+    s = blank()
+    title_centered(s, [("The Master Table.", INK)],
+                   y=0.85, size=40)
+    subtitle_centered(s,
+        "M is a DAG over typed columns. Each row is one atomic event.",
+        y=1.65, size=15)
 
-def main(out_path):
-    prs = Presentation()
-    prs.slide_width = SLIDE_W
-    prs.slide_height = SLIDE_H
+    # LEFT — schema dag
+    lx = 0.55
+    lw = (SW - 1.10) * 0.60
+    rw = (SW - 1.10) * 0.36
+    rx = lx + lw + (SW - 1.10 - lw - rw)
+    ly = 2.40
+    lh = 3.60
+    card(s, lx, ly, lw, lh)
+    textbox(s, lx + 0.30, ly + 0.20, lw - 0.60, 0.30,
+            [("SCHEMA DAG · SwiftEats", 11, True, MUTED)])
 
-    slide_title(prs)
-    slide_motivation(prs)
-    slide_prior_work(prs)
-    slide_contributions(prs)
-    slide_pipeline(prs)
-    slide_phase_01(prs)
-    slide_paradigm(prs)
-    slide_sdk(prs)
-    slide_groups(prs)
-    slide_dag(prs)
-    slide_validation(prs)
-    slide_amortization(prs)
-    slide_algebra(prs)
-    slide_bridges(prs)
-    slide_summary(prs)
+    # Nodes
+    nodes = {
+        "zone_tier":   (lx + 0.70, ly + 1.20),
+        "algorithm":   (lx + 2.85, ly + 1.20),
+        "accepted":    (lx + 4.95, ly + 1.20),
+        "distance_km": (lx + 0.70, ly + 2.70),
+        "pickup_drop": (lx + 4.45, ly + 2.70),
+    }
+    node_w, node_h = 1.40, 0.42
+    style = {
+        "zone_tier":   (ACCENT_SOFT, ACCENT,  "zone_tier"),
+        "algorithm":   (WHITE,       INK,     "algorithm"),
+        "accepted":    (WHITE,       INK,     "accepted"),
+        "distance_km": (WHITE,       INK,     "distance_km"),
+        "pickup_drop": (WHITE,       INK,     "pickup→drop"),
+    }
+    for name, (cx, cy) in nodes.items():
+        fill, edge, lbl = style[name]
+        rounded(s, cx - node_w/2, cy - node_h/2, node_w, node_h,
+                fill=fill, line=edge, line_w=1.2)
+        textbox(s, cx - node_w/2, cy - node_h/2, node_w, node_h,
+                [(lbl, 11, True, edge, False, MONO)],
+                align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE)
 
-    prs.save(out_path)
-    print(f"Wrote {out_path}")
+    # Edges
+    def edge(a, b, color=INK, weight=1.4, dash=False):
+        ax, ay = nodes[a]; bx, by = nodes[b]
+        if abs(ay - by) < 0.05:
+            x1 = ax + node_w/2 + 0.02; x2 = bx - node_w/2 - 0.02
+            line_seg(s, x1, ay, x2, by, color=color, weight=weight, dash=dash, arrow_end=True)
+        else:
+            line_seg(s, ax + node_w/2 + 0.02, ay,
+                     bx - node_w/2 - 0.02, by,
+                     color=color, weight=weight, dash=dash, arrow_end=True)
+    edge("zone_tier",   "algorithm",   color=ACCENT, weight=1.8)
+    edge("algorithm",   "accepted",    color=INK,    weight=1.4)
+    edge("distance_km", "pickup_drop", color=INK,    weight=1.4)
+    edge("algorithm",   "pickup_drop", color=INK,    weight=1.2, dash=True)
+
+    textbox(s, lx + 1.45, ly + 0.70, 1.50, 0.25,
+            [("zone selection", 11, True, ACCENT, True)],
+            align=PP_ALIGN.CENTER)
+    textbox(s, lx + 1.80, ly + 2.30, 2.10, 0.25,
+            [("distance scales time", 10, True, MUTED, True)],
+            align=PP_ALIGN.CENTER)
+
+    # RIGHT — atomic rows preview
+    ry = ly
+    rh = lh
+    card(s, rx, ry, rw, rh)
+    textbox(s, rx + 0.20, ry + 0.20, rw - 0.40, 0.30,
+            [("ATOMIC ROWS · 1 ROW = 1 ORDER", 11, True, MUTED)])
+
+    headers = ["id", "zone", "algo", "out", "p→d"]
+    col_w = (rw - 0.40) / 5
+    tbl_y = ry + 0.65
+    # header row
+    for j, hdr in enumerate(headers):
+        rect(s, rx + 0.20 + j * col_w, tbl_y, col_w, 0.30, fill=INK)
+        textbox(s, rx + 0.20 + j * col_w, tbl_y, col_w, 0.30,
+                [(hdr, 10, True, WHITE, False, MONO)],
+                align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE)
+    rows = [
+        ("01", "ctr", "new", "✓", "16"),
+        ("02", "per", "new", "×", "—"),
+        ("03", "mid", "old", "✓", "28"),
+        ("04", "ctr", "new", "✓", "14"),
+        ("05", "per", "old", "✓", "38"),
+        ("06", "per", "new", "×", "—"),
+        ("07", "mid", "new", "✓", "19"),
+    ]
+    for ri, row in enumerate(rows):
+        ry_i = tbl_y + 0.30 + ri * 0.28
+        for j, v in enumerate(row):
+            fill = WHITE if ri % 2 == 0 else CODE_BG
+            rect(s, rx + 0.20 + j * col_w, ry_i, col_w, 0.28, fill=fill)
+            textbox(s, rx + 0.20 + j * col_w, ry_i, col_w, 0.28,
+                    [(v, 10, False, INK, False, MONO)],
+                    align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE)
+    textbox(s, rx + 0.20, ry + rh - 0.40, rw - 0.40, 0.30,
+            [("… 1000 rows total", 10, False, MUTED, True)],
+            align=PP_ALIGN.CENTER)
+
+    # Bottom callout
+    bx, by, bw, bh = 1.60, 6.30, SW - 3.20, 0.55
+    card(s, bx, by, bw, bh)
+    textbox(s, bx, by, bw, bh,
+            [("Aggregation lives downstream. Bar totals equal pie totals equal line totals.",
+              14, True, INK)],
+            align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE)
+    return s
+
+
+# ===========================================================================
+# SLIDE 14 — TABLE AMORTIZATION (1 M → many views)
+# ===========================================================================
+def slide_amortize():
+    s = blank()
+    title_centered(s, [("Phase 3 — one table, ", INK),
+                       ("many views", ACCENT), (".", INK)],
+                   y=0.85, size=32)
+    subtitle_centered(s,
+        "Deterministic SQL projection yields 10–30+ coherent tasks per Master Table.",
+        y=1.65, size=15)
+
+    # Master Table marker — outlined neutral box, not a red pill
+    mp_w = 6.40
+    mp_x = SW/2 - mp_w/2
+    mp_y = 2.20
+    mp_h = 0.60
+    rounded(s, mp_x, mp_y, mp_w, mp_h, fill=WHITE, line=INK, line_w=1.6)
+    textbox(s, mp_x, mp_y, mp_w, mp_h,
+            [("Master  M  ·  SwiftEats  ·  1000 atomic rows",
+              14, True, INK, False, MONO)],
+            align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE)
+    textbox(s, 0, mp_y + mp_h + 0.05, SW, 0.45,
+            [("↓", 24, True, MUTED)], align=PP_ALIGN.CENTER)
+
+    # Three lens cards
+    cy = 3.65
+    ch = 2.65
+    cw = (SW - 1.10 - 0.50) / 3
+    gap = 0.25
+    lenses = [
+        ("Bar · avg time by algorithm", "Avg time by algorithm",
+         "SELECT algorithm, AVG(p2d)\n  FROM M GROUP BY algorithm"),
+        ("Heatmap · accept rate × zone", "Accept rate × zone",
+         "SELECT zone, algo, AVG(accept)\n  FROM M GROUP BY zone, algo"),
+        ("Funnel · stage × algorithm", "Stage × algorithm",
+         "SELECT stage, COUNT(*)\n  FROM M GROUP BY algo, stage"),
+    ]
+    for i, (label, head, sql) in enumerate(lenses):
+        x0 = 0.55 + i * (cw + gap)
+        card(s, x0, cy, cw, ch)
+        textbox(s, x0 + 0.30, cy + 0.20, cw - 0.60, 0.30,
+                [(label.upper(), 11, True, MUTED)])
+        textbox(s, x0 + 0.30, cy + 0.55, cw - 0.60, 0.45,
+                [(head, 17, True, INK)])
+        # SQL block
+        rect(s, x0 + 0.30, cy + 1.20, cw - 0.60, 1.25, fill=CODE_BG)
+        sql_lines = sql.split("\n")
+        for j, ln in enumerate(sql_lines):
+            kw_set = {"SELECT", "FROM", "GROUP", "BY", "COUNT", "AVG"}
+            tokens = []
+            buf = ""
+            for ch_ in ln + " ":
+                if ch_.isalnum() or ch_ == "_":
+                    buf += ch_
+                else:
+                    if buf:
+                        if buf.upper() in kw_set:
+                            tokens.append((buf, 11, True, ACCENT, False, MONO))
+                        else:
+                            tokens.append((buf, 11, False, INK, False, MONO))
+                        buf = ""
+                    if ch_ == " ":
+                        tokens.append((ch_, 11, False, INK, False, MONO))
+                    elif ch_:
+                        tokens.append((ch_, 11, False, INK, False, MONO))
+            textbox(s, x0 + 0.40, cy + 1.30 + j * 0.32, cw - 0.80, 0.32, tokens)
+
+    # Bottom callout
+    bx, by, bw, bh = 1.60, 6.50, SW - 3.20, 0.55
+    card(s, bx, by, bw, bh)
+    textbox(s, bx, by, bw, bh,
+            [("Same M, three views. Arithmetic consistency holds by construction.",
+              14, True, INK)],
+            align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE)
+    return s
+
+
+# ===========================================================================
+# SLIDE 15 — OPERATOR PIPELINE EXAMPLE
+# ===========================================================================
+def slide_operator():
+    s = blank()
+    title_centered(s, [("A question is a typed ", INK),
+                       ("operator pipeline", ACCENT), (".", INK)],
+                   y=0.85, size=30)
+    subtitle_centered(s,
+        "Difficulty equals the number of operators. No LLM is involved.",
+        y=1.65, size=15)
+
+    # Question card
+    qx, qy, qw, qh = 0.95, 2.40, SW - 1.90, 2.40
+    card(s, qx, qy, qw, qh)
+    textbox(s, qx + 0.30, qy + 0.20, qw - 0.60, 0.30,
+            [("Q · ", 11, True, MUTED),
+             ('"Which zone tier has the highest delivery time under the new algorithm?"',
+              11, True, MUTED, True)])
+    rect(s, qx + 0.30, qy + 0.65, qw - 0.60, qh - 0.85, fill=CODE_BG)
+    pipe_lines = [
+        [("M  →  ", 14, False, INK, False, MONO),
+         ("Filter", 14, True, ACCENT, False, MONO),
+         ("(algorithm='new')", 14, False, INK, False, MONO)],
+        [("   →  ", 14, False, INK, False, MONO),
+         ("GroupBy", 14, True, ACCENT, False, MONO),
+         ("(zone_tier, ", 14, False, INK, False, MONO),
+         ("AVG", 14, True, ACCENT, False, MONO),
+         ("(pickup_to_dropoff_min))", 14, False, INK, False, MONO)],
+        [("   →  ", 14, False, INK, False, MONO),
+         ("Sort", 14, True, ACCENT, False, MONO),
+         ("(", 14, False, INK, False, MONO),
+         ("desc", 14, True, ACCENT, False, MONO),
+         (")", 14, False, INK, False, MONO)],
+        [("   →  ", 14, False, INK, False, MONO),
+         ("ArgMax", 14, True, ACCENT, False, MONO)],
+        [("   →  ", 14, False, INK, False, MONO),
+         ('"peripheral"', 14, False, GOOD, False, MONO),
+         ("     ", 14, False, INK, False, MONO),
+         ("# 5 ops = Medium difficulty", 12, False, MUTED, True, MONO)],
+    ]
+    for j, runs in enumerate(pipe_lines):
+        textbox(s, qx + 0.50, qy + 0.80 + j * 0.28, qw - 1.00, 0.32, runs)
+
+    # Three stat cards
+    cy = 5.10
+    ch = 1.80
+    cw = (SW - 1.10 - 0.50) / 3
+    gap = 0.25
+    stats = [
+        ("16", "typed operators",     "Set · Scalar · Combinator · Bridge"),
+        ("6",  "chart families · 16 types", "Comparison, Trend, Distribution …"),
+        ("0",  "LLM calls in Phase 3",     "deterministic, seed-reproducible"),
+    ]
+    for i, (big, lbl, sub) in enumerate(stats):
+        x0 = 0.55 + i * (cw + gap)
+        card(s, x0, cy, cw, ch)
+        textbox(s, x0, cy + 0.20, cw, 0.80,
+                [(big, 44, True, ACCENT, False, MONO)],
+                align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE)
+        textbox(s, x0 + 0.20, cy + 1.05, cw - 0.40, 0.30,
+                [(lbl, 12, True, INK)], align=PP_ALIGN.CENTER)
+        textbox(s, x0 + 0.20, cy + 1.35, cw - 0.40, 0.35,
+                [(sub, 10, False, MUTED, True)], align=PP_ALIGN.CENTER)
+
+    pageno(s, 16)
+    return s
+
+
+# ===========================================================================
+# SLIDE 16 — SECTION: C2
+# ===========================================================================
+def slide_section_c2():
+    s = blank()
+    textbox(s, 0, 2.85, SW, 1.20,
+            [[("C2 · ", 50, True, INK),
+              ("Active", 50, True, ACCENT),
+              (" Chart Reasoning.", 50, True, INK)]],
+            align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE)
+    textbox(s, 0, 4.30, SW, 0.55,
+            [("Four moves. Two costly actions. One bbox-grounded answer.",
+              19, False, MUTED, True)],
+            align=PP_ALIGN.CENTER)
+    return s
+
+
+# ===========================================================================
+# SLIDE 17 — FOUR MOVES
+# ===========================================================================
+def slide_four_moves():
+    s = blank()
+    title_centered(s, [("Four moves: Read, Reveal, Reconcile, ", INK),
+                       ("Debunk", ACCENT), (".", INK)],
+                   y=0.85, size=28)
+    subtitle_centered(s,
+        "Each move names a specific question the agent must answer about the chart.",
+        y=1.55, size=15)
+
+    moves = [
+        ("1", "Read",       "what does the metric mean?",
+         "Identify the two timestamps the metric spans. Identify which orders are in the denominator."),
+        ("2", "Reveal",     "what dimension is missing?",
+         "Stratify by zone tier. Check whether the new algorithm stopped accepting peripheral orders."),
+        ("3", "Reconcile",  "how can both charts be true?",
+         "Delivery time fell and refunds rose. Find the funnel structure under which both can hold."),
+        ("4", "Debunk",     "does the metric survive a fair yardstick?",
+         "Widen the window to click-to-door. Include every cancelled and timed-out order. Recompute."),
+    ]
+    cy = 2.30
+    ch = 2.30
+    cw = (SW - 1.10 - 0.40) / 2
+    gap = 0.40
+    for i, (num, verb, tag, body) in enumerate(moves):
+        x0 = 0.55 + (i % 2) * (cw + gap)
+        yy = cy + (i // 2) * (ch + 0.30)
+        card(s, x0, yy, cw, ch)
+        badge_circle(s, x0 + 0.55, yy + 0.55, 0.55, num, size=20)
+        textbox(s, x0 + 1.30, yy + 0.30, cw - 1.50, 0.45,
+                [(verb, 22, True, INK)])
+        textbox(s, x0 + 1.30, yy + 0.78, cw - 1.50, 0.32,
+                [(tag, 14, False, MUTED, True)])
+        textbox(s, x0 + 0.30, yy + 1.35, cw - 0.60, 0.90,
+                [(body, 12.5, False, MUTED, True)])
+    return s
+
+
+# ===========================================================================
+# SLIDE 18 — ACTION SPACE
+# ===========================================================================
+def slide_actions():
+    s = blank()
+    title_centered(s, [("Five actions. ", INK),
+                       ("Two cost budget", ACCENT), (".", INK)],
+                   y=0.85, size=32)
+    subtitle_centered(s,
+        "The budget forces strategy. Every answer must point to a bbox.",
+        y=1.65, size=15)
+
+    # Table card
+    tx, ty, tw, th = 0.55, 2.30, SW - 1.10, 3.10
+    card(s, tx, ty, tw, th)
+
+    # Headers
+    cols_x = [tx + 0.40, tx + 2.55, tx + 5.85, tx + 7.85]
+    cols_w = [2.10, 3.20, 1.90, tw - (cols_x[-1] - tx) - 0.40]
+    hdr = ["ACTION", "ROLE", "COST", "RETURNS"]
+    for hx, hw, ht in zip(cols_x, cols_w, hdr):
+        textbox(s, hx, ty + 0.25, hw, 0.30,
+                [(ht, 10, True, MUTED)])
+    line_seg(s, tx + 0.40, ty + 0.65, tx + tw - 0.40, ty + 0.65,
+             color=HAIR, weight=0.8)
+
+    actions = [
+        ("request_view",  "Pull a new projection",     "−1 Bᵥ",  "PNG only",       True),
+        ("point",         "Inspect element locally",   "−1 Bₚ",  "bbox feedback",  True),
+        ("commit_belief", "Update working theory",     "free",   "confirmed",      False),
+        ("answer",        "Submit answer + bbox",      "free",   "logged",         False),
+        ("terminate",     "Trigger scoring",           "free",   "final report",   False),
+    ]
+    for i, (n, role, cost, ret, costly) in enumerate(actions):
+        yy = ty + 0.80 + i * 0.42
+        textbox(s, cols_x[0], yy, cols_w[0], 0.36,
+                [(n, 13, True, ACCENT if costly else INK, False, MONO)],
+                anchor=MSO_ANCHOR.MIDDLE)
+        textbox(s, cols_x[1], yy, cols_w[1], 0.36,
+                [(role, 12, False, INK)], anchor=MSO_ANCHOR.MIDDLE)
+        textbox(s, cols_x[2], yy, cols_w[2], 0.36,
+                [(cost, 12, True, ACCENT if costly else MUTED, False, MONO)],
+                anchor=MSO_ANCHOR.MIDDLE)
+        textbox(s, cols_x[3], yy, cols_w[3], 0.36,
+                [(ret, 12, True, INK if costly else MUTED)], anchor=MSO_ANCHOR.MIDDLE)
+
+    # Two plain shadow cards
+    py = 5.65
+    ph = 1.30
+    pw = (SW - 1.10 - 0.40) / 2
+    labelled_card(s, 0.55, py, pw, ph, "VISUAL-ONLY RETURN",
+                  [[("request_view returns PNG, never CSV.", 14, True, INK)],
+                   [("The protocol cannot degenerate into SQL planning.",
+                     11, False, MUTED, True)]],
+                  label_color=MUTED)
+    labelled_card(s, 0.55 + pw + 0.40, py, pw, ph, "BBOX GROUNDING",
+                  [[("Every answer cites a bounding box, cross-chart.", 14, True, INK)],
+                   [("Grounding is mandatory, not decorative.",
+                     11, False, MUTED, True)]],
+                  label_color=MUTED)
+    return s
+
+
+# ---------------------------------------------------------------------------
+# HYPOTHESIS STATUS LINE — single muted monospace line, no pill widget
+# ---------------------------------------------------------------------------
+_HSTATUS_LABEL = {
+    "pending":   ("not yet",    False),
+    "off":       ("not yet",    False),
+    "rising":    ("consistent", True),
+    "consistent":("consistent", True),
+    "partial":   ("partial",    True),
+    "confirmed": ("confirmed",  True),
+}
+
+
+def suspect_board(slide, y, states):
+    """One-line hypothesis status under the body. Replaces the suspect board.
+    Active states render in accent; inactive in muted gray."""
+    parts = []
+    for i, (hid, _name, state) in enumerate(states):
+        label, active = _HSTATUS_LABEL[state]
+        color = ACCENT if active else MUTED
+        if i > 0:
+            parts.append(("     ", 12, True, MUTED, False, MONO))
+        parts.append((hid + " · ", 12, True, INK, False, MONO))
+        parts.append((label, 12, True, color, False, MONO))
+    textbox(slide, 0.55, y, SW - 1.10, 0.35, parts,
+            align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE)
+
+
+def beat_header(slide, runs):
+    """Plain centered beat title. ``runs`` is a list of (text, color) pairs."""
+    title_centered(slide, runs, y=0.90, size=28)
+
+
+def beat_question(slide, subtitle):
+    """Plain italic subtitle for the beat slide."""
+    subtitle_centered(slide, subtitle, y=1.55, size=15)
+
+
+# ===========================================================================
+# SLIDE 19 — B1 · READ
+# ===========================================================================
+def slide_b1_read():
+    s = blank()
+    beat_header(s, [("Read — what does ", INK),
+                    ('"18 min"', ACCENT), (" measure?", INK)])
+    beat_question(s,
+        "Inspect the time window and the denominator on the headline chart.")
+
+    # LEFT — returned view: timeline + denominator
+    lx, ly, lw, lh = 0.55, 2.15, (SW - 1.10) * 0.58, 3.40
+    card(s, lx, ly, lw, lh)
+    textbox(s, lx + 0.30, ly + 0.20, lw - 0.60, 0.28,
+            [("TIME WINDOW", 11, True, MUTED)])
+
+    # 4-stage timeline
+    tl_y = ly + 0.65
+    tl_h = 0.42
+    tl_l = lx + 0.30
+    tl_w = lw - 0.60
+    seg_w = tl_w / 4.0
+    chip_gray = RGBColor(0xF5, 0xF5, 0xF5)
+    rect(s, tl_l,              tl_y, seg_w, tl_h, fill=chip_gray)
+    textbox(s, tl_l, tl_y, seg_w, tl_h,
+            [("click → assign", 10, True, MUTED)],
+            align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE)
+    rect(s, tl_l + seg_w,      tl_y, seg_w, tl_h, fill=chip_gray)
+    textbox(s, tl_l + seg_w, tl_y, seg_w, tl_h,
+            [("prep + wait", 10, True, MUTED)],
+            align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE)
+    rect(s, tl_l + 2 * seg_w,  tl_y, 2 * seg_w, tl_h, fill=ACCENT)
+    textbox(s, tl_l + 2 * seg_w, tl_y, 2 * seg_w, tl_h,
+            [("pickup → drop  ·  the 18 min window", 11, True, WHITE)],
+            align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE)
+    # tick labels
+    for i, lbl in enumerate(["t₀ click", "t₁ assigned", "t₂ pickup", "t₃ delivered"]):
+        textbox(s, tl_l - 0.40 + i * seg_w, tl_y + tl_h + 0.04, 0.80, 0.22,
+                [(lbl, 9, False, MUTED)], align=PP_ALIGN.CENTER)
+
+    # denominator label
+    textbox(s, tl_l, tl_y + 1.20, tl_w, 0.30,
+            [("DENOMINATOR", 11, True, MUTED)])
+
+    # denominator bar
+    db_y = tl_y + 1.55
+    db_h = 0.48
+    db_l = tl_l
+    db_w = tl_w
+    delivered_w = db_w * 0.57
+    rect(s, db_l, db_y, db_w, db_h, fill=chip_gray)
+    rect(s, db_l, db_y, delivered_w, db_h, fill=INK)
+    textbox(s, db_l, db_y, delivered_w, db_h,
+            [("570 delivered  ·  included in 18 min", 11, True, WHITE)],
+            align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE)
+    textbox(s, db_l + delivered_w, db_y, db_w - delivered_w, db_h,
+            [("430 failed  ·  excluded", 11, True, MUTED)],
+            align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE)
+    textbox(s, db_l, db_y + db_h + 0.04, db_w, 0.24,
+            [("1000 orders requested", 10, False, MUTED, True)],
+            align=PP_ALIGN.CENTER)
+
+    # RIGHT — key finding
+    rx = lx + lw + 0.40
+    rw = SW - 0.55 - rx
+    card(s, rx, ly, rw, lh, fill=WHITE)
+    textbox(s, rx + 0.30, ly + 0.20, rw - 0.60, 0.30,
+            [("AFTER READ", 11, True, MUTED)])
+    textbox(s, rx + 0.30, ly + 0.60, rw - 0.60, 0.85,
+            [[('Two narrow choices sit inside "18 min":', 15, True, INK)]])
+    # two narrow choices
+    chip_fill = RGBColor(0xF7, 0xF7, 0xF7)
+    cy = ly + 1.65
+    rounded(s, rx + 0.30, cy, rw - 0.60, 0.55, fill=chip_fill)
+    textbox(s, rx + 0.30, cy, rw - 0.60, 0.55,
+            [("pickup-to-drop only", 14, True, INK)],
+            align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE)
+    rounded(s, rx + 0.30, cy + 0.70, rw - 0.60, 0.55, fill=chip_fill)
+    textbox(s, rx + 0.30, cy + 0.70, rw - 0.60, 0.55,
+            [("delivered orders only", 14, True, INK)],
+            align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE)
+
+    suspect_board(s, 6.40,
+        [("h₁", "", "pending"),
+         ("h₂", "", "pending"),
+         ("h₃", "", "rising"),
+         ("h₄", "", "rising")])
+    return s
+
+
+# ===========================================================================
+# SLIDE 20 — B2 · REVEAL
+# ===========================================================================
+def slide_b2_reveal():
+    s = blank()
+    beat_header(s, [("Reveal — where do the ", INK),
+                    ("excluded orders", ACCENT), (" come from?", INK)])
+    beat_question(s,
+        "Stratify acceptance by zone tier and algorithm.")
+
+    # LEFT — twin heatmaps OLD vs NEW
+    lx, ly, lw, lh = 0.55, 2.15, (SW - 1.10) * 0.58, 3.40
+    card(s, lx, ly, lw, lh)
+    textbox(s, lx + 0.30, ly + 0.20, lw - 0.60, 0.28,
+            [("ACCEPTANCE MAP · OLD VS NEW DISPATCHER",
+              11, True, MUTED)])
+
+    # 4x4 heatmaps
+    grid_size = 0.30
+    grid_y = ly + 0.80
+    # OLD heatmap on left half
+    old_pattern = [[0.55, 0.70, 0.65, 0.55],
+                   [0.70, 0.90, 0.88, 0.70],
+                   [0.68, 0.88, 0.90, 0.68],
+                   [0.55, 0.66, 0.60, 0.55]]
+    g1_x = lx + 0.70
+    for r in range(4):
+        for c in range(4):
+            v = old_pattern[r][c]
+            fill = GOOD if v >= 0.75 else GOOD_SOFT
+            rect(s, g1_x + c * grid_size, grid_y + r * grid_size,
+                 grid_size, grid_size, fill=fill)
+    textbox(s, g1_x - 0.10, grid_y + 4 * grid_size + 0.06,
+            4 * grid_size + 0.20, 0.22,
+            [("OLD  ·  uniform 82%", 10, True, GOOD)],
+            align=PP_ALIGN.CENTER)
+
+    # arrow between
+    textbox(s, lx + lw/2 - 0.30, grid_y + 2 * grid_size - 0.15,
+            0.60, 0.30,
+            [("→", 22, True, MUTED)], align=PP_ALIGN.CENTER,
+            anchor=MSO_ANCHOR.MIDDLE)
+
+    # NEW heatmap on right half: center bright, periphery gray
+    g2_x = lx + lw - 4 * grid_size - 0.70
+    edge_gray = RGBColor(0xE6, 0xE6, 0xE6)
+    for r in range(4):
+        for c in range(4):
+            is_center = (r in (1, 2)) and (c in (1, 2))
+            fill = GOOD if is_center else edge_gray
+            rect(s, g2_x + c * grid_size, grid_y + r * grid_size,
+                 grid_size, grid_size, fill=fill)
+    textbox(s, g2_x - 0.10, grid_y + 4 * grid_size + 0.06,
+            4 * grid_size + 0.20, 0.22,
+            [("NEW  ·  periphery drops to 41%", 10, True, MUTED)],
+            align=PP_ALIGN.CENTER)
+
+    # RIGHT — key finding
+    rx = lx + lw + 0.40
+    rw = SW - 0.55 - rx
+    card(s, rx, ly, rw, lh, fill=WHITE)
+    textbox(s, rx + 0.30, ly + 0.20, rw - 0.60, 0.30,
+            [("AFTER REVEAL", 11, True, MUTED)])
+    textbox(s, rx + 0.30, ly + 0.60, rw - 0.60, 0.95,
+            [[("Downtown is steady;", 15, True, INK)],
+             [("the periphery ", 15, True, INK),
+              ("collapses", 15, True, ACCENT),
+              (".", 15, True, INK)]])
+    # contrast — tinted comparison cards
+    rounded(s, rx + 0.30, ly + 1.85, rw - 0.60, 0.55, fill=GOOD_SOFT)
+    textbox(s, rx + 0.30, ly + 1.85, rw - 0.60, 0.55,
+            [("Old · periphery  ", 13, True, GOOD),
+             ("82%", 18, True, GOOD)],
+            align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE)
+    rounded(s, rx + 0.30, ly + 2.55, rw - 0.60, 0.55, fill=BAD_SOFT)
+    textbox(s, rx + 0.30, ly + 2.55, rw - 0.60, 0.55,
+            [("New · periphery  ", 13, True, BAD),
+             ("41%", 18, True, BAD)],
+            align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE)
+
+    suspect_board(s, 6.40,
+        [("h₁", "", "pending"),
+         ("h₂", "", "confirmed"),
+         ("h₃", "", "rising"),
+         ("h₄", "", "rising")])
+    return s
+
+
+# ===========================================================================
+# SLIDE 21 — B3 · RECONCILE
+# ===========================================================================
+def slide_b3_reconcile():
+    s = blank()
+    beat_header(s, [("Reconcile — how can ", INK),
+                    ("both", ACCENT), (" charts be true?", INK)])
+    beat_question(s,
+        "Inspect the funnel: requested → assigned → picked up → delivered.")
+
+    # LEFT — twin funnels
+    lx, ly, lw, lh = 0.55, 2.15, (SW - 1.10) * 0.58, 3.40
+    card(s, lx, ly, lw, lh)
+    textbox(s, lx + 0.30, ly + 0.20, lw - 0.60, 0.28,
+            [("FUNNEL · OLD VS NEW DISPATCHER",
+              11, True, MUTED)])
+
+    # Funnel geometry
+    f_top = ly + 0.75
+    f_h   = 2.10
+    band_h = f_h / 5.0
+    max_w  = 1.20
+
+    fail_gray = RGBColor(0xE6, 0xE6, 0xE6)
+
+    def draw_funnel(x_left, label, counts, fail_n, success_pct, success_color):
+        for i, c in enumerate(counts):
+            w = max_w * (c / 1000.0)
+            cx = x_left + (max_w - w) / 2.0
+            y_ = f_top + i * band_h
+            fill = success_color if i == 3 else INK
+            rect(slide=s, x=cx, y=y_, w=w, h=band_h - 0.04, fill=fill)
+            textbox(s, x_left, y_, max_w, band_h - 0.04,
+                    [(f"{c}", 10, True, WHITE)],
+                    align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE)
+        fail_w = max_w * (fail_n / 1000.0)
+        fcx = x_left + (max_w - fail_w) / 2.0
+        fy = f_top + 4 * band_h + 0.04
+        rect(s, fcx, fy, fail_w, band_h - 0.04, fill=fail_gray)
+        textbox(s, x_left - 0.20, fy + band_h + 0.02, max_w + 0.40, 0.24,
+                [(f"{fail_n} failed", 10, True, MUTED, True)],
+                align=PP_ALIGN.CENTER)
+        textbox(s, x_left - 0.10, fy + band_h + 0.34, max_w + 0.20, 0.24,
+                [(label, 12, True, success_color)], align=PP_ALIGN.CENTER)
+        textbox(s, x_left - 0.20, fy + band_h + 0.58, max_w + 0.40, 0.22,
+                [("success ", 9, False, MUTED, True),
+                 (success_pct, 11, True, success_color)],
+                align=PP_ALIGN.CENTER)
+
+    # stage labels in middle column
+    stage_labels = ["requested", "assigned", "picked up", "delivered", "failed"]
+    label_x = lx + lw/2 - 0.45
+    for i, lbl in enumerate(stage_labels):
+        y_ = (f_top + i * band_h) if i < 4 else (f_top + 4 * band_h + 0.04)
+        textbox(s, label_x, y_, 1.00, band_h - 0.04,
+                [(lbl, 10, True, MUTED, True)],
+                align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE)
+
+    # OLD funnel (left of middle)
+    draw_funnel(lx + 0.55, "Old · 84% success", [1000, 920, 870, 840],
+                160, "84%", GOOD)
+    # NEW funnel (right of middle)
+    draw_funnel(lx + lw - 0.55 - max_w, "New · 57% success", [1000, 620, 590, 570],
+                430, "57%", ACCENT)
+
+    # RIGHT — key finding
+    rx = lx + lw + 0.40
+    rw = SW - 0.55 - rx
+    card(s, rx, ly, rw, lh, fill=WHITE)
+    textbox(s, rx + 0.30, ly + 0.20, rw - 0.60, 0.30,
+            [("AFTER RECONCILE", 11, True, MUTED)])
+    textbox(s, rx + 0.30, ly + 0.60, rw - 0.60, 0.95,
+            [[("Both stories hold on", 15, True, INK)],
+             [("different denominators", 15, True, ACCENT),
+              (".", 15, True, INK)]])
+
+    chip_fill = RGBColor(0xF7, 0xF7, 0xF7)
+    rounded(s, rx + 0.30, ly + 1.80, rw - 0.60, 0.70, fill=chip_fill)
+    textbox(s, rx + 0.30, ly + 1.80, rw - 0.60, 0.70,
+            [("84%  →  57%", 22, True, ACCENT, False, MONO)],
+            align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE)
+    textbox(s, rx + 0.30, ly + 2.65, rw - 0.60, 0.65,
+            [("Delivered orders really are faster. They are also a different population from the orders that were requested.",
+              11, False, MUTED, True)])
+
+    suspect_board(s, 6.40,
+        [("h₁", "", "rising"),
+         ("h₂", "", "confirmed"),
+         ("h₃", "", "confirmed"),
+         ("h₄", "", "rising")])
+    return s
+
+
+# ===========================================================================
+# SLIDE 22 — B4 · DEBUNK  + final verdict
+# ===========================================================================
+def slide_b4_debunk():
+    s = blank()
+    beat_header(s, [("Debunk — does ", INK),
+                    ('"18 min"', ACCENT),
+                    (" survive a ", INK),
+                    ("fair yardstick", ACCENT), ("?", INK)])
+    beat_question(s,
+        "Widen the window to click-to-door and include every requested order.")
+
+    # LEFT — two grouped panels: headline vs honest yardstick
+    lx, ly, lw, lh = 0.55, 2.15, (SW - 1.10) * 0.58, 3.10
+    card(s, lx, ly, lw, lh)
+    textbox(s, lx + 0.30, ly + 0.20, lw - 0.60, 0.28,
+            [("HEADLINE  VS  HONEST YARDSTICK",
+              11, True, MUTED)])
+
+    # Two panels side by side
+    p_top = ly + 0.65
+    p_h   = lh - 0.95
+    p_w   = (lw - 0.90) / 2
+    p1_x  = lx + 0.30
+    p2_x  = p1_x + p_w + 0.30
+
+    bar_gray = RGBColor(0x9B, 0x9B, 0x9B)
+
+    # Panel 1 — pickup → drop
+    rect(s, p1_x, p_top, p_w, p_h, fill=CODE_BG)
+    textbox(s, p1_x + 0.15, p_top + 0.10, p_w - 0.30, 0.26,
+            [("HEADLINE · pickup → drop (min)", 10, True, MUTED)])
+    bx_old1 = p1_x + 0.55
+    bx_new1 = p1_x + p_w - 0.55 - 0.45
+    base1 = p_top + p_h - 0.45
+    rect(s, bx_old1, base1 - 1.05, 0.45, 1.05, fill=bar_gray)
+    textbox(s, bx_old1 - 0.20, base1 - 1.05, 0.85, 0.32,
+            [("31", 18, True, MUTED, False, MONO)],
+            align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.BOTTOM)
+    rect(s, bx_new1, base1 - 0.62, 0.45, 0.62, fill=GOOD)
+    textbox(s, bx_new1 - 0.20, base1 - 0.62, 0.85, 0.32,
+            [("18", 18, True, GOOD, False, MONO)],
+            align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.BOTTOM)
+    textbox(s, bx_old1 - 0.20, base1 + 0.06, 0.85, 0.22,
+            [("old", 10, False, MUTED)], align=PP_ALIGN.CENTER)
+    textbox(s, bx_new1 - 0.20, base1 + 0.06, 0.85, 0.22,
+            [("new", 10, False, MUTED)], align=PP_ALIGN.CENTER)
+    textbox(s, p1_x + 0.15, p_top + p_h - 0.30, p_w - 0.30, 0.25,
+            [("−42% (looks good)", 11, True, GOOD)],
+            align=PP_ALIGN.CENTER)
+
+    # Panel 2 — click → door on-time
+    rect(s, p2_x, p_top, p_w, p_h, fill=CODE_BG)
+    textbox(s, p2_x + 0.15, p_top + 0.10, p_w - 0.30, 0.26,
+            [("HONEST · click → door on-time (%)", 10, True, MUTED)])
+    bx_old2 = p2_x + 0.55
+    bx_new2 = p2_x + p_w - 0.55 - 0.45
+    base2 = p_top + p_h - 0.45
+    rect(s, bx_old2, base2 - 1.15, 0.45, 1.15, fill=GOOD)
+    textbox(s, bx_old2 - 0.20, base2 - 1.15, 0.85, 0.32,
+            [("73%", 16, True, GOOD, False, MONO)],
+            align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.BOTTOM)
+    rect(s, bx_new2, base2 - 0.78, 0.45, 0.78, fill=ACCENT)
+    textbox(s, bx_new2 - 0.20, base2 - 0.78, 0.85, 0.32,
+            [("49%", 16, True, ACCENT, False, MONO)],
+            align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.BOTTOM)
+    textbox(s, bx_old2 - 0.20, base2 + 0.06, 0.85, 0.22,
+            [("old", 10, False, MUTED)], align=PP_ALIGN.CENTER)
+    textbox(s, bx_new2 - 0.20, base2 + 0.06, 0.85, 0.22,
+            [("new", 10, False, MUTED)], align=PP_ALIGN.CENTER)
+    textbox(s, p2_x + 0.15, p_top + p_h - 0.30, p_w - 0.30, 0.25,
+            [("−24 pt (gets worse)", 11, True, ACCENT)],
+            align=PP_ALIGN.CENTER)
+
+    # RIGHT — key finding
+    rx = lx + lw + 0.40
+    rw = SW - 0.55 - rx
+    card(s, rx, ly, rw, lh, fill=WHITE)
+    textbox(s, rx + 0.30, ly + 0.20, rw - 0.60, 0.30,
+            [("AFTER DEBUNK", 11, True, MUTED)])
+    textbox(s, rx + 0.30, ly + 0.60, rw - 0.60, 0.95,
+            [[("On the fair yardstick,", 15, True, INK)],
+             [("the headline ", 15, True, INK),
+              ("reverses sign", 15, True, ACCENT),
+              (".", 15, True, INK)]])
+    chip_fill = RGBColor(0xF7, 0xF7, 0xF7)
+    rounded(s, rx + 0.30, ly + 1.80, rw - 0.60, 0.70, fill=chip_fill)
+    textbox(s, rx + 0.30, ly + 1.80, rw - 0.60, 0.70,
+            [("73%  →  49%", 22, True, ACCENT, False, MONO)],
+            align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE)
+
+    # Plain result strip
+    vx, vy, vw, vh = 0.55, 5.45, SW - 1.10, 0.65
+    card(s, vx, vy, vw, vh)
+    textbox(s, vx + 0.30, vy, vw - 0.60, vh,
+            [("Result. ", 15, True, INK),
+             ("31 → 18", 15, True, INK, False, MONO),
+             (" decomposes into ", 15, True, INK),
+             ("zone selection + denominator change + metric boundary",
+              15, True, ACCENT),
+             (".", 15, True, INK)],
+            align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE)
+
+    suspect_board(s, 6.50,
+        [("h₁", "", "rising"),
+         ("h₂", "", "confirmed"),
+         ("h₃", "", "confirmed"),
+         ("h₄", "", "confirmed")])
+    return s
+
+
+# ===========================================================================
+# SLIDE 21 — EXPERIMENTS
+# ===========================================================================
+def slide_experiments():
+    s = blank()
+    title_centered(s, [("Three experiments separate ", INK),
+                       ("action", ACCENT), (" from perception.", INK)],
+                   y=0.85, size=28)
+    subtitle_centered(s, "Each isolates one axis of the protocol.", y=1.55, size=15)
+
+    cy = 2.30
+    ch = 4.00
+    cw = (SW - 1.10 - 0.50) / 3
+    gap = 0.25
+    studies = [
+        ("Exp. A · action necessity",
+         "Does the action axis matter more than model scale?",
+         "Cross model axis with protocol axis (passive, random, planning).",
+         "Action axis explains more variance than model scale."),
+        ("Exp. B · evidence pareto",
+         "How does accuracy scale with view budget?",
+         "Sweep Bᵥ ∈ {2, 4, 8, 16, ∞} on Recovery and Resolution splits.",
+         "Frontier VLM at Bᵥ=16 stays below Oracle at Bᵥ=4."),
+        ("Exp. C · channel ablation",
+         "Does the agent need pixels or just SQL?",
+         "request_view returns PNG only, CSV only, or both.",
+         "Pixel-only and CSV-only collapse to different failure modes."),
+    ]
+    for i, (tag, head, body, punch) in enumerate(studies):
+        x0 = 0.55 + i * (cw + gap)
+        card(s, x0, cy, cw, ch)
+        contrib_tag(s, x0 + 0.30, cy + 0.30, cw - 0.60, 0.30, tag)
+        textbox(s, x0 + 0.30, cy + 0.85, cw - 0.60, 0.95,
+                [(head, 16, True, INK)])
+        textbox(s, x0 + 0.30, cy + 1.95, cw - 0.60, 0.90,
+                [(body, 12, False, MUTED, True)])
+        # Expected card
+        rounded(s, x0 + 0.30, cy + ch - 1.30, cw - 0.60, 1.10, fill=GOOD_SOFT)
+        textbox(s, x0 + 0.45, cy + ch - 1.20, cw - 0.90, 0.30,
+                [("EXPECTED", 11, True, GOOD)])
+        textbox(s, x0 + 0.45, cy + ch - 0.90, cw - 0.90, 0.80,
+                [(punch, 12, True, INK)])
+
+    # Bottom plain card
+    bx, by, bw, bh = 1.60, 6.55, SW - 3.20, 0.50
+    card(s, bx, by, bw, bh)
+    textbox(s, bx, by, bw, bh,
+            [("The hypothesis: the bottleneck is ", 13, True, INK),
+             ("exploration strategy", 13, True, ACCENT),
+             (", not perception.", 13, True, INK)],
+            align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE)
+    return s
+
+
+# ===========================================================================
+# SLIDE 24 — CONCLUSION
+# ===========================================================================
+def slide_conclusion():
+    s = blank()
+    title_centered(s, [("Summary.", INK)], y=0.85, size=44)
+    subtitle_centered(s,
+        "From single-shot chart reading to active investigation of a hidden table.",
+        y=1.85, size=15)
+
+    bullets = [
+        ("C1", "Atomic-grain Code-as-DGP",
+         "An LLM writes Python over a typed SDK. One Master Table emits 10–30+ chart QA tasks through deterministic SQL projection, with cross-chart arithmetic consistent by construction."),
+        ("C2", "Active Chart Reasoning protocol",
+         "Five actions, two with budget cost. Bbox grounding on every answer. Four named moves: Read, Reveal, Reconcile, Debunk."),
+        ("C1 + C2", "LDW-Gym",
+         "One pipeline emits data and protocol together. Private test sets regenerate on demand, structurally immune to contamination."),
+    ]
+    cy = 2.85
+    ch = 1.30
+    cw = SW - 1.10
+    for i, (tag, head, body) in enumerate(bullets):
+        yy = cy + i * (ch + 0.25)
+        card(s, 0.55, yy, cw, ch)
+        tag_w = 1.30
+        contrib_tag(s, 0.95, yy + 0.20, tag_w, 0.30, tag)
+        textbox(s, 0.95 + tag_w + 0.20, yy + 0.18, cw - tag_w - 0.60, 0.40,
+                [(head, 18, True, INK)])
+        textbox(s, 0.95 + tag_w + 0.20, yy + 0.62, cw - tag_w - 0.60, 0.55,
+                [(body, 12.5, False, MUTED, True)])
+    return s
+
+
+# ===========================================================================
+# SLIDE 25 — CLOSING
+# ===========================================================================
+def slide_closing():
+    s = blank()
+    textbox(s, 0, 2.85, SW, 1.30,
+            [[("Charts are projections of a", 44, True, INK)]],
+            align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE)
+    textbox(s, 0, 3.85, SW, 1.30,
+            [[("latent data world", 44, True, ACCENT),
+              (".", 44, True, INK)]],
+            align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE)
+    textbox(s, 0, 5.30, SW, 0.55,
+            [("Thank you.", 19, False, MUTED, True)],
+            align=PP_ALIGN.CENTER)
+    return s
+
+
+# ---------------------------------------------------------------------------
+# BUILD
+# ---------------------------------------------------------------------------
+def main():
+    slide_title()           # 01
+    slide_puzzle()          # 02
+    slide_suspects()        # 03  h₁–h₄ hook (NEW)
+    slide_trap()            # 04
+    slide_benchmark_gap()   # 05
+    slide_contributions()   # 06
+    slide_overview()        # 07
+    slide_section_c1()      # 08
+    slide_phase0()          # 09
+    slide_phase1()          # 10
+    slide_phase2_intro()    # 11
+    slide_phase2_swift()    # 12
+    slide_self_correct()    # 13
+    slide_master_table()    # 14
+    slide_amortize()        # 15
+    slide_operator()        # 16
+    slide_section_c2()      # 17
+    slide_four_moves()      # 18
+    slide_actions()         # 19
+    slide_b1_read()         # 20  B1 · READ
+    slide_b2_reveal()       # 21  B2 · REVEAL
+    slide_b3_reconcile()    # 22  B3 · RECONCILE
+    slide_b4_debunk()       # 23  B4 · DEBUNK + verdict
+    slide_experiments()     # 24
+    slide_conclusion()      # 25
+    slide_closing()         # 26
+
+    out = Path(__file__).resolve().parent / "chartagent_slides.pptx"
+    prs.save(out)
+    print(f"saved: {out}  ({len(prs.slides)} slides)")
 
 
 if __name__ == "__main__":
-    import sys
-    out = sys.argv[1] if len(sys.argv) > 1 else "chartagent_proposal.pptx"
-    main(out)
+    main()

@@ -1,0 +1,1852 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>潜在数据世界 — 评估视觉语言模型智能体作为视觉数据调查员的能力</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;500;600;700;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#06060c;--surface:#0d0d18;--surface-2:#161624;--surface-3:#1c1c30;
+  --border:#22223a;--border-bright:#3a3a5c;
+  --gold:#e5b94a;--gold-bright:#f4d068;--gold-dim:rgba(229,185,74,.12);--gold-mid:rgba(229,185,74,.22);
+  --teal:#3cc4bb;--teal-bright:#5edcd4;--teal-dim:rgba(60,196,187,.12);
+  --blue:#5588e0;--blue-dim:rgba(85,136,224,.12);
+  --red:#e04858;--red-dim:rgba(224,72,88,.12);
+  --purple:#9b70d8;--purple-dim:rgba(155,112,216,.12);
+  --text:#e8e3d4;--text-dim:#9091a8;--text-muted:#54546e;
+  --font-display:'Cormorant Garamond',Georgia,serif;
+  --font-body:'Noto Serif SC','Source Han Serif SC',Georgia,serif;
+  --font-mono:'JetBrains Mono','Courier New',monospace;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-size:16px;line-height:1.85;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+code{font-family:var(--font-mono);font-size:.8em;background:var(--surface-3);border:1px solid var(--border);padding:.1em .35em;border-radius:3px;color:var(--teal)}
+strong{color:var(--text);font-weight:600}
+em{font-style:italic}
+::selection{background:var(--gold);color:var(--bg)}
+
+/* DECORATIVE GRAIN */
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:1;opacity:.03;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;width:220px;height:100vh;padding:2.2rem 1.5rem;border-right:1px solid var(--border);background:rgba(6,6,12,.92);backdrop-filter:blur(14px);z-index:100;overflow-y:auto}
+.nav-brand{font-family:var(--font-mono);font-size:.58rem;color:var(--gold);letter-spacing:.18em;text-transform:uppercase;margin-bottom:.4rem}
+.nav-mark{display:flex;align-items:center;gap:.5rem;margin-bottom:1.6rem;padding-bottom:1.2rem;border-bottom:1px solid var(--border)}
+.nav-mark-glyph{width:24px;height:24px;display:flex;align-items:center;justify-content:center;border:1px solid var(--gold);color:var(--gold);font-family:var(--font-display);font-style:italic;font-size:.9rem;font-weight:700}
+.nav-title{font-family:var(--font-body);font-size:.92rem;font-weight:600;color:var(--text);line-height:1.4;margin-bottom:1.4rem}
+.nav-title-en{font-family:var(--font-display);font-size:.72rem;font-style:italic;color:var(--text-muted);margin-top:.15rem;font-weight:400}
+nav ul{list-style:none}
+nav ul li+li{margin-top:.1rem}
+nav ul li a{display:flex;align-items:baseline;gap:.6rem;padding:.35rem .55rem;color:var(--text-dim);text-decoration:none;font-family:var(--font-body);font-size:.72rem;border-radius:4px;transition:all .2s}
+nav ul li a:hover,nav ul li a.active{color:var(--gold);background:var(--gold-dim)}
+.nav-num{color:var(--text-muted);font-family:var(--font-mono);font-size:.58rem;min-width:24px}
+.nav-foot{margin-top:1.5rem;padding-top:1.2rem;border-top:1px solid var(--border);font-family:var(--font-mono);font-size:.55rem;color:var(--text-muted);letter-spacing:.06em;line-height:1.6}
+
+/* LAYOUT */
+main{margin-left:220px;position:relative;z-index:2}
+
+/* HERO */
+#hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:4rem 5rem;position:relative;overflow:hidden;border-bottom:1px solid var(--border);background:radial-gradient(ellipse at 78% 28%,rgba(60,196,187,.08) 0%,transparent 55%),radial-gradient(ellipse at 18% 72%,rgba(229,185,74,.06) 0%,transparent 50%),var(--bg)}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(60,196,187,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(60,196,187,.05) 1px,transparent 1px);background-size:48px 48px;mask-image:radial-gradient(ellipse at 65% 50%,black 8%,transparent 65%)}
+.hero-marks{position:absolute;top:2rem;right:5rem;font-family:var(--font-mono);font-size:.6rem;color:var(--text-muted);letter-spacing:.16em;text-transform:uppercase;display:flex;gap:1.5rem}
+.hero-marks span::before{content:'·';color:var(--gold);margin-right:.5rem}
+.hero-tag{font-family:var(--font-mono);font-size:.65rem;letter-spacing:.18em;text-transform:uppercase;color:var(--teal);margin-bottom:1.8rem;display:flex;align-items:center;gap:.8rem;position:relative}
+.hero-tag::before{content:'';display:inline-block;width:32px;height:1px;background:var(--teal)}
+h1.hero-title{font-family:var(--font-body);font-size:clamp(2.8rem,6vw,6rem);font-weight:900;line-height:1.05;letter-spacing:-.02em;color:var(--text);margin-bottom:.6rem;max-width:900px;position:relative}
+h1.hero-title strong{color:var(--gold);font-weight:900;position:relative;display:inline-block}
+h1.hero-title strong::after{content:'';position:absolute;left:0;right:0;bottom:.1em;height:.18em;background:rgba(229,185,74,.18);z-index:-1}
+.hero-en{font-family:var(--font-display);font-size:clamp(1.05rem,1.9vw,1.5rem);font-weight:400;font-style:italic;color:var(--text-dim);margin-bottom:1.8rem;position:relative;letter-spacing:.01em}
+.hero-quote{border-left:3px solid var(--gold);padding-left:1.6rem;margin:0 0 2.8rem;max-width:620px;position:relative}
+.hero-quote p{font-family:var(--font-body);font-size:1.18rem;font-weight:500;color:var(--text);line-height:1.65}
+.hero-quote-en{font-family:var(--font-display);font-size:1rem;font-style:italic;color:var(--text-muted);margin-top:.5rem;line-height:1.45}
+.hero-meta{display:flex;gap:2.5rem;flex-wrap:wrap;position:relative}
+.hero-meta-item{font-family:var(--font-mono);font-size:.62rem;color:var(--text-muted);letter-spacing:.1em;text-transform:uppercase}
+.hero-meta-item strong{display:block;color:var(--text-dim);font-family:var(--font-body);font-size:.82rem;margin-bottom:.25rem;letter-spacing:0;text-transform:none;font-weight:500}
+.scroll-hint{position:absolute;bottom:2.2rem;left:5rem;display:flex;align-items:center;gap:.8rem;font-family:var(--font-mono);font-size:.6rem;color:var(--text-muted);letter-spacing:.12em;text-transform:uppercase}
+.scroll-line{width:38px;height:1px;background:var(--text-muted);animation:spulse 2.4s ease-in-out infinite}
+@keyframes spulse{0%,100%{opacity:.25;width:18px}50%{opacity:1;width:38px}}
+
+/* SECTIONS */
+section{padding:6rem 5rem;border-bottom:1px solid var(--border);position:relative}
+section:nth-child(even){background:var(--surface)}
+section::before{content:attr(data-num);position:absolute;top:3rem;right:3rem;font-family:var(--font-display);font-size:7rem;font-weight:300;font-style:italic;color:var(--text-muted);opacity:.07;line-height:1;pointer-events:none;letter-spacing:-.05em}
+.section-tag{font-family:var(--font-mono);font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:var(--text-muted);margin-bottom:.5rem;display:flex;align-items:center;gap:.6rem}
+.section-num{color:var(--gold);font-size:.75rem}
+.section-num::before{content:'§ ';color:var(--text-muted)}
+h2.section-title{font-family:var(--font-body);font-size:clamp(1.9rem,3.7vw,2.8rem);font-weight:700;line-height:1.18;color:var(--text);margin-bottom:.5rem;letter-spacing:-.005em}
+h2.section-title em{color:var(--gold);font-style:normal;position:relative}
+h2.section-title em::after{content:'';position:absolute;left:0;right:0;bottom:.05em;height:.12em;background:rgba(229,185,74,.18);z-index:-1}
+.section-lead{font-size:1rem;color:var(--text-dim);max-width:680px;margin-bottom:2.8rem;line-height:1.75}
+h3.sub{font-family:var(--font-body);font-size:1.35rem;font-weight:700;color:var(--text);margin:2.8rem 0 .9rem;display:flex;align-items:baseline;gap:.7rem}
+h3.sub::before{content:'';display:inline-block;width:18px;height:1px;background:var(--gold);transform:translateY(-.4em)}
+p.body{max-width:720px;margin-bottom:1.3rem;color:var(--text);line-height:1.85}
+
+/* RUNNING EXAMPLE — Case anchor threaded through the whole document */
+.running-ex{position:relative;background:linear-gradient(135deg,rgba(229,185,74,.085),rgba(60,196,187,.045));border:1px solid rgba(229,185,74,.34);border-radius:12px;padding:1.7rem 2rem 1.5rem 2.2rem;margin:1.2rem 0 2.8rem;max-width:880px;overflow:hidden;box-shadow:0 18px 60px rgba(0,0,0,.32)}
+.running-ex::before{content:'';position:absolute;top:0;left:0;bottom:0;width:5px;background:linear-gradient(to bottom,var(--gold),var(--teal))}
+.running-ex::after{content:'★';position:absolute;top:.9rem;right:1.3rem;font-family:var(--font-display);font-size:2.6rem;color:var(--gold);opacity:.16;line-height:1;font-style:italic}
+.run-stamp{font-family:var(--font-mono);font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:.55rem;display:flex;align-items:center;gap:.55rem}
+.run-stamp::before{content:'■';color:var(--red);font-size:.55rem}
+.run-title{font-family:var(--font-body);font-size:1.4rem;font-weight:700;color:var(--text);margin-bottom:.3rem;letter-spacing:-.005em;line-height:1.3}
+.run-title-en{font-family:var(--font-display);font-size:1.02rem;font-style:italic;color:var(--gold);font-weight:500;margin-bottom:.9rem}
+.run-setup{font-size:.95rem;color:var(--text-dim);line-height:1.78;margin-bottom:1rem;max-width:none}
+.run-setup strong{color:var(--text)}
+.run-setup em{color:var(--gold);font-style:italic}
+.run-clues{margin:1rem 0 .95rem;padding:.95rem 1.05rem .55rem;background:linear-gradient(95deg,rgba(224,72,88,.08),rgba(224,72,88,.02));border:1px dashed rgba(224,72,88,.34);border-radius:6px}
+.run-clues-head{font-family:var(--font-mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--red);margin-bottom:.6rem;font-weight:700;display:flex;align-items:center;gap:.45rem}
+.run-clues-head .star{color:var(--gold);font-size:.72rem;font-style:italic}
+.run-clue{display:flex;gap:.7rem;align-items:flex-start;padding:.45rem 0;font-size:.85rem;color:var(--text-dim);line-height:1.6}
+.run-clue+.run-clue{border-top:1px dotted rgba(224,72,88,.18)}
+.clue-mark{flex-shrink:0;width:18px;height:18px;background:var(--red);color:var(--bg);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:.72rem;font-weight:800;margin-top:.15rem;line-height:1}
+.clue-body strong{color:var(--text)}
+.run-grid{display:grid;grid-template-columns:1fr 1fr;gap:.55rem;margin:1rem 0 1.05rem;font-size:.85rem}
+.run-cap{display:flex;gap:.65rem;align-items:flex-start;color:var(--text-dim);line-height:1.55;padding:.55rem .75rem;background:rgba(0,0,0,.24);border-radius:4px;border-left:2px solid;transition:background .2s}
+.run-cap-read{border-left-color:var(--blue)}
+.run-cap-reveal{border-left-color:var(--teal)}
+.run-cap-reconcile{border-left-color:var(--gold)}
+.run-cap-debunk{border-left-color:var(--red)}
+.run-cap-tag{font-family:var(--font-mono);font-size:.62rem;letter-spacing:.06em;font-weight:700;min-width:64px;text-transform:uppercase;padding-top:.1rem}
+.run-cap-read .run-cap-tag{color:var(--blue)}
+.run-cap-reveal .run-cap-tag{color:var(--teal)}
+.run-cap-reconcile .run-cap-tag{color:var(--gold)}
+.run-cap-debunk .run-cap-tag{color:var(--red)}
+.run-tease{font-size:.92rem;color:var(--text);line-height:1.7;margin-top:.4rem;border-top:1px solid var(--border);padding-top:.95rem;max-width:none}
+.run-tease em{color:var(--text-dim)}
+.run-tease strong{color:var(--gold);font-style:normal}
+.run-ref{display:inline-flex;align-items:baseline;gap:.32rem;font-family:var(--font-mono);font-size:.58rem;letter-spacing:.1em;color:var(--gold);background:rgba(229,185,74,.1);border:1px solid rgba(229,185,74,.32);padding:.12rem .42rem;border-radius:3px;text-transform:uppercase;margin-right:.4rem;vertical-align:.1em;font-weight:600}
+.run-ref::before{content:'★';font-style:normal;font-size:.62rem}
+
+/* SUSPECT BOARD — h1..h4 lineup, status updates section-by-section */
+.suspects{margin:1.1rem 0 .95rem;padding:.95rem 1.1rem .65rem;background:linear-gradient(95deg,rgba(229,185,74,.06),rgba(60,196,187,.04));border:1px dashed rgba(229,185,74,.42);border-radius:6px}
+.suspects-head{font-family:var(--font-mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:.7rem;font-weight:700;display:flex;align-items:center;gap:.5rem}
+.suspects-head .star{color:var(--gold);font-size:.7rem;font-style:italic}
+.suspect-row{display:grid;grid-template-columns:30px 110px 1fr 92px;gap:.7rem;align-items:center;padding:.45rem 0;font-size:.85rem;color:var(--text-dim);line-height:1.55}
+.suspect-row+.suspect-row{border-top:1px dotted rgba(229,185,74,.18)}
+.suspect-id{font-family:var(--font-mono);font-size:.92rem;font-weight:700;color:var(--gold);text-align:center}
+.suspect-name{font-family:var(--font-body);font-size:.88rem;font-weight:600;color:var(--text);font-style:italic}
+.suspect-desc{font-size:.84rem;color:var(--text-dim);line-height:1.5}
+.suspect-desc strong{color:var(--text)}
+.suspect-status{font-family:var(--font-mono);font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;text-align:center;padding:.22rem .45rem;border-radius:3px;font-weight:700;border:1px solid}
+.status-alive{color:var(--text-muted);background:transparent;border-color:var(--border-bright)}
+.status-rising{color:var(--gold);background:rgba(229,185,74,.12);border-color:rgba(229,185,74,.42)}
+.status-rising::before{content:'↑ ';font-size:.6rem}
+.status-killed{color:var(--red);background:rgba(224,72,88,.1);border-color:rgba(224,72,88,.4);text-decoration:line-through;text-decoration-color:rgba(224,72,88,.55)}
+.status-killed::before{content:'✗ ';font-size:.6rem;text-decoration:none;display:inline-block}
+.status-confirmed{color:var(--teal);background:rgba(60,196,187,.1);border-color:rgba(60,196,187,.4)}
+.status-confirmed::before{content:'✓ ';font-size:.6rem}
+
+/* AGENT-ACTION ARTIFACT (B1..B4) — what the agent's request_view returned */
+.artifact{margin:1.1rem 0 .9rem;background:linear-gradient(95deg,rgba(13,13,24,.85),rgba(22,22,36,.85));border:1px solid var(--border-bright);border-radius:8px;overflow:hidden;max-width:880px}
+.artifact-head{display:flex;align-items:center;justify-content:space-between;padding:.55rem 1rem;background:linear-gradient(90deg,var(--surface-3),var(--surface-2));border-bottom:1px solid var(--border)}
+.artifact-tag{font-family:var(--font-mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);display:flex;align-items:center;gap:.5rem;font-weight:700}
+.artifact-tag .beat{background:var(--gold);color:var(--bg);padding:.1rem .45rem;border-radius:2px;font-size:.6rem;letter-spacing:.08em}
+.artifact-trace{font-family:var(--font-mono);font-size:.62rem;color:var(--teal);letter-spacing:.05em}
+.artifact-body{display:grid;grid-template-columns:1.05fr .95fr;gap:0;align-items:stretch}
+.artifact-svg{padding:1rem;background:rgba(0,0,0,.35);border-right:1px solid var(--border)}
+.artifact-svg svg{width:100%;height:auto;display:block}
+.artifact-meta{padding:1rem 1.15rem .95rem;display:flex;flex-direction:column;gap:.6rem}
+.artifact-meta-head{font-family:var(--font-body);font-size:.7rem;font-weight:700;color:var(--text-muted);letter-spacing:.05em;text-transform:uppercase}
+.artifact-finding{font-size:.9rem;color:var(--text);line-height:1.7}
+.artifact-finding strong{color:var(--gold)}
+.artifact-update{font-family:var(--font-mono);font-size:.7rem;color:var(--text-dim);line-height:1.7;padding:.55rem .7rem;background:rgba(0,0,0,.28);border-left:2px solid var(--gold);border-radius:0 4px 4px 0}
+.artifact-update .h{color:var(--gold);font-weight:700}
+.artifact-update .killed{color:var(--red);text-decoration:line-through}
+.artifact-update .rising{color:var(--gold)}
+.artifact-update .conf{color:var(--teal)}
+
+@media(max-width:700px){.suspect-row{grid-template-columns:24px 1fr 70px;gap:.5rem}.suspect-row .suspect-desc{grid-column:2/-1;font-size:.8rem;margin-top:.2rem}.artifact-body{grid-template-columns:1fr}.artifact-svg{border-right:none;border-bottom:1px solid var(--border)}}
+
+/* PULL QUOTE */
+.pull-quote{background:linear-gradient(95deg,var(--surface-2),var(--surface));border:1px solid var(--border);border-left:4px solid var(--gold);padding:1.5rem 1.9rem;margin:2.2rem 0;max-width:720px;border-radius:0 8px 8px 0;position:relative}
+.pull-quote::before{content:'"';position:absolute;top:-1.2rem;left:1rem;font-family:var(--font-display);font-size:5rem;color:var(--gold);opacity:.25;line-height:1;font-style:italic}
+.pull-quote p{font-family:var(--font-body);font-size:1.08rem;color:var(--text);line-height:1.7;max-width:none;margin:0;font-weight:500}
+.pull-quote .en{display:block;font-family:var(--font-display);font-size:.95rem;font-style:italic;color:var(--text-muted);margin-top:.5rem;font-weight:400;line-height:1.5}
+
+/* SVG WRAPPER */
+.figure{margin:2.5rem 0;max-width:920px}
+.fig-cap{font-family:var(--font-mono);font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted);margin-top:.7rem;padding-left:.4rem;border-left:2px solid var(--gold);display:flex;align-items:center;gap:.5rem}
+.fig-cap strong{color:var(--gold)}
+
+/* 3-TIER STAIRCASE — SVG-driven */
+.tier-svg{width:100%;max-width:760px;display:block;margin:1rem auto}
+
+/* WHY-NOW 2026 BANNER */
+.why-now{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;margin:2.5rem 0;max-width:920px}
+.wn{background:var(--surface-2);border:1px solid var(--border);border-radius:8px;padding:1.3rem;position:relative;overflow:hidden;transition:transform .25s}
+.wn:hover{transform:translateY(-3px)}
+.wn::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.wn-1::before{background:var(--teal)}
+.wn-2::before{background:var(--blue)}
+.wn-3::before{background:var(--purple)}
+.wn-tag{font-family:var(--font-mono);font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;margin-bottom:.4rem}
+.wn-1 .wn-tag{color:var(--teal)}
+.wn-2 .wn-tag{color:var(--blue)}
+.wn-3 .wn-tag{color:var(--purple)}
+.wn-title{font-family:var(--font-body);font-size:.95rem;font-weight:700;color:var(--text);margin-bottom:.4rem;line-height:1.4}
+.wn-en{font-family:var(--font-display);font-size:.78rem;font-style:italic;color:var(--text-muted);margin-bottom:.6rem;line-height:1.3}
+.wn-desc{font-size:.83rem;color:var(--text-dim);line-height:1.6}
+.wn-cite{font-family:var(--font-mono);font-size:.58rem;color:var(--gold);margin-top:.55rem;letter-spacing:.05em;line-height:1.5}
+
+/* CONVERGENCE VENN */
+.venn-wrap{display:grid;grid-template-columns:1.1fr .9fr;gap:2rem;max-width:920px;align-items:center;margin:2.5rem 0}
+.venn-svg{width:100%}
+.venn-text{font-size:.92rem;color:var(--text-dim);line-height:1.75}
+.venn-text strong{color:var(--text)}
+.venn-text .ld{color:var(--gold);font-weight:600}
+
+/* CASE FILE */
+.case-file{background:var(--surface-2);border:1px solid var(--border);border-radius:8px;overflow:hidden;margin:2rem 0;max-width:880px;box-shadow:0 14px 50px rgba(0,0,0,.35)}
+.case-file-header{background:linear-gradient(90deg,var(--surface-3),var(--surface-2));padding:.85rem 1.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.case-file-title{font-family:var(--font-mono);font-size:.7rem;letter-spacing:.12em;color:var(--gold);font-weight:500;display:flex;align-items:center;gap:.6rem}
+.case-file-title::before{content:'■';color:var(--red);font-size:.6rem}
+.case-stamp{font-family:var(--font-body);font-size:.65rem;color:var(--red);border:1px solid var(--red);padding:.15rem .55rem;font-weight:600;letter-spacing:.08em;transform:rotate(-2deg);text-transform:uppercase}
+.case-body{display:grid;grid-template-columns:1fr 1fr}
+.case-col{padding:1.5rem}
+.case-col:first-child{border-right:1px solid var(--border);background:rgba(224,72,88,.03)}
+.case-col-label{font-family:var(--font-body);font-size:.7rem;font-weight:700;letter-spacing:.08em;margin-bottom:.85rem;display:flex;align-items:center;gap:.5rem}
+.case-col-label.hl{color:var(--red)}
+.case-col-label.vl{color:var(--teal)}
+.case-item{display:flex;align-items:flex-start;gap:.55rem;margin-bottom:.45rem;font-size:.88rem;color:var(--text-dim);line-height:1.55}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--text-muted);margin-top:.55rem;flex-shrink:0}
+.dot.r{background:var(--red)}.dot.t{background:var(--teal)}
+.case-goal{padding:1.1rem 1.5rem;background:linear-gradient(95deg,var(--gold-dim),rgba(229,185,74,.04));border-top:1px solid rgba(229,185,74,.22)}
+.case-goal-label{font-family:var(--font-body);font-size:.7rem;font-weight:700;letter-spacing:.08em;color:var(--gold);margin-bottom:.7rem;display:flex;align-items:center;gap:.4rem}
+.case-goal-label::before{content:'▶'}
+.case-goal ol{counter-reset:gi;list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:.4rem}
+.case-goal li{font-size:.85rem;color:var(--text-dim);display:flex;gap:.55rem;align-items:flex-start;counter-increment:gi;line-height:1.45}
+.case-goal li::before{content:counter(gi);background:var(--gold);color:var(--bg);font-family:var(--font-mono);font-size:.6rem;font-weight:700;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:3px}
+
+/* 4 CAPABILITIES */
+.cap-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:2rem 0;max-width:880px}
+.cap{padding:1.5rem;border:1px solid var(--border);border-radius:8px;position:relative;overflow:hidden;transition:transform .25s,box-shadow .25s}
+.cap:hover{transform:translateY(-3px);box-shadow:0 14px 40px rgba(0,0,0,.4)}
+.cap::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.cap-read{background:linear-gradient(160deg,var(--blue-dim),transparent);border-color:rgba(85,136,224,.22)}.cap-read::before{background:var(--blue)}
+.cap-reveal{background:linear-gradient(160deg,var(--teal-dim),transparent);border-color:rgba(60,196,187,.22)}.cap-reveal::before{background:var(--teal)}
+.cap-reconcile{background:linear-gradient(160deg,var(--gold-dim),transparent);border-color:rgba(229,185,74,.22)}.cap-reconcile::before{background:var(--gold)}
+.cap-debunk{background:linear-gradient(160deg,var(--red-dim),transparent);border-color:rgba(224,72,88,.22)}.cap-debunk::before{background:var(--red)}
+.cap-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.7rem}
+.cap-titles{display:flex;flex-direction:column;gap:.05rem}
+.cap-verb{font-family:var(--font-body);font-size:1.6rem;font-weight:700;line-height:1.05;letter-spacing:-.005em}
+.cap-read .cap-verb{color:var(--blue)}.cap-reveal .cap-verb{color:var(--teal)}.cap-reconcile .cap-verb{color:var(--gold)}.cap-debunk .cap-verb{color:var(--red)}
+.cap-en{font-family:var(--font-display);font-size:1rem;font-style:italic;opacity:.55;line-height:1}
+.cap-glyph{width:38px;height:38px;display:flex;align-items:center;justify-content:center;border-radius:50%;border:1px solid currentColor;opacity:.55}
+.cap-read .cap-glyph{color:var(--blue)}.cap-reveal .cap-glyph{color:var(--teal)}.cap-reconcile .cap-glyph{color:var(--gold)}.cap-debunk .cap-glyph{color:var(--red)}
+.cap-tag{font-family:var(--font-body);font-size:.7rem;font-weight:600;color:var(--text-muted);margin-bottom:.65rem;letter-spacing:.02em}
+.cap-desc{font-size:.86rem;color:var(--text-dim);line-height:1.65;margin-bottom:.75rem}
+.cap-example{background:rgba(0,0,0,.25);border-radius:4px;padding:.6rem .8rem;font-size:.8rem;color:var(--text-dim);line-height:1.55;border-left:2px solid currentColor;opacity:.92}
+.cap-read .cap-example{border-left-color:var(--blue)}.cap-reveal .cap-example{border-left-color:var(--teal)}.cap-reconcile .cap-example{border-left-color:var(--gold)}.cap-debunk .cap-example{border-left-color:var(--red)}
+.cap-example-label{font-family:var(--font-body);font-size:.65rem;font-weight:700;color:var(--text-muted);display:block;margin-bottom:.25rem;letter-spacing:.05em}
+
+/* HYPOTHESIS LIST */
+.hlist{background:var(--surface-2);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin:1.8rem 0;max-width:640px;position:relative}
+.hlist::before{content:'';position:absolute;top:0;left:0;bottom:0;width:3px;background:linear-gradient(to bottom,var(--gold),transparent)}
+.hlist-head{font-family:var(--font-body);font-size:.7rem;font-weight:700;letter-spacing:.06em;color:var(--text-muted);margin-bottom:1rem;padding-bottom:.55rem;border-bottom:1px solid var(--border)}
+.hitem{display:flex;gap:1rem;padding:.6rem 0;border-bottom:1px solid var(--border);align-items:flex-start;transition:background .2s;border-radius:4px;padding-left:.3rem}
+.hitem:last-child{border-bottom:none}
+.hitem:hover{background:var(--gold-dim)}
+.hlabel{font-family:var(--font-mono);font-size:.78rem;color:var(--gold);font-weight:600;flex-shrink:0;padding-top:.08rem;min-width:24px}
+.htext{font-size:.9rem;color:var(--text-dim);line-height:1.55}
+
+/* CALLOUT */
+.callout{border:1px solid var(--border);border-left:4px solid;padding:1.3rem 1.6rem;border-radius:0 8px 8px 0;margin:1.8rem 0;max-width:720px;position:relative}
+.callout-gold{border-left-color:var(--gold);background:linear-gradient(95deg,var(--gold-dim),transparent)}
+.callout-teal{border-left-color:var(--teal);background:linear-gradient(95deg,var(--teal-dim),transparent)}
+.callout-red{border-left-color:var(--red);background:linear-gradient(95deg,var(--red-dim),transparent)}
+.callout-title{font-family:var(--font-body);font-size:.7rem;font-weight:700;letter-spacing:.08em;margin-bottom:.5rem;text-transform:uppercase}
+.callout-gold .callout-title{color:var(--gold)}.callout-teal .callout-title{color:var(--teal)}.callout-red .callout-title{color:var(--red)}
+.callout p{font-size:.92rem;color:var(--text-dim);max-width:none;margin:0;line-height:1.75}
+.callout p strong{color:var(--text)}
+
+/* ACTION SPACE */
+.action-head{display:grid;grid-template-columns:2fr 3fr 140px 2fr;gap:1rem;padding:.55rem 1.3rem;font-family:var(--font-body);font-size:.65rem;font-weight:700;color:var(--text-muted);letter-spacing:.06em;text-transform:uppercase}
+.action-list{display:flex;flex-direction:column;gap:.55rem;margin:0 0 1.8rem;max-width:880px}
+.acard{display:grid;grid-template-columns:2fr 3fr 140px 2fr;gap:1rem;align-items:center;padding:1rem 1.3rem;border:1px solid var(--border);border-radius:6px;background:var(--surface-2);transition:background .2s,border-color .2s}
+.acard:hover{border-color:var(--border-bright)}
+.acard.costly{background:linear-gradient(95deg,rgba(229,185,74,.05),var(--surface-2));border-color:rgba(229,185,74,.2)}
+.aname{font-family:var(--font-mono);font-size:.82rem;font-weight:500;color:var(--gold)}
+.aname.free{color:var(--text-dim)}
+.aname-zh{display:block;font-family:var(--font-body);font-size:.7rem;font-weight:500;color:var(--text-muted);margin-top:.15rem;letter-spacing:.02em}
+.arole{font-size:.88rem;color:var(--text-dim);line-height:1.55}
+.acost{text-align:center}
+.badge{display:inline-block;background:var(--red);color:#fff;font-family:var(--font-body);font-size:.65rem;font-weight:600;padding:.25rem .55rem;border-radius:3px;white-space:nowrap;letter-spacing:.02em}
+.badge.free{background:var(--text-muted)}
+.areturn{font-size:.83rem;color:var(--text-muted);line-height:1.5}
+.areturn .hl{color:var(--teal);font-family:var(--font-mono);font-size:.76rem;font-weight:500}
+
+/* CONSTRAINTS */
+.con-pair{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin:2rem 0;max-width:880px}
+.con{background:var(--surface-2);border:1px solid var(--border);border-radius:8px;padding:1.5rem;position:relative;overflow:hidden}
+.con::after{content:'';position:absolute;top:0;left:0;width:60px;height:60px;background:radial-gradient(circle at top left,var(--gold-dim),transparent 70%);opacity:.7}
+.con-num{font-family:var(--font-body);font-size:.68rem;font-weight:700;color:var(--gold);margin-bottom:.4rem;letter-spacing:.05em;position:relative;z-index:1}
+.con-title{font-family:var(--font-body);font-size:1.1rem;font-weight:700;color:var(--text);margin-bottom:.5rem;position:relative;z-index:1}
+.con-title-en{font-family:var(--font-display);font-size:.85rem;font-style:italic;color:var(--text-muted);font-weight:400;display:block;margin-top:.1rem}
+.con-desc{font-size:.88rem;color:var(--text-dim);line-height:1.7;position:relative;z-index:1}
+
+/* INVESTIGATION LOOP SVG */
+.loop-wrap{display:flex;justify-content:center;margin:2rem 0;max-width:880px}
+.loop-svg{width:100%;max-width:760px}
+
+/* METRICS */
+.met-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.1rem;margin:2.2rem 0;max-width:880px}
+.met{background:var(--surface-2);border:1px solid var(--border);border-radius:8px;padding:1.5rem;position:relative;overflow:hidden;transition:transform .25s}
+.met:hover{transform:translateY(-3px)}
+.met::before{content:'';position:absolute;top:0;right:0;width:60px;height:60px;background:radial-gradient(circle at top right,currentColor,transparent 70%);opacity:.12}
+.met-label{font-family:var(--font-mono);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:.4rem}
+.met-name{font-family:var(--font-body);font-size:1.25rem;font-weight:700;margin-bottom:.2rem}
+.met-en{font-family:var(--font-display);font-size:.95rem;font-style:italic;margin-bottom:.65rem;opacity:.7;font-weight:400}
+.m1{color:var(--blue)}.m1 .met-name{color:var(--blue)}.m1 .met-en{color:var(--blue)}
+.m2{color:var(--teal)}.m2 .met-name{color:var(--teal)}.m2 .met-en{color:var(--teal)}
+.m3{color:var(--gold)}.m3 .met-name{color:var(--gold)}.m3 .met-en{color:var(--gold)}
+.m4{color:var(--purple)}.m4 .met-name{color:var(--purple)}.m4 .met-en{color:var(--purple)}
+.met-desc{font-size:.88rem;color:var(--text-dim);line-height:1.7;margin-bottom:.85rem}
+.met-tags{display:flex;flex-wrap:wrap;gap:.4rem}
+.mtag{font-family:var(--font-mono);font-size:.62rem;color:var(--text-muted);background:var(--surface-3);border:1px solid var(--border);padding:.18rem .42rem;border-radius:3px}
+
+/* EXPERIMENTS */
+.exp-list{display:flex;flex-direction:column;gap:1.3rem;margin:2.2rem 0;max-width:880px}
+.exp{display:grid;grid-template-columns:80px 1fr;gap:1.5rem;padding:1.5rem;background:var(--surface-2);border:1px solid var(--border);border-radius:8px;transition:transform .25s,border-color .25s}
+.exp:hover{transform:translateX(4px);border-color:var(--gold-mid)}
+.exp-side{text-align:center;border-right:1px solid var(--border);padding-right:1rem}
+.exp-letter{font-family:var(--font-display);font-size:3.4rem;font-weight:700;color:var(--gold);line-height:1;display:block;font-style:italic}
+.exp-stag{font-family:var(--font-body);font-size:.65rem;font-weight:600;color:var(--text-muted);letter-spacing:.06em;text-transform:uppercase;display:block;margin-top:.25rem}
+.exp-title{font-family:var(--font-body);font-size:1.15rem;font-weight:700;color:var(--text);margin-bottom:.45rem}
+.exp-desc{font-size:.88rem;color:var(--text-dim);line-height:1.7;margin-bottom:.7rem}
+.exp-punch{font-size:.88rem;color:var(--teal);border-left:2px solid var(--teal);padding-left:.85rem;line-height:1.65;font-weight:500}
+.exp-punch::before{content:'预期：';color:var(--text-muted);font-weight:400;font-size:.78rem}
+
+/* PARETO PREVIEW */
+.pareto-wrap{margin:2rem 0;max-width:780px;background:var(--surface-2);border:1px solid var(--border);border-radius:8px;padding:1.5rem}
+.pareto-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:1rem;flex-wrap:wrap;gap:.5rem}
+.pareto-title{font-family:var(--font-body);font-size:.85rem;font-weight:700;color:var(--text);letter-spacing:.02em}
+.pareto-cap{font-family:var(--font-mono);font-size:.6rem;color:var(--text-muted);letter-spacing:.1em;text-transform:uppercase}
+.pareto-svg{width:100%;max-width:700px}
+.pareto-legend{display:flex;gap:1.2rem;margin-top:.8rem;flex-wrap:wrap;font-family:var(--font-mono);font-size:.65rem;color:var(--text-dim)}
+.lg{display:flex;align-items:center;gap:.4rem}
+.lg-mark{width:18px;height:2px;border-radius:1px}
+
+/* FIGURE 1 - SIMPSON TRAP */
+.fig1{margin:2rem 0;max-width:920px;background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:1.5rem;box-shadow:0 16px 60px rgba(0,0,0,.4)}
+.fig1-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:.8rem;flex-wrap:wrap;gap:.5rem}
+.fig1-title{font-family:var(--font-body);font-size:1rem;font-weight:700;color:var(--gold);letter-spacing:.02em}
+.fig1-sub{font-family:var(--font-mono);font-size:.6rem;color:var(--text-muted);letter-spacing:.12em;text-transform:uppercase}
+.fig1-svg{width:100%}
+.fig1-narr{display:grid;grid-template-columns:repeat(4,1fr);gap:.75rem;margin-top:1rem;font-size:.74rem;color:var(--text-dim);line-height:1.55}
+.fig1-narr div{padding:.55rem .75rem;border-radius:4px;background:rgba(0,0,0,.22)}
+.fig1-narr div:nth-child(1){border-left:2px solid var(--blue)}
+.fig1-narr div:nth-child(2){border-left:2px solid var(--teal)}
+.fig1-narr div:nth-child(3){border-left:2px solid var(--gold)}
+.fig1-narr div:nth-child(4){border-left:2px solid var(--red)}
+.fig1-narr strong{font-weight:700}
+.fig1-verdict{margin-top:1.1rem;padding:1rem 1.2rem;background:linear-gradient(95deg,var(--gold-dim),rgba(60,196,187,.06));border:1px solid rgba(229,185,74,.4);border-radius:6px;border-left:4px solid var(--gold);font-size:.92rem;color:var(--text);line-height:1.72}
+.fig1-verdict strong{color:var(--gold)}
+.fig1-verdict em{color:var(--teal);font-style:italic;font-weight:500}
+
+/* COMPARISON TABLE */
+.comp-wrap{overflow-x:auto;margin:2.2rem 0;border-radius:8px;border:1px solid var(--border)}
+.comp-table{width:100%;border-collapse:collapse;font-size:.85rem;min-width:780px}
+.comp-table th{font-family:var(--font-body);font-size:.7rem;font-weight:700;color:var(--text-muted);padding:.85rem 1rem;text-align:left;border-bottom:1px solid var(--border);white-space:nowrap;background:var(--surface-3);letter-spacing:.04em}
+.comp-table th.ldw{color:var(--gold);background:linear-gradient(180deg,var(--gold-dim),var(--surface-3))}
+.comp-table td{padding:.85rem 1rem;border-bottom:1px solid var(--border);color:var(--text-dim);vertical-align:top;line-height:1.55}
+.comp-table td.ldw{background:rgba(229,185,74,.07);color:var(--text);font-weight:500}
+.comp-table tr:last-child td{border-bottom:none}
+.comp-table tr:hover td{background:rgba(255,255,255,.015)}
+.comp-table tr:hover td.ldw{background:rgba(229,185,74,.1)}
+.comp-table td:first-child{font-family:var(--font-body);font-size:.78rem;font-weight:600;color:var(--text);white-space:nowrap;background:var(--surface)}
+.chk{color:var(--teal);font-size:1.05rem;font-weight:700}.crs{color:var(--red);opacity:.55}
+
+/* IMPACT */
+.imp-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.1rem;margin:2.2rem 0;max-width:920px}
+.imp{background:var(--surface-2);border:1px solid var(--border);border-radius:8px;padding:1.4rem;position:relative;overflow:hidden;transition:transform .25s}
+.imp:hover{transform:translateY(-3px)}
+.imp-layer{position:absolute;top:.7rem;right:.9rem;font-family:var(--font-display);font-size:2.4rem;font-style:italic;font-weight:700;color:var(--gold);opacity:.15;line-height:1}
+.imp-num{font-family:var(--font-body);font-size:.7rem;font-weight:700;color:var(--gold);margin-bottom:.5rem;letter-spacing:.05em}
+.imp-title{font-family:var(--font-body);font-size:1.05rem;font-weight:700;color:var(--text);margin-bottom:.5rem}
+.imp-desc{font-size:.85rem;color:var(--text-dim);line-height:1.7}
+
+/* CITATION TABLE */
+.cite-table{width:100%;border-collapse:collapse;max-width:780px;font-size:.86rem;margin:1.8rem 0;border:1px solid var(--border);border-radius:8px;overflow:hidden}
+.cite-table th{font-family:var(--font-body);font-size:.7rem;font-weight:700;color:var(--text-muted);padding:.65rem .9rem;text-align:left;border-bottom:1px solid var(--border);letter-spacing:.05em;background:var(--surface-3)}
+.cite-table td{padding:.65rem .9rem;color:var(--text-dim);border-bottom:1px solid var(--border);vertical-align:top;line-height:1.65}
+.cite-table tr:last-child td{border-bottom:none}
+.cite-table td:first-child{color:var(--gold);font-weight:600;white-space:nowrap;font-size:.82rem;background:rgba(229,185,74,.04)}
+
+/* TITLE/CLOSING */
+.rec-title{background:linear-gradient(135deg,var(--gold-dim),rgba(229,185,74,.04));border:1px solid rgba(229,185,74,.28);border-radius:10px;padding:2rem;margin:1.8rem 0;max-width:820px;position:relative;overflow:hidden}
+.rec-title::before{content:'★';position:absolute;top:1rem;right:1.4rem;font-size:3rem;color:var(--gold);opacity:.15;line-height:1}
+.rec-label{font-family:var(--font-body);font-size:.7rem;font-weight:700;color:var(--gold);margin-bottom:.75rem;letter-spacing:.06em}
+.rec-title h3{font-family:var(--font-body);font-size:1.45rem;font-weight:700;color:var(--text);line-height:1.45;margin-bottom:.5rem}
+.rec-title h3 .en{font-family:var(--font-display);font-style:italic;color:var(--teal-bright);font-weight:600;display:block;font-size:1.2rem;margin-top:.3rem;letter-spacing:.005em}
+.alt-list{list-style:none;margin:1.2rem 0;max-width:760px}
+.alt-list li{padding:.6rem 0;border-bottom:1px solid var(--border);color:var(--text-dim);font-size:.92rem;line-height:1.55;display:flex;align-items:flex-start;gap:.8rem}
+.alt-list li::before{content:'→';color:var(--gold);font-family:var(--font-mono);flex-shrink:0;font-weight:600}
+.alt-en{display:block;font-family:var(--font-display);font-style:italic;color:var(--text-muted);font-size:.85rem;margin-top:.15rem}
+.closing-q{border:1px solid var(--border);border-radius:10px;padding:2.2rem 2.4rem;margin:2.2rem 0;max-width:820px;background:linear-gradient(135deg,var(--surface-2),var(--surface));position:relative;overflow:hidden}
+.closing-q::before{content:'"';position:absolute;top:-.5rem;left:1.6rem;font-family:var(--font-display);font-size:5.5rem;color:var(--gold);opacity:.3;line-height:1;font-style:italic}
+.closing-q::after{content:'';position:absolute;bottom:0;right:0;width:140px;height:140px;background:radial-gradient(circle at bottom right,var(--gold-dim),transparent 70%);opacity:.55}
+.closing-q p{font-family:var(--font-body);font-size:1.18rem;color:var(--text);line-height:1.7;margin:0;font-weight:500;position:relative;z-index:1}
+.closing-q p .en{display:block;font-family:var(--font-display);font-style:italic;font-size:.95rem;color:var(--text-dim);margin-top:.55rem;font-weight:400;line-height:1.55}
+.closing-meta{font-family:var(--font-mono);font-size:.6rem;color:var(--text-muted);margin-top:.5rem;letter-spacing:.06em;display:flex;gap:.7rem;flex-wrap:wrap}
+.closing-meta span::before{content:'·';color:var(--gold);margin-right:.4rem}
+
+/* REFS */
+.refs{list-style:none;max-width:780px}
+.refs li{font-size:.85rem;color:var(--text-dim);padding:.55rem 0;border-bottom:1px solid var(--border);display:grid;grid-template-columns:auto 1fr auto;gap:.8rem;align-items:baseline;line-height:1.5}
+.refs li::before{content:'•';color:var(--gold);font-size:1rem}
+.refs li .rtitle{color:var(--text)}
+.refs li .rmeta{font-family:var(--font-mono);font-size:.7rem;color:var(--text-muted);white-space:nowrap}
+.refs a{color:var(--teal);text-decoration:none}
+.refs a:hover{text-decoration:underline}
+
+/* BENCH STATS */
+.bstats{display:grid;grid-template-columns:repeat(3,1fr);gap:1.1rem;margin:1.8rem 0;max-width:720px}
+.bstat{background:var(--surface-2);border:1px solid var(--border);border-radius:8px;padding:1.2rem;text-align:center;position:relative;overflow:hidden}
+.bstat::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--red)}
+.bstat-src{font-family:var(--font-mono);font-size:.6rem;color:var(--text-muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.45rem}
+.bstat-val{font-family:var(--font-display);font-size:1.7rem;font-weight:700;color:var(--red);margin-bottom:.35rem;font-style:italic;line-height:1}
+.bstat-desc{font-size:.8rem;color:var(--text-dim);line-height:1.55}
+
+/* REVEAL */
+.reveal{opacity:0;transform:translateY(20px);transition:opacity .7s ease,transform .7s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
+
+/* RESPONSIVE */
+@media(max-width:1100px){nav{display:none}main{margin-left:0}section{padding:4rem 2.5rem}#hero{padding:4rem 2.5rem}.scroll-hint{left:2.5rem}.venn-wrap{grid-template-columns:1fr}.hero-marks{display:none}}
+@media(max-width:700px){.cap-grid,.met-grid,.con-pair,.bstats,.imp-grid,.why-now,.fig1-narr,.run-grid{grid-template-columns:1fr}.case-body{grid-template-columns:1fr}.action-head,.acard{grid-template-columns:1fr 1fr}.acost,.areturn{grid-column:1/-1}.exp{grid-template-columns:1fr}.exp-side{border-right:none;border-bottom:1px solid var(--border);padding-right:0;padding-bottom:.8rem;display:flex;align-items:baseline;gap:1rem;justify-content:flex-start}.exp-letter{font-size:2.2rem}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-mark">
+    <div class="nav-mark-glyph">L</div>
+    <div class="nav-brand">LDW · 研究提案</div>
+  </div>
+  <div class="nav-title">潜在数据世界<span class="nav-title-en">Latent Data World</span></div>
+  <ul>
+    <li><a href="#thesis"><span class="nav-num">§1</span> 核心论点</a></li>
+    <li><a href="#motivation"><span class="nav-num">§2</span> 研究动机</a></li>
+    <li><a href="#whynow"><span class="nav-num">§2.5</span> 为什么是 2026</a></li>
+    <li><a href="#protocol"><span class="nav-num">§3</span> LDW 协议</a></li>
+    <li><a href="#actions"><span class="nav-num">§4</span> 动作空间</a></li>
+    <li><a href="#metrics"><span class="nav-num">§5</span> 评估指标</a></li>
+    <li><a href="#experiments"><span class="nav-num">§6</span> 核心实验</a></li>
+    <li><a href="#diff"><span class="nav-num">§7</span> 差异化对比</a></li>
+    <li><a href="#impact"><span class="nav-num">§8</span> 长远影响</a></li>
+    <li><a href="#title"><span class="nav-num">§9</span> 标题与结语</a></li>
+    <li><a href="#refs"><span class="nav-num">附</span> 参考文献</a></li>
+  </ul>
+  <div class="nav-foot">v1 · 2026.05<br>chartAgent / VAGEN</div>
+</nav>
+
+<main>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-marks">
+    <span>Research Proposal</span><span>Best-Paper Draft</span><span>2026.05</span>
+  </div>
+  <div class="hero-tag">Active Visual Investigation · Agentic Chart Understanding · 2026</div>
+  <h1 class="hero-title"><strong>潜在数据世界</strong></h1>
+  <div class="hero-en">Latent Data World — Evaluating VLM Agents as Visual Data Investigators</div>
+  <blockquote class="hero-quote">
+    <p>图表是线索。任务是调查。目标是潜在的数据世界。</p>
+    <div class="hero-quote-en">Charts are clues. The task is investigation. The target is the latent data world.</div>
+  </blockquote>
+  <div class="hero-meta">
+    <div class="hero-meta-item"><strong>协议</strong>仅视觉 · 有预算 · 主动调查</div>
+    <div class="hero-meta-item"><strong>四种能力</strong>读取 · 揭示 · 协调 · 驳斥</div>
+    <div class="hero-meta-item"><strong>核心指标</strong>模式恢复 + 潜在问答 + 解释解析 + 证据效率</div>
+  </div>
+  <div class="scroll-hint"><div class="scroll-line"></div>向下滚动 · 进入调查</div>
+</section>
+
+<!-- §1 核心论点 -->
+<section id="thesis" data-num="01">
+  <div class="section-tag"><span class="section-num">1</span> 核心论点 / Thesis</div>
+  <h2 class="section-title">超越图表<em>读取</em></h2>
+  <p class="section-lead">一个真正有能力的图表智能体，不应该仅仅回答给定图表中的问题。</p>
+
+  <p class="body">它应该<strong>知道什么时候给出的图表信息不够充分</strong>，主动索要正确的视觉证据，并从中还原出隐藏在图表背后的潜在数据世界。</p>
+
+  <p class="body">我们提出 <strong>潜在数据世界（Latent Data World，LDW）</strong>——一种仅依赖视觉、有预算约束的主动图表调查协议。每个任务从一张由隐藏主表生成的不完整仪表板开始；智能体在视图预算内请求新的图表视图，在数据点预算内检查局部证据，最终提交一份包含恢复的数据模式、接受/拒绝的假设解释、问题答案和带边界框的证据追踪的报告。</p>
+
+  <div class="figure reveal">
+    <svg class="tier-svg" viewBox="0 0 760 380" xmlns="http://www.w3.org/2000/svg" aria-label="三层重新定义">
+      <defs>
+        <linearGradient id="grayG" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#1c1c30"/><stop offset="1" stop-color="#161624"/></linearGradient>
+        <linearGradient id="tealG" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="rgba(60,196,187,.22)"/><stop offset="1" stop-color="rgba(60,196,187,.06)"/></linearGradient>
+        <linearGradient id="goldG" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="rgba(229,185,74,.28)"/><stop offset="1" stop-color="rgba(229,185,74,.08)"/></linearGradient>
+      </defs>
+      <!-- Tier 1: Reading -->
+      <g transform="translate(40,290)">
+        <rect width="600" height="70" rx="4" fill="url(#grayG)" stroke="#3a3a5c" stroke-width="1"/>
+        <rect width="4" height="70" fill="#54546e"/>
+        <text x="22" y="28" font-family="Noto Serif SC,serif" font-size="14" font-weight="700" fill="#9091a8">读取（Reading）</text>
+        <text x="22" y="50" font-family="Noto Serif SC,serif" font-size="12" fill="#54546e">给定一张图表，读出答案——被动、单轮、无能动性</text>
+        <text x="540" y="28" font-family="JetBrains Mono,monospace" font-size="9" fill="#54546e" letter-spacing="1">现有基准</text>
+      </g>
+      <!-- Arrow 1 -->
+      <g transform="translate(360,260)">
+        <line x1="0" y1="0" x2="0" y2="22" stroke="#3a3a5c" stroke-width="1" stroke-dasharray="2 2"/>
+        <polygon points="0,0 -4,8 4,8" fill="#3a3a5c"/>
+        <text x="14" y="14" font-family="Noto Serif SC,serif" font-size="10" fill="#54546e">缺失</text>
+      </g>
+      <!-- Tier 2: Investigation -->
+      <g transform="translate(80,160)">
+        <rect width="600" height="70" rx="4" fill="url(#tealG)" stroke="rgba(60,196,187,.4)" stroke-width="1"/>
+        <rect width="4" height="70" fill="#3cc4bb"/>
+        <text x="22" y="28" font-family="Noto Serif SC,serif" font-size="14" font-weight="700" fill="#3cc4bb">调查（Investigation）</text>
+        <text x="22" y="50" font-family="Noto Serif SC,serif" font-size="12" fill="#9091a8">面对不完整视图，决定下一步该看什么——主动、有预算、多步推理</text>
+      </g>
+      <!-- Arrow 2 -->
+      <g transform="translate(380,130)">
+        <line x1="0" y1="0" x2="0" y2="22" stroke="#e5b94a" stroke-width="1.5"/>
+        <polygon points="0,0 -4,8 4,8" fill="#e5b94a"/>
+      </g>
+      <!-- Tier 3: World Recovery -->
+      <g transform="translate(120,30)">
+        <rect width="600" height="70" rx="4" fill="url(#goldG)" stroke="rgba(229,185,74,.5)" stroke-width="1.5"/>
+        <rect width="4" height="70" fill="#e5b94a"/>
+        <text x="22" y="28" font-family="Noto Serif SC,serif" font-size="14" font-weight="700" fill="#e5b94a">世界恢复（World Recovery）</text>
+        <text x="22" y="50" font-family="Noto Serif SC,serif" font-size="12" fill="#e8e3d4">重建这些图表背后隐藏的数据模式、变量关系和充分统计量</text>
+        <g transform="translate(545,15)">
+          <rect x="-3" y="-3" width="46" height="22" fill="#e5b94a" rx="2"/>
+          <text x="20" y="11" font-family="Noto Serif SC,serif" font-size="10" font-weight="700" fill="#06060c" text-anchor="middle">LDW 目标</text>
+        </g>
+        <text x="20" y="-8" font-family="Cormorant Garamond,serif" font-size="18" font-style="italic" fill="#e5b94a">★</text>
+      </g>
+    </svg>
+    <div class="fig-cap"><strong>图 1·</strong>三层重新定义 — 从"图表读取"到"潜在世界恢复"的能力阶梯</div>
+  </div>
+</section>
+
+<!-- §2 研究动机 -->
+<section id="motivation" data-num="02">
+  <div class="section-tag"><span class="section-num">2</span> 研究动机 / Motivation</div>
+  <h2 class="section-title">图表是线索，<em>不是答案</em></h2>
+
+  <!-- RUNNING EXAMPLE — anchor case threaded through §3 capabilities, §4 actions, §5 metrics, and §6 Figure 1 -->
+  <div class="running-ex reveal">
+    <div class="run-stamp">Running Example · 全文贯穿案例</div>
+    <div class="run-title">"18 分钟外卖奇迹"</div>
+    <div class="run-title-en">The 18-Minute Delivery Miracle · A visual investigation</div>
+    <p class="run-setup"><strong>一家城市外卖平台 <strong>SwiftEats</strong> 在周一发布新一代 AI 调度算法。</strong>当天的路演仪表盘首页只有一张极其醒目的柱状图：旧算法红色 <strong>31&nbsp;分钟</strong>，新算法绿色 <strong>18&nbsp;分钟</strong>，配着一句标语：<em>"AI makes every delivery faster."</em><br>
+    可同一周，一名财经记者注意到一组矛盾的数据：<strong>送达时间下降了，可用户投诉、取消订单、退款却同时上升。</strong>她把这张漂亮的仪表盘扔给一个只能通过<strong>视觉接口</strong>审阅数据的智能体：<em>"告诉我——这 18 分钟，是真的变快了，还是仪表盘制造出来的幻觉？"</em></p>
+    <div class="run-clues">
+      <div class="run-clues-head"><span class="star">★</span> 初看仪表板 · 三处让人不安的细节</div>
+      <div class="run-clue">
+        <span class="clue-mark">!</span>
+        <div class="clue-body"><strong>"18 分钟"是从什么时候开始算的？</strong>是用户点下"下单"那一刻，还是骑手取到餐之后才开始计时？这条边界在哪里，决定了它是不是真的提升。</div>
+      </div>
+      <div class="run-clue">
+        <span class="clue-mark">!</span>
+        <div class="clue-body"><strong>"被服务的城市"还和过去一样吗？</strong>柱状图只给出一个城市级均值，看不到不同区域的接单率、放弃率——平台完全可能只把困难订单悄悄推开了。</div>
+      </div>
+      <div class="run-clue">
+        <span class="clue-mark">!</span>
+        <div class="clue-body"><strong>分母里到底有没有失败订单？</strong>一根均值柱子盖住了取消、超时、无人接单的订单——任何一类被剔除，"+18 分钟"都会被自动美化。</div>
+      </div>
+    </div>
+    <div class="suspects">
+      <div class="suspects-head">
+        <span class="star">★</span> 嫌疑名单 · 四个候选解释 — 哪一个（或哪几个）真正解释了 "31 min → 18 min"？
+      </div>
+      <div class="suspect-row">
+        <div class="suspect-id">h₁</div>
+        <div class="suspect-name">"真正提速"</div>
+        <div class="suspect-desc">新算法<strong>确实让配送路径更短</strong>，对所有区域、所有订单都更快</div>
+        <div class="suspect-status status-alive">未确认</div>
+      </div>
+      <div class="suspect-row">
+        <div class="suspect-id">h₂</div>
+        <div class="suspect-name">"区域挑选"</div>
+        <div class="suspect-desc">平台<strong>停止服务远距离、低密度区域</strong>，只对剩下的城区送餐，均值自然变好</div>
+        <div class="suspect-status status-alive">未确认</div>
+      </div>
+      <div class="suspect-row">
+        <div class="suspect-id">h₃</div>
+        <div class="suspect-name">"分母清洗"</div>
+        <div class="suspect-desc"><strong>"18 分钟"只统计成功送达订单</strong>——取消、超时、无人接单的订单从分母中消失</div>
+        <div class="suspect-status status-alive">未确认</div>
+      </div>
+      <div class="suspect-row">
+        <div class="suspect-id">h₄</div>
+        <div class="suspect-name">"指标边界转移"</div>
+        <div class="suspect-desc">"18 分钟"只覆盖<strong>骑手取餐到送达</strong>这一段，下单→接单、备餐等待被悄悄移出了边界</div>
+        <div class="suspect-status status-alive">未确认</div>
+      </div>
+    </div>
+    <p class="run-tease"><em>隐藏的主表 <strong>M</strong> 知道真相；初始仪表板不知道。</em> 接下来三节，agent 每烧一个视图预算就拉出一张新视图，嫌疑名单的状态就更新一次——<strong>§3</strong> 读清头条 claim 的精确定义，<strong>§4</strong> 请求缺失的区域维度，<strong>§5</strong> 用第三张视图协调矛盾，<strong>§6 Figure 1</strong> 在全请求口径下做最后一击。读者跟着 agent 一起破案。</p>
+  </div>
+
+  <div class="pull-quote reveal">
+    <p>最危险的图表问题，不是模型无法回答的那个，而是它从一个本质上不充分的视图中自信地给出错误答案的那个。</p>
+    <span class="en">The most dangerous chart question is not the one a model cannot answer. It is the one it answers confidently from an intrinsically insufficient view.</span>
+  </div>
+
+  <p class="body">真实的分析师、临床医生、审计员和经济学家，从不把仪表板当作推理的终点。他们把图表当作<strong>线索</strong>：隐藏数据世界的有损投影。当一个投影有歧义时，他们会索要另一个。当两个视图看起来不一致时，他们会获取第三个来加以协调。当一个边际趋势看起来很显著时，他们会进行分层分析，看看这个趋势是否依然成立。</p>
+
+  <p class="body"><strong>现有基准测试移除了这个调查循环。</strong>所有现有的图表理解基准测试都共享一个隐含假设：<em>模型必须从给定的视图中作答。</em></p>
+
+  <div class="bstats reveal">
+    <div class="bstat">
+      <div class="bstat-src">ChartMuseum</div>
+      <div class="bstat-val">−30 分</div>
+      <div class="bstat-desc">顶尖 VLM 在真实视觉推理上比人类落后 30+ 分（人类 93% vs. Gemini-2.5-Pro 63%）</div>
+    </div>
+    <div class="bstat">
+      <div class="bstat-src">InterChart</div>
+      <div class="bstat-val">急剧 ↓</div>
+      <div class="bstat-desc">信息分散在 2–3 张相关图表中时，准确率急剧下降</div>
+    </div>
+    <div class="bstat">
+      <div class="bstat-src">ChartPoint</div>
+      <div class="bstat-val">失败</div>
+      <div class="bstat-desc">模型经常无法将推理过程落实到正确的图表元素上</div>
+    </div>
+  </div>
+
+  <p class="body">但这些研究都仍然在衡量模型<strong>读取证据的能力</strong>——而不是它是否知道缺少什么证据。这个区别非常重要，因为即使每张独立的图表都是正确的，仪表板也可能产生误导。分层分析后，边际趋势可能消失。两张图表看起来不一致，直到第三张揭示了一个隐藏的中介变量。<strong>一个立即作答的模型是流畅的——但它不是在调查。</strong></p>
+
+  <div class="callout callout-gold reveal">
+    <div class="callout-title">核心重构 / Key Recast</div>
+    <p>我们将图表理解重新定义为<strong>对潜在数据世界的主动视觉调查</strong>。关键问题不再是"模型能回答这个图表问题吗？"，而是<em>"模型能否决定它需要看什么才能得出答案？"</em></p>
+  </div>
+</section>
+
+<!-- §2.5 WHY NOW -->
+<section id="whynow" data-num="2.5">
+  <div class="section-tag"><span class="section-num">2.5</span> 为什么是 2026 / Why Now</div>
+  <h2 class="section-title">三股研究潮流，<em>同一个测试平台</em></h2>
+  <p class="section-lead">2026 上半年，三个原本平行的子领域第一次开始触及同一个问题：智能体如何决定看什么。LDW 处在它们的交集。</p>
+
+  <div class="why-now reveal">
+    <div class="wn wn-1">
+      <div class="wn-tag">主动感知 / Active Perception</div>
+      <div class="wn-title">VLM 应"主动看"，而非被动接收</div>
+      <div class="wn-en">VS-Bench · DriveAgent-R1 · GLANCE</div>
+      <div class="wn-desc">VS-Bench（CVPR 2026 Oral）拆分"感知 / 战略推理 / 决策"三个维度，发现 SOTA 模型在感知上接近饱和，但决策仅有 31.4% 归一化回报——<strong>感知已解决，行动尚未</strong>。</div>
+      <div class="wn-cite">VS-Bench arXiv:2506.02387 · CVPR'26 Oral</div>
+    </div>
+    <div class="wn wn-2">
+      <div class="wn-tag">部分可观测 / Partial Observability</div>
+      <div class="wn-title">在残缺视图下，决定"下一眼看哪里"</div>
+      <div class="wn-en">POMDP-Bench · Active Inference · GLANCE</div>
+      <div class="wn-desc">2026 上半年，多个工作把 VLM 智能体放进显式的"部分可观测"测试床：智能体看到的不是全景，必须<strong>在预算约束下选择下一次观测</strong>以最小化信念熵。LDW 把这一范式带入<em>视觉数据分析</em>——仪表板天然是潜在数据世界的有损投影。</div>
+      <div class="wn-cite">POMDP-Bench · GLANCE arXiv:2605.03782</div>
+    </div>
+    <div class="wn wn-3">
+      <div class="wn-tag">智能体基准 / Agentic Eval</div>
+      <div class="wn-title">基准从单轮 QA 转向多轮过程</div>
+      <div class="wn-en">BALROG · BenchLM · Agentic 2026</div>
+      <div class="wn-desc">2026 年的智能体评估浪潮（工具调用、浏览、计算机操作）共享一个洞见：<strong>过程比答案更能区分能力</strong>。LDW 把这套方法学带入图表理解领域——这里还没有这样的基准。</div>
+      <div class="wn-cite">BALROG · 2026 Agentic Bench survey</div>
+    </div>
+  </div>
+
+  <div class="venn-wrap reveal">
+    <svg class="venn-svg" viewBox="0 0 440 360" xmlns="http://www.w3.org/2000/svg" aria-label="2026 趋势汇聚">
+      <defs>
+        <radialGradient id="vt" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="rgba(60,196,187,.5)"/><stop offset="1" stop-color="rgba(60,196,187,0)"/></radialGradient>
+        <radialGradient id="vb" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="rgba(85,136,224,.5)"/><stop offset="1" stop-color="rgba(85,136,224,0)"/></radialGradient>
+        <radialGradient id="vp" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="rgba(155,112,216,.5)"/><stop offset="1" stop-color="rgba(155,112,216,0)"/></radialGradient>
+      </defs>
+      <!-- Three circles -->
+      <circle cx="160" cy="140" r="110" fill="url(#vt)" stroke="#3cc4bb" stroke-width="1.2" opacity=".85"/>
+      <circle cx="280" cy="140" r="110" fill="url(#vb)" stroke="#5588e0" stroke-width="1.2" opacity=".85"/>
+      <circle cx="220" cy="240" r="110" fill="url(#vp)" stroke="#9b70d8" stroke-width="1.2" opacity=".85"/>
+      <!-- Labels -->
+      <text x="85" y="80" font-family="Noto Serif SC,serif" font-size="13" font-weight="700" fill="#3cc4bb">主动感知</text>
+      <text x="85" y="96" font-family="Cormorant Garamond,serif" font-size="11" font-style="italic" fill="#3cc4bb" opacity=".7">Active Perception</text>
+      <text x="305" y="80" font-family="Noto Serif SC,serif" font-size="13" font-weight="700" fill="#5588e0">部分可观测</text>
+      <text x="305" y="96" font-family="Cormorant Garamond,serif" font-size="11" font-style="italic" fill="#5588e0" opacity=".7">Partial Observability</text>
+      <text x="155" y="335" font-family="Noto Serif SC,serif" font-size="13" font-weight="700" fill="#9b70d8">智能体过程评估</text>
+      <text x="155" y="351" font-family="Cormorant Garamond,serif" font-size="11" font-style="italic" fill="#9b70d8" opacity=".7">Agentic Process Eval</text>
+      <!-- LDW at center -->
+      <circle cx="220" cy="180" r="34" fill="#e5b94a" opacity=".18"/>
+      <circle cx="220" cy="180" r="22" fill="#e5b94a" stroke="#f4d068" stroke-width="1.5"/>
+      <text x="220" y="178" font-family="Noto Serif SC,serif" font-size="13" font-weight="900" fill="#06060c" text-anchor="middle">LDW</text>
+      <text x="220" y="192" font-family="JetBrains Mono,monospace" font-size="7" font-weight="600" fill="#06060c" text-anchor="middle">2026</text>
+      <text x="220" y="232" font-family="Cormorant Garamond,serif" font-size="10" font-style="italic" fill="#e5b94a" text-anchor="middle">Latent Data World</text>
+    </svg>
+    <div class="venn-text">
+      <p>LDW 不是任何单一潮流的延续，而是<span class="ld">三者在图表理解上的交集</span>：把"主动感知"的<strong>预算式视图请求</strong>、"部分可观测"的<strong>信念-观测耦合</strong>、"智能体评估"的<strong>过程-评分挂钩</strong>，全部带入一个 2026 年还没有人占据的领域。</p>
+      <p style="margin-top:1rem">这意味着 LDW 出现的时间窗口很窄——再晚一年，这三股潮流会各自给出自己的"图表智能体基准"，把空间填满。<strong>现在动手，定义这个评估范式。</strong></p>
+    </div>
+  </div>
+</section>
+
+<!-- §3 LDW 协议 -->
+<section id="protocol" data-num="03">
+  <div class="section-tag"><span class="section-num">3</span> LDW 协议 / Protocol</div>
+  <h2 class="section-title">每个任务单元都是一个<em>悬案</em></h2>
+
+  <h3 class="sub">3.1 任务单元 = 一个悬案</h3>
+  <p class="body">每个任务单元是一个由隐藏主表生成的独立案例文件。智能体被问的不是"X 是什么"，而是"<strong>哪个解释是真的，以及什么证据支持它</strong>"。</p>
+
+  <div class="case-file reveal">
+    <div class="case-file-header">
+      <div class="case-file-title">案例文件 · Case File — Episode Specification</div>
+      <div class="case-stamp">Active Investigation</div>
+    </div>
+    <div class="case-body">
+      <div class="case-col">
+        <div class="case-col-label hl">⬛ 对智能体隐藏</div>
+        <div class="case-item"><div class="dot r"></div><span>主表 <strong>M</strong> — Master Table</span></div>
+        <div class="case-item"><div class="dot r"></div><span>模式 <strong>S</strong>——列名、分布、相关性、正交性、依赖关系、实体对齐</span></div>
+      </div>
+      <div class="case-col">
+        <div class="case-col-label vl">◻ 智能体可见</div>
+        <div class="case-item"><div class="dot t"></div><span>初始仪表板 <strong>D₀</strong>——2–4 张不完整的图表线索</span></div>
+        <div class="case-item"><div class="dot t"></div><span>案例简介 — 高层次调查问题</span></div>
+        <div class="case-item"><div class="dot t"></div><span>候选解释 <strong>H = {h₁, h₂, h₃, h₄}</strong></span></div>
+        <div class="case-item"><div class="dot t"></div><span>问题集 <strong>Q</strong>，涵盖四种能力（§3.2）</span></div>
+        <div class="case-item"><div class="dot t"></div><span>预算——<strong>B<sub>v</sub></strong> 个视图，<strong>B<sub>p</sub></strong> 个数据点</span></div>
+      </div>
+    </div>
+    <div class="case-goal">
+      <div class="case-goal-label">目标：最终报告必须包含</div>
+      <ol>
+        <li>恢复的数据模式和充分统计量</li>
+        <li>接受/拒绝的假设解释</li>
+        <li>问题 Q 的答案</li>
+        <li>带边界框的证据追踪</li>
+      </ol>
+    </div>
+  </div>
+
+  <h3 class="sub">3.2 四种任务能力：读取 / 揭示 / 协调 / 驳斥</h3>
+  <p class="body">这四个动词满足"相互独立、完全穷尽"（MECE）的原则，便于记忆，且每个都对应一种独特的调查能力。它们共同取代了图表问答中简单的"可见 vs. 潜在"二元视角。</p>
+
+  <div class="cap-grid reveal">
+    <div class="cap cap-read">
+      <div class="cap-top">
+        <div class="cap-titles">
+          <div class="cap-verb">读取</div>
+          <div class="cap-en">Read</div>
+        </div>
+        <div class="cap-glyph">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 4 L2 20 L10 20 L12 18 L14 20 L22 20 L22 4 L14 4 L12 6 L10 4 Z"/></svg>
+        </div>
+      </div>
+      <div class="cap-tag">基础图表读取 · 读清 claim 定义</div>
+      <div class="cap-desc">不是读数字，而是读清头条 claim 的精确定义——分母是谁、时间窗口从哪里开始、统计对象到底是什么。</div>
+      <div class="cap-example"><span class="cap-example-label"><span class="run-ref">案例</span>示例问题</span>"31 min → 18 min" 这条 headline 的时间窗口在哪两个时刻之间？纳入这个均值的是全部订单，还是仅成功送达订单？</div>
+    </div>
+    <div class="cap cap-reveal">
+      <div class="cap-top">
+        <div class="cap-titles">
+          <div class="cap-verb">揭示</div>
+          <div class="cap-en">Reveal</div>
+        </div>
+        <div class="cap-glyph">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="10" cy="10" r="6"/><line x1="14.5" y1="14.5" x2="20" y2="20"/></svg>
+        </div>
+      </div>
+      <div class="cap-tag">主动补全 · 请求缺失的维度</div>
+      <div class="cap-desc">不是多看一张图，而是主动选择最能改变结论的新投影——补上当前视图缺失的关键维度。</div>
+      <div class="cap-example"><span class="cap-example-label"><span class="run-ref">案例</span>示例问题</span>按城市区域分层（市中心 / 中环 / 远郊）后，新旧算法上线后的订单接受率分别是多少？是否有区域被悄悄放弃？</div>
+    </div>
+    <div class="cap cap-reconcile">
+      <div class="cap-top">
+        <div class="cap-titles">
+          <div class="cap-verb">协调</div>
+          <div class="cap-en">Reconcile</div>
+        </div>
+        <div class="cap-glyph">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="3" x2="12" y2="21"/><path d="M4 9 L12 6 L20 9"/><path d="M2 16 L8 16"/><path d="M16 16 L22 16"/></svg>
+        </div>
+      </div>
+      <div class="cap-tag">跨图表协调 · 解释矛盾</div>
+      <div class="cap-desc">不是简单比较两张图，而是找到一个更高层的潜在结构，让看似矛盾的两张图同时成立。</div>
+      <div class="cap-example"><span class="cap-example-label"><span class="run-ref">案例</span>示例问题</span>"平均送达时间下降"与"用户投诉、取消、退款上升"同时为真——能否在订单生命周期的漏斗视图中找到使两者同时成立的潜在结构？</div>
+    </div>
+    <div class="cap cap-debunk">
+      <div class="cap-top">
+        <div class="cap-titles">
+          <div class="cap-verb">驳斥</div>
+          <div class="cap-en">Debunk</div>
+        </div>
+        <div class="cap-glyph">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><line x1="12" y1="3" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="21"/></svg>
+        </div>
+      </div>
+      <div class="cap-tag">用修正指标击穿 headline</div>
+      <div class="cap-desc">不是找错，而是用修正后的全口径指标击穿误导性头条——把被排除的订单全部纳回分母。</div>
+      <div class="cap-example"><span class="cap-example-label"><span class="run-ref">案例</span>示例问题</span>把取消、超时、无人接单全部纳回分母，并把时间窗口拉回"用户下单 → 餐到门口"——"31 min → 18 min" 是否还成立？若不成立，证据来自哪几张视图？</div>
+    </div>
+  </div>
+
+  <h3 class="sub">3.3 案件启动 · agent 的第一步（B1 · READ）</h3>
+  <p class="body">智能体被给出案例文件后做的第一件事，<strong>不是回答 18 分钟是不是真的更快</strong>——而是请求一张能精确告诉它 "18 min" 这个数字到底在测量什么的视图。它把第一个视图预算花在 READ 能力上：读清头条 claim 的<strong>时间窗口边界与统计口径</strong>。</p>
+
+  <div class="artifact reveal">
+    <div class="artifact-head">
+      <span class="artifact-tag"><span class="beat">B1 · READ</span>第一张视图 · 时间窗口与口径</span>
+      <span class="artifact-trace">request_view(metric=avg_minutes, populations=all-orders | delivered-only, window=t0|t1|t2|t3) → PNG  ·  −1 B<sub>v</sub></span>
+    </div>
+    <div class="artifact-body">
+      <div class="artifact-svg">
+        <svg viewBox="0 0 460 250" xmlns="http://www.w3.org/2000/svg" aria-label="B1 时间窗口与口径">
+          <text x="14" y="18" font-family="JetBrains Mono,monospace" font-size="9" fill="#9091a8" letter-spacing="1">RETURNED VIEW · timeline · "18 min" 的边界 + 分母</text>
+
+          <!-- TIMELINE — 4 lifecycle stages on a horizontal axis -->
+          <g transform="translate(40,52)">
+            <!-- axis -->
+            <line x1="0" y1="20" x2="380" y2="20" stroke="#3a3a5c" stroke-width="1"/>
+            <!-- stage ticks at 0, 100, 200, 300, 380 -->
+            <g font-family="JetBrains Mono,monospace" font-size="8" fill="#9091a8">
+              <line x1="0" y1="16" x2="0" y2="24" stroke="#3a3a5c"/>
+              <text x="0" y="38" text-anchor="middle">t₀ · 下单</text>
+              <line x1="95" y1="16" x2="95" y2="24" stroke="#3a3a5c"/>
+              <text x="95" y="38" text-anchor="middle">t₁ · 接单</text>
+              <line x1="190" y1="16" x2="190" y2="24" stroke="#3a3a5c"/>
+              <text x="190" y="38" text-anchor="middle">t₂ · 取餐</text>
+              <line x1="380" y1="16" x2="380" y2="24" stroke="#3a3a5c"/>
+              <text x="380" y="38" text-anchor="middle">t₃ · 送达</text>
+            </g>
+            <!-- stage segments (hidden from headline = gray; counted = teal) -->
+            <rect x="0"   y="6" width="95"  height="14" fill="rgba(224,72,88,.18)" stroke="#e04858" stroke-width=".5" stroke-dasharray="2 2"/>
+            <text x="47" y="3" font-family="Noto Serif SC,serif" font-size="8" fill="#e04858" text-anchor="middle" font-style="italic">下单→接单</text>
+            <rect x="95"  y="6" width="95"  height="14" fill="rgba(224,72,88,.18)" stroke="#e04858" stroke-width=".5" stroke-dasharray="2 2"/>
+            <text x="142" y="3" font-family="Noto Serif SC,serif" font-size="8" fill="#e04858" text-anchor="middle" font-style="italic">备餐+等骑手</text>
+            <rect x="190" y="6" width="190" height="14" fill="#3cc4bb" opacity=".82"/>
+            <text x="285" y="3" font-family="Noto Serif SC,serif" font-size="8" font-weight="700" fill="#3cc4bb" text-anchor="middle">pickup → dropoff（"18 min" 仅此一段）</text>
+          </g>
+
+          <!-- BRACE under teal segment -->
+          <g transform="translate(40,108)">
+            <line x1="190" y1="0" x2="190" y2="-8" stroke="#e5b94a" stroke-width="1"/>
+            <line x1="190" y1="0" x2="380" y2="0" stroke="#e5b94a" stroke-width="1"/>
+            <line x1="380" y1="0" x2="380" y2="-8" stroke="#e5b94a" stroke-width="1"/>
+            <text x="285" y="14" font-family="Noto Serif SC,serif" font-size="10" font-weight="700" fill="#e5b94a" text-anchor="middle">headline "18 min" 的边界</text>
+          </g>
+
+          <!-- POPULATION FILTER — completed-only vs all-requested -->
+          <g transform="translate(20,160)">
+            <text x="0" y="0" font-family="Noto Serif SC,serif" font-size="10" font-weight="700" fill="#e8e3d4">分母 · 谁被纳入这个均值？</text>
+            <!-- new-algo orders bucket — 1000 requested total -->
+            <rect x="0" y="14" width="380" height="20" fill="rgba(85,136,224,.18)" stroke="#5588e0" stroke-width=".8"/>
+            <text x="386" y="28" font-family="JetBrains Mono,monospace" font-size="9" fill="#5588e0">1000 requested</text>
+            <!-- delivered subset (570 / 1000 = 57% → width 217) -->
+            <rect x="0" y="14" width="217" height="20" fill="#3cc4bb" opacity=".82"/>
+            <text x="108" y="29" font-family="JetBrains Mono,monospace" font-size="9" font-weight="700" fill="#06060c" text-anchor="middle">570 delivered</text>
+            <!-- canceled / no_driver / timeout subset (430) -->
+            <rect x="217" y="14" width="163" height="20" fill="rgba(224,72,88,.18)" stroke="#e04858" stroke-width=".5" stroke-dasharray="2 2"/>
+            <text x="298" y="29" font-family="Noto Serif SC,serif" font-size="9" font-style="italic" fill="#e04858" text-anchor="middle">430 失败 / 取消 / 超时</text>
+            <!-- brace under delivered only -->
+            <line x1="0"   y1="44" x2="0"   y2="38" stroke="#e5b94a" stroke-width=".9"/>
+            <line x1="0"   y1="44" x2="217" y2="44" stroke="#e5b94a" stroke-width=".9"/>
+            <line x1="217" y1="44" x2="217" y2="38" stroke="#e5b94a" stroke-width=".9"/>
+            <text x="108" y="58" font-family="Noto Serif SC,serif" font-size="9.5" font-weight="700" fill="#e5b94a" text-anchor="middle">"18 min" 的分母 — 仅 successful subset</text>
+          </g>
+        </svg>
+      </div>
+      <div class="artifact-meta">
+        <div class="artifact-meta-head">视图返回 · 关键发现</div>
+        <div class="artifact-finding">"18 min" 不是从用户下单开始算，而是<strong>从骑手取到餐开始算到送达</strong>（pickup → dropoff）；并且只在 <strong>successfully delivered orders</strong> 上求均值——下单到接单、备餐等待、以及 430 个失败订单全都从这条 headline 中消失了。</div>
+        <div class="artifact-meta-head" style="margin-top:.3rem">嫌疑名单更新</div>
+        <div class="artifact-update">
+          <span class="h">h₁</span> 真正提速 · 未变&nbsp;&nbsp;|&nbsp;&nbsp;
+          <span class="h">h₂</span> 区域挑选 · 未变<br>
+          <span class="rising">h₃ 分母清洗 ↑ 浮出</span>&nbsp;&nbsp;|&nbsp;&nbsp;
+          <span class="rising">h₄ 指标边界转移 ↑ 浮出</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <p class="body">第一次出手没有"破案"——它<strong>读清了被比较的东西</strong>：headline 测量的是 pickup→dropoff 区间、仅在成功订单上的均值。h₃ 与 h₄ 一同浮出。但还有一个更可疑的问题没回答：那 430 个失败订单，是<em>什么样的订单</em>、来自<em>什么样的城市区域</em>？这正是 §4 第二个视图预算要去解决的事。</p>
+</section>
+
+<!-- §4 动作空间 -->
+<section id="actions" data-num="04">
+  <div class="section-tag"><span class="section-num">4</span> 动作空间 / Action Space</div>
+  <h2 class="section-title">两种有成本层级的<em>视觉动作</em></h2>
+  <p class="section-lead">加上零成本的记录类动作。预算耗尽迫使智能体进行战略性规划。</p>
+
+  <div class="action-head" style="max-width:880px"><span>动作</span><span>作用</span><span>成本</span><span>返回内容</span></div>
+  <div class="action-list reveal">
+    <div class="acard costly">
+      <div class="aname">request_view<span class="aname-zh">请求视图</span></div>
+      <div class="arole">从隐藏主表请求一个新的投影</div>
+      <div class="acost"><span class="badge">−1 视图预算</span></div>
+      <div class="areturn"><span class="hl">渲染后的 PNG</span><br>绝不是 CSV</div>
+    </div>
+    <div class="acard costly">
+      <div class="aname">point<span class="aname-zh">指向</span></div>
+      <div class="arole">在现有图表中检查局部证据</div>
+      <div class="acost"><span class="badge">−1 数据点预算</span></div>
+      <div class="areturn">定位反馈——元素 id、标签匹配、几何匹配</div>
+    </div>
+    <div class="acard">
+      <div class="aname free">commit_belief<span class="aname-zh">提交信念</span></div>
+      <div class="arole">用带边界框的证据更新案例理论</div>
+      <div class="acost"><span class="badge free">免费</span></div>
+      <div class="areturn">已确认</div>
+    </div>
+    <div class="acard">
+      <div class="aname free">answer<span class="aname-zh">回答</span></div>
+      <div class="arole">提交一个答案，必须引用边界框证据</div>
+      <div class="acost"><span class="badge free">免费</span></div>
+      <div class="areturn">已记录</div>
+    </div>
+    <div class="acard">
+      <div class="aname free">terminate<span class="aname-zh">终止</span></div>
+      <div class="arole">关闭案例，触发评分</div>
+      <div class="acost"><span class="badge free">免费</span></div>
+      <div class="areturn">最终报告</div>
+    </div>
+  </div>
+
+  <div class="loop-wrap reveal">
+    <svg class="loop-svg" viewBox="0 0 760 220" xmlns="http://www.w3.org/2000/svg" aria-label="调查循环">
+      <defs>
+        <marker id="arrh" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+          <path d="M0,0 L10,5 L0,10 Z" fill="#e5b94a"/>
+        </marker>
+      </defs>
+      <!-- 5 nodes in a horizontal loop -->
+      <g font-family="Noto Serif SC,serif" font-size="11" fill="#e8e3d4">
+        <!-- 1 Observe -->
+        <g transform="translate(40,95)">
+          <rect width="110" height="42" rx="6" fill="#161624" stroke="#3cc4bb" stroke-width="1.2"/>
+          <text x="55" y="18" text-anchor="middle" font-weight="700" fill="#3cc4bb">1 · 观察</text>
+          <text x="55" y="33" text-anchor="middle" font-size="9" fill="#9091a8">Observe D</text>
+        </g>
+        <!-- 2 Hypothesize -->
+        <g transform="translate(180,95)">
+          <rect width="110" height="42" rx="6" fill="#161624" stroke="#9b70d8" stroke-width="1.2"/>
+          <text x="55" y="18" text-anchor="middle" font-weight="700" fill="#9b70d8">2 · 提出假设</text>
+          <text x="55" y="33" text-anchor="middle" font-size="9" fill="#9091a8">Hypothesize</text>
+        </g>
+        <!-- 3 Request view (costly) -->
+        <g transform="translate(320,95)">
+          <rect width="110" height="42" rx="6" fill="rgba(229,185,74,.08)" stroke="#e5b94a" stroke-width="1.5"/>
+          <text x="55" y="18" text-anchor="middle" font-weight="700" fill="#e5b94a">3 · request_view</text>
+          <text x="55" y="33" text-anchor="middle" font-size="9" fill="#e5b94a">−1 B_v</text>
+        </g>
+        <!-- 4 Point (costly) -->
+        <g transform="translate(460,95)">
+          <rect width="110" height="42" rx="6" fill="rgba(229,185,74,.08)" stroke="#e5b94a" stroke-width="1.5"/>
+          <text x="55" y="18" text-anchor="middle" font-weight="700" fill="#e5b94a">4 · point</text>
+          <text x="55" y="33" text-anchor="middle" font-size="9" fill="#e5b94a">−1 B_p</text>
+        </g>
+        <!-- 5 Commit / Answer -->
+        <g transform="translate(600,95)">
+          <rect width="120" height="42" rx="6" fill="#161624" stroke="#3cc4bb" stroke-width="1.2"/>
+          <text x="60" y="18" text-anchor="middle" font-weight="700" fill="#3cc4bb">5 · commit + 答案</text>
+          <text x="60" y="33" text-anchor="middle" font-size="9" fill="#9091a8">w/ bbox 证据</text>
+        </g>
+      </g>
+      <!-- Arrows forward -->
+      <g stroke="#54546e" stroke-width="1.2" fill="none">
+        <line x1="150" y1="116" x2="178" y2="116" marker-end="url(#arrh)"/>
+        <line x1="290" y1="116" x2="318" y2="116" marker-end="url(#arrh)"/>
+        <line x1="430" y1="116" x2="458" y2="116" marker-end="url(#arrh)"/>
+        <line x1="570" y1="116" x2="598" y2="116" marker-end="url(#arrh)"/>
+      </g>
+      <!-- Loop back arc -->
+      <path d="M 660 137 Q 660 200 360 200 Q 95 200 95 137" stroke="#e5b94a" stroke-width="1.2" fill="none" stroke-dasharray="4 3" marker-end="url(#arrh)"/>
+      <text x="380" y="195" font-family="Noto Serif SC,serif" font-size="10" font-style="italic" fill="#e5b94a" text-anchor="middle">预算未耗尽 · 假设未稳定 → 继续调查</text>
+      <!-- Top: case file -->
+      <g transform="translate(280,15)">
+        <rect width="200" height="45" rx="4" fill="#0d0d18" stroke="#22223a" stroke-width="1"/>
+        <text x="100" y="20" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="9" fill="#e5b94a" letter-spacing="1">CASE FILE</text>
+        <text x="100" y="36" text-anchor="middle" font-family="Noto Serif SC,serif" font-size="10" fill="#9091a8">案例 · D₀ · Q · H · 预算</text>
+      </g>
+      <line x1="380" y1="60" x2="95" y2="95" stroke="#22223a" stroke-width=".8" stroke-dasharray="2 2"/>
+    </svg>
+  </div>
+  <div class="fig-cap" style="max-width:760px;margin:-1rem auto 2rem"><strong>图 2·</strong>调查循环 — 预算驱动的视觉-假设迭代</div>
+
+  <div class="con-pair reveal">
+    <div class="con">
+      <div class="con-num">约束 1 · 核心支柱</div>
+      <div class="con-title">仅返回视觉内容<span class="con-title-en">Visual-Only Return</span></div>
+      <div class="con-desc"><code>request_view</code> 返回 PNG，<strong>绝不返回表格数据</strong>。如果动作返回 CSV，视觉模态将被绕过，协议将退化为 SQL 规划。这个约束是本文的核心支柱。</div>
+    </div>
+    <div class="con">
+      <div class="con-num">约束 2 · 问责机制</div>
+      <div class="con-title">边界框作为证据凭证<span class="con-title-en">Bbox as Evidence Receipts</span></div>
+      <div class="con-desc">每个提交的信念和每个答案都必须附带指向支持视觉证据的元素级边界框。未接地的输出将被路由到低分通道。</div>
+    </div>
+  </div>
+
+  <div class="pull-quote reveal">
+    <p>在 LDW 中，边界框不是解释——它们是证据凭证。定位不是一种可解释性装饰；它是一种问责机制。</p>
+    <span class="en">In LDW, bounding boxes are not explanations — they are evidence receipts. Grounding is not an interpretability decoration; it is an accountability mechanism.</span>
+  </div>
+
+  <p class="body" style="font-size:.92rem;color:var(--text-dim)">这将 LDW 与之前的单图表有根基推理（例如 ChartPoint 的 PointCoT，它将边界框作为单张图表内的推理辅助工具）区分开来：在 LDW 中，<strong>边界框是跨图表的、强制性的，并与评分直接挂钩</strong>。</p>
+
+  <h3 class="sub">4.3 第二步：补上缺失的区域维度（B2 · REVEAL）</h3>
+  <p class="body">B1 让 agent 看清了"<strong>18 min</strong> 只测量 pickup→dropoff、只在成功订单上求均值"，但还没回答一个更关键的问题：那 430 个失败订单<em>来自哪里</em>？新算法是不是悄悄停了某些区域的接单？第二个视图预算被花在 REVEAL 能力上：请求一张<strong>城市区域热力图</strong>，看 order acceptance rate 在新旧算法下如何在地图上重新分布。</p>
+
+  <div class="artifact reveal">
+    <div class="artifact-head">
+      <span class="artifact-tag"><span class="beat">B2 · REVEAL</span>第二张视图 · 城市区域热力图</span>
+      <span class="artifact-trace">request_view(group=zone, metric=order_acceptance_rate, by=algorithm) → PNG  ·  −1 B<sub>v</sub></span>
+    </div>
+    <div class="artifact-body">
+      <div class="artifact-svg">
+        <svg viewBox="0 0 460 250" xmlns="http://www.w3.org/2000/svg" aria-label="B2 城市区域热力图">
+          <text x="14" y="18" font-family="JetBrains Mono,monospace" font-size="9" fill="#9091a8" letter-spacing="1">RETURNED VIEW · acceptance_rate × zone × algorithm</text>
+
+          <!-- LEFT HEATMAP — OLD ALGORITHM -->
+          <g transform="translate(28,40)">
+            <text x="80" y="-4" font-family="Noto Serif SC,serif" font-size="10" font-weight="700" fill="#e8e3d4" text-anchor="middle">旧算法</text>
+            <!-- 4x4 grid; centre cells brighter -->
+            <!-- row 1 -->
+            <rect x="0"   y="0"  width="40" height="40" fill="#3cc4bb" opacity=".55"/>
+            <rect x="40"  y="0"  width="40" height="40" fill="#3cc4bb" opacity=".65"/>
+            <rect x="80"  y="0"  width="40" height="40" fill="#3cc4bb" opacity=".60"/>
+            <rect x="120" y="0"  width="40" height="40" fill="#3cc4bb" opacity=".50"/>
+            <!-- row 2 -->
+            <rect x="0"   y="40" width="40" height="40" fill="#3cc4bb" opacity=".70"/>
+            <rect x="40"  y="40" width="40" height="40" fill="#3cc4bb" opacity=".88"/>
+            <rect x="80"  y="40" width="40" height="40" fill="#3cc4bb" opacity=".90"/>
+            <rect x="120" y="40" width="40" height="40" fill="#3cc4bb" opacity=".70"/>
+            <!-- row 3 -->
+            <rect x="0"   y="80" width="40" height="40" fill="#3cc4bb" opacity=".68"/>
+            <rect x="40"  y="80" width="40" height="40" fill="#3cc4bb" opacity=".90"/>
+            <rect x="80"  y="80" width="40" height="40" fill="#3cc4bb" opacity=".88"/>
+            <rect x="120" y="80" width="40" height="40" fill="#3cc4bb" opacity=".70"/>
+            <!-- row 4 -->
+            <rect x="0"   y="120" width="40" height="40" fill="#3cc4bb" opacity=".55"/>
+            <rect x="40"  y="120" width="40" height="40" fill="#3cc4bb" opacity=".66"/>
+            <rect x="80"  y="120" width="40" height="40" fill="#3cc4bb" opacity=".60"/>
+            <rect x="120" y="120" width="40" height="40" fill="#3cc4bb" opacity=".50"/>
+            <!-- accept rate annotations -->
+            <text x="20" y="164" font-family="JetBrains Mono,monospace" font-size="7" fill="#06060c" text-anchor="middle" font-weight="700">边缘</text>
+            <text x="80" y="64" font-family="JetBrains Mono,monospace" font-size="9" fill="#06060c" text-anchor="middle" font-weight="700">市中心</text>
+            <!-- zone average label -->
+            <text x="80" y="178" font-family="Noto Serif SC,serif" font-size="8.5" fill="#9091a8" text-anchor="middle">全市平均接单率</text>
+            <text x="80" y="192" font-family="JetBrains Mono,monospace" font-size="13" font-weight="700" fill="#3cc4bb" text-anchor="middle">82%</text>
+          </g>
+
+          <!-- ARROW -->
+          <g transform="translate(220,110)">
+            <text x="0" y="0" font-family="JetBrains Mono,monospace" font-size="9" fill="#e5b94a" text-anchor="middle" letter-spacing="1">new algo</text>
+            <line x1="-18" y1="6" x2="18" y2="6" stroke="#e5b94a" stroke-width="1.2"/>
+            <polygon points="18,6 12,2 12,10" fill="#e5b94a"/>
+          </g>
+
+          <!-- RIGHT HEATMAP — NEW ALGORITHM (peripheral cells go gray) -->
+          <g transform="translate(252,40)">
+            <text x="80" y="-4" font-family="Noto Serif SC,serif" font-size="10" font-weight="700" fill="#e8e3d4" text-anchor="middle">新算法</text>
+            <!-- row 1 — periphery -->
+            <rect x="0"   y="0"  width="40" height="40" fill="#54546e" opacity=".55"/>
+            <rect x="40"  y="0"  width="40" height="40" fill="#54546e" opacity=".55"/>
+            <rect x="80"  y="0"  width="40" height="40" fill="#54546e" opacity=".55"/>
+            <rect x="120" y="0"  width="40" height="40" fill="#54546e" opacity=".55"/>
+            <!-- row 2 — kept bright -->
+            <rect x="0"   y="40" width="40" height="40" fill="#54546e" opacity=".55"/>
+            <rect x="40"  y="40" width="40" height="40" fill="#3cc4bb" opacity=".95"/>
+            <rect x="80"  y="40" width="40" height="40" fill="#3cc4bb" opacity=".95"/>
+            <rect x="120" y="40" width="40" height="40" fill="#54546e" opacity=".55"/>
+            <!-- row 3 — kept bright -->
+            <rect x="0"   y="80" width="40" height="40" fill="#54546e" opacity=".55"/>
+            <rect x="40"  y="80" width="40" height="40" fill="#3cc4bb" opacity=".95"/>
+            <rect x="80"  y="80" width="40" height="40" fill="#3cc4bb" opacity=".95"/>
+            <rect x="120" y="80" width="40" height="40" fill="#54546e" opacity=".55"/>
+            <!-- row 4 -->
+            <rect x="0"   y="120" width="40" height="40" fill="#54546e" opacity=".55"/>
+            <rect x="40"  y="120" width="40" height="40" fill="#54546e" opacity=".55"/>
+            <rect x="80"  y="120" width="40" height="40" fill="#54546e" opacity=".55"/>
+            <rect x="120" y="120" width="40" height="40" fill="#54546e" opacity=".55"/>
+            <!-- annotations -->
+            <text x="20" y="164" font-family="JetBrains Mono,monospace" font-size="7" fill="#e04858" text-anchor="middle" font-weight="700">41%</text>
+            <text x="80" y="64" font-family="JetBrains Mono,monospace" font-size="9" fill="#06060c" text-anchor="middle" font-weight="700">市中心</text>
+            <text x="140" y="164" font-family="JetBrains Mono,monospace" font-size="7" fill="#e04858" text-anchor="middle" font-weight="700">41%</text>
+            <!-- bbox around periphery -->
+            <rect x="-2" y="-2" width="164" height="164" fill="none" stroke="#e5b94a" stroke-width=".9" stroke-dasharray="3 2"/>
+            <text x="80" y="178" font-family="Noto Serif SC,serif" font-size="8.5" fill="#9091a8" text-anchor="middle">边缘区域接单率坍缩</text>
+            <text x="80" y="192" font-family="JetBrains Mono,monospace" font-size="13" font-weight="700" fill="#e04858" text-anchor="middle">82% → 41%</text>
+          </g>
+
+          <!-- legend -->
+          <g transform="translate(110,232)" font-family="Noto Serif SC,serif" font-size="8" fill="#9091a8">
+            <rect x="0" y="-7" width="10" height="6" fill="#3cc4bb" opacity=".9"/><text x="14" y="-1">高接单率</text>
+            <rect x="70" y="-7" width="10" height="6" fill="#54546e" opacity=".6"/><text x="84" y="-1">已被新算法放弃</text>
+            <rect x="200" y="-7" width="10" height="6" fill="none" stroke="#e5b94a" stroke-dasharray="2 1.5"/><text x="214" y="-1">bbox · h₂ 证据</text>
+          </g>
+        </svg>
+      </div>
+      <div class="artifact-meta">
+        <div class="artifact-meta-head">视图返回 · 关键发现</div>
+        <div class="artifact-finding">市中心区域接单率几乎不变（&gt; 90%）；但<strong>边缘区域接单率从 82% 坍缩到 41%</strong>。新算法不是把"所有订单都送快了"，而是<strong>只接它送得快的订单</strong>——城市的一大圈外环被悄悄放弃了。</div>
+        <div class="artifact-meta-head" style="margin-top:.3rem">嫌疑名单更新</div>
+        <div class="artifact-update">
+          <span class="h">h₁</span> 真正提速 · 未变（仍未直接证伪）<br>
+          <span class="rising">h₂ 区域挑选 ↑↑（被这张图直接锁定）</span>&nbsp;&nbsp;|&nbsp;&nbsp;
+          <span class="rising">h₃ 分母清洗 ↑</span>&nbsp;&nbsp;|&nbsp;&nbsp;
+          <span class="h">h₄ 边界转移 · 未变</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <p class="body" style="font-size:.92rem;color:var(--text-dim)">B2 中 agent 紧接着用一次 <code>point</code> 把热力图中"<strong>变灰的整圈外环</strong>"圈定为支持 <em>h₂ 区域挑选</em> 的证据——bbox 直接钉在那 12 个降为 41% 的边缘格子上。在评分系统里，h₂ 被标记为"agent 已携带跨图表 bbox 证据确认"。</p>
+</section>
+
+<!-- §5 评估指标 -->
+<section id="metrics" data-num="05">
+  <div class="section-tag"><span class="section-num">5</span> 评估指标 / Metrics</div>
+  <h2 class="section-title">四个维度的<em>调查能力</em></h2>
+  <p class="section-lead">每个指标测试不同维度——共同取代先前基准测试单一准确率标题的做法。</p>
+
+  <div class="met-grid reveal">
+    <div class="met m1">
+      <div class="met-label">Metric 1</div>
+      <div class="met-name">模式恢复率</div>
+      <div class="met-en">Recovery@Schema</div>
+      <div class="met-desc">智能体最终信念与潜在模式的一致程度：列存在性（F1）、边际分布（KS / Wasserstein 距离）、相关性误差、已声明正交性的召回率、依赖图边的准确率。</div>
+      <div class="met-tags"><span class="mtag">Column F1</span><span class="mtag">KS / Wasserstein</span><span class="mtag">相关性误差</span><span class="mtag">正交性召回</span><span class="mtag">依赖图</span></div>
+    </div>
+    <div class="met m2">
+      <div class="met-label">Metric 2</div>
+      <div class="met-name">潜在问答准确率</div>
+      <div class="met-en">Latent QA Accuracy</div>
+      <div class="met-desc">读取 / 揭示 / 协调 / 驳斥问题子集的准确率，标题数字为<strong>非读取类的平均值</strong>——衡量主动调查能力。</div>
+      <div class="met-tags"><span class="mtag">读取</span><span class="mtag">揭示</span><span class="mtag">协调</span><span class="mtag">驳斥</span></div>
+    </div>
+    <div class="met m3">
+      <div class="met-label">Metric 3</div>
+      <div class="met-name">解释解析率</div>
+      <div class="met-en">Explanation Resolution</div>
+      <div class="met-desc">案例竞争假设的选择 / 排序 / 反驳准确率。<strong>这是最贴近真实分析实践的指标。</strong></div>
+      <div class="met-tags"><span class="mtag">选择准确率</span><span class="mtag">假设排序</span><span class="mtag">反驳</span></div>
+    </div>
+    <div class="met m4">
+      <div class="met-label">Metric 4</div>
+      <div class="met-name">证据效率</div>
+      <div class="met-en">Evidence Efficiency</div>
+      <div class="met-desc">单位预算下的得分——（恢复率 + 解释解析率）与（已用视图预算 B<sub>v</sub>、已用数据点预算 B<sub>p</sub>）的帕累托前沿。</div>
+      <div class="met-tags"><span class="mtag">预算利用率</span><span class="mtag">帕累托前沿</span><span class="mtag">探索策略</span></div>
+    </div>
+  </div>
+
+  <h3 class="sub">5.1 第三步：协调矛盾的订单漏斗（B3 · RECONCILE）</h3>
+  <p class="body">B1 + B2 已经合力暴露了 headline 的口径问题与区域挑选，但仍有一个看似矛盾的事实没被解释：<strong>送达时间下降了，可同时投诉、取消、退款也上升了</strong>——两个故事怎么能同时为真？agent 烧掉第三个视图预算，请求一张订单生命周期的<strong>漏斗视图</strong>——这是 RECONCILE 能力的典型用法：用第三张视图找到一个让前两张视图同时成立的潜在结构。</p>
+
+  <div class="artifact reveal">
+    <div class="artifact-head">
+      <span class="artifact-tag"><span class="beat">B3 · RECONCILE</span>第三张视图 · 订单生命周期漏斗</span>
+      <span class="artifact-trace">request_view(stage=requested→assigned→picked_up→delivered+canceled, by=algorithm) → PNG  ·  −1 B<sub>v</sub></span>
+    </div>
+    <div class="artifact-body">
+      <div class="artifact-svg">
+        <svg viewBox="0 0 460 250" xmlns="http://www.w3.org/2000/svg" aria-label="B3 订单漏斗">
+          <text x="14" y="18" font-family="JetBrains Mono,monospace" font-size="9" fill="#9091a8" letter-spacing="1">RETURNED VIEW · funnel: requested → assigned → picked_up → delivered</text>
+
+          <!-- OLD algorithm funnel (left) -->
+          <g transform="translate(36,40)">
+            <text x="80" y="-2" font-family="Noto Serif SC,serif" font-size="10" font-weight="700" fill="#e8e3d4" text-anchor="middle">旧算法</text>
+            <!-- 4 trapezoid bars, descending from 1000 to 840 -->
+            <!-- requested: full width 160 -->
+            <rect x="0"   y="6"  width="160" height="22" fill="#5588e0" opacity=".85"/>
+            <text x="80"  y="22" font-family="JetBrains Mono,monospace" font-size="9.5" font-weight="700" fill="#06060c" text-anchor="middle">1000 requested</text>
+            <!-- assigned 920 → width 147 -->
+            <rect x="6"   y="34" width="147" height="22" fill="#5588e0" opacity=".75"/>
+            <text x="80"  y="50" font-family="JetBrains Mono,monospace" font-size="9" font-weight="700" fill="#06060c" text-anchor="middle">920 assigned</text>
+            <!-- picked 870 → width 139 -->
+            <rect x="10"  y="62" width="139" height="22" fill="#5588e0" opacity=".65"/>
+            <text x="80"  y="78" font-family="JetBrains Mono,monospace" font-size="9" font-weight="700" fill="#06060c" text-anchor="middle">870 picked up</text>
+            <!-- delivered 840 → width 134 -->
+            <rect x="13"  y="90" width="134" height="22" fill="#3cc4bb" opacity=".85"/>
+            <text x="80"  y="106" font-family="JetBrains Mono,monospace" font-size="9.5" font-weight="700" fill="#06060c" text-anchor="middle">840 delivered</text>
+            <!-- failed 160 -->
+            <rect x="40"  y="120" width="80" height="14" fill="rgba(224,72,88,.25)" stroke="#e04858" stroke-width=".5"/>
+            <text x="80"  y="131" font-family="JetBrains Mono,monospace" font-size="8" fill="#e04858" text-anchor="middle">160 failed</text>
+            <!-- success-rate badge -->
+            <text x="80" y="156" font-family="Noto Serif SC,serif" font-size="9" fill="#9091a8" text-anchor="middle">success</text>
+            <text x="80" y="172" font-family="JetBrains Mono,monospace" font-size="13" font-weight="700" fill="#3cc4bb" text-anchor="middle">84%</text>
+          </g>
+
+          <!-- NEW algorithm funnel (right) -->
+          <g transform="translate(264,40)">
+            <text x="80" y="-2" font-family="Noto Serif SC,serif" font-size="10" font-weight="700" fill="#e8e3d4" text-anchor="middle">新算法</text>
+            <rect x="0"   y="6"  width="160" height="22" fill="#5588e0" opacity=".85"/>
+            <text x="80"  y="22" font-family="JetBrains Mono,monospace" font-size="9.5" font-weight="700" fill="#06060c" text-anchor="middle">1000 requested</text>
+            <!-- assigned 620 → width 99 -->
+            <rect x="30"  y="34" width="99"  height="22" fill="#5588e0" opacity=".75"/>
+            <text x="80"  y="50" font-family="JetBrains Mono,monospace" font-size="9" font-weight="700" fill="#06060c" text-anchor="middle">620 assigned</text>
+            <!-- picked 590 → width 94 -->
+            <rect x="33"  y="62" width="94"  height="22" fill="#5588e0" opacity=".65"/>
+            <text x="80"  y="78" font-family="JetBrains Mono,monospace" font-size="9" font-weight="700" fill="#06060c" text-anchor="middle">590 picked up</text>
+            <!-- delivered 570 → width 91 -->
+            <rect x="34"  y="90" width="91"  height="22" fill="#3cc4bb" opacity=".95"/>
+            <text x="80"  y="106" font-family="JetBrains Mono,monospace" font-size="9.5" font-weight="700" fill="#06060c" text-anchor="middle">570 delivered</text>
+            <!-- failed 430 -->
+            <rect x="20"  y="120" width="120" height="14" fill="rgba(224,72,88,.45)" stroke="#e04858" stroke-width=".7"/>
+            <text x="80"  y="131" font-family="JetBrains Mono,monospace" font-size="8" fill="#06060c" text-anchor="middle" font-weight="700">430 failed / canceled / no driver</text>
+            <!-- headline brace under delivered -->
+            <line x1="34"  y1="90" x2="34"  y2="84" stroke="#e5b94a" stroke-width=".9"/>
+            <line x1="125" y1="90" x2="125" y2="84" stroke="#e5b94a" stroke-width=".9"/>
+            <line x1="34"  y1="86" x2="125" y2="86" stroke="#e5b94a" stroke-width=".9"/>
+            <!-- success-rate badge -->
+            <text x="80" y="156" font-family="Noto Serif SC,serif" font-size="9" fill="#9091a8" text-anchor="middle">success</text>
+            <text x="80" y="172" font-family="JetBrains Mono,monospace" font-size="13" font-weight="700" fill="#e04858" text-anchor="middle">57%</text>
+          </g>
+
+          <!-- center annotation -->
+          <g transform="translate(230,148)">
+            <rect x="-72" y="-12" width="144" height="36" rx="3" fill="rgba(229,185,74,.1)" stroke="#e5b94a" stroke-width=".8"/>
+            <text x="0" y="0" font-family="Noto Serif SC,serif" font-size="9" font-weight="700" fill="#e5b94a" text-anchor="middle">headline "18 min" 仅 ↑</text>
+            <text x="0" y="13" font-family="Noto Serif SC,serif" font-size="9" font-weight="700" fill="#e5b94a" text-anchor="middle">这条 teal 段的均值</text>
+          </g>
+
+          <!-- bottom legend -->
+          <g transform="translate(80,232)" font-family="Noto Serif SC,serif" font-size="8" fill="#9091a8">
+            <rect x="0" y="-7" width="10" height="6" fill="#3cc4bb" opacity=".88"/><text x="14" y="-1">delivered</text>
+            <rect x="80" y="-7" width="10" height="6" fill="rgba(224,72,88,.45)" stroke="#e04858" stroke-width=".5"/><text x="94" y="-1">从 headline 消失的订单</text>
+          </g>
+        </svg>
+      </div>
+      <div class="artifact-meta">
+        <div class="artifact-meta-head">视图返回 · 关键发现</div>
+        <div class="artifact-finding">两个故事终于可以同时成立：成功送达的 570 单<strong>确实更快</strong>，但失败 / 取消 / 超时的订单<strong>从 16% 暴涨到 43%</strong>。"+18 min" 只是<strong>那 570 个成功订单的均值</strong>——它把 430 个失败订单悄悄从结论中消失掉了。送得更快 ∧ 体验更差，并不矛盾——它们对应着两个不同的分母。</div>
+        <div class="artifact-meta-head" style="margin-top:.3rem">嫌疑名单更新</div>
+        <div class="artifact-update">
+          <span class="rising">h₁ 真正提速 ↑ 部分成立（仅在成功送达子集上）</span><br>
+          <span class="conf">h₂ 区域挑选 ✓ confirmed</span>&nbsp;&nbsp;|&nbsp;&nbsp;
+          <span class="conf">h₃ 分母清洗 ✓ confirmed</span>&nbsp;&nbsp;|&nbsp;&nbsp;
+          <span class="h">h₄ 边界转移 · 未变（还需 B4 量化贡献）</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <p class="body">B1 + B2 + B3 共消耗 3 个视图预算，已经把"18 min" 拆成"窄口径成功子集 + 区域挑选 + 失败订单不计分母"。还剩一刀：在<strong>全请求口径下</strong>（recover all 1000 + 把时间窗口拉回 t₀→t₃），SwiftEats 的服务质量是变好了还是变差了？这是 §6 Figure 1 要交付的最后一击。</p>
+</section>
+
+<!-- §6 核心实验 -->
+<section id="experiments" data-num="06">
+  <div class="section-tag"><span class="section-num">6</span> 核心实验 / Experiments</div>
+  <h2 class="section-title">三个实验 + <em>一个引子</em></h2>
+
+  <div class="exp-list reveal">
+    <div class="exp">
+      <div class="exp-side"><span class="exp-letter">A</span><span class="exp-stag">动作必要性</span></div>
+      <div>
+        <div class="exp-title">动作必要性 / Action Necessity</div>
+        <div class="exp-desc">在<strong>模型维度</strong>（顶尖闭源 + 顶尖开源 VLM）和<strong>协议维度</strong>（被动式——无动作；随机式——随机请求；规划式——思维链 + 动作）的交叉对比中，读取潜在问答准确率。</div>
+        <div class="exp-punch">动作能力轴比模型规模轴带来的方差更大——与 VS-Bench 在多智能体战略推理上的发现同构。</div>
+      </div>
+    </div>
+    <div class="exp">
+      <div class="exp-side"><span class="exp-letter">B</span><span class="exp-stag">证据效率</span></div>
+      <div>
+        <div class="exp-title">证据效率帕累托分析 / Evidence Efficiency Pareto</div>
+        <div class="exp-desc">x 轴为视图预算 B<sub>v</sub> ∈ {2, 4, 8, 16, ∞}；y 轴为恢复率 + 解释解析率。绘制各模型系列的帕累托前沿。</div>
+        <div class="exp-punch">前沿 VLM 在 B<sub>v</sub> = 16 时，仍无法达到 B<sub>v</sub> = 4 时的理想基准——瓶颈不在感知，而在探索策略。</div>
+      </div>
+    </div>
+    <div class="exp">
+      <div class="exp-side"><span class="exp-letter">C</span><span class="exp-stag">通道消融</span></div>
+      <div>
+        <div class="exp-title">视觉通道 vs. 表格通道消融 / Channel Ablation</div>
+        <div class="exp-desc"><code>request_view</code> 返回的三种变体：仅 PNG / 仅 CSV / 两者都有。在所有四种能力类型和所有指标上进行评测。</div>
+        <div class="exp-punch">这个消融实验决定了本文研究的是图表理解还是 SQL 规划。它属于主论文，而不是附录。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pareto preview SVG -->
+  <div class="pareto-wrap reveal">
+    <div class="pareto-head">
+      <div class="pareto-title">实验 B 预期结果示意</div>
+      <div class="pareto-cap">B<sub>v</sub> — Recovery + Expl. Resolution</div>
+    </div>
+    <svg class="pareto-svg" viewBox="0 0 700 290" xmlns="http://www.w3.org/2000/svg" aria-label="预期帕累托前沿">
+      <!-- Axes -->
+      <line x1="60" y1="240" x2="660" y2="240" stroke="#3a3a5c" stroke-width="1"/>
+      <line x1="60" y1="20" x2="60" y2="240" stroke="#3a3a5c" stroke-width="1"/>
+      <!-- X ticks -->
+      <g font-family="JetBrains Mono,monospace" font-size="10" fill="#9091a8" text-anchor="middle">
+        <text x="120" y="258">2</text><line x1="120" y1="240" x2="120" y2="244" stroke="#3a3a5c"/>
+        <text x="225" y="258">4</text><line x1="225" y1="240" x2="225" y2="244" stroke="#3a3a5c"/>
+        <text x="350" y="258">8</text><line x1="350" y1="240" x2="350" y2="244" stroke="#3a3a5c"/>
+        <text x="490" y="258">16</text><line x1="490" y1="240" x2="490" y2="244" stroke="#3a3a5c"/>
+        <text x="620" y="258">∞</text><line x1="620" y1="240" x2="620" y2="244" stroke="#3a3a5c"/>
+      </g>
+      <text x="360" y="278" font-family="Noto Serif SC,serif" font-size="11" fill="#9091a8" text-anchor="middle">视图预算 B<tspan font-size="8" dy="3">v</tspan></text>
+      <!-- Y ticks -->
+      <g font-family="JetBrains Mono,monospace" font-size="9" fill="#9091a8" text-anchor="end">
+        <text x="54" y="244">0</text>
+        <text x="54" y="190">.25</text><line x1="56" y1="186" x2="60" y2="186" stroke="#3a3a5c"/>
+        <text x="54" y="135">.50</text><line x1="56" y1="131" x2="60" y2="131" stroke="#3a3a5c"/>
+        <text x="54" y="80">.75</text><line x1="56" y1="76" x2="60" y2="76" stroke="#3a3a5c"/>
+        <text x="54" y="24">1.0</text><line x1="56" y1="20" x2="60" y2="20" stroke="#3a3a5c"/>
+      </g>
+      <text x="20" y="130" font-family="Noto Serif SC,serif" font-size="11" fill="#9091a8" text-anchor="middle" transform="rotate(-90,20,130)">综合得分</text>
+      <!-- Grid -->
+      <g stroke="#22223a" stroke-width=".5" stroke-dasharray="2 3">
+        <line x1="60" y1="186" x2="660" y2="186"/>
+        <line x1="60" y1="131" x2="660" y2="131"/>
+        <line x1="60" y1="76" x2="660" y2="76"/>
+      </g>
+      <!-- Oracle (top, gold dashed) -->
+      <path d="M 120 50 L 225 38 L 350 32 L 490 30 L 620 30" fill="none" stroke="#e5b94a" stroke-width="1.8" stroke-dasharray="6 3"/>
+      <g fill="#e5b94a"><circle cx="120" cy="50" r="3.5"/><circle cx="225" cy="38" r="3.5"/><circle cx="350" cy="32" r="3.5"/><circle cx="490" cy="30" r="3.5"/><circle cx="620" cy="30" r="3.5"/></g>
+      <!-- Planned LDW agent (rising teal) -->
+      <path d="M 120 200 L 225 150 L 350 105 L 490 80 L 620 70" fill="none" stroke="#3cc4bb" stroke-width="2.2"/>
+      <g fill="#3cc4bb"><circle cx="120" cy="200" r="4"/><circle cx="225" cy="150" r="4"/><circle cx="350" cy="105" r="4"/><circle cx="490" cy="80" r="4"/><circle cx="620" cy="70" r="4"/></g>
+      <!-- Naive random (purple, modest rise) -->
+      <path d="M 120 220 L 225 200 L 350 180 L 490 165 L 620 158" fill="none" stroke="#9b70d8" stroke-width="1.6"/>
+      <g fill="#9b70d8"><circle cx="120" cy="220" r="3"/><circle cx="225" cy="200" r="3"/><circle cx="350" cy="180" r="3"/><circle cx="490" cy="165" r="3"/><circle cx="620" cy="158" r="3"/></g>
+      <!-- Passive (flat low) -->
+      <path d="M 120 230 L 225 228 L 350 226 L 490 225 L 620 224" fill="none" stroke="#e04858" stroke-width="1.4" stroke-dasharray="3 2"/>
+      <g fill="#e04858"><circle cx="120" cy="230" r="2.5"/><circle cx="620" cy="224" r="2.5"/></g>
+      <!-- Annotations -->
+      <g font-family="Noto Serif SC,serif" font-size="10">
+        <text x="630" y="32" fill="#e5b94a" text-anchor="end" font-weight="600">理想基准（Oracle）</text>
+        <text x="630" y="65" fill="#3cc4bb" text-anchor="end" font-weight="600">LDW 规划式智能体</text>
+        <text x="630" y="155" fill="#9b70d8" text-anchor="end" font-weight="600">随机请求</text>
+        <text x="630" y="220" fill="#e04858" text-anchor="end" font-weight="600">被动 VLM</text>
+      </g>
+      <!-- Punchline annotation -->
+      <g transform="translate(280,100)">
+        <rect width="200" height="48" rx="4" fill="#06060c" stroke="#e5b94a" stroke-width="1" opacity=".95"/>
+        <text x="100" y="18" font-family="Noto Serif SC,serif" font-size="10" font-weight="700" fill="#e5b94a" text-anchor="middle">瓶颈不在感知</text>
+        <text x="100" y="34" font-family="Noto Serif SC,serif" font-size="10" font-weight="700" fill="#e5b94a" text-anchor="middle">而在探索策略</text>
+      </g>
+      <!-- Dashed line from Oracle at B_v=4 down to LDW-agent at B_v=16 — illustrating the gap -->
+      <line x1="225" y1="38" x2="490" y2="80" stroke="#e5b94a" stroke-width=".8" stroke-dasharray="2 2" opacity=".7"/>
+    </svg>
+    <div class="pareto-legend">
+      <span class="lg"><span class="lg-mark" style="background:#e5b94a"></span>理想（Oracle）</span>
+      <span class="lg"><span class="lg-mark" style="background:#3cc4bb"></span>LDW 规划式</span>
+      <span class="lg"><span class="lg-mark" style="background:#9b70d8"></span>随机请求</span>
+      <span class="lg"><span class="lg-mark" style="background:#e04858"></span>被动 VLM</span>
+    </div>
+  </div>
+
+  <h3 class="sub">引子图（Figure 1）— <span class="run-ref">案例</span>《18 分钟外卖奇迹》· 一次完整调查的视觉轨迹</h3>
+  <p class="body">现在 agent 已经走完 B1 (§3) → B2 (§4) → B3 (§5) 三步。Figure 1 把这条调查链<strong>完整铺开</strong>——加上 B4 这最后一击：把取消、超时、无人接单的失败订单全部纳回分母，把时间窗口拉回 t₀→t₃（用户下单→餐到门口），在全请求口径下 SwiftEats 的服务质量到底变好了还是变差了？同时把嫌疑名单 h₁–h₄ 在每一步的状态变化锁定在图上，让读者在一张图里看完整场破案。</p>
+
+  <div class="fig1 reveal">
+    <div class="fig1-head">
+      <div class="fig1-title">Figure 1 · The 18-Minute Delivery Miracle — 4-beat investigation trail (B1 → B2 → B3 → B4)</div>
+      <div class="fig1-sub">read · reveal · reconcile · debunk</div>
+    </div>
+    <svg class="fig1-svg" viewBox="0 0 880 510" xmlns="http://www.w3.org/2000/svg" aria-label="Figure 1 4-beat investigation trail">
+      <defs>
+        <marker id="af1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+          <path d="M0,0 L10,5 L0,10 Z" fill="#9091a8"/>
+        </marker>
+      </defs>
+
+      <!-- =========== TOP: SUSPECT BOARD (final state) =========== -->
+      <g transform="translate(15,8)">
+        <text x="0" y="0" font-family="JetBrains Mono,monospace" font-size="9" letter-spacing="2" fill="#e5b94a">SUSPECT BOARD · FINAL STATE (after B1→B2→B3→B4)</text>
+        <!-- 4 final-state pills -->
+        <g transform="translate(0,10)">
+          <!-- h1 narrowed @ B3 -->
+          <rect x="0" y="0" width="207" height="38" rx="4" fill="rgba(229,185,74,.08)" stroke="#e5b94a" stroke-width=".8"/>
+          <text x="10" y="16" font-family="JetBrains Mono,monospace" font-size="11" font-weight="700" fill="#e5b94a">h₁ · 真正提速</text>
+          <text x="10" y="30" font-family="Noto Serif SC,serif" font-size="9" fill="#e5b94a" font-style="italic">▲ 仅 successful subset · 窄口径成立</text>
+          <!-- h2 confirmed @ B2 -->
+          <rect x="217" y="0" width="207" height="38" rx="4" fill="rgba(60,196,187,.08)" stroke="#3cc4bb" stroke-width=".8"/>
+          <text x="227" y="16" font-family="JetBrains Mono,monospace" font-size="11" font-weight="700" fill="#3cc4bb">h₂ · 区域挑选</text>
+          <text x="227" y="30" font-family="Noto Serif SC,serif" font-size="9" fill="#3cc4bb" font-style="italic">✓ confirmed @ B2 · 边缘 82%→41%</text>
+          <!-- h3 confirmed @ B3 -->
+          <rect x="434" y="0" width="207" height="38" rx="4" fill="rgba(60,196,187,.08)" stroke="#3cc4bb" stroke-width=".8"/>
+          <text x="444" y="16" font-family="JetBrains Mono,monospace" font-size="11" font-weight="700" fill="#3cc4bb">h₃ · 分母清洗</text>
+          <text x="444" y="30" font-family="Noto Serif SC,serif" font-size="9" fill="#3cc4bb" font-style="italic">✓ confirmed @ B3 · 430 单消失</text>
+          <!-- h4 confirmed @ B4 -->
+          <rect x="651" y="0" width="207" height="38" rx="4" fill="rgba(60,196,187,.08)" stroke="#3cc4bb" stroke-width=".8"/>
+          <text x="661" y="16" font-family="JetBrains Mono,monospace" font-size="11" font-weight="700" fill="#3cc4bb">h₄ · 边界转移</text>
+          <text x="661" y="30" font-family="Noto Serif SC,serif" font-size="9" fill="#3cc4bb" font-style="italic">✓ confirmed @ B4 · t₀→t₃ 全口径</text>
+        </g>
+      </g>
+
+      <!-- =========== 4 INVESTIGATION PANELS =========== -->
+      <!-- ====== PANEL 1 · B1 · READ ====== -->
+      <g transform="translate(15,90)">
+        <rect width="200" height="290" rx="6" fill="#0d0d18" stroke="rgba(85,136,224,.5)" stroke-width="1"/>
+        <rect width="200" height="4" rx="2" fill="#5588e0"/>
+        <text x="12" y="22" font-family="Noto Serif SC,serif" font-size="13" font-weight="700" fill="#5588e0">B1 · READ</text>
+        <text x="12" y="38" font-family="JetBrains Mono,monospace" font-size="7.5" fill="#9091a8">read claim boundary + population</text>
+        <text x="12" y="50" font-family="JetBrains Mono,monospace" font-size="7" fill="#54546e">−1 B_v</text>
+
+        <!-- mini chart: lifecycle timeline -->
+        <g transform="translate(12,68)">
+          <text x="0" y="0" font-family="Noto Serif SC,serif" font-size="9" font-weight="600" fill="#e8e3d4">订单时间窗口</text>
+          <!-- timeline base axis -->
+          <line x1="0" y1="24" x2="170" y2="24" stroke="#3a3a5c" stroke-width=".7"/>
+          <!-- 3 stage segments -->
+          <rect x="0"   y="14" width="42" height="10" fill="rgba(224,72,88,.18)" stroke="#e04858" stroke-width=".4" stroke-dasharray="2 1"/>
+          <rect x="42"  y="14" width="42" height="10" fill="rgba(224,72,88,.18)" stroke="#e04858" stroke-width=".4" stroke-dasharray="2 1"/>
+          <rect x="84"  y="14" width="86" height="10" fill="#3cc4bb" opacity=".85"/>
+          <text x="127" y="22" font-family="JetBrains Mono,monospace" font-size="6.5" font-weight="700" fill="#06060c" text-anchor="middle">pickup→drop</text>
+          <!-- t labels -->
+          <g font-family="JetBrains Mono,monospace" font-size="6" fill="#9091a8">
+            <text x="0"   y="34">t₀ 下单</text>
+            <text x="42"  y="34" text-anchor="middle">t₁ 接单</text>
+            <text x="84"  y="34" text-anchor="middle">t₂ 取餐</text>
+            <text x="170" y="34" text-anchor="end">t₃ 送达</text>
+          </g>
+          <!-- brace under teal -->
+          <line x1="84"  y1="44" x2="84"  y2="38" stroke="#e5b94a" stroke-width=".7"/>
+          <line x1="170" y1="44" x2="170" y2="38" stroke="#e5b94a" stroke-width=".7"/>
+          <line x1="84"  y1="44" x2="170" y2="44" stroke="#e5b94a" stroke-width=".7"/>
+          <text x="127" y="56" font-family="Noto Serif SC,serif" font-size="7.5" font-weight="700" fill="#e5b94a" text-anchor="middle">"18 min" 边界</text>
+
+          <!-- population bar -->
+          <text x="0" y="78" font-family="Noto Serif SC,serif" font-size="8" fill="#9091a8">分母 · who's counted</text>
+          <rect x="0"   y="84" width="170" height="14" fill="rgba(85,136,224,.18)" stroke="#5588e0" stroke-width=".5"/>
+          <rect x="0"   y="84" width="97"  height="14" fill="#3cc4bb" opacity=".85"/>
+          <text x="48"  y="94" font-family="JetBrains Mono,monospace" font-size="7" font-weight="700" fill="#06060c" text-anchor="middle">570 delivered</text>
+          <text x="133" y="94" font-family="JetBrains Mono,monospace" font-size="6.5" fill="#e04858" text-anchor="middle" font-style="italic">430 失败</text>
+        </g>
+
+        <!-- finding box -->
+        <g transform="translate(10,210)">
+          <rect width="180" height="70" rx="3" fill="rgba(85,136,224,.08)" stroke="rgba(85,136,224,.42)" stroke-width=".8"/>
+          <text x="8" y="14" font-family="Noto Serif SC,serif" font-size="8.5" font-weight="700" fill="#5588e0">关键发现</text>
+          <text x="8" y="28" font-family="Noto Serif SC,serif" font-size="9" fill="#e8e3d4">仅 pickup→dropoff · 仅成功单</text>
+          <text x="8" y="42" font-family="Noto Serif SC,serif" font-size="8" fill="#9091a8" font-style="italic">下单到接单、备餐、430 个失败</text>
+          <text x="8" y="53" font-family="Noto Serif SC,serif" font-size="8" fill="#9091a8" font-style="italic">订单全都不在 "18 min" 里</text>
+          <text x="8" y="66" font-family="JetBrains Mono,monospace" font-size="7.5" font-weight="700" fill="#e5b94a">嫌疑更新: h₃ ↑ · h₄ ↑</text>
+        </g>
+      </g>
+
+      <!-- arrow 1 → 2 -->
+      <line x1="218" y1="232" x2="230" y2="232" stroke="#9091a8" stroke-width="1.2" marker-end="url(#af1)"/>
+
+      <!-- ====== PANEL 2 · B2 · REVEAL ====== -->
+      <g transform="translate(232,90)">
+        <rect width="200" height="290" rx="6" fill="#0d0d18" stroke="rgba(60,196,187,.5)" stroke-width="1"/>
+        <rect width="200" height="4" rx="2" fill="#3cc4bb"/>
+        <text x="12" y="22" font-family="Noto Serif SC,serif" font-size="13" font-weight="700" fill="#3cc4bb">B2 · REVEAL</text>
+        <text x="12" y="38" font-family="JetBrains Mono,monospace" font-size="7.5" fill="#9091a8">request_view(zone, accept_rate)</text>
+        <text x="12" y="50" font-family="JetBrains Mono,monospace" font-size="7" fill="#54546e">−1 B_v</text>
+
+        <!-- mini chart: heatmap comparison -->
+        <g transform="translate(12,68)">
+          <text x="0" y="0" font-family="Noto Serif SC,serif" font-size="9" font-weight="600" fill="#e8e3d4">城市区域接单率</text>
+          <!-- OLD heatmap (left) — uniform teal -->
+          <g transform="translate(0,14)">
+            <rect x="0"  y="0"  width="18" height="18" fill="#3cc4bb" opacity=".55"/>
+            <rect x="18" y="0"  width="18" height="18" fill="#3cc4bb" opacity=".70"/>
+            <rect x="36" y="0"  width="18" height="18" fill="#3cc4bb" opacity=".65"/>
+            <rect x="54" y="0"  width="18" height="18" fill="#3cc4bb" opacity=".55"/>
+            <rect x="0"  y="18" width="18" height="18" fill="#3cc4bb" opacity=".70"/>
+            <rect x="18" y="18" width="18" height="18" fill="#3cc4bb" opacity=".90"/>
+            <rect x="36" y="18" width="18" height="18" fill="#3cc4bb" opacity=".88"/>
+            <rect x="54" y="18" width="18" height="18" fill="#3cc4bb" opacity=".68"/>
+            <rect x="0"  y="36" width="18" height="18" fill="#3cc4bb" opacity=".68"/>
+            <rect x="18" y="36" width="18" height="18" fill="#3cc4bb" opacity=".88"/>
+            <rect x="36" y="36" width="18" height="18" fill="#3cc4bb" opacity=".90"/>
+            <rect x="54" y="36" width="18" height="18" fill="#3cc4bb" opacity=".66"/>
+            <rect x="0"  y="54" width="18" height="18" fill="#3cc4bb" opacity=".55"/>
+            <rect x="18" y="54" width="18" height="18" fill="#3cc4bb" opacity=".68"/>
+            <rect x="36" y="54" width="18" height="18" fill="#3cc4bb" opacity=".60"/>
+            <rect x="54" y="54" width="18" height="18" fill="#3cc4bb" opacity=".55"/>
+            <text x="36" y="86" font-family="Noto Serif SC,serif" font-size="7.5" fill="#9091a8" text-anchor="middle">旧 · 82%</text>
+          </g>
+          <!-- arrow -->
+          <g transform="translate(82,40)">
+            <line x1="0" y1="0" x2="14" y2="0" stroke="#e5b94a" stroke-width="1"/>
+            <polygon points="14,0 10,-3 10,3" fill="#e5b94a"/>
+          </g>
+          <!-- NEW heatmap (right) — periphery gray -->
+          <g transform="translate(100,14)">
+            <rect x="0"  y="0"  width="18" height="18" fill="#54546e" opacity=".55"/>
+            <rect x="18" y="0"  width="18" height="18" fill="#54546e" opacity=".55"/>
+            <rect x="36" y="0"  width="18" height="18" fill="#54546e" opacity=".55"/>
+            <rect x="54" y="0"  width="18" height="18" fill="#54546e" opacity=".55"/>
+            <rect x="0"  y="18" width="18" height="18" fill="#54546e" opacity=".55"/>
+            <rect x="18" y="18" width="18" height="18" fill="#3cc4bb" opacity=".95"/>
+            <rect x="36" y="18" width="18" height="18" fill="#3cc4bb" opacity=".95"/>
+            <rect x="54" y="18" width="18" height="18" fill="#54546e" opacity=".55"/>
+            <rect x="0"  y="36" width="18" height="18" fill="#54546e" opacity=".55"/>
+            <rect x="18" y="36" width="18" height="18" fill="#3cc4bb" opacity=".95"/>
+            <rect x="36" y="36" width="18" height="18" fill="#3cc4bb" opacity=".95"/>
+            <rect x="54" y="36" width="18" height="18" fill="#54546e" opacity=".55"/>
+            <rect x="0"  y="54" width="18" height="18" fill="#54546e" opacity=".55"/>
+            <rect x="18" y="54" width="18" height="18" fill="#54546e" opacity=".55"/>
+            <rect x="36" y="54" width="18" height="18" fill="#54546e" opacity=".55"/>
+            <rect x="54" y="54" width="18" height="18" fill="#54546e" opacity=".55"/>
+            <!-- bbox around periphery -->
+            <rect x="-2" y="-2" width="76" height="76" fill="none" stroke="#e5b94a" stroke-width=".7" stroke-dasharray="2 2"/>
+            <text x="36" y="86" font-family="Noto Serif SC,serif" font-size="7.5" fill="#e04858" text-anchor="middle" font-weight="700">新 · 边缘 41%</text>
+          </g>
+        </g>
+
+        <!-- finding box -->
+        <g transform="translate(10,210)">
+          <rect width="180" height="70" rx="3" fill="rgba(60,196,187,.08)" stroke="rgba(60,196,187,.42)" stroke-width=".8"/>
+          <text x="8" y="14" font-family="Noto Serif SC,serif" font-size="8.5" font-weight="700" fill="#3cc4bb">关键发现</text>
+          <text x="8" y="28" font-family="Noto Serif SC,serif" font-size="9" fill="#e8e3d4">边缘区域接单率 82% → 41%</text>
+          <text x="8" y="42" font-family="Noto Serif SC,serif" font-size="8" fill="#9091a8" font-style="italic">新算法只接送得快的订单，</text>
+          <text x="8" y="53" font-family="Noto Serif SC,serif" font-size="8" fill="#9091a8" font-style="italic">外环被悄悄放弃</text>
+          <text x="8" y="66" font-family="JetBrains Mono,monospace" font-size="7.5" font-weight="700" fill="#3cc4bb">嫌疑更新: h₂ ✓ confirmed</text>
+        </g>
+      </g>
+
+      <!-- arrow 2 → 3 -->
+      <line x1="435" y1="232" x2="447" y2="232" stroke="#9091a8" stroke-width="1.2" marker-end="url(#af1)"/>
+
+      <!-- ====== PANEL 3 · B3 · RECONCILE ====== -->
+      <g transform="translate(449,90)">
+        <rect width="200" height="290" rx="6" fill="#0d0d18" stroke="rgba(229,185,74,.5)" stroke-width="1"/>
+        <rect width="200" height="4" rx="2" fill="#e5b94a"/>
+        <text x="12" y="22" font-family="Noto Serif SC,serif" font-size="13" font-weight="700" fill="#e5b94a">B3 · RECONCILE</text>
+        <text x="12" y="38" font-family="JetBrains Mono,monospace" font-size="7.5" fill="#9091a8">request_view(stage, funnel)</text>
+        <text x="12" y="50" font-family="JetBrains Mono,monospace" font-size="7" fill="#54546e">−1 B_v</text>
+
+        <!-- mini chart: side-by-side funnels -->
+        <g transform="translate(16,68)">
+          <text x="0" y="0" font-family="Noto Serif SC,serif" font-size="9" font-weight="600" fill="#e8e3d4">订单生命周期漏斗</text>
+          <!-- OLD funnel (left) -->
+          <g transform="translate(0,14)">
+            <rect x="0"   y="0"  width="72" height="10" fill="#5588e0" opacity=".82"/>
+            <text x="36"  y="8"  font-family="JetBrains Mono,monospace" font-size="6.5" fill="#06060c" text-anchor="middle" font-weight="700">1000</text>
+            <rect x="3"   y="12" width="66" height="10" fill="#5588e0" opacity=".72"/>
+            <text x="36"  y="20" font-family="JetBrains Mono,monospace" font-size="6.5" fill="#06060c" text-anchor="middle">920</text>
+            <rect x="5"   y="24" width="62" height="10" fill="#5588e0" opacity=".62"/>
+            <text x="36"  y="32" font-family="JetBrains Mono,monospace" font-size="6.5" fill="#06060c" text-anchor="middle">870</text>
+            <rect x="6"   y="36" width="60" height="10" fill="#3cc4bb" opacity=".88"/>
+            <text x="36"  y="44" font-family="JetBrains Mono,monospace" font-size="6.5" fill="#06060c" text-anchor="middle" font-weight="700">840 ✓</text>
+            <rect x="20"  y="50" width="32" height="8"  fill="rgba(224,72,88,.25)" stroke="#e04858" stroke-width=".4"/>
+            <text x="36"  y="57" font-family="JetBrains Mono,monospace" font-size="6" fill="#e04858" text-anchor="middle">160 fail</text>
+            <text x="36"  y="72" font-family="Noto Serif SC,serif" font-size="7.5" font-weight="700" fill="#3cc4bb" text-anchor="middle">success 84%</text>
+          </g>
+          <!-- NEW funnel (right) -->
+          <g transform="translate(90,14)">
+            <rect x="0"   y="0"  width="72" height="10" fill="#5588e0" opacity=".82"/>
+            <text x="36"  y="8"  font-family="JetBrains Mono,monospace" font-size="6.5" fill="#06060c" text-anchor="middle" font-weight="700">1000</text>
+            <rect x="14"  y="12" width="44" height="10" fill="#5588e0" opacity=".72"/>
+            <text x="36"  y="20" font-family="JetBrains Mono,monospace" font-size="6.5" fill="#06060c" text-anchor="middle">620</text>
+            <rect x="16"  y="24" width="40" height="10" fill="#5588e0" opacity=".62"/>
+            <text x="36"  y="32" font-family="JetBrains Mono,monospace" font-size="6.5" fill="#06060c" text-anchor="middle">590</text>
+            <rect x="17"  y="36" width="38" height="10" fill="#3cc4bb" opacity=".95"/>
+            <text x="36"  y="44" font-family="JetBrains Mono,monospace" font-size="6.5" fill="#06060c" text-anchor="middle" font-weight="700">570 ✓</text>
+            <rect x="6"   y="50" width="60" height="8"  fill="rgba(224,72,88,.45)" stroke="#e04858" stroke-width=".5"/>
+            <text x="36"  y="57" font-family="JetBrains Mono,monospace" font-size="6" fill="#06060c" text-anchor="middle" font-weight="700">430 fail</text>
+            <text x="36"  y="72" font-family="Noto Serif SC,serif" font-size="7.5" font-weight="700" fill="#e04858" text-anchor="middle">success 57%</text>
+            <!-- bbox -->
+            <rect x="17"  y="36" width="38" height="10" fill="none" stroke="#e5b94a" stroke-width=".7" stroke-dasharray="2 1.5"/>
+          </g>
+          <!-- arrow showing headline only on this segment -->
+          <text x="86" y="100" font-family="Noto Serif SC,serif" font-size="6.5" font-style="italic" fill="#e5b94a" text-anchor="middle">"18 min" 仅在这条 teal 段</text>
+        </g>
+
+        <!-- finding box -->
+        <g transform="translate(10,210)">
+          <rect width="180" height="70" rx="3" fill="rgba(229,185,74,.1)" stroke="rgba(229,185,74,.42)" stroke-width=".8"/>
+          <text x="8" y="14" font-family="Noto Serif SC,serif" font-size="8.5" font-weight="700" fill="#e5b94a">关键发现</text>
+          <text x="8" y="28" font-family="Noto Serif SC,serif" font-size="9" fill="#e8e3d4">success: 84% → 57%</text>
+          <text x="8" y="42" font-family="Noto Serif SC,serif" font-size="8" fill="#9091a8" font-style="italic">"送得更快"与"体验更差"</text>
+          <text x="8" y="53" font-family="Noto Serif SC,serif" font-size="8" fill="#9091a8" font-style="italic">同时为真 — 对应两个不同分母</text>
+          <text x="8" y="66" font-family="JetBrains Mono,monospace" font-size="7.5" font-weight="700" fill="#3cc4bb">嫌疑更新: h₃ ✓ confirmed</text>
+        </g>
+      </g>
+
+      <!-- arrow 3 → 4 -->
+      <line x1="652" y1="232" x2="664" y2="232" stroke="#9091a8" stroke-width="1.2" marker-end="url(#af1)"/>
+
+      <!-- ====== PANEL 4 · B4 · DEBUNK ====== -->
+      <g transform="translate(666,90)">
+        <rect width="200" height="290" rx="6" fill="#0d0d18" stroke="rgba(224,72,88,.5)" stroke-width="1"/>
+        <rect width="200" height="4" rx="2" fill="#e04858"/>
+        <text x="12" y="22" font-family="Noto Serif SC,serif" font-size="13" font-weight="700" fill="#e04858">B4 · DEBUNK</text>
+        <text x="12" y="38" font-family="JetBrains Mono,monospace" font-size="7.5" fill="#9091a8">all-request · click→door</text>
+        <text x="12" y="50" font-family="JetBrains Mono,monospace" font-size="7" fill="#54546e">−1 B_v</text>
+
+        <!-- mini chart: headline vs corrected metric -->
+        <g transform="translate(20,68)">
+          <text x="0" y="0" font-family="Noto Serif SC,serif" font-size="9" font-weight="600" fill="#e8e3d4">headline vs 修正口径</text>
+          <!-- Two paired bars -->
+          <!-- HEADLINE pair: old vs new pickup-dropoff -->
+          <g transform="translate(0,14)">
+            <text x="0" y="6" font-family="Noto Serif SC,serif" font-size="7" fill="#9091a8">pickup→drop（headline）</text>
+            <rect x="0" y="10" width="80" height="10" fill="#e04858" opacity=".7"/>
+            <text x="84" y="18" font-family="JetBrains Mono,monospace" font-size="7" font-weight="700" fill="#e04858">31 min</text>
+            <rect x="0" y="22" width="46" height="10" fill="#3cc4bb" opacity=".9"/>
+            <text x="50" y="30" font-family="JetBrains Mono,monospace" font-size="7" font-weight="700" fill="#3cc4bb">18 min ↓</text>
+            <text x="160" y="22" font-family="JetBrains Mono,monospace" font-size="6.5" fill="#3cc4bb" text-anchor="end" font-weight="700">−42%</text>
+          </g>
+          <!-- CORRECTED pair: old vs new all-request click-to-door -->
+          <g transform="translate(0,52)">
+            <text x="0" y="6" font-family="Noto Serif SC,serif" font-size="7" fill="#9091a8">click→door · all-request 口径</text>
+            <rect x="0" y="10" width="50" height="10" fill="#3cc4bb" opacity=".9"/>
+            <text x="54" y="18" font-family="JetBrains Mono,monospace" font-size="7" font-weight="700" fill="#3cc4bb">73% on-time</text>
+            <rect x="0" y="22" width="82" height="10" fill="#e04858" opacity=".7"/>
+            <text x="86" y="30" font-family="JetBrains Mono,monospace" font-size="7" font-weight="700" fill="#e04858">49% on-time ↓</text>
+            <text x="160" y="22" font-family="JetBrains Mono,monospace" font-size="6.5" fill="#e04858" text-anchor="end" font-weight="700">−24 pt</text>
+          </g>
+          <!-- Diverging-stories label -->
+          <g transform="translate(0,100)">
+            <rect x="0" y="0" width="170" height="22" rx="2" fill="rgba(224,72,88,.08)" stroke="#e04858" stroke-width=".5"/>
+            <text x="85" y="9"  font-family="Noto Serif SC,serif" font-size="7" fill="#e8e3d4" text-anchor="middle" font-weight="700">两条线方向相反 ↑↓</text>
+            <text x="85" y="18" font-family="Noto Serif SC,serif" font-size="6.5" fill="#9091a8" text-anchor="middle" font-style="italic">headline ↓ 反而对应服务质量 ↓</text>
+          </g>
+        </g>
+
+        <!-- finding box -->
+        <g transform="translate(10,210)">
+          <rect width="180" height="70" rx="3" fill="rgba(224,72,88,.1)" stroke="rgba(224,72,88,.42)" stroke-width=".8"/>
+          <text x="8" y="14" font-family="Noto Serif SC,serif" font-size="8.5" font-weight="700" fill="#e04858">关键发现</text>
+          <text x="8" y="28" font-family="Noto Serif SC,serif" font-size="9" fill="#e8e3d4">全口径 on-time: 73% → 49%</text>
+          <text x="8" y="42" font-family="Noto Serif SC,serif" font-size="8" fill="#9091a8" font-style="italic">把窗口拉回 t₀→t₃、把失败</text>
+          <text x="8" y="53" font-family="Noto Serif SC,serif" font-size="8" fill="#9091a8" font-style="italic">订单纳回——headline 翻面</text>
+          <text x="8" y="66" font-family="JetBrains Mono,monospace" font-size="7.5" font-weight="700" fill="#3cc4bb">嫌疑更新: h₄ ✓ confirmed</text>
+        </g>
+      </g>
+
+      <!-- =========== BOTTOM: FINAL VERDICT STRIP =========== -->
+      <g transform="translate(15,396)">
+        <rect width="850" height="98" rx="6" fill="rgba(229,185,74,.06)" stroke="#e5b94a" stroke-width="1"/>
+        <rect width="6" height="98" rx="2" fill="#e5b94a"/>
+        <text x="20" y="22" font-family="JetBrains Mono,monospace" font-size="9" letter-spacing="2" fill="#e5b94a" font-weight="700">FINAL VERDICT · 4 视图预算之后</text>
+        <text x="20" y="44" font-family="Noto Serif SC,serif" font-size="13" font-weight="700" fill="#e8e3d4">"31 → 18 min" = <tspan fill="#3cc4bb" font-weight="700">区域挑选 (h₂)</tspan>  +  <tspan fill="#3cc4bb" font-weight="700">分母清洗 (h₃)</tspan>  +  <tspan fill="#3cc4bb" font-weight="700">指标边界转移 (h₄)</tspan>  ·  <tspan fill="#e5b94a" font-weight="700">残余真提速仅在窄口径成立 (h₁ ▲)</tspan></text>
+        <text x="20" y="64" font-family="Noto Serif SC,serif" font-size="10" fill="#9091a8" font-style="italic">恢复的依赖关系: zone × algorithm × outcome × metric_window → headline_minutes  ·  与 §C1.b SDK 中声明的 DGP 完全一致</text>
+        <text x="20" y="82" font-family="JetBrains Mono,monospace" font-size="9" fill="#54546e">4 个视图预算  ·  4 组 bbox  ·  一条完整的调查轨迹  ——  而不是"18 min"的脱口而出</text>
+      </g>
+    </svg>
+    <div class="fig1-narr">
+      <div><strong style="color:#5588e0">B1 · READ —</strong> agent 烧第一个视图预算读清头条 claim 的精确定义。返回结果显示 "18 min" 只测量 <code>pickup → dropoff</code> 区间、并且只在 successfully delivered orders 上求均值——下单到接单、备餐等待、以及 430 个失败订单都不在分母里。<strong>h₃、h₄ 同时浮出。</strong></div>
+      <div><strong style="color:#3cc4bb">B2 · REVEAL —</strong> 第二个视图预算请求城市区域热力图。返回结果显示市中心区域接单率几乎不变，但<strong>边缘外环从 82% 坍缩到 41%</strong>——新算法不是把订单送快了，而是只接送得快的订单。<strong>h₂ ✓ confirmed，bbox 锁在外环。</strong></div>
+      <div><strong style="color:#e5b94a">B3 · RECONCILE —</strong> 第三个视图预算请求订单生命周期漏斗。返回结果显示成功率从 84% 暴跌到 57%——"送得更快"与"体验更差"对应着两个不同分母，两个看似矛盾的故事终于在一张图里同时成立。<strong>h₃ ✓ confirmed。</strong></div>
+      <div><strong style="color:#e04858">B4 · DEBUNK —</strong> 最后一个视图预算把时间窗口拉回 t₀→t₃、把 430 个失败订单全部纳回分母。<strong>headline 仅在窄口径上 ↓ 42%，但全请求口径下 on-time 成功率从 73% 跌到 49%</strong>——两条线方向完全相反。<strong>h₄ ✓ confirmed。</strong></div>
+    </div>
+    <div class="fig1-verdict">
+      <strong>4 视图、4 组 bbox、一条完整轨迹</strong>——SwiftEats 的"18 分钟外卖奇迹"，实质是 <em>区域挑选（外环被放弃）</em>、<em>分母清洗（430 个失败订单不计入）</em> 与 <em>指标边界转移（只算 pickup→dropoff 一段）</em> 三个机制共同制造的 dashboard illusion；真正的"AI 提速"只在<em>已经被接单并成功送达的窄口径</em>上成立，全请求服务质量反而下降。<strong>这是 LDW 协议在一个具体案例上交付的最完整答卷。</strong>
+    </div>
+  </div>
+</section>
+
+<!-- §7 差异化对比 -->
+<section id="diff" data-num="07">
+  <div class="section-tag"><span class="section-num">7</span> 差异化对比 / Differentiation</div>
+  <h2 class="section-title">LDW 如何<em>与众不同</em></h2>
+
+  <div class="comp-wrap reveal">
+    <table class="comp-table">
+      <thead>
+        <tr>
+          <th>维度</th>
+          <th>ChartMuseum</th>
+          <th>InterChart</th>
+          <th>ChartPoint</th>
+          <th>ChartM3</th>
+          <th class="ldw">LDW（我们）</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>数据来源</td>
+          <td>真实世界爬取</td>
+          <td>真实 + 合成</td>
+          <td>真实 + 合成</td>
+          <td>代码驱动多图表</td>
+          <td class="ldw">代码即数据生成过程 + 原子主表</td>
+        </tr>
+        <tr>
+          <td>模式</td>
+          <td>被动 QA</td>
+          <td>被动多图表</td>
+          <td>被动 + 单图表 bbox CoT</td>
+          <td>被动多图表</td>
+          <td class="ldw">主动、有预算、悬案模式</td>
+        </tr>
+        <tr>
+          <td>潜在真值</td>
+          <td><span class="crs">—</span></td>
+          <td><span class="crs">—</span></td>
+          <td><span class="crs">—</span></td>
+          <td>部分</td>
+          <td class="ldw"><span class="chk">✓</span> 完整模式元数据</td>
+        </tr>
+        <tr>
+          <td>Bbox 作用</td>
+          <td><span class="crs">—</span></td>
+          <td><span class="crs">—</span></td>
+          <td>单图表推理辅助</td>
+          <td><span class="crs">—</span></td>
+          <td class="ldw"><span class="chk">✓</span> 跨图表证据凭证（强制）</td>
+        </tr>
+        <tr>
+          <td>误导性仪表板</td>
+          <td><span class="crs">✗</span></td>
+          <td><span class="crs">✗</span></td>
+          <td><span class="crs">✗</span></td>
+          <td><span class="crs">✗</span></td>
+          <td class="ldw"><span class="chk">✓</span> 驳斥类</td>
+        </tr>
+        <tr>
+          <td>竞争假设</td>
+          <td><span class="crs">✗</span></td>
+          <td><span class="crs">✗</span></td>
+          <td><span class="crs">✗</span></td>
+          <td><span class="crs">✗</span></td>
+          <td class="ldw"><span class="chk">✓</span></td>
+        </tr>
+        <tr>
+          <td>预算 / 探索成本</td>
+          <td><span class="crs">✗</span></td>
+          <td><span class="crs">✗</span></td>
+          <td><span class="crs">✗</span></td>
+          <td><span class="crs">✗</span></td>
+          <td class="ldw"><span class="chk">✓</span> B<sub>v</sub> + B<sub>p</sub> 双预算</td>
+        </tr>
+        <tr>
+          <td>标题指标</td>
+          <td>准确率</td>
+          <td>准确率</td>
+          <td>准确率</td>
+          <td>准确率</td>
+          <td class="ldw">恢复率 + 潜在 QA + 解释解析 + 证据效率</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- §8 长远影响 -->
+<section id="impact" data-num="08">
+  <div class="section-tag"><span class="section-num">8</span> 长远影响 / Long-term Impact</div>
+  <h2 class="section-title">开创新的<em>评估范式</em></h2>
+  <p class="section-lead">VLM 评估进入新阶段——不再是"它能看到什么"，而是"它能否决定看什么、何时停止、何时承认自己不知道"。</p>
+
+  <p class="body">四个研究社区首次围绕同一个测试平台汇聚：<strong>主动感知</strong>（机器人学）、<strong>系统辨识</strong>（控制论）、<strong>贝叶斯实验设计</strong>（统计学）和<strong>多模态科学探索</strong>（VLM 评估）。</p>
+
+  <h3 class="sub">基础设施：LDW-Gym</h3>
+  <p class="body">分三层发布，每层都为下一波研究做铺垫。</p>
+
+  <div class="imp-grid reveal">
+    <div class="imp">
+      <div class="imp-layer">I</div>
+      <div class="imp-num">第一层 · 生成器</div>
+      <div class="imp-title">无限测试集</div>
+      <div class="imp-desc"><code>generate_episode(seed)</code> 让任何研究人员都能以任意规模生成私有测试集——从结构上免疫测试集污染问题（这是 2026–2028 年基准测试的核心威胁）。</div>
+    </div>
+    <div class="imp">
+      <div class="imp-layer">II</div>
+      <div class="imp-num">第二层 · 环境</div>
+      <div class="imp-title">双 API 接口</div>
+      <div class="imp-desc">同时提供 Gym 风格和工具调用风格的 API。兼容 LangChain / AutoGen / Anthropic SDK。无接入摩擦。</div>
+    </div>
+    <div class="imp">
+      <div class="imp-layer">III</div>
+      <div class="imp-num">第三层 · 排行榜</div>
+      <div class="imp-title">双分割机制</div>
+      <div class="imp-desc">固定分割（用于横向比较）+ 重新生成分割（防止过拟合）。基准测试永远保持有意义。</div>
+    </div>
+  </div>
+
+  <div class="callout callout-teal reveal">
+    <div class="callout-title">我们交付的核心 / The Deliverable</div>
+    <p>一个<strong>可以永远被重新实例化的协议</strong>，而不是一个必然会过时的固定基准。<em>当它被人攻击，它就已经成为了基础设施。</em></p>
+  </div>
+
+  <h3 class="sub">预期引用模式</h3>
+  <table class="cite-table reveal">
+    <thead><tr><th style="width:32%">社区</th><th>引用形式</th></tr></thead>
+    <tbody>
+      <tr><td>视觉语言模型</td><td>"我们遵循 LDW 协议；我们报告 Recovery@Schema、Latent QA、Explanation Resolution、Evidence Efficiency。"</td></tr>
+      <tr><td>智能体 / 规划</td><td>"LDW-Gym 作为视图选择策略的受控测试平台。"</td></tr>
+      <tr><td>主动学习 / 贝叶斯实验设计</td><td>"我们在 LDW 框架下实例化有预算约束的贝叶斯实验设计。"</td></tr>
+      <tr><td>对抗性 / 鲁棒性</td><td>"我们构建了利用 LDW 恢复指标的仪表板。"</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- §9 标题与结语 -->
+<section id="title" data-num="09">
+  <div class="section-tag"><span class="section-num">9</span> 标题与结语 / Title & Closing</div>
+  <h2 class="section-title">论文的<em>框架</em></h2>
+
+  <div class="rec-title reveal">
+    <div class="rec-label">★ 推荐标题 / Recommended Title</div>
+    <h3>潜在数据世界：评估视觉语言模型智能体作为视觉数据调查员的能力
+      <span class="en">Latent Data World: Evaluating VLM Agents as Visual Data Investigators</span>
+    </h3>
+  </div>
+
+  <p class="body">备选标题 / Alternates：</p>
+  <ul class="alt-list reveal">
+    <li><div>从图表读取到数据世界调查：一个视觉调查协议<span class="alt-en">From Chart Reading to Data World Investigation: A Visual Investigation Protocol</span></div></li>
+    <li><div>图表是线索：潜在数据世界上的主动视觉推断<span class="alt-en">Charts Are Clues: Active Visual Inference over Latent Data Worlds</span></div></li>
+  </ul>
+
+  <div class="closing-q reveal">
+    <p>最危险的图表问题，不是模型无法回答的那个——而是它从一个本质上不充分的视图中自信地给出错误答案的那个。
+      <span class="en">The most dangerous chart question is not the one a model cannot answer — it is the one it answers confidently from a view that is intrinsically insufficient.</span>
+    </p>
+  </div>
+  <div class="closing-meta"><span>论文开篇语</span><span>结论结尾语</span><span>结构对称</span></div>
+</section>
+
+<!-- 附录：流水线接口（merged from appendix） -->
+<section id="appendix" data-num="A">
+  <div class="section-tag"><span class="section-num">A</span> 附录 · 流水线接口 / Appendix</div>
+  <h2 class="section-title">在现有流水线上的<em>增量</em></h2>
+  <p class="section-lead">LDW 无需修改，直接复用 <code>chartagent_proposal.md</code> 中已定义的资产。</p>
+
+  <table class="cite-table reveal">
+    <thead><tr><th>LDW 所需</th><th>由谁提供</th></tr></thead>
+    <tbody>
+      <tr><td>隐藏主表 M</td><td>第二阶段主事实表</td></tr>
+      <tr><td>模式真值 S</td><td>第二阶段模式元数据 + 三层验证器</td></tr>
+      <tr><td><code>request_view</code> 渲染</td><td>第三阶段 SQL 投影 + 图表渲染器</td></tr>
+      <tr><td>读取 / 揭示 / 协调 / 驳斥 标签</td><td>第三阶段 QA 生成器，按所需证据类型标注</td></tr>
+      <tr><td>元素级 bbox 真值</td><td>图表渲染器布局（已计算）</td></tr>
+      <tr><td>可重复性</td><td>(声明, 种子) → 逐位可复现</td></tr>
+    </tbody>
+  </table>
+  <p class="body" style="font-size:.9rem;color:var(--text-dim);margin-top:1.5rem">在现有流水线基础上新增的工程量：为第三阶段 QA 添加案例文件包装器、从渲染器导出 bbox 层、以及带预算记账功能的动作运行时调度器。<strong>预估工作量：约 2 人周；不超过完整流水线的 5%。</strong></p>
+</section>
+
+<!-- 参考文献 -->
+<section id="refs" data-num="R">
+  <div class="section-tag"><span class="section-num">附</span> 参考文献 / References</div>
+  <h2 class="section-title"><em>先前工作</em></h2>
+  <ul class="refs reveal">
+    <li><span class="rtitle">ChartMuseum: Testing Visual Reasoning Capabilities of Large Vision-Language Models</span><span class="rmeta">arXiv:2505.13444</span></li>
+    <li><span class="rtitle">InterChart: Benchmarking Visual Reasoning Across Decomposed and Distributed Chart Information</span><span class="rmeta">arXiv:2508.07630</span></li>
+    <li><span class="rtitle">ChartPoint: Guiding MLLMs with Grounding Reflection for Chart Reasoning</span><span class="rmeta">arXiv:2512.00305</span></li>
+    <li><span class="rtitle">ChartM3: A Multi-Stage Code-Driven Pipeline for Multi-Chart Reasoning</span><span class="rmeta">arXiv:2511.02415</span></li>
+    <li><span class="rtitle">VS-Bench: Evaluating VLMs for Strategic Abilities in Multi-Agent Environments</span><span class="rmeta">arXiv:2506.02387 · CVPR'26 Oral</span></li>
+    <li><span class="rtitle">VAGEN: Reinforcing World Model Reasoning for Multi-Turn VLM Agents</span><span class="rmeta">vagen-ai.github.io</span></li>
+    <li><span class="rtitle">GLANCE: Driving Exploration in VLM Agents via Visual-Linguistic Curiosity</span><span class="rmeta">arXiv:2605.03782</span></li>
+    <li><span class="rtitle">WorldArena: A Unified Benchmark for Evaluating Perception</span><span class="rmeta">arXiv:2602.08971</span></li>
+    <li><span class="rtitle">Molmo 2: State-of-the-art Pointing and Grounding</span><span class="rmeta">Ai2 · 2025.12</span></li>
+    <li><span class="rtitle">BBox-DocVQA: Large-Scale Bounding-Box-Grounded Document VQA</span><span class="rmeta">arXiv:2511.15090</span></li>
+    <li><span class="rtitle">DriveAgent-R1: VLM-based Autonomous Driving with Active Perception</span><span class="rmeta">arXiv:2507.20879</span></li>
+    <li><span class="rtitle">BALROG: Benchmarking Agentic LLM and VLM Reasoning</span><span class="rmeta">UCL · 2025</span></li>
+  </ul>
+</section>
+
+</main>
+
+<script>
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.08 });
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+const sections = document.querySelectorAll('section[id]');
+const links = document.querySelectorAll('nav ul li a');
+const navObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const id = e.target.id;
+      links.forEach(l => l.classList.toggle('active', l.getAttribute('href') === `#${id}`));
+    }
+  });
+}, { threshold: 0.25 });
+sections.forEach(s => navObs.observe(s));
+</script>
+</body>
+</html>
