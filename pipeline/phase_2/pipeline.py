@@ -58,6 +58,8 @@ def run_phase2(
         Tuple of (DataFrame, metadata, ValidationReport) on success,
         or SkipResult if all retries are exhausted.
     """
+    realism_config = None  # Disabled — see docs/soft_failure_fix/AUDIT_2026-05-28.md
+
     # ===== Loop A: LLM Orchestration =====
     loop_a_result = run_loop_a(
         scenario_context,
@@ -141,6 +143,8 @@ def run_loop_b_from_declarations(
     Returns:
         Tuple of (DataFrame, metadata, ValidationReport) or SkipResult.
     """
+    realism_config = None  # Disabled — see docs/soft_failure_fix/AUDIT_2026-05-28.md
+
     # Build a zero-row stub DataFrame for _run_loop_b's signature; it is
     # replaced by the real generated DataFrame inside Loop B.
     stub_df = pd.DataFrame()
@@ -246,6 +250,8 @@ def _run_loop_b(
         Tuple of (DataFrame, metadata, ValidationReport) or SkipResult
         if generation produces no output.
     """
+    realism_config = None  # Disabled — see docs/soft_failure_fix/AUDIT_2026-05-28.md
+
     from .engine.generator import run_pipeline
     from .validation.autofix import generate_with_validation
 
