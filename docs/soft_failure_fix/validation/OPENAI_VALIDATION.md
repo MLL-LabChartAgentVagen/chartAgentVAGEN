@@ -1,6 +1,6 @@
 # OpenAI End-to-End Validation (gpt-5.5)
 
-> 配套 [SIGMA_CALIBRATION.md §7.4](../subsystems/SIGMA_CALIBRATION.md#74-openai-端到端验证-path-bc-缺口)
+> 配套 [SIGMA_CALIBRATION.md §7.4](../archive/SIGMA_CALIBRATION.md#74-openai-端到端验证-path-bc-缺口)
 > 留的缺口：Path B/C 的 typed-error 反馈环路在 gemini 上没触发过，需要
 > 在原始 production model openai/gpt-5.5 上重跑一遍验证。
 >
@@ -298,7 +298,7 @@ Loop B 误触的 autofix 推过线——这是设计意图之外的额外收益�
 
 - [PATH_D_KS_SPARSE_CELLS.md](../subsystems/PATH_D_KS_SPARSE_CELLS.md) — Path D 设计 + gemini V3 实测
 - [M1_RATIO_OPERATOR_STRAGGLER.md](../mechanisms/M1_RATIO_OPERATOR_STRAGGLER.md) — §7.4 剩 1 条 residual 的根因
-- [SIGMA_CALIBRATION.md](../subsystems/SIGMA_CALIBRATION.md) — calibration 设计与 gemini 端验证
+- [SIGMA_CALIBRATION.md](../archive/SIGMA_CALIBRATION.md) — calibration 设计与 gemini 端验证
 - [FAILURE_MECHANISMS.md](../FAILURE_MECHANISMS.md) — 三机制 + 4-way 实测
 - [SKIP_PERSISTENCE.md](../subsystems/SKIP_PERSISTENCE.md) — Stage 1 skip 持久化 wiring
 - [2026-05-14-stage1-sigma-calibration.md](../archive/2026-05-14-stage1-sigma-calibration.md) — 原 TDD 实施计划

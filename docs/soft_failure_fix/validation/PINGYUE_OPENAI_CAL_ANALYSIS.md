@@ -345,6 +345,6 @@ jq '.columns[] | select(.name == "student_faculty_ratio" or .name == "course_loa
 
 - 入口：[ANALYSIS.md](../ANALYSIS.md) / [FAILURE_MECHANISMS.md](../FAILURE_MECHANISMS.md)
 - Batch-level summary：[OPENAI_VALIDATION.md](OPENAI_VALIDATION.md)
-- 机制纵深：[mechanisms/MECHANISM_1_DEEP_DIVE.md](../mechanisms/MECHANISM_1_DEEP_DIVE.md) / [mechanisms/MECHANISM_3_DEEP_DIVE.md](../mechanisms/MECHANISM_3_DEEP_DIVE.md)
+- 机制纵深：[archive/MECHANISM_1_DEEP_DIVE.md](../archive/MECHANISM_1_DEEP_DIVE.md) / [mechanisms/MECHANISM_3_DEEP_DIVE.md](../mechanisms/MECHANISM_3_DEEP_DIVE.md)
 - M1 长尾：[mechanisms/M1_RATIO_OPERATOR_STRAGGLER.md](../mechanisms/M1_RATIO_OPERATOR_STRAGGLER.md)
-- 子系统：[subsystems/SIGMA_CALIBRATION.md](../subsystems/SIGMA_CALIBRATION.md) / [subsystems/PATH_D_KS_SPARSE_CELLS.md](../subsystems/PATH_D_KS_SPARSE_CELLS.md)
+- 子系统：[archive/SIGMA_CALIBRATION.md](../archive/SIGMA_CALIBRATION.md) / [subsystems/PATH_D_KS_SPARSE_CELLS.md](../subsystems/PATH_D_KS_SPARSE_CELLS.md)

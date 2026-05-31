@@ -29,6 +29,8 @@ soft-failed / 2 errored）暴露出来的根本病因，并解释三条修复路
 
 ## 2. 机制 1 — 复合方差盲区
 
+> **⚠️ 更正（2026-05-31）**：本节「乘积方差使 residual_std 膨胀 66×」的因果叙事**已被证伪**——residual validator 用实测因子列重算公式，乘积方差进不了 residual。M1 `residual_*` 失败的真因是 **Phase γ pattern 污染**（σ 无关），其「修复」sigma calibration 已**禁用**。当前权威说法见 [mechanisms/M1_RESIDUAL_RECONCILIATION.md](mechanisms/M1_RESIDUAL_RECONCILIATION.md)。以下保留作历史。
+
 ### 现象
 
 15 条 `residual_*` 失败，ratio = `residual_std / noise_sigma` 高达 **66×**：
@@ -310,7 +312,9 @@ Loop A 看到这种 typed exception 会写"effect 'major_yield' 缺值 'None'，
 
 ## 7. 没修的部分（坦白）
 
-### 7.1 机制 1 的根（已修复 → 见 orchestration/calibration.py）
+### 7.1 机制 1 的根（~~已修复~~ → calibration 已禁用，见更正）
+
+> **⚠️ 更正（2026-05-31）**：sigma calibration 已于 2026-05-30 禁用——它实为掩盖 pattern 污染而非修因，真因与修复方向见 [mechanisms/M1_RESIDUAL_RECONCILIATION.md](mechanisms/M1_RESIDUAL_RECONCILIATION.md)。以下算法保留作历史。
 
 Path A 的 heuristic prompt 是 prevention layer。**实际修复机制 1 的根**
 靠的是 [orchestration/calibration.py](../../pipeline/phase_2/orchestration/calibration.py)：

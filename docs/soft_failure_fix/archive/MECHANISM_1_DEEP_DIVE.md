@@ -1,5 +1,11 @@
 # 机制 1（复合方差盲区）深度剖析：根因 → 算法 → 实测
 
+> **🗄 已归档（2026-05-31）**：本文叙事已被证伪、所述 calibration 亦已禁用，当前权威 M1 说法见 [../mechanisms/M1_RESIDUAL_RECONCILIATION.md](../mechanisms/M1_RESIDUAL_RECONCILIATION.md)。保留作历史投资记录。
+>
+> **⚠️ 更正（2026-05-30）**：本文「validator sees residual_std ≈ 乘积方差 / 66×」这一前提，与现行（且自第一版 `0e696e0` 起就存在的）residual 实现冲突——validator 用**实测因子列**重算公式，乘积方差被减掉，进不了 residual。M1 `residual_*` 失败的真因是 **Phase γ pattern 污染 + P3-8 排除泄漏**（σ 无关），sigma 校准只是用大 noise 掩盖它。详见 [../mechanisms/M1_RESIDUAL_RECONCILIATION.md](../mechanisms/M1_RESIDUAL_RECONCILIATION.md)。以下原文保留作历史。
+>
+> **已实测锁定（2026-05-30）**：确定性诊断 [`residual_source_dump.py`](../../../pipeline/phase_2/analysis/residual_source_dump.py) 证实——合成 case 里 residual_std 仅在 P3-8 被绕过时膨胀到 127×σ，P3-8 在位则 ≈σ；而**本文 §3.1 的案例 `agpds_e9c40d0352::absentee_count`**（这里归因为「乘积方差 743、28.74×」）在现行代码 + T9 修复下 residual_std=23.6 ≈ σ(24)，本应 PASS。即历史 66×/9742× 是 T9 bug（P3-8 失效）的产物，乘积方差从不进 residual，**也不需要 sigma 校准来修**。
+>
 > 配套阅读：[ANALYSIS.md](../ANALYSIS.md) 是一页综述；本文档是机制 1 的纵深，把"为什么 LLM 算不对乘积 sigma → 我们怎么用 calibration 绕过 → pingyue-samples 上的真实失败和修复后的实测"串成一条线。
 >
 > 数据来自三个 byte-identical 批次（同 10 scenario · gemini · seed=42）：
@@ -313,7 +319,7 @@ Path A（prompt heuristic）能把 ratio median 从 19.25 → 2.49，但摸不�
 
 修复一行：`patterns=patterns`（commit `b16525e`）。
 
-教训写进 [SIGMA_CALIBRATION.md §8.3](../subsystems/SIGMA_CALIBRATION.md)：
+教训写进 [SIGMA_CALIBRATION.md §8.3](SIGMA_CALIBRATION.md)：
 
 > 跨模块的"同一个计算"产生不同结果时，**别先怀疑算法**——先验证两边的输入是否字节一致。
 
@@ -331,6 +337,6 @@ Path A（prompt heuristic）能把 ratio median 从 19.25 → 2.49，但摸不�
 
 - [ANALYSIS.md](../ANALYSIS.md) — 一页综述，所有 soft-failure 问题的入口
 - [FAILURE_MECHANISMS.md](../FAILURE_MECHANISMS.md) — 三机制 + Path A/B/C 修复路径全图
-- [SIGMA_CALIBRATION.md](../subsystems/SIGMA_CALIBRATION.md) — calibration 模块技术参考（架构图、retry budget、T9 case study）
-- [2026-05-14-stage1-sigma-calibration.md](../archive/2026-05-14-stage1-sigma-calibration.md) — TDD 实施计划（历史档案）
+- [SIGMA_CALIBRATION.md](SIGMA_CALIBRATION.md) — calibration 模块技术参考（架构图、retry budget、T9 case study）
+- [2026-05-14-stage1-sigma-calibration.md](2026-05-14-stage1-sigma-calibration.md) — TDD 实施计划（历史档案）
 - [VALIDATION_PERSISTENCE.md](../subsystems/VALIDATION_PERSISTENCE.md) — Stage 2 持久化层（report 落盘合约）

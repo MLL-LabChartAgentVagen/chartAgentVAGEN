@@ -168,7 +168,7 @@ Loop B 的自动修复工具（[validation/autofix.py](../../../pipeline/phase_2
 
 ### 3.3 Loop A calibration 也救不了
 
-[Loop A in-loop sigma calibration](../subsystems/SIGMA_CALIBRATION.md) 解决的是 measure_type=="structural" 的 noise sigma（机制 1）。conditional_weights 不属于 measure DAG，calibration 不扫它。即使扫了，按 §3.1 的 math 也不应该让 LLM 改 weights——LLM 已经写对了。**这个 mechanism 必须在 validator 侧解决。**
+[Loop A in-loop sigma calibration](../archive/SIGMA_CALIBRATION.md) 解决的是 measure_type=="structural" 的 noise sigma（机制 1）。conditional_weights 不属于 measure DAG，calibration 不扫它。即使扫了，按 §3.1 的 math 也不应该让 LLM 改 weights——LLM 已经写对了。**这个 mechanism 必须在 validator 侧解决。**
 
 ---
 
@@ -454,7 +454,7 @@ Phase A 已经关闭比例漂移机制。Path D 后 13 条 → Phase A 后 6 条
 
 ### 6.6 教训：阈值算法必须知道样本量
 
-跟 [SIGMA_CALIBRATION.md §8.3](../subsystems/SIGMA_CALIBRATION.md) 的 T9 plumbing bug 同精神：
+跟 [SIGMA_CALIBRATION.md §8.3](../archive/SIGMA_CALIBRATION.md) 的 T9 plumbing bug 同精神：
 
 > 跨模块的"同一个计算"产生不同结果时，**别先怀疑算法**——先验证两边的输入是否字节一致。
 
@@ -472,11 +472,11 @@ Phase A 这边的 mirror 教训：
 - [FAILURE_MECHANISMS.md](../FAILURE_MECHANISMS.md) — 三机制（M1/M2/M3）+ Path A/B/C 修复路径全图（M4-family 尚待更新进去）
 - [validation/PINGYUE_OPENAI_CAL_ANALYSIS.md](../validation/PINGYUE_OPENAI_CAL_ANALYSIS.md) — openai-calibrated 批次深度分析，§6 是本机制的 hand-traced 证据起点，§8 是 Phase A-E 计划全图
 - [validation/OPENAI_VALIDATION.md](../validation/OPENAI_VALIDATION.md) — batch-level summary（Phase A 后需更新表格）
-- [mechanisms/MECHANISM_1_DEEP_DIVE.md](MECHANISM_1_DEEP_DIVE.md) — 机制 1（复合方差）纵深，本文写作模板
+- [archive/MECHANISM_1_DEEP_DIVE.md](../archive/MECHANISM_1_DEEP_DIVE.md) — 机制 1（复合方差）纵深，本文写作模板
 - [mechanisms/MECHANISM_3_DEEP_DIVE.md](MECHANISM_3_DEEP_DIVE.md) — 机制 3（稀疏 cell KS）纵深，n-aware 阈值的 KS 兄弟版
 - [mechanisms/M1_RATIO_OPERATOR_STRAGGLER.md](M1_RATIO_OPERATOR_STRAGGLER.md) — 机制 1 在除法算子上的长尾分支
 - [subsystems/PATH_D_KS_SPARSE_CELLS.md](../subsystems/PATH_D_KS_SPARSE_CELLS.md) — 机制 3 的 validator 实现（本机制的兄弟篇，思路同源）
-- [subsystems/SIGMA_CALIBRATION.md](../subsystems/SIGMA_CALIBRATION.md) — 机制 1 的 validator/orchestration 实现
+- [archive/SIGMA_CALIBRATION.md](../archive/SIGMA_CALIBRATION.md) — 机制 1 的 validator/orchestration 实现
 
 ---
 

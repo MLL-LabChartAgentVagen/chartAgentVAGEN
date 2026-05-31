@@ -508,11 +508,11 @@ Phase B 这边的 mirror 教训：
 - [FAILURE_MECHANISMS.md](../FAILURE_MECHANISMS.md) — 三机制（M1/M2/M3）+ Path A/B/C 修复路径全图（M4/M5 尚待 backport）
 - [validation/PINGYUE_OPENAI_CAL_ANALYSIS.md](../validation/PINGYUE_OPENAI_CAL_ANALYSIS.md) — openai-calibrated 批次深度分析，§4.2 是本机制的发现起点，§8.2 是 Phase B 计划
 - [mechanisms/MECHANISM_4_PROPORTION_DRIFT_DEEP_DIVE.md](MECHANISM_4_PROPORTION_DRIFT_DEEP_DIVE.md) — Phase A（小样本比例漂移）纵深，本文写作模板
-- [mechanisms/MECHANISM_1_DEEP_DIVE.md](MECHANISM_1_DEEP_DIVE.md) — 机制 1（复合方差）纵深
+- [archive/MECHANISM_1_DEEP_DIVE.md](../archive/MECHANISM_1_DEEP_DIVE.md) — 机制 1（复合方差）纵深
 - [mechanisms/MECHANISM_3_DEEP_DIVE.md](MECHANISM_3_DEEP_DIVE.md) — 机制 3（稀疏 cell KS）纵深，n-aware 阈值的 KS 兄弟版
 - [mechanisms/M1_RATIO_OPERATOR_STRAGGLER.md](M1_RATIO_OPERATOR_STRAGGLER.md) — 机制 1 在除法算子上的长尾分支
 - [subsystems/PATH_D_KS_SPARSE_CELLS.md](../subsystems/PATH_D_KS_SPARSE_CELLS.md) — 机制 3 的 validator 实现（本机制的兄弟篇，思路同源）
-- [subsystems/SIGMA_CALIBRATION.md](../subsystems/SIGMA_CALIBRATION.md) — 机制 1 的 validator/orchestration 实现
+- [archive/SIGMA_CALIBRATION.md](../archive/SIGMA_CALIBRATION.md) — 机制 1 的 validator/orchestration 实现
 
 ---
 

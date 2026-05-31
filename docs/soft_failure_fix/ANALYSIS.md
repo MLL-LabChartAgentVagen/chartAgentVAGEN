@@ -1,6 +1,8 @@
 # AGPDS Phase 2 Soft Failure 分析：根因、修复、效果、未尽事项
 
-> 基于 [docs/soft_failure_fix/SIGMA_CALIBRATION.md](subsystems/SIGMA_CALIBRATION.md)、[docs/soft_failure_fix/FAILURE_MECHANISMS.md](FAILURE_MECHANISMS.md) 与 [pipeline/phase_2/orchestration/calibration.py](../../pipeline/phase_2/orchestration/calibration.py)、[pipeline/phase_2/orchestration/retry_loop.py](../../pipeline/phase_2/orchestration/retry_loop.py) 等代码综合整理。
+> 基于 [FAILURE_MECHANISMS.md](FAILURE_MECHANISMS.md) 与 [pipeline/phase_2/orchestration/calibration.py](../../pipeline/phase_2/orchestration/calibration.py)、[retry_loop.py](../../pipeline/phase_2/orchestration/retry_loop.py) 等代码综合整理。
+
+> **⚠️ 更正（2026-05-31）**：本文写于 sigma calibration 时代。该 calibration 已于 2026-05-30 **禁用**，且 M1 真因已更正为 **Phase γ pattern 污染**（非乘积方差、非「LLM 算不出乘积 σ」）。§0 表「解决方案核心 / 当前效果」、§3.2 算法、§4.x 等涉及 calibration 的叙述均为历史；当前权威说法见 [mechanisms/M1_RESIDUAL_RECONCILIATION.md](mechanisms/M1_RESIDUAL_RECONCILIATION.md)。
 
 ---
 
@@ -124,49 +126,9 @@ Loop B 的四把工具（[autofix.py](../../pipeline/phase_2/validation/autofix.
 > Path B、C 是 **反馈通道**：把哑错升级成会话，让 Loop A 能修。
 > Calibration 是 **根治层**：直接绕过 LLM 算不出乘积 std 的数学障碍。
 
-### 3.2 Sigma Calibration 算法（核心新增）
+### 3.2 Sigma Calibration 算法（已禁用，历史）
 
-集成点：[retry_loop.py L:200–510](../../pipeline/phase_2/orchestration/retry_loop.py#L200) 的 `run_retry_loop`。
-
-```
-Loop A
-┌─ execute_in_sandbox(current_code) ─────────────┐
-│                                                 │
-│   if result.success:                            │
-│     cal_result = check_sigma_calibration(       │
-│         raw_declarations,                       │
-│         threshold=0.2,                          │
-│     )                                           │
-│     # 内部：                                     │
-│     # 1. run_pipeline(realism=None) replay      │
-│     # 2. for each structural measure with sigma:│
-│     #      check_structural_residuals(...)      │
-│     #      ratio = |emp - decl| / decl          │
-│     #      if ratio ≥ 0.2: CalibrationFailure   │
-│                                                 │
-│     if cal_result.passed: return success        │
-│                                                 │
-│     if calibration_budget remaining:            │
-│        feedback = format_calibration_feedback(  │
-│            original_code, failures              │
-│        )                                        │
-│        current_code = llm_generate(feedback)    │
-│        # 注意：attempt -= 1，独立于 exec budget │
-│        continue                                 │
-│                                                 │
-│     else:                                       │
-│        return SkipResult(                       │
-│            skip_reason="calibration_unconverged"│
-│        )                                        │
-└─────────────────────────────────────────────────┘
-```
-
-**关键设计决策**：
-
-1. **独立 retry budget**：`exec_attempts` (≤3) 与 `calibration_attempts` (≤3) **互不消耗**。最坏 6 次 LLM call/scenario。理由：calibration 失败 ≠ 代码失败，不该挤兑 exec 错误的修正预算。
-2. **复用 validator 算法**：calibration 调的是 Stage 2 同一个 [check_structural_residuals](../../pipeline/phase_2/validation/statistical.py#L368)。保证 Loop A 校准过的 sigma 在 Stage 2 一定通过——*前提是两边输入一致*（这正是 §4.3 plumbing bug 的来源）。
-3. **典型 feedback 模板**：把 `(measure, declared σ, empirical σ, suggested σ)` 嵌进 prompt，原代码原样附上，明确说 *Do NOT change* 公式或其它部分——只改 noise。
-4. **不收敛 → SkipResult**：3 轮没过就放弃这个 scenario，写 `output/agpds/<batch>/skipped.jsonl`，下游不消费。
+> calibration 已于 2026-05-30 **禁用**。其算法（Loop A exec 成功后 replay → 量 empirical residual std → 偏差 ≥0.2 则反馈 LLM 重写 sigma，独立 retry budget ≤3、不收敛写 `skipped.jsonl`）与设计决策详见已归档手册 [archive/SIGMA_CALIBRATION.md](archive/SIGMA_CALIBRATION.md)。**为何它实为「掩盖」pattern 污染而非修因，见 [mechanisms/M1_RESIDUAL_RECONCILIATION.md §5](mechanisms/M1_RESIDUAL_RECONCILIATION.md)。**
 
 ### 3.3 Path A 不是 calibration 的替代——它降低 calibration 触发频率
 
@@ -194,20 +156,13 @@ Path A 的 hard constraint 11/12（[prompt.py:103-118](../../pipeline/phase_2/or
 
 ### 4.3 T9 plumbing bug 教训
 
-T8 production rerun 一度报 -v3 0/10 passed、residual median 6.76——看起来 calibration 失败。debug 路径（[SIGMA_CALIBRATION.md §8](subsystems/SIGMA_CALIBRATION.md#8-case-studyt9-plumbing-bug)）：
+`patterns=metadata.get("patterns", [])` 在 `agpds_execute` 路径收到空 metadata → patterns=`[]` → `check_structural_residuals` 的 P3-8 pattern-row 排除静默失效 → pattern outlier 行被计入 residual std。一行修复 `patterns=patterns`（commit `b16525e`）。完整 case study 见 [archive/SIGMA_CALIBRATION.md §8](archive/SIGMA_CALIBRATION.md#8-case-studyt9-plumbing-bug)。教训：跨模块「同一个计算」结果不一致时，先验证两端输入字节一致。
 
-1. Loop A 校准说 `residual_std=4.49`；Stage 2 validator 说 `residual_std=9.54`。**同一个函数、同一份 df、不同结果**。
-2. 二分定位 [pipeline.py:281](../../pipeline/phase_2/pipeline.py#L281)：`patterns=metadata.get("patterns", [])`。但 `agpds_execute.py:95` 调时不传 metadata → 默认空 dict → patterns=`[]`。
-3. `check_structural_residuals` 的 P3-8 pattern-row 排除逻辑因此静默失效——pattern injected 的 outlier 行被计入 residual std，膨胀 ratio。
-4. 一行修复：`patterns=patterns`（用 `raw_declarations` 里的 local var）。修复后用同一份 declarations 重跑 Stage 2 → 上表的 -v3 真实数字。
-
-**教训**（已写入 [SIGMA_CALIBRATION.md §8.3](subsystems/SIGMA_CALIBRATION.md)）：
-
-> 跨模块的"同一个计算"产生不同结果时，**别先怀疑算法**——先验证两边的输入是否字节一致。
+> 后记：此 T9 bug 正是后来锁定 **M1 residual 膨胀真因 = pattern 污染**（而非乘积方差）的关键线索，见 [mechanisms/M1_RESIDUAL_RECONCILIATION.md](mechanisms/M1_RESIDUAL_RECONCILIATION.md)。
 
 ### 4.4 测试覆盖
 
-baseline 355 → **376 测试**（+21），全部 `pytest pipeline/phase_2/tests/modular -x -q` 通过。具体见 [SIGMA_CALIBRATION.md §5](subsystems/SIGMA_CALIBRATION.md#5-测试矩阵)：
+baseline 355 → **376 测试**（+21），全部 `pytest pipeline/phase_2/tests/modular -x -q` 通过。具体见 [SIGMA_CALIBRATION.md §5](archive/SIGMA_CALIBRATION.md#5-测试矩阵)：
 
 - `test_calibration.py` (14) — dataclasses、happy path、_extract_declared_sigma 6 edge case、parse RuntimeError
 - `test_sandbox_format.py` (2) — feedback 含具体数字、原代码、"Do NOT change" 指令
@@ -275,6 +230,6 @@ passed 4/10 是 stretch 达成，但还剩 6 个有 18 条失败。逐一看失�
 ## 配套阅读
 
 - [FAILURE_MECHANISMS.md](FAILURE_MECHANISMS.md) — 3 机制 + 修复路径 A/B/C + 3-way/4-way 实测对比
-- [SIGMA_CALIBRATION.md](subsystems/SIGMA_CALIBRATION.md) — calibration 模块技术参考
+- [SIGMA_CALIBRATION.md](archive/SIGMA_CALIBRATION.md) — calibration 模块技术参考
 - [VALIDATION_PERSISTENCE.md](subsystems/VALIDATION_PERSISTENCE.md) — Stage 2 持久化层
 - [pipeline/phase_2/INTERFACES.md](../../pipeline/phase_2/INTERFACES.md) — M1–M5 模块契约

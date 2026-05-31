@@ -1,6 +1,6 @@
 # 机制 3（稀疏 cell + KS 过敏）深度剖析：根因 → 算法 → 实测
 
-> 配套阅读：[ANALYSIS.md](../ANALYSIS.md) 是一页综述；本文档是机制 3 的纵深，把"为什么小样本 + 多重检验场景下 KS validator 必然误报 → 我们怎么用 n threshold + Bonferroni + aggregate 三件套修 → pingyue-samples 上的真实失败和修复后的实测"串成一条线。本文档与 [MECHANISM_1_DEEP_DIVE.md](MECHANISM_1_DEEP_DIVE.md)（机制 1 深度）对位。
+> 配套阅读：[ANALYSIS.md](../ANALYSIS.md) 是一页综述；本文档是机制 3 的纵深，把"为什么小样本 + 多重检验场景下 KS validator 必然误报 → 我们怎么用 n threshold + Bonferroni + aggregate 三件套修 → pingyue-samples 上的真实失败和修复后的实测"串成一条线。本文档与 [MECHANISM_1_DEEP_DIVE.md](../archive/MECHANISM_1_DEEP_DIVE.md)（机制 1 深度）对位。
 >
 > 数据来自两个 byte-identical 批次（同 10 scenario · gemini · seed=42 · declarations 完全一致；只重跑 Stage 2 验证）：
 > - `output/agpds/pingyue-samples-gemini-pathA-calibrated` — Path D 前（机制 1 已修，机制 3 未动）
@@ -172,131 +172,11 @@ Path A 让 LLM 把 sigma 写得更现实，机制 1 关闭后**反而暴露了�
 
 ---
 
-## 4. 解决方案：Validator 三件套 + Prompt Constraint 13
+## 4. 解决方案：见 PATH_D_KS_SPARSE_CELLS
 
-### 4.1 一句话
-
-> Validator 内对每个 stochastic measure 的 cell 列表：(1) **跳过 n<30 的 cell**，(2) 剩余 cell 用 **Bonferroni-corrected α=0.05/K** 单点判定，(3) 把 K 个结果**聚合成单个 `ks_<col>` Check**，pass-rate ≥ 0.9 才算 measure 通过。Prompt 端加 HARD CONSTRAINT 13 让 LLM 在声明阶段预谋 cell 密度（`target_rows ≥ 30 × cell_count`，或 K ≤ 2），避免 "全 cell 都 n<30 → validator silent-pass" 的兜底分支被滥用。
-
-### 4.2 为什么这能绕过统计学障碍
-
-| 病 | 修法 | 数学原理 |
-|---|---|---|
-| **n<30 不可靠** | `n<30` skip | KS 检验需要 n≥30 才有可靠 inference；低于阈值不做断言比错断更诚实 |
-| **多重检验膨胀** | `α = 0.05 / K`（Bonferroni） | FWER ≤ K × (α/K) = α，无论 K 多大；保守但不需要 p 值排序 |
-| **单 cell 飘移拖全 measure** | pass-rate ≥ 0.9 聚合 | 即使 1/10 cell 假阳性，aggregate 仍通过——同时保留"7/10 真信号"的检测能力 |
-| **LLM 不知道 validator 这套行为** | HARD CONSTRAINT 13 | 显式告知 LLM `n<30 skip` 存在；让它选 (a) 加 target_rows, (b) 降 K, (c) 接受 silent-pass |
-
-LLM 算不出乘积 sigma（机制 1）需要 calibration 闭环；但**稀疏 cell 上的 KS 过敏是 validator 自身的算法问题**——validator 自己改算法即可，不需要 LLM 闭环。这是机制 3 比机制 1 修复成本低的根本原因。
-
-### 4.3 算法流程
-
-```
-check_stochastic_ks(df, col_name, meta, patterns)
-┌──────────────────────────────────────────────────────────────┐
-│ 1. 排除 pattern-targeted 行（T9 fix，保留）                    │
-│ 2. cells = _iter_predictor_cells(work_df, col, ...)            │
-│    （Cartesian product, cap 100, 现有逻辑）                     │
-│                                                                │
-│ Stage 1: per-cell collect                                      │
-│ ─────────────────────────                                      │
-│ per_cell = []                                                  │
-│ skipped_no_cdf = skipped_small = 0                             │
-│ for (predictor_values, cell_df) in cells:                      │
-│     dist = expected_cdf(family, cell_params)                   │
-│     if dist is None:                                           │
-│         skipped_no_cdf += 1 ; continue                         │
-│     sample = cell_df[col_name].dropna().values                 │
-│     if len(sample) < KS_MIN_CELL_SIZE (=30):                   │
-│         skipped_small += 1 ; continue              ← 病 1 修复  │
-│     D, p = scipy.stats.kstest(sample, dist.cdf)                │
-│     per_cell.append((label, D, p, n))                          │
-│                                                                │
-│ Stage 2: Bonferroni + aggregate                                │
-│ ──────────────────────────────                                 │
-│ K = len(per_cell)                                              │
-│ if K == 0:                                                     │
-│     return [Check(passed=True, "No testable cells ...")]       │
-│                                       ← silent-pass 兜底分支    │
-│ α = KS_BASE_ALPHA (=0.05) / K                      ← 病 2 修复  │
-│ finalized = [(label, p > α, D, p, n) for ...]                  │
-│ passed_cnt = sum(ok)                                           │
-│ rate = passed_cnt / K                                          │
-│ overall = rate >= KS_AGGREGATE_PASS_RATE (=0.9)    ← 病 3 修复  │
-│                                                                │
-│ detail = f"{passed}/{K} cells passed @ α={α} ..."              │
-│        + "Failed cells: ..." (capped at 10 + '+N more')        │
-│        + "Passed cells: ..." (capped at 10)                    │
-│                                                                │
-│ return [Check(name=f"ks_{col_name}", passed=overall, detail)]  │
-└──────────────────────────────────────────────────────────────┘
-```
-
-塌缩为单 Check 后，downstream 的 `all_passed = AND(per Check)`（[types.py:283](../../../pipeline/phase_2/types.py#L283)）只看 aggregate 结果——单 cell 飘移不再拖整个 measure 下水。
-
-### 4.4 关键设计决策
-
-| 决策 | 选择 | 理由 |
-|---|---|---|
-| **n threshold** | **30** | 教科书 KS 可靠下限；pingyue 实测失败 100% 来自 n<30，n=30 是干净的切割线 |
-| **多重检验校正** | **Bonferroni** vs FDR (Benjamini-Hochberg) | 在 cell 数典型 ≤ 100 时差异不大；Bonferroni 不依赖 p 值排序、单 cell semantically 易解释；保守但失败极少假阴性 |
-| **Aggregate vs per-cell Check** | **Aggregate 替代** | 现行 `all_passed = AND(Check)` 让单 cell 飘移就拖全 measure 下水；aggregate 用 pass-rate 0.9 提供噪声容差。等价于在 measure 级做了第二层 FDR |
-| **pass-rate 阈值** | **0.9** | 90% cell 通过才算 measure 通过；保留 1/10 cell 在 α 下假阳性的余量。可调常量 `KS_AGGREGATE_PASS_RATE` |
-| **Silent-pass 兜底** | **passed=True + detail 标注** | 实操诚实：cell 全 skip 就是没信号；Constraint 13 让 LLM 主动避免，不在 validator 这边硬拒（避免死锁） |
-| **Detail 截断** | **首 10 个 cell + "+N more"** | 同名 cell 数极多（≥100）时保持 detail 可读；可观测性不丢（前 10 含 n/D/p） |
-| **保留所有现有行为** | pattern-row 排除、`_iter_predictor_cells` 100-cap、family-CDF 检查 | 不动 T9 fix、不动 mixture 支持、不引入新的 categorical 路径 |
-
-### 4.5 代码位点
-
-| 文件 | 行 | 内容 |
-|---|---|---|
-| [validation/statistical.py](../../../pipeline/phase_2/validation/statistical.py) | 24–28 | 模块常量：`KS_MIN_CELL_SIZE`/`KS_BASE_ALPHA`/`KS_AGGREGATE_PASS_RATE`/`KS_DETAIL_CELL_CAP` |
-| [validation/statistical.py](../../../pipeline/phase_2/validation/statistical.py) | 232–365 | `check_stochastic_ks` refactor（Stage 1 collect / Stage 2 Bonferroni+aggregate） |
-| [orchestration/prompt.py](../../../pipeline/phase_2/orchestration/prompt.py) | HARD CONSTRAINTS | 新增 constraint 13：KS-CELL DENSITY |
-| [tests/modular/test_validation_ks_path_d.py](../../../pipeline/phase_2/tests/modular/test_validation_ks_path_d.py) | 全文件 | 9 新测试 case 锁定 skip / Bonferroni / aggregate / detail observability |
-| [tests/modular/test_validation_statistical_mixture.py](../../../pipeline/phase_2/tests/modular/test_validation_statistical_mixture.py) | 调整 | 2 个 mixture 测试改适配新 aggregate Check 形状 + detail 字段 |
-
-### 4.6 Aggregate Check detail 的实际样子
-
-修复后一个典型 measure 的 Check（在 pathD-revalidation 的 `agpds_33d84d2c9b` 上）：
-
-```
-ks_applicant_count: passed=True
-detail: "62/62 cells passed @ α=0.0008 (Bonferroni K=62, threshold 90%);
-         18 cells skipped (18 small-n, 0 no-CDF).
-         Passed cells: academic_program=Biology,residency=In-state,year=2020
-           (n=43, D=0.0978, p=0.7891); academic_program=Biology,residency=In-state,
-           year=2021 (n=51, D=0.0823, p=0.8456); ... (+52 more)"
-```
-
-可以看到：
-
-- **62 个 cell 通过 KS，0 个失败**（baseline 同 measure 是 2 个失败）
-- **18 个 cell 被 small-n 跳过**——这 18 个就是 baseline 里报失败的 n=5/17 那两个 + 16 个 n<30 但 baseline 没报的（baseline 只在 D>临界 时报，所以没出现）
-- **α=0.0008**——Bonferroni 校正后的阈值，K=62 让 alpha 从 0.05 缩到 0.0008，杜绝随机假阳性
-- **pass-rate = 62/62 = 100% ≥ 90%** → aggregate passed=True
-- detail 列前 10 个通过 cell 的 (n, D, p)，可观测性保持
-
-把 4 条 KS 失败收敛到 0，这个 scenario 翻过去成 `all_passed=True`。
-
-### 4.7 Prompt Constraint 13 全文
-
-```
-13. KS-CELL DENSITY: when a stochastic measure has K categorical predictor
-    columns in its param_model effects (and any parent columns), the
-    validator skips KS testing on cells with fewer than 30 rows and applies
-    a Bonferroni correction across the remaining cells. To avoid a silent
-    pass (all cells skipped — no signal):
-      - cell_count ≈ product of distinct values across predictor dims.
-      - Set `target_rows ≥ 30 × cell_count` for full coverage.
-      - If `target_rows` is constrained, keep K ≤ 2 (drop third-tier dims
-        from param_model effects; they can still exist as columns).
-    Example: tier(3) × program(8) × residency(2) = 48 cells → need
-    target_rows ≥ 1440. With target_rows=500, restrict effects to
-    tier × residency only (6 cells → need ≥ 180 rows; safe).
-```
-
-风格与 constraint 11/12 一致：全大写标题 + 具体数字 + WHY + worked example。
+> 修复 = Validator 三件套（**跳过 n<30 的 cell** + 剩余用 **Bonferroni α=0.05/K** 单点判定 + 聚合成单个 `ks_<col>` Check，pass-rate ≥ 0.9）+ Prompt **HARD CONSTRAINT 13**（`target_rows ≥ 30 × cell_count`，或 K ≤ 2）。
+>
+> 算法流程、设计决策、代码位点、Constraint 13 全文、aggregate Check detail 样例**统一见修复手册** [../subsystems/PATH_D_KS_SPARSE_CELLS.md](../subsystems/PATH_D_KS_SPARSE_CELLS.md)。本文聚焦诊断（§1–3）与实测（§5）。
 
 ---
 
@@ -432,7 +312,7 @@ K=1 时 α=0.05，跟 baseline 一样。这里没缓冲，单 cell n=30 上 D �
 
 - [ANALYSIS.md](../ANALYSIS.md) — 一页综述，所有 soft-failure 问题的入口
 - [FAILURE_MECHANISMS.md](../FAILURE_MECHANISMS.md) — 三机制 + Path A/B/C/D 修复路径全图
-- [MECHANISM_1_DEEP_DIVE.md](MECHANISM_1_DEEP_DIVE.md) — 机制 1（复合方差盲区）深度（同级对位）
+- [MECHANISM_1_DEEP_DIVE.md](../archive/MECHANISM_1_DEEP_DIVE.md) — 机制 1（复合方差盲区）深度（同级对位）
 - [PATH_D_KS_SPARSE_CELLS.md](../subsystems/PATH_D_KS_SPARSE_CELLS.md) — Path D 技术参考（架构图、测试矩阵）
-- [SIGMA_CALIBRATION.md](../subsystems/SIGMA_CALIBRATION.md) — 机制 1 calibration 模块技术参考
+- [SIGMA_CALIBRATION.md](../archive/SIGMA_CALIBRATION.md) — 机制 1 calibration 模块技术参考
 - [SKIP_PERSISTENCE.md](../subsystems/SKIP_PERSISTENCE.md) — `_save_skip_record` 接入修复

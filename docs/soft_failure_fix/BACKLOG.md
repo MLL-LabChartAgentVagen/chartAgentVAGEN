@@ -204,3 +204,6 @@ Tier 4 (accepted, 不修):
 | 2026-05-21 | Phase D 实施完成（Constraint 17 + validator detail）| `38c99e8` `4a68905` |
 | 2026-05-21 | Phase D.2 实施完成（row-count guardrail）| `fad9d8b` `a4350b0` |
 | 2026-05-21 | **本 BACKLOG.md 起草** | (this commit) |
+| 2026-05-30 | **M1 真因反转** + Loop A sigma 校准 / Path A 约束 11 可逆禁用（建立干净 baseline）| `mechanisms/M1_RESIDUAL_RECONCILIATION.md` |
+| 2026-05-31 | 整数分类列 group-dep **int-key JSON 往返 bug** 修复 + 回归测试 | `subsystems/SERIALIZATION_INT_KEY_ROUNDTRIP.md` |
+| 2026-05-31 | docs 精简：M1 旧叙事 + calibration 手册归档，M3 §4 / ANALYSIS 去重 | (this change) |

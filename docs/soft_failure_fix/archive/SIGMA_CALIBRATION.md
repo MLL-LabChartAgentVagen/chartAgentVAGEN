@@ -1,6 +1,8 @@
-# Stage 1 Sigma Calibration
+# Stage 1 Sigma Calibration（已归档：calibration 现已禁用）
 
-> Loop A LLM-in-the-loop sigma calibration—**机制 1（复合方差盲区）的最终修复**。
+> **⚠️ 已归档（2026-05-31）/ 已禁用（2026-05-30）**：本文记录的 Loop A sigma calibration 在 2026-05-30 已被**可逆禁用**（`retry_loop._CALIBRATION_ENABLED=False`）。后续调查表明它是在**掩盖** Phase γ pattern 污染（residual 真因与 σ 无关），而非修因——当前权威说法见 [../mechanisms/M1_RESIDUAL_RECONCILIATION.md](../mechanisms/M1_RESIDUAL_RECONCILIATION.md)。本文保留作历史/再启用参考。
+>
+> Loop A LLM-in-the-loop sigma calibration—~~机制 1（复合方差盲区）的最终修复~~。
 > 实测：pingyue-samples 10 个 scenario，passed 0/10 → 4/10，residual_* 失败 15 → 0。
 
 ## 1. 一句话总结
@@ -218,11 +220,11 @@ spy `SchemaAwareValidator.validate`，断言收到的 patterns 列表非空且 t
 ## 9. 配套阅读
 
 - [FAILURE_MECHANISMS.md](../FAILURE_MECHANISMS.md) — 3 机制（复合方差盲区 / 联合分布盲区 / 稀疏 cell 脆弱性）、修复路径 A/B/C、3-way + 4-way 实测对比
-- [VALIDATION_PERSISTENCE.md](VALIDATION_PERSISTENCE.md) — Stage 2 持久化层（`validation/{gen_id}_report.json` + `validation_summary.json`）
+- [VALIDATION_PERSISTENCE.md](../subsystems/VALIDATION_PERSISTENCE.md) — Stage 2 持久化层（`validation/{gen_id}_report.json` + `validation_summary.json`）
 - [INTERFACES.md](../../../pipeline/phase_2/INTERFACES.md) — M1–M5 模块契约
 - [README.md](../../../pipeline/phase_2/README.md) — Phase 2 总览
 
 本目录其他：
-- [2026-05-14-stage1-sigma-calibration.md](../archive/2026-05-14-stage1-sigma-calibration.md) — TDD-style 实施计划（35 个 step）
+- [2026-05-14-stage1-sigma-calibration.md](2026-05-14-stage1-sigma-calibration.md) — TDD-style 实施计划（35 个 step）
 
 历史 plan（执行调度 + amendments）位于本机 `~/.claude/plans/pipeline-agpds-execute-py-soft-warning-temporal-rivest.md`（仓库外，不入版本控制）。

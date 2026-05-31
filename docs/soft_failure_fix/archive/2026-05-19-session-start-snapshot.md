@@ -12,7 +12,7 @@
 |---|---|---|---|
 | [ANALYSIS.md](../ANALYSIS.md) | 综述 | **唯一的入口文档**——一页内回答 "sigma 是什么 / soft failure 是什么 / 根因 / 修法 / 当前效果 / 未尽事项" | **catch-up 就读这一份** |
 | [FAILURE_MECHANISMS.md](../FAILURE_MECHANISMS.md) | 诊断 | 三条根因机制（复合方差盲区 / 联合分布盲区 / 稀疏 cell 脆弱性）+ Path A/B/C 修复路径 + 3-way/4-way 实测对比表 | 想深挖某条机制的统计证据时翻 |
-| [SIGMA_CALIBRATION.md](../subsystems/SIGMA_CALIBRATION.md) | 技术参考 | calibration 子系统模块手册：架构图、算法、独立 retry budget 设计、T9 plumbing bug case study | 改 [calibration.py](../../../pipeline/phase_2/orchestration/calibration.py) 或 [retry_loop.py](../../../pipeline/phase_2/orchestration/retry_loop.py) 前翻 |
+| [SIGMA_CALIBRATION.md](../archive/SIGMA_CALIBRATION.md) | 技术参考 | calibration 子系统模块手册：架构图、算法、独立 retry budget 设计、T9 plumbing bug case study | 改 [calibration.py](../../../pipeline/phase_2/orchestration/calibration.py) 或 [retry_loop.py](../../../pipeline/phase_2/orchestration/retry_loop.py) 前翻 |
 | [VALIDATION_PERSISTENCE.md](../subsystems/VALIDATION_PERSISTENCE.md) | 技术参考 | Stage 2 / Loop B 的持久化层——`validation_summary.json` + per-scenario report 的写盘合约 | 跟 §5.1 (`_save_skip_record` 接入) 直接相关 |
 | [2026-05-14-stage1-sigma-calibration.md](2026-05-14-stage1-sigma-calibration.md) | 实施计划 | TDD 任务清单——calibration 模块当时是按这份 plan 拆 task 实施的，每个 task 有 checkbox | 历史档案；calibration 已实现，不用再读 |
 
@@ -53,5 +53,5 @@
 
 本 session 还产出：
 
-- [MECHANISM_1_DEEP_DIVE.md](../mechanisms/MECHANISM_1_DEEP_DIVE.md) — 机制 1 根因 → 算法 → 实测的完整串联（含 pathA / pathA-calibrated 真实数据）
+- [MECHANISM_1_DEEP_DIVE.md](../archive/MECHANISM_1_DEEP_DIVE.md) — 机制 1 根因 → 算法 → 实测的完整串联（含 pathA / pathA-calibrated 真实数据）
 - [SKIP_PERSISTENCE.md](../subsystems/SKIP_PERSISTENCE.md) — `_save_skip_record` wiring 修复的前因后果 / 方案 / 结果

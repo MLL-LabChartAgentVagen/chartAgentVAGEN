@@ -5,7 +5,7 @@
 > Tests: 387 (was 378) — 全部通过
 > 实测: pingyue-samples 10 个 scenario, `ks_*` 失败 **11 → 0**, passed **4 → 5**
 
-机制 3 的 calibration / 设计层兄弟篇——和 [SIGMA_CALIBRATION.md](SIGMA_CALIBRATION.md) (机制 1) 同级。
+机制 3 的 calibration / 设计层兄弟篇——和 [SIGMA_CALIBRATION.md](../archive/SIGMA_CALIBRATION.md) (机制 1) 同级。
 
 ---
 
@@ -281,5 +281,5 @@ PYTHONPATH=. python -m pipeline.agpds_execute \
 
 - [ANALYSIS.md](../ANALYSIS.md) — 全局摘要（含 Path D 后的更新）
 - [FAILURE_MECHANISMS.md](../FAILURE_MECHANISMS.md) §4 + §7.2 — 机制 3 诊断
-- [SIGMA_CALIBRATION.md](SIGMA_CALIBRATION.md) — 机制 1 修复（同级技术参考）
+- [SIGMA_CALIBRATION.md](../archive/SIGMA_CALIBRATION.md) — 机制 1 修复（同级技术参考）
 - [SKIP_PERSISTENCE.md](SKIP_PERSISTENCE.md) — `_save_skip_record` 接入（前置 wiring 修复）

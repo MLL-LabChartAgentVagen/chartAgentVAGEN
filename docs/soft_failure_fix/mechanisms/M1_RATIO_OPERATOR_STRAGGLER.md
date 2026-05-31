@@ -1,9 +1,11 @@
 # M1 长尾残留：ratio operator 引入的结构方差
 
+> **⚠️ 注（2026-05-31）**：本文写于 calibration 时代（「calibration 校到 0.77 ratio 仍残留」）。calibration 已于 2026-05-30 禁用。`Var(A/B)` 的 σ-无关结构方差下限本身仍成立，但「靠 calibration 调 σ 去吞它」的框架属历史；M1 residual 当前权威说法见 [M1_RESIDUAL_RECONCILIATION.md](M1_RESIDUAL_RECONCILIATION.md)。
+>
 > Status: 已识别 / 未修 — 2026-05-20
 > Trigger scenario: `agpds_503613ba96` / column `student_faculty_ratio`
 > Discovery batch: `output/agpds/pingyue-samples-openai-calibrated/`
-> 配套阅读：[FAILURE_MECHANISMS.md §2 + §7.1](../FAILURE_MECHANISMS.md)、[MECHANISM_1_DEEP_DIVE.md](MECHANISM_1_DEEP_DIVE.md)、[SIGMA_CALIBRATION.md](../subsystems/SIGMA_CALIBRATION.md)、[OPENAI_VALIDATION.md §3.2](../validation/OPENAI_VALIDATION.md)
+> 配套阅读：[FAILURE_MECHANISMS.md §2 + §7.1](../FAILURE_MECHANISMS.md)、[MECHANISM_1_DEEP_DIVE.md](../archive/MECHANISM_1_DEEP_DIVE.md)、[SIGMA_CALIBRATION.md](../archive/SIGMA_CALIBRATION.md)、[OPENAI_VALIDATION.md §3.2](../validation/OPENAI_VALIDATION.md)
 
 ---
 
@@ -88,7 +90,7 @@ LLM 把 sigma 调到 4.43 时 sigma² = 19.6；empirical residual² = 61.4。**�
 | **除法算子** | `A / B` | `Var ≈ (A/B)² × ((σ_A/A)² + (σ_B/B)²)` | ✓ | **本 doc 新覆盖** |
 | **复合（链 + 除）**| `A × B / C` 等 | 更复杂 | 应同发病 | 本批未踩到 |
 
-Calibration 在乘法链上**有效**（参见 [SIGMA_CALIBRATION.md](../subsystems/SIGMA_CALIBRATION.md)），因为乘法链的方差量级随 sigma 单调；LLM 把 sigma 调高就能覆盖。**除法引入的方差有一个由上游 stochastic 决定的硬下界**——LLM 即使把 sigma 调到与之相当也只是把信号噪声化，无法消除该结构项。
+Calibration 在乘法链上**有效**（参见 [SIGMA_CALIBRATION.md](../archive/SIGMA_CALIBRATION.md)），因为乘法链的方差量级随 sigma 单调；LLM 把 sigma 调高就能覆盖。**除法引入的方差有一个由上游 stochastic 决定的硬下界**——LLM 即使把 sigma 调到与之相当也只是把信号噪声化，无法消除该结构项。
 
 ---
 
@@ -207,7 +209,7 @@ jq '.[] | select(.generation_id == "agpds_503613ba96") | .failures[] | select(.n
 ## 10. 相关
 
 - [FAILURE_MECHANISMS.md §2](../FAILURE_MECHANISMS.md) — 机制 1 总论（乘法链版本）
-- [MECHANISM_1_DEEP_DIVE.md](MECHANISM_1_DEEP_DIVE.md) — 机制 1 的细化
-- [SIGMA_CALIBRATION.md](../subsystems/SIGMA_CALIBRATION.md) — calibration 设计与 gemini 端验证
+- [MECHANISM_1_DEEP_DIVE.md](../archive/MECHANISM_1_DEEP_DIVE.md) — 机制 1 的细化
+- [SIGMA_CALIBRATION.md](../archive/SIGMA_CALIBRATION.md) — calibration 设计与 gemini 端验证
 - [OPENAI_VALIDATION.md §3.2](../validation/OPENAI_VALIDATION.md) — 本批生产数据（包含对本 doc 的引用）
 - [PATH_D_KS_SPARSE_CELLS.md](../subsystems/PATH_D_KS_SPARSE_CELLS.md) — 机制 3（同期完成的兄弟 fix）

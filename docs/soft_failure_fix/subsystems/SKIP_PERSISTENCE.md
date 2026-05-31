@@ -273,5 +273,5 @@ grep -rn 'raise RuntimeError.*Loop A exhausted' pipeline/
 
 - [ANALYSIS.md](../ANALYSIS.md) §5.1 — 之前的 known-issue 标注（现已标记为已修）
 - [VALIDATION_PERSISTENCE.md](VALIDATION_PERSISTENCE.md) — Stage 2 的对偶持久化层
-- [SIGMA_CALIBRATION.md](SIGMA_CALIBRATION.md) — calibration 模块技术参考（`skip_reason="calibration_unconverged"` 的来源）
+- [SIGMA_CALIBRATION.md](../archive/SIGMA_CALIBRATION.md) — calibration 模块技术参考（`skip_reason="calibration_unconverged"` 的来源）
 - [2026-05-14-stage1-sigma-calibration.md](../archive/2026-05-14-stage1-sigma-calibration.md) — calibration 原实施计划（T5/T6 出处）
