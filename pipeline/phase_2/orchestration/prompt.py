@@ -103,13 +103,16 @@ SYSTEM_PROMPT_TEMPLATE: Final[str] = (
     "10. Each dimension group has EXACTLY ONE root column (no parent).\n"
     "    Additional columns in the same group must use `parent=...` to make them\n"
     "    children of the root.\n"
-    "11. NOISE CALIBRATION: when declaring a stochastic measure with gaussian/\n"
-    "    normal noise (`add_measure(..., noise_sigma=...)`) or a structural\n"
-    "    measure with `noise={\"sigma\": ...}`, `sigma` MUST be approximately\n"
-    "    10–30% of the measure's expected dynamic range. If a measure ranges\n"
-    "    over [0, 1000], `sigma` should be ~50–300, NOT 1–5. Under-sizing\n"
-    "    noise is the single most common validation failure: the structural\n"
-    "    formula's residual std must not dwarf the declared noise floor.\n"
+    # M1 研究 baseline（2026-05-30）：Path A「NOISE CALIBRATION」约束 11 已禁用，
+    # 让 LLM 声明自然（偏小）的 sigma，使真实 residual 行为在 Stage 2 浮现。
+    # 见 docs/soft_failure_fix/mechanisms/M1_RESIDUAL_RECONCILIATION.md §8。恢复 = 取消注释。
+    # "11. NOISE CALIBRATION: when declaring a stochastic measure with gaussian/\n"
+    # "    normal noise (`add_measure(..., noise_sigma=...)`) or a structural\n"
+    # "    measure with `noise={\"sigma\": ...}`, `sigma` MUST be approximately\n"
+    # "    10–30% of the measure's expected dynamic range. If a measure ranges\n"
+    # "    over [0, 1000], `sigma` should be ~50–300, NOT 1–5. Under-sizing\n"
+    # "    noise is the single most common validation failure: the structural\n"
+    # "    formula's residual std must not dwarf the declared noise floor.\n"
     "12. NEVER use Python `None` or the string \"None\" as a category value,\n"
     "    `parent=` reference, `add_group_dependency` parent/child, effect-map\n"
     "    key, or pattern `target` filter. Missing values must be expressed via\n"

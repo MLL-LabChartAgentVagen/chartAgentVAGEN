@@ -17,6 +17,7 @@ from __future__ import annotations
 
 from unittest.mock import patch
 
+import pytest
 import pandas as pd
 
 from pipeline.core.llm_client import LLMResponse, TokenUsage
@@ -114,6 +115,11 @@ def _pass_check(name: str = "residual_accepted") -> Check:
 # Test 1: Calibration never converges → SkipResult-equivalent
 # ---------------------------------------------------------------------------
 
+@pytest.mark.skip(
+    reason="M1 研究 baseline：Loop A 校准已禁用 "
+    "(retry_loop._CALIBRATION_ENABLED=False)，见 "
+    "docs/soft_failure_fix/mechanisms/M1_RESIDUAL_RECONCILIATION.md §8"
+)
 def test_calibration_failure_triggers_retry_then_skip_if_unconverged():
     """If declared sigma stays wrong across all calibration retries, the
     loop must return success=False with skipped_reason starting with
@@ -168,6 +174,11 @@ def test_calibration_failure_triggers_retry_then_skip_if_unconverged():
 # Test 2: Calibration recovers after one round of feedback
 # ---------------------------------------------------------------------------
 
+@pytest.mark.skip(
+    reason="M1 研究 baseline：Loop A 校准已禁用 "
+    "(retry_loop._CALIBRATION_ENABLED=False)，见 "
+    "docs/soft_failure_fix/mechanisms/M1_RESIDUAL_RECONCILIATION.md §8"
+)
 def test_calibration_recovers_after_one_round_of_feedback():
     """First exec produces a calibration failure; LLM returns a script
     with corrected sigma; second calibration check passes; loop succeeds."""

@@ -36,6 +36,13 @@ logger = logging.getLogger(__name__)
 _CODE_GEN_MAX_TOKENS: int = 32768
 DEFAULT_MAX_RETRIES: int = 3
 
+# M1 研究 baseline（2026-05-30）：禁用 Loop A sigma 校准，在保留 T9
+# patterns 修复的前提下观察真实 residual 行为。校准被认为是「掩盖」
+# pattern 污染而非修因——见
+# docs/soft_failure_fix/mechanisms/M1_RESIDUAL_RECONCILIATION.md §8。
+# 恢复：置 True（并 un-skip 受影响测试）。
+_CALIBRATION_ENABLED: bool = False
+
 
 def _make_generate_fn(
     llm_client: LLMClient,
@@ -261,6 +268,19 @@ def run_retry_loop(
         # ===== Success Path — Calibration Check =====
 
         if result.success:
+            # M1 研究 baseline：校准禁用时，exec 成功即返回，不再 replay
+            # 量 empirical residual std（见 _CALIBRATION_ENABLED 注释）。
+            if not _CALIBRATION_ENABLED:
+                return RetryLoopResult(
+                    success=True,
+                    dataframe=result.dataframe,
+                    metadata=result.metadata,
+                    raw_declarations=result.raw_declarations,
+                    source_code=result.source_code or current_code,
+                    attempts=attempt,
+                    history=history,
+                )
+
             logger.debug(
                 "§2.7 retry loop: sandbox succeeded on attempt %d, "
                 "running sigma calibration", attempt,
