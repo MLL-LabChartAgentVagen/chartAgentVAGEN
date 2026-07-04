@@ -80,6 +80,11 @@ absorbs the cross. Medium is the worst tier.
 
 ## Candidate follow-ups (not done here)
 
+> **裁定 (2026-05-31): 不追究。** 见 [KS_N30_VERDICT_2026-05-31.md](./KS_N30_VERDICT_2026-05-31.md)
+> —— n<30 跳过是统计上正确的,唯一真实漏洞(1% silent-pass)可接受;下列 follow-ups
+> 仅作记录,不作为主手段。若日后要消灭 silent-pass,正确做法是 PIT-pooled backstop
+> 而非加行数(详见裁定文档)。
+
 - Raise the simple/medium `target_rows` floors, or make Constraint 13's
   `target_rows ≥ 30 × cell_count` actually *bind* at those tiers (currently advisory).
 - Cap categorical cardinality for simple-tier scenarios (drives simple/K=1 n<30).
