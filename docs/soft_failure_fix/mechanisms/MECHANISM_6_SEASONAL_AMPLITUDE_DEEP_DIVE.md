@@ -805,6 +805,7 @@ loop 蒙猜。
 
 - [ANALYSIS.md](../ANALYSIS.md) — 一页综述，所有 soft-failure 问题的入口
 - [FAILURE_MECHANISMS.md](../FAILURE_MECHANISMS.md) — 三机制（M1/M2/M3）+ Path A/B/C 修复路径全图（M4/M5/M6 尚待 backport）
+- [validation/TEST1_TEST2_REGEN_COMPARISON.md](../validation/TEST1_TEST2_REGEN_COMPARISON.md) — test-1/test-2 同场景两次 regen 对比；§5 hand-trace 证明本机制部分 realized-z-gap 实因是 validator 忽略 pattern `target` 的稀释（target-restricted z=2.69 本应 PASS），候选 M10 target scope mismatch
 - [validation/PINGYUE_OPENAI_CAL_ANALYSIS.md](../validation/PINGYUE_OPENAI_CAL_ANALYSIS.md) — openai-calibrated 批次深度分析，§3.1 是本机制的发现起点，§8.4 是 Phase D 计划
 - [mechanisms/MECHANISM_4_PROPORTION_DRIFT_DEEP_DIVE.md](MECHANISM_4_PROPORTION_DRIFT_DEEP_DIVE.md) — Phase A（小样本比例漂移）纵深
 - [mechanisms/MECHANISM_5_ORTHOGONAL_DEGENERACY_DEEP_DIVE.md](MECHANISM_5_ORTHOGONAL_DEGENERACY_DEEP_DIVE.md) — Phase B（正交退化）纵深，本文写作模板 + retry trajectory § 6.4

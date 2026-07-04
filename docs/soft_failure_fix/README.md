@@ -25,6 +25,7 @@ Phase 2 soft-failure 分析、修复、子系统手册、批次实测的合集�
 | 改 Stage 1 skip 持久化（`skipped.jsonl`）| [subsystems/SKIP_PERSISTENCE.md](subsystems/SKIP_PERSISTENCE.md) |
 | 改 `declarations_from_json` / 排查整数分类列 int-key 往返 bug | [subsystems/SERIALIZATION_INT_KEY_ROUNDTRIP.md](subsystems/SERIALIZATION_INT_KEY_ROUNDTRIP.md) |
 | 审计 `output/agpds/pingyue-samples-openai-calibrated/` 这份批次 | [validation/OPENAI_VALIDATION.md](validation/OPENAI_VALIDATION.md) |
+| 想看一次 LLM regen 两批结果的对比（persistent vs variance）+ pattern target scope mismatch 证据 | [validation/TEST1_TEST2_REGEN_COMPARISON.md](validation/TEST1_TEST2_REGEN_COMPARISON.md) |
 | 审计某条机制的统计证据 | [mechanisms/](mechanisms/) 下对应深度文档 |
 
 ---
@@ -54,7 +55,8 @@ docs/soft_failure_fix/
 │   └── SKIP_PERSISTENCE.md              Stage 1 skipped.jsonl wiring
 ├── validation/                        📋 批次实测记录
 │   ├── OPENAI_VALIDATION.md             openai-cal end-to-end + Path D rerun
-│   └── PINGYUE_OPENAI_CAL_ANALYSIS.md   per-scenario 诊断（M4/M5/M6 起点）
+│   ├── PINGYUE_OPENAI_CAL_ANALYSIS.md   per-scenario 诊断（M4/M5/M6 起点）
+│   └── TEST1_TEST2_REGEN_COMPARISON.md  test-1/test-2 同场景两次 regen 对比 + target scope mismatch 证据
 └── archive/                           🗄 历史 / 已 superseded
     ├── MECHANISM_1_DEEP_DIVE.md         M1 旧叙事（乘积方差→校准，已被证伪）
     ├── SIGMA_CALIBRATION.md             Loop A sigma calibration（已禁用）
@@ -140,3 +142,4 @@ docs/soft_failure_fix/
 | 2026-05-30 | **M1 真因反转**：代码+git 对账证实 residual validator 减实测因子、乘积方差不进 residual；真因 = Phase γ pattern 污染。Loop A sigma 校准 + Path A 约束 11 **可逆禁用**（建立干净 baseline） | `M1_RESIDUAL_RECONCILIATION.md` |
 | 2026-05-31 | `residual_source_dump.py` 确定性诊断锁定机制（合成 + 90-scenario 复核）；整数分类列 group-dep **int-key 往返 bug** 修复 + 回归测试 | `SERIALIZATION_INT_KEY_ROUNDTRIP.md` |
 | 2026-05-31 | docs 精简：M1 旧叙事 + calibration 手册归档至 `archive/`，M3 §4 / ANALYSIS 去重，索引刷新 | (this change) |
+| 2026-05-31 | test-1/test-2 同场景两次 LLM regen 对比定稿：generation_id=场景锚点；持续失败仅 seasonal；hand-trace 锁定 pattern **target scope mismatch**（候选 M10）| `validation/TEST1_TEST2_REGEN_COMPARISON.md` |
