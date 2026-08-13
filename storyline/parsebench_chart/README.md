@@ -34,6 +34,7 @@
 | [04_render.md](04_render.md) | 八个采样维度、页面合成、Chart Registry |
 | [05_provenance.md](05_provenance.md) | 三层溯源记录 |
 | [06_output.md](06_output.md) | 输出格式、训练目标、评测与消融 |
+| [related_work.md](related_work.md) | 截至 2026-08 的相关工作与定位 |
 
 ---
 
