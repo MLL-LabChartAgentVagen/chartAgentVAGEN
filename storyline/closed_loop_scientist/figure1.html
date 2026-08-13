@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>World Programs — 主动探索 + 可验证的科学发现</title>
+<style>
+  :root{
+    --accent:#8C1515;        /* 强调 / "光算"得到的错误信号 */
+    --g0:#2C6FB0;            /* 组 no */
+    --g1:#2E7D4F;            /* 组 yes */
+    --ink:#1a1a1a; --muted:#6b6b6b; --bg:#ffffff;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:"Avenir Next","Avenir","AvenirNext-Heavy","Helvetica Neue",sans-serif;font-weight:800;}
+  .slide{min-height:100vh;width:100vw;padding:6vh 7vw;position:relative;
+    display:flex;flex-direction:column;justify-content:center;border-bottom:1px solid #f0f0f0;}
+  .slide-title{text-align:center;font-size:clamp(38px,4.8vw,68px);font-weight:900;
+    letter-spacing:-0.01em;margin:0 0 1.5vh;line-height:1.1;}
+  .slide-subtitle{text-align:center;color:var(--muted);font-weight:500;font-style:italic;
+    font-size:clamp(18px,2vw,25px);margin:0 0 4vh;}
+  .accent{color:var(--accent);} .muted{color:var(--muted);}
+  .c0{color:var(--g0);} .c1{color:var(--g1);}
+  .card{background:#fff;border-radius:14px;padding:22px 30px;
+    box-shadow:0 2px 6px rgba(0,0,0,.04),0 10px 28px rgba(0,0,0,.07);}
+  .card-bad{background:#F8ECEC;} .card-bad .lab{color:#B23A3A;}
+  .card-good{background:#EAF4EC;} .card-good .lab{color:#2E7D4F;}
+  .lab{font-weight:900;font-size:clamp(18px,1.8vw,24px);margin-bottom:8px;}
+  .row{display:grid;gap:30px;max-width:1180px;margin:0 auto;width:100%;}
+  .figwrap{display:grid;grid-template-columns:1fr 1fr;gap:40px;max-width:1180px;margin:0 auto;width:100%;}
+  .panel{background:#fff;border-radius:16px;padding:18px 18px 8px;
+    box-shadow:0 2px 6px rgba(0,0,0,.04),0 10px 28px rgba(0,0,0,.07);}
+  .panel h3{text-align:center;font-size:clamp(17px,1.6vw,22px);margin:4px 0 2px;}
+  .panel .sub{text-align:center;color:var(--muted);font-weight:600;font-size:clamp(13px,1.1vw,16px);margin:0 0 6px;}
+  .cap{text-align:center;color:var(--muted);font-weight:600;font-size:clamp(15px,1.4vw,19px);
+    max-width:1000px;margin:3vh auto 0;line-height:1.5;}
+  .badge{width:46px;height:46px;border-radius:50%;background:var(--accent);color:#fff;
+    display:inline-flex;align-items:center;justify-content:center;font-weight:900;font-size:20px;flex-shrink:0;}
+  .loop{display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap;max-width:1150px;margin:0 auto;}
+  .loop .step{display:flex;align-items:center;gap:12px;}
+  .loop .txt{font-size:clamp(16px,1.5vw,22px);}
+  .arr{color:var(--accent);font-size:28px;font-weight:900;}
+  .footer{text-align:center;color:var(--muted);font-size:clamp(13px,1.1vw,16px);font-weight:500;margin-top:5vh;}
+  .keyline{max-width:940px;margin:3vh auto 0;text-align:center;font-size:clamp(18px,1.9vw,26px);line-height:1.45;}
+  svg text{font-family:"Avenir Next","Avenir",sans-serif;font-weight:700;}
+</style>
+</head>
+<body>
+
+<!-- ① 单一 claim + 闭环 + 动作空间 -->
+<section class="slide" style="justify-content:center;align-items:center;text-align:center;">
+  <h1 class="slide-title"><span class="accent">VLM agent</span> 主动探索 + 可验证的科学发现</h1>
+  <p class="slide-subtitle">Closed-Loop Scientific Discovery with a VLM Agent</p>
+  <div class="keyline" style="margin-bottom:4vh;">
+    一个 <b>VLM agent</b> 在程序生成的世界里<b>主动探索</b>(自己决定看哪张图、查哪段数据),<br>
+    提出机制假说、验证,最终交出一段<b>可执行的生成程序</b>;<br>
+    生成这个世界的<b class="accent">原始程序</b>就是 oracle,直接判定发现对不对。
+  </div>
+  <div class="loop" style="margin-bottom:3.5vh;">
+    <div class="step"><div class="badge">1</div><div class="txt">主动观测</div></div>
+    <span class="arr">→</span>
+    <div class="step"><div class="badge">2</div><div class="txt">提出假说</div></div>
+    <span class="arr">→</span>
+    <div class="step"><div class="badge">3</div><div class="txt">计算验证</div></div>
+    <span class="arr">→</span>
+    <div class="step"><div class="badge">4</div><div class="txt">交出程序<br><span class="muted">oracle 比对</span></div></div>
+    <span class="arr">↻</span>
+  </div>
+  <div class="row" style="grid-template-columns:repeat(5,1fr);gap:14px;max-width:1150px;">
+    <div class="card" style="padding:14px 12px;"><b class="accent">request_view</b><br><span class="muted" style="font-weight:600;">→ chart 图像,VLM 看</span></div>
+    <div class="card" style="padding:14px 12px;"><b>request_table</b><br><span class="muted" style="font-weight:600;">→ 数据表,读数</span></div>
+    <div class="card" style="padding:14px 12px;"><b>run_stat_test</b><br><span class="muted" style="font-weight:600;">→ 统计量/p 值</span></div>
+    <div class="card" style="padding:14px 12px;"><b>run_code</b><br><span class="muted" style="font-weight:600;">→ sandbox 计算</span></div>
+    <div class="card" style="padding:14px 12px;"><b>submit_program</b><br><span class="muted" style="font-weight:600;">→ 交答案,结束</span></div>
+  </div>
+  <div class="footer">动作空间(预算 B 步)· 第一个带 ground-truth oracle 的科学发现环境 · 复用现有 data generation pipeline</div>
+</section>
+
+<!-- ② 为什么要主动探索:Simpson 例子 -->
+<section class="slide">
+  <h1 class="slide-title">为什么发现需要<span class="accent">主动探索</span>,而不只是"算"</h1>
+  <p class="slide-subtitle">同一份急诊数据:cost vs wait</p>
+  <div class="figwrap">
+    <div class="panel">
+      <h3>① 只是"算":整体回归</h3>
+      <p class="sub">corr <span class="accent">+0.53</span></p>
+      <svg id="panelA" viewBox="0 0 460 360"></svg>
+    </div>
+    <div class="panel">
+      <h3>② 主动去看 + 按 insurance 分组</h3>
+      <p class="sub">两簇 · 组内斜率 <span class="c0">−8.5</span> / <span class="c1">−7.5</span></p>
+      <svg id="panelB" viewBox="0 0 460 360"></svg>
+    </div>
+  </div>
+  <p class="cap">
+    左:整体回归得到<span class="accent" style="font-weight:900">正斜率 +15.7</span> → "等得越久越贵"——所有汇总数字都对,但结论<b class="accent">是反的</b>。
+    右:主动按 insurance 分组,看到两簇<b>各自向下</b>(真相:cost 随 wait 下降)。<br>
+    <b>光"算"会被聚合骗;要"主动看、主动分组"才能发现真机制。</b>
+    <span class="muted">(示意为 140 点子样本;全样本 N=600 时整体 +12.4 / 组内 −8.0)</span>
+  </p>
+</section>
+
+<!-- ③ 难度分级 -->
+<section class="slide">
+  <h1 class="slide-title">难度<span class="accent">层层递进</span>(线性不禁,是最简单那档)</h1>
+  <p class="slide-subtitle">机制对朴素观测藏得多深 = 要多主动地探索才能揭开</p>
+  <div class="row" style="grid-template-columns:repeat(3,1fr);">
+    <div class="card card-good">
+      <div class="lab">Easy</div>
+      线性加性、可直接读出的关系。<br><b>一次 OLS / 看一张柱状图就对。</b>
+      <div class="muted" style="margin-top:10px;">几乎不用探索</div>
+    </div>
+    <div class="card">
+      <div class="lab" style="color:#C9851A;">Medium</div>
+      分布形状(双峰/偏态)、简单依赖(中介/共同原因)。<br><b>聚合统计会漏掉,需要选对视图、做一次分组或控制。</b>
+      <div class="muted" style="margin-top:10px;">要会选该看什么</div>
+    </div>
+    <div class="card card-bad">
+      <div class="lab">Hard</div>
+      聚合下被掩盖甚至<b>反号</b>的结构(Simpson 反转)、多机制叠加。<br><b>光算会结论性地错。</b>
+      <div class="muted" style="margin-top:10px;">必须反复主动探索</div>
+    </div>
+  </div>
+  <div class="keyline">复杂世界 = 在同一张表的不同列上<b>叠几个机制</b>。自然、可叠加、可控。</div>
+</section>
+
+<!-- ④ 反事实分水岭 -->
+<section class="slide">
+  <h1 class="slide-title">怎么区分"真懂"和"死记":<span class="accent">反事实</span></h1>
+  <p class="slide-subtitle">普通比对能被拟合蒙混;干预下的预测不能</p>
+  <div class="row" style="grid-template-columns:1fr 1fr;">
+    <div class="card card-bad">
+      <div class="lab">拟合派</div>
+      把整体记成一条正斜率 <code>cost ≈ +12·wait</code>。<br>见过的数据复现得不错,<b>但没有"投保比例"这个旋钮</b>。
+    </div>
+    <div class="card card-good">
+      <div class="lab">机制派</div>
+      还原"两组 + 组内负斜率 + 组间差异"的<b>真实结构</b>。
+    </div>
+  </div>
+  <div class="card" style="max-width:900px;margin:34px auto 0;text-align:center;">
+    <div class="lab" style="text-align:center;">oracle 做一个干预:把有保险比例 50% → 80%,重新生成</div>
+    拟合派按老规律外推 <span class="accent" style="font-weight:900">✗ 错</span>　·　机制派重算两组混合 <span class="c1" style="font-weight:900">✓ 对</span>
+  </div>
+  <div class="keyline">
+    <b>显式结构 vs 死记硬拟合,就是真懂机制的标志。</b>世界一变,只有真懂的程序还对。
+  </div>
+  <div class="footer">范围:程序生成的世界 + 已知 SDK + 确定性 oracle · 不主张 general causal discovery</div>
+</section>
+
+<script>
+const PTS = [[16.45,84.6,0],[17.99,6.3,0],[15.15,67.3,0],[12.59,96.9,0],[14.35,116.6,0],[12.21,119.5,0],[16.74,57.9,0],[24.58,-5.9,0],[14.19,80.2,0],[13.65,128.9,0],[19.05,36.9,0],[18.3,46.0,0],[16.97,73.0,0],[12.44,97.5,0],[16.3,64.7,0],[20.26,10.1,0],[10.99,111.8,0],[14.34,74.2,0],[9.3,154.8,0],[11.17,127.0,0],[9.46,123.7,0],[15.32,94.1,0],[11.24,101.6,0],[17.84,83.6,0],[17.24,62.0,0],[15.55,90.2,0],[7.73,105.9,0],[13.99,96.7,0],[16.21,28.1,0],[17.01,13.0,0],[10.39,109.3,0],[14.25,63.5,0],[12.26,106.0,0],[12.9,152.9,0],[22.61,-1.7,0],[12.91,81.1,0],[16.28,74.9,0],[21.44,40.8,0],[13.8,85.2,0],[15.9,67.6,0],[17.0,81.6,0],[16.76,78.9,0],[11.39,83.1,0],[16.82,63.4,0],[24.72,3.1,0],[10.34,90.9,0],[21.28,36.2,0],[17.04,42.2,0],[13.57,115.8,0],[29.97,-34.9,0],[20.67,36.9,0],[11.48,93.4,0],[16.82,62.5,0],[19.55,-6.3,0],[15.54,47.4,0],[20.18,47.6,0],[16.12,17.8,0],[20.09,60.5,0],[25.32,-46.2,0],[13.43,111.5,0],[17.48,39.0,0],[14.31,105.0,0],[17.08,66.6,0],[11.52,69.4,0],[13.82,120.7,0],[15.5,112.0,0],[21.53,26.1,0],[23.19,7.7,0],[11.06,107.6,0],[12.96,72.0,0],[46.04,531.3,1],[28.14,695.9,1],[32.61,598.0,1],[26.1,638.4,1],[27.44,686.9,1],[22.57,720.5,1],[48.28,507.6,1],[31.62,648.0,1],[44.25,524.5,1],[33.25,596.2,1],[26.89,680.7,1],[30.02,635.5,1],[27.99,635.0,1],[33.19,647.1,1],[29.59,661.7,1],[30.27,668.0,1],[21.9,700.1,1],[26.0,675.6,1],[54.39,439.9,1],[27.08,661.2,1],[24.14,711.8,1],[36.64,587.3,1],[50.51,504.8,1],[21.41,737.2,1],[31.11,701.8,1],[27.4,646.0,1],[19.52,766.0,1],[41.28,567.5,1],[32.88,636.6,1],[33.83,593.1,1],[26.42,677.1,1],[37.96,614.9,1],[28.17,672.6,1],[31.73,648.2,1],[23.75,702.7,1],[22.99,744.9,1],[49.44,504.0,1],[28.44,617.5,1],[36.14,593.5,1],[32.78,588.5,1],[29.01,586.6,1],[28.43,659.3,1],[40.01,613.3,1],[30.25,659.2,1],[31.64,617.5,1],[33.34,609.8,1],[47.13,551.2,1],[40.62,579.0,1],[37.14,604.1,1],[27.96,674.9,1],[21.88,725.9,1],[44.03,567.9,1],[44.25,559.8,1],[31.75,651.4,1],[38.96,562.2,1],[41.86,577.9,1],[42.49,542.9,1],[43.66,578.1,1],[28.88,637.1,1],[52.17,479.2,1],[22.78,717.6,1],[42.88,523.8,1],[38.4,635.8,1],[43.04,592.2,1],[58.19,422.9,1],[51.69,505.7,1],[23.49,721.6,1],[19.95,675.0,1],[42.31,567.8,1],[24.42,703.1,1]];
+const LINES={pooled:[15.7,-48.0],g0:[-8.54,205.4],g1:[-7.46,875.4]};
+const css=getComputedStyle(document.documentElement);
+const COL={g0:css.getPropertyValue('--g0').trim(),g1:css.getPropertyValue('--g1').trim(),acc:css.getPropertyValue('--accent').trim()};
+const W=460,H=360,M={l:54,r:14,t:14,b:40};
+const xs=PTS.map(p=>p[0]),ys=PTS.map(p=>p[1]);
+const xmin=Math.min(...xs)-2,xmax=Math.max(...xs)+2,ymin=Math.min(...ys)-30,ymax=Math.max(...ys)+30;
+const X=v=>M.l+(v-xmin)/(xmax-xmin)*(W-M.l-M.r);
+const Y=v=>H-M.b-(v-ymin)/(ymax-ymin)*(H-M.t-M.b);
+function axes(){
+  let s=`<line x1="${M.l}" y1="${H-M.b}" x2="${W-M.r}" y2="${H-M.b}" stroke="#ccc" stroke-width="1.5"/>`;
+  s+=`<line x1="${M.l}" y1="${M.t}" x2="${M.l}" y2="${H-M.b}" stroke="#ccc" stroke-width="1.5"/>`;
+  s+=`<text x="${(M.l+W-M.r)/2}" y="${H-8}" text-anchor="middle" font-size="15" fill="#6b6b6b">wait</text>`;
+  s+=`<text x="16" y="${(M.t+H-M.b)/2}" text-anchor="middle" font-size="15" fill="#6b6b6b" transform="rotate(-90 16 ${(M.t+H-M.b)/2})">cost</text>`;
+  return s;
+}
+function line(coef,color){
+  const [b,a]=coef;
+  return `<line x1="${X(xmin)}" y1="${Y(b*xmin+a)}" x2="${X(xmax)}" y2="${Y(b*xmax+a)}" stroke="${color}" stroke-width="3.5" stroke-linecap="round"/>`;
+}
+function dots(colorFn){
+  return PTS.map(p=>`<circle cx="${X(p[0])}" cy="${Y(p[1])}" r="3.4" fill="${colorFn(p[2])}" fill-opacity="0.78"/>`).join('');
+}
+document.getElementById('panelA').innerHTML =
+  axes() + dots(()=>'#9aa0a6') + line(LINES.pooled,COL.acc) +
+  `<text x="${W-M.r-6}" y="28" text-anchor="end" font-size="16" font-weight="900" fill="${COL.acc}">+15.7 ↗</text>`;
+document.getElementById('panelB').innerHTML =
+  axes() + dots(g=>g?COL.g1:COL.g0) + line(LINES.g0,COL.g0) + line(LINES.g1,COL.g1) +
+  `<text x="${X(34)}" y="${Y(LINES.g1[0]*34+LINES.g1[1])-12}" font-size="14" font-weight="900" fill="${COL.g1}">有保险: −7.5 ↘</text>`+
+  `<text x="${X(20)}" y="${Y(LINES.g0[0]*20+LINES.g0[1])+22}" font-size="14" font-weight="900" fill="${COL.g0}">无保险: −8.5 ↘</text>`;
+</script>
+</body>
+</html>
