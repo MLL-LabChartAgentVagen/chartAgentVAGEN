@@ -13,15 +13,17 @@ LLM 写可执行 Python 调用类型安全 SDK，声明一个数据生成程序�
 
 | 方法 | 作用 |
 |---|---|
-| `dim(name, values, weights, parent)` | 类别列。`parent` 表达层级，权重可按父值给出条件分布 |
+| `dim(name, values, weights, parent, ordered)` | 类别列。`parent` 表达层级，权重可按父值给出条件分布，`ordered` 标记取值顺序有语义 |
 | `time(name, start, end, freq)` | 时间列。日历派生（星期、月、季度、是否周末）自动产生 |
-| `measure(name, expr)` | 数值列。表达式可引用维度、时间、其他数值列、分布与噪声 |
+| `measure(name, expr, unit, additive)` | 数值列。表达式可引用维度、时间、其他数值列、分布与噪声 |
 | `emit(n)` | 产出 n 行原子事件 |
 
 **表达式**支持分布族（gaussian、lognormal、gamma、beta、uniform、poisson、exponential、mixture）、算术、以及条件分支。
 
 - **依赖关系**从表达式的自由变量推断，无需显式声明。引用了其他数值列即构成 DAG 边。
 - **统计模式**是表达式的一部分：离群值是一个乘性条件项，趋势断点是一个关于时间的分段项。
+
+**`unit` 与 `additive` 两个字段服务下游，不影响数值生成**：`unit` 决定 [04](04_render.md) 的轴标签与数字格式；`additive` 决定 [03](03_figure.md) 能否把该测度画成构成类图表。计数、金额、时长可加；比率、百分比、温度、评分不可加。`ordered` 同理，决定 flow 族图表的可行性。声明一次，下游只做查表。
 
 **硬约束**
 
@@ -30,6 +32,7 @@ LLM 写可执行 Python 调用类型安全 SDK，声明一个数据生成程序�
 3. 所有依赖构成有向无环图
 4. 表达式中每个符号都有显式数值定义
 5. 每个数值列只声明一次，不通过后续调用修补
+6. 每个数值列必须给出 `unit` 与 `additive`
 
 ---
 
@@ -74,8 +77,8 @@ LLM 输出脚本 → 沙箱执行
 
 与 [03](03_figure.md) 的契约。内容：
 
-- **维度组**：每组的列与层级链
-- **列清单**：名称、类型（categorical / temporal / measure）、所属组、父列、基数
+- **维度组**：每组的列与层级链，以及每列是否有序
+- **列清单**：名称、类型（categorical / temporal / measure）、所属组、父列、基数；measure 另含单位与可加性
 - **依赖图**：数值列的拓扑序与边
 - **总行数**
 

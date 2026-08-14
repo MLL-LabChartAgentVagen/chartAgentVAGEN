@@ -3,7 +3,7 @@
 产出供 [02](02_fact_table.md) 使用的语义锚点：一个具体、真实、领域内的数据场景。不生成任何数据。
 
 **本文**
-1. [域池](#1-域池) → 2. [场景实例化](#2-场景实例化) → 3. [分析意图](#3-分析意图) → 4. [约束](#4-约束)
+1. [域池](#1-域池) → 2. [场景实例化](#2-场景实例化) → 3. [分析意图](#3-分析意图) → 4. [约束](#4-约束) → [附录：域池条目 schema](#附录域池条目-schema)
 
 ---
 
@@ -13,11 +13,11 @@
 
 每个子领域携带：名称、父 topic、复杂度层级（simple / medium / complex）、典型实体提示、典型指标提示（含单位）、时间粒度提示。
 
-**质量控制**：embedding 余弦相似度去重（阈值 0.80）、复杂度三层均衡、topic 覆盖统计。
+**生成方式**：先批量生成互不重叠的 topic，再逐 topic 生成 sub-topic。两级都要求"具体的分析情境"而非宽泛标签，并按复杂度三层均衡。
+
+**质量控制**：embedding 余弦相似度去重（阈值 0.80）、复杂度三层均衡、topic 覆盖统计。同一个去重检查器供 topic、sub-topic、[§2](#2-场景实例化) 的场景三处使用。
 
 **采样**：分层无放回。耗尽 80% 后重置。
-
-> 完整 prompt 与输出 schema 见 [`../data_generation/phase_0.md`](../data_generation/phase_0.md)。
 
 ---
 
@@ -36,6 +36,8 @@
 | `analytical_intent` | 见下节 |
 
 **场景级去重**：对 `data_context` 做 embedding 去重（阈值 0.85），复用域池的同一个检查器。
+
+**one-shot 示例**：prompt 中给一个完整的输入-输出样例。格式的稳定性直接决定 [02](02_fact_table.md) 能否可靠解析，示例的作用是限定输出结构。
 
 ---
 
@@ -59,3 +61,32 @@
 - 本阶段不出现任何图表类型词汇。数据源于业务需求，图表是数据的投影，选择权在 [03](03_figure.md)。
 - 所有数字、实体、时间窗口须落在合理的真实世界范围内。
 - 严格 JSON 输出，无附加说明。
+
+---
+
+## 附录：域池条目 schema
+
+```json
+{
+  "id": "dom_001",
+  "name": "ICU bed turnover analytics",
+  "topic": "Healthcare",
+  "complexity_tier": "complex",
+  "typical_entities_hint": ["hospitals", "ICU wards", "patient categories"],
+  "typical_metrics_hint": [
+    {"name": "occupancy_rate", "unit": "%"},
+    {"name": "length_of_stay", "unit": "days"}
+  ],
+  "temporal_granularity_hint": "daily"
+}
+```
+
+池文件另存版本号、生成时间、复杂度分布与 topic 覆盖统计，用于检查均衡性。
+
+复杂度层级的定义：
+
+| 层级 | 含义 |
+|---|---|
+| simple | 单一实体类型，1–2 个指标，直接的时间序列 |
+| medium | 多个相关指标，2 个以上实体类型 |
+| complex | 嵌套层级，3 个以上相互依赖的指标 |

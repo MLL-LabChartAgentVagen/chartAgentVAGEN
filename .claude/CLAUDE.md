@@ -2,52 +2,53 @@
 
 ## Project
 
-ChartAgent — atomic-grain chart understanding benchmark. **Code-as-DGP**: the LLM writes Python SDK scripts to synthesize a Master Fact Table; deterministic SQL projection (**Table Amortization**) yields 10–30+ multi-chart QA tasks per table with cross-chart arithmetic consistency.
+**Grounded transcription** chart data generation. Programmatically synthesize charts where every rendered value carries the pixel region it was drawn in. Output unit is `(key, value, region)`. Ground truth comes from instrumenting the renderer — never from annotating images.
+
+Spec lives in `storyline/parsebench_chart/`. Implementation plan in `IMPL_PLAN.md`.
 
 ## Architecture
 
-Four-phase pipeline. LLM appears only in Phases 0–2; Phase 3 is fully deterministic.
+Four execution stages plus two contracts. LLM appears in stages 01–03 only; stage 04 is fully deterministic.
 
-- **Phase 0 — Domain Pool** (cached): 200+ fine-grained sub-topics, embedding-deduped, complexity-balanced.
-- **Phase 1 — Scenario Contextualization**: sample one domain → realistic `scenario_context` (entities, metrics, target_rows). **No chart-type binding here.**
-- **Phase 2 — Agentic Data Simulator**: LLM writes a `FactTableSimulator` script → `(Master DataFrame, Schema Metadata)`. Execution-error feedback + three-layer validator with auto-fix.
-- **Phase 3 — View Extraction & QA**: SQL projection enumerates `(chart_type, column_binding)` views; operator-algebra pipelines build single- and multi-chart questions.
+- **01 Scenario** — domain pool (cached) → scenario context + analytical intent. LLM.
+- **02 Fact table** — LLM writes a DGP script against a 4-method SDK; deterministic engine executes it → atomic row-level table + Schema Metadata.
+- **03 Figure** — enumerate views (deterministic) → filter (deterministic) → LLM picks from the filtered candidate list → FigureSpec. **Filter before select**, never the reverse.
+- **04 Render** — FigureSpec + independently sampled style vector → page image + L0/L1 geometry. Single instrumented backend.
+- **05 Provenance** (contract) — three-layer record format, recoverability rule, three verification gates.
+- **06 Output** (contract) — provenance record → training targets, as a pure function.
 
-Schema Metadata is the Phase 2 ↔ Phase 3 contract.
+Schema Metadata is the 02 ↔ 03 contract. The provenance record is the 04 ↔ 06 contract.
 
 ## Code Standards
 
 - **Simple, short, clear, concise** — prefer the minimal implementation that solves the problem; avoid over-engineering, premature abstraction, and overly large files.
-- **Modular over monolithic** — split by responsibility; one file = one purpose. Anything reused across phases (sampling, validation, SQL projection, embedding utils) lives in a shared module, not duplicated per phase.
+- **Modular over monolithic** — split by responsibility; one file = one purpose. Anything reused across stages (sampling, embedding dedup, geometry transforms, caching) lives in a shared module.
 - **Reusable building blocks** — extract a helper the second time a pattern repeats, not the first; never the third.
 - **No redundancy** — no copy-pasted logic, no parallel implementations of the same idea, no dead code.
-- **Type hints on every signature**; avoid `Any` unless truly unavoidable. Use `@dataclass` for any structured input/output (`ViewSpec`, `ScenarioContext`, `Check`, ...), not loose dicts.
+- **Type hints on every signature**; avoid `Any`. Use `@dataclass` for any structured input/output (`ViewSpec`, `FigureSpec`, `Mark`, `StyleVector`, ...), not loose dicts.
 - **Determinism** — `(declarations, seed)` → bit-for-bit reproducible. No hidden global state.
-- **Atomic grain** — every Master Table row is one indivisible event; aggregation belongs to Phase 3.
-- **Closed-form measures** — declare each measure once; never patch via successive overrides.
-- **No LLM in Phase 3.**
+- **Stages are pure functions** — `f(input, seed) -> output`, cached by content hash. No stage reaches backwards.
+- **Atomic grain** — every fact-table row is one indivisible event; aggregation happens only in the SQL projection.
 
 ## Key Patterns
 
-- **`FactTableSimulator` SDK — two ordered steps**: Step 1 declare columns (`add_category`, `add_temporal`, `add_measure`, `add_measure_structural`); Step 2 declare relationships/patterns (`declare_orthogonal`, `add_group_dependency`, `inject_pattern`, `set_realism`).
-- **Dimension groups** — within-group hierarchy via `parent`; cross-group via orthogonality or root-only DAG dependencies.
-- **Measure DAG** — stochastic = root, structural = derived from formula; topological generation; cycles raise typed SDK exceptions fed back to the LLM (≤3 retries).
-- **Operator algebra (Phase 3)** — every question is a typed pipeline `V → … → S` over Set / Scalar / Combinator / Bridge ops. **Operator–chart compatibility is the single filter** for view feasibility, multi-chart pairing, and pipeline sampling.
-- **Difficulty = #ops** (1–2 Easy · 3–4 Medium · 5–6 Hard · 7+ Very Hard).
-
-## Chart Type Registry
-
-6 families · 16 types: Comparison (bar, grouped_bar) · Trend (line, area) · Distribution (histogram, box, violin) · Composition (pie, donut, stacked_bar, treemap) · Relationship (scatter, bubble, heatmap, radar) · Flow (waterfall, funnel).
+- **SDK — four methods**: `dim`, `time`, `measure`, `emit`. Dependencies inferred from expression free variables, not declared. `unit` / `additive` / `ordered` are declared once in 02 and only looked up downstream.
+- **Registry is the single source of chart-type truth** — structure (for enumeration), semantics (for filtering), visual (mark shape + encoding channel, for instrumentation and recoverability). Tiered delivery: Tier 1 first, end to end.
+- **Provenance emission is distributed** — projector emits L2 row counts, instrumented renderer emits L1 marks, page compositor emits L0 element boxes. Merging is a pure join.
+- **Recoverability is computed after rendering** from actual pixel geometry plus the encoding channel. Unrecoverable marks drop out of value targets but stay in localization targets.
+- **One coordinate convention** — pixels, origin top-left, `[x0, y0, x1, y1]`, image width/height recorded alongside.
+- **Every image degradation has an analytic geometric transform**; boxes are mapped through it.
 
 ## Don'ts
 
-- Don't bind chart types in Phase 1 — scenarios are domain-driven.
+- Don't bind chart types in 01 — scenarios are domain-driven.
 - Don't aggregate at generation time.
-- Don't patch a measure across multiple SDK calls.
-- Don't put cross-group dependencies on non-root columns; don't allow cycles in any DAG.
-- Don't call the LLM in Phase 3.
-- Don't add scoring heuristics or QA templates — compatibility is the only filter.
+- Don't let the LLM judge feasibility — feasibility is table lookup over declarations made in 02.
+- Don't re-render. If a value is unrecoverable, drop it from the value target set.
+- Don't add a second rendering backend before the style ablation demands it.
+- Don't write ground truth that was not produced by instrumentation.
+- Don't generate QA pairs — this pipeline produces transcription and grounding targets, not questions.
 
 ## Maintenance
 
-Keep `storyline/` (the spec) and the implementation in sync. Update `README.md` for setup/CLI/SDK-surface changes.
+`storyline/parsebench_chart/` is the spec and must stay in sync with the implementation. Update `IMPL_PLAN.md`'s checklist as work lands, and `README.md` for setup/CLI changes.
