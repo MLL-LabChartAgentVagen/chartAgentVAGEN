@@ -2,53 +2,60 @@
 
 ## Project
 
-**Grounded transcription** chart data generation. Programmatically synthesize charts where every rendered value carries the pixel region it was drawn in. Output unit is `(key, value, region)`. Ground truth comes from instrumenting the renderer — never from annotating images.
+Chart data generation for **grounded transcription**: synthesize charts where every rendered value carries the pixel box it was drawn in. Output unit is `(key, value, box)`. Ground truth is recorded while drawing — never obtained by annotating finished images.
 
-Spec lives in `storyline/parsebench_chart/`. Implementation plan in `IMPL_PLAN.md`.
+- Spec: `storyline/parsebench_chart/` — the single source of truth.
+- Plan: `IMPL_PLAN.md` — module layout, data interfaces, checklist.
+- Running example used by every spec doc: hospital ER wait times (3 hospitals × 4 departments × 3 severity levels, 900 rows).
 
-## Architecture
+## Pipeline
 
-Four execution stages plus two contracts. LLM appears in stages 01–03 only; stage 04 is fully deterministic.
+Six stages, one forward data flow. LLM appears in 01–03 only.
 
-- **01 Scenario** — domain pool (cached) → scenario context + analytical intent. LLM.
-- **02 Fact table** — LLM writes a DGP script against a 4-method SDK; deterministic engine executes it → atomic row-level table + Schema Metadata.
-- **03 Figure** — enumerate views (deterministic) → filter (deterministic) → LLM picks from the filtered candidate list → FigureSpec. **Filter before select**, never the reverse.
-- **04 Render** — FigureSpec + independently sampled style vector → page image + L0/L1 geometry. Single instrumented backend.
-- **05 Provenance** (contract) — three-layer record format, recoverability rule, three verification gates.
-- **06 Output** (contract) — provenance record → training targets, as a pure function.
+| Stage | Package | In → Out | LLM |
+|---|---|---|---|
+| 01 scenario | `s01_scenario` | domain pool → ScenarioContext | yes |
+| 02 facts | `s02_facts` | ScenarioContext → FactTable + TableSchema | yes, writes the generating script |
+| 03 figure | `s03_figure` | table + schema + intent → FigureSpec | yes, picks index numbers |
+| 04 render | `s04_render` | FigureSpec + StyleVector → image + L0/L1 | no |
+| 05 record | `s05_record` | RenderOutput → Record (3 layers + `readable`) | no |
+| 06 targets | `s06_targets` | Record → training target files | no |
 
-Schema Metadata is the 02 ↔ 03 contract. The provenance record is the 04 ↔ 06 contract.
+Shared layer: `interfaces/` (the five data interfaces), `registry/` (chart types), `common/` (seeds, geometry, cache, llm, dedup).
+
+## How the tricky parts work
+
+- **Record while drawing.** Every mark writes its box, key, and values at the moment it is drawn, using the plotting library's own coordinate transform. Never draw first and parse the image afterwards.
+- **Freeze layout.** Figure size, dpi, and the axes rectangle are fixed. Auto-layout moves the plot area after the fact and silently invalidates every recorded box.
+- **Filter before select.** 03 enumerates, filters by rule, then lets the LLM pick from the filtered list. The LLM cannot produce an infeasible figure, so there is no validate-and-retry loop.
+- **Feasibility is a lookup, not a judgement.** `additive` / `ordered` / `unit` are declared once in 02; 03 only matches them against the registry.
+- **Readability is decided after rendering** from actual pixel geometry plus the encoding channel (length/position → maybe; angle/area/color → no). Unreadable marks drop out of value targets but stay in localization targets.
+- **Three self-checks on the production path** (`s05_record/selfcheck.py`): is there anything inside the box, does the value read back from pixels match, does the answer stay the same under a different style. Failure discards the figure and logs the reason.
+- **One coordinate convention**: pixels, origin top-left, `[x0, y0, x1, y1]`, image size recorded alongside.
+- **Keys are ordered string tuples** — `("协和", "外科")`. All three record layers join on `(figure_id, panel_id, key)`.
 
 ## Code Standards
 
-- **Simple, short, clear, concise** — prefer the minimal implementation that solves the problem; avoid over-engineering, premature abstraction, and overly large files.
-- **Modular over monolithic** — split by responsibility; one file = one purpose. Anything reused across stages (sampling, embedding dedup, geometry transforms, caching) lives in a shared module.
-- **Reusable building blocks** — extract a helper the second time a pattern repeats, not the first; never the third.
-- **No redundancy** — no copy-pasted logic, no parallel implementations of the same idea, no dead code.
-- **Type hints on every signature**; avoid `Any`. Use `@dataclass` for any structured input/output (`ViewSpec`, `FigureSpec`, `Mark`, `StyleVector`, ...), not loose dicts.
-- **Determinism** — `(declarations, seed)` → bit-for-bit reproducible. No hidden global state.
-- **Stages are pure functions** — `f(input, seed) -> output`, cached by content hash. No stage reaches backwards.
-- **Atomic grain** — every fact-table row is one indivisible event; aggregation happens only in the SQL projection.
-
-## Key Patterns
-
-- **SDK — four methods**: `dim`, `time`, `measure`, `emit`. Dependencies inferred from expression free variables, not declared. `unit` / `additive` / `ordered` are declared once in 02 and only looked up downstream.
-- **Registry is the single source of chart-type truth** — structure (for enumeration), semantics (for filtering), visual (mark shape + encoding channel, for instrumentation and recoverability). Tiered delivery: Tier 1 first, end to end.
-- **Provenance emission is distributed** — projector emits L2 row counts, instrumented renderer emits L1 marks, page compositor emits L0 element boxes. Merging is a pure join.
-- **Recoverability is computed after rendering** from actual pixel geometry plus the encoding channel. Unrecoverable marks drop out of value targets but stay in localization targets.
-- **One coordinate convention** — pixels, origin top-left, `[x0, y0, x1, y1]`, image width/height recorded alongside.
-- **Every image degradation has an analytic geometric transform**; boxes are mapped through it.
+- **Simple, short, clear** — the minimal implementation that solves the problem. No premature abstraction, no oversized files.
+- **One file, one responsibility.** Anything used by two stages lives in `common/` or `interfaces/`.
+- **Extract a helper the second time a pattern repeats**, not the first, never the third.
+- **Type hints everywhere**; avoid `Any`. `@dataclass` for every structured object, not loose dicts.
+- **Stages talk only through `interfaces/`** — no stage imports another stage's internals.
+- **Determinism**: `(input, seed) -> output` bit-for-bit. No global random state, no hidden mutation.
+- **Split drawing code by mark shape, not by chart type** — 18 chart types, 6 mark shapes.
+- **Atomic grain**: one fact-table row = one event. Aggregation happens only in the 03 projection.
 
 ## Don'ts
 
-- Don't bind chart types in 01 — scenarios are domain-driven.
+- Don't mention chart types in 01 — scenarios come from the domain, not from visualization templates.
 - Don't aggregate at generation time.
-- Don't let the LLM judge feasibility — feasibility is table lookup over declarations made in 02.
-- Don't re-render. If a value is unrecoverable, drop it from the value target set.
-- Don't add a second rendering backend before the style ablation demands it.
-- Don't write ground truth that was not produced by instrumentation.
+- Don't let the LLM judge feasibility.
+- Don't re-render. If a value can't be read off the image, drop it from the value targets.
+- Don't add a second plotting backend before the style ablation demands it.
+- Don't write ground truth that wasn't recorded during drawing.
 - Don't generate QA pairs — this pipeline produces transcription and grounding targets, not questions.
+- Don't change a data interface without also updating its sample in `tests/samples/` and its `schema_version`.
 
 ## Maintenance
 
-`storyline/parsebench_chart/` is the spec and must stay in sync with the implementation. Update `IMPL_PLAN.md`'s checklist as work lands, and `README.md` for setup/CLI changes.
+`storyline/parsebench_chart/` and the code must stay in sync. Update `IMPL_PLAN.md`'s checklist as work lands, and `README.md` for setup or CLI changes. Keep the hospital ER example consistent across all docs — the numbers in 03/04/05/06 are chained.
