@@ -1,62 +1,143 @@
 # 03 · 选图
 
-把事实表投影成图表就绪的视图，决定画哪些图，产出 FigureSpec。**本阶段不调用 LLM。**
+把事实表投影成图表就绪的视图，决定画哪几张图。
+
+**这一阶段** — **[规则]** 全部四步都是程序执行，**不调用 LLM**。要画什么图在 [02](02_fact_table.md#4-声明期枚举) 已经由声明确定，意图也已经绑到列上，本阶段没有需要判断的地方。
 
 **本文**
-1. [四步](#1-四步) → 2. [枚举](#2-枚举) → 3. [投影](#3-投影) → 4. [数据过滤](#4-数据过滤) → 5. [挑图](#5-挑图) → 6. [FigureSpec](#6-figurespec) → 7. [示例](#7-示例)
+0. [示例](#0-示例) → 1. [枚举](#1-枚举) → 2. [投影](#2-投影) → 3. [数据过滤](#3-数据过滤) → 4. [挑图](#4-挑图) → 5. [FigureSpec](#5-figurespec)
 
 ---
 
-## 1. 四步
+## 0. 示例
+
+输入是 [02](02_fact_table.md#0-示例) 的 900 行事实表与表结构说明。
+
+### 第一步 · 枚举：这张表能画出哪些图
+
+可填角色的列：
 
 ```
-枚举  →  投影  →  数据过滤  →  挑图
+类别角色  hospital(3)  department(4)  severity(3,ordinal)  day_of_week(7)  month(6)  quarter(2)  is_weekend(2)
+时间角色  visit_date → 重采样为 weekly(26 点) 或 monthly(6 点)；daily(182 点) 超出上限
+数值角色  wait_minutes(可加)  cost(可加)  satisfaction(不可加)
 ```
 
-能画什么图在 [02](02_fact_table.md#3-声明期就知道能画什么) 的声明期就已经确定，本阶段把同一套规则用在实际数据上：枚举复用同一个函数，多出来的只有需要真实数值才能判断的那几项检查，以及按意图挑图。
+以 `bar` 为例，它要 1 个类别角色 + 1 个测度，基数 3–30：
 
-因此本阶段没有需要判断的地方，也就不需要 LLM。LLM 的判断已经在 02 以「意图绑定」的形式给出。
+```
+类别  hospital(3) · department(4) · severity(3) · day_of_week(7) · month(6)        → 5 个
+      quarter(2)、is_weekend(2) 基数不足，淘汰
+聚合  SUM(wait) · AVG(wait) · SUM(cost) · AVG(cost) · AVG(satisfaction) · COUNT(*)  → 6 个
+                                                                       5 × 6 = 30 条
+```
+
+以 `pie` 为例，它要基数 3–8 的类别 + 可加测度 + SUM：
+
+```
+类别  hospital(3) · department(4) · severity(3) · month(6) · day_of_week(7)         → 5 个
+聚合  SUM(wait) · SUM(cost)                                                          → 2 个
+      satisfaction 不可加，SUM 不在它的允许集里，这一支根本不产生
+                                                                       5 × 2 = 10 条
+```
+
+Tier 1 十二型全部枚举完、乘以三种行过滤，共 214 条。
+
+### 第二步 · 投影：每条候选跑一次聚合
+
+`bar(hospital × AVG(wait_minutes))` 的结果，聚合值与行数一起出来：
+
+```
+协和 42.3 (372 行)   华山 35.8 (315 行)   瑞金 28.1 (213 行)
+```
+
+括号里的行数就是 [05](05_provenance.md) 的 L2 层，不需要再算第二遍。
+
+### 第三步 · 数据过滤：淘汰画出来没有信息量的
+
+| 候选 | 结果 |
+|---|---|
+| `bar(hospital × AVG(wait_minutes))` | 通过。三个值区分明显，变异系数 0.20 |
+| `bar(month × COUNT(*))` | 淘汰。六个月就诊量 148/152/151/149/150/150，变异系数 0.01，是一条平线 |
+| `heatmap(day_of_week × month × AVG(wait))` | 通过。42 格、每格实际 18–25 行，达到 ≥3 行的下限 |
+| `heatmap(department × day_of_week × AVG(wait))` | 淘汰。28 格，但创伤科在周末只有 2 行，低于下限 |
+| `bar(is_weekend × AVG(cost))` | 第一步就已淘汰，基数 2 |
+| `funnel(severity × COUNT(*))` | 不枚举。funnel 要求 `ordered="stage"`，severity 声明的是 `"ordinal"`。轻 450 / 中 315 / 重 135 确实单调递减，但严重程度不是流转阶段 |
+
+214 条过滤后剩 96 条。
+
+### 第四步 · 挑图：3 张主图 + 5 张补充图
+
+主图按 [02](02_fact_table.md#42-意图绑定) 给的绑定做匹配，一条意图一张：
+
+```
+意图① 比较 · hospital × wait_minutes
+      96 条里视图类为比较、且列绑定覆盖这两列的有 4 条，按确定顺序取第一条
+      → bar(hospital × AVG(wait_minutes))
+意图② 趋势 · visit_date × wait_minutes  → line(月 × hospital × AVG(wait_minutes))
+意图③ 关系 · wait_minutes × satisfaction → scatter(wait_minutes × satisfaction)
+```
+
+补充图从剩下的候选里按图表族轮转取，补足到 8 张，用来撑住类型覆盖面：
+
+```
+构成 pie(department × SUM(cost))          分布 box(department × wait_minutes)
+关系 heatmap(day_of_week × month × AVG(wait))   比较 grouped_bar(hospital × severity × AVG(wait))
+趋势 area(月 × department × SUM(cost))
+```
+
+### 输出
+
+8 份 FigureSpec。意图①那份：
+
+```
+面板   1 个
+视图   bar，x = hospital，y = AVG(wait_minutes)
+数据   协和 42.3 (372 行)   华山 35.8 (315 行)   瑞金 28.1 (213 行)
+版面   单图
+来源   意图① "哪家医院、哪个科室的等待时间最长"
+```
+
+八张图共享同一份底层算术，因此**跨图一致性由构造保证**：饼图里协和的费用和条形图里协和的费用必然是同一个数。
 
 ---
 
-## 2. 枚举
+## 1. 枚举
 
-枚举器遍历 **图表类型 × 列绑定 × 聚合函数 × 行过滤**，判据全部来自 [chart_types.md §2](chart_types.md) 的结构条件与语义条件。
+**[规则]**。遍历 **图表类型 × 列绑定 × 聚合函数 × 行过滤**，判据全部来自 [chart_types.md §2](chart_types.md) 的结构条件与语义条件。与 [02](02_fact_table.md#4-声明期枚举) 调用的是同一个函数。
 
 **列绑定**：对每个图表类型，从表结构说明里找出能填进它各个角色的列。
 
 - 类别角色接受类别列与日历派生列（星期、月、季度、是否周末）
-- 时间角色只接受时间列，且可按更粗的粒度重采样，取时间点数落在该类型要求内的那些粒度
+- 时间角色只接受时间列，可按更粗的粒度重采样，取时间点数落在该类型要求内的那些粒度
 - 数值角色接受数值列
-- 同一个视图里一个列不能填两个角色，派生列不能与它的来源时间列同时出现
+- 一个视图里一个列不能填两个角色，派生列不能与它的来源时间列同时出现
 
 填好立刻查基数，不落在范围内的直接丢，不必真去跑聚合。
 
-**聚合函数**由可加性决定，默认集是可加 `{SUM, AVG}`、不可加 `{AVG}`，外加不需要测度的 `COUNT(*)`；`MAX / MIN / MEDIAN` 是配置项，默认关闭以控制组合数。构成族只接受 `SUM`——饼图里放平均值没有意义。
+**聚合函数**由可加性决定。默认集：可加 `{SUM, AVG}`、不可加 `{AVG}`、不需要测度的 `COUNT(*)`；`MAX / MIN / MEDIAN` 是配置项，默认关闭以控制组合数。构成族只接受 `SUM`——饼图里放平均值没有意义。
 
 **行过滤**只枚举三种：不过滤、时间前半段、时间后半段。其余条件的组合是无穷的，而它对图表形态的贡献只有"同一视图看不同时间窗"这一种。
 
-**上限**：按族与按场景两道上限，超出时按确定性顺序（图表类型序 → 列序 → 聚合序）截断，并记录丢弃了多少。同一个输入每次得到同一个候选清单。
+**上限**：按族与按场景两道上限，超出时按确定性顺序（图表类型序 → 列序 → 聚合序）截断，并记录丢弃了多少。同一个输入每次得到同一份候选清单。
 
 ---
 
-## 3. 投影
+## 2. 投影
 
-对每个候选跑一次聚合：先按条件选行，再分组聚合，最后取列。
+**[规则]**。对每个候选跑一次聚合：先按条件选行，再分组聚合，最后取列。
 
 ```
 视图 = 选行 → 分组聚合 → 取列
 ```
 
-聚合时**一并返回每组的行数**。`COUNT(*)` 与聚合值一起算出来，它就是 [05](05_provenance.md) 的 L2 层内容，不需要再算第二遍。
-
-同一张事实表投影出的所有视图共享同一份底层算术。两张图上的同一个数必然相等，**跨图一致性由构造保证**。
+聚合时**一并返回每组的行数**。`COUNT(*)` 与聚合值一起算出来，它就是 [05](05_provenance.md) 的 L2 层内容。
 
 ---
 
-## 4. 数据过滤
+## 3. 数据过滤
 
-只查需要真实数值才能判断的三项，其余条件在声明期已经查过。
+**[规则]**。只查需要真实数值才能判断的三项，其余条件在声明期已经查过。
 
 | 检查 | 判据 | 挡住什么 |
 |---|---|---|
@@ -68,21 +149,19 @@
 
 ---
 
-## 5. 挑图
+## 4. 挑图
 
-每个场景产出 K 张图，分两部分，都是确定性的。
+**[规则]**。每个场景产出 K 张图，分两部分。
 
-**意图图**：[02](02_fact_table.md#32-意图绑定) 给了每条意图的「目标列 + 视图类」。在通过过滤的候选里，找视图类匹配、且列绑定覆盖目标列的那些，按确定顺序取第一条。取不到就顺着同一视图类往下找；整类都没有则该意图不产图，记录原因。
+**主图**：按意图绑定给的「目标列 + 视图类」在通过过滤的候选里匹配，按确定顺序取第一条。取不到就顺着同一视图类往下找；整类都没有则该意图不产图，记录原因。
 
 **补充图**：剩下的候选按图表族轮转取，补足到 K 张。轮转保证一个场景里图表类型是散开的，不会全是条形图。补充图没有对应意图，caption 由视图本身的描述生成。
 
-意图图保证图与图之间有叙事关系，补充图保证类型覆盖面。两者共用同一份底层算术，因此仍然跨图一致。
+主图保证图与图之间有叙事关系，补充图保证类型覆盖面。
 
 ---
 
-## 6. FigureSpec
-
-一张最终图像的完整描述。
+## 5. FigureSpec
 
 | 字段 | 内容 |
 |---|---|
@@ -92,96 +171,3 @@
 | 来源 | 对应哪条意图，或标为补充图 |
 
 风格与退化不进 FigureSpec，由 [04](04_render.md) 独立采样。值能不能从图上读出取决于轴范围与图像尺寸，由 [04](04_render.md) 决定，因此在渲染之后判定，见 [05 §5](05_provenance.md)。
-
----
-
-## 7. 示例
-
-接[急诊科事实表](02_fact_table.md#7-示例)。
-
-### 第一步 · 枚举
-
-可填角色的列：
-
-```
-类别角色  hospital(3)  department(4)  severity(3,ordinal)  day_of_week(7)  month(6)  quarter(2)  is_weekend(2)
-时间角色  visit_date → 可重采样为 weekly(26 点) / monthly(6 点)，daily(182 点) 超出上限不取
-数值角色  wait_minutes(可加)  cost(可加)  satisfaction(不可加)
-```
-
-以 `bar` 为例，它要 1 个类别角色 + 1 个测度，基数 3–30：
-
-```
-类别    hospital(3) · department(4) · severity(3) · day_of_week(7) · month(6)      → 5 个
-        quarter(2) 与 is_weekend(2) 基数不足，淘汰
-聚合    SUM(wait) · AVG(wait) · SUM(cost) · AVG(cost) · AVG(satisfaction) · COUNT(*) → 6 个
-候选    5 × 6 = 30 条
-```
-
-以 `pie` 为例，它要基数 3–8 的类别 + 可加测度 + SUM：
-
-```
-类别    hospital(3) · department(4) · severity(3) · month(6) · day_of_week(7)      → 5 个
-聚合    SUM(wait) · SUM(cost)                                                       → 2 个
-        satisfaction 不可加，SUM 不在它的允许集里，这一支根本不产生
-候选    5 × 2 = 10 条
-```
-
-Tier 1 十二型全部枚举完，加上三种行过滤，合计两百余条，经每族 20 条、每场景 120 条的上限截断后进入投影。
-
-### 第二步 · 投影
-
-每条候选跑一次聚合。`bar(hospital × AVG(wait_minutes))` 的结果：
-
-```
-协和 42.3 (372 行)   华山 35.8 (315 行)   瑞金 28.1 (213 行)
-```
-
-### 第三步 · 数据过滤
-
-| 候选 | 结果 |
-|---|---|
-| `bar(hospital × AVG(wait_minutes))` | 通过。三个值区分明显，变异系数 0.20 |
-| `bar(is_weekend × AVG(cost))` | 枚举时就已淘汰：基数 2 |
-| `bar(month × COUNT(*))` | 淘汰：六个月就诊量分别 148/152/151/149/150/150，变异系数 0.01，是一条平线 |
-| `heatmap(day_of_week × month × AVG(wait))` | 通过。42 格、每格实际 18–25 行，达到 ≥3 行的下限 |
-| `heatmap(department × day_of_week × AVG(wait))` | 淘汰：28 格但创伤科在周末只有 2 行，低于下限 |
-| `funnel(severity × COUNT(*))` | 不枚举：funnel 要求 `ordered="stage"`，而 severity 声明的是 `"ordinal"`。轻 450 / 中 315 / 重 135 确实单调递减，但严重程度不是流转阶段 |
-
-### 第四步 · 挑图
-
-意图绑定来自 02：
-
-```
-意图① 视图类 比较，目标列 hospital × wait_minutes
-      匹配到 bar(hospital × AVG(wait)) 、grouped_bar(hospital × severity × AVG(wait)) 等 4 条
-      按确定顺序取第一条 → bar(hospital × AVG(wait_minutes))
-
-意图② 视图类 趋势，目标列 visit_date × wait_minutes
-      → line(月 × hospital × AVG(wait_minutes))
-
-意图③ 视图类 关系，目标列 wait_minutes × satisfaction
-      → scatter(wait_minutes × satisfaction)
-```
-
-补充图按族轮转，从剩余候选里取到 K=8：
-
-```
-构成  pie(department × SUM(cost))
-分布  box(department × wait_minutes)
-关系  heatmap(day_of_week × month × AVG(wait_minutes))
-比较  grouped_bar(hospital × severity × AVG(wait_minutes))
-趋势  area(月 × department × SUM(cost))
-```
-
-意图①的 FigureSpec：
-
-```
-面板   1 个
-视图   bar，x = hospital，y = AVG(wait_minutes)
-数据   协和 42.3 (372 行)   华山 35.8 (315 行)   瑞金 28.1 (213 行)
-版面   单图
-来源   意图① "哪家医院、哪个科室的等待时间最长"
-```
-
-括号里的行数直接来自聚合时的 `COUNT(*)`，它会成为 [05](05_provenance.md) 的 L2 层。

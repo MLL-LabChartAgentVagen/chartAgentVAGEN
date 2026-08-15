@@ -29,7 +29,7 @@
 
 ## 2. 系统骨架
 
-六个阶段，一条单向的数据流。每个阶段只认它上游那一份数据接口。
+六个阶段，一条单向的数据流。每个阶段只认它上游那一份数据接口。**整条流水线只有两次 LLM 调用**（01 一次、02 一次），03–06 全部由程序执行。
 
 ```
    配置 + 根种子
@@ -63,14 +63,14 @@
 
 每个阶段是一个函数：`阶段(上游产物, 种子, 配置) -> 下游产物`。同样的输入必得同样的输出，产物按输入的内容哈希落盘。任何阶段可以单独重跑，也可以拿样例文件单独开发。
 
-| 阶段 | 输入 | 输出 | 用 LLM |
+| 阶段 | 输入 | 输出 | LLM 调用 |
 |---|---|---|---|
-| 01 scenario | 领域池 | ScenarioContext | 是 |
-| 02 facts | ScenarioContext | FactTable + TableSchema（含意图绑定） | 是，写生成程序并绑定意图 |
-| 03 figure | FactTable + TableSchema | FigureSpec | **否** |
-| 04 render | FigureSpec + StyleVector | RenderOutput | 否 |
-| 05 record | RenderOutput | Record | 否 |
-| 06 targets | Record | 训练目标文件 | 否 |
+| 01 scenario | 领域池 | ScenarioContext | **1 次**：写场景与分析意图 |
+| 02 facts | ScenarioContext | FactTable + TableSchema（含意图绑定） | **1 次**：写生成脚本与意图绑定。解析、枚举、覆盖度检查、执行、结构检查全部是程序 |
+| 03 figure | FactTable + TableSchema | FigureSpec | 0 |
+| 04 render | FigureSpec + StyleVector | RenderOutput | 0 |
+| 05 record | RenderOutput | Record | 0 |
+| 06 targets | Record | 训练目标文件 | 0 |
 
 **枚举器是共享层的纯函数**，输入只有列声明与图表条件表。02 调用它做覆盖度反馈，03 调用同一个函数得到候选清单——两处结果的差别只来自需要真实数据才能判断的那三项检查。
 

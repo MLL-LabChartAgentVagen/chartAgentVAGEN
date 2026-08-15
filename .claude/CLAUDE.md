@@ -11,12 +11,14 @@ Chart data generation for **grounded transcription**: synthesize charts where ev
 
 ## Pipeline
 
-Six stages, one forward data flow. **LLM appears in 01 and 02 only**, and only ever emits declarations and bindings — never a data value.
+Six stages, one forward data flow. **The whole pipeline makes exactly two LLM calls** — one in 01, one in 02 — and both emit only declarations and bindings, never a data value. Everything else is program.
+
+Each spec doc opens with a worked example and tags every step `[LLM]` or `[规则]`; keep that convention when editing them.
 
 | Stage | Package | In → Out | LLM |
 |---|---|---|---|
 | 01 scenario | `s01_scenario` | domain pool → ScenarioContext | yes |
-| 02 facts | `s02_facts` | ScenarioContext → FactTable + TableSchema | yes: writes the generating script and binds each intent to columns |
+| 02 facts | `s02_facts` | ScenarioContext → FactTable + TableSchema | yes, one call: writes the generating script and binds each intent to columns. Parsing, enumeration, the coverage check, execution and the structural check are all program |
 | 03 figure | `s03_figure` | table + schema → FigureSpec | no |
 | 04 render | `s04_render` | FigureSpec + StyleVector → image + L0/L1 | no |
 | 05 record | `s05_record` | RenderOutput → Record (3 layers + `readable`) | no |
