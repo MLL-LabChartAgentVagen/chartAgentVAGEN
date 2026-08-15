@@ -9,6 +9,7 @@
 | 路径 | 内容 |
 |---|---|
 | [storyline/parsebench_chart/](storyline/parsebench_chart/) | 方案规格。流水线的唯一定义处，六个阶段文档共用一份贯穿示例 |
+| [storyline/parsebench_chart/chart_types.md](storyline/parsebench_chart/chart_types.md) | 能画哪些图、每种图要满足什么条件才能画 |
 | [IMPL_PLAN.md](IMPL_PLAN.md) | 实现计划：系统骨架、目录结构、数据接口、todo checklist |
 | [slides/](slides/) | 讲稿 |
 
