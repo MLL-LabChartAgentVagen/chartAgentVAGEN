@@ -232,7 +232,7 @@
       <table class="tbl sm">
         <tr><th>stage</th><th>in &rarr; out</th><th class="num">this run</th></tr>
         <tr class="hi"><td>1 &ensp;Data</td><td>domain seed &rarr; fact table + schema</td><td class="num">900 rows</td></tr>
-        <tr><td>2 &ensp;Figure</td><td>table + schema &rarr; FigureSpec</td><td class="num">80 &rarr; 36 &rarr; 8</td></tr>
+        <tr><td>2 &ensp;Figure</td><td>table + schema &rarr; FigureSpec</td><td class="num">8 figures</td></tr>
         <tr><td>3 &ensp;Render</td><td>FigureSpec + style &rarr; page image + geometry</td><td class="num">8 images</td></tr>
         <tr><td>4 &ensp;Record</td><td>geometry &rarr; three-layer record</td><td class="num">8 records</td></tr>
         <tr><td>5 &ensp;Output</td><td>record &rarr; training targets</td><td class="num">8 &times; 8 files</td></tr>
@@ -240,7 +240,7 @@
     </div>
     <div class="grid3" style="margin-top:2.4vh;">
       <div class="card"><span class="card-label accent">The call writes declarations</span><div>A generating script and a set of intents bound to its columns. Never a data value.</div></div>
-      <div class="card"><span class="card-label muted">Everything after is a rule</span><div>Enumerate, project, filter, pair, compose, draw, record, export.</div></div>
+      <div class="card"><span class="card-label muted">Everything after is a rule</span><div>Construct, derive, sample, project, admit, compose, draw, record, export.</div></div>
       <div class="card"><span class="card-label muted">Same seed, same bytes</span><div>Each stage is a function of its input and a derived sub-seed.</div></div>
     </div>
   </div>
@@ -426,9 +426,9 @@ two or more numeric columns                     <span class="k">&rarr; relation,
 stage dimension     none                        <span class="c">&rarr; process family unavailable</span>
 2-D cross product   7 &times; 6 = 42 cells, 900 rows &rarr; 21 expected per cell
 
-80 candidates, 5 of 6 families</div>
+5 of 6 families non-empty</div>
       <div class="stack" style="flex:1;">
-        <div class="card"><span class="card-label accent">Same function, twice</span><div>Stage 1 runs the enumerator for coverage feedback. Stage 2 runs it again for the candidate list. The only difference in the result comes from the three checks that need real numbers.</div></div>
+        <div class="card"><span class="card-label accent">Families, not a candidate list</span><div>Stage 1 only asks whether each family is non-empty &mdash; arithmetic over cardinalities and declared fields. It never expands the combinations. Stage 2 reads the same condition table when it builds or draws one specific view.</div></div>
         <div class="card"><span class="card-label muted">Coverage is feedback</span><div class="mono" style="font-size:.84em;margin-top:.6vh;">"no additive measure &mdash; pie, stacked_bar,<br>&nbsp;area and treemap are all unavailable.<br>&nbsp;Add a count or currency measure."</div></div>
         <div class="card card-bad"><span class="card-label">Process family stays empty</span><div>funnel and waterfall need <span class="mono">ordered="stage"</span>. Severity is ordinal, not a process. Nothing is forced.</div></div>
       </div>
@@ -440,89 +440,72 @@ stage dimension     none                        <span class="c">&rarr; process f
 
 <!-- ═══════════════ 12 · 02 OVERVIEW ═══════════════ -->
 <section class="slide">
-  <h1 class="slide-title"><span class="accent">02</span>&ensp;Enumerate &#8594; filter &#8594; compose</h1>
-  <p class="slide-subtitle">No model call in this stage. What the intent supplied was a family and a column pair; the type inside that family is a lookup.</p>
+  <h1 class="slide-title"><span class="accent">02</span>&ensp;Three kinds of figure, three mechanisms</h1>
+  <p class="slide-subtitle">No model call here. Only one of the three needs a random number.</p>
   <div class="body">
-    <div style="display:flex;align-items:center;justify-content:center;gap:1.4vw;">
-      <div style="text-align:center;">
-        <div class="card" style="width:15vw;"><span class="card-label muted">Enumerate</span><div class="big" style="font-size:clamp(28px,3.2vw,54px);">80</div><div style="font-weight:500;">legal views</div></div>
-        <div class="cap">declaration conditions</div>
+    <div class="grid3">
+      <div class="card" style="background:#FBF1F1;">
+        <span class="card-label accent">Intent figure &middot; constructed</span>
+        <div class="mono" style="font-size:.84em;margin:.8vh 0;">hospital &times; AVG(wait), comparison<br>&rarr; bar( hospital, AVG wait )</div>
+        <div>The binding fixes the columns, the aggregate and the family. The condition table picks the type. Nothing is searched.</div>
       </div>
-      <span class="arrow">&#8594;</span>
-      <div style="text-align:center;">
-        <div class="card" style="width:15vw;"><span class="card-label muted">Filter</span><div class="big" style="font-size:clamp(28px,3.2vw,54px);">36</div><div style="font-weight:500;">worth drawing</div></div>
-        <div class="cap">three numeric checks</div>
+      <div class="card">
+        <span class="card-label muted">Multi-panel &middot; derived</span>
+        <div class="mono" style="font-size:.84em;margin:.8vh 0;">anchor + drill-down rule<br>&rarr; grouped_bar( hospital &times; dept )</div>
+        <div>The second panel is computed from the anchor by the relationship rule. Nothing is searched.</div>
       </div>
-      <span class="arrow">&#8594;</span>
-      <div style="text-align:center;">
-        <div class="card" style="width:15vw;background:#FBF1F1;"><span class="card-label accent">Compose</span><div class="big" style="font-size:clamp(28px,3.2vw,54px);">8</div><div style="font-weight:500;">figures</div></div>
-        <div class="cap">3 intent &middot; 2 multi-panel &middot; 3 rotation<br>K is fixed at 8, the split is not</div>
+      <div class="card">
+        <span class="card-label muted">Rotation &middot; sampled</span>
+        <div class="mono" style="font-size:.84em;margin:.8vh 0;">draw (type, columns, aggregate)<br>&rarr; test &rarr; keep or redraw</div>
+        <div>No target is specified. The ask is "another one that is not a repeat", which is what sampling is for.</div>
       </div>
     </div>
-    <div class="card" style="margin:3vh auto 0;max-width:84%;text-align:center;">
-      A view is one projection over the fact table.&ensp;<span class="mono">view = &sigma;<sub>rows</sub> &#8728; &gamma;<sub>agg</sub> &#8728; &pi;<sub>cols</sub> (M)</span>
+    <div class="grid2" style="margin-top:2.6vh;">
+      <div class="card card-bad">
+        <span class="card-label">What this replaces</span>
+        <div>Enumerating every legal view, projecting all of them, then picking a few. That is a few hundred candidates on this schema and a few thousand on a wide one &mdash; each needing a full pass over the table.</div>
+      </div>
+      <div class="card card-good">
+        <span class="card-label">What it costs now</span>
+        <div>This run drew 14 candidates and kept 3. Intent and multi-panel figures are built directly, so they cost one projection each.</div>
+      </div>
     </div>
-    <div class="grid3" style="margin-top:2.4vh;">
-      <div class="card"><span class="card-label muted">3 intent figures</span><div>Family from the intent, type from the condition table, ties by a deterministic order</div></div>
-      <div class="card"><span class="card-label muted">2 multi-panel &middot; 3 rotation</span><div>Multi-panel is anchored on a main figure. Rotation picks the family, and within it a view sharing a column with a main figure.</div></div>
-      <div class="card card-good"><span class="card-label">Consistency by construction</span><div>All eight come off one fact table, so Xiehe's cost in the pie is the same number as in the bar</div></div>
-    </div>
+    <div class="cap" style="margin-top:1.4vh;">All figures come off one fact table, so cross-chart consistency holds by construction.</div>
   </div>
-  <div class="footer">ParseBench · Chart Data Generation</div>
+  <div class="footer">ParseBench &middot; Chart Data Generation</div>
 </section>
 
-<!-- ═══════════════ 13 · ENUMERATION ═══════════════ -->
+<!-- ═══════════════ 13 · DIVERSITY ═══════════════ -->
 <section class="slide">
-  <h1 class="slide-title">Enumeration is <span class="accent">three dimensions</span></h1>
-  <p class="slide-subtitle">Chart type &times; column binding &times; aggregate. Row filters are deliberately not the fourth.</p>
+  <h1 class="slide-title">Diversity is a <span class="accent">test</span>, not a count</h1>
+  <p class="slide-subtitle">Capping the number of figures does not stop them from being near-copies of each other.</p>
   <div class="body">
-    <div style="display:flex;gap:1.8vw;align-items:center;">
-      <div class="code" style="flex:1.05;font-size:clamp(10px,1.02vw,16.5px);"><span class="k">line</span>  <span class="c">1 temporal + 0&ndash;1 series + 1 measure</span>
-  granularity  weekly 26 pts &middot; monthly 6 pts       <span class="c">&rarr; 2</span>
-               daily 182 exceeds the cap
-  series       none &middot; hospital &middot; department
-               severity &middot; quarter &middot; is_weekend      <span class="c">&rarr; 6</span>
-  aggregate    SUM/AVG wait &middot; SUM/AVG cost
-               AVG satisfaction &middot; COUNT(*)          <span class="c">&rarr; 6</span>
-                                        2 &times; 6 &times; 6 = 72
-
-<span class="k">pie</span>   <span class="c">1 categorical (card 3&ndash;8) + additive measure</span>
-  aggregate    SUM wait &middot; SUM cost                  <span class="c">&rarr; 2</span>
-               satisfaction is not additive, so the
-               SUM branch never opens        5 &times; 2 = 10
-
-<span class="k">scatter</span>  <span class="c">3 measure pairs &times; 6 colour options = 18</span>
-  <span class="c">no aggregate factor &mdash; it does not group</span></div>
-      <table class="tbl sm" style="flex:1;">
-        <tr><th>type</th><th class="num">raw</th><th class="num">capped</th></tr>
-        <tr class="hi"><td>line</td><td class="num">72</td><td class="num">12</td></tr>
-        <tr><td>grouped_bar</td><td class="num">36</td><td class="num">12</td></tr>
-        <tr><td>bar</td><td class="num">30</td><td class="num">12</td></tr>
-        <tr><td>scatter</td><td class="num">18</td><td class="num">12</td></tr>
-        <tr><td>pie</td><td class="num">10</td><td class="num">10</td></tr>
-        <tr><td>stacked_bar</td><td class="num">8</td><td class="num">8</td></tr>
-        <tr><td>area</td><td class="num">6</td><td class="num">6</td></tr>
-        <tr><td>compound</td><td class="num">5</td><td class="num">5</td></tr>
-        <tr><td>histogram</td><td class="num">3</td><td class="num">3</td></tr>
-        <tr class="bad"><td>waterfall, funnel</td><td class="num">0</td><td class="num">0</td></tr>
-        <tr class="tot"><td>11 Tier-1 types</td><td class="num">188</td><td class="num">80</td></tr>
-      </table>
-    </div>
-    <div class="grid2" style="margin-top:2vh;">
-      <div class="card">
-        <span class="card-label muted">The cap is not about enumeration cost</span>
-        <div>Enumeration touches no data. The cost is the next step, one pass over 900 rows per candidate. The real constraint is that a scenario ships 8 figures.</div>
+    <div class="grid2">
+      <div class="card card-bad">
+        <span class="card-label">A count cannot see this</span>
+        <div class="mono" style="font-size:.86em;font-weight:500;margin-top:.6vh;line-height:1.7;">bar( hospital, AVG wait )<br>bar( hospital, SUM wait )<br>bar( hospital, AVG cost )<br>bar( hospital, COUNT(*) )</div>
+        <div style="margin-top:1vh;">Four figures, same three labels, same three boxes. Only the heights move. A budget of 8 admits all of them.</div>
       </div>
-      <div class="card">
-        <span class="card-label accent">Truncate by rotation, not by prefix</span>
-        <div>A prefix cut leaves 12 views all sitting on the first-declared columns and the first aggregate. Rotating over (column, aggregate) spreads them, and stays deterministic.</div>
+      <div class="card card-good">
+        <span class="card-label">Admission test</span>
+        <div style="margin-top:.6vh;">Reject a candidate when the batch already holds a figure with the <span class="accent">same key set and the same mark shape</span>.</div>
+        <div class="mono" style="font-size:.84em;font-weight:500;margin-top:1vh;line-height:1.7;">bar( hospital, SUM cost )&ensp;&rarr; reject<br>pie( hospital, SUM wait )&ensp;&rarr; keep&ensp;<span class="c">sector, not rect</span><br>box( department, wait )&ensp;&nbsp;&rarr; keep&ensp;<span class="c">different keys</span></div>
+        <div style="margin-top:1vh;">No threshold to tune.</div>
       </div>
     </div>
-    <div class="cap" style="margin-top:1.2vh;">
-      A row filter only ever means "the same view over a different time window". It serves one pairing relationship, so pair.py slices the two halves off the anchor on demand instead of multiplying all 80 by the window count.
+    <div class="grid2" style="margin-top:2.4vh;">
+      <div class="card">
+        <span class="card-label muted">Why that pair</span>
+        <div>The output unit is (key, value, region). The key set decides which entities appear; the mark shape decides what the box looks like, how many values it carries, and whether the value is readable at all.</div>
+      </div>
+      <div class="card">
+        <span class="card-label muted">K is only a budget</span>
+        <div>Render and storage cost, nothing else. How many figures a scenario actually yields falls out of the test and of running dry.</div>
+      </div>
     </div>
+    <div class="cap" style="margin-top:1.2vh;">Multi-panel figures are exempt &mdash; their value is the layout form, and the repeated keys are exactly what makes them a paired sample.</div>
   </div>
-  <div class="footer">ParseBench · Chart Data Generation</div>
+  <div class="footer">ParseBench &middot; Chart Data Generation</div>
 </section>
 
 <!-- ═══════════════ 13b · PROJECTION SHAPES ═══════════════ -->
@@ -543,7 +526,7 @@ stage dimension     none                        <span class="c">&rarr; process f
       <div class="card">
         <span class="card-label accent">All four are one SELECT</span>
         <div class="mono" style="font-size:.8em;margin-top:.6vh;line-height:1.5;">SELECT dims, AGG(m), COUNT(*) &hellip; GROUP BY dims<br>SELECT dim, MIN, PCT, MEDIAN, PCT, MAX &hellip;<br>SELECT bucket(m), COUNT(*) &hellip; GROUP BY bucket<br>SELECT m1, m2 FROM M&ensp;<span class="c">-- no GROUP BY</span></div>
-        <div style="font-weight:500;margin-top:.6vh;">The aggregate follows the shape, so FIVE_NUM, BIN_COUNT and NONE add no factor to the enumeration.</div>
+        <div style="font-weight:500;margin-top:.6vh;">The aggregate follows the shape. FIVE_NUM, BIN_COUNT and NONE are not SUM / AVG / COUNT.</div>
       </div>
       <div class="card">
         <span class="card-label muted">Scatter needs a sample</span>
@@ -605,38 +588,35 @@ stage dimension     none                        <span class="c">&rarr; process f
   <div class="footer">ParseBench · Chart Data Generation</div>
 </section>
 
-<!-- ═══════════════ 15 · PAIRING ═══════════════ -->
+<!-- ═══════════════ 15 · MULTI-PANEL ═══════════════ -->
 <section class="slide">
-  <h1 class="slide-title">Multi-panel figures are <span class="accent">composed by rule</span></h1>
-  <p class="slide-subtitle">Five relationships, each a field comparison between two ViewSpecs. The relationship decides the layout and what is shared.</p>
+  <h1 class="slide-title">The second panel is <span class="accent">computed</span>, not searched</h1>
+  <p class="slide-subtitle">Anchor on a figure already in the batch, then apply one of five construction rules.</p>
   <div class="body">
     <div class="scrollx">
       <table class="tbl sm">
-        <tr><th>relationship</th><th>test</th><th>layout</th></tr>
-        <tr class="hi"><td>drill-down</td><td class="m">same measure and aggregate, group keys A &sub; B</td><td>side by side, shared y and legend</td></tr>
-        <tr><td>dual metric</td><td class="m">same group keys, different measure</td><td>one panel, two y axes (compound)</td></tr>
-        <tr><td>orthogonal slice</td><td class="m">same measure and aggregate, disjoint group keys</td><td>grid, shared y</td></tr>
-        <tr><td>time comparison</td><td class="m">same view, complementary row filters</td><td>side by side, shared x and y</td></tr>
-        <tr><td>part and whole</td><td class="m">same keys and measure, composition vs comparison family</td><td>side by side, shared legend</td></tr>
+        <tr><th>relationship</th><th>given the anchor, the partner is</th><th class="num">panels</th><th>layout</th></tr>
+        <tr class="hi"><td>orthogonal slice</td><td class="m">same measure and aggregate, group key swapped for a disjoint one; take N&minus;1 of them</td><td class="num">2&ndash;4</td><td>grid, shared y</td></tr>
+        <tr><td>drill-down</td><td class="m">group keys plus one level &mdash; a child column if the hierarchy has one</td><td class="num">2&ndash;3</td><td>side by side, shared y and legend</td></tr>
+        <tr><td>time comparison</td><td class="m">the anchor itself, row filter split into halves or quarters</td><td class="num">2 or 4</td><td>side by side, shared x and y</td></tr>
+        <tr><td>dual metric</td><td class="m">same group keys, next legal measure in declaration order</td><td class="num">2</td><td>compound, two y axes</td></tr>
+        <tr><td>part and whole</td><td class="m">same keys and measure, family switched comparison &rarr; composition</td><td class="num">2</td><td>side by side, shared legend</td></tr>
       </table>
     </div>
-    <div class="grid2" style="margin-top:2.4vh;">
+    <div class="cap" style="margin-top:1.2vh;">Orthogonal slice is the N-panel workhorse &mdash; one measure cut by hospital, department, severity, weekday. Real small multiples.</div>
+    <div class="grid2" style="margin-top:2vh;">
       <div class="card">
-        <span class="card-label muted">Figure 4, drill-down</span>
-        <div class="mono" style="font-size:.86em;font-weight:500;">p0&ensp;bar( hospital, AVG wait )<br>p1&ensp;grouped_bar( hospital &times; department, AVG wait )</div>
-        <div style="font-weight:500;margin-top:.8vh;">One outside legend, three entries, covering both panels.</div>
+        <span class="card-label muted">The anchor must already be a standalone figure</span>
+        <div>Then that view appears twice &mdash; alone and as panel p0 &mdash; with identical keys and values and different pixels. Sample the anchor independently and that pair disappears.</div>
       </div>
       <div class="card card-good">
-        <span class="card-label">Why this is required, not decoration</span>
-        <div>Legend binding asks which panels an entry applies to. On a single-panel figure the answer is always the one panel. <span class="mono">applies_to_panels</span> is empty for the whole dataset without this stage.</div>
+        <span class="card-label">Shared legend needs a shared series column</span>
+        <div>Panels colored by the same categorical get one legend covering all of them. Different series columns force one legend per panel and <span class="mono">applies_to_panels</span> collapses to a single element.</div>
       </div>
     </div>
-    <div class="cap" style="margin-top:1.4vh;">
-      <span class="mono">bar( hospital, AVG wait )</span> appears both as figure 1 and as panel p0 of figure 4 &mdash; identical keys and values, different pixels. That pair is free training signal.
-      The three rotation figures are tied in too: rotation picks the family, and inside it the order prefers a view sharing a column with a main figure, so all eight share entities, not just a table.
-    </div>
+    <div class="cap" style="margin-top:1.2vh;">Same type across panels gives small multiples; mixed type (bar + line) forces the model to switch reading rules inside one image. Which one is a style dimension.</div>
   </div>
-  <div class="footer">ParseBench · Chart Data Generation</div>
+  <div class="footer">ParseBench &middot; Chart Data Generation</div>
 </section>
 
 <!-- ═══════════════ 16 · FIGURESPEC ═══════════════ -->
@@ -750,7 +730,7 @@ stage dimension     none                        <span class="c">&rarr; process f
     <div class="card" style="margin:2.2vh auto 0;max-width:88%;text-align:center;">
       All three carry the same ground truth: Xiehe = <span class="accent mono">42.3</span>. Only the tolerance moves &mdash; a printed label demands an exact match, an unlabeled bar gets 1%.
     </div>
-    <div class="cap" style="margin-top:1vh;">Six sampled dimensions: labels &middot; layout detail &middot; number format &middot; palette &middot; shape detail &middot; axes. A hollow pie is a value here, not a chart type.</div>
+    <div class="cap" style="margin-top:1vh;">Seven sampled dimensions: labels &middot; layout detail &middot; panel type mix &middot; number format &middot; palette &middot; shape detail &middot; axes. A hollow pie is a value here, not a chart type.</div>
   </div>
   <div class="footer">ParseBench · Chart Data Generation</div>
 </section>
