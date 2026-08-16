@@ -456,7 +456,7 @@ stage dimension     none                        <span class="c">&rarr; process f
       <span class="arrow">&#8594;</span>
       <div style="text-align:center;">
         <div class="card" style="width:15vw;background:#FBF1F1;"><span class="card-label accent">Compose</span><div class="big" style="font-size:clamp(28px,3.2vw,54px);">8</div><div style="font-weight:500;">figures</div></div>
-        <div class="cap">3 intent &middot; 2 multi-panel &middot; 3 rotation</div>
+        <div class="cap">3 intent &middot; 2 multi-panel &middot; 3 rotation<br>K is fixed at 8, the split is not</div>
       </div>
     </div>
     <div class="card" style="margin:3vh auto 0;max-width:84%;text-align:center;">
@@ -464,7 +464,7 @@ stage dimension     none                        <span class="c">&rarr; process f
     </div>
     <div class="grid3" style="margin-top:2.4vh;">
       <div class="card"><span class="card-label muted">3 intent figures</span><div>Family from the intent, type from the condition table, ties by a deterministic order</div></div>
-      <div class="card"><span class="card-label muted">2 multi-panel &middot; 3 rotation</span><div>Type by rotation over the six families. This is where type coverage comes from.</div></div>
+      <div class="card"><span class="card-label muted">2 multi-panel &middot; 3 rotation</span><div>Multi-panel is anchored on a main figure. Rotation picks the family, and within it a view sharing a column with a main figure.</div></div>
       <div class="card card-good"><span class="card-label">Consistency by construction</span><div>All eight come off one fact table, so Xiehe's cost in the pie is the same number as in the bar</div></div>
     </div>
   </div>
@@ -541,9 +541,9 @@ stage dimension     none                        <span class="c">&rarr; process f
     </div>
     <div class="grid3" style="margin-top:2.4vh;">
       <div class="card">
-        <span class="card-label muted">The aggregate follows the shape</span>
-        <div class="mono" style="font-size:.84em;margin-top:.6vh;">FIVE_NUM &middot; BIN_COUNT &middot; NONE</div>
-        <div style="font-weight:500;margin-top:.6vh;">These are not SUM / AVG / COUNT, so they contribute no factor to the enumeration.</div>
+        <span class="card-label accent">All four are one SELECT</span>
+        <div class="mono" style="font-size:.8em;margin-top:.6vh;line-height:1.5;">SELECT dims, AGG(m), COUNT(*) &hellip; GROUP BY dims<br>SELECT dim, MIN, PCT, MEDIAN, PCT, MAX &hellip;<br>SELECT bucket(m), COUNT(*) &hellip; GROUP BY bucket<br>SELECT m1, m2 FROM M&ensp;<span class="c">-- no GROUP BY</span></div>
+        <div style="font-weight:500;margin-top:.6vh;">The aggregate follows the shape, so FIVE_NUM, BIN_COUNT and NONE add no factor to the enumeration.</div>
       </div>
       <div class="card">
         <span class="card-label muted">Scatter needs a sample</span>
@@ -633,6 +633,7 @@ stage dimension     none                        <span class="c">&rarr; process f
     </div>
     <div class="cap" style="margin-top:1.4vh;">
       <span class="mono">bar( hospital, AVG wait )</span> appears both as figure 1 and as panel p0 of figure 4 &mdash; identical keys and values, different pixels. That pair is free training signal.
+      The three rotation figures are tied in too: rotation picks the family, and inside it the order prefers a view sharing a column with a main figure, so all eight share entities, not just a table.
     </div>
   </div>
   <div class="footer">ParseBench · Chart Data Generation</div>
