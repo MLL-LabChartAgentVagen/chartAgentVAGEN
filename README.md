@@ -8,14 +8,22 @@
 
 | 路径 | 内容 |
 |---|---|
-| [storyline/parsebench_chart/](storyline/parsebench_chart/) | 方案规格。流水线的唯一定义处，六个阶段文档共用一份贯穿示例 |
+| [storyline/parsebench_chart/](storyline/parsebench_chart/) | 方案规格。流水线的唯一定义处，五个阶段文档共用一份贯穿示例 |
 | [storyline/parsebench_chart/chart_types.md](storyline/parsebench_chart/chart_types.md) | 能画哪些图、每种图要满足什么条件才能画 |
 | [IMPL_PLAN.md](IMPL_PLAN.md) | 实现计划：系统骨架、目录结构、数据接口、todo checklist |
 | [slides/](slides/) | 讲稿 |
 
+## 流水线
+
+五个阶段，**整条流水线只有一次 LLM 调用**：01 一次写出场景、数据生成脚本与绑到列上的分析意图，此后枚举、投影、过滤、配对、组版、渲染、记录、导出全部是规则。
+
+```
+01 数据 [LLM×1] → 02 选图 → 03 渲染 → 04 记录 → 05 输出
+```
+
 ## 对齐的基准
 
-主目标是 ParseBench 的 Charts 与 Visual Grounding 两个维度——现状是没有任何单一方法在这两项上同时强。此外覆盖 ChartREG++、ChartAB、LongChart VQA 的定位与指代任务，并要求在 ChartQA、CharXiv、ChartQAPro 上不退化。图表类型覆盖 6 族 18 型，不局限于任何单一基准收录的那几种。
+主目标是 ParseBench 的 Charts 与 Visual Grounding 两个维度——现状是没有任何单一方法在这两项上同时强。此外覆盖 ChartREG++、ChartAB、LongChart VQA 的定位与指代任务，并要求在 ChartQA、CharXiv、ChartQAPro 上不退化。图表类型覆盖 6 族 17 型，不局限于任何单一基准收录的那几种。
 
 ## 状态
 
