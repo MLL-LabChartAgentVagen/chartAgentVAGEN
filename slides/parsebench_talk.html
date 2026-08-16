@@ -232,7 +232,7 @@
       <table class="tbl sm">
         <tr><th>stage</th><th>in &rarr; out</th><th class="num">this run</th></tr>
         <tr class="hi"><td>1 &ensp;Data</td><td>domain seed &rarr; fact table + schema</td><td class="num">900 rows</td></tr>
-        <tr><td>2 &ensp;Figure</td><td>table + schema &rarr; FigureSpec</td><td class="num">71 &rarr; 32 &rarr; 8</td></tr>
+        <tr><td>2 &ensp;Figure</td><td>table + schema &rarr; FigureSpec</td><td class="num">80 &rarr; 36 &rarr; 8</td></tr>
         <tr><td>3 &ensp;Render</td><td>FigureSpec + style &rarr; page image + geometry</td><td class="num">8 images</td></tr>
         <tr><td>4 &ensp;Record</td><td>geometry &rarr; three-layer record</td><td class="num">8 records</td></tr>
         <tr><td>5 &ensp;Output</td><td>record &rarr; training targets</td><td class="num">8 &times; 8 files</td></tr>
@@ -273,8 +273,15 @@
 1  Which hospital and department waits longest      <span class="k">hospital &times; AVG(wait_minutes)</span>     comparison
 2  How wait time moves over the half year           <span class="k">visit_date &times; AVG(wait_minutes)</span>   trend
 3  Whether longer waits mean lower satisfaction     <span class="k">wait_minutes &times; satisfaction</span>     relation</div>
-    <div class="card" style="margin:2.2vh auto 0;max-width:88%;text-align:center;">
-      The aggregate is part of the binding. <span class="accent">SUM and AVG are both legal on an additive measure</span>, and "total wait minutes across three hospitals" is not what intent 1 asks.
+    <div class="grid2" style="margin-top:2.2vh;">
+      <div class="card">
+        <span class="card-label muted">The aggregate is part of the binding</span>
+        <div><span class="accent">SUM and AVG are both legal on an additive measure.</span> "Total wait minutes across three hospitals" is not what intent 1 asks, and no rule can tell the difference.</div>
+      </div>
+      <div class="card">
+        <span class="card-label muted">The last field is a family, not a type</span>
+        <div>comparison, trend, composition, relation, distribution, process. The prompt never names <span class="mono">bar</span>, and the call never sees the candidate list.</div>
+      </div>
     </div>
   </div>
   <div class="footer">ParseBench · Chart Data Generation</div>
@@ -419,7 +426,7 @@ two or more numeric columns                     <span class="k">&rarr; relation,
 stage dimension     none                        <span class="c">&rarr; process family unavailable</span>
 2-D cross product   7 &times; 6 = 42 cells, 900 rows &rarr; 21 expected per cell
 
-71 candidates, 5 of 6 families</div>
+80 candidates, 5 of 6 families</div>
       <div class="stack" style="flex:1;">
         <div class="card"><span class="card-label accent">Same function, twice</span><div>Stage 1 runs the enumerator for coverage feedback. Stage 2 runs it again for the candidate list. The only difference in the result comes from the three checks that need real numbers.</div></div>
         <div class="card"><span class="card-label muted">Coverage is feedback</span><div class="mono" style="font-size:.84em;margin-top:.6vh;">"no additive measure &mdash; pie, stacked_bar,<br>&nbsp;area and treemap are all unavailable.<br>&nbsp;Add a count or currency measure."</div></div>
@@ -434,16 +441,16 @@ stage dimension     none                        <span class="c">&rarr; process f
 <!-- ═══════════════ 12 · 02 OVERVIEW ═══════════════ -->
 <section class="slide">
   <h1 class="slide-title"><span class="accent">02</span>&ensp;Enumerate &#8594; filter &#8594; compose</h1>
-  <p class="slide-subtitle">No model call in this stage. Every choice is a rule, so chart-type coverage is guaranteed by rotation rather than by taste.</p>
+  <p class="slide-subtitle">No model call in this stage. What the intent supplied was a family and a column pair; the type inside that family is a lookup.</p>
   <div class="body">
     <div style="display:flex;align-items:center;justify-content:center;gap:1.4vw;">
       <div style="text-align:center;">
-        <div class="card" style="width:15vw;"><span class="card-label muted">Enumerate</span><div class="big" style="font-size:clamp(28px,3.2vw,54px);">71</div><div style="font-weight:500;">legal views</div></div>
+        <div class="card" style="width:15vw;"><span class="card-label muted">Enumerate</span><div class="big" style="font-size:clamp(28px,3.2vw,54px);">80</div><div style="font-weight:500;">legal views</div></div>
         <div class="cap">declaration conditions</div>
       </div>
       <span class="arrow">&#8594;</span>
       <div style="text-align:center;">
-        <div class="card" style="width:15vw;"><span class="card-label muted">Filter</span><div class="big" style="font-size:clamp(28px,3.2vw,54px);">32</div><div style="font-weight:500;">worth drawing</div></div>
+        <div class="card" style="width:15vw;"><span class="card-label muted">Filter</span><div class="big" style="font-size:clamp(28px,3.2vw,54px);">36</div><div style="font-weight:500;">worth drawing</div></div>
         <div class="cap">three numeric checks</div>
       </div>
       <span class="arrow">&#8594;</span>
@@ -455,8 +462,10 @@ stage dimension     none                        <span class="c">&rarr; process f
     <div class="card" style="margin:3vh auto 0;max-width:84%;text-align:center;">
       A view is one projection over the fact table.&ensp;<span class="mono">view = &sigma;<sub>rows</sub> &#8728; &gamma;<sub>agg</sub> &#8728; &pi;<sub>cols</sub> (M)</span>
     </div>
-    <div class="cap" style="margin-top:1.4vh;font-size:clamp(13px,1.2vw,19px);">
-      All eight figures come off one fact table, so <span class="accent">cross-chart consistency holds by construction</span> &mdash; Xiehe's cost in the pie is the same number as Xiehe's cost in the bar.
+    <div class="grid3" style="margin-top:2.4vh;">
+      <div class="card"><span class="card-label muted">3 intent figures</span><div>Family from the intent, type from the condition table, ties by a deterministic order</div></div>
+      <div class="card"><span class="card-label muted">2 multi-panel &middot; 3 rotation</span><div>Type by rotation over the six families. This is where type coverage comes from.</div></div>
+      <div class="card card-good"><span class="card-label">Consistency by construction</span><div>All eight come off one fact table, so Xiehe's cost in the pie is the same number as in the bar</div></div>
     </div>
   </div>
   <div class="footer">ParseBench · Chart Data Generation</div>
@@ -468,36 +477,82 @@ stage dimension     none                        <span class="c">&rarr; process f
   <p class="slide-subtitle">Chart type &times; column binding &times; aggregate. Row filters are deliberately not the fourth.</p>
   <div class="body">
     <div style="display:flex;gap:1.8vw;align-items:center;">
-      <div class="code" style="flex:1.05;font-size:clamp(10px,1.02vw,16.5px);"><span class="k">bar</span>  <span class="c">1 categorical (card 3&ndash;30) + 1 measure</span>
-  categorical  hospital 3 &middot; department 4 &middot; severity 3
-               dow 7 &middot; month 6                       <span class="c">&rarr; 5</span>
-               quarter 2, is_weekend 2 too coarse
+      <div class="code" style="flex:1.05;font-size:clamp(10px,1.02vw,16.5px);"><span class="k">line</span>  <span class="c">1 temporal + 0&ndash;1 series + 1 measure</span>
+  granularity  weekly 26 pts &middot; monthly 6 pts       <span class="c">&rarr; 2</span>
+               daily 182 exceeds the cap
+  series       none &middot; hospital &middot; department
+               severity &middot; quarter &middot; is_weekend      <span class="c">&rarr; 6</span>
   aggregate    SUM/AVG wait &middot; SUM/AVG cost
-               AVG satisfaction &middot; COUNT(*)            <span class="c">&rarr; 6</span>
-                                            5 &times; 6 = 30
+               AVG satisfaction &middot; COUNT(*)          <span class="c">&rarr; 6</span>
+                                        2 &times; 6 &times; 6 = 72
 
-<span class="k">pie</span>  <span class="c">1 categorical (card 3&ndash;8) + additive measure + SUM</span>
-  aggregate    SUM wait &middot; SUM cost                    <span class="c">&rarr; 2</span>
-               satisfaction is not additive, so SUM
-               never enters its branch
-                                            5 &times; 2 = 10</div>
+<span class="k">pie</span>   <span class="c">1 categorical (card 3&ndash;8) + additive measure</span>
+  aggregate    SUM wait &middot; SUM cost                  <span class="c">&rarr; 2</span>
+               satisfaction is not additive, so the
+               SUM branch never opens        5 &times; 2 = 10
+
+<span class="k">scatter</span>  <span class="c">3 measure pairs &times; 6 colour options = 18</span>
+  <span class="c">no aggregate factor &mdash; it does not group</span></div>
       <table class="tbl sm" style="flex:1;">
-        <tr><th>type</th><th class="num">views</th></tr>
-        <tr class="hi"><td>bar</td><td class="num">12</td></tr>
-        <tr><td>grouped_bar</td><td class="num">12</td></tr>
-        <tr><td>line</td><td class="num">12</td></tr>
-        <tr><td>pie</td><td class="num">10</td></tr>
-        <tr><td>stacked_bar</td><td class="num">8</td></tr>
-        <tr><td>area</td><td class="num">6</td></tr>
-        <tr><td>compound</td><td class="num">5</td></tr>
-        <tr><td>scatter</td><td class="num">3</td></tr>
-        <tr><td>histogram</td><td class="num">3</td></tr>
-        <tr class="bad"><td>waterfall, funnel</td><td class="num">0</td></tr>
-        <tr class="tot"><td>11 Tier-1 types</td><td class="num">71</td></tr>
+        <tr><th>type</th><th class="num">raw</th><th class="num">capped</th></tr>
+        <tr class="hi"><td>line</td><td class="num">72</td><td class="num">12</td></tr>
+        <tr><td>grouped_bar</td><td class="num">36</td><td class="num">12</td></tr>
+        <tr><td>bar</td><td class="num">30</td><td class="num">12</td></tr>
+        <tr><td>scatter</td><td class="num">18</td><td class="num">12</td></tr>
+        <tr><td>pie</td><td class="num">10</td><td class="num">10</td></tr>
+        <tr><td>stacked_bar</td><td class="num">8</td><td class="num">8</td></tr>
+        <tr><td>area</td><td class="num">6</td><td class="num">6</td></tr>
+        <tr><td>compound</td><td class="num">5</td><td class="num">5</td></tr>
+        <tr><td>histogram</td><td class="num">3</td><td class="num">3</td></tr>
+        <tr class="bad"><td>waterfall, funnel</td><td class="num">0</td><td class="num">0</td></tr>
+        <tr class="tot"><td>11 Tier-1 types</td><td class="num">188</td><td class="num">80</td></tr>
       </table>
     </div>
-    <div class="card" style="margin:2.2vh auto 0;max-width:90%;text-align:center;">
-      A row filter only ever means "the same view over a different time window". It serves one pairing relationship, so <span class="accent">pair.py slices the two halves off the anchor on demand</span> instead of multiplying all 71 by the window count.
+    <div class="grid2" style="margin-top:2vh;">
+      <div class="card">
+        <span class="card-label muted">The cap is not about enumeration cost</span>
+        <div>Enumeration touches no data. The cost is the next step, one pass over 900 rows per candidate. The real constraint is that a scenario ships 8 figures.</div>
+      </div>
+      <div class="card">
+        <span class="card-label accent">Truncate by rotation, not by prefix</span>
+        <div>A prefix cut leaves 12 views all sitting on the first-declared columns and the first aggregate. Rotating over (column, aggregate) spreads them, and stays deterministic.</div>
+      </div>
+    </div>
+    <div class="cap" style="margin-top:1.2vh;">
+      A row filter only ever means "the same view over a different time window". It serves one pairing relationship, so pair.py slices the two halves off the anchor on demand instead of multiplying all 80 by the window count.
+    </div>
+  </div>
+  <div class="footer">ParseBench · Chart Data Generation</div>
+</section>
+
+<!-- ═══════════════ 13b · PROJECTION SHAPES ═══════════════ -->
+<section class="slide">
+  <h1 class="slide-title">Projection has <span class="accent">four shapes</span></h1>
+  <p class="slide-subtitle">Every surviving candidate is evaluated once, because the data filters can only read the evaluated output. Not all of them group.</p>
+  <div class="body">
+    <div class="scrollx">
+      <table class="tbl sm">
+        <tr><th>shape</th><th>types</th><th>one mark is</th><th class="m">value dict</th><th class="num">L2 rows</th></tr>
+        <tr class="hi"><td>grouped scalar</td><td>bar family, line, area, pie, heatmap, treemap, compound, waterfall, funnel</td><td>a group of rows, reduced by SUM / AVG / COUNT</td><td class="m">value</td><td class="num">group size</td></tr>
+        <tr><td>grouped five-number</td><td>box, violin</td><td>a group of rows, reduced to a summary</td><td class="m">min q1 median q3 max</td><td class="num">group size</td></tr>
+        <tr><td>binned count</td><td>histogram</td><td>one bin</td><td class="m">count bin_lo bin_hi</td><td class="num">= count</td></tr>
+        <tr class="bad"><td>per row, no grouping</td><td>scatter, bubble</td><td><span class="accent">one atomic row</span></td><td class="m">x y (size)</td><td class="num">1</td></tr>
+      </table>
+    </div>
+    <div class="grid3" style="margin-top:2.4vh;">
+      <div class="card">
+        <span class="card-label muted">The aggregate follows the shape</span>
+        <div class="mono" style="font-size:.84em;margin-top:.6vh;">FIVE_NUM &middot; BIN_COUNT &middot; NONE</div>
+        <div style="font-weight:500;margin-top:.6vh;">These are not SUM / AVG / COUNT, so they contribute no factor to the enumeration.</div>
+      </div>
+      <div class="card">
+        <span class="card-label muted">Scatter needs a sample</span>
+        <div>900 rows exceed the 500-point cap, so the view carries a seeded down-sample. It is stored on the ViewSpec, and readable and the self-checks run on the sampled points.</div>
+      </div>
+      <div class="card card-bad">
+        <span class="card-label">L2 degenerates here</span>
+        <div>One row behind one point makes drill-down trivial. Scatter and histogram still produce localization and read-value targets.</div>
+      </div>
     </div>
   </div>
   <div class="footer">ParseBench · Chart Data Generation</div>
