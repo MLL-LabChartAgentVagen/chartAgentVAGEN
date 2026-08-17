@@ -110,24 +110,42 @@ def nice_range(vmin: float, vmax: float, style: StyleVector) -> tuple[float, flo
     return (lo, max(hi, lo + step), step)
 
 
+#: Currency units and the symbol each one is written with.
+CURRENCY_SYMBOLS: dict[str, str] = {
+    "usd": "$", "eur": "€", "gbp": "£", "jpy": "¥", "cny": "¥",
+    "rmb": "¥", "krw": "₩", "inr": "₹",
+}
+
+#: Units whose values are already shares, so a percent sign describes them.
+PERCENT_UNITS = frozenset({"%", "percent", "pct", "percentage", "share", "ratio", "rate"})
+
+
 def format_number(value: float, style: StyleVector, unit: str | None = None) -> str:
-    """Format a number for display. The format is style; the value is not."""
+    """Write a number for display. The format is style; the number itself is not.
+
+    A format that would make the label disagree with the number it labels is not
+    applied. A percent sign on a duration and a currency symbol on a satisfaction
+    score are both wrong, and a label is read as ground truth with no tolerance,
+    so the unit decides whether those two formats apply at all. Scaling never
+    happens: a label always shows the value that was recorded for that mark.
+    """
     d = style.decimals
     fmt = style.number_format
+    key = (unit or "").strip().lower()
+
     if fmt == "percent":
-        return f"{value * 100:.{d}f}%"
+        return f"{value:.{d}f}%" if key in PERCENT_UNITS else f"{value:.{d}f}"
+    if fmt == "currency":
+        return f"{CURRENCY_SYMBOLS[key]}{value:,.{d}f}" if key in CURRENCY_SYMBOLS \
+            else f"{value:,.{d}f}"
     if fmt == "si":
         for limit, suffix in ((1e9, "B"), (1e6, "M"), (1e3, "K")):
             if abs(value) >= limit:
                 return f"{value / limit:.{d}f}{suffix}"
         return f"{value:.{d}f}"
     text = f"{value:,.{d}f}" if fmt == "thousands" else f"{value:.{d}f}"
-    if fmt == "currency":
-        text = f"¥{text}"
     if fmt == "paren_neg" and value < 0:
         text = f"({text.lstrip('-')})"
-    if unit and fmt == "plain":
-        return text
     return text
 
 

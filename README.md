@@ -48,7 +48,7 @@ export PYTHONPATH=src          # 下面所有命令都要
 | 重画一份已有 schema 的图 | `python -m chartgen.cli inspect data/generated/s000/schema.json` |
 | 只跑 03，从一份 FigureSpec 渲染 | `python -m chartgen.cli render tests/samples/figure_spec.json -o data/generated/demo` |
 | 把记录里的框叠回图像目视检查 | `python tools/overlay.py data/generated/demo/f01.json` |
-| 跑整条流水线 | `python -m chartgen.cli run --scenarios 3` |
+| 跑整条流水线（02 起未实现，跑到 01 之后停） | `python -m chartgen.cli run --scenarios 3` |
 | 重生成接口样例（改了接口之后） | `python tools/make_samples.py` |
 
 改配置：`--config 别的.yaml` 换一份，`--set data.target_rows=1200` 覆盖单项。默认值与每一项的含义在 [configs/default.yaml](configs/default.yaml)。

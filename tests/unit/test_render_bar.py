@@ -171,3 +171,48 @@ class TestStyleDoesNotChangeTheAnswer:
         y = next(a for a in out.panels[0].axes if a.role == "y")
         assert y.value_range[0] > 0
         assert [m.values["value"] for m in out.marks] == [42.3, 35.8, 28.1]
+
+
+class TestALabelSaysWhatTheMarkIsWorth:
+    """A written value is read with no tolerance, so the text must be the number
+    that was recorded, in a form the unit allows."""
+
+    def test_a_percent_format_does_not_turn_minutes_into_a_percentage(self):
+        from chartgen.s03_render.style import format_number
+
+        style = StyleVector(number_format="percent", decimals=1)
+        assert format_number(42.3, style, "minutes") == "42.3"
+
+    def test_a_percent_format_applies_where_the_unit_is_a_share(self):
+        from chartgen.s03_render.style import format_number
+
+        style = StyleVector(number_format="percent", decimals=1)
+        assert format_number(42.3, style, "%") == "42.3%"
+
+    def test_a_currency_symbol_follows_the_unit_and_never_a_score(self):
+        from chartgen.s03_render.style import format_number
+
+        style = StyleVector(number_format="currency", decimals=0)
+        assert format_number(1250.0, style, "USD") == "$1,250"
+        assert format_number(4.2, style, "points") == "4"
+
+    def test_no_sampled_style_writes_a_label_that_reads_back_wrong(self):
+        """Every style the sampler can produce, over the values of the worked example."""
+        from chartgen.s03_render.style import format_number
+        from chartgen.s03_render.style import sample as sample_style
+
+        for variant in range(24):
+            style = sample_style(20260816, "er_wait", "f01", variant)
+            for value in (42.3, 35.8, 28.1):
+                text = format_number(value, style, "minutes")
+                assert _as_number(text) == pytest.approx(value, abs=0.5), \
+                    (style.number_format, style.decimals, text, value)
+
+
+def _as_number(text: str) -> float:
+    """Read a formatted label back the way a reader of the image would."""
+    scale = {"K": 1e3, "M": 1e6, "B": 1e9}.get(text[-1:], 1.0)
+    body = text.rstrip("KMB%").replace(",", "").replace("$", "")
+    if body.startswith("(") and body.endswith(")"):
+        body = "-" + body[1:-1]
+    return float(body) * scale
