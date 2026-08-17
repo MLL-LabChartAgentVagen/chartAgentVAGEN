@@ -14,6 +14,8 @@ import argparse
 import json
 from pathlib import Path
 
+from llmkit import LLM, Deduper
+
 from . import report
 from .common import serde
 from .config import Config
@@ -25,18 +27,14 @@ from .s03_render.render import render
 from .s03_render.style import sample as sample_style
 
 
-def _llm(config: Config):
-    from llmkit import LLM
-
+def _llm(config: Config) -> LLM:
     return LLM(model=str(config.get("llm.model")),
                max_tokens=int(config.get("llm.max_tokens", 8000)),
                cache_dir=config.get("llm.cache_dir"))
 
 
-def _deduper(config: Config, key: str, path: str | None = None):
+def _deduper(config: Config, key: str, path: str | None = None) -> Deduper:
     """A near-duplicate judge. The similarity function is local by default."""
-    from llmkit import Deduper
-
     return Deduper(threshold=float(config.get(key, 0.85)), path=path)
 
 
