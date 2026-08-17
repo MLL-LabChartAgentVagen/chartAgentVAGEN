@@ -15,7 +15,7 @@ from typing import Callable, Iterable, Sequence
 from .cache import ResponseCache
 from .parse import ParseError, extract_json, validate
 from .providers import DEFAULT_MODEL, AnthropicProvider, Effort, Provider
-from .types import LLMError, Message, Refusal, Response, Truncated, Usage
+from .types import Image, LLMError, Message, Refusal, Response, Truncated, Usage
 
 #: Sent back after a parse failure. It carries the original text and the specific
 #: error, because "that was not valid" gives the model nothing to fix.
@@ -52,8 +52,8 @@ class LLM:
     # ---------------------------------------------------------------- one call
 
     def complete(self, system: str, user: str, *, messages: Sequence[Message] | None = None,
-                 schema: dict | None = None) -> Response:
-        msgs = list(messages) if messages is not None else [Message("user", user)]
+                 schema: dict | None = None, images: Sequence[Image] = ()) -> Response:
+        msgs = list(messages) if messages is not None else [Message("user", user, tuple(images))]
         key = self._cache_key(system, msgs, schema)
         if self.cache is not None:
             hit = self.cache.get(key)
@@ -72,9 +72,10 @@ class LLM:
 
     # ---------------------------------------------------------------- structured output
 
-    def json(self, system: str, user: str, *, schema: dict) -> dict:
+    def json(self, system: str, user: str, *, schema: dict, images: Sequence[Image] = ()) -> dict:
         """Ask for JSON. On a parse or schema failure, ask again with the error attached."""
-        messages = [Message("user", user)]
+        first = Message("user", user, tuple(images))
+        messages = [first]
         last_error: Exception | None = None
         last_text = ""
         for _ in range(max(1, self.max_content_retries)):
@@ -86,8 +87,10 @@ class LLM:
                 return value
             except ParseError as exc:
                 last_error = exc
+                # The images ride on the first message only; resending them with the
+                # correction would bill for the same pixels twice.
                 messages = [
-                    Message("user", user),
+                    first,
                     Message("user", RETRY_TEMPLATE.format(error=exc, text=response.text[:2000])),
                 ]
         raise ParseError(f"no valid JSON after {self.max_content_retries} attempts: "
@@ -95,14 +98,18 @@ class LLM:
 
     # ---------------------------------------------------------------- batches
 
-    def map(self, prompts: Iterable[tuple[str, str]], *, workers: int = 4,
+    def map(self, prompts: Iterable[Sequence], *, workers: int = 4,
             on_error: Callable[[Exception], None] | None = None) -> list[Response | None]:
-        """Run a batch concurrently, keeping input order. A failed item comes back as None."""
+        """Run a batch concurrently, keeping input order. A failed item comes back as None.
+
+        An item is `(system, user)` or `(system, user, images)`.
+        """
         items = list(prompts)
 
-        def run(pair: tuple[str, str]) -> Response | None:
+        def run(item: Sequence) -> Response | None:
+            system, user, *rest = item
             try:
-                return self.complete(*pair)
+                return self.complete(system, user, images=rest[0] if rest else ())
             except Exception as exc:  # noqa: BLE001 -- one failure must not stop the batch
                 if on_error:
                     on_error(exc)
@@ -120,7 +127,9 @@ class LLM:
             "provider": self.provider.name,
             "model": self.model,
             "system": system,
-            "messages": [[m.role, m.content] for m in messages],
+            # Image digests, not the bytes: the key is stored beside every cached
+            # reply, so putting base64 in it would multiply the cache by its size.
+            "messages": [[m.role, m.content, [im.digest for im in m.images]] for m in messages],
             "max_tokens": self.max_tokens,
             "effort": self.effort,
             "schema": schema,

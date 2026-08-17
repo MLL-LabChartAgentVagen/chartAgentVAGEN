@@ -6,7 +6,7 @@ import sys
 
 import pytest
 
-from llmkit import LLM, Message, Response, Usage
+from llmkit import LLM, Image, Message, Response, Usage
 from llmkit.parse import ParseError, extract_json
 from llmkit.providers import Provider
 
@@ -169,6 +169,91 @@ class TestBatch:
         llm, _ = llm_factory(["a", RuntimeError("boom"), "c"])
         got = llm.map([("s", "u1"), ("s", "u2"), ("s", "u3")], workers=1)
         assert [r.text if r else None for r in got] == ["a", None, "c"]
+
+
+class TestImages:
+    """An image rides on a message; the bytes reach the provider, the digest reaches
+    the cache key."""
+
+    PNG = Image("image/png", "aGVsbG8=")
+    OTHER = Image("image/png", "d29ybGQ=")
+
+    def test_a_message_carries_no_images_by_default(self):
+        assert Message("user", "u").images == ()
+
+    def test_an_unknown_media_type_is_refused(self):
+        with pytest.raises(ValueError, match="image/tiff"):
+            Image("image/tiff", "x")
+
+    def test_from_path_reads_and_encodes(self, tmp_path):
+        p = tmp_path / "page.png"
+        p.write_bytes(b"hello")
+        assert Image.from_path(p) == self.PNG
+
+    def test_complete_puts_the_images_on_the_user_message(self, llm_factory):
+        llm, provider = llm_factory(["ok"])
+        llm.complete("s", "u", images=[self.PNG])
+        assert provider.calls[0]["messages"] == [Message("user", "u", (self.PNG,))]
+
+    def test_json_mode_accepts_images(self, llm_factory):
+        llm, provider = llm_factory(['{"title": "x"}'])
+        schema = {"type": "object", "properties": {"title": {"type": "string"}},
+                  "required": ["title"], "additionalProperties": False}
+        assert llm.json("s", "u", schema=schema, images=[self.PNG]) == {"title": "x"}
+        assert provider.calls[0]["messages"][0].images == (self.PNG,)
+
+    def test_a_retry_resends_the_images_once_not_twice(self, llm_factory):
+        """The correction is a second message; repeating the pixels would bill twice."""
+        llm, provider = llm_factory(["not json", '{"title": "x"}'], max_content_retries=2)
+        schema = {"type": "object", "properties": {"title": {"type": "string"}},
+                  "required": ["title"], "additionalProperties": False}
+        llm.json("s", "u", schema=schema, images=[self.PNG])
+        retry = provider.calls[1]["messages"]
+        assert retry[0].images == (self.PNG,) and retry[1].images == ()
+
+    def test_map_accepts_a_third_element_of_images(self, llm_factory):
+        llm, provider = llm_factory(["a", "b"])
+        got = llm.map([("s", "u1", [self.PNG]), ("s", "u2")], workers=1)
+        assert [r.text for r in got] == ["a", "b"]
+        assert provider.calls[0]["messages"][0].images == (self.PNG,)
+        assert provider.calls[1]["messages"][0].images == ()
+
+    def test_a_different_image_is_a_different_cache_entry(self, llm_factory, tmp_path):
+        llm, provider = llm_factory(["a", "b"], cache_dir=tmp_path)
+        llm.complete("s", "u", images=[self.PNG])
+        llm.complete("s", "u", images=[self.OTHER])
+        assert len(provider.calls) == 2
+
+    def test_the_same_image_hits_the_cache(self, llm_factory, tmp_path):
+        llm, provider = llm_factory(["a"], cache_dir=tmp_path)
+        llm.complete("s", "u", images=[self.PNG])
+        llm.complete("s", "u", images=[self.PNG])
+        assert len(provider.calls) == 1
+
+    def test_the_cache_key_holds_the_digest_and_not_the_bytes(self, llm_factory, tmp_path):
+        llm, _ = llm_factory(["a"], cache_dir=tmp_path)
+        llm.complete("s", "u", images=[self.PNG])
+        written = next(tmp_path.glob("*.json")).read_text()
+        assert self.PNG.digest in written and self.PNG.data not in written
+
+    def test_the_request_body_puts_the_image_block_before_the_text(self):
+        from llmkit.providers import AnthropicProvider
+
+        body = AnthropicProvider.build_request(
+            model="m", system="S", messages=[Message("user", "U", (self.PNG,))],
+            max_tokens=8, effort=None, schema=None, extra={})
+        blocks = body["messages"][0]["content"]
+        assert [b["type"] for b in blocks] == ["image", "text"]
+        assert blocks[0]["source"] == {"type": "base64", "media_type": "image/png",
+                                       "data": "aGVsbG8="}
+
+    def test_a_text_only_message_stays_a_plain_string(self):
+        from llmkit.providers import AnthropicProvider
+
+        body = AnthropicProvider.build_request(
+            model="m", system="S", messages=[Message("user", "U")],
+            max_tokens=8, effort=None, schema=None, extra={})
+        assert body["messages"][0]["content"] == "U"
 
 
 class TestLexicalJudge:

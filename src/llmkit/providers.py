@@ -12,6 +12,23 @@ from typing import Any, Protocol, Sequence
 
 from .types import LLMError, Message, Response, Usage
 
+
+def message_content(message: Message) -> str | list[dict]:
+    """A text-only message stays a plain string; one with images becomes blocks.
+
+    Images go before the text: the question is about them, and a model reads the
+    blocks in order.
+    """
+    if not message.images:
+        return message.content
+    blocks: list[dict] = [
+        {"type": "image", "source": {"type": "base64", "media_type": im.media_type, "data": im.data}}
+        for im in message.images
+    ]
+    if message.content:
+        blocks.append({"type": "text", "text": message.content})
+    return blocks
+
 #: The model used when none is named.
 DEFAULT_MODEL = "claude-opus-5"
 
@@ -79,7 +96,7 @@ class AnthropicProvider:
         body: dict[str, Any] = {
             "model": model,
             "max_tokens": max_tokens,
-            "messages": [{"role": m.role, "content": m.content} for m in messages],
+            "messages": [{"role": m.role, "content": message_content(m)} for m in messages],
         }
         if system:
             body["system"] = system

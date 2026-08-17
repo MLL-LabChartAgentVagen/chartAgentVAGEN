@@ -2,16 +2,50 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+import base64
+import mimetypes
+from dataclasses import dataclass, field
+from hashlib import blake2b
+from pathlib import Path
 from typing import Literal
 
 Role = Literal["user", "assistant"]
+
+#: What the Anthropic image block accepts.
+IMAGE_MEDIA_TYPES = ("image/png", "image/jpeg", "image/gif", "image/webp")
+
+
+@dataclass(frozen=True)
+class Image:
+    """One image to send with a message, already base64 encoded.
+
+    The bytes are never put in a cache key or a log line -- `digest` stands in
+    for them, so a keyed request stays the size of a request.
+    """
+
+    media_type: str
+    data: str
+
+    def __post_init__(self) -> None:
+        if self.media_type not in IMAGE_MEDIA_TYPES:
+            raise ValueError(f"{self.media_type!r} is not one of {IMAGE_MEDIA_TYPES}")
+
+    @classmethod
+    def from_path(cls, path: str | Path) -> "Image":
+        path = Path(path)
+        media_type, _ = mimetypes.guess_type(path.name)
+        return cls(media_type or "image/png", base64.b64encode(path.read_bytes()).decode("ascii"))
+
+    @property
+    def digest(self) -> str:
+        return blake2b(f"{self.media_type}\n{self.data}".encode("utf-8"), digest_size=12).hexdigest()
 
 
 @dataclass(frozen=True)
 class Message:
     role: Role
     content: str
+    images: tuple[Image, ...] = field(default_factory=tuple)
 
 
 @dataclass(frozen=True)
