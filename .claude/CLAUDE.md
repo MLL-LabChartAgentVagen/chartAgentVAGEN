@@ -5,7 +5,8 @@
 Chart data generation for **grounded transcription**: synthesize charts where every rendered value carries the pixel box it was drawn in. Output unit is `(key, value, box)`. Ground truth is recorded while drawing — never obtained by annotating finished images.
 
 - Spec: `storyline/parsebench_chart/` — the single source of truth.
-- **All pipeline-produced content is English** — column values, units, scenario prose, intent sentences, captions, axis labels, slides. Repo documentation and code comments stay Chinese. The running example is a US emergency department.
+- **All code is English** — comments, docstrings, exception text, prompts, CLI output. So is all pipeline-produced content: column values, units, scenario prose, intent sentences, captions, axis labels, slides. Chinese stays in the documents: `storyline/`, `README.md`, `IMPL_PLAN.md`.
+- **Docstrings stand on their own.** Never refer to a stage by its number alone or to a spec section by number (`03 → 04`, `§4`, `L1`); say what the thing does and name the component. A spec path may follow as a pointer, never as the explanation. The running example is a US emergency department.
 - What can be drawn and under what conditions: `storyline/parsebench_chart/chart_types.md`.
 - Plan: `IMPL_PLAN.md` — module layout, data interfaces, checklist.
 - Running example in every spec doc: hospital ER wait times (3 hospitals × 4 departments × 3 severity levels, 900 rows).
@@ -24,7 +25,7 @@ Each spec doc opens with a worked example and tags every step `[LLM]` or `[规�
 | 04 record | `s04_record` | RenderOutput → Record (3 layers + `readable`) | no |
 | 05 output | `s05_output` | Record → training target files | no |
 
-Shared layer: `interfaces/` (six data interfaces), `registry/` (`charts.py` condition table, `conditions.py` predicate, `channels.py` readability), `common/` (seeds, geometry, pixel readback, cache).
+Shared layer: `interfaces/` (six data interfaces), `registry/` (`charts.py` condition table, `conditions.py` predicate, `channels.py` readability), `common/` (seeds, geometry, pixel readback, cache), `report.py` (the readable view of an artifact: Mermaid diagrams and a terminal summary, written automatically beside every schema — a new stage adds a section here rather than a script under `tools/`).
 
 `src/llmkit/` is a separate package that knows nothing about chartgen: model calls, JSON-mode with feedback retry, on-disk response cache, embedding dedup, concurrent batch. 01 uses it; so will any future multi-model evaluation. Adding a provider is one file.
 

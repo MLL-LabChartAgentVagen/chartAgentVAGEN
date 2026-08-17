@@ -35,9 +35,9 @@
      纯函数，01 与 02 共用，只读声明
 
 ──────────────────── 共享层 ────────────────────
-  interfaces/  六份数据接口，唯一定义处
+  interfaces/  五份数据接口，唯一定义处
   registry/    图表条件表 + 条件判定 + 可读性判据
-  common/      种子 · 几何 · 像素反算 · 缓存 · LLM · 去重
+  common/      种子 · 几何 · 像素反算 · 读写与版本 · 缓存
 ```
 
 | 阶段 | 输入 → 输出 | LLM |
@@ -70,32 +70,31 @@
 │   └── embed.py                 Deduper：领域池与场景去重共用一个判据
 │
 ├── src/chartgen/
-│   ├── interfaces/            ── 六份数据接口，先定死，其他一切依赖它
-│   │   ├── table.py             TableSchema（场景、维度组、列清单、依赖图、意图绑定）
-│   │   ├── figure.py            ViewSpec、FigureSpec
+│   ├── interfaces/            ── 五份数据接口，先定死，其他一切依赖它
+│   │   ├── table.py             TableSchema（场景、维度组、列清单、依赖图、意图绑定）+ FactTable
+│   │   ├── figure.py            Binding、ViewSpec、FigureSpec
 │   │   ├── style.py             StyleVector
-│   │   ├── record.py            PageElement、Panel、Axis、Mark、LegendEntry、Record
-│   │   └── io.py                统一读写与版本检查
+│   │   └── record.py            Element、Panel、Axis、Mark、LegendEntry、RenderOutput、Record
 │   │
 │   ├── registry/              ── 图表类型的唯一定义处，01 与 02 共用
 │   │   ├── charts.py            6 族 13 型：结构 / 语义 / 数据条件、族、投影形态、图元形状、通道
-│   │   ├── conditions.py        check(ViewSpec, TableSchema) · family_nonempty(family, TableSchema)
+│   │   ├── conditions.py        check(Binding, TableSchema) · family_nonempty(family, TableSchema)
 │   │   └── channels.py          画法 → "值能否读出"的三条规则
 │   │
 │   ├── common/                ── 跨阶段复用
 │   │   ├── rng.py               由根种子派生各阶段子种子
 │   │   ├── geometry.py          坐标约定、框运算、缩放 / 仿射 / 单应
-│   │   ├── readback.py          框内颜色占比、框 + 轴 → 反算值。04 自检与 05 奖励共用
+│   │   ├── readback.py          框内颜色占比、框 + 轴 → 反算值。自检与可验证奖励共用
+│   │   ├── serde.py             接口对象的统一读写与版本检查（原 interfaces/io.py）
 │   │   └── cache.py             内容哈希缓存与产物落盘
 │   │
 │   ├── s01_data/
-│   │   ├── pool.py              领域池构建（一次性）与分档无放回采样
-│   │   ├── author.py            那一次 LLM 调用：场景 + 脚本 + 意图绑定 + 错误反馈
-│   │   ├── declare.py           dim / time / measure / emit 四个声明方法 + 隔离执行
-│   │   ├── expr.py              表达式解析、自由变量提取、分布求值
+│   │   ├── pool.py              领域池两级构建与分档无放回采样
+│   │   ├── expr.py              表达式解析、自由变量提取、整列求值
+│   │   ├── declare.py           dim / time / measure / emit 四个声明方法 + 隔离执行 + 建表结构
 │   │   ├── engine.py            依赖图拓扑执行 + 后处理
-│   │   ├── check.py             结构检查四项 + 意图绑定校验
-│   │   └── coverage.py          调 registry.conditions 逐族判非空，组装回喂文本
+│   │   ├── validate.py          逐族判可画 + 意图绑定校验 + 结构检查（三者都产出回喂文本）
+│   │   └── author.py            那一次 LLM 调用：提示词、输出契约、规则那一半、四类回喂
 │   │
 │   ├── s02_figure/
 │   │   ├── project.py           四种投影形态；逐行形态含确定性抽样
@@ -113,10 +112,10 @@
 │   │   │   ├── cell.py            heatmap
 │   │   │   └── boxlike.py         box
 │   │   ├── degrade.py           图像退化与框的同步变换
-│   │   └── page.py              页面合成与 L0
+│   │   └── page.py              页面合成与页面元素层
 │   │
 │   ├── s04_record/
-│   │   ├── merge.py             L0 / L1 / L2 拼接
+│   │   ├── merge.py             三层拼接
 │   │   ├── readable.py          逐图元判定值能否读出
 │   │   └── selfcheck.py         三项自检，前两项调 common/readback.py
 │   │
@@ -124,12 +123,16 @@
 │   │   ├── export.py            记录 → 八类训练目标 + 文件布局
 │   │   └── verify.py            模型输出的可验证奖励，调同一个 common/readback.py
 │   │
-│   ├── pipeline.py              编排：按顺序调各阶段，每步查缓存
-│   └── cli.py                   单阶段运行 / 指定场景重跑 / 批量生成
+│   ├── report.py                产物的可读视图：schema 的三张 Mermaid 图 + 终端摘要
+│   ├── pipeline.py              编排：按顺序调各阶段，每步查缓存，产物落盘
+│   └── cli.py                   建池 / 单阶段运行 / 画图 / 批量生成
 │
-├── tools/overlay.py             把记录里的框叠回图像，人工目视检查
-├── tests/{samples,unit,e2e}/
-└── out/                         产物，不进版本库
+├── data/domains/                领域池，进版本库
+├── data/generated/              运行产物，不进版本库
+├── tools/
+│   ├── make_samples.py          重生成 tests/samples/ 的接口样例
+│   └── overlay.py               把记录里的框叠回图像，人工目视检查
+└── tests/{samples,unit,e2e}/
 ```
 
 ---
@@ -206,11 +209,13 @@ Record        上面这些 + rows=372 + readable=true
 
 **缓存**：每个阶段的产物按输入的内容哈希落盘，命中直接返回。改 03 不会触发 01–02 重跑，这同时就是断点续跑。
 
-**产物布局**：`out/<run_id>/<scenario_id>/` 下按阶段分文件，图像与记录同名不同后缀。
+**产物布局**：`data/generated/<run_id>/<scenario_id>/` 下按阶段分文件，图像与记录同名不同后缀。单阶段运行少一层 `run_id`。
+
+**产物自带可读视图**：写 schema 的同时写一份 `schema.md`（层级树、数值列依赖、意图指向三张 Mermaid 图，加可画族与最密叉积的行/格）。不用另跑命令才能看懂一次运行产出了什么。
 
 **失败处理**：任何阶段失败只丢弃当前场景并写一条带原因的记录，不中断批次。跑完输出各阶段通过率——这是流水线健康度的主要观测量。
 
-**CLI**：单阶段运行（拿样例文件当输入）、指定场景重跑、批量生成。
+**CLI**：单阶段运行（拿样例文件当输入）、指定场景重跑、批量生成、补画已有 schema。
 
 ---
 
@@ -239,7 +244,7 @@ A 是所有人的前置。A 完成后 B–F 之间只靠样例文件耦合，可
 - [x] A1 仓库骨架：各子包与空 `__init__`；`configs/` 默认配置（模型、根种子、规模、层级开关、K_max、采样上限 T）；`tests/` 三个子目录与 pytest 配置；`pipeline.py` / `cli.py` 空壳串起五个阶段的签名
 - [x] A2 六份数据接口
   - [x] A2.1 dataclass 定义，全部带类型标注与 `schema_version`
-  - [x] A2.2 `interfaces/io.py` 统一读写与版本检查
+  - [x] A2.2 `common/serde.py` 统一读写与版本检查
   - [x] A2.3 每份接口一个最小样例进 `tests/samples/`
   - [x] A2.4 序列化往返测试：读进来再写出去逐位相同
 - [x] A3 图表条件表
@@ -249,27 +254,28 @@ A 是所有人的前置。A 完成后 B–F 之间只靠样例文件耦合，可
   - [x] A3.4 静态检查：`conditions.py` 只读 TableSchema，碰不到数据
   - [x] A3.5 自检：每型声明的图元形状与它的值字典键一致
 - [x] A4 公共模块：`rng` 种子派生 · `geometry` 坐标与变换 · `readback` 颜色占比与反算值 · `cache` 内容哈希；LLM 调用、JSON 解析、重试与去重独立成 `src/llmkit/`
+- [x] A5 产物可读视图 `report.py`：schema 的三张 Mermaid 图与终端摘要，随每次产出自动落盘；`cli inspect` 补画早先的 schema
 
 ### B. 01 数据
 
-- [ ] B1 领域池：topic → sub-topic 两级生成、embedding 去重（0.80）、三档均衡补齐到 200+、落盘带统计；分档无放回采样（80% 后重置）与同种子可复现测试
-- [ ] B2 四个声明方法：`dim` / `time` / `measure` / `emit` 与参数校验；`unit` / `additive` / `ordered` 写进 TableSchema；带语义的异常；隔离执行与异常捕获
-- [ ] B3 表达式：分布族求值 · 类别效应两种写法 · 自由变量提取与依赖边推断 · 算术裁剪条件分段
-- [ ] B4 生成引擎
-  - [ ] B4.1 全列依赖图与拓扑排序，环检测
-  - [ ] B4.2 非数值列：根维度、条件下钻、时间与四个日历派生
-  - [ ] B4.3 数值列：按拓扑序整列向量求值；后处理裁剪与小数位
-  - [ ] B4.4 结构检查四项，其中基数必须与声明一致
-  - [ ] B4.5 「声明 + 种子」逐位可复现测试
-- [ ] B5 覆盖度检查：调 `conditions.family_nonempty` 逐族判；四条缺口的回喂文案（缺可加测度、缺 stage 维度、基数全部越界、非空族数过低）；期望每格行数的粗筛
-- [ ] B6 那一次 LLM 调用
-  - [ ] B6.1 提示词：声明方法说明 + 一个完整的输入-输出样例
-  - [ ] B6.2 同一次调用输出三段：场景散文、脚本、带绑定的意图
-  - [ ] B6.3 场景去重（`data_context`，0.85），命中就换子领域重来
-  - [ ] B6.4 意图绑定校验：列存在、聚合对该测度合法、族在六个里
-  - [ ] B6.5 四类回喂（执行失败 / 覆盖度不足 / 结构检查不过 / 绑定不合法），上限三次
-  - [ ] B6.6 异常与缺口类型分布统计
-  - [ ] B6.7 手写脚本样例进 `tests/samples/`，供 C 阶段脱离 LLM 开发
+- [x] B1 领域池：topic → sub-topic 两级生成、embedding 去重（0.80）、三档均衡补齐到 200+、落盘带统计；分档无放回采样（80% 后重置）与同种子可复现测试
+- [x] B2 四个声明方法：`dim` / `time` / `measure` / `emit` 与参数校验；`unit` / `additive` / `ordered` 写进 TableSchema；带语义的异常；隔离执行与异常捕获
+- [x] B3 表达式：分布族求值 · 类别效应两种写法 · 自由变量提取与依赖边推断 · 算术裁剪条件分段
+- [x] B4 生成引擎
+  - [x] B4.1 全列依赖图与拓扑排序，环检测
+  - [x] B4.2 非数值列：根维度、条件下钻、时间与四个日历派生
+  - [x] B4.3 数值列：按拓扑序整列向量求值；后处理裁剪与小数位
+  - [x] B4.4 结构检查四项，其中基数必须与声明一致
+  - [x] B4.5 「声明 + 种子」逐位可复现测试
+- [x] B5 覆盖度检查：调 `conditions.family_nonempty` 逐族判；五条缺口的回喂文案（缺可加测度、缺 stage 维度、基数全部越界、二维叉积每格行数过稀、非空族数过低）
+- [x] B6 那一次 LLM 调用
+  - [x] B6.1 提示词：声明方法说明 + 一个完整的输入-输出样例
+  - [x] B6.2 同一次调用输出三段：场景散文、脚本、带绑定的意图
+  - [x] B6.3 场景去重（比对 `scenario_title`），命中就换子领域重来；判据默认是 `llmkit.embed.lexical`（字符 n-gram，不需要服务），换语义 embedding 只是换一个函数
+  - [x] B6.4 意图绑定校验：列存在、聚合对该测度合法、族在六个里
+  - [x] B6.5 四类回喂（执行失败 / 覆盖度不足 / 结构检查不过 / 绑定不合法），上限三次
+  - [x] B6.6 异常与缺口类型分布统计
+  - [x] B6.7 手写脚本样例进 `tests/samples/`，供 C 阶段脱离 LLM 开发
 
 ### C. 02 选图
 
