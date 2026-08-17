@@ -23,9 +23,9 @@
 
 ```
 键            值     区域                    readable  labeled  行数
-("协和",)     42.3   [168, 196, 278, 520]    true      false    372
-("华山",)     35.8   [423, 245, 533, 520]    true      false    315
-("瑞金",)     28.1   [678, 305, 788, 520]    true      false    213
+("Mercy General",)     42.3   [168, 196, 278, 520]    true      false    372
+("St. Luke's",)     35.8   [423, 245, 533, 520]    true      false    315
+("Riverside",)     28.1   [678, 305, 788, 520]    true      false    213
 ```
 
 八类训练目标都是这组元组（外加面板、图例、页面元素三份几何）的投影。
@@ -35,15 +35,15 @@
 ```
 带位置的表   全部三条元组的 (键, 值, 区域)
 抽查标注集   三个图元 readable 都为真、都没写标注，因此容差 1%
-             ("协和",) 42.3 ± 0.42   ("华山",) 35.8 ± 0.36   ("瑞金",) 28.1 ± 0.28
+             ("Mercy General",) 42.3 ± 0.42   ("St. Luke's",) 35.8 ± 0.36   ("Riverside",) 28.1 ± 0.28
 ```
 
 **B · 定向探针** —— 同一组元组，三个查询方向
 
 ```
-图元定位   "协和的平均等待时间"      →  [168, 196, 278, 520]
+图元定位   "Mercy General average wait time"      →  [168, 196, 278, 520]
 图元读值   [168, 196, 278, 520]      →  42.3
-下钻       "协和的平均等待时间背后有多少次就诊"  →  372
+下钻       "How many visits are behind Mercy General average wait time"  →  372
 ```
 
 **C · 版面与图例**
@@ -53,12 +53,12 @@
 图例绑定     本图单面板无图例，此项为空
 ```
 
-图例绑定要有内容得靠共享图例的多面板图：[02 §0](02_figure.md#0-示例) 的图④ 那里是「协和 → {p0, p1}」。
+图例绑定要有内容得靠共享图例的多面板图：[02 §0](02_figure.md#0-示例) 的图④ 那里是「Mercy General → {p0, p1}」。
 
 **caption**
 
 ```
-"本图比较三家三甲医院急诊科的平均等待时间，用于评估 2024 上半年分流政策的效果。"
+"Average emergency-department wait time at three metro hospitals, shown to assess the triage diversion policy introduced in early 2024."
 ```
 
 **换个风格会怎样**：若 y 轴值域被采样成 `[0, 6000]`，三个图元 `readable` 变为假，则抽查标注集与图元读值两项为空，其余六项不变。图仍然有用，只是不再要求模型报数。

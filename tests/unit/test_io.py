@@ -17,14 +17,14 @@ from chartgen.interfaces.table import Column, FactTable, IntentBinding, TableSch
 def schema() -> TableSchema:
     return TableSchema(
         scenario_id="er_wait",
-        scenario_title="2024 上半年 A 市三家三甲医院急诊科就诊与等待时间记录",
-        data_context="A 市卫健委为评估急诊分流政策的效果……",
+        scenario_title="Emergency department visits and wait times at three metro hospitals, Jan–Jun 2024",
+        data_context="The county health department compiled per-visit records ...",
         columns=(
-            Column("hospital", "category", 3, group="entity", values=("协和", "华山", "瑞金")),
-            Column("wait_minutes", "measure", 900, unit="分钟", additive=True),
+            Column("hospital", "category", 3, group="entity", values=("Mercy General", "St. Luke's", "Riverside")),
+            Column("wait_minutes", "measure", 900, unit="minutes", additive=True),
         ),
         dependencies=(("wait_minutes", "cost"),),
-        intents=(IntentBinding(0, "哪家医院等待最久", ("hospital", "wait_minutes"), "AVG", "comparison"),),
+        intents=(IntentBinding(0, "Which hospital waits longest", ("hospital", "wait_minutes"), "AVG", "comparison"),),
         n_rows=900,
     )
 
@@ -34,9 +34,9 @@ def figure() -> FigureSpec:
     view = ViewSpec(
         binding=Binding("bar", dims=("hospital",), measures=("wait_minutes",), aggregate="AVG"),
         data=(
-            Datum(("协和",), {"value": 42.3}, 372),
-            Datum(("华山",), {"value": 35.8}, 315),
-            Datum(("瑞金",), {"value": 28.1}, 213),
+            Datum(("Mercy General",), {"value": 42.3}, 372),
+            Datum(("St. Luke's",), {"value": 35.8}, 315),
+            Datum(("Riverside",), {"value": 28.1}, 213),
         ),
     )
     return FigureSpec(
@@ -67,14 +67,14 @@ class TestRoundTrip:
         assert isinstance(back.panels[0].view.binding.dims, tuple)
 
     def test_box_round_trips_as_four_numbers(self, tmp_path):
-        mark = Mark("m0", "p0", ("协和",), {"value": 42.3}, Box(168, 196, 278, 520), "length")
+        mark = Mark("m0", "p0", ("Mercy General",), {"value": 42.3}, Box(168, 196, 278, 520), "length")
         io.save(mark, tmp_path / "m.json")
         raw = json.loads((tmp_path / "m.json").read_text())
         assert raw["data"]["box"] == [168.0, 196.0, 278.0, 520.0]
         assert io.load(Mark, tmp_path / "m.json") == mark
 
     def test_optional_fields_survive_as_none(self, tmp_path):
-        mark = Mark("m0", "p0", ("协和",), {"value": 1.0}, Box(0, 0, 1, 1), "length")
+        mark = Mark("m0", "p0", ("Mercy General",), {"value": 1.0}, Box(0, 0, 1, 1), "length")
         assert io.load_dict(Mark, io.to_dict(mark)).readable is None
 
     def test_record_inherits_render_output_fields(self, tmp_path):
@@ -83,7 +83,7 @@ class TestRoundTrip:
             style=StyleVector(),
             panels=(Panel("p0", Box(96, 60, 860, 520),
                           (Axis("y", (0.0, 60.0), (520.0, 60.0), column="wait_minutes"),), "bar"),),
-            marks=(Mark("m0", "p0", ("协和",), {"value": 42.3}, Box(168, 196, 278, 520),
+            marks=(Mark("m0", "p0", ("Mercy General",), {"value": 42.3}, Box(168, 196, 278, 520),
                         "length", rows=372, readable=True),),
             selfcheck=SelfCheck(True, True, None),
         )
@@ -119,7 +119,7 @@ class TestVersionCheck:
 
 class TestFactTable:
     def test_fact_table_round_trips_through_parquet(self, tmp_path):
-        df = pd.DataFrame({"hospital": ["协和", "华山"], "wait_minutes": [42.3, 35.8]})
+        df = pd.DataFrame({"hospital": ["Mercy General", "St. Luke's"], "wait_minutes": [42.3, 35.8]})
         io.save_table(FactTable("er_wait", df), tmp_path / "facts.parquet")
         back = io.load_table(tmp_path / "facts.parquet")
         assert back.scenario_id == "er_wait"

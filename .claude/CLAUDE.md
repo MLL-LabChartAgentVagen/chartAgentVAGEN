@@ -5,6 +5,7 @@
 Chart data generation for **grounded transcription**: synthesize charts where every rendered value carries the pixel box it was drawn in. Output unit is `(key, value, box)`. Ground truth is recorded while drawing — never obtained by annotating finished images.
 
 - Spec: `storyline/parsebench_chart/` — the single source of truth.
+- **All pipeline-produced content is English** — column values, units, scenario prose, intent sentences, captions, axis labels, slides. Repo documentation and code comments stay Chinese. The running example is a US emergency department.
 - What can be drawn and under what conditions: `storyline/parsebench_chart/chart_types.md`.
 - Plan: `IMPL_PLAN.md` — module layout, data interfaces, checklist.
 - Running example in every spec doc: hospital ER wait times (3 hospitals × 4 departments × 3 severity levels, 900 rows).
@@ -23,7 +24,9 @@ Each spec doc opens with a worked example and tags every step `[LLM]` or `[规�
 | 04 record | `s04_record` | RenderOutput → Record (3 layers + `readable`) | no |
 | 05 output | `s05_output` | Record → training target files | no |
 
-Shared layer: `interfaces/` (six data interfaces), `registry/` (`charts.py` condition table, `conditions.py` predicate, `channels.py` readability), `common/` (seeds, geometry, pixel readback, cache, llm, dedup).
+Shared layer: `interfaces/` (six data interfaces), `registry/` (`charts.py` condition table, `conditions.py` predicate, `channels.py` readability), `common/` (seeds, geometry, pixel readback, cache).
+
+`src/llmkit/` is a separate package that knows nothing about chartgen: model calls, JSON-mode with feedback retry, on-disk response cache, embedding dedup, concurrent batch. 01 uses it; so will any future multi-model evaluation. Adding a provider is one file.
 
 ## How the tricky parts work
 
@@ -36,7 +39,7 @@ Shared layer: `interfaces/` (six data interfaces), `registry/` (`charts.py` cond
   Never reintroduce enumeration here. Enumerating every legal view means hundreds to thousands of candidates, each needing a full projection pass, to ship about a dozen figures.
 - **Diversity is an admission test, not a count.** Reject a candidate when the batch already holds a figure with the **same key set and the same mark shape** — no threshold to tune. That pair is the right one because the output unit is `(key, value, box)`. `K_max` is only a render/storage budget; a count admits eight variations of `bar(hospital × …)`. Multi-panel figures are exempt: their value is the layout form, and repeated keys are what makes them a paired sample.
 - **Row filters live only in `panel.py`.** They serve exactly one relationship (time comparison) and are sliced off the anchor on demand, never a sampling dimension of ViewSpec.
-- **Projection is always one SELECT, in four shapes.** Grouped scalar (bar family, line, area, pie, heatmap, treemap, compound, waterfall, funnel), grouped five-number (box, violin), binned count (histogram), and **per-row with no grouping** (scatter, bubble). Scatter and bubble need deterministic down-sampling to the type's point cap, and their L2 degenerates: `rows` is 1 per mark, and histogram's `rows` equals its `count`. The aggregate set follows the shape — `FIVE_NUM`, `BIN_COUNT`, `NONE` are not SUM/AVG/COUNT. The four are a branch point because value dict size, applicable data filters and L2 usefulness all differ.
+- **Projection is always one SELECT, in four shapes.** Grouped scalar (bar family, line, area, pie, heatmap, compound, waterfall, funnel), grouped five-number (box), binned count (histogram), and **per-row with no grouping** (scatter). Scatter needs deterministic down-sampling to the type's point cap, and its L2 degenerates: `rows` is 1 per mark, and histogram's `rows` equals its `count`. The aggregate set follows the shape — `FIVE_NUM`, `BIN_COUNT`, `NONE` are not SUM/AVG/COUNT. The four are a branch point because value dict size, applicable data filters and L2 usefulness all differ.
 - **The names describe how a figure was chosen**, not its importance. Never reintroduce "main / supplementary" — that reading is what confuses readers.
 - **Multi-panel figures are composed by rule** in `s02_figure/panel.py`, from five relationships: orthogonal slice (2–4 panels, the small-multiples workhorse), drill-down (2–3), time comparison (2 or 4), dual metric (2, compound), part-whole (2). The relationship determines panel count, layout and what is shared. Not optional decoration: `applies_to_panels` is trivial on single-panel figures, so without this the target is always empty. **A shared legend requires every panel to use the same series column** — that is a FigureSpec constraint the style vector cannot override. Same-type across panels vs. mixed-type (bar + line) is a style dimension; both are wanted.
 - **Record while drawing.** Every mark writes its box, key, and values at the moment it is drawn, using the plotting library's own coordinate transform. Never draw first and parse the image afterwards.
@@ -46,7 +49,7 @@ Shared layer: `interfaces/` (six data interfaces), `registry/` (`charts.py` cond
 - **The first two self-checks are also the RL reward.** They need only the image and the claimed `(value, box)`, not ground truth. `common/readback.py` holds the one implementation; `s04_record/selfcheck.py` feeds it the renderer's record, `s05_output/verify.py` feeds it the model's output.
 - **Visual variants live in the style vector, not the type table.** Two "types" whose four condition columns, mark shape and value dict are identical (solid pie vs. donut) occupy one row in `registry/charts.py`; the difference is a `StyleVector` field.
 - **One coordinate convention**: pixels, origin top-left, `[x0, y0, x1, y1]`, image size recorded alongside.
-- **Keys are ordered string tuples** — `("协和", "外科")`. All three record layers join on `(figure_id, panel_id, key)`.
+- **Keys are ordered string tuples** — `("Mercy General", "Surgery")`. All three record layers join on `(figure_id, panel_id, key)`.
 
 ## Code Standards
 
@@ -56,7 +59,7 @@ Shared layer: `interfaces/` (six data interfaces), `registry/` (`charts.py` cond
 - **Type hints everywhere**; avoid `Any`. `@dataclass` for every structured object, not loose dicts.
 - **Stages talk only through `interfaces/`** — no stage imports another stage's internals.
 - **Determinism**: `(input, seed) -> output` bit-for-bit. No global random state, no hidden mutation.
-- **Split drawing code by mark shape, not by chart type** — 17 chart types, 6 mark shapes.
+- **Split drawing code by mark shape, not by chart type** — 13 chart types, 5 mark shapes.
 - **Atomic grain**: one fact-table row = one event. Aggregation happens only in the 02 projection, and three chart shapes there do not aggregate at all.
 
 ## Don'ts
@@ -78,4 +81,4 @@ The recorded metadata (scenario, fact table, schema, FigureSpec, three record la
 
 ## Maintenance
 
-`storyline/parsebench_chart/` and the code must stay in sync. Update `IMPL_PLAN.md`'s checklist as work lands, `README.md` for setup or CLI changes, and `slides/parsebench_talk.html` when the method changes. Keep the hospital ER example consistent across all docs — the numbers in 01/02/03/04/05 are chained (900 rows → 8 figures = 3 intent + 2 multi-panel + 3 rotation; 协和 42.3 / 华山 35.8 / 瑞金 28.1; box [168,196,278,520]).
+`storyline/parsebench_chart/` and the code must stay in sync. Update `IMPL_PLAN.md`'s checklist as work lands, `README.md` for setup or CLI changes, and `slides/parsebench_talk.html` when the method changes. Keep the hospital ER example consistent across all docs — the numbers in 01/02/03/04/05 are chained (900 rows → 8 figures = 3 intent + 2 multi-panel + 3 rotation; Mercy General 42.3 / St. Luke's 35.8 / Riverside 28.1; box [168,196,278,520]).

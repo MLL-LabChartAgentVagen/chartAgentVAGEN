@@ -152,13 +152,13 @@
         <text x="80" y="374" text-anchor="end" font-size="22" fill="#8a8a8a" font-weight="700">20</text>
         <text x="80" y="220" text-anchor="end" font-size="22" fill="#8a8a8a" font-weight="700">40</text>
         <text x="80" y="67"  text-anchor="end" font-size="22" fill="#8a8a8a" font-weight="700">60</text>
-        <text x="223" y="556" text-anchor="middle" font-size="24" fill="#2a2a2a" font-weight="800">Xiehe</text>
-        <text x="478" y="556" text-anchor="middle" font-size="24" fill="#6b6b6b" font-weight="800">Huashan</text>
-        <text x="733" y="556" text-anchor="middle" font-size="24" fill="#6b6b6b" font-weight="800">Ruijin</text>
+        <text x="223" y="556" text-anchor="middle" font-size="24" fill="#2a2a2a" font-weight="800">Mercy General</text>
+        <text x="478" y="556" text-anchor="middle" font-size="24" fill="#6b6b6b" font-weight="800">St. Luke's</text>
+        <text x="733" y="556" text-anchor="middle" font-size="24" fill="#6b6b6b" font-weight="800">Riverside</text>
         <text x="478" y="592" text-anchor="middle" font-size="21" fill="#9a9a9a" font-weight="600">mean ER wait, minutes</text>
       </svg>
       <span class="arrow" style="font-size:2.6vw;">&#8594;</span>
-      <div class="code" style="font-size:clamp(12px,1.24vw,20px);">{ <span class="k">"key"</span>:    ["Xiehe"],
+      <div class="code" style="font-size:clamp(12px,1.24vw,20px);">{ <span class="k">"key"</span>:    ["Mercy General"],
   <span class="k">"value"</span>:  42.3,
   <span class="k">"box"</span>:    [168, 196, 278, 520],
   <span class="k">"rows"</span>:   372 }</div>
@@ -295,7 +295,7 @@
     <div class="grid2">
       <div class="card card-bad">
         <span class="card-label">Call 1 writes prose, call 2 recovers columns</span>
-        <div class="mono" style="font-weight:500;font-size:.88em;margin-top:.8vh;">entities: ["Xiehe", "Huashan", "Ruijin",<br>&nbsp;"Internal", "Surgery", "Pediatrics", "Trauma",<br>&nbsp;"mild", "moderate", "severe"]</div>
+        <div class="mono" style="font-weight:500;font-size:.88em;margin-top:.8vh;">entities: ["Mercy General", "St. Luke's", "Riverside",<br>&nbsp;"Internal", "Surgery", "Pediatrics", "Trauma",<br>&nbsp;"mild", "moderate", "severe"]</div>
         <div style="font-weight:500;margin-top:1.2vh;">Ten strings in one flat list. That hospital contains department, and that mild &lt; moderate &lt; severe, are not in there. The second call invents both.</div>
         <div class="no" style="margin-top:1.2vh;font-size:.9em;">And intents were written before the columns existed, so they get re-bound by inference too.</div>
       </div>
@@ -319,9 +319,9 @@
   <p class="slide-subtitle">Four declaration methods. Columns are declared first, rows are emitted last.</p>
   <div class="body">
     <div class="code"><span class="c"># dimension group: entity, hierarchical</span>
-<span class="k">dim</span>("hospital",   ["Xiehe", "Huashan", "Ruijin"], weights=[.40, .35, .25])
+<span class="k">dim</span>("hospital",   ["Mercy General", "St. Luke's", "Riverside"], weights=[.40, .35, .25])
 <span class="k">dim</span>("department", ["Internal", "Surgery", "Pediatrics", "Trauma"], parent="hospital",
-              weights={"Xiehe": [.35, .25, .15, .25], <span class="c">...</span>})
+              weights={"Mercy General": [.35, .25, .15, .25], <span class="c">...</span>})
 
 <span class="c"># dimension group: triage, ordered but not a process stage</span>
 <span class="k">dim</span>("severity",   ["mild", "moderate", "severe"], weights=[.50, .35, .15], ordered="ordinal")
@@ -330,7 +330,7 @@
 
 <span class="c"># measures are expressions. Dependencies are read off the free variables.</span>
 <span class="k">measure</span>("wait_minutes",  "lognormal(mu = 2.8 + 0.4*[severity=moderate] + 0.9*[severity=severe]"
-                                 "          + 0.2*[hospital=Xiehe], sigma = 0.35)",  unit="min",   additive=<span class="k">True</span>)
+                                 "          + 0.2*[hospital=Mercy General], sigma = 0.35)",  unit="min",   additive=<span class="k">True</span>)
 <span class="k">measure</span>("cost",          "wait_minutes * 12 + {mild:80, moderate:260, severe:700}[severity]"
                                  "          + gaussian(0, 30)",                       unit="CNY",   additive=<span class="k">True</span>)
 <span class="k">measure</span>("satisfaction",  "clip(5.2 - wait_minutes / 32 + gaussian(0, 0.3), 1, 5)",  unit="score", additive=<span class="k">False</span>)
@@ -385,11 +385,11 @@
           <th>visit_date</th><th>dow</th><th>hospital</th><th>department</th><th>severity</th>
           <th class="num">wait_minutes</th><th class="num">cost</th><th class="num">satisfaction</th>
         </tr>
-        <tr class="hi"><td>2024-01-03</td><td>Wed</td><td>Xiehe</td><td>Surgery</td><td>moderate</td>
+        <tr class="hi"><td>2024-01-03</td><td>Wed</td><td>Mercy General</td><td>Surgery</td><td>moderate</td>
           <td class="num">38.4</td><td class="num">721</td><td class="num">4.0</td></tr>
-        <tr><td>2024-01-03</td><td>Wed</td><td>Ruijin</td><td>Internal</td><td>mild</td>
+        <tr><td>2024-01-03</td><td>Wed</td><td>Riverside</td><td>Internal</td><td>mild</td>
           <td class="num">19.7</td><td class="num">316</td><td class="num">4.6</td></tr>
-        <tr><td>2024-02-11</td><td>Sun</td><td>Xiehe</td><td>Trauma</td><td>severe</td>
+        <tr><td>2024-02-11</td><td>Sun</td><td>Mercy General</td><td>Trauma</td><td>severe</td>
           <td class="num">92.1</td><td class="num">1805</td><td class="num">2.3</td></tr>
       </table>
     </div>
@@ -626,7 +626,7 @@ stage dimension     none                        <span class="c">&rarr; process f
   <div class="body">
     <div class="code" style="font-size:clamp(11px,1.14vw,18px);"><span class="k">FigureSpec</span>  <span class="c">figure 4</span>
   panels   [ p0  bar          x = hospital, y = AVG(wait_minutes)
-                             Xiehe 42.3 (372 rows) &middot; Huashan 35.8 (315) &middot; Ruijin 28.1 (213)
+                             Mercy General 42.3 (372 rows) &middot; St. Luke's 35.8 (315) &middot; Riverside 28.1 (213)
              p1  grouped_bar  x = hospital, series = department, y = AVG(wait_minutes)
                              12 values, each with its own row count ]
   layout   two panels side by side
@@ -662,15 +662,15 @@ stage dimension     none                        <span class="c">&rarr; process f
       <div style="flex:1.5;">
         <div class="code" style="font-size:clamp(10.5px,1.08vw,17px);">y_px  =  520 <span class="k">&minus;</span> value / 60 <span class="k">&times;</span> 460
 
-  Xiehe    42.3  &rarr;  520 &minus; 324  =  196
-  Huashan  35.8  &rarr;  520 &minus; 275  =  245
-  Ruijin   28.1  &rarr;  520 &minus; 215  =  305</div>
+  Mercy General    42.3  &rarr;  520 &minus; 324  =  196
+  St. Luke's  35.8  &rarr;  520 &minus; 275  =  245
+  Riverside   28.1  &rarr;  520 &minus; 215  =  305</div>
         <div class="scrollx" style="margin-top:1.6vh;">
           <table class="tbl sm">
             <tr><th>key</th><th class="num">value</th><th class="m">box</th><th>channel</th><th>labeled</th></tr>
-            <tr class="hi"><td>Xiehe</td><td class="num">42.3</td><td class="m">[168, 196, 278, 520]</td><td>length</td><td>false</td></tr>
-            <tr><td>Huashan</td><td class="num">35.8</td><td class="m">[423, 245, 533, 520]</td><td>length</td><td>false</td></tr>
-            <tr><td>Ruijin</td><td class="num">28.1</td><td class="m">[678, 305, 788, 520]</td><td>length</td><td>false</td></tr>
+            <tr class="hi"><td>Mercy General</td><td class="num">42.3</td><td class="m">[168, 196, 278, 520]</td><td>length</td><td>false</td></tr>
+            <tr><td>St. Luke's</td><td class="num">35.8</td><td class="m">[423, 245, 533, 520]</td><td>length</td><td>false</td></tr>
+            <tr><td>Riverside</td><td class="num">28.1</td><td class="m">[678, 305, 788, 520]</td><td>length</td><td>false</td></tr>
           </table>
         </div>
       </div>
@@ -728,7 +728,7 @@ stage dimension     none                        <span class="c">&rarr; process f
       </div>
     </div>
     <div class="card" style="margin:2.2vh auto 0;max-width:88%;text-align:center;">
-      All three carry the same ground truth: Xiehe = <span class="accent mono">42.3</span>. Only the tolerance moves &mdash; a printed label demands an exact match, an unlabeled bar gets 1%.
+      All three carry the same ground truth: Mercy General = <span class="accent mono">42.3</span>. Only the tolerance moves &mdash; a printed label demands an exact match, an unlabeled bar gets 1%.
     </div>
     <div class="cap" style="margin-top:1vh;">Seven sampled dimensions: labels &middot; layout detail &middot; panel type mix &middot; number format &middot; palette &middot; shape detail &middot; axes. A hollow pie is a value here, not a chart type.</div>
   </div>
@@ -844,9 +844,9 @@ stage dimension     none                        <span class="c">&rarr; process f
   <p class="slide-subtitle">Export reads the record and nothing else. It does not know the fact table or the renderer.</p>
   <div class="body">
     <div class="code" style="font-size:clamp(10.5px,1.1vw,17.5px);"><span class="c">key          value   box                     readable  labeled  rows</span>
-["Xiehe"]    42.3    [168, 196, 278, 520]    true      false    372
-["Huashan"]  35.8    [423, 245, 533, 520]    true      false    315
-["Ruijin"]   28.1    [678, 305, 788, 520]    true      false    213</div>
+["Mercy General"]    42.3    [168, 196, 278, 520]    true      false    372
+["St. Luke's"]  35.8    [423, 245, 533, 520]    true      false    315
+["Riverside"]   28.1    [678, 305, 788, 520]    true      false    213</div>
     <div class="grid3" style="margin-top:2.4vh;">
       <div class="card" style="background:#FBF1F1;">
         <span class="card-label accent">A &ensp;Transcription</span>
@@ -854,7 +854,7 @@ stage dimension     none                        <span class="c">&rarr; process f
       </div>
       <div class="card">
         <span class="card-label muted">B &ensp;Directed probes</span>
-        <div class="mono" style="font-weight:500;font-size:.84em;">"Xiehe mean wait" &rarr; box<br>box &rarr; 42.3<br>"Xiehe mean wait" &rarr; 372 rows</div>
+        <div class="mono" style="font-weight:500;font-size:.84em;">"Mercy General mean wait" &rarr; box<br>box &rarr; 42.3<br>"Mercy General mean wait" &rarr; 372 rows</div>
       </div>
       <div class="card">
         <span class="card-label muted">C &ensp;Page and legend</span>

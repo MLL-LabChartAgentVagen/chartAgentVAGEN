@@ -29,14 +29,14 @@
 ```
 L0  来自页面合成器   图表是一个 Picture，上方正文与下方图注是 Text
 L1  来自渲染器       三个条的框、键、值；绘图区与 y 轴的值域像素域
-L2  来自 02 的投影   协和 372 行 · 华山 315 行 · 瑞金 213 行
+L2  来自 02 的投影   Mercy General 372 行 · St. Luke's 315 行 · Riverside 213 行
 ```
 
-拼完的协和那个条：
+拼完的Mercy General那个条：
 
 ```json
 {"mark_id": "m0", "panel_id": "p0",
- "key": ["协和"], "values": {"value": 42.3},
+ "key": ["Mercy General"], "values": {"value": 42.3},
  "box": [168, 196, 278, 520],
  "channel": "length", "labeled": false,
  "rows": 372}
@@ -79,7 +79,7 @@ L2  来自 02 的投影   协和 372 行 · 华山 315 行 · 瑞金 213 行
 [02](02_figure.md#0-示例) 的图④是两个面板共享 y 轴与图例。记录里多出来的是：
 
 ```json
-{"legend": [{"box": [820, 120, 890, 138], "maps_to_category": "协和",
+{"legend": [{"box": [820, 120, 890, 138], "maps_to_category": "Mercy General",
              "applies_to_panels": ["p0", "p1"]}]}
 ```
 
@@ -143,7 +143,7 @@ L1  panels[]       panel_id, box,
 L2  marks[].rows   该图元背后的原始行数
 ```
 
-- **`key` 是有序字符串元组**，例如 `("协和",)`、`("协和", "外科")`、`("2024-03", "协和")`。它唯一确定这个图元对应表里的哪一组，也是 [05](05_output.md) 输出格式里的"键"。
+- **`key` 是有序字符串元组**，例如 `("Mercy General",)`、`("Mercy General", "Surgery")`、`("2024-03", "Mercy General")`。它唯一确定这个图元对应表里的哪一组，也是 [05](05_output.md) 输出格式里的"键"。
 - **`axes` 的 `value_range` 与 `pixel_range`** 是 [§5](#5-值能不能读出) 的全部输入。compound 图有 `y` 与 `y_right` 两条，各绑一个测度。
 - **`legend[].applies_to_panels`**：共享图例下"这个图例项管哪几个面板"是模型的已知失败模式，这里零成本产出它的答案。
 - **L2 存行数不存行**：需要真实的行时用 `key` 回去过滤事实表即可确定性还原，记录体积小一个量级。

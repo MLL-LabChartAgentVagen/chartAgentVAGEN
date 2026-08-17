@@ -3,20 +3,20 @@
 判据在 [chart_types.md §4](../../../storyline/parsebench_chart/chart_types.md) 定义一次，
 04 的 `readable` 与 05 的容差都只调这里：
 
-    图上写出了数值                   → readable，容差 0
-    没写，画法是角度 / 面积 / 颜色    → 不 readable
-    没写，画法是长度 / 位置 / 半径    → 1% 的值折算成像素 ≥ 2 时 readable，容差 1%
+    图上写出了数值            → readable，容差 0
+    没写，画法是角度 / 颜色    → 不 readable
+    没写，画法是长度 / 位置    → 1% 的值折算成像素 ≥ 2 时 readable，容差 1%
 """
 
 from __future__ import annotations
 
 from ..common.geometry import Range, value_per_pixel
 
-#: 量像素能反算出值的画法。半径按「长度 · 位置」处理。
-MEASURABLE = frozenset({"length", "position", "radius"})
+#: 量像素能反算出值的画法。
+MEASURABLE = frozenset({"length", "position"})
 
-#: 量不出 1% 相对精度的画法：角度分辨率不够，面积误差按平方放大，色标量化且感知非线性。
-UNMEASURABLE = frozenset({"angle", "area", "color"})
+#: 量不出 1% 相对精度的画法：角度分辨率不够，色标量化且感知非线性。
+UNMEASURABLE = frozenset({"angle", "color"})
 
 #: 1% 的值至少要折算成这么多像素才算读得出。
 MIN_PIXELS_PER_PERCENT = 2.0

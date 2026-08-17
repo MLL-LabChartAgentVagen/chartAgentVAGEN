@@ -12,7 +12,7 @@
 
 **不做**：模型训练、评测脚本、真实图表的抓取与清洗。这三项消费本流水线的产物，不在本仓库。
 
-**规模目标**：Tier 1 十一种图表类型端到端可复现、单机能跑通。规模化只是重复调用，不是新设计。
+**规模目标**：13 种图表类型端到端可复现、单机能跑通。规模化只是重复调用，不是新设计。
 
 ---
 
@@ -61,6 +61,14 @@
 ├── configs/                     模型 · 根种子 · 规模 · 层级开关 · K_max · 采样上限 T
 ├── storyline/parsebench_chart/  规格，唯一定义处
 │
+├── src/llmkit/                  ── 与 chartgen 无关的 LLM 调用层，可单独复用
+│   ├── types.py                 Message · Usage · Response · 三类异常
+│   ├── providers.py             Provider 接口 + Anthropic 实现（换家只加一个文件）
+│   ├── client.py                LLM：complete · json（结构化输出 + 回喂重试）· map（批量评测）
+│   ├── parse.py                 从散文 / 围栏里挖 JSON + schema 校验
+│   ├── cache.py                 按请求内容哈希缓存回复
+│   └── embed.py                 Deduper：领域池与场景去重共用一个判据
+│
 ├── src/chartgen/
 │   ├── interfaces/            ── 六份数据接口，先定死，其他一切依赖它
 │   │   ├── table.py             TableSchema（场景、维度组、列清单、依赖图、意图绑定）
@@ -70,7 +78,7 @@
 │   │   └── io.py                统一读写与版本检查
 │   │
 │   ├── registry/              ── 图表类型的唯一定义处，01 与 02 共用
-│   │   ├── charts.py            6 族 17 型：结构 / 语义 / 数据条件、族、投影形态、图元形状、通道
+│   │   ├── charts.py            6 族 13 型：结构 / 语义 / 数据条件、族、投影形态、图元形状、通道
 │   │   ├── conditions.py        check(ViewSpec, TableSchema) · family_nonempty(family, TableSchema)
 │   │   └── channels.py          画法 → "值能否读出"的三条规则
 │   │
@@ -78,9 +86,7 @@
 │   │   ├── rng.py               由根种子派生各阶段子种子
 │   │   ├── geometry.py          坐标约定、框运算、缩放 / 仿射 / 单应
 │   │   ├── readback.py          框内颜色占比、框 + 轴 → 反算值。04 自检与 05 奖励共用
-│   │   ├── cache.py             内容哈希缓存与产物落盘
-│   │   ├── llm.py               调用、JSON 解析、重试
-│   │   └── embed.py             embedding 与去重检查器
+│   │   └── cache.py             内容哈希缓存与产物落盘
 │   │
 │   ├── s01_data/
 │   │   ├── pool.py              领域池构建（一次性）与分档无放回采样
@@ -105,8 +111,7 @@
 │   │   │   ├── point.py           line / area / scatter
 │   │   │   ├── sector.py          pie（中空与否是风格参数）
 │   │   │   ├── cell.py            heatmap
-│   │   │   ├── boxlike.py         box / violin
-│   │   │   └── special.py         treemap / radar / bubble（Tier 3 三种形状）
+│   │   │   └── boxlike.py         box
 │   │   ├── degrade.py           图像退化与框的同步变换
 │   │   └── page.py              页面合成与 L0
 │   │
@@ -145,25 +150,27 @@
 
 **场景散文与意图绑定是 TableSchema 的字段**，与列声明在 01 的同一次调用里产出，不占单独的跨阶段产物。
 
-三条约定：**键是有序字符串元组**（`("协和", "外科")`，三层记录靠 `(figure_id, panel_id, key)` 对齐）；**框只有一种写法**（像素、原点左上、`[x0,y0,x1,y1]`，与图像宽高一起存）；**每个接口对象带 `schema_version`**。
+三条约定：**键是有序字符串元组**（`("Mercy General", "Surgery")`，三层记录靠 `(figure_id, panel_id, key)` 对齐）；**框只有一种写法**（像素、原点左上、`[x0,y0,x1,y1]`，与图像宽高一起存）；**每个接口对象带 `schema_version`**。
 
 以[急诊科示例](storyline/parsebench_chart/README.md#贯穿示例)为例：
 
 ```
 TableSchema   hospital(3)→department(4)、severity(3,ordinal)、visit_date(182天)
-              wait_minutes 分钟 可加 · cost 元 可加 · satisfaction 分 不可加
+              wait_minutes minutes 可加 · cost USD 可加 · satisfaction points 不可加
               意图绑定 ①比较 hospital×AVG(wait) ②趋势 visit_date×AVG(wait) ③关系 wait×satisfaction
 FactTable     900 行，一行一次就诊
 FigureSpec    bar，x=hospital，y=AVG(wait_minutes)
-              协和 42.3 (372 行) · 华山 35.8 (315 行) · 瑞金 28.1 (213 行)
+              Mercy General 42.3 (372 行) · St. Luke's 35.8 (315 行) · Riverside 28.1 (213 行)
 StyleVector   不写数值标注 · 企业蓝 · y 轴起点为零 · 900×600 · JPEG 75
-RenderOutput  绘图区 [96,60,860,520]，y 值域 [0,60] ↔ 像素域 [520,60]；协和的条 [168,196,278,520]
+RenderOutput  绘图区 [96,60,860,520]，y 值域 [0,60] ↔ 像素域 [520,60]；Mercy General的条 [168,196,278,520]
 Record        上面这些 + rows=372 + readable=true
 ```
 
 ---
 
 ## 5. 模块划分的决定
+
+**LLM 调用层独立成包。** `src/llmkit/` 不认识 chartgen，只做「调模型、要 JSON、缓存、去重、批量」五件事。01 用它，将来横向评测多个模型也用它。换一家模型只加一个 provider 文件。
 
 **LLM 只在"定义"时出现，不在"选择"时出现。** 01 定义场景、列、单位、可加性、有序性与意图绑定；此后构造、推导、采样、拒绝、组版全部是规则，每次运行可复现。
 
@@ -179,7 +186,7 @@ Record        上面这些 + rows=372 + readable=true
 
 **行过滤只在 `panel.py` 里出现。** 它只服务「时间对照」一种关系，是配对时从锚点现场切出来的，不是 ViewSpec 的一个采样维度。
 
-**按图元形状分文件，不按图表类型分文件。** 17 种类型只有 6 种图元形状。`draw/rect.py` 同时服务 bar、grouped_bar、stacked_bar、histogram、waterfall、funnel——差别只在值字典里填哪几个键。
+**按图元形状分文件，不按图表类型分文件。** 13 种类型只有 5 种图元形状。`draw/rect.py` 同时服务 bar、grouped_bar、stacked_bar、histogram、waterfall、funnel——差别只在值字典里填哪几个键。
 
 **视觉变体归风格向量，不进类型表。** 四类条件、图元形状、值字典逐项相同的两个"类型"（实心饼与中空饼）在 `registry/charts.py` 里只占一行。**但共享图例要求各面板共用系列列，这条是 FigureSpec 的硬约束，风格改不动。**
 
@@ -236,12 +243,12 @@ A 是所有人的前置。A 完成后 B–F 之间只靠样例文件耦合，可
   - [x] A2.3 每份接口一个最小样例进 `tests/samples/`
   - [x] A2.4 序列化往返测试：读进来再写出去逐位相同
 - [x] A3 图表条件表
-  - [x] A3.1 `registry/charts.py`：Tier 1 十一型的条件、族、投影形态、图元形状、通道
+  - [x] A3.1 `registry/charts.py`：13 型的条件、族、投影形态、图元形状、通道
   - [x] A3.2 `registry/conditions.py`：`check(ViewSpec, TableSchema)` 与 `family_nonempty(family, TableSchema)`
   - [x] A3.3 `registry/channels.py`：画法 → 可读性的三条规则
   - [x] A3.4 静态检查：`conditions.py` 只读 TableSchema，碰不到数据
   - [x] A3.5 自检：每型声明的图元形状与它的值字典键一致
-- [~] A4 公共模块：`rng` 种子派生 ✓ · `geometry` 坐标与变换 ✓ · `readback` 颜色占比与反算值 ✓ · `cache` 内容哈希 ✓ · `llm` 调用与解析 · `embed` 去重
+- [x] A4 公共模块：`rng` 种子派生 · `geometry` 坐标与变换 · `readback` 颜色占比与反算值 · `cache` 内容哈希；LLM 调用、JSON 解析、重试与去重独立成 `src/llmkit/`
 
 ### B. 01 数据
 
@@ -268,9 +275,9 @@ A 是所有人的前置。A 完成后 B–F 之间只靠样例文件耦合，可
 
 - [ ] C1 投影 `project.py`
   - [ ] C1.1 分组标量：选行 → 分组聚合 → 取列，一并返回每组行数
-  - [ ] C1.2 分组五数（box / violin）与离群点图元
+  - [ ] C1.2 分组五数（box）与离群点图元
   - [ ] C1.3 分箱计数（histogram）：先定箱边再计数
-  - [ ] C1.4 逐行（scatter / bubble）：不分组；超过点数上限时按种子确定性抽样，抽样索引进 ViewSpec
+  - [ ] C1.4 逐行（scatter）：不分组；超过点数上限时按种子确定性抽样，抽样索引进 ViewSpec
   - [ ] C1.5 时间轴重采样（daily / weekly / monthly）
 - [ ] C2 准入检查 `admit.py`
   - [ ] C2.1 数据条件三项，按形态决定查哪几项
@@ -317,7 +324,7 @@ A 是所有人的前置。A 完成后 B–F 之间只靠样例文件耦合，可
   - [ ] E3.2 量出来的值对不对：调 `common/readback.py` 反算值与记录值比对
   - [ ] E3.3 换风格答案变不变：拿 D4 的两份风格版本比对键 → 值
   - [ ] E3.4 失败时丢图并记原因
-- [ ] E4 Tier 1 十一型全部通过自检
+- [ ] E4 13 型全部通过自检
 
 ### F. 05 输出
 
@@ -332,8 +339,7 @@ A 是所有人的前置。A 完成后 B–F 之间只靠样例文件耦合，可
 
 ### G. 扩展与消融
 
-- [ ] G1 Tier 2：`draw/cell.py` heatmap；`draw/boxlike.py` box、violin
-- [ ] G2 Tier 3：`draw/special.py` treemap、radar、bubble
-- [ ] G3 消融开关：L2 单独关闭 · 风格向量固定 · 全部写数值标注 · 去掉区域输出 · 去掉可验证奖励 · 只用 Tier 1 · 只用意图图
-- [ ] G4 其他导出（不在当前主线）：问答对 · 图表代码 · 风格配对 / 版面配对 / 多图一致性样本
-- [ ] G5 文档同步：规格与实现逐条对齐；README 补 CLI 与产物说明
+- [ ] G1 Tier 2：`draw/cell.py` heatmap；`draw/boxlike.py` box
+- [ ] G2 消融开关：L2 单独关闭 · 风格向量固定 · 全部写数值标注 · 去掉区域输出 · 去掉可验证奖励 · 只用 Tier 1 · 只用意图图
+- [ ] G3 其他导出（不在当前主线）：问答对 · 图表代码 · 风格配对 / 版面配对 / 多图一致性样本
+- [ ] G4 文档同步：规格与实现逐条对齐；README 补 CLI 与产物说明

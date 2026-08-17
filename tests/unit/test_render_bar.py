@@ -16,9 +16,9 @@ from chartgen.s03_render.render import render
 #: 03 §0 记下的几何，规格文档与样例文件里的数字都是这一组。
 PLOT_RECT = (96.0, 60.0, 860.0, 520.0)
 BAR_BOXES = {
-    ("协和",): (168.0, 196.0, 278.0, 520.0),
-    ("华山",): (423.0, 245.0, 533.0, 520.0),
-    ("瑞金",): (678.0, 305.0, 788.0, 520.0),
+    ("Mercy General",): (168.0, 196.0, 278.0, 520.0),
+    ("St. Luke's",): (423.0, 245.0, 533.0, 520.0),
+    ("Riverside",): (678.0, 305.0, 788.0, 520.0),
 }
 
 
@@ -53,7 +53,7 @@ class TestFrozenLayout:
 class TestMarksRecordedWhileDrawing:
     def test_one_mark_per_projected_value(self, rendered):
         assert len(rendered.marks) == 3
-        assert [m.key for m in rendered.marks] == [("协和",), ("华山",), ("瑞金",)]
+        assert [m.key for m in rendered.marks] == [("Mercy General",), ("St. Luke's",), ("Riverside",)]
 
     def test_each_mark_carries_its_value(self, rendered):
         assert [m.values["value"] for m in rendered.marks] == [42.3, 35.8, 28.1]

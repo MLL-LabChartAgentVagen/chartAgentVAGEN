@@ -13,7 +13,7 @@ Y_AXIS = ((0.0, 60.0), (520.0, 60.0))
 
 @pytest.fixture
 def canvas() -> np.ndarray:
-    """900×600 白底，画一个协和的蓝条。"""
+    """900×600 白底，画一条 Mercy General 的蓝条。"""
     img = np.full((600, 900, 3), 255, np.uint8)
     img[196:520, 168:278] = BLUE
     return img

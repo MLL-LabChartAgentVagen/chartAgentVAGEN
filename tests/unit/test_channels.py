@@ -13,8 +13,8 @@ class TestThreeRules:
         assert ch.readable("angle", labeled=True, value=0.38, axis=None)
         assert ch.tolerance(labeled=True) == 0.0
 
-    def test_angle_area_and_color_are_not_readable_without_a_label(self):
-        for channel in ("angle", "area", "color"):
+    def test_angle_and_color_are_not_readable_without_a_label(self):
+        for channel in ("angle", "color"):
             assert not ch.readable(channel, labeled=False, value=0.38, axis=Y_460PX)
 
     def test_length_is_readable_when_one_percent_spans_at_least_two_pixels(self):
@@ -25,8 +25,8 @@ class TestThreeRules:
         # 每像素 13 分钟；42.3 的 1% 只有 0.03 像素
         assert not ch.readable("length", labeled=False, value=42.3, axis=Y_SHARED)
 
-    def test_position_and_radius_follow_the_length_rule(self):
-        for channel in ("position", "radius"):
+    def test_position_follows_the_length_rule(self):
+        for channel in ("position",):
             assert ch.readable(channel, labeled=False, value=42.3, axis=Y_460PX)
             assert not ch.readable(channel, labeled=False, value=42.3, axis=Y_SHARED)
 
@@ -53,7 +53,7 @@ class TestTolerance:
         assert ch.tolerance(labeled=False) == pytest.approx(0.01)
 
     def test_the_worked_example_tolerances(self):
-        # 05 §0：协和 42.3 ± 0.42
+        # 05 §0：Mercy General 42.3 ± 0.42
         assert 42.3 * ch.tolerance(labeled=False) == pytest.approx(0.423)
 
 

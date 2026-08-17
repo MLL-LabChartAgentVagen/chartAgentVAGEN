@@ -17,7 +17,7 @@ from .style import Degradation, StyleVector
 
 ElementCategory = Literal["Text", "Table", "Picture", "Page-Header", "Page-Footer"]
 AxisRole = Literal["x", "y", "y_right"]
-Channel = Literal["length", "position", "angle", "area", "color", "radius"]
+Channel = Literal["length", "position", "angle", "color"]
 
 
 @dataclass(frozen=True)

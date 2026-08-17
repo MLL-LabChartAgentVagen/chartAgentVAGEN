@@ -29,8 +29,8 @@
 
 ```json
 {"name": "急诊科运营分析", "topic": "Healthcare", "complexity_tier": "medium",
- "typical_entities_hint": ["医院", "科室", "分诊等级"],
- "typical_metrics_hint": [{"name": "wait_time", "unit": "分钟"}],
+ "typical_entities_hint": ["hospital", "department", "triage level"],
+ "typical_metrics_hint": [{"name": "wait_time", "unit": "minutes"}],
  "temporal_granularity_hint": "daily"}
 ```
 
@@ -39,32 +39,32 @@
 一次调用，输出三段。第一段是场景散文，只用于 [05](05_output.md) 的 caption：
 
 ```json
-{"scenario_title": "2024 上半年 A 市三家三甲医院急诊科就诊与等待时间记录",
- "data_context": "A 市卫健委为评估急诊分流政策的效果，汇总了三家三甲医院 2024 年 1 至 6 月的逐次就诊记录。"}
+{"scenario_title": "Emergency department visits and wait times at three metro hospitals, Jan–Jun 2024",
+ "data_context": "The county health department compiled per-visit records from three hospitals for January through June 2024 to assess a new triage diversion policy."}
 ```
 
 第二段是脚本：
 
 ```python
-dim("hospital", ["协和", "华山", "瑞金"], weights=[0.40, 0.35, 0.25])
-dim("department", ["内科", "外科", "儿科", "创伤"], parent="hospital",
-    weights={"协和": [0.35, 0.25, 0.15, 0.25],
-             "华山": [0.40, 0.20, 0.20, 0.20],
-             "瑞金": [0.30, 0.30, 0.15, 0.25]})
-dim("severity", ["轻", "中", "重"], weights=[0.50, 0.35, 0.15], ordered="ordinal")
+dim("hospital", ["Mercy General", "St. Luke's", "Riverside"], weights=[0.40, 0.35, 0.25])
+dim("department", ["Internal Medicine", "Surgery", "Pediatrics", "Trauma"], parent="hospital",
+    weights={"Mercy General": [0.35, 0.25, 0.15, 0.25],
+             "St. Luke's": [0.40, 0.20, 0.20, 0.20],
+             "Riverside": [0.30, 0.30, 0.15, 0.25]})
+dim("severity", ["Minor", "Moderate", "Severe"], weights=[0.50, 0.35, 0.15], ordered="ordinal")
 
 time("visit_date", start="2024-01-01", end="2024-06-30", freq="daily")
 
 measure("wait_minutes",
-        "lognormal(mu = 2.8 + 0.4*[severity=中] + 0.9*[severity=重] + 0.2*[hospital=协和],"
+        "lognormal(mu = 2.8 + 0.4*[severity=Moderate] + 0.9*[severity=Severe] + 0.2*[hospital=Mercy General],"
         "          sigma = 0.35)",
-        unit="分钟", additive=True)
+        unit="minutes", additive=True)
 measure("cost",
-        "wait_minutes * 12 + {轻: 80, 中: 260, 重: 700}[severity] + gaussian(0, 30)",
-        unit="元", additive=True)
+        "wait_minutes * 12 + {Minor: 80, Moderate: 260, Severe: 700}[severity] + gaussian(0, 30)",
+        unit="USD", additive=True)
 measure("satisfaction",
         "clip(5.2 - wait_minutes / 32 + gaussian(0, 0.3), 1, 5)",
-        unit="分", additive=False)
+        unit="points", additive=False)
 
 emit(900)
 ```
@@ -72,9 +72,9 @@ emit(900)
 第三段是分析意图。每条意图带着它指向的列一起写出——**这份数据被收集来回答什么问题，以及这个问题落在哪几列上**：
 
 ```
-① 哪家医院、哪个科室的等待时间最长   hospital × AVG(wait_minutes)    比较
-② 等待时间在半年内怎么变化           visit_date × AVG(wait_minutes)  趋势
-③ 等待越久是不是满意度越低           wait_minutes × satisfaction     关系
+① Which hospital and department waits longest   hospital × AVG(wait_minutes)    比较
+② How wait time moved over the half year  visit_date × AVG(wait_minutes)  趋势
+③ Do longer waits go with lower satisfaction wait_minutes × satisfaction     关系
 ```
 
 绑定里带聚合方式，因为规则分不出这一层：`wait_minutes` 可加，`SUM` 与 `AVG` 都合法，但"三家医院的总等待分钟数"不是意图①问的东西。定义列的人顺手说清楚，比让下游猜便宜。
@@ -112,9 +112,9 @@ emit(900)
 
 | visit_date | day_of_week | hospital | department | severity | wait_minutes | cost | satisfaction |
 |---|---|---|---|---|---|---|---|
-| 2024-01-03 | 周三 | 协和 | 外科 | 中 | 38.4 | 721 | 4.0 |
-| 2024-01-03 | 周三 | 瑞金 | 内科 | 轻 | 19.7 | 316 | 4.6 |
-| 2024-02-11 | 周日 | 协和 | 创伤 | 重 | 92.1 | 1805 | 2.3 |
+| 2024-01-03 | Wed | Mercy General | Surgery | Moderate | 38.4 | 721 | 4.0 |
+| 2024-01-03 | Wed | Riverside | Internal Medicine | Minor | 19.7 | 316 | 4.6 |
+| 2024-02-11 | Sun | Mercy General | Trauma | Severe | 92.1 | 1805 | 2.3 |
 | … | | | | | | | 共 900 行 |
 
 结构检查：行数 900 ✓ · 三个类别列的实际取值数与声明一致 ✓ · 三个数值列有限非常数 ✓ · 无环 ✓。
@@ -122,19 +122,19 @@ emit(900)
 ### 第六步 · **[规则]** 产出表结构说明
 
 ```
-场景    "2024 上半年 A 市三家三甲医院急诊科就诊与等待时间记录" + 数据背景一段
+场景    "Emergency department visits and wait times at three metro hospitals, Jan–Jun 2024" + 数据背景一段
 维度组  entity = hospital(3) → department(4)      triage = severity(3, ordinal)
 时间列  visit_date, daily, 182 天;  派生 day_of_week / month / quarter / is_weekend
-数值列  wait_minutes  分钟  可加   根
-        cost          元    可加   ← wait_minutes
-        satisfaction  分    不可加 ← wait_minutes
+数值列  wait_minutes  minutes  可加   根
+        cost          USD      可加   ← wait_minutes
+        satisfaction  points   不可加 ← wait_minutes
 意图绑定  ①比较 hospital×AVG(wait_minutes)  ②趋势 visit_date×AVG(wait_minutes)  ③关系 wait×satisfaction
 总行数  900
 ```
 
 ### 出错时
 
-第三到第五步任何一项不通过，**[规则]** 组装一段说明原因的反馈文本，**[LLM]** 拿着它改脚本重来，最多三次。例如覆盖度只剩 2 个族时，反馈是"没有可加测度，画不出任何构成类图（pie、stacked_bar、area、treemap），请加一个计数或金额类的测度"。
+第三到第五步任何一项不通过，**[规则]** 组装一段说明原因的反馈文本，**[LLM]** 拿着它改脚本重来，最多三次。例如覆盖度只剩 2 个族时，反馈是"没有可加测度，画不出以 SUM 表达构成的图（pie、stacked_bar、area 的可加要求），请加一个计数或金额类的测度"。
 
 ---
 
@@ -163,7 +163,7 @@ emit(900)
   "name": "ICU 床位周转分析",
   "topic": "Healthcare",
   "complexity_tier": "complex",
-  "typical_entities_hint": ["医院", "ICU 病区", "患者类别"],
+  "typical_entities_hint": ["hospital", "ICU unit", "patient class"],
   "typical_metrics_hint": [{"name": "occupancy_rate", "unit": "%"},
                            {"name": "length_of_stay", "unit": "天"}],
   "temporal_granularity_hint": "daily"
@@ -219,8 +219,8 @@ LLM 写不出 `bar` 这个词；它写的是"这份数据被收集来比较各�
 **用途二：caption 的内容来源。** caption 是[训练目标](05_output.md#2-训练目标)之一。没有意图，caption 只能从 ViewSpec 生成——那种句子模型看着图就能写出来，拿它当目标学不到东西。
 
 ```
-有意图   "本图比较三家三甲医院急诊科的平均等待时间，用于评估 2024 上半年分流政策的效果"
-没意图   "各医院平均等待时间"      —— 复述坐标轴名，图上读得出来
+有意图   "Average emergency-department wait time at three metro hospitals, shown to assess the triage diversion policy introduced in early 2024"
+没意图   "Average wait time by hospital"      —— 复述坐标轴名，图上读得出来
 ```
 
 第一句里的"评估分流政策的效果""三甲医院"**图上一个字都没有**。这是 caption 作为训练目标的全部价值。
@@ -250,7 +250,7 @@ LLM 写不出 `bar` 这个词；它写的是"这份数据被收集来比较各�
 
 | 方法 | 作用 |
 |---|---|
-| `dim(name, values, weights, parent, ordered)` | 类别列。`parent` 表达层级，`weights` 可以是一个向量，也可以是按父值给出的条件分布；`ordered` 取 `None` / `"ordinal"`（有大小顺序，如轻/中/重）/ `"stage"`（流程里依次经过的阶段，如分诊→就诊→住院） |
+| `dim(name, values, weights, parent, ordered)` | 类别列。`parent` 表达层级，`weights` 可以是一个向量，也可以是按父值给出的条件分布；`ordered` 取 `None` / `"ordinal"`（有大小顺序，如 Minor / Moderate / Severe）/ `"stage"`（流程里依次经过的阶段，如Triage → Exam → Admission） |
 | `time(name, start, end, freq)` | 时间列。星期、月、季度、是否周末四个日历字段自动派生 |
 | `measure(name, expr, unit, additive)` | 数值列。`expr` 是一个表达式字符串 |
 | `emit(n)` | 产出 n 行 |
@@ -274,7 +274,7 @@ LLM 写不出 `bar` 这个词；它写的是"这份数据被收集来比较各�
 | 成分 | 写法 | 例 |
 |---|---|---|
 | 分布 | `gaussian` `lognormal` `gamma` `beta` `uniform` `poisson` `exponential` `mixture` | `lognormal(mu=2.8, sigma=0.35)` |
-| 类别效应 | `[列=取值]` 作为 0/1 指示，或 `{取值: 数}[列]` 作为查表 | `0.9*[severity=重]`、`{轻:80, 中:260}[severity]` |
+| 类别效应 | `[列=取值]` 作为 0/1 指示，或 `{取值: 数}[列]` 作为查表 | `0.9*[severity=Severe]`、`{Minor:80, Moderate:260}[severity]` |
 | 其他数值列 | 直接写列名 | `wait_minutes * 12` |
 | 算术与裁剪 | `+ - * /`、`clip`、条件分段 | `clip(..., 1, 5)` |
 
@@ -300,7 +300,7 @@ LLM 写不出 `bar` 这个词；它写的是"这份数据被收集来比较各�
 
 | 情况 | 回喂内容 |
 |---|---|
-| 一个可加测度都没有 | 画不出任何构成类图（pie、stacked_bar、area、treemap） |
+| 一个可加测度都没有 | 构成类图只能退到 COUNT(*)，画不出金额或时长的占比 |
 | 没有 `ordered="stage"` 的维度 | 画不出流程类图（waterfall、funnel） |
 | 类别基数全部 < 3 或 > 30 | 画不出比较类图 |
 | 非空族数低于阈值 | 这套 schema 一个场景只能产出少量图 |

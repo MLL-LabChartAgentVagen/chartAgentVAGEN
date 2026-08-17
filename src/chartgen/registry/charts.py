@@ -1,4 +1,4 @@
-"""图表类型的唯一定义处：6 族 17 型。
+"""图表类型的唯一定义处：6 族 13 型。
 
 四类条件按 [chart_types.md §2](../../../storyline/parsebench_chart/chart_types.md) 逐格抄下来，
 分成三段字段：
@@ -19,16 +19,14 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Literal
 
+from ..interfaces.record import Channel
 from ..interfaces.table import Family
 
 #: 投影形态。决定值字典有几个键、聚合集是什么、准入检查查哪几项、L2 有没有信息量。
 Shape = Literal["grouped_scalar", "grouped_fivenum", "binned_count", "per_row"]
 
 #: 图元形状。绘制与记录的代码按形状分文件，不按图表类型分文件。
-MarkShape = Literal["rect", "point", "sector", "cell", "boxlike", "hier_rect"]
-
-#: 值的画法。chart_types.md §4 的 readable 判据只看这一列。
-Channel = Literal["length", "position", "angle", "area", "color", "radius"]
+MarkShape = Literal["rect", "point", "sector", "cell", "boxlike"]
 
 Bound = tuple[int, int | None]   # (下限, 上限)，上限 None 表示不设
 
@@ -66,8 +64,7 @@ class ChartType:
     min_rows_per_cell: int = 0
     n_marks: Bound | None = None       # 图元数：散点点数、直方图箱数
     monotone_decreasing: bool = False
-    min_share: float = 0.0             # 最小扇区 / 最小叶子占比
-    nonneg_size: bool = False          # bubble 的尺寸测度非负
+    min_share: float = 0.0             # 最小扇区占比
 
     @property
     def group_bound(self) -> Bound:
@@ -136,29 +133,10 @@ _TIER2 = [
     _t(name="box", family="distribution", tier=2, shape="grouped_fivenum", mark="boxlike",
        channel="position", value_keys=("min", "q1", "median", "q3", "max"),
        n_cat=(1, 1), n_measure=(1, 1), card=(2, 10), min_rows_per_cell=15),
-    _t(name="violin", family="distribution", tier=2, shape="grouped_fivenum", mark="boxlike",
-       channel="position", value_keys=("min", "q1", "median", "q3", "max"),
-       n_cat=(1, 1), n_measure=(1, 1), card=(2, 8), min_rows_per_cell=30),
-]
-
-#: Tier 3 · 层级矩形、极坐标顶点、带尺寸的点
-#: treemap 的层级路径就是 `key` 元组本身，不再在值字典里重复一份。
-_TIER3 = [
-    _t(name="treemap", family="composition", tier=3, shape="grouped_scalar", mark="hier_rect",
-       channel="area", value_keys=("value",),
-       n_cat=(1, 2), n_measure=(0, 1), card=(8, 50),
-       require_additive=True, min_share=0.01),
-    _t(name="radar", family="relation", tier=3, shape="grouped_scalar", mark="point",
-       channel="radius", value_keys=("value",),
-       n_cat=(1, 1), n_measure=(4, 12), card=(2, 8),
-       require_same_unit=True, check_variation=True),
-    _t(name="bubble", family="relation", tier=3, shape="per_row", mark="point",
-       channel="position", value_keys=("x", "y", "size"),
-       n_cat=(0, 1), n_measure=(3, 3), n_marks=(15, 100), nonneg_size=True),
 ]
 
 #: 名称 → 条目。插入顺序即族内确定性顺序。
-CHARTS: dict[str, ChartType] = {c.name: c for c in (*_TIER1, *_TIER2, *_TIER3)}
+CHARTS: dict[str, ChartType] = {c.name: c for c in (*_TIER1, *_TIER2)}
 
 FAMILIES: tuple[Family, ...] = (
     "comparison", "trend", "composition", "relation", "distribution", "process",
@@ -175,11 +153,10 @@ SHAPE_AGGREGATES: dict[Shape, tuple[str, ...]] = {
 #: 图元形状 → 值字典必须有的键。A3.5 的自检拿它比对每一行。
 SHAPE_VALUE_KEYS: dict[MarkShape, frozenset[str]] = {
     "rect": frozenset({"value", "cum_start", "cum_end", "count", "bin_lo", "bin_hi"}),
-    "point": frozenset({"value", "cum_start", "cum_end", "x", "y", "size"}),
+    "point": frozenset({"value", "cum_start", "cum_end", "x", "y"}),
     "sector": frozenset({"value", "share"}),
     "cell": frozenset({"value"}),
     "boxlike": frozenset({"min", "q1", "median", "q3", "max"}),
-    "hier_rect": frozenset({"value"}),
 }
 
 

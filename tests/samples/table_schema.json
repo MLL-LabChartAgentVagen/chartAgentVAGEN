@@ -3,8 +3,8 @@
   "type": "TableSchema",
   "data": {
     "scenario_id": "er_wait",
-    "scenario_title": "2024 上半年 A 市三家三甲医院急诊科就诊与等待时间记录",
-    "data_context": "A 市卫健委为评估急诊分流政策的效果，汇总了三家三甲医院 2024 年 1 至 6 月的逐次就诊记录。",
+    "scenario_title": "Emergency department visits and wait times at three metro hospitals, Jan–Jun 2024",
+    "data_context": "The county health department compiled per-visit records from three hospitals for January through June 2024 to assess a new triage diversion policy.",
     "columns": [
       {
         "name": "hospital",
@@ -14,9 +14,9 @@
         "parent": null,
         "ordered": null,
         "values": [
-          "协和",
-          "华山",
-          "瑞金"
+          "Mercy General",
+          "St. Luke's",
+          "Riverside"
         ],
         "unit": null,
         "additive": null,
@@ -33,10 +33,10 @@
         "parent": "hospital",
         "ordered": null,
         "values": [
-          "内科",
-          "外科",
-          "儿科",
-          "创伤"
+          "Internal Medicine",
+          "Surgery",
+          "Pediatrics",
+          "Trauma"
         ],
         "unit": null,
         "additive": null,
@@ -53,9 +53,9 @@
         "parent": null,
         "ordered": "ordinal",
         "values": [
-          "轻",
-          "中",
-          "重"
+          "Minor",
+          "Moderate",
+          "Severe"
         ],
         "unit": null,
         "additive": null,
@@ -87,13 +87,13 @@
         "parent": null,
         "ordered": "ordinal",
         "values": [
-          "周一",
-          "周二",
-          "周三",
-          "周四",
-          "周五",
-          "周六",
-          "周日"
+          "Mon",
+          "Tue",
+          "Wed",
+          "Thu",
+          "Fri",
+          "Sat",
+          "Sun"
         ],
         "unit": null,
         "additive": null,
@@ -132,7 +132,7 @@
         "parent": null,
         "ordered": null,
         "values": [],
-        "unit": "分钟",
+        "unit": "minutes",
         "additive": true,
         "freq": null,
         "start": null,
@@ -147,7 +147,7 @@
         "parent": null,
         "ordered": null,
         "values": [],
-        "unit": "元",
+        "unit": "USD",
         "additive": true,
         "freq": null,
         "start": null,
@@ -162,7 +162,7 @@
         "parent": null,
         "ordered": null,
         "values": [],
-        "unit": "分",
+        "unit": "points",
         "additive": false,
         "freq": null,
         "start": null,
@@ -206,7 +206,7 @@
     "intents": [
       {
         "index": 0,
-        "sentence": "哪家医院、哪个科室的等待时间最长",
+        "sentence": "Which hospital and department waits longest",
         "columns": [
           "hospital",
           "wait_minutes"
@@ -216,7 +216,7 @@
       },
       {
         "index": 1,
-        "sentence": "等待时间在半年内怎么变化",
+        "sentence": "How wait time moved over the half year",
         "columns": [
           "visit_date",
           "wait_minutes"
@@ -226,7 +226,7 @@
       },
       {
         "index": 2,
-        "sentence": "等待越久是不是满意度越低",
+        "sentence": "Do longer waits go with lower satisfaction",
         "columns": [
           "wait_minutes",
           "satisfaction"

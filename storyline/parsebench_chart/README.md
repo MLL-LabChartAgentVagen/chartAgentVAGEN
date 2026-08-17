@@ -31,7 +31,7 @@
 
 | | 内容 |
 |---|---|
-| [chart_types.md](chart_types.md) | **能画哪些图、每种图要满足什么条件才能画**。6 族 17 型的唯一定义处 |
+| [chart_types.md](chart_types.md) | **能画哪些图、每种图要满足什么条件才能画**。6 族 13 型的唯一定义处 |
 | [01_data.md](01_data.md) | 领域池、那一次 LLM 调用、四个声明方法、覆盖度检查、生成引擎、表结构说明 |
 | [02_figure.md](02_figure.md) | 意图图构造、多面板推导、轮转图采样、投影与准入检查、FigureSpec |
 | [03_render.md](03_render.md) | 边画边记、风格向量、图像退化、页面合成 |
@@ -49,9 +49,9 @@
 
 | | |
 |---|---|
-| 维度 | `hospital` 协和 / 华山 / 瑞金 → `department` 内科 / 外科 / 儿科 / 创伤；`severity` 轻 / 中 / 重（ordinal） |
+| 维度 | `hospital` Mercy General / St. Luke's / Riverside → `department` Internal Medicine / Surgery / Pediatrics / Trauma；`severity` Minor / Moderate / Severe（ordinal） |
 | 时间 | `visit_date` 2024-01-01 至 2024-06-30，按天 |
-| 测度 | `wait_minutes` 分钟（可加）、`cost` 元（可加）、`satisfaction` 1–5 分（不可加） |
+| 测度 | `wait_minutes` minutes（可加）、`cost` USD（可加）、`satisfaction` 1–5 points（不可加） |
 | 一行 | 一次就诊。共 900 行 |
 | 分析意图 | ① 哪家医院等待最久 ② 等待时间随时间怎么变 ③ 等待时间与满意度是否相关 |
 

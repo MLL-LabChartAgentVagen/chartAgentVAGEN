@@ -34,7 +34,7 @@
 投影一遍，三条都通过[准入检查](#3-准入检查)。`bar(hospital × AVG wait)` 的结果，聚合值与行数一起出来：
 
 ```
-协和 42.3 (372 行)   华山 35.8 (315 行)   瑞金 28.1 (213 行)
+Mercy General 42.3 (372 行)   St. Luke's 35.8 (315 行)   Riverside 28.1 (213 行)
 ```
 
 ### 第二步 · 多面板图：以意图图为锚点，推出第二个面板
@@ -56,26 +56,26 @@
 ⑤ 双指标  bar(hospital × AVG wait) + line(hospital × SUM cost)  同面板双轴 compound
 ```
 
-图④ 是这批里唯一产出非平凡`图例绑定`目标的图：外置图例里的「协和 / 华山 / 瑞金」三项同时管两个面板。
+图④ 是这批里唯一产出非平凡`图例绑定`目标的图：外置图例里的「Mercy General / St. Luke's / Riverside」三项同时管两个面板。
 
 ### 第三步 · 轮转图：按族采样，逐条判进出
 
 按图表族轮转，先补批次里还没有的族。每抽一条就投影一次、判一次，不通过就重抽：
 
 ```
-构成族  抽 pie(hospital × SUM wait)      键 {协和,华山,瑞金} + 扇形，不撞 → 本可收
+构成族  抽 pie(hospital × SUM wait)      键 {Mercy General, St. Luke's, Riverside} + 扇形，不撞 → 本可收
                                          但同族继续抽到键更新的一条，取后者
         抽 pie(department × SUM wait)    键 {四个科室} + 扇形         → 收 ⑥
 分布族  抽 box(department × wait)        键 {四个科室} + 箱体，形状不同 → 收 ⑦
 流程族  该族为空                          没有 ordered="stage" 的维度   → 跳过，记日志
-关系族  抽 heatmap(星期 × 月 × AVG wait)  42 个新键 + 格子             → 收 ⑧
+关系族  抽 heatmap(day_of_week × month × AVG wait)  42 个新键 + 格子             → 收 ⑧
 ```
 
 被拒的两个例子：
 
 ```
-bar(hospital × SUM cost)      键 {协和,华山,瑞金} + 矩形，与 ① 完全撞 → 拒
-heatmap(department × 星期)    28 格，但创伤科在周末只有 2 行，低于下限 → 拒
+bar(hospital × SUM cost)      键 {Mercy General,St. Luke's,Riverside} + 矩形，与 ① 完全撞 → 拒
+heatmap(department × day_of_week)    28 格，但 Trauma 在周末只有 2 行，低于下限 → 拒
 ```
 
 本次运行共抽了 14 条，收下 3 条。
@@ -87,16 +87,16 @@ heatmap(department × 星期)    28 格，但创伤科在周末只有 2 行，�
 ```
 面板   1 个
 视图   bar，x = hospital，y = AVG(wait_minutes)
-数据   协和 42.3 (372 行)   华山 35.8 (315 行)   瑞金 28.1 (213 行)
+数据   Mercy General 42.3 (372 行)   St. Luke's 35.8 (315 行)   Riverside 28.1 (213 行)
 版面   单图
-来源   意图① "哪家医院、哪个科室的等待时间最长"
+来源   意图① "Which hospital and department waits longest"
 ```
 
 图④那份：
 
 ```
 面板   2 个
-  p0   bar，x = hospital，y = AVG(wait_minutes)          协和 42.3 · 华山 35.8 · 瑞金 28.1
+  p0   bar，x = hospital，y = AVG(wait_minutes)          Mercy General 42.3 · St. Luke's 35.8 · Riverside 28.1
   p1   grouped_bar，x = hospital，分组 = department，y = AVG(wait_minutes)   12 个值
 版面   并排两面板
 共享   共享 y 轴（0–60 分钟）、共享图例（系列列都是 hospital）
@@ -155,10 +155,10 @@ heatmap(department × 星期)    28 格，但创伤科在周末只有 2 行，�
 
 | 形态 | 类型 | SQL | 一个图元 | 值字典 |
 |---|---|---|---|---|
-| **分组标量** | bar 族、line、area、pie、heatmap、treemap、compound、waterfall、funnel | `SELECT dims, AGG(m), COUNT(*) FROM M [WHERE …] GROUP BY dims` | 一组行 | `value` |
-| **分组五数** | box、violin | `SELECT dim, MIN, PCT(.25), MEDIAN, PCT(.75), MAX, COUNT(*) … GROUP BY dim` | 一组行 | `min` `q1` `median` `q3` `max`；离群点另一条 SELECT |
+| **分组标量** | bar 族、line、area、pie、heatmap、compound、waterfall、funnel | `SELECT dims, AGG(m), COUNT(*) FROM M [WHERE …] GROUP BY dims` | 一组行 | `value` |
+| **分组五数** | box | `SELECT dim, MIN, PCT(.25), MEDIAN, PCT(.75), MAX, COUNT(*) … GROUP BY dim` | 一组行 | `min` `q1` `median` `q3` `max`；离群点另一条 SELECT |
 | **分箱计数** | histogram | 先取值域定箱边，再 `SELECT bucket(m), COUNT(*) … GROUP BY bucket(m)` | 一个箱 | `count` `bin_lo` `bin_hi` |
-| **逐行** | scatter、bubble | `SELECT m1, m2 FROM M [WHERE …]`，**没有 GROUP BY** | **一行** | `x` `y`（bubble 另加 `size`） |
+| **逐行** | scatter | `SELECT m1, m2 FROM M [WHERE …]`，**没有 GROUP BY** | **一行** | `x` `y` |
 
 前三种一并返回每组行数，它就是 [04](04_record.md) 的 L2 层，不需要再算第二遍。
 
@@ -189,7 +189,7 @@ heatmap(department × 星期)    28 格，但创伤科在周末只有 2 行，�
 **判据是一对：`(键集合, 图元形状)`。批次里已有同样的一对就拒。** 没有阈值，不用调参。
 
 ```
-bar(hospital × AVG wait)   已收        键 {协和,华山,瑞金}  矩形
+bar(hospital × AVG wait)   已收        键 {Mercy General,St. Luke's,Riverside}  矩形
 bar(hospital × SUM cost)   拒          键同、形状同——三个条、同样的标签，只有高度不同
 pie(hospital × SUM wait)   收          键同、形状不同(扇形)，值字典与可读性通道都不同
 box(department × wait)     收          键不同

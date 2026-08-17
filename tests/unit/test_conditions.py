@@ -29,8 +29,8 @@ class TestStructuralConditions:
 
     def test_bar_rejects_cardinality_below_three(self, er):
         schema = TableSchema("s", "t", "c", columns=(
-            Column("side", "category", 2, values=("左", "右")),
-            Column("m", "measure", 100, unit="件", additive=True),
+            Column("side", "category", 2, values=("Left", "Right")),
+            Column("m", "measure", 100, unit="units", additive=True),
         ), n_rows=100)
         r = C.check(bind("bar", dims=("side",), measures=("m",), aggregate="AVG"), schema)
         assert not r.ok and "基数" in r.reason
@@ -38,7 +38,7 @@ class TestStructuralConditions:
     def test_bar_rejects_cardinality_above_thirty(self, er):
         schema = TableSchema("s", "t", "c", columns=(
             Column("sku", "category", 400, values=tuple(str(i) for i in range(400))),
-            Column("m", "measure", 100, unit="件", additive=True),
+            Column("m", "measure", 100, unit="units", additive=True),
         ), n_rows=100)
         assert not C.check(bind("bar", dims=("sku",), measures=("m",), aggregate="AVG"),
                            schema).ok
@@ -85,7 +85,7 @@ class TestStructuralConditions:
     def test_histogram_needs_a_hundred_raw_rows(self, er):
         assert C.check(bind("histogram", measures=("wait_minutes",), aggregate="BIN_COUNT"), er).ok
         small = TableSchema("s", "t", "c", columns=(
-            Column("m", "measure", 40, unit="件", additive=True),), n_rows=40)
+            Column("m", "measure", 40, unit="units", additive=True),), n_rows=40)
         r = C.check(bind("histogram", measures=("m",), aggregate="BIN_COUNT"), small)
         assert not r.ok and "行数" in r.reason
 
@@ -135,8 +135,8 @@ class TestSemanticConditions:
     def test_funnel_passes_when_the_dimension_is_a_stage(self):
         schema = TableSchema("s", "t", "c", columns=(
             Column("step", "category", 4, ordered="stage",
-                   values=("分诊", "就诊", "检查", "住院")),
-            Column("n", "measure", 900, unit="人次", additive=True),
+                   values=("Triage", "Exam", "Imaging", "Admission")),
+            Column("n", "measure", 900, unit="visits", additive=True),
         ), n_rows=900)
         assert C.check(bind("funnel", dims=("step",), measures=("n",), aggregate="SUM"),
                        schema).ok
@@ -147,7 +147,7 @@ class TestSemanticConditions:
 
 
 class TestAggregateSet:
-    def test_five_num_belongs_to_box_and_violin_only(self, er):
+    def test_five_num_belongs_to_the_boxlike_shape_only(self, er):
         assert C.check(bind("box", dims=("department",), measures=("wait_minutes",),
                             aggregate="FIVE_NUM"), er).ok
         assert not C.check(bind("bar", dims=("hospital",), measures=("wait_minutes",),
@@ -181,9 +181,9 @@ class TestCoverage:
         「一个可加测度都没有」是 01 §5.1 的缺口诊断，不是族为空。
         """
         no_additive = TableSchema("s", "t", "c", columns=(
-            Column("hospital", "category", 3, values=("协和", "华山", "瑞金")),
+            Column("hospital", "category", 3, values=("Mercy General", "St. Luke's", "Riverside")),
             Column("rate", "measure", 900, unit="%", additive=False),
-            Column("score", "measure", 900, unit="分", additive=False),
+            Column("score", "measure", 900, unit="points", additive=False),
         ), n_rows=900)
         assert C.family_nonempty("composition", no_additive)
         assert next(C.iter_bindings("pie", no_additive)).aggregate == "COUNT"
@@ -198,8 +198,8 @@ class TestCoverage:
     def test_tier_limit_shrinks_coverage(self, er):
         assert C.family_nonempty("distribution", er, max_tier=1)      # histogram
         one_measure = TableSchema("s", "t", "c", columns=(
-            Column("hospital", "category", 3, values=("协和", "华山", "瑞金")),
-            Column("wait", "measure", 40, unit="分钟", additive=True),
+            Column("hospital", "category", 3, values=("Mercy General", "St. Luke's", "Riverside")),
+            Column("wait", "measure", 40, unit="minutes", additive=True),
         ), n_rows=40)
         assert not C.family_nonempty("distribution", one_measure, max_tier=1)   # 行数 < 100
         assert C.family_nonempty("distribution", one_measure, max_tier=2)       # box 每组 ≥15 行
@@ -258,12 +258,19 @@ class TestStaticGuarantees:
         for c in CHARTS.values():
             assert SHAPE_AGGREGATES[c.shape], c.name
 
-    def test_the_table_holds_seventeen_types_in_six_families(self):
+    def test_the_table_holds_thirteen_types_in_six_families(self):
         from chartgen.registry.charts import CHARTS, FAMILIES
 
-        assert len(CHARTS) == 17
+        assert len(CHARTS) == 13
         assert {c.family for c in CHARTS.values()} == {*FAMILIES, None}
-        assert len({c.mark for c in CHARTS.values()}) == 6
+        assert len({c.mark for c in CHARTS.values()}) == 5
+        assert {c.tier for c in CHARTS.values()} == {1, 2}
+
+    def test_every_family_has_at_least_one_type(self):
+        from chartgen.registry.charts import FAMILIES, in_family
+
+        for family in FAMILIES:
+            assert in_family(family), family
 
     def test_no_two_types_share_all_four_condition_columns(self):
         """四类条件、图元形状、值字典逐项相同的视觉变体归风格向量，不占一行。"""

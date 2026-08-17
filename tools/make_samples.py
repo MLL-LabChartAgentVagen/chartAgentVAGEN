@@ -1,8 +1,8 @@
 """生成 tests/samples/ 下的最小接口样例。
 
 样例用[急诊科贯穿示例](../storyline/parsebench_chart/README.md#贯穿示例)的数字，
-与规格文档里的 01–05 逐段对齐：900 行 → 协和 42.3 / 华山 35.8 / 瑞金 28.1 →
-协和的条 [168, 196, 278, 520]。
+与规格文档里的 01–05 逐段对齐：900 行 → Mercy General 42.3 / St. Luke's 35.8 / Riverside 28.1 →
+Mercy General的条 [168, 196, 278, 520]。
 
 改接口时改这里再重跑：`python tools/make_samples.py`。
 """
@@ -31,38 +31,39 @@ PLOT_RECT = Box(96, 60, 860, 520)
 Y_AXIS = Axis("y", (0.0, 60.0), (520.0, 60.0), column="wait_minutes")
 
 BARS = (
-    (("协和",), 42.3, Box(168, 196, 278, 520), 372),
-    (("华山",), 35.8, Box(423, 245, 533, 520), 315),
-    (("瑞金",), 28.1, Box(678, 305, 788, 520), 213),
+    (("Mercy General",), 42.3, Box(168, 196, 278, 520), 372),
+    (("St. Luke's",), 35.8, Box(423, 245, 533, 520), 315),
+    (("Riverside",), 28.1, Box(678, 305, 788, 520), 213),
 )
 
 
 def table_schema() -> TableSchema:
     return TableSchema(
         scenario_id=SCENARIO,
-        scenario_title="2024 上半年 A 市三家三甲医院急诊科就诊与等待时间记录",
+        scenario_title="Emergency department visits and wait times at three metro hospitals, Jan–Jun 2024",
         data_context=(
-            "A 市卫健委为评估急诊分流政策的效果，"
-            "汇总了三家三甲医院 2024 年 1 至 6 月的逐次就诊记录。"
+            "The county health department compiled per-visit records from three "
+            "hospitals for January through June 2024 to assess a new triage "
+            "diversion policy."
         ),
         columns=(
             Column("hospital", "category", 3, group="entity",
-                   values=("协和", "华山", "瑞金")),
+                   values=("Mercy General", "St. Luke's", "Riverside")),
             Column("department", "category", 4, group="entity", parent="hospital",
-                   values=("内科", "外科", "儿科", "创伤")),
+                   values=("Internal Medicine", "Surgery", "Pediatrics", "Trauma")),
             Column("severity", "category", 3, group="triage", ordered="ordinal",
-                   values=("轻", "中", "重")),
+                   values=("Minor", "Moderate", "Severe")),
             Column("visit_date", "time", 182, group="calendar",
                    freq="daily", start="2024-01-01", end="2024-06-30"),
             Column("day_of_week", "category", 7, group="calendar", derived_from="visit_date",
                    ordered="ordinal",
-                   values=("周一", "周二", "周三", "周四", "周五", "周六", "周日")),
+                   values=("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun")),
             Column("month", "category", 6, group="calendar", derived_from="visit_date",
                    ordered="ordinal",
                    values=("2024-01", "2024-02", "2024-03", "2024-04", "2024-05", "2024-06")),
-            Column("wait_minutes", "measure", 900, unit="分钟", additive=True),
-            Column("cost", "measure", 900, unit="元", additive=True),
-            Column("satisfaction", "measure", 900, unit="分", additive=False),
+            Column("wait_minutes", "measure", 900, unit="minutes", additive=True),
+            Column("cost", "measure", 900, unit="USD", additive=True),
+            Column("satisfaction", "measure", 900, unit="points", additive=False),
         ),
         groups=(
             DimGroup("entity", ("hospital", "department")),
@@ -71,11 +72,11 @@ def table_schema() -> TableSchema:
         ),
         dependencies=(("wait_minutes", "cost"), ("wait_minutes", "satisfaction")),
         intents=(
-            IntentBinding(0, "哪家医院、哪个科室的等待时间最长",
+            IntentBinding(0, "Which hospital and department waits longest",
                           ("hospital", "wait_minutes"), "AVG", "comparison"),
-            IntentBinding(1, "等待时间在半年内怎么变化",
+            IntentBinding(1, "How wait time moved over the half year",
                           ("visit_date", "wait_minutes"), "AVG", "trend"),
-            IntentBinding(2, "等待越久是不是满意度越低",
+            IntentBinding(2, "Do longer waits go with lower satisfaction",
                           ("wait_minutes", "satisfaction"), "NONE", "relation"),
         ),
         n_rows=900,
@@ -95,7 +96,7 @@ def figure_spec() -> FigureSpec:
         sharing=Sharing(),
         relation=None,
         source=Source("intent", intent_index=0),
-        column_units={"wait_minutes": "分钟", "cost": "元", "satisfaction": "分"},
+        column_units={"wait_minutes": "minutes", "cost": "USD", "satisfaction": "points"},
     )
 
 
