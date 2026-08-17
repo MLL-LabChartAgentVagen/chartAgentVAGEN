@@ -28,13 +28,14 @@ from dataclasses import replace
 from pathlib import Path
 from typing import Any, Callable, Literal, Protocol, Sequence
 
+from ..common.rng import seed_of
 from ..config import Config
 from ..interfaces.table import FactTable, TableSchema
 from ..registry.charts import FAMILIES
 from . import engine, validate
 from .declare import run, to_schema
 from .expr import DeclarationError
-from .pool import TARGET_ROWS, Pool, Sampler
+from .pool import TARGET_ROWS, TIERS, Pool, Sampler
 
 #: Why an answer was rejected. Also the key the failure statistics count.
 RejectKind = Literal["script", "binding", "feasibility", "structure", "duplicate"]
@@ -332,7 +333,8 @@ def build_scenario(scenario_id: str, seed: int, config: Config, *,
 
     for _ in range(retries + 1):
         if domain is None:
-            domain = _next_domain(sampler, config)
+            sampler = sampler or _default_sampler(config, scenario_id)
+            domain = _next_domain(sampler, _tier_of(scenario_id, seed))
         payload = llm.json(SYSTEM, user_prompt(domain, _row_range(domain), feedback),
                            schema=SCENARIO_SCHEMA)
 
@@ -369,19 +371,31 @@ def _row_range(domain: dict[str, Any]) -> tuple[int, int]:
     return TARGET_ROWS.get(domain.get("complexity_tier", "medium"), (500, 1000))
 
 
-def _next_domain(sampler: Sampling | None, config: Config) -> dict[str, Any]:
-    if sampler is None:
-        sampler = _default_sampler(config)
-    picked = sampler.take()
+def _next_domain(sampler: Sampling, tier: str) -> dict[str, Any]:
+    picked = sampler.take(tier)
     return picked if isinstance(picked, dict) else picked.to_dict()
 
 
-def _default_sampler(config: Config) -> Sampling:
+def _tier_of(scenario_id: str, seed: int) -> str:
+    """Which complexity tier a scenario draws from. Fixed by the scenario, so a
+    batch spreads over the three tiers instead of taking the same one every time."""
+    return TIERS[seed_of(seed, scenario_id, "tier") % len(TIERS)]
+
+
+def _default_sampler(config: Config, scenario_id: str) -> Sampling:
+    """One sampler per scenario, seeded with the scenario it draws for.
+
+    A sampler holds what it has already handed out, so it must outlive the retry
+    loop: a scenario rejected as a near-duplicate has to draw a different
+    sub-topic, and a fresh sampler would hand back the one just rejected. The
+    scenario identifier goes into the seed for the same reason -- without it every
+    scenario in a batch starts from the same draw.
+    """
     path = Path(str(config.get("data.pool_path", "data/domains/pool.json")))
     if not path.exists():
         raise FileNotFoundError(
             f"no domain pool at {path}. Build one: python -m chartgen.cli pool --out {path}")
-    return Sampler(Pool.load(path), int(config.get("root_seed", 0)))
+    return Sampler(Pool.load(path), seed_of(int(config.get("root_seed", 0)), scenario_id))
 
 
 def _default_llm(config: Config) -> Authoring:

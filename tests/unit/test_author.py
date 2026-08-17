@@ -136,6 +136,23 @@ class TestTheRetryLoop:
                          is_duplicate=lambda text: text in seen and not seen.discard(text))
         assert sampler.taken == 2               # the first scenario collided, so it drew again
 
+    def test_each_scenario_draws_its_own_sub_topic(self, tmp_path):
+        """One sampler per scenario would otherwise start every scenario from the
+        same draw, and a batch would be one sub-topic repeated."""
+        from chartgen.s01_data import pool as P
+
+        domains = tuple(P.Domain(f"dom_{i:03d}", f"situation {i}", "T", tier)
+                        for tier in P.TIERS for i in range(8))
+        path = P.Pool(domains, ("T",)).save(tmp_path / "pool.json")
+        config = Config.load().set("data.pool_path", str(path))
+
+        drawn = []
+        for scenario in ("s000", "s001", "s002"):
+            llm = FakeLLM([payload()])
+            A.build_scenario(scenario, SEED, config, llm=llm)
+            drawn.append(re.search(r'"name": "(situation \d+)"', llm.prompts[0])[1])
+        assert len(set(drawn)) == 3, drawn
+
     def test_the_scenario_id_reaches_the_schema(self):
         _, schema = A.build_scenario("run7_s3", SEED, CONFIG, llm=FakeLLM([payload()]),
                                      domain=A.EXAMPLE_DOMAIN)
