@@ -29,7 +29,18 @@
 
 ## 状态
 
-规格已定稿，实现未开始。进度见 [IMPL_PLAN.md](IMPL_PLAN.md) 的 checklist。
+规格已定稿。实现进行中，进度见 [IMPL_PLAN.md](IMPL_PLAN.md) 的 checklist：
+骨架与六份数据接口、图表条件表、公共几何与像素反算、03 的 bar 边画边记已落地。
+
+```bash
+pip install -r requirements.txt
+python -m pytest                                   # 单元测试
+python tools/make_samples.py                       # 重生成 tests/samples/ 的接口样例
+
+PYTHONPATH=src python -m chartgen.cli render \
+    tests/samples/figure_spec.json --style tests/samples/style_vector.json -o out/demo
+python tools/overlay.py out/demo/f01.json          # 把记录里的框叠回图像目视检查
+```
 
 ## 历史
 

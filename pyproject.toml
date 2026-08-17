@@ -1,0 +1,21 @@
+[project]
+name = "chartgen"
+version = "0.1.0"
+description = "Grounded-transcription chart data generation"
+requires-python = ">=3.11"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src", "."]
+testpaths = ["tests"]
+addopts = "-q --strict-markers"
+markers = [
+    "llm: needs a live LLM call; skipped unless CHARTGEN_LLM=1",
+    "slow: end-to-end run over a whole scenario",
+]

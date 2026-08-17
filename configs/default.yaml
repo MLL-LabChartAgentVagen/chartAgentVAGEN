@@ -1,0 +1,43 @@
+# 默认配置。CLI 用 --config 换一份，用 --set a.b=c 覆盖单项。
+run_id: dev
+root_seed: 20260816
+
+llm:
+  model: claude-opus-5          # 整条流水线只在 01 调一次
+  max_tokens: 8000
+  temperature: 1.0
+  max_retries: 3                # 01 的四类回喂上限
+  embedding_model: text-embedding-3-small
+
+scale:
+  scenarios: 1                  # 一次跑几个场景
+  max_tier: 1                   # 只开 Tier 1 十一型
+
+data:                           # 01
+  target_rows: 900
+  row_tolerance: 0.10           # 行数落在目标值 10% 以内
+  min_nonempty_families: 3      # 覆盖度阈值
+  scenario_dedup_cosine: 0.85
+  pool_dedup_cosine: 0.80
+
+figure:                         # 02
+  k_max: 12                     # 渲染与存储的预算上限，不是多样性判据
+  sample_tries: 8               # 轮转图每族至多抽这么多次
+  max_panels: 4
+
+render:                         # 03
+  style_variants: 2             # 同一份 FigureSpec 渲几份风格版本（自检③要两份）
+  degradation: true
+
+layers:                         # 消融开关
+  l0: true
+  l1: true
+  l2: true
+
+output:
+  dir: out
+  targets: [grounded_table, spot_check, mark_locate, mark_read,
+            drilldown, page_elements, legend_binding, caption]
+
+cache:
+  enabled: true

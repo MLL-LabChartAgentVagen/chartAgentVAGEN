@@ -229,19 +229,19 @@ A 是所有人的前置。A 完成后 B–F 之间只靠样例文件耦合，可
 
 ### A. 骨架与数据接口
 
-- [ ] A1 仓库骨架：各子包与空 `__init__`；`configs/` 默认配置（模型、根种子、规模、层级开关、K_max、采样上限 T）；`tests/` 三个子目录与 pytest 配置；`pipeline.py` / `cli.py` 空壳串起五个阶段的签名
-- [ ] A2 六份数据接口
-  - [ ] A2.1 dataclass 定义，全部带类型标注与 `schema_version`
-  - [ ] A2.2 `interfaces/io.py` 统一读写与版本检查
-  - [ ] A2.3 每份接口一个最小样例进 `tests/samples/`
-  - [ ] A2.4 序列化往返测试：读进来再写出去逐位相同
-- [ ] A3 图表条件表
-  - [ ] A3.1 `registry/charts.py`：Tier 1 十一型的条件、族、投影形态、图元形状、通道
-  - [ ] A3.2 `registry/conditions.py`：`check(ViewSpec, TableSchema)` 与 `family_nonempty(family, TableSchema)`
-  - [ ] A3.3 `registry/channels.py`：画法 → 可读性的三条规则
-  - [ ] A3.4 静态检查：`conditions.py` 只读 TableSchema，碰不到数据
-  - [ ] A3.5 自检：每型声明的图元形状与它的值字典键一致
-- [ ] A4 公共模块：`rng` 种子派生 · `geometry` 坐标与变换 · `readback` 颜色占比与反算值 · `cache` 内容哈希 · `llm` 调用与解析 · `embed` 去重
+- [x] A1 仓库骨架：各子包与空 `__init__`；`configs/` 默认配置（模型、根种子、规模、层级开关、K_max、采样上限 T）；`tests/` 三个子目录与 pytest 配置；`pipeline.py` / `cli.py` 空壳串起五个阶段的签名
+- [x] A2 六份数据接口
+  - [x] A2.1 dataclass 定义，全部带类型标注与 `schema_version`
+  - [x] A2.2 `interfaces/io.py` 统一读写与版本检查
+  - [x] A2.3 每份接口一个最小样例进 `tests/samples/`
+  - [x] A2.4 序列化往返测试：读进来再写出去逐位相同
+- [x] A3 图表条件表
+  - [x] A3.1 `registry/charts.py`：Tier 1 十一型的条件、族、投影形态、图元形状、通道
+  - [x] A3.2 `registry/conditions.py`：`check(ViewSpec, TableSchema)` 与 `family_nonempty(family, TableSchema)`
+  - [x] A3.3 `registry/channels.py`：画法 → 可读性的三条规则
+  - [x] A3.4 静态检查：`conditions.py` 只读 TableSchema，碰不到数据
+  - [x] A3.5 自检：每型声明的图元形状与它的值字典键一致
+- [~] A4 公共模块：`rng` 种子派生 ✓ · `geometry` 坐标与变换 ✓ · `readback` 颜色占比与反算值 ✓ · `cache` 内容哈希 ✓ · `llm` 调用与解析 · `embed` 去重
 
 ### B. 01 数据
 
@@ -293,11 +293,11 @@ A 是所有人的前置。A 完成后 B–F 之间只靠样例文件耦合，可
 
 ### D. 03 渲染
 
-- [ ] D1 边画边记的最小实现
-  - [ ] D1.1 `draw/canvas.py`：画布、面板框、轴的值域与像素域、图例
-  - [ ] D1.2 `draw/rect.py`：bar 的绘制与图元记录
-  - [ ] D1.3 冻结图像尺寸、dpi、绘图区矩形，确认记录与实际一致
-  - [ ] D1.4 `tools/overlay.py` 把框叠回图像，目视确认
+- [x] D1 边画边记的最小实现
+  - [x] D1.1 `draw/canvas.py`：画布、面板框、轴的值域与像素域、图例
+  - [x] D1.2 `draw/rect.py`：bar 的绘制与图元记录
+  - [x] D1.3 冻结图像尺寸、dpi、绘图区矩形，确认记录与实际一致
+  - [x] D1.4 `tools/overlay.py` 把框叠回图像，目视确认
 - [ ] D2 其余图元形状（Tier 1）：`rect.py` 扩到 grouped_bar / stacked_bar / histogram / waterfall / funnel；`point.py` line / area / scatter；`sector.py` pie；compound 双轴各记一份值域像素域
 - [ ] D3 多面板绘制
   - [ ] D3.1 逐面板绘制，每面板各记一份框与轴的值域像素域
