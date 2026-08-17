@@ -76,6 +76,25 @@ class TestStructuralConditions:
         assert not C.check(bind("line", dims=("hospital",), measures=("wait_minutes",),
                                 aggregate="AVG"), er).ok
 
+    def test_a_monthly_column_counts_its_points_in_months(self):
+        """Counting a monthly column's points as if they were days emptied the
+        whole trend family for every scenario that is not daily."""
+        monthly = TableSchema("s", "t", "c", columns=(
+            Column("posting_month", "time", 36, group="calendar", freq="monthly"),
+            Column("provision", "measure", 360, unit="USD", additive=True)), n_rows=360)
+        assert C.check(bind("line", time="posting_month", measures=("provision",),
+                            aggregate="SUM"), monthly).ok
+        assert C.family_nonempty("trend", monthly)
+
+    def test_resampling_only_coarsens_a_time_axis(self, er):
+        assert C.check(bind("line", time="visit_date", measures=("wait_minutes",),
+                            aggregate="AVG", resample="monthly"), er).ok      # 182 days -> 6
+        short = TableSchema("s", "t", "c", columns=(
+            Column("week", "time", 8, group="calendar", freq="weekly"),
+            Column("m", "measure", 80, unit="units", additive=True)), n_rows=80)
+        assert C.check(bind("line", time="week", measures=("m",), aggregate="SUM",
+                            resample="daily"), short).ok                      # stays 8 weeks
+
     def test_line_allows_one_to_six_series(self, er):
         assert C.check(bind("line", time="visit_date", dims=("hospital",),
                             measures=("wait_minutes",), aggregate="AVG"), er).ok

@@ -34,6 +34,16 @@ from .expr import DeclarationError, edges, parse
 #: Calendar fields derived from a time column. No other column may take these names.
 DERIVED: tuple[str, ...] = ("day_of_week", "month", "quarter", "is_weekend")
 
+#: Which of them a given frequency actually supports. A field finer than the axis
+#: step describes where the points happen to fall rather than the data -- every
+#: point of a monthly axis is the first of a month -- and a field with one value
+#: per point is the time column again under another name.
+DERIVED_BY_FREQ: dict[str, tuple[str, ...]] = {
+    "daily": DERIVED,
+    "weekly": ("month", "quarter"),
+    "monthly": ("quarter",),
+}
+
 #: Dimension group that holds the time column and its derived calendar fields.
 CALENDAR = "calendar"
 
@@ -307,25 +317,27 @@ def _columns(script: Script, n_rows: int) -> Iterator[Column]:
         yield Column(d.name, "category", d.cardinality, group=d.group, parent=d.parent,
                      ordered=d.ordered, values=d.values)
     if script.time is not None:
-        points = script.time.points()
-        yield Column(script.time.name, "time", len(points), group=CALENDAR,
+        yield Column(script.time.name, "time", len(script.time.points()), group=CALENDAR,
                      freq=script.time.freq, start=script.time.start, end=script.time.end)
-        for name, values in calendar_values(points).items():
+        for name, values in calendar_values(script.time).items():
             yield Column(name, "category", len(values), group=CALENDAR, ordered="ordinal",
                          values=values, derived_from=script.time.name)
     for m in script.measures:
         yield Column(m.name, "measure", n_rows, unit=m.unit, additive=m.additive)
 
 
-def calendar_values(points: Sequence[date]) -> dict[str, tuple[str, ...]]:
+def calendar_values(time: TimeDecl) -> dict[str, tuple[str, ...]]:
     """The values each derived calendar field takes, in time order.
 
-    They are computed from the set of time points, so a cardinality declared here
-    always matches the data that gets generated. A field with a single value is
-    dropped: on a weekly axis every point is a Monday, which makes `day_of_week`
-    and `is_weekend` constant and useless. Schema building, generation and the
-    structural check all read this one function, so they cannot disagree.
+    They are computed from the time points themselves, so a cardinality declared
+    here always matches the data that gets generated. Two kinds of field are left
+    out: one the frequency does not support, and one that ends up with a single
+    value, as `day_of_week` does on a weekly axis where every point is a Monday.
+    Schema building, generation and the structural check all read this one
+    function, so they cannot disagree.
     """
+    points = time.points()
+    keep = DERIVED_BY_FREQ.get(time.freq, DERIVED)
     out: dict[str, list[str]] = {name: [] for name in DERIVED}
     for name, value in zip(DERIVED * len(points),
                            (v for p in points for v in calendar_of(p))):
@@ -333,7 +345,7 @@ def calendar_values(points: Sequence[date]) -> dict[str, tuple[str, ...]]:
             out[name].append(value)
     order = {"day_of_week": WEEKDAYS}
     return {name: tuple(sorted(vals, key=order[name].index) if name in order else vals)
-            for name, vals in out.items() if len(vals) >= 2}
+            for name, vals in out.items() if name in keep and len(vals) >= 2}
 
 
 def calendar_of(day: date) -> tuple[str, str, str, str]:

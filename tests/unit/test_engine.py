@@ -71,13 +71,15 @@ class TestCardinalityMatchesTheDeclaration:
         assert df["visit_date"].nunique() == len(script.time.points())
 
     def test_the_derived_calendar_columns_match_their_declared_values(self, df, script):
-        declared = D.calendar_values(script.time.points())
+        declared = D.calendar_values(script.time)
         for name, values in declared.items():
             assert set(df[name].unique()) == set(values), name
 
 
 class TestEveryDeclaredValueGetsRows:
-    """Allocation has to give every declared value at least one row."""
+    """A column has to show every value it declares -- its declared cardinality is
+    what decided which chart families are drawable. Inside one parent value the
+    rule is the opposite: a weight of zero means the child does not occur there."""
 
     def test_a_tiny_weight_still_gets_one_row(self):
         script = D.run('dim("a", ["A", "B", "C", "D", "E", "F", "G"], '
@@ -89,7 +91,7 @@ class TestEveryDeclaredValueGetsRows:
         assert len(counts) == 7 and counts.min() >= 1
         assert counts["A"] == pytest.approx(378 * 0.40, abs=3)
 
-    def test_a_tiny_conditional_weight_still_gets_one_row(self):
+    def test_a_small_conditional_weight_still_appears_under_that_parent(self):
         script = D.run('dim("p", ["P1", "P2"], weights=[0.9, 0.1], group="g")\n'
                        'dim("c", ["u", "v", "w"], parent="p", '
                        'weights={"P1": [0.98, 0.01, 0.01], "P2": [0.5, 0.3, 0.2]})\n'
@@ -98,6 +100,20 @@ class TestEveryDeclaredValueGetsRows:
                        'measure("n", "m * 2", unit="u", additive=True)\nemit(200)')
         df = G.generate(script, SEED)
         assert set(df[df["p"] == "P1"]["c"].unique()) == {"u", "v", "w"}
+
+    def test_a_zero_conditional_weight_keeps_a_child_out_of_that_parent(self):
+        """How a strict hierarchy is written: a processing center belongs to one
+        region, unlike a department, which every hospital has."""
+        script = D.run('dim("region", ["North", "South"], group="g")\n'
+                       'dim("center", ["Albany", "Atlanta"], parent="region", '
+                       'weights={"North": [1.0, 0.0], "South": [0.0, 1.0]})\n'
+                       'dim("k", ["x", "y"], group="h")\n'
+                       'measure("m", "gaussian(0,1)", unit="u", additive=True)\n'
+                       'measure("n", "m * 2", unit="u", additive=True)\nemit(200)')
+        df = G.generate(script, SEED)
+        assert set(df[df["region"] == "North"]["center"]) == {"Albany"}
+        assert set(df[df["region"] == "South"]["center"]) == {"Atlanta"}
+        assert set(df["center"]) == {"Albany", "Atlanta"}
 
     def test_more_values_than_rows_names_the_column(self):
         script = D.run('dim("a", ["A", "B", "C", "D", "E"], group="g")\n'
@@ -196,3 +212,23 @@ class TestDeterminism:
         grown = G.generate(D.run(text), SEED)
         for name in ("hospital", "visit_date", "wait_minutes", "cost"):
             pd.testing.assert_series_equal(df[name], grown[name])
+
+
+class TestCalendarFieldsMatchTheFrequency:
+    """A field finer than the axis step describes where the points fall, not the
+    data, and a field with one value per point is the time column renamed."""
+
+    def test_a_monthly_axis_derives_only_the_quarter(self):
+        script = D.run('dim("a", ["A", "B"], group="g")\ndim("b", ["u", "v"], group="h")\n'
+                       'time("posting_month", start="2022-01-01", end="2024-12-01", '
+                       'freq="monthly")\n'
+                       'measure("m", "gaussian(0,1)", unit="u", additive=True)\n'
+                       'measure("n", "m * 2", unit="u", additive=True)\nemit(300)')
+        df = G.generate(script, SEED)
+        assert "quarter" in df.columns
+        for name in ("month", "day_of_week", "is_weekend"):
+            assert name not in df.columns, name
+
+    def test_a_daily_axis_still_derives_all_four(self, df):
+        for name in ("day_of_week", "month", "quarter", "is_weekend"):
+            assert name in df.columns, name

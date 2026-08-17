@@ -250,8 +250,8 @@ LLM 写不出 `bar` 这个词；它写的是"这份数据被收集来比较各�
 
 | 方法 | 作用 |
 |---|---|
-| `dim(name, values, weights, parent, ordered, group)` | 类别列。`parent` 表达层级，`weights` 可以是一个向量，也可以是按父值给出的条件分布；`ordered` 取 `None` / `"ordinal"`（有大小顺序，如 Minor / Moderate / Severe）/ `"stage"`（流程里依次经过的阶段，如Triage → Exam → Admission）；`group` 给这条层级链命名，同一条链上的列写同一个 `group`，不写就取链的根列名 |
-| `time(name, start, end, freq)` | 时间列。星期、月、季度、是否周末四个日历字段自动派生 |
+| `dim(name, values, weights, parent, ordered, group)` | 类别列。`parent` 表达层级，`weights` 可以是一个向量，也可以是按父值给出的条件分布；`ordered` 取 `None` / `"ordinal"`（有大小顺序，如 Minor / Moderate / Severe）/ `"stage"`（流程里依次经过的阶段，如Triage → Exam → Admission）；`group` 给这条层级链命名，同一条链上的列写同一个 `group`，不写就取链的根列名。子列在某个父值下权重为 0 就表示不出现在那个父值下——**严格层级（一个处理中心只属于一个大区）这样写**，而每家医院都有外科则各父值下都给正权重；每个声明值至少要在一个父值下出现 |
+| `time(name, start, end, freq)` | 时间列。星期、月、季度、是否周末四个日历字段自动派生，但只派生比轴步长粗的那几个：日频四个都派生，周频派生月与季度，月频只派生季度——比步长细的字段描述的是点落在哪一天，与数据无关；与时间列一一对应的字段是同一列换个名字 |
 | `measure(name, expr, unit, additive)` | 数值列。`expr` 是一个表达式字符串 |
 | `emit(n)` | 产出 n 行 |
 

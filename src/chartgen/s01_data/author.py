@@ -130,6 +130,10 @@ dim(name, values, weights=None, parent=None, ordered=None, group=None)
     vector or a distribution per parent value; `ordered` is None, "ordinal" (values
     have a natural order) or "stage" (steps something passes through in sequence);
     `group` names the hierarchy chain, and columns on one chain share a group.
+    A child value with weight 0 under a parent value does not occur there, which
+    is how a value belonging to exactly one parent is written -- a processing
+    center sits in one region, while every hospital has a surgery department.
+    Every declared value must still occur under some parent.
 time(name, start, end, freq)
     A time column, freq is daily, weekly or monthly. The calendar fields
     day_of_week, month, quarter and is_weekend are derived automatically -- do not

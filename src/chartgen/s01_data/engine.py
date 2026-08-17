@@ -55,7 +55,7 @@ def generate(script: Script, seed: int) -> pd.DataFrame:
     if script.time is not None:
         days = _draw_time(script.time, n, derive(seed, STAGE, script.time.name))
         columns[script.time.name] = np.array([np.datetime64(d) for d in days])
-        for name in calendar_values(script.time.points()):
+        for name in calendar_values(script.time):
             i = DERIVED.index(name)
             columns[name] = np.array([calendar_of(d)[i] for d in days])
         env = dict(columns)
@@ -117,28 +117,38 @@ def _cycle(graph: dict[str, list[str]], nodes: set[str]) -> str:
 
 # ---------------------------------------------------------------- non-numeric columns
 
-def _allocate(n: int, weights: Sequence[float] | None, size: int, who: str) -> np.ndarray:
-    """Split n rows across `size` values by weight. Deterministic; every value gets one.
+def _allocate(n: int, weights: Sequence[float] | None, size: int, who: str,
+              *, every_value: bool = True) -> np.ndarray:
+    """Split n rows across `size` values by weight. Deterministic.
 
-    When a weight is small enough that `n * w < 1`, largest-remainder rounding
-    hands it zero rows and the column ends up with fewer distinct values than
-    declared. One row is then moved over from the largest bucket: the proportions
-    are off by at most `size` rows, and matching the declared count is the harder
-    requirement.
+    `every_value` says whether all of them must come out non-empty. A column as a
+    whole must show every value it declares, or its declared cardinality -- which
+    is what decided the chart families -- would be a promise the data breaks. So
+    when a weight is small enough that largest-remainder rounding leaves a value
+    with nothing, one row moves over from the largest bucket.
+
+    Inside one parent value it is the opposite: a weight of zero is how a strict
+    hierarchy is written, where a child belongs to exactly one parent. Forcing a
+    row in there would put every child under every parent.
     """
-    if n < size:
-        raise DeclarationError(
-            f"`{who}` has {size} values but only {n} rows to spread across them; "
-            "raise the row count or declare fewer values")
     w = np.full(size, 1.0) if weights is None else np.asarray(weights, dtype=float)
+    wanted = size if every_value else int(np.count_nonzero(w))
+    if n < wanted:
+        raise DeclarationError(
+            f"`{who}` needs {wanted} values but has only {n} rows to spread across "
+            "them; raise the row count or declare fewer values")
+
     raw = w / w.sum() * n
     counts = np.floor(raw).astype(int)
     order = np.lexsort((np.arange(size), -(raw - counts)))
-    counts[order[:n - int(counts.sum())]] += 1
+    takers = order if every_value else order[w[order] > 0]
+    for i in range(n - int(counts.sum())):
+        counts[takers[i % len(takers)]] += 1
 
-    for empty in np.flatnonzero(counts == 0):
-        counts[int(np.argmax(counts))] -= 1
-        counts[empty] = 1
+    if every_value:
+        for empty in np.flatnonzero(counts == 0):
+            counts[int(np.argmax(counts))] -= 1
+            counts[empty] = 1
     return counts
 
 
@@ -158,7 +168,8 @@ def _draw_dim(decl: DimDecl, columns: dict[str, np.ndarray], n: int,
         idx = np.flatnonzero(parent == value)
         weights = decl.weights[value] if isinstance(decl.weights, dict) else decl.weights
         counts = _allocate(len(idx), weights, len(decl.values),
-                           f"{decl.name} (within {decl.parent}={value})")
+                           f"{decl.name} (within {decl.parent}={value})",
+                           every_value=False)
         out[idx] = _spread(decl.values, counts, rng)
     return out
 

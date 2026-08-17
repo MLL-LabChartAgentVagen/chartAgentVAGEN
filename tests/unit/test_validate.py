@@ -52,6 +52,19 @@ class TestStructuralChecks:
         failures = V.structural(shrunk, script)
         assert any(f.kind == "cardinality" and "severity" in f.message for f in failures)
 
+    def test_a_child_value_no_parent_gives_weight_is_reported(self):
+        """Zero weights are how a strict hierarchy is written, so a value can be
+        weighted out of existence. The column-level check is what catches it."""
+        script = D.run('dim("region", ["North", "South"], group="g")\n'
+                       'dim("center", ["Albany", "Atlanta", "Tempe"], parent="region", '
+                       'weights={"North": [1.0, 0.0, 0.0], "South": [0.0, 1.0, 0.0]})\n'
+                       'dim("k", ["x", "y"], group="h")\n'
+                       'measure("m", "gaussian(0,1)", unit="u", additive=True)\n'
+                       'measure("n", "m * 2", unit="u", additive=True)\nemit(200)')
+        failures = V.structural(G.generate(script, SEED), script)
+        assert [f.kind for f in failures] == ["cardinality"]
+        assert "Tempe" in failures[0].message
+
     def test_a_constant_measure_fails(self, df, script):
         flat = df.assign(cost=1.0)
         failures = V.structural(flat, script)

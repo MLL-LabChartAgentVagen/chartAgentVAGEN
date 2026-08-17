@@ -22,8 +22,10 @@ from ..interfaces.table import (
 )
 from .charts import CHARTS, SHAPE_AGGREGATES, ChartType, in_family, within
 
-#: Divisor applied to a time column's point count when it is resampled.
-RESAMPLE_DIVISOR: dict[str, int] = {"daily": 1, "weekly": 7, "monthly": 30}
+#: Days one point covers at each frequency. Resampling divides the point count by
+#: the ratio between the two frequencies, never by the target alone: a column that
+#: is already monthly has its points counted in months.
+DAYS_PER_POINT: dict[str, int] = {"daily": 1, "weekly": 7, "monthly": 30}
 
 
 @dataclass(frozen=True)
@@ -45,9 +47,11 @@ def _no(reason: str) -> Check:
 # ---------------------------------------------------------------- cardinality
 
 def _points(col: Column, resample: str | None) -> int:
-    """Points left on the time axis after resampling."""
-    divisor = RESAMPLE_DIVISOR.get(resample or col.freq or "daily", 1)
-    return max(1, col.cardinality // divisor)
+    """Points left on the time axis after resampling. Resampling only coarsens:
+    asking a monthly column for weekly points leaves it monthly."""
+    own = DAYS_PER_POINT.get(col.freq or "daily", 1)
+    target = max(own, DAYS_PER_POINT.get(resample or "", own))
+    return max(1, col.cardinality * own // target)
 
 
 def _product(schema: TableSchema, names: Sequence[str]) -> int:

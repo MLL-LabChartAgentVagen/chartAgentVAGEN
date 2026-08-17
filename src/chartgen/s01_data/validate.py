@@ -250,7 +250,7 @@ def _rows(df: pd.DataFrame, script: Script, tolerance: float) -> list[Failure]:
 def _cardinality(df: pd.DataFrame, script: Script) -> list[Failure]:
     declared: dict[str, tuple[str, ...]] = {d.name: d.values for d in script.dims}
     if script.time is not None:
-        declared |= calendar_values(script.time.points())
+        declared |= calendar_values(script.time)
 
     out: list[Failure] = []
     for name, values in declared.items():
