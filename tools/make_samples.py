@@ -1,21 +1,20 @@
-"""生成 tests/samples/ 下的最小接口样例。
+"""Writing the minimal sample of every interface into tests/samples/.
 
-样例用[急诊科贯穿示例](../storyline/parsebench_chart/README.md#贯穿示例)的数字，
-与规格文档里的 01–05 逐段对齐：900 行 → Mercy General 42.3 / St. Luke's 35.8 / Riverside 28.1 →
-Mercy General的条 [168, 196, 278, 520]。
-
-改接口时改这里再重跑：`python tools/make_samples.py`。
+The samples share one worked example end to end, so the numbers in a schema, a
+figure spec, a render output and a record all line up. Changing an interface means
+editing this file and running it again.
 """
 
 from __future__ import annotations
 
+import json
 import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from chartgen.common.geometry import Box  # noqa: E402
-from chartgen.interfaces import io  # noqa: E402
+from chartgen.common import serde  # noqa: E402
 from chartgen.interfaces.figure import (  # noqa: E402
     Binding, Datum, FigureSpec, PanelSpec, Sharing, Source, ViewSpec,
 )
@@ -24,6 +23,7 @@ from chartgen.interfaces.record import (  # noqa: E402
 )
 from chartgen.interfaces.style import Degradation, StyleVector  # noqa: E402
 from chartgen.interfaces.table import Column, DimGroup, IntentBinding, TableSchema  # noqa: E402
+from chartgen.s01_data.author import EXAMPLE_OUTPUT  # noqa: E402
 
 SCENARIO = "er_wait"
 IMAGE_SIZE = (900, 600)
@@ -101,7 +101,7 @@ def figure_spec() -> FigureSpec:
 
 
 def style_vector() -> StyleVector:
-    """03 §0 采样出的那一组：全不画标注、企业蓝、y 起点为零、900×600、JPEG 75。"""
+    """One fixed style: no written values, a corporate blue, an axis from zero."""
     return StyleVector(
         value_labels="none",
         palette="corporate_low",
@@ -153,11 +153,19 @@ BUILDERS = {
 }
 
 
+SCENARIO_PATH = serde.SAMPLES["TableSchema"][1].parent / "er_scenario.json"
+
+
 def main() -> None:
     for name, build in BUILDERS.items():
-        path = io.SAMPLES[name][1]
-        io.save(build(), path)
-        print(f"写出 {path.relative_to(Path.cwd())}")
+        path = serde.SAMPLES[name][1]
+        serde.save(build(), path)
+        print(f"wrote {path.relative_to(Path.cwd())}")
+    # The hand-written answer for the data stage. It is the same object the prompt
+    # carries as its worked example, so the two cannot drift apart.
+    SCENARIO_PATH.write_text(
+        json.dumps(EXAMPLE_OUTPUT, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    print(f"wrote {SCENARIO_PATH.relative_to(Path.cwd())}")
 
 
 if __name__ == "__main__":

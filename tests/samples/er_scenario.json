@@ -1,0 +1,34 @@
+{
+  "scenario_title": "Emergency department visits and wait times at three metro hospitals, Jan-Jun 2024",
+  "data_context": "The county health department compiled per-visit records from three hospitals for January through June 2024 to assess a new triage diversion policy.",
+  "script": "dim(\"hospital\", [\"Mercy General\", \"St. Luke's\", \"Riverside\"],\n    weights=[0.40, 0.35, 0.25], group=\"entity\")\ndim(\"department\", [\"Internal Medicine\", \"Surgery\", \"Pediatrics\", \"Trauma\"], parent=\"hospital\",\n    weights={\"Mercy General\": [0.35, 0.25, 0.15, 0.25],\n             \"St. Luke's\": [0.40, 0.20, 0.20, 0.20],\n             \"Riverside\": [0.30, 0.30, 0.15, 0.25]})\ndim(\"severity\", [\"Minor\", \"Moderate\", \"Severe\"], weights=[0.50, 0.35, 0.15],\n    ordered=\"ordinal\", group=\"triage\")\n\ntime(\"visit_date\", start=\"2024-01-01\", end=\"2024-06-30\", freq=\"daily\")\n\nmeasure(\"wait_minutes\",\n        \"lognormal(mu = 2.8 + 0.4*[severity=Moderate] + 0.9*[severity=Severe]\"\n        \"             + 0.2*[hospital=Mercy General],\"\n        \"          sigma = 0.35)\",\n        unit=\"minutes\", additive=True)\nmeasure(\"cost\",\n        \"wait_minutes * 12 + {Minor: 80, Moderate: 260, Severe: 700}[severity] + gaussian(0, 30)\",\n        unit=\"USD\", additive=True)\nmeasure(\"satisfaction\",\n        \"clip(5.2 - wait_minutes / 32 + gaussian(0, 0.3), 1, 5)\",\n        unit=\"points\", additive=False)\n\nemit(900)\n",
+  "intents": [
+    {
+      "sentence": "Which hospital and department waits longest",
+      "columns": [
+        "hospital",
+        "wait_minutes"
+      ],
+      "aggregate": "AVG",
+      "family": "comparison"
+    },
+    {
+      "sentence": "How wait time moved over the half year",
+      "columns": [
+        "visit_date",
+        "wait_minutes"
+      ],
+      "aggregate": "AVG",
+      "family": "trend"
+    },
+    {
+      "sentence": "Do longer waits go with lower satisfaction",
+      "columns": [
+        "wait_minutes",
+        "satisfaction"
+      ],
+      "aggregate": "NONE",
+      "family": "relation"
+    }
+  ]
+}

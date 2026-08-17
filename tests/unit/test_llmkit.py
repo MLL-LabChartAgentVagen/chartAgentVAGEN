@@ -1,6 +1,8 @@
-"""llmkit：可复用的 LLM 调用层。用假 provider 测，不联网。"""
+"""The model-calling layer, exercised against a fake provider with no network."""
 
 import json
+import subprocess
+import sys
 
 import pytest
 
@@ -10,7 +12,7 @@ from llmkit.providers import Provider
 
 
 class FakeProvider(Provider):
-    """按顺序吐出预置回复，并记下收到的每一次请求。"""
+    """Returns canned replies in order and records every request it received."""
 
     name = "fake"
 
@@ -169,7 +171,50 @@ class TestBatch:
         assert [r.text if r else None for r in got] == ["a", None, "c"]
 
 
+class TestLexicalJudge:
+    """The similarity the deduper falls back to when no embedding is injected. It
+    needs no service and no model, so the numbers below are what the configured
+    thresholds are calibrated against."""
+
+    def test_a_text_is_identical_to_itself(self):
+        from llmkit.embed import cosine, lexical
+
+        assert cosine(*lexical(["ICU bed turnover"] * 2)) == pytest.approx(1.0)
+
+    def test_a_reworded_name_stays_close(self):
+        from llmkit.embed import cosine, lexical
+
+        assert cosine(*lexical(["ICU bed turnover analysis", "ICU bed turnover"])) > 0.65
+
+    def test_an_unrelated_name_is_far(self):
+        from llmkit.embed import cosine, lexical
+
+        assert cosine(*lexical(["ICU bed turnover", "Retail promotion uplift"])) < 0.3
+
+    def test_names_separate_far_more_widely_than_prose(self):
+        """Why the scenario check compares titles: on a paragraph the margin is thin."""
+        from llmkit.embed import cosine, lexical
+
+        near = cosine(*lexical(["ICU bed turnover", "ICU bed turnover rate"]))
+        far = cosine(*lexical(["ICU bed turnover", "Retail promotion uplift"]))
+        assert near - far > 0.5
+
+    def test_the_same_text_hashes_the_same_across_processes(self):
+        code = ("import sys; sys.path.insert(0, 'src'); from llmkit.embed import lexical; "
+                "print(sum(lexical(['ICU bed turnover'])[0]))")
+        runs = {subprocess.run([sys.executable, "-c", code], capture_output=True,
+                               text=True).stdout for _ in range(2)}
+        assert len(runs) == 1
+
+
 class TestDedupe:
+    def test_the_default_judge_catches_a_repeat_with_nothing_injected(self):
+        from llmkit.embed import Deduper
+
+        d = Deduper(threshold=0.75)
+        assert d.add("ICU bed turnover") and not d.add("ICU bed turnover")
+        assert d.add("Quarterly freight cost by lane") and len(d) == 2
+
     def test_a_near_duplicate_is_caught(self):
         from llmkit.embed import Deduper
 
@@ -202,7 +247,7 @@ class TestDedupe:
 
 
 class TestAnthropicProviderShape:
-    """不联网，只检查请求是按当前 API 组装的。"""
+    """Check the request shape offline, without sending anything."""
 
     def test_request_carries_no_removed_sampling_params(self):
         from llmkit.providers import AnthropicProvider
@@ -210,7 +255,7 @@ class TestAnthropicProviderShape:
         body = AnthropicProvider.build_request(
             model="claude-opus-5", system="S",
             messages=[Message("user", "U")], max_tokens=8000,
-            effort="high", schema={"type": "object"}, extra={})
+            effort="high", schema={"type": "object", "additionalProperties": False}, extra={})
         assert "temperature" not in body and "top_p" not in body and "top_k" not in body
         assert "budget_tokens" not in json.dumps(body)
 
@@ -230,6 +275,37 @@ class TestAnthropicProviderShape:
             model="claude-opus-5", system="S", messages=[Message("user", "U")],
             max_tokens=8000, effort=None, schema=schema, extra={})
         assert body["output_config"]["format"] == {"type": "json_schema", "schema": schema}
+
+    def test_fields_the_installed_sdk_does_not_type_go_through_extra_body(self):
+        """Newer request parameters have no keyword on an older SDK, but `extra_body`
+        is merged into the body untouched, so one split works against either."""
+        from llmkit.providers import AnthropicProvider
+
+        body = AnthropicProvider.build_request(
+            model="claude-opus-5", system="S", messages=[Message("user", "U")],
+            max_tokens=8000, effort="high", schema=None, extra={})
+        kwargs, extra_body = AnthropicProvider.split_body(body)
+        assert set(kwargs) == {"model", "max_tokens", "messages", "system"}
+        assert extra_body == {"output_config": {"effort": "high"}}
+
+    def test_an_object_that_does_not_close_itself_is_caught_before_the_request(self):
+        """The service refuses such a schema, naming only the innermost field."""
+        from llmkit.providers import AnthropicProvider
+        from llmkit.types import LLMError
+
+        schema = {"type": "object", "additionalProperties": False,
+                  "properties": {"items": {"type": "array", "items": {"type": "object"}}}}
+        with pytest.raises(LLMError, match=r"schema\.items\[\]"):
+            AnthropicProvider.build_request(
+                model="m", system="S", messages=[Message("user", "U")],
+                max_tokens=8, effort=None, schema=schema, extra={})
+
+    def test_a_body_with_only_known_fields_needs_no_extra_body(self):
+        from llmkit.providers import AnthropicProvider
+
+        kwargs, extra_body = AnthropicProvider.split_body(
+            {"model": "m", "max_tokens": 8, "messages": []})
+        assert extra_body is None and kwargs["model"] == "m"
 
     def test_the_default_model_is_the_current_opus(self):
         import llmkit

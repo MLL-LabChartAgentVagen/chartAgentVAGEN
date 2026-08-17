@@ -1,0 +1,161 @@
+"""The single model call: what it must produce, and what happens when it does not.
+
+`compose` is the rules half of that call. It knows nothing about models, so the
+whole data stage can be exercised from a hand-written answer with no network.
+"""
+
+import json
+import re
+from pathlib import Path
+
+import pytest
+
+from chartgen.config import Config
+from chartgen.s01_data import author as A
+
+SAMPLE = json.loads(Path("tests/samples/er_scenario.json").read_text(encoding="utf-8"))
+SEED = 20260816
+CONFIG = Config.load()
+
+
+def payload(**over) -> dict:
+    return {**json.loads(json.dumps(SAMPLE)), **over}
+
+
+class TestTheSampleIsTheOneInThePrompt:
+    def test_the_worked_example_and_the_test_sample_are_one_file(self):
+        assert A.EXAMPLE_OUTPUT == SAMPLE, "run python tools/make_samples.py"
+
+    def test_the_prompt_names_no_chart_type(self):
+        """Scenarios come from subject matter, not from a catalogue of charts."""
+        text = A.SYSTEM + A.user_prompt(A.EXAMPLE_DOMAIN, (500, 1000))
+        for name in ("bar", "pie", "line", "scatter", "histogram", "heatmap",
+                     "box", "funnel", "waterfall", "area", "compound"):
+            assert not re.search(rf"\b{name}\b", text, re.I), name
+
+    def test_the_prompt_asks_for_english_content(self):
+        assert "in English" in A.user_prompt(A.EXAMPLE_DOMAIN, (500, 1000))
+
+    def test_the_prompt_holds_no_chinese(self):
+        import re
+        text = A.SYSTEM + A.user_prompt(A.EXAMPLE_DOMAIN, (500, 1000), feedback="why")
+        assert not re.search(r"[\u4e00-\u9fff]", text)
+
+    def test_the_output_contract_is_shaped_the_way_structured_output_demands(self):
+        """A fake model accepts any schema; the service does not."""
+        from llmkit.providers import check_strict
+
+        check_strict(A.SCENARIO_SCHEMA)
+
+    def test_a_retry_carries_the_reason(self):
+        text = A.user_prompt(A.EXAMPLE_DOMAIN, (500, 1000),
+                            feedback="`cost` and `revenue` reference each other")
+        assert "`cost` and `revenue`" in text
+
+
+class TestComposeIsAllRules:
+    def test_the_worked_example_composes_end_to_end(self):
+        table, schema = A.compose(payload(), scenario_id="er_wait", seed=SEED, config=CONFIG)
+        assert table.n_rows == 900 and schema.n_rows == 900
+        assert schema.scenario_title.startswith("Emergency department")
+        assert [i.family for i in schema.intents] == ["comparison", "trend", "relation"]
+        assert schema.dependencies == (("wait_minutes", "cost"),
+                                       ("wait_minutes", "satisfaction"))
+
+    def test_the_schema_describes_the_data_that_was_actually_generated(self):
+        table, schema = A.compose(payload(), scenario_id="er_wait", seed=SEED, config=CONFIG)
+        for column in schema.categories:
+            assert set(table.df[column.name].unique()) == set(column.values), column.name
+
+    def test_a_broken_script_is_rejected_as_a_parse_failure(self):
+        with pytest.raises(A.Rejected) as exc:
+            A.compose(payload(script='dim("x", ["A"])\nemit(10)'),
+                      scenario_id="s", seed=SEED, config=CONFIG)
+        assert exc.value.kind == "script" and "values" in str(exc.value)
+
+    def test_an_intent_bound_to_a_missing_column_is_a_binding_failure(self):
+        bad = payload()
+        bad["intents"][1]["columns"] = ["visit_hour", "wait_minutes"]
+        with pytest.raises(A.Rejected) as exc:
+            A.compose(bad, scenario_id="s", seed=SEED, config=CONFIG)
+        assert exc.value.kind == "binding" and "visit_hour" in str(exc.value)
+
+    def test_the_intent_count_is_part_of_the_contract(self):
+        with pytest.raises(A.Rejected) as exc:
+            A.compose(payload(intents=[SAMPLE["intents"][0]]), scenario_id="s",
+                      seed=SEED, config=CONFIG)
+        assert exc.value.kind == "binding"
+
+    def test_a_schema_that_covers_too_few_families_is_a_coverage_failure(self):
+        script = ('dim("a", ["p", "q"], group="g")\ndim("b", ["u", "v"], group="h")\n'
+                  'measure("m", "gaussian(50, 8)", unit="ratio", additive=False)\n'
+                  'measure("n", "m * 2", unit="ratio", additive=False)\nemit(300)')
+        thin = payload(script=script, intents=[
+            {"sentence": "s", "columns": ["m", "n"], "aggregate": "NONE", "family": "relation"},
+            {"sentence": "t", "columns": ["a", "m"], "aggregate": "AVG", "family": "comparison"}])
+        with pytest.raises(A.Rejected) as exc:
+            A.compose(thin, scenario_id="s", seed=SEED, config=CONFIG)
+        assert exc.value.kind == "feasibility" and "families" in str(exc.value)
+
+    def test_a_constant_measure_is_a_structure_failure(self):
+        script = SAMPLE["script"].replace(
+            '"clip(5.2 - wait_minutes / 32 + gaussian(0, 0.3), 1, 5)"', '"4.0"')
+        with pytest.raises(A.Rejected) as exc:
+            A.compose(payload(script=script), scenario_id="s", seed=SEED, config=CONFIG)
+        assert exc.value.kind == "structure" and "satisfaction" in str(exc.value)
+
+
+class TestTheRetryLoop:
+    def test_a_clean_first_answer_costs_one_call(self):
+        llm = FakeLLM([payload()])
+        table, schema = A.build_scenario("er_wait", SEED, CONFIG, llm=llm,
+                                         domain=A.EXAMPLE_DOMAIN)
+        assert llm.n == 1 and table.n_rows == 900
+
+    def test_a_rejected_answer_is_fed_back_with_its_reason(self):
+        llm = FakeLLM([payload(script='dim("x", ["A"])\nemit(10)'), payload()])
+        log: list[A.Rejected] = []
+        A.build_scenario("er_wait", SEED, CONFIG, llm=llm, domain=A.EXAMPLE_DOMAIN, log=log)
+        assert llm.n == 2
+        assert [r.kind for r in log] == ["script"]
+        assert "values" in llm.prompts[1]
+
+    def test_giving_up_after_the_retry_limit(self):
+        broken = payload(script='dim("x", ["A"])\nemit(10)')
+        llm = FakeLLM([broken] * 9)
+        with pytest.raises(A.Rejected):
+            A.build_scenario("s", SEED, CONFIG.set("llm.max_retries", 2), llm=llm,
+                             domain=A.EXAMPLE_DOMAIN)
+        assert llm.n == 3                       # the first attempt plus two retries
+
+    def test_a_duplicate_scenario_draws_another_domain(self):
+        llm = FakeLLM([payload(), payload()])
+        seen = {SAMPLE["scenario_title"]}
+        sampler = FakeSampler()
+        A.build_scenario("s", SEED, CONFIG, llm=llm, sampler=sampler,
+                         is_duplicate=lambda text: text in seen and not seen.discard(text))
+        assert sampler.taken == 2               # the first scenario collided, so it drew again
+
+    def test_the_scenario_id_reaches_the_schema(self):
+        _, schema = A.build_scenario("run7_s3", SEED, CONFIG, llm=FakeLLM([payload()]),
+                                     domain=A.EXAMPLE_DOMAIN)
+        assert schema.scenario_id == "run7_s3"
+
+
+class FakeLLM:
+    def __init__(self, answers: list[dict]) -> None:
+        self.answers, self.n, self.prompts = answers, 0, []
+
+    def json(self, system: str, user: str, *, schema: dict) -> dict:
+        self.prompts.append(user)
+        self.n += 1
+        return self.answers[self.n - 1]
+
+
+class FakeSampler:
+    def __init__(self) -> None:
+        self.taken = 0
+
+    def take(self, tier=None) -> dict:
+        self.taken += 1
+        return {**A.EXAMPLE_DOMAIN, "name": f"domain {self.taken}"}
