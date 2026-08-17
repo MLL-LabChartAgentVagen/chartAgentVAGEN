@@ -1,7 +1,10 @@
-"""02 内部的 ViewSpec 与 02 → 03 的 FigureSpec。
+"""What a figure is made of: the views inside it and how they relate.
 
-`Binding` 与 `ViewSpec` 分开，是为了让条件判定拿不到数据：`registry.conditions`
-只接受 `Binding`，结构与语义条件因此在编译期就碰不到求值结果。
+A `Binding` names columns and an aggregate but holds no values, which is what
+keeps the feasibility rules honest -- they take a binding and a schema, so they
+structurally cannot look at data. A `ViewSpec` is a binding plus the values it
+projects to. A `FigureSpec` is one or more views laid out together, with what they
+share and where the figure came from.
 """
 
 from __future__ import annotations
@@ -13,32 +16,34 @@ from .table import Aggregate, Family
 
 Layout = Literal["single", "side_by_side", "grid", "dual_axis"]
 
-#: 多面板的五种关系，见 02_figure.md §4.1。
+#: How a second panel is derived from the first one.
 Relation = Literal[
-    "facet",       # 同指标不同切面
-    "drilldown",   # 下钻
-    "time_split",  # 时间对照
-    "dual_metric", # 双指标
-    "part_whole",  # 整体与部分
+    "facet",       # same metric, a different slice
+    "drilldown",   # one level deeper
+    "time_split",  # the same view over two time windows
+    "dual_metric", # the same grouping, the next metric
+    "part_whole",  # comparison turned into composition
 ]
 
+#: How a figure was chosen: built from an intent, derived from an anchor figure,
+#: or sampled to widen chart-type coverage.
 SourceKind = Literal["intent", "panel", "rotation"]
 
 
 @dataclass(frozen=True)
 class Binding:
-    """一条候选视图的列绑定。只引用列名，不含任何求值结果。
+    """The columns one candidate view would use. Names only, never values.
 
-    `group_columns` 是 GROUP BY 的键顺序，也是记录里 `key` 元组的顺序：
-    时间列在前，类别列按 P、S 顺序在后。
+    `group_columns` is both the grouping order and the order of the key tuple in
+    the records: the time column first, then category columns by role.
     """
 
     chart_type: str
-    dims: tuple[str, ...] = ()        # 类别列，按角色顺序 P, S
-    time: str | None = None           # 时间列
+    dims: tuple[str, ...] = ()        # category columns, primary then secondary
+    time: str | None = None
     measures: tuple[str, ...] = ()
     aggregate: Aggregate = "NONE"
-    resample: str | None = None       # 时间轴重采样：daily / weekly / monthly
+    resample: str | None = None       # daily, weekly or monthly for the time axis
 
     @property
     def group_columns(self) -> tuple[str, ...]:
@@ -51,7 +56,8 @@ class Binding:
 
 @dataclass(frozen=True)
 class TimeWindow:
-    """行过滤。只服务「时间对照」一种关系，配对时从锚点现场切出来。"""
+    """A row filter. It exists only to show one view over two time windows, and is
+    cut from the anchor when that pairing is built."""
 
     column: str
     start: str
@@ -61,9 +67,10 @@ class TimeWindow:
 
 @dataclass(frozen=True)
 class Datum:
-    """投影出的一条结果：一个键、一个值字典、它背后的原始行数。
+    """One projected result: a key, a value dictionary, and how many rows it covers.
 
-    值字典的键由图元形状决定，见 chart_types.md §3。`rows` 就是 04 的 L2 层。
+    Which keys the value dictionary holds follows from the mark shape. `rows` is
+    the provenance layer of the records, carried along rather than recomputed.
     """
 
     key: tuple[str, ...]
@@ -73,12 +80,12 @@ class Datum:
 
 @dataclass(frozen=True)
 class ViewSpec:
-    """一个面板要画的东西：绑定 + 行过滤 + 求值结果。"""
+    """What one panel draws: a binding, an optional row filter, and the values."""
 
     binding: Binding
     data: tuple[Datum, ...]
     row_filter: TimeWindow | None = None
-    sample_index: tuple[int, ...] = ()   # 逐行形态的确定性抽样索引
+    sample_index: tuple[int, ...] = ()   # rows kept when a per-row view is downsampled
 
     @property
     def keys(self) -> frozenset[tuple[str, ...]]:
@@ -93,7 +100,8 @@ class PanelSpec:
 
 @dataclass(frozen=True)
 class Sharing:
-    """共享关系。`series_column` 只有共享图例时非空——各面板系列列必须相同。"""
+    """What the panels of a figure share. `series_column` is set only when the
+    legend is shared, which requires every panel to colour by the same column."""
 
     share_x: bool = False
     share_y: bool = False
@@ -103,7 +111,7 @@ class Sharing:
 
 @dataclass(frozen=True)
 class Source:
-    """这张图是怎么来的：意图构造 / 从锚点推导 / 按族采样。"""
+    """Where this figure came from."""
 
     kind: SourceKind
     intent_index: int | None = None
@@ -112,7 +120,7 @@ class Source:
 
 @dataclass(frozen=True)
 class FigureSpec:
-    """02 → 03。决定哪些视图进同一张图、彼此什么关系、共享什么。"""
+    """One image to draw: which views go together, how they relate, what they share."""
 
     figure_id: str
     scenario_id: str
@@ -121,8 +129,8 @@ class FigureSpec:
     sharing: Sharing = Sharing()
     relation: Relation | None = None
     source: Source = Source(kind="rotation")
-    #: 列 → 单位。03 画轴标签与定数字格式要用，02 从 TableSchema 抄过来，
-    #: 这样 03 不必认识表结构说明。
+    #: Column to unit. The renderer needs it for axis labels and number formats,
+    #: and copying it here means the renderer never has to read a table schema.
     column_units: dict[str, str] = field(default_factory=dict)
 
     @property

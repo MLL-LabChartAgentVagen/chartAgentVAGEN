@@ -1,4 +1,4 @@
-"""llmkit 的基本类型：消息、用量、回复，以及三类异常。"""
+"""The basic types: a message, a usage tally, a reply, and the errors that can occur."""
 
 from __future__ import annotations
 
@@ -36,12 +36,12 @@ class Response:
 
 
 class LLMError(RuntimeError):
-    """llmkit 抛出的所有异常的基类。"""
+    """Base class for everything this package raises."""
 
 
 class Refusal(LLMError):
-    """安全分类器拒答。文本可能为空或只有一半，不要当成正常回复。"""
+    """The request was declined. The text may be empty or partial; it is not a reply."""
 
 
 class Truncated(LLMError):
-    """回复被 max_tokens 截断。"""
+    """The reply was cut off by the output limit, so it is incomplete."""

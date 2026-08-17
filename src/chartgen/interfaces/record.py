@@ -1,10 +1,16 @@
-"""03 → 04 的 RenderOutput 与 04 → 05 的 Record。
+"""The annotation record: an image plus everything known about what is drawn on it.
 
-三层各由知道它的组件写出，拼接是按 `(figure_id, panel_id, key)` 的查表连接：
+Three layers, each written by the component that already knows it, and joined on
+`(figure_id, panel_id, key)` without inference:
 
-    L0 页面元素   ← 03 的页面合成器
-    L1 面板 / 轴 / 图元 / 图例  ← 03 的渲染器，画每个图元时记下框、键、值
-    L2 图元的原始行数          ← 02 的投影，04 按键连接进来
+    page elements   written by the page composer: boxes and their categories
+    encoding        written by the renderer: for every mark, its box, key and value,
+                    and for every panel, its axis value and pixel ranges
+    provenance      written by the projection: how many source rows a mark covers
+
+`Mark` uses one value dictionary rather than a class per shape. A bar fills one
+key, a box plot fills five, and everything downstream does the same thing with
+both -- take the box, take the values -- so there is nothing for polymorphism to do.
 """
 
 from __future__ import annotations
@@ -17,12 +23,15 @@ from .style import Degradation, StyleVector
 
 ElementCategory = Literal["Text", "Table", "Picture", "Page-Header", "Page-Footer"]
 AxisRole = Literal["x", "y", "y_right"]
+
+#: How a mark encodes its value. Length and position can be measured off the
+#: pixels; angle and colour cannot be measured to useful precision.
 Channel = Literal["length", "position", "angle", "color"]
 
 
 @dataclass(frozen=True)
 class Element:
-    """L0：页面上的一个框与它的类别。纯像素事实，无数据语义。"""
+    """A box on the page and what kind of thing it is. Pixels only, no data meaning."""
 
     box: Box
     category: ElementCategory
@@ -30,28 +39,30 @@ class Element:
 
 @dataclass(frozen=True)
 class Axis:
-    """`value_range` 与 `pixel_range` 是可读性判定与值反算的全部输入。"""
+    """An axis as drawn. The value range and the pixel range are the whole input to
+    deciding whether a value can be read off the image and to converting a box
+    back into a value."""
 
     role: AxisRole
     value_range: tuple[float, float]
     pixel_range: tuple[float, float]
     scale: Literal["linear", "log"] = "linear"
-    column: str | None = None      # 这条轴绑的是哪一列；compound 的两条各绑一个测度
+    column: str | None = None      # which column this axis carries
 
 
 @dataclass(frozen=True)
 class Panel:
     panel_id: str
-    box: Box                        # 绘图区
+    box: Box                        # the plotting area
     axes: tuple[Axis, ...] = ()
     chart_type: str = ""
 
 
 @dataclass(frozen=True)
 class Mark:
-    """一个可单独指认的图形：一个框、一个键、一个值字典。
+    """One separately identifiable shape: a box, a key, a value dictionary.
 
-    `rows`（L2）与 `readable` 由 04 补齐，渲染器写出时为 None。
+    `rows` and `readable` are filled in after rendering; the renderer writes None.
     """
 
     mark_id: str
@@ -68,7 +79,12 @@ class Mark:
 
 @dataclass(frozen=True)
 class LegendEntry:
-    """`applies_to_panels` 在单面板图上恒为一个元素；共享图例时才有信息量。"""
+    """A legend item and the panels it governs.
+
+    On a single-panel figure `applies_to_panels` always has one element and says
+    nothing. It carries information only when several panels share one legend,
+    which is where the legend-binding training target comes from.
+    """
 
     box: Box
     maps_to_category: str
@@ -77,7 +93,8 @@ class LegendEntry:
 
 @dataclass(frozen=True)
 class RenderOutput:
-    """03 → 04。图像加三份几何，图元还没有 rows 与 readable。"""
+    """What the renderer produces: the image and its geometry. Marks do not yet
+    carry their row counts or readability."""
 
     figure_id: str
     scenario_id: str
@@ -93,7 +110,12 @@ class RenderOutput:
 
 @dataclass(frozen=True)
 class SelfCheck:
-    """04 §6 的三项。第三项按图抽样跑，没跑到时为 None。"""
+    """The three checks a figure must pass before its record is kept.
+
+    Is there anything inside the box; does the value read back off the pixels match
+    the recorded one; does a differently styled rendering give the same answers.
+    The third is run on a sample of figures, so it is None when it did not run.
+    """
 
     box_content: bool | None = None
     value_readback: bool | None = None
@@ -108,7 +130,9 @@ class SelfCheck:
 
 @dataclass(frozen=True)
 class Record(RenderOutput):
-    """04 → 05。RenderOutput 拼上 L2 行数、逐图元的 `readable` 与自检结论。"""
+    """A finished record: the render output plus row counts, per-mark readability
+    and the self-check verdict. The exporter reads only this -- it needs to know
+    nothing about the fact table or the renderer."""
 
     selfcheck: SelfCheck = field(default_factory=SelfCheck)
 
@@ -116,7 +140,7 @@ class Record(RenderOutput):
         for p in self.panels:
             if p.panel_id == panel_id:
                 return p
-        raise KeyError(f"没有这个面板: {panel_id}")
+        raise KeyError(f"no such panel: {panel_id}")
 
     def marks_of(self, panel_id: str) -> tuple[Mark, ...]:
         return tuple(m for m in self.marks if m.panel_id == panel_id)

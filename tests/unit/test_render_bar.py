@@ -1,19 +1,21 @@
-"""D1 · 边画边记的最小实现，配 E3.1 / E3.2 两项自检。
+"""Drawing and recording in one step, checked against the rendered pixels.
 
-这一组测试是整条流水线的正确性底线：框由绘图库自己的坐标变换算出，错了不会
-抛异常，只会安静地产出偏移的框。所以判据不是「有没有框」，而是回读渲染出的
-PNG，看框里有没有东西、框反算出的值对不对。
+This is the correctness floor of the whole pipeline. A box comes from the plotting
+library's own transform, and when that goes wrong nothing raises -- the boxes are
+simply offset. So these tests do not ask whether a box exists; they read the
+rendered image back and ask whether anything is inside it and whether the geometry
+agrees with the recorded value.
 """
 
 import pytest
 
 from chartgen.common import readback as rb
 from chartgen.common.geometry import Box
-from chartgen.interfaces import io
+from chartgen.common import serde
 from chartgen.interfaces.style import StyleVector
 from chartgen.s03_render.render import render
 
-#: 03 §0 记下的几何，规格文档与样例文件里的数字都是这一组。
+#: The geometry the worked example produces, shared with the sample files.
 PLOT_RECT = (96.0, 60.0, 860.0, 520.0)
 BAR_BOXES = {
     ("Mercy General",): (168.0, 196.0, 278.0, 520.0),
@@ -24,8 +26,8 @@ BAR_BOXES = {
 
 @pytest.fixture(scope="module")
 def rendered(tmp_path_factory):
-    spec = io.sample("FigureSpec")
-    style = io.sample("StyleVector")
+    spec = serde.sample("FigureSpec")
+    style = serde.sample("StyleVector")
     return render(spec, style, tmp_path_factory.mktemp("render"))
 
 
@@ -77,7 +79,8 @@ class TestMarksRecordedWhileDrawing:
 
 
 class TestSelfCheckOne:
-    """框里有没有东西——挡住框整体偏移、自动布局挪动绘图区、dpi 换算错。"""
+    """Is there anything inside the box: catches offsets, moved plotting areas,
+    and wrong resolution arithmetic."""
 
     def test_every_recorded_box_actually_contains_ink(self, rendered):
         img = rb.load_image(rendered.image_path)
@@ -95,7 +98,8 @@ class TestSelfCheckOne:
         assert rb.ink_fraction(img, Box(300, 300, 400, 500)) < 0.05
 
     def test_a_box_moved_onto_the_next_bar_passes_check_one_and_fails_check_two(self, rendered):
-        """两项自检分工：①只管框里有没有东西，②才管这块几何配不配这个值。"""
+        """The two checks divide the work: one asks whether anything is there, the
+        other whether the geometry fits the value."""
         img = rb.load_image(rendered.image_path)
         y = next(a for a in rendered.panels[0].axes if a.role == "y")
         slot = 764 / 3
@@ -108,7 +112,7 @@ class TestSelfCheckOne:
 
 
 class TestSelfCheckTwo:
-    """量出来的值对不对——挡住轴映射错误、负值与堆叠基线错误。"""
+    """Does the measured value match: catches axis mapping, negatives and stacking errors."""
 
     def test_each_bar_reads_back_within_one_percent(self, rendered):
         y = next(a for a in rendered.panels[0].axes if a.role == "y")
@@ -126,43 +130,43 @@ class TestSelfCheckTwo:
 
 class TestDeterminism:
     def test_the_same_spec_and_style_render_byte_identical_images(self, tmp_path):
-        spec, style = io.sample("FigureSpec"), io.sample("StyleVector")
+        spec, style = serde.sample("FigureSpec"), serde.sample("StyleVector")
         a = render(spec, style, tmp_path / "a")
         b = render(spec, style, tmp_path / "b")
         assert open(a.image_path, "rb").read() == open(b.image_path, "rb").read()
-        assert io.to_dict(a.marks) == io.to_dict(b.marks)
+        assert serde.to_dict(a.marks) == serde.to_dict(b.marks)
 
     def test_the_render_output_round_trips_through_io(self, rendered, tmp_path):
         from chartgen.interfaces.record import RenderOutput
 
-        io.save(rendered, tmp_path / "r.json")
-        assert io.load(RenderOutput, tmp_path / "r.json") == rendered
+        serde.save(rendered, tmp_path / "r.json")
+        assert serde.load(RenderOutput, tmp_path / "r.json") == rendered
 
 
 class TestStyleDoesNotChangeTheAnswer:
-    """风格与真值分离：换风格，键 → 值 必须一模一样。"""
+    """Style and answers are separate: a different look must give identical values."""
 
     def test_labels_and_palette_do_not_move_the_values(self, tmp_path):
-        spec = io.sample("FigureSpec")
-        plain = render(spec, io.sample("StyleVector"), tmp_path / "a")
+        spec = serde.sample("FigureSpec")
+        plain = render(spec, serde.sample("StyleVector"), tmp_path / "a")
         fancy = render(spec, StyleVector(value_labels="all", palette="grayscale",
                                          gridlines=False, bar_width=0.8), tmp_path / "b")
         assert ({m.key: m.values for m in plain.marks}
                 == {m.key: m.values for m in fancy.marks})
 
     def test_a_wider_bar_moves_the_box_but_not_the_value(self, tmp_path):
-        spec = io.sample("FigureSpec")
+        spec = serde.sample("FigureSpec")
         wide = render(spec, StyleVector(bar_width=0.8), tmp_path / "c")
         assert wide.marks[0].box.width == pytest.approx(0.8 / 0.432 * 110, abs=2)
 
     def test_writing_labels_records_a_label_box(self, tmp_path):
-        spec = io.sample("FigureSpec")
+        spec = serde.sample("FigureSpec")
         out = render(spec, StyleVector(value_labels="all"), tmp_path / "d")
         assert all(m.labeled for m in out.marks)
         assert all(m.label_box is not None for m in out.marks)
 
     def test_a_non_zero_baseline_changes_the_axis_but_not_the_values(self, tmp_path):
-        spec = io.sample("FigureSpec")
+        spec = serde.sample("FigureSpec")
         out = render(spec, StyleVector(zero_baseline=False), tmp_path / "e")
         y = next(a for a in out.panels[0].axes if a.role == "y")
         assert y.value_range[0] > 0

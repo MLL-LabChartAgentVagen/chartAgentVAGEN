@@ -1,4 +1,4 @@
-"""条件判定：结构与语义条件只看列声明，01 与 02 共用这一份。"""
+"""Deciding what can be drawn from declarations alone."""
 
 import ast
 import inspect
@@ -6,7 +6,7 @@ from pathlib import Path
 
 import pytest
 
-from chartgen.interfaces import io
+from chartgen.common import serde
 from chartgen.interfaces.figure import Binding
 from chartgen.interfaces.table import Column, DimGroup, IntentBinding, TableSchema
 from chartgen.registry import conditions as C
@@ -14,8 +14,8 @@ from chartgen.registry import conditions as C
 
 @pytest.fixture
 def er() -> TableSchema:
-    """急诊科贯穿示例的表结构说明。"""
-    return io.sample("TableSchema")
+    """The schema of the worked example."""
+    return serde.sample("TableSchema")
 
 
 def bind(chart_type: str, **kw) -> Binding:
@@ -33,7 +33,7 @@ class TestStructuralConditions:
             Column("m", "measure", 100, unit="units", additive=True),
         ), n_rows=100)
         r = C.check(bind("bar", dims=("side",), measures=("m",), aggregate="AVG"), schema)
-        assert not r.ok and "基数" in r.reason
+        assert not r.ok and "cardinality" in r.reason
 
     def test_bar_rejects_cardinality_above_thirty(self, er):
         schema = TableSchema("s", "t", "c", columns=(
@@ -46,19 +46,19 @@ class TestStructuralConditions:
     def test_grouped_bar_needs_two_category_columns(self, er):
         r = C.check(bind("grouped_bar", dims=("hospital",), measures=("wait_minutes",),
                          aggregate="AVG"), er)
-        assert not r.ok and "类别列" in r.reason
+        assert not r.ok and "category columns" in r.reason
 
     def test_grouped_bar_product_must_be_between_six_and_twentyfour(self, er):
         assert C.check(bind("grouped_bar", dims=("hospital", "department"),
                             measures=("wait_minutes",), aggregate="AVG"), er).ok    # 3×4 = 12
         r = C.check(bind("grouped_bar", dims=("day_of_week", "month"),
                          measures=("wait_minutes",), aggregate="AVG"), er)          # 7×6 = 42
-        assert not r.ok and "基数" in r.reason
+        assert not r.ok and "cardinality" in r.reason
 
     def test_the_same_column_cannot_take_two_roles(self, er):
         r = C.check(bind("grouped_bar", dims=("hospital", "hospital"),
                          measures=("wait_minutes",), aggregate="AVG"), er)
-        assert not r.ok and "重复" in r.reason
+        assert not r.ok and "several roles" in r.reason
 
     def test_unknown_column_is_reported_by_name(self, er):
         r = C.check(bind("bar", dims=("visit_hour",), measures=("wait_minutes",),
@@ -80,14 +80,14 @@ class TestStructuralConditions:
         assert C.check(bind("line", time="visit_date", dims=("hospital",),
                             measures=("wait_minutes",), aggregate="AVG"), er).ok
         assert not C.check(bind("line", time="visit_date", dims=("day_of_week",),
-                                measures=("wait_minutes",), aggregate="AVG"), er).ok  # 7 系列
+                                measures=("wait_minutes",), aggregate="AVG"), er).ok  # seven series
 
     def test_histogram_needs_a_hundred_raw_rows(self, er):
         assert C.check(bind("histogram", measures=("wait_minutes",), aggregate="BIN_COUNT"), er).ok
         small = TableSchema("s", "t", "c", columns=(
             Column("m", "measure", 40, unit="units", additive=True),), n_rows=40)
         r = C.check(bind("histogram", measures=("m",), aggregate="BIN_COUNT"), small)
-        assert not r.ok and "行数" in r.reason
+        assert not r.ok and "source rows" in r.reason
 
     def test_scatter_needs_exactly_two_measures(self, er):
         assert C.check(bind("scatter", measures=("wait_minutes", "satisfaction"),
@@ -112,12 +112,12 @@ class TestSemanticConditions:
                             aggregate="SUM"), er).ok
         r = C.check(bind("pie", dims=("department",), measures=("satisfaction",),
                          aggregate="AVG"), er)
-        assert not r.ok and "可加" in r.reason
+        assert not r.ok and "additive" in r.reason
 
     def test_sum_over_a_non_additive_measure_is_never_legal(self, er):
         r = C.check(bind("bar", dims=("hospital",), measures=("satisfaction",),
                          aggregate="SUM"), er)
-        assert not r.ok and "聚合" in r.reason
+        assert not r.ok and "aggregates" in r.reason
 
     def test_median_is_legal_on_a_non_additive_measure(self, er):
         assert C.check(bind("bar", dims=("hospital",), measures=("satisfaction",),
@@ -165,7 +165,7 @@ class TestAggregateSet:
 
 
 class TestCoverage:
-    """01 §0 第四步：声明期逐族判非空，不需要数据。"""
+    """Which families are non-empty, decided before any data exists."""
 
     def test_er_schema_has_five_of_six_families_non_empty(self, er):
         cov = C.coverage(er)
@@ -176,9 +176,9 @@ class TestCoverage:
         assert not C.family_nonempty("process", er)
 
     def test_composition_survives_without_an_additive_measure_via_count(self, er):
-        """COUNT(*) 不需要测度，饼图画就诊量占比是合法的（chart_types.md §2 聚合表）。
+        """Counting rows needs no measure, so a share-of-total chart is still legal.
 
-        「一个可加测度都没有」是 01 §5.1 的缺口诊断，不是族为空。
+    Having no additive measure is a gap worth reporting, not an empty family.
         """
         no_additive = TableSchema("s", "t", "c", columns=(
             Column("hospital", "category", 3, values=("Mercy General", "St. Luke's", "Riverside")),
@@ -201,12 +201,12 @@ class TestCoverage:
             Column("hospital", "category", 3, values=("Mercy General", "St. Luke's", "Riverside")),
             Column("wait", "measure", 40, unit="minutes", additive=True),
         ), n_rows=40)
-        assert not C.family_nonempty("distribution", one_measure, max_tier=1)   # 行数 < 100
-        assert C.family_nonempty("distribution", one_measure, max_tier=2)       # box 每组 ≥15 行
+        assert not C.family_nonempty("distribution", one_measure, max_tier=1)   # too few rows
+        assert C.family_nonempty("distribution", one_measure, max_tier=2)       # a box plot fits
 
 
 class TestDeterministicBindings:
-    """意图图「通过的按确定顺序取第一条」用的就是这个迭代器。"""
+    """Building a figure from an intent takes the first binding this yields."""
 
     def test_first_binding_for_intent_one_is_a_bar(self, er):
         got = next(C.iter_bindings_for_family(
@@ -243,7 +243,7 @@ class TestStaticGuarantees:
             a.name for n in ast.walk(tree) if isinstance(n, ast.Import) for a in n.names
         }
         assert not {m for m in imported if m.split(".")[0] in {"pandas", "numpy"}}
-        assert "FactTable" not in src, "条件判定不许碰事实表"
+        assert "FactTable" not in src, "deciding what is drawable must not touch data"
 
     def test_every_type_declares_value_keys_its_mark_shape_allows(self):
         from chartgen.registry.charts import CHARTS, SHAPE_VALUE_KEYS
@@ -273,13 +273,14 @@ class TestStaticGuarantees:
             assert in_family(family), family
 
     def test_no_two_types_share_all_four_condition_columns(self):
-        """四类条件、图元形状、值字典逐项相同的视觉变体归风格向量，不占一行。"""
+        """A type whose conditions, shape and values all match another is a style
+        variant, not a separate type."""
         from dataclasses import astuple
 
         from chartgen.registry.charts import CHARTS
 
         seen = {}
         for c in CHARTS.values():
-            fingerprint = astuple(c)[3:]     # 去掉 name / family / tier
-            assert fingerprint not in seen, f"{c.name} 与 {seen.get(fingerprint)} 逐格相同"
+            fingerprint = astuple(c)[3:]     # everything but name, family and tier
+            assert fingerprint not in seen, f"{c.name} matches {seen.get(fingerprint)} in every column"
             seen[fingerprint] = c.name

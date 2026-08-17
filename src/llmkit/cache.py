@@ -1,7 +1,7 @@
-"""按请求内容哈希缓存回复。
+"""Caching model replies under a hash of the request.
 
-作用有两个：同一份提示词重跑不再花钱，以及让"整条流水线可复现"这句话
-在有 LLM 的那一步也成立。
+Two reasons: rerunning the same prompt costs nothing, and the claim that a run is
+reproducible keeps holding at the one step that calls a model.
 """
 
 from __future__ import annotations

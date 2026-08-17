@@ -1,7 +1,8 @@
-"""从模型回复里取出 JSON，并按 schema 做最小校验。
+"""Pulling JSON out of a reply and checking it against a schema.
 
-只做两件事：把 JSON 从散文或围栏里挖出来，以及检查必填字段和类型。
-不引第三方校验库——schema 是我们自己写的，需要的判定就这么几条。
+Two jobs only: find the JSON whether it arrived bare, fenced or wrapped in prose,
+and check required fields, types and enums. No validation library, because the
+schemas are ours and these are the only checks they need.
 """
 
 from __future__ import annotations
@@ -14,17 +15,17 @@ FENCE = re.compile(r"```(?:json)?\s*(.+?)\s*```", re.S)
 
 
 class ParseError(ValueError):
-    """回复里没有合法 JSON，或者不满足 schema。"""
+    """The reply held no valid JSON, or JSON that does not match the schema."""
 
 
 def extract_json(text: str) -> Any:
-    """依次尝试：整段、围栏里的一段、第一个平衡的花括号块。"""
+    """Try the whole reply, then any fenced block, then the first balanced braces."""
     for candidate in _candidates(text):
         try:
             return json.loads(candidate)
         except json.JSONDecodeError:
             continue
-    raise ParseError(f"回复里没有合法 JSON: {text[:400]}")
+    raise ParseError(f"no valid JSON in the reply: {text[:400]}")
 
 
 def _candidates(text: str):
@@ -57,14 +58,14 @@ _TYPES = {"object": dict, "array": list, "string": str, "number": (int, float),
 
 
 def validate(value: Any, schema: dict) -> None:
-    """必填字段、类型、枚举三项。不满足就抛 ParseError，消息进回喂文本。"""
+    """Check required fields, types and enums. The message becomes feedback text."""
     expected = schema.get("type")
     if expected and not isinstance(value, _TYPES[expected]):
-        raise ParseError(f"应当是 {expected}，实际是 {type(value).__name__}")
+        raise ParseError(f"expected {expected}, got {type(value).__name__}")
     if expected == "object":
         for key in schema.get("required", ()):
             if key not in value:
-                raise ParseError(f"缺少必填字段 {key!r}")
+                raise ParseError(f"missing required field {key!r}")
         for key, sub in schema.get("properties", {}).items():
             if key in value:
                 validate(value[key], sub)
@@ -72,4 +73,4 @@ def validate(value: Any, schema: dict) -> None:
         for item in value:
             validate(item, schema["items"])
     if "enum" in schema and value not in schema["enum"]:
-        raise ParseError(f"{value!r} 不在 {schema['enum']} 里")
+        raise ParseError(f"{value!r} is not one of {schema['enum']}")

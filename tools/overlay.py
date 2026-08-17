@@ -1,9 +1,11 @@
-"""把记录里的框叠回图像，人工目视检查。
+"""Draw the recorded boxes back onto the image, to look at them.
 
     python tools/overlay.py out/er_wait/f01.json [-o overlay.png]
 
-框来自记录，不来自重新解析图像——所以这张叠加图就是「边画边记」对不对的目视证据。
-颜色：图元框 = 洋红，面板绘图区 = 青，图例项 = 橙，页面元素 = 灰。
+The boxes come from the record, not from re-parsing the image, so the overlay is
+visual evidence that drawing and recording stayed in step.
+Colours: marks in magenta, plotting areas in cyan, legend entries in orange, page
+elements in grey.
 """
 
 from __future__ import annotations
@@ -17,7 +19,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 from PIL import Image, ImageDraw, ImageFont  # noqa: E402
 
 from chartgen.common.geometry import Box  # noqa: E402
-from chartgen.interfaces import io  # noqa: E402
+from chartgen.common import serde  # noqa: E402
 from chartgen.interfaces.record import Record, RenderOutput  # noqa: E402
 
 MARK_COLOR = (214, 39, 120)
@@ -33,7 +35,7 @@ def _font(size: int = 12) -> ImageFont.FreeTypeFont:
     for name in ("Noto Sans CJK JP", "Droid Sans Fallback", "DejaVu Sans"):
         try:
             return ImageFont.truetype(fm.findfont(fm.FontProperties(family=name)), size)
-        except Exception:  # noqa: BLE001 — 字体缺失就退到下一个
+        except Exception:  # noqa: BLE001 -- try the next font
             continue
     return ImageFont.load_default()
 
@@ -82,20 +84,20 @@ def overlay(record: RenderOutput, image_path: str | Path | None = None) -> Image
 
 
 def main() -> None:
-    ap = argparse.ArgumentParser(description="把记录里的框叠回图像")
-    ap.add_argument("record", type=Path, help="RenderOutput 或 Record 的 json")
-    ap.add_argument("-i", "--image", type=Path, default=None, help="覆盖记录里的图像路径")
+    ap = argparse.ArgumentParser(description="draw recorded boxes back onto the image")
+    ap.add_argument("record", type=Path, help="a render output or record json file")
+    ap.add_argument("-i", "--image", type=Path, default=None, help="use this image instead of the one named in the record")
     ap.add_argument("-o", "--out", type=Path, default=None)
     args = ap.parse_args()
 
     try:
-        rec: RenderOutput = io.load(Record, args.record)
-    except io.SchemaTypeError:
-        rec = io.load(RenderOutput, args.record)
+        rec: RenderOutput = serde.load(Record, args.record)
+    except serde.SchemaTypeError:
+        rec = serde.load(RenderOutput, args.record)
 
     out = args.out or args.record.with_suffix(".overlay.png")
     overlay(rec, args.image).save(out)
-    print(f"写出 {out}")
+    print(f"wrote {out}")
 
 
 if __name__ == "__main__":

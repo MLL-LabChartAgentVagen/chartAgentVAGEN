@@ -1,11 +1,11 @@
-"""可复用的 LLM 调用层。
+"""A small, reusable layer for calling a model.
 
-与 chartgen 无关，任何需要调模型的地方都可以用：数据生成里的那一次调用、
-横向评测多个模型、批量跑提示词。
+It knows nothing about chart generation and can be used anywhere a model is
+needed: one structured call, a batch of prompts, a comparison across models.
 
     from llmkit import LLM
     llm = LLM(cache_dir=".cache/llm")
-    spec = llm.json("你是数据建模助手", prompt, schema=SCHEMA)
+    spec = llm.json("You are a data modelling assistant", prompt, schema=SCHEMA)
 """
 
 from .cache import ResponseCache

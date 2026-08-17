@@ -1,11 +1,11 @@
-"""画法 → 值能不能读出。判据在 chart_types.md §4 定义一次，这里只是执行它。"""
+"""Whether a value can be read off the image, given how it is encoded."""
 
 import pytest
 
 from chartgen.registry import channels as ch
 
-Y_460PX = ((0.0, 60.0), (520.0, 60.0))       # 04 §0：值域 [0,60] ↔ 460 像素
-Y_SHARED = ((0.0, 6000.0), (520.0, 60.0))    # 与另一面板共享 y 轴后的值域
+Y_460PX = ((0.0, 60.0), (520.0, 60.0))       # 60 units of value across 460 pixels
+Y_SHARED = ((0.0, 6000.0), (520.0, 60.0))    # the same axis after sharing it with a larger panel
 
 
 class TestThreeRules:
@@ -18,11 +18,11 @@ class TestThreeRules:
             assert not ch.readable(channel, labeled=False, value=0.38, axis=Y_460PX)
 
     def test_length_is_readable_when_one_percent_spans_at_least_two_pixels(self):
-        # 每像素 0.13 分钟；42.3 的 1% 是 0.42 分钟 ≈ 3.2 像素
+        # 0.13 units per pixel; one percent of 42.3 is 0.42, about 3.2 pixels
         assert ch.readable("length", labeled=False, value=42.3, axis=Y_460PX)
 
     def test_the_same_bar_stops_being_readable_on_a_shared_axis(self):
-        # 每像素 13 分钟；42.3 的 1% 只有 0.03 像素
+        # 13 units per pixel; one percent of 42.3 is 0.03 pixels
         assert not ch.readable("length", labeled=False, value=42.3, axis=Y_SHARED)
 
     def test_position_follows_the_length_rule(self):
@@ -33,7 +33,7 @@ class TestThreeRules:
 
 class TestBoundary:
     def test_exactly_two_pixels_counts_as_readable(self):
-        # 值域跨度 100，像素跨度 100 → 每像素 1；值 200 的 1% 恰好 2 像素
+        # one unit per pixel, so one percent of 200 is exactly two pixels
         axis = ((0.0, 100.0), (100.0, 0.0))
         assert ch.readable("length", labeled=False, value=200.0, axis=axis)
         assert not ch.readable("length", labeled=False, value=199.0, axis=axis)

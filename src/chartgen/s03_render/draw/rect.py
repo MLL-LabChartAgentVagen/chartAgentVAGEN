@@ -1,7 +1,7 @@
-"""矩形图元：bar 族 / histogram / waterfall / funnel。
+"""Rectangular marks: the bar family, histograms, waterfalls and funnels.
 
-按图元形状分文件，不按图表类型分文件——这几种类型的差别只在值字典里填哪几个键，
-以及矩形的底边从哪里起。
+One file per mark shape rather than per chart type. These types differ only in
+which keys their value dictionary holds and where the base of the rectangle sits.
 """
 
 from __future__ import annotations
@@ -10,12 +10,12 @@ from ...common.geometry import Box
 from ..style import format_number, hex_of, nice_range
 from .canvas import DrawContext
 
-#: 数值标注离矩形顶边的距离（像素）。
+#: Distance from the top of a rectangle to its value label, in pixels.
 LABEL_OFFSET_PX = 6.0
 
 
 def _label_values(ctx: DrawContext, n: int) -> list[bool]:
-    """数值标注三态：全画 / 全不画 / 部分画。部分画时按确定顺序隔一个画一个。"""
+    """Which marks get a written value: all, none, or every other one."""
     mode = ctx.style.value_labels
     if mode == "all":
         return [True] * n
@@ -25,7 +25,7 @@ def _label_values(ctx: DrawContext, n: int) -> list[bool]:
 
 
 def _write_label(ctx: DrawContext, x: float, top_value: float, text: str) -> Box:
-    """在矩形顶边上方写数值，并记下标注框。"""
+    """Write the value above the rectangle and record the label box."""
     artist = ctx.panel.ax.annotate(
         text, xy=(x, top_value), xytext=(0, LABEL_OFFSET_PX),
         textcoords="offset points", ha="center", va="bottom",
@@ -36,7 +36,7 @@ def _write_label(ctx: DrawContext, x: float, top_value: float, text: str) -> Box
 
 
 def draw_bar(ctx: DrawContext) -> None:
-    """单维条形。一个键一个矩形，值编码成长度。"""
+    """One rectangle per key, with the value encoded as length."""
     panel, style = ctx.panel, ctx.style
     data = ctx.view.data
     labels = [d.key[0] for d in data]

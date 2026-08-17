@@ -1,9 +1,12 @@
-"""坐标约定与框运算。全流水线只有这一套约定。
+"""The coordinate convention, and the arithmetic on boxes and axes.
 
-像素坐标，原点在图像左上角，框写成 `[x0, y0, x1, y1]`，随图像宽高一并记录。
+There is exactly one convention: pixels, origin at the top left of the image,
+a box written `[x0, y0, x1, y1]`, always stored next to the image size.
 
-变换统一写成 3×3 齐次矩阵：退化（缩放 / 仿射 / 单应）与页面合成（平移加缩放）
-共用同一个机制，框的映射就是四个顶点变换后取外接框。
+Every transform is a 3x3 homogeneous matrix, so image degradation (scale, affine,
+perspective) and page composition (translate and scale) share one mechanism, and
+mapping a box is always the same operation: transform four corners, take the
+bounding box.
 """
 
 from __future__ import annotations
@@ -22,7 +25,7 @@ Range = tuple[float, float]
 
 @dataclass(frozen=True)
 class Box:
-    """像素框，原点左上。构造时归一化到 x0 ≤ x1、y0 ≤ y1。"""
+    """A pixel box, origin top left. Normalised on construction so x0 <= x1, y0 <= y1."""
 
     x0: float
     y0: float
@@ -32,7 +35,7 @@ class Box:
     def __post_init__(self) -> None:
         vals = (self.x0, self.y0, self.x1, self.y1)
         if not all(math.isfinite(v) for v in vals):
-            raise ValueError(f"框的坐标必须有限: {vals}")
+            raise ValueError(f"box coordinates must be finite: {vals}")
         object.__setattr__(self, "x0", float(min(self.x0, self.x1)))
         object.__setattr__(self, "x1", float(max(vals[0], vals[2])))
         object.__setattr__(self, "y0", float(min(self.y0, self.y1)))
@@ -72,7 +75,7 @@ def iou(a: Box, b: Box) -> float:
     return inter / union if union > 0 else 0.0
 
 
-# ---------------------------------------------------------------- 变换
+# ---------------------------------------------------------------- transforms
 
 def identity() -> Matrix:
     return np.eye(3)
@@ -98,9 +101,9 @@ def rotate(degrees: float, cx: float = 0.0, cy: float = 0.0) -> Matrix:
 
 
 def homography(src: Sequence[Point], dst: Sequence[Point]) -> Matrix:
-    """四组对应点解出单应矩阵。用于透视形变退化。"""
+    """Solve a homography from four point correspondences."""
     if len(src) != 4 or len(dst) != 4:
-        raise ValueError("单应需要四组对应点")
+        raise ValueError("a homography needs four point correspondences")
     a, b = [], []
     for (x, y), (u, v) in zip(src, dst):
         a.append([x, y, 1, 0, 0, 0, -u * x, -u * y])
@@ -111,7 +114,7 @@ def homography(src: Sequence[Point], dst: Sequence[Point]) -> Matrix:
 
 
 def compose(*matrices: Matrix) -> Matrix:
-    """从右往左依次施加：`compose(T, S)` 表示先缩放再平移。"""
+    """Applied right to left: `compose(T, S)` scales first, then translates."""
     out = np.eye(3)
     for m in matrices:
         out = out @ m
@@ -125,14 +128,16 @@ def invert(m: Matrix) -> Matrix:
 def apply_point(m: Matrix, x: float, y: float) -> Point:
     v = m @ np.array([x, y, 1.0])
     if v[2] == 0:
-        raise ValueError("变换把点映到了无穷远")
+        raise ValueError("the transform sent the point to infinity")
     return (float(v[0] / v[2]), float(v[1] / v[2]))
 
 
 def apply(m: Matrix, box: Box) -> Box:
-    """框的变换：四个顶点各自变换后取外接框。
+    """Transform a box: map four corners, take the bounding box.
 
-    旋转与透视之后外接框会比原图元略大，这是已知且可控的偏差。
+    After a rotation or a perspective change the bounding box is slightly larger
+    than the shape it encloses. That is a known and bounded error, and the record
+    notes which transform was applied.
     """
     pts = [apply_point(m, x, y) for x, y in box.corners()]
     xs = [p[0] for p in pts]
@@ -140,60 +145,65 @@ def apply(m: Matrix, box: Box) -> Box:
     return Box(min(xs), min(ys), max(xs), max(ys))
 
 
-# ---------------------------------------------------------------- 轴映射
+# ---------------------------------------------------------------- axis mapping
 
 def _to_axis_space(v: float, scale_kind: Scale) -> float:
     if scale_kind == "log":
         if v <= 0:
-            raise ValueError(f"对数轴上的值必须为正: {v}")
+            raise ValueError(f"a value on a log axis must be positive: {v}")
         return math.log10(v)
     return v
 
 
 def value_to_pixel(value: float, value_range: Range, pixel_range: Range,
                    scale: Scale = "linear") -> float:
-    """值 → 像素。`pixel_range` 按 `value_range` 的顺序给出，y 轴通常是反的。"""
+    """Value to pixel. `pixel_range` follows the order of `value_range`, so a y
+    axis usually runs backwards."""
     v0, v1 = (_to_axis_space(v, scale) for v in value_range)
     if v0 == v1:
-        raise ValueError(f"值域跨度为零: {value_range}")
+        raise ValueError(f"the value range has zero span: {value_range}")
     p0, p1 = pixel_range
     return p0 + (_to_axis_space(value, scale) - v0) / (v1 - v0) * (p1 - p0)
 
 
 def pixel_to_value(pixel: float, value_range: Range, pixel_range: Range,
                    scale: Scale = "linear") -> float:
-    """像素 → 值。04 的自检与 05 的可验证奖励反算值时都走这里。"""
+    """Pixel to value. Both the generation self-check and the reward check use this."""
     v0, v1 = (_to_axis_space(v, scale) for v in value_range)
     p0, p1 = pixel_range
     if p0 == p1:
-        raise ValueError(f"像素域跨度为零: {pixel_range}")
+        raise ValueError(f"the pixel range has zero span: {pixel_range}")
     t = v0 + (pixel - p0) / (p1 - p0) * (v1 - v0)
     return 10.0**t if scale == "log" else t
 
 
 def value_per_pixel(value_range: Range, pixel_range: Range) -> float:
-    """每像素代表多少值。chart_types.md §4 第三条判据的分母。"""
+    """How much value one pixel stands for. The denominator of the readability rule."""
     span_v = abs(value_range[1] - value_range[0])
     span_p = abs(pixel_range[1] - pixel_range[0])
     if span_p == 0:
-        raise ValueError(f"像素域跨度为零: {pixel_range}")
+        raise ValueError(f"the pixel range has zero span: {pixel_range}")
     return span_v / span_p
 
 
-# ---------------------------------------------------------------- 冻结版面
+# ---------------------------------------------------------------- frozen layout
 
 def axes_rect(image_size: tuple[int, int], *, left: float, top: float,
               right: float, bottom: float) -> Box:
-    """由图像尺寸与四边留白算出绘图区。写死，不用自动布局。"""
+    """The plotting area, from image size and four margins.
+
+    Fixed on purpose. Auto-layout moves the plotting area after the drawing is
+    done, which silently invalidates every box already recorded.
+    """
     w, h = image_size
     rect = (left, top, w - right, h - bottom)
     if rect[2] <= rect[0] or rect[3] <= rect[1]:
-        raise ValueError(f"留白过大，绘图区为空: {image_size} {rect}")
+        raise ValueError(f"margins leave no plotting area: {image_size} {rect}")
     return Box(*rect)
 
 
 def rect_to_mpl_fraction(rect: Box, image_size: tuple[int, int]) -> tuple[float, float, float, float]:
-    """左上原点像素 → matplotlib 的 (left, bottom, width, height) 0–1 figure 坐标。"""
+    """Top-left pixels to the plotting library's (left, bottom, width, height) fractions."""
     w, h = image_size
     return (rect.x0 / w, (h - rect.y1) / h, rect.width / w, rect.height / h)
 

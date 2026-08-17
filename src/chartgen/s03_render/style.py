@@ -1,7 +1,9 @@
-"""风格向量：采样、配色、字体、轴范围与数字格式。
+"""Sampling a style, and the palettes, fonts, axis ranges and number formats it picks.
 
-七组维度各自独立按种子采样，不做联合分布。风格改不动真值——唯一的例外是轴起点，
-它改变值与像素的换算，因而影响 04 判定哪些值读得出。
+Each dimension is sampled independently from a seed; there is no joint
+distribution to tune. Style never changes an answer, with one deliberate
+exception: whether an axis starts at zero changes how values map to pixels, and
+therefore which values can still be measured off the image.
 """
 
 from __future__ import annotations
@@ -13,15 +15,15 @@ from ..interfaces.style import Degradation, StyleVector
 
 RGB = tuple[int, int, int]
 
-#: 中文字形。按可用性取第一个，取不到就退回 matplotlib 自带的 DejaVu Sans。
+#: Fonts to try in order, falling back to the plotting library's own default.
 CJK_PREFERENCE = (
     "Noto Sans CJK SC", "Noto Sans CJK JP", "Source Han Sans SC",
     "WenQuanYi Zen Hei", "Droid Sans Fallback", "DejaVu Sans",
 )
 
-#: 四套配色。每套给一串按顺序取用的颜色。
+#: Four palettes, each a sequence of colours taken in order.
 PALETTES: dict[str, tuple[RGB, ...]] = {
-    # 企业报表低对比：同色系蓝，相邻两条差别不大
+    # Low contrast, as corporate reports tend to be: one hue, neighbours close together
     "corporate_low": ((31, 78, 121), (46, 105, 156), (68, 132, 184),
                       (99, 158, 205), (139, 185, 222), (180, 210, 236)),
     "monochrome": ((40, 40, 40), (85, 85, 85), (130, 130, 130),
@@ -36,18 +38,18 @@ BACKGROUND: RGB = (255, 255, 255)
 GRID_COLOR: RGB = (222, 226, 230)
 TEXT_COLOR: RGB = (33, 37, 41)
 
-#: 刻度密度 → 目标刻度间隔数。
+#: Tick density to the number of intervals aimed for.
 TICK_INTERVALS: dict[str, int] = {"sparse": 4, "normal": 6, "dense": 10}
 
-#: 最高的图元最多占轴的这个比例，其余留白。取 0.75 是企业报表的常见观感。
+#: The tallest mark fills at most this much of the axis; the rest is headroom.
 MAX_AXIS_FILL = 0.75
 
-#: 「好看」的刻度步长尾数。
+#: Mantissas a tick step is allowed to take.
 NICE_STEPS = (1.0, 2.0, 2.5, 5.0, 10.0)
 
 
 def resolve_font(name: str) -> str:
-    """`"auto"` 解析成本机第一个可用的中文字体。"""
+    """Resolve "auto" to the first font available on this machine."""
     from matplotlib import font_manager as fm
 
     available = {f.name for f in fm.fontManager.ttflist}
@@ -60,7 +62,7 @@ def resolve_font(name: str) -> str:
 
 
 def colors(style: StyleVector, n: int) -> tuple[RGB, ...]:
-    """取 n 个颜色，不够就循环。"""
+    """Take n colours, cycling if the palette is shorter."""
     palette = PALETTES[style.palette]
     return tuple(palette[i % len(palette)] for i in range(n))
 
@@ -70,7 +72,7 @@ def hex_of(rgb: RGB) -> str:
 
 
 def nice_step(raw: float) -> float:
-    """把一个粗略步长抬到最近的「好看」步长。"""
+    """Round a rough step up to the nearest presentable one."""
     if raw <= 0:
         return 1.0
     magnitude = 10.0 ** math.floor(math.log10(raw))
@@ -81,13 +83,15 @@ def nice_step(raw: float) -> float:
 
 
 def nice_range(vmin: float, vmax: float, style: StyleVector) -> tuple[float, float, float]:
-    """`(下界, 上界, 步长)`。轴起点是否为零是风格维度。
+    """Lower bound, upper bound and tick step for an axis.
 
-    上界由「最高的图元最多占轴的 75%」定，再抬到步长的整数倍。急诊科示例的
-    42.3 因此落在 `[0, 60]`，刻度每 10 分钟——与 03 §0 记的一样。
+    The upper bound comes from letting the tallest mark fill at most `MAX_AXIS_FILL`
+    of the axis, then rounding up to a whole number of steps. Whether the axis
+    starts at zero is a style dimension.
 
-    这是风格影响标注集大小的唯一途径：值域一变，04 判定读得出的图元就变，
-    但每个图元的值不变。
+    This is the one way style affects how many values a figure is asked for: the
+    value range changes which marks can still be measured, but never what any of
+    them is worth.
     """
     intervals = TICK_INTERVALS[style.tick_density]
     if style.zero_baseline:
@@ -107,7 +111,7 @@ def nice_range(vmin: float, vmax: float, style: StyleVector) -> tuple[float, flo
 
 
 def format_number(value: float, style: StyleVector, unit: str | None = None) -> str:
-    """数字格式是风格维度，不改变值本身。"""
+    """Format a number for display. The format is style; the value is not."""
     d = style.decimals
     fmt = style.number_format
     if fmt == "percent":
@@ -128,7 +132,8 @@ def format_number(value: float, style: StyleVector, unit: str | None = None) -> 
 
 
 def sample(root_seed: int, scenario_id: str, figure_id: str, variant: int = 0) -> StyleVector:
-    """每个维度独立按种子采样。`variant` 用来给同一份 FigureSpec 出第二份风格版本。"""
+    """Sample every dimension independently. `variant` gives one figure a second look,
+    which is both a paired training sample and the input to the style self-check."""
     r = derive(root_seed, scenario_id, "s03_style", figure_id, variant)
     pick = lambda xs: xs[int(r.integers(len(xs)))]
     return StyleVector(

@@ -1,9 +1,8 @@
-"""`LLM`：一个模型 + 一份默认参数 + 磁盘缓存 + 内容级重试。
+"""One model, one set of defaults, a disk cache, and retries on unusable content.
 
-三个方法：
-    complete  一问一答，返回文本
-    json      要求结构化输出，解析失败就把错误回喂给模型重来
-    map       并发跑一批，用来横向比较不同模型 / 不同提示词
+    complete  ask once, get text back
+    json      ask for structured output; on a parse failure, feed the error back
+    map       run a batch concurrently, keeping input order
 """
 
 from __future__ import annotations
@@ -18,20 +17,22 @@ from .parse import ParseError, extract_json, validate
 from .providers import DEFAULT_MODEL, AnthropicProvider, Effort, Provider
 from .types import LLMError, Message, Refusal, Response, Truncated, Usage
 
-#: 解析失败时回喂给模型的模板。带上原文与具体错误，只说"格式不对"没有帮助。
+#: Sent back after a parse failure. It carries the original text and the specific
+#: error, because "that was not valid" gives the model nothing to fix.
 RETRY_TEMPLATE = (
-    "你上一次的回复无法解析：{error}\n\n"
-    "原文如下：\n{text}\n\n"
-    "请只输出满足 schema 的 JSON，不要加解释或围栏。"
+    "Your previous reply could not be parsed: {error}\n\n"
+    "It was:\n{text}\n\n"
+    "Reply with JSON matching the schema, with no explanation and no code fences."
 )
 
 
 def _check(response: Response, max_tokens: int) -> None:
-    """拒答的文本可能为空或只有一半，截断的文本一定不完整——两者都不算正常回复。"""
+    """A declined reply may be empty or partial and a cut-off one is always partial.
+    Neither is a reply, so neither is returned or cached."""
     if response.stop_reason == "refusal":
-        raise Refusal("安全分类器拒答，文本不完整，不要按正常回复处理")
+        raise Refusal("the request was declined; the text is not a usable reply")
     if response.stop_reason == "max_tokens":
-        raise Truncated(f"回复被 max_tokens={max_tokens} 截断")
+        raise Truncated(f"the reply was cut off at max_tokens={max_tokens}")
 
 
 class LLM:
@@ -48,7 +49,7 @@ class LLM:
         self.cache = ResponseCache(cache_dir) if cache_dir else None
         self.usage = Usage()
 
-    # ---------------------------------------------------------------- 一次调用
+    # ---------------------------------------------------------------- one call
 
     def complete(self, system: str, user: str, *, messages: Sequence[Message] | None = None,
                  schema: dict | None = None) -> Response:
@@ -64,15 +65,15 @@ class LLM:
             max_tokens=self.max_tokens, effort=self.effort,
             schema=schema, extra=self.extra)
         self.usage = self.usage + response.usage
-        _check(response, self.max_tokens)          # 拒答与截断不进缓存
+        _check(response, self.max_tokens)          # declined and cut-off replies are not cached
         if self.cache is not None:
             self.cache.put(key, response)
         return response
 
-    # ---------------------------------------------------------------- 结构化输出
+    # ---------------------------------------------------------------- structured output
 
     def json(self, system: str, user: str, *, schema: dict) -> dict:
-        """要 JSON。解析或校验失败就带着具体错误重来，上限 `max_content_retries`。"""
+        """Ask for JSON. On a parse or schema failure, ask again with the error attached."""
         messages = [Message("user", user)]
         last_error: Exception | None = None
         last_text = ""
@@ -89,20 +90,20 @@ class LLM:
                     Message("user", user),
                     Message("user", RETRY_TEMPLATE.format(error=exc, text=response.text[:2000])),
                 ]
-        raise ParseError(f"{self.max_content_retries} 次都没拿到合法 JSON："
-                         f"{last_error}；最后一次回复：{last_text[:400]}")
+        raise ParseError(f"no valid JSON after {self.max_content_retries} attempts: "
+                         f"{last_error}; last reply: {last_text[:400]}")
 
-    # ---------------------------------------------------------------- 批量
+    # ---------------------------------------------------------------- batches
 
     def map(self, prompts: Iterable[tuple[str, str]], *, workers: int = 4,
             on_error: Callable[[Exception], None] | None = None) -> list[Response | None]:
-        """并发跑一批 `(system, user)`，保持输入顺序。失败的那条返回 None。"""
+        """Run a batch concurrently, keeping input order. A failed item comes back as None."""
         items = list(prompts)
 
         def run(pair: tuple[str, str]) -> Response | None:
             try:
                 return self.complete(*pair)
-            except Exception as exc:  # noqa: BLE001 — 批量里失败隔离
+            except Exception as exc:  # noqa: BLE001 -- one failure must not stop the batch
                 if on_error:
                     on_error(exc)
                 return None
@@ -112,7 +113,7 @@ class LLM:
         with ThreadPoolExecutor(max_workers=workers) as pool:
             return list(pool.map(run, items))
 
-    # ---------------------------------------------------------------- 内部
+    # ---------------------------------------------------------------- internals
 
     def _cache_key(self, system: str, messages: Sequence[Message], schema: dict | None) -> str:
         return jsonlib.dumps({

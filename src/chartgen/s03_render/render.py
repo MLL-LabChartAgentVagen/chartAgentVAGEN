@@ -1,6 +1,7 @@
-"""03 的阶段入口：FigureSpec + StyleVector → RenderOutput。
+"""Drawing a figure: a figure specification and a style vector to an image plus geometry.
 
-不调用 LLM。给定同样的输入必得逐位相同的图像与几何。
+No model is involved. The same specification and style always produce a
+bit-identical image and identical geometry.
 """
 
 from __future__ import annotations
@@ -19,18 +20,18 @@ from .style import colors
 
 
 class UnsupportedChartType(NotImplementedError):
-    """条件表里有这一行，但还没有对应的绘制分支。"""
+    """The chart table lists this type, but no drawing branch exists for it yet."""
 
 
 def panel_rects(spec: FigureSpec, canvas: Canvas) -> list[Box]:
-    """版面 → 每个面板的绘图区。单图占满，多面板在 D3 展开。"""
+    """Layout to one plotting area per panel."""
     if len(spec.panels) == 1:
         return [canvas.full_rect()]
-    raise UnsupportedChartType(f"还没有 {spec.layout} 版面的多面板绘制")
+    raise UnsupportedChartType(f"no multi-panel drawing for the {spec.layout} layout yet")
 
 
 def series_palette(spec: FigureSpec, canvas: Canvas) -> dict[str, tuple[int, int, int]]:
-    """系列 → 颜色。整张图共用一份，共享图例才对得上。"""
+    """Series to colour, shared across the whole figure so one legend can serve all panels."""
     keys: list[str] = []
     for panel in spec.panels:
         for datum in panel.view.data:
@@ -41,7 +42,7 @@ def series_palette(spec: FigureSpec, canvas: Canvas) -> dict[str, tuple[int, int
 
 
 def render(spec: FigureSpec, style: StyleVector, out_dir: str | Path) -> RenderOutput:
-    """画一张图，边画边记。"""
+    """Draw one figure, recording each mark as it is drawn."""
     out_dir = Path(out_dir)
     canvas = Canvas(style)
     with rc_context({"font.family": [canvas.font], "axes.unicode_minus": False}):

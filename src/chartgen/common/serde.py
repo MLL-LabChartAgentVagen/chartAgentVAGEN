@@ -1,8 +1,11 @@
-"""六份接口的统一读写与版本检查。
+"""Reading and writing the interface objects, with a version check.
 
-一个按类型标注驱动的编解码器，接口 dataclass 因此不用各写一遍 `to_dict`。
-落盘时套一层信封 `{schema_version, type, data}`：版本与类型只在这一处检查，
-旧产物在读取时报错，不会静默错算。
+One codec driven by type hints, so the interface dataclasses do not each write
+their own `to_dict`. Files carry an envelope, `{schema_version, type, data}`:
+version and type are checked in this one place, so an artifact written by older
+code fails loudly on load instead of being silently misread.
+
+Fact tables go to parquet with a small sidecar for the same envelope fields.
 """
 
 from __future__ import annotations
@@ -16,11 +19,11 @@ from typing import Any, Literal, TypeVar, Union, get_args, get_origin, get_type_
 
 import pandas as pd
 
-from ..common.geometry import Box
-from .figure import FigureSpec
-from .record import Record, RenderOutput
-from .style import StyleVector
-from .table import FactTable, TableSchema
+from .geometry import Box
+from ..interfaces.figure import FigureSpec
+from ..interfaces.record import Record, RenderOutput
+from ..interfaces.style import StyleVector
+from ..interfaces.table import FactTable, TableSchema
 
 SCHEMA_VERSION = 1
 
@@ -28,14 +31,14 @@ T = TypeVar("T")
 
 
 class SchemaVersionError(RuntimeError):
-    """产物的 schema_version 与当前代码不符。"""
+    """An artifact was written under a different schema version."""
 
 
 class SchemaTypeError(RuntimeError):
-    """产物的类型与请求的类型不符。"""
+    """An artifact holds a different type than the one asked for."""
 
 
-# ---------------------------------------------------------------- 编码
+# ---------------------------------------------------------------- encoding
 
 def to_dict(obj: Any) -> Any:
     if isinstance(obj, Box):
@@ -48,13 +51,13 @@ def to_dict(obj: Any) -> Any:
         return [to_dict(v) for v in obj]
     if isinstance(obj, (str, int, float, bool)) or obj is None:
         return obj
-    raise TypeError(f"不知道怎么编码 {type(obj)!r}")
+    raise TypeError(f"cannot encode {type(obj)!r}")
 
 
-# ---------------------------------------------------------------- 解码
+# ---------------------------------------------------------------- decoding
 
 def _unwrap_optional(tp: Any) -> tuple[Any, bool]:
-    """`X | None` → `(X, True)`。"""
+    """`X | None` becomes `(X, True)`."""
     if get_origin(tp) in (Union, types.UnionType):
         args = [a for a in get_args(tp) if a is not type(None)]
         return (args[0] if len(args) == 1 else Union[tuple(args)], len(args) < len(get_args(tp)))
@@ -65,14 +68,14 @@ def _from_dict(tp: Any, raw: Any) -> Any:
     tp, optional = _unwrap_optional(tp)
     if raw is None:
         if not optional:
-            raise ValueError(f"{tp} 不接受 None")
+            raise ValueError(f"{tp} does not accept None")
         return None
 
     if tp is Box:
         return Box(*raw)
     if get_origin(tp) is Literal:
         if raw not in get_args(tp):
-            raise ValueError(f"{raw!r} 不在 {get_args(tp)} 里")
+            raise ValueError(f"{raw!r} is not one of {get_args(tp)}")
         return raw
 
     origin = get_origin(tp)
@@ -97,18 +100,18 @@ def _from_dict(tp: Any, raw: Any) -> Any:
         return tp(raw)
     if tp is Any:
         return raw
-    raise TypeError(f"不知道怎么解码 {tp!r}")
+    raise TypeError(f"cannot decode {tp!r}")
 
 
 def from_dict(cls: type[T], raw: dict) -> T:
     return typing.cast(T, _from_dict(cls, raw))
 
 
-#: 别名，读起来对称
+#: Alias, so call sites read symmetrically.
 load_dict = from_dict
 
 
-# ---------------------------------------------------------------- 落盘
+# ---------------------------------------------------------------- files
 
 def _envelope(obj: Any) -> dict:
     return {"schema_version": SCHEMA_VERSION, "type": type(obj).__name__, "data": to_dict(obj)}
@@ -129,11 +132,12 @@ def loads(cls: type[T], text: str) -> T:
     raw = json.loads(text)
     if raw.get("schema_version") != SCHEMA_VERSION:
         raise SchemaVersionError(
-            f"产物是 schema_version={raw.get('schema_version')}，当前是 {SCHEMA_VERSION}；"
-            "改接口必须同时改样例并重跑上游"
+            f"artifact is schema_version={raw.get('schema_version')}, this code writes "
+            f"{SCHEMA_VERSION}; changing an interface means updating its sample and "
+            "regenerating anything produced upstream"
         )
     if raw.get("type") != cls.__name__:
-        raise SchemaTypeError(f"产物类型是 {raw.get('type')}，请求的是 {cls.__name__}")
+        raise SchemaTypeError(f"artifact holds {raw.get('type')}, asked for {cls.__name__}")
     return from_dict(cls, raw["data"])
 
 
@@ -141,7 +145,7 @@ def load(cls: type[T], path: str | Path) -> T:
     return loads(cls, Path(path).read_text(encoding="utf-8"))
 
 
-# ---------------------------------------------------------------- 事实表
+# ---------------------------------------------------------------- fact tables
 
 def save_table(table: FactTable, path: str | Path) -> Path:
     path = Path(path)
@@ -159,15 +163,16 @@ def load_table(path: str | Path) -> FactTable:
     path = Path(path)
     meta = json.loads(path.with_suffix(".meta.json").read_text(encoding="utf-8"))
     if meta.get("schema_version") != SCHEMA_VERSION:
-        raise SchemaVersionError(f"事实表是 schema_version={meta.get('schema_version')}")
+        raise SchemaVersionError(f"fact table is schema_version={meta.get('schema_version')}")
     return FactTable(meta["scenario_id"], pd.read_parquet(path))
 
 
-# ---------------------------------------------------------------- 样例
+# ---------------------------------------------------------------- samples
 
 _SAMPLE_DIR = Path(__file__).resolve().parents[3] / "tests" / "samples"
 
-#: 每份接口一个最小样例。改接口要同时改这里的文件并升 SCHEMA_VERSION。
+#: One minimal sample per interface. Changing an interface means rewriting these
+#: files and raising SCHEMA_VERSION.
 SAMPLES: dict[str, tuple[type, Path]] = {
     "TableSchema": (TableSchema, _SAMPLE_DIR / "table_schema.json"),
     "FigureSpec": (FigureSpec, _SAMPLE_DIR / "figure_spec.json"),

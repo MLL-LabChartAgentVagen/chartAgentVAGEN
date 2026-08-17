@@ -1,7 +1,13 @@
-"""从像素反算：框内颜色占比，以及「框 + 轴 → 值」。
+"""Measuring things back out of the rendered pixels.
 
-**一份实现，三处使用**——04 的自检拿渲染器的记录当输入，05 的可验证奖励拿模型
-输出当输入，评测期算无标注一致性指标。三处的差别只在谁写的那条 `(键, 值, 区域)`。
+Two questions, both answerable from an image and a claimed `(key, value, box)`
+without any ground truth: is there anything inside the box, and does the box
+geometry agree with the claimed value.
+
+That is why there is one implementation and three callers. During generation the
+claim comes from the renderer and a failure discards the figure. During training
+the claim comes from the model and the same code is the reward. During evaluation
+it yields a consistency metric on datasets that carry no box annotations at all.
 """
 
 from __future__ import annotations
@@ -18,21 +24,21 @@ Anchor = Literal["top", "bottom", "left", "right", "center_x", "center_y"]
 Axis = tuple[Range, Range]                 # (value_range, pixel_range)
 RGB = tuple[int, int, int]
 
-#: 与目标颜色的每通道最大差，超过就不算这个颜色。
+#: Per-channel distance from the target colour that still counts as that colour.
 COLOR_TOLERANCE = 30
 
-#: 与背景色的每通道差超过这个值才算「有墨」。
+#: Per-channel distance from the background before a pixel counts as ink.
 INK_TOLERANCE = 12
 
-#: 框内有多少比例的像素不是背景，才算「框里有东西」。
+#: Fraction of a box that must be ink before the box counts as non-empty.
 MIN_CONTENT_FRACTION = 0.15
 
-#: 声称的值为零时改用绝对下限判定。
+#: Absolute floor used instead of a relative tolerance when the claim is zero.
 ABSOLUTE_FLOOR = 1e-6
 
 
 def load_image(path: str | Path) -> np.ndarray:
-    """读成 RGB uint8。形状 (H, W, 3)，索引是 [y, x]。"""
+    """Load as RGB uint8, shaped (H, W, 3) and indexed [y, x]."""
     from PIL import Image
 
     return np.asarray(Image.open(path).convert("RGB"), dtype=np.uint8)
@@ -49,7 +55,7 @@ def _crop(img: np.ndarray, box: Box) -> np.ndarray:
 
 def color_fraction(img: np.ndarray, box: Box, rgb: RGB,
                    tolerance: int = COLOR_TOLERANCE) -> float:
-    """框内有多少比例的像素接近这个颜色。"""
+    """Fraction of the box close to this colour."""
     patch = _crop(img, box)
     if patch.size == 0:
         return 0.0
@@ -59,7 +65,7 @@ def color_fraction(img: np.ndarray, box: Box, rgb: RGB,
 
 def ink_fraction(img: np.ndarray, box: Box, background: RGB = (255, 255, 255),
                  tolerance: int = INK_TOLERANCE) -> float:
-    """框内有多少比例的像素不是背景色。不需要知道图元是什么颜色。"""
+    """Fraction of the box that is not background. Needs no knowledge of the mark colour."""
     patch = _crop(img, box)
     if patch.size == 0:
         return 0.0
@@ -69,7 +75,8 @@ def ink_fraction(img: np.ndarray, box: Box, background: RGB = (255, 255, 255),
 
 def box_has_content(img: np.ndarray, box: Box, rgb: RGB | None = None,
                     min_fraction: float = MIN_CONTENT_FRACTION) -> bool:
-    """自检①：框里有没有东西。给了颜色就查那个颜色的占比，否则查有没有墨。"""
+    """Is there anything inside the box. With a colour, look for that colour; without
+    one, look for anything that is not background."""
     frac = color_fraction(img, box, rgb) if rgb is not None else ink_fraction(img, box)
     return frac >= min_fraction
 
@@ -87,27 +94,28 @@ def _anchor_pixel(box: Box, anchor: Anchor) -> float:
 
 def value_from_box(box: Box, axis: Axis, anchor: Anchor,
                    scale: Literal["linear", "log"] = "linear") -> float:
-    """自检②：用框的像素位置与该面板的值域、像素域反算出值。
+    """Convert a box back into a value using the panel's value and pixel ranges.
 
-    `anchor` 说的是这个图元的哪条边编码了值：竖条取 `top`、横条取 `right`、
-    点取 `center_y`。它由图元形状决定，不由图表类型决定。
+    `anchor` names the edge of the mark that carries the value: the top of a
+    vertical bar, the right of a horizontal one, the centre of a point. It follows
+    from the mark shape, not from the chart type.
     """
     value_range, pixel_range = axis
     return pixel_to_value(_anchor_pixel(box, anchor), value_range, pixel_range, scale)
 
 
 def value_agrees(measured: float, claimed: float, tolerance: float) -> bool:
-    """相对容差；声称的值为零时退到绝对下限。"""
+    """Relative tolerance, falling back to an absolute floor when the claim is zero."""
     limit = abs(claimed) * tolerance if claimed else ABSOLUTE_FLOOR
     return abs(measured - claimed) <= max(limit, ABSOLUTE_FLOOR)
 
 
 @dataclass(frozen=True)
 class Verification:
-    """两项几何判定的结果。不需要 ground truth 就能算。"""
+    """The outcome of both geometric checks. Computable without ground truth."""
 
     has_content: bool
-    value_agrees: bool | None            # 没给轴时为 None，这一项没跑
+    value_agrees: bool | None            # None when no axis was given, so it did not run
     measured_value: float | None = None
     content_fraction: float = 0.0
 
@@ -119,7 +127,7 @@ class Verification:
 def verify(img: np.ndarray, *, box: Box, claimed_value: float, axis: Axis | None,
            anchor: Anchor = "top", rgb: RGB | None = None, tolerance: float = 0.01,
            scale: Literal["linear", "log"] = "linear") -> Verification:
-    """一条 `(键, 值, 区域)` 的两项几何判定。"""
+    """Run both geometric checks on one claimed `(key, value, box)`."""
     frac = color_fraction(img, box, rgb) if rgb is not None else ink_fraction(img, box)
     has_content = frac >= MIN_CONTENT_FRACTION
     if axis is None:

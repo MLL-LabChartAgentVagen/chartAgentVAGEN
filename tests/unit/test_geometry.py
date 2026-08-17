@@ -1,4 +1,4 @@
-"""几何：全流水线唯一一套坐标约定，以及退化 / 页面合成共用的框变换。"""
+"""The one coordinate convention, and the box transform every stage shares."""
 
 import math
 
@@ -40,12 +40,12 @@ class TestTransforms:
         assert g.apply(g.identity(), b).as_tuple() == b.as_tuple()
 
     def test_scale_then_translate_matches_page_composition_example(self):
-        # 03 §0 第三步：图表缩放 0.8 倍贴到 (120, 340)
+        # a chart scaled to 0.8 and pasted at (120, 340)
         t = g.compose(g.translate(120, 340), g.scale(0.8, 0.8))
         assert g.apply(t, g.Box(0, 0, 900, 600)).as_tuple() == (120.0, 340.0, 840.0, 820.0)
 
     def test_rotation_takes_bounding_box_of_four_corners(self):
-        b = g.Box(0, 0, 10, 0)          # 一条水平线段
+        b = g.Box(0, 0, 10, 0)          # a horizontal segment
         out = g.apply(g.rotate(90, cx=0, cy=0), b)
         assert out.as_tuple() == pytest.approx((0.0, 0.0, 0.0, 10.0), abs=1e-9)
 
@@ -63,7 +63,7 @@ class TestTransforms:
         assert out.y1 == pytest.approx(100.0, abs=1e-6)
 
     def test_compose_is_right_to_left(self):
-        # 先缩放再平移
+        # scale first, then translate
         t = g.compose(g.translate(5, 0), g.scale(2, 2))
         assert g.apply(t, g.Box(1, 1, 2, 2)).as_tuple() == (7.0, 2.0, 9.0, 4.0)
 
@@ -75,10 +75,10 @@ class TestTransforms:
 
 
 class TestAxisMapping:
-    """值域 ↔ 像素域。04 的可读性判定与自检都只用这一个换算。"""
+    """Value range against pixel range: the one conversion everything downstream uses."""
 
     def test_value_to_pixel_matches_the_worked_example(self):
-        # y 值域 [0, 60] ↔ 像素域 520 (值 0) → 60 (值 60)
+        # 0 sits at pixel 520 and 60 sits at pixel 60
         assert g.value_to_pixel(42.3, (0, 60), (520, 60)) == pytest.approx(196.0, abs=0.5)
         assert g.value_to_pixel(0, (0, 60), (520, 60)) == 520.0
 
@@ -114,7 +114,7 @@ class TestFrozenLayout:
 
 
 def test_matplotlib_fraction_round_trip():
-    """matplotlib 用左下原点的 0–1 figure 坐标，本项目用左上原点的像素。"""
+    """The plotting library uses bottom-left fractions; this project uses top-left pixels."""
     size = (900, 600)
     rect = g.axes_rect(size, left=96, top=60, right=40, bottom=80)
     frac = g.rect_to_mpl_fraction(rect, size)

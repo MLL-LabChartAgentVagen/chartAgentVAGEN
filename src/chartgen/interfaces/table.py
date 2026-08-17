@@ -1,7 +1,12 @@
-"""01 → 02：事实表与表结构说明。
+"""The fact table and its schema: what the data stage hands to view selection.
 
-`TableSchema` 是 01 那一次 LLM 调用的全部产物：场景散文、列声明、依赖图、意图绑定。
-它不含任何数据值——数值由 `FactTable` 承载。
+`TableSchema` is everything the single model call produced -- scenario prose,
+column declarations, the dependency graph between numeric columns, and the
+analysis intents. It holds no data values; those live in `FactTable`.
+
+Keeping declarations and values apart is what lets chart feasibility be decided
+before any row exists: cardinality, units, additivity and ordering are all
+declared fields.
 """
 
 from __future__ import annotations
@@ -15,59 +20,54 @@ ColumnKind = Literal["category", "time", "measure"]
 Ordered = Literal["ordinal", "stage"]
 Freq = Literal["daily", "weekly", "monthly"]
 
-#: 六个视图类 / 图表族。与 chart_types.md 的族一一对应。
+#: The six view classes, one per chart family. An analysis intent names one of
+#: these; which chart type serves it is decided from the column declarations.
 Family = Literal[
-    "comparison",    # 比较
-    "trend",         # 趋势
-    "composition",   # 构成
-    "relation",      # 关系
-    "distribution",  # 分布
-    "process",       # 流程
+    "comparison",
+    "trend",
+    "composition",
+    "relation",
+    "distribution",
+    "process",
 ]
 
-FAMILY_ZH: dict[str, str] = {
-    "comparison": "比较",
-    "trend": "趋势",
-    "composition": "构成",
-    "relation": "关系",
-    "distribution": "分布",
-    "process": "流程",
-}
-FAMILY_FROM_ZH: dict[str, str] = {v: k for k, v in FAMILY_ZH.items()}
-
-#: 分组标量形态的聚合；后三个是别的形态的占位，不是 SUM/AVG/COUNT 一类。
+#: Aggregates for the grouped-scalar projection shape, plus three placeholders
+#: that stand for the other shapes: five-number summaries, bin counts, and no
+#: aggregation at all.
 Aggregate = Literal[
     "SUM", "AVG", "MAX", "MIN", "MEDIAN", "COUNT",
     "FIVE_NUM", "BIN_COUNT", "NONE",
 ]
 
-#: 可加 / 不可加测度各自允许的聚合，见 chart_types.md §2。
+#: Aggregates each kind of measure allows. Summing a non-additive measure -- a
+#: ratio, a percentage, a score -- is never meaningful.
 AGG_ADDITIVE: tuple[str, ...] = ("SUM", "AVG", "MAX", "MIN")
 AGG_NON_ADDITIVE: tuple[str, ...] = ("AVG", "MEDIAN", "MAX", "MIN")
 
 
 @dataclass(frozen=True)
 class Column:
-    """一列的声明。基数与语义字段在声明期就定死，是可画性判定的全部输入。"""
+    """One declared column. Cardinality and the semantic fields are fixed at
+    declaration time, and together they decide what can be drawn."""
 
     name: str
     kind: ColumnKind
     cardinality: int
-    group: str | None = None          # 所属维度组
-    parent: str | None = None         # 层级里的父列
+    group: str | None = None          # which dimension group it belongs to
+    parent: str | None = None         # the column above it in a hierarchy
     ordered: Ordered | None = None
-    values: tuple[str, ...] = ()      # 类别列的取值列表
-    unit: str | None = None           # 数值列
-    additive: bool | None = None      # 数值列
-    freq: Freq | None = None          # 时间列
+    values: tuple[str, ...] = ()      # category columns
+    unit: str | None = None           # numeric columns
+    additive: bool | None = None      # numeric columns
+    freq: Freq | None = None          # time columns
     start: str | None = None
     end: str | None = None
-    derived_from: str | None = None   # 日历派生列指向它的时间列
+    derived_from: str | None = None   # a calendar field points at its time column
 
 
 @dataclass(frozen=True)
 class DimGroup:
-    """一个维度组及其层级链，`columns` 按从根到叶排列。"""
+    """A dimension group and its hierarchy chain, ordered root to leaf."""
 
     name: str
     columns: tuple[str, ...]
@@ -75,7 +75,13 @@ class DimGroup:
 
 @dataclass(frozen=True)
 class IntentBinding:
-    """一条分析意图：一句话 + 目标列 + 聚合 + 族。02 拿它直接构造意图图。"""
+    """One analysis intent: a sentence, its target columns, an aggregate, a view class.
+
+    Written in the same call as the columns, so the binding holds by construction
+    rather than by inference. It is what a figure built to answer a question is
+    constructed from, and the only source of caption text that cannot be read off
+    the image itself.
+    """
 
     index: int
     sentence: str
@@ -86,14 +92,14 @@ class IntentBinding:
 
 @dataclass(frozen=True)
 class TableSchema:
-    """给 02 的数据接口。场景散文与意图绑定是它的字段，不占单独产物。"""
+    """The description of a generated table. Carries no values."""
 
     scenario_id: str
     scenario_title: str
     data_context: str
     columns: tuple[Column, ...]
     groups: tuple[DimGroup, ...] = ()
-    dependencies: tuple[tuple[str, str], ...] = ()   # 数值列之间的边 (src → dst)
+    dependencies: tuple[tuple[str, str], ...] = ()   # edges between numeric columns
     intents: tuple[IntentBinding, ...] = ()
     n_rows: int = 0
 
@@ -101,7 +107,7 @@ class TableSchema:
         for c in self.columns:
             if c.name == name:
                 return c
-        raise KeyError(f"未声明的列: {name}")
+        raise KeyError(f"undeclared column: {name}")
 
     def has(self, name: str) -> bool:
         return any(c.name == name for c in self.columns)
@@ -127,7 +133,8 @@ class TableSchema:
 
 @dataclass
 class FactTable:
-    """行级事件表。一行一件不可再分的事，聚合只发生在 02 的投影里。"""
+    """Row-level events. One row is one indivisible occurrence; aggregation happens
+    only when a view is projected out of it."""
 
     scenario_id: str
     df: pd.DataFrame = field(repr=False)

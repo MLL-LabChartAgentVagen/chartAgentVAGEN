@@ -1,6 +1,7 @@
-"""按图元形状分文件的绘制函数。17 种类型只有 6 种图元形状。
+"""Drawing functions, one file per mark shape rather than per chart type.
 
-`DRAWERS` 是图表类型 → 绘制函数的唯一映射。新增一个类型在这里加一行。
+`DRAWERS` is the one mapping from chart type to drawing function; a new type adds
+one line here.
 """
 
 from __future__ import annotations

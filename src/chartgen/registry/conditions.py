@@ -1,9 +1,13 @@
-"""结构条件与语义条件的判定。**只读列声明，碰不到任何数据。**
+"""Deciding whether a binding can be drawn, from declarations alone.
 
-01 用 `coverage` / `family_nonempty` 逐族判非空；02 用 `check` 逐条判候选，
-用 `iter_bindings_for_family` 为意图图按确定顺序取第一条。两处读同一份 `charts.py`。
+This module takes a binding and a schema and never sees data, which is what lets
+the same rules run at two very different moments: before generation, to ask
+whether a chart family is empty for this schema, and after it, to check one
+concrete candidate. Both read the same chart table, so the two answers cannot
+drift apart.
 
-数据条件（变异、区分度、每格行数、图元数）要求值之后才知道，在 `s02_figure/admit.py`。
+Conditions that need projected values -- variation, distinctness, rows per cell,
+mark counts -- are decided elsewhere, once the values exist.
 """
 
 from __future__ import annotations
@@ -18,7 +22,7 @@ from ..interfaces.table import (
 )
 from .charts import CHARTS, SHAPE_AGGREGATES, ChartType, in_family, within
 
-#: 时间列重采样后的点数按这个比例折算。daily → weekly 是除以 7。
+#: Divisor applied to a time column's point count when it is resampled.
 RESAMPLE_DIVISOR: dict[str, int] = {"daily": 1, "weekly": 7, "monthly": 30}
 
 
@@ -38,10 +42,10 @@ def _no(reason: str) -> Check:
     return Check(False, reason)
 
 
-# ---------------------------------------------------------------- 基数
+# ---------------------------------------------------------------- cardinality
 
 def _points(col: Column, resample: str | None) -> int:
-    """时间列重采样后的点数。"""
+    """Points left on the time axis after resampling."""
     divisor = RESAMPLE_DIVISOR.get(resample or col.freq or "daily", 1)
     return max(1, col.cardinality // divisor)
 
@@ -53,20 +57,20 @@ def _product(schema: TableSchema, names: Sequence[str]) -> int:
     return out
 
 
-# ---------------------------------------------------------------- 主判定
+# ---------------------------------------------------------------- the check
 
 def check(binding: Binding, schema: TableSchema) -> Check:
-    """一条列绑定能不能画。结构条件 + 语义条件 + 聚合合法性。"""
+    """Can this binding be drawn: roles, cardinality, semantics, aggregate."""
     spec = CHARTS.get(binding.chart_type)
     if spec is None:
-        return _no(f"没有这个图表类型: {binding.chart_type}")
+        return _no(f"no such chart type: {binding.chart_type}")
 
     named = (*binding.dims, *binding.measures, *((binding.time,) if binding.time else ()))
     if len(set(named)) != len(named):
-        return _no(f"同一列重复出现在多个角色上: {named}")
+        return _no(f"one column fills several roles: {named}")
     for name in named:
         if not schema.has(name):
-            return _no(f"声明里没有这一列: {name}")
+            return _no(f"undeclared column: {name}")
 
     if (r := _roles(binding, spec, schema)) is not _OK:
         return r
@@ -80,40 +84,40 @@ def check(binding: Binding, schema: TableSchema) -> Check:
 def _roles(binding: Binding, spec: ChartType, schema: TableSchema) -> Check:
     for name in binding.dims:
         if schema.column(name).kind != "category":
-            return _no(f"{name} 不是类别列，填不了 P/S 角色")
+            return _no(f"{name} is not a category column, so it cannot group")
     if binding.time and schema.column(binding.time).kind != "time":
-        return _no(f"{binding.time} 不是时间列")
+        return _no(f"{binding.time} is not a time column")
     for name in binding.measures:
         if schema.column(name).kind != "measure":
-            return _no(f"{name} 不是数值列")
+            return _no(f"{name} is not a numeric column")
 
     if not within(len(binding.dims), spec.n_cat):
-        return _no(f"{spec.name} 要 {spec.n_cat} 个类别列，给了 {len(binding.dims)} 个")
+        return _no(f"{spec.name} takes {spec.n_cat} category columns, got {len(binding.dims)}")
     if not within(1 if binding.time else 0, spec.n_time):
-        return _no(f"{spec.name} 要 {spec.n_time} 个时间列")
+        return _no(f"{spec.name} takes {spec.n_time} time columns")
     if not within(len(binding.measures), spec.n_measure) and binding.aggregate != "COUNT":
-        return _no(f"{spec.name} 要 {spec.n_measure} 个测度，给了 {len(binding.measures)} 个")
+        return _no(f"{spec.name} takes {spec.n_measure} measures, got {len(binding.measures)}")
     if not within(binding.n_group, spec.group_bound):
-        return _no(f"{spec.name} 要 {spec.group_bound} 个分组列，给了 {binding.n_group} 个")
+        return _no(f"{spec.name} takes {spec.group_bound} grouping columns, got {binding.n_group}")
     if schema.n_rows < spec.min_raw_rows:
-        return _no(f"{spec.name} 要原始行数 ≥ {spec.min_raw_rows}，只有 {schema.n_rows}")
+        return _no(f"{spec.name} needs at least {spec.min_raw_rows} source rows, got {schema.n_rows}")
     return _OK
 
 
 def _cardinality(binding: Binding, spec: ChartType, schema: TableSchema) -> Check:
-    """聚合后的基数。有时间列时分成「点数」与「系列数」两项。"""
+    """Cardinality after grouping. With a time column it splits into points and series."""
     if binding.time:
         pts = _points(schema.column(binding.time), binding.resample)
         if not within(pts, spec.points):
-            return _no(f"{spec.name} 要时间点数落在 {spec.points}，实际 {pts}")
+            return _no(f"{spec.name} needs time points within {spec.points}, got {pts}")
         series = _product(schema, binding.dims)
         if not within(series, spec.series):
-            return _no(f"{spec.name} 要系列数落在 {spec.series}，实际 {series}")
+            return _no(f"{spec.name} needs series within {spec.series}, got {series}")
         return _OK
     if binding.dims:
         card = _product(schema, binding.dims)
         if not within(card, spec.card):
-            return _no(f"{spec.name} 要基数落在 {spec.card}，实际 {card}")
+            return _no(f"{spec.name} needs cardinality within {spec.card}, got {card}")
     return _OK
 
 
@@ -121,46 +125,47 @@ def _semantics(binding: Binding, spec: ChartType, schema: TableSchema) -> Check:
     if spec.require_additive:
         for name in binding.measures:
             if not schema.column(name).additive:
-                return _no(f"{spec.name} 要可加测度，{name} 不可加")
+                return _no(f"{spec.name} needs an additive measure, and {name} is not additive")
     if spec.require_stage:
         if not any(schema.column(n).ordered == "stage" for n in binding.dims):
-            return _no(f'{spec.name} 要一个 ordered="stage" 的维度')
+            return _no(f'{spec.name} needs a dimension declared ordered="stage"')
     if spec.require_same_unit:
         units = {schema.column(n).unit for n in binding.measures}
         if len(units) > 1:
-            return _no(f"{spec.name} 要多测度同量纲，给了 {units}")
+            return _no(f"{spec.name} needs its measures to share a unit, got {units}")
     return _OK
 
 
 def _aggregate(binding: Binding, spec: ChartType, schema: TableSchema) -> Check:
     allowed = SHAPE_AGGREGATES[spec.shape]
     if binding.aggregate not in allowed:
-        return _no(f"{spec.name} 是 {spec.shape} 形态，聚合只能取 {allowed}")
+        return _no(f"{spec.name} projects as {spec.shape}, whose aggregates are {allowed}")
     if spec.shape != "grouped_scalar":
         return _OK
 
     if binding.aggregate == "COUNT":
-        return _OK if not binding.measures else _no("COUNT(*) 不带测度")
+        return _OK if not binding.measures else _no("counting rows takes no measure")
     if not binding.measures:
-        return _no(f"聚合 {binding.aggregate} 需要一个测度")
+        return _no(f"{binding.aggregate} needs a measure")
     for name in binding.measures:
         col = schema.column(name)
         legal = AGG_ADDITIVE if col.additive else AGG_NON_ADDITIVE
         if binding.aggregate not in legal:
-            kind = "可加" if col.additive else "不可加"
-            return _no(f"{name} {kind}，聚合只能取 {legal}，给了 {binding.aggregate}")
+            kind = "additive" if col.additive else "non-additive"
+            return _no(f"{name} is {kind}, so its aggregates are {legal}, got {binding.aggregate}")
     return _OK
 
 
-# ---------------------------------------------------------------- 逐族判非空
+# ---------------------------------------------------------------- per family
 
 def iter_bindings(chart_type: str, schema: TableSchema, *,
                   columns: Sequence[str] | None = None,
                   aggregate: str | None = None) -> Iterator[Binding]:
-    """按确定顺序惰性产出通过 `check` 的列绑定。
+    """Yield bindings that pass `check`, lazily and in a fixed order.
 
-    只走列声明，不投影、不求值，也不materialize候选清单——调用方取够就停。
-    `columns` 把可用列限制在意图绑定给的那几列上。
+    Nothing is projected or evaluated and no candidate list is built: the caller
+    stops as soon as it has enough. `columns` narrows the pool, which is how an
+    intent restricts the search to the columns it named.
     """
     spec = CHARTS[chart_type]
     pool = schema.columns if columns is None else tuple(
@@ -194,7 +199,7 @@ def iter_bindings_for_family(family: Family, schema: TableSchema, *,
                              columns: Sequence[str] | None = None,
                              aggregate: str | None = None,
                              max_tier: int = 3) -> Iterator[Binding]:
-    """族内按 `charts.py` 的行顺序逐型产出。意图图取它的第一条。"""
+    """Walk a family type by type, in tie-break order."""
     for spec in in_family(family):
         if spec.tier > max_tier:
             continue
@@ -202,11 +207,11 @@ def iter_bindings_for_family(family: Family, schema: TableSchema, *,
 
 
 def family_nonempty(family: Family, schema: TableSchema, max_tier: int = 3) -> bool:
-    """这个族里有没有任何一条合法绑定。短路，不展开组合。"""
+    """Whether this family holds any legal binding. Short-circuits."""
     return next(iter_bindings_for_family(family, schema, max_tier=max_tier), None) is not None
 
 
 def coverage(schema: TableSchema, max_tier: int = 3) -> dict[str, bool]:
-    """逐族判非空。01 §5 的覆盖度检查，不需要数据。"""
+    """Which families are non-empty for this schema. Needs no data."""
     from .charts import FAMILIES
     return {f: family_nonempty(f, schema, max_tier) for f in FAMILIES}

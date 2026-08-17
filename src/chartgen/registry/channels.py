@@ -1,34 +1,38 @@
-"""画法 → 「值能否读出」的三条规则。
+"""Whether a value can be read off the image, and with what tolerance.
 
-判据在 [chart_types.md §4](../../../storyline/parsebench_chart/chart_types.md) 定义一次，
-04 的 `readable` 与 05 的容差都只调这里：
+Three rules, applied in order:
 
-    图上写出了数值            → readable，容差 0
-    没写，画法是角度 / 颜色    → 不 readable
-    没写，画法是长度 / 位置    → 1% 的值折算成像素 ≥ 2 时 readable，容差 1%
+    the value is written on the chart   readable, and it must match exactly
+    otherwise, angle or colour          not readable
+    otherwise, length or position       readable when one percent of the value is
+                                        at least two pixels, within one percent
+
+The record builder and the reward check both call this, so there is one rule and
+one place it lives.
 """
 
 from __future__ import annotations
 
 from ..common.geometry import Range, value_per_pixel
 
-#: 量像素能反算出值的画法。
+#: Encodings a value can be measured back out of.
 MEASURABLE = frozenset({"length", "position"})
 
-#: 量不出 1% 相对精度的画法：角度分辨率不够，色标量化且感知非线性。
+#: Encodings that cannot reach one percent precision: an angle is too small to
+#: measure on a small sector, and a colour scale is quantised and non-linear.
 UNMEASURABLE = frozenset({"angle", "color"})
 
-#: 1% 的值至少要折算成这么多像素才算读得出。
+#: Pixels that one percent of the value must span before it counts as readable.
 MIN_PIXELS_PER_PERCENT = 2.0
 
-#: 没写标注时的相对容差。
+#: Relative tolerance when the value is not written on the chart.
 RELATIVE_TOLERANCE = 0.01
 
 Axis = tuple[Range, Range]     # (value_range, pixel_range)
 
 
 def pixels_per_percent(value: float, axis: Axis) -> float:
-    """该值的 1% 折算成多少像素。第三条规则的左边。"""
+    """How many pixels one percent of this value spans."""
     value_range, pixel_range = axis
     return abs(value) * RELATIVE_TOLERANCE / value_per_pixel(value_range, pixel_range)
 
@@ -39,12 +43,12 @@ def readable(channel: str, *, labeled: bool, value: float, axis: Axis | None) ->
     if channel in UNMEASURABLE:
         return False
     if channel not in MEASURABLE:
-        raise ValueError(f"没有这种画法: {channel}")
+        raise ValueError(f"unknown encoding: {channel}")
     if axis is None:
         return False
     return pixels_per_percent(value, axis) >= MIN_PIXELS_PER_PERCENT
 
 
 def tolerance(labeled: bool) -> float:
-    """写了标注要求精确匹配，没写则 1% 相对容差。"""
+    """A written value must match exactly; an estimated one gets one percent."""
     return 0.0 if labeled else RELATIVE_TOLERANCE

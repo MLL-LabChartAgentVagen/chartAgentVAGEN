@@ -1,4 +1,4 @@
-"""种子派生与内容哈希缓存：`(输入, 种子) -> 输出` 逐位可复现的两块地基。"""
+"""Seed derivation and content-addressed caching: what makes a run reproducible."""
 
 from pathlib import Path
 
@@ -6,7 +6,7 @@ import numpy as np
 import pytest
 
 from chartgen.common import cache, rng
-from chartgen.interfaces import io
+from chartgen.common import serde
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 
@@ -26,7 +26,7 @@ class TestSeedDerivation:
         assert not np.array_equal(rng.derive(7, "x").random(5), rng.derive(8, "x").random(5))
 
     def test_seeds_are_stable_across_processes(self):
-        """不能用 Python 的 hash()——它每个进程加盐，跨进程不可复现。"""
+        """The built-in hash is salted per process, so it cannot be used here."""
         import subprocess
         import sys
 
@@ -38,7 +38,7 @@ class TestSeedDerivation:
             assert int(out.stdout) == rng.seed_of(7, "er_wait", "s02", 3)
 
     def test_the_derivation_itself_is_pinned(self):
-        """改这个值等于作废全部已落盘的产物，所以它是有意钉死的。"""
+        """Changing this invalidates every artifact on disk, so it is pinned on purpose."""
         assert rng.seed_of(7, "er_wait", "s02", 3) == 6941357540799242452
 
     def test_deriving_twice_does_not_advance_a_shared_state(self):
@@ -54,17 +54,17 @@ class TestSeedDerivation:
 
 class TestContentHash:
     def test_the_same_object_hashes_the_same(self):
-        schema = io.sample("TableSchema")
-        assert cache.content_hash(schema) == cache.content_hash(io.sample("TableSchema"))
+        schema = serde.sample("TableSchema")
+        assert cache.content_hash(schema) == cache.content_hash(serde.sample("TableSchema"))
 
     def test_a_changed_field_changes_the_hash(self):
         import dataclasses
-        schema = io.sample("TableSchema")
+        schema = serde.sample("TableSchema")
         other = dataclasses.replace(schema, n_rows=901)
         assert cache.content_hash(schema) != cache.content_hash(other)
 
     def test_hash_is_hex_and_short_enough_for_a_path(self):
-        h = cache.content_hash(io.sample("StyleVector"))
+        h = cache.content_hash(serde.sample("StyleVector"))
         assert len(h) == 16 and all(c in "0123456789abcdef" for c in h)
 
     def test_plain_values_hash_too(self):

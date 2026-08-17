@@ -1,4 +1,5 @@
-"""像素反算。04 的前两项自检与 05 的可验证奖励共用这一个实现。"""
+"""Measuring values back out of pixels: one implementation, used at generation,
+training and evaluation time."""
 
 import numpy as np
 import pytest
@@ -13,7 +14,7 @@ Y_AXIS = ((0.0, 60.0), (520.0, 60.0))
 
 @pytest.fixture
 def canvas() -> np.ndarray:
-    """900×600 白底，画一条 Mercy General 的蓝条。"""
+    """A white canvas with one blue bar drawn on it."""
     img = np.full((600, 900, 3), 255, np.uint8)
     img[196:520, 168:278] = BLUE
     return img
@@ -66,7 +67,7 @@ class TestValueFromBox:
 
 
 class TestAgreement:
-    """两项自检的判据本身：量出来的值与声称的值差多少算过。"""
+    """How far a measured value may sit from a claimed one."""
 
     def test_within_one_percent_passes(self):
         assert rb.value_agrees(measured=42.26, claimed=42.3, tolerance=0.01)
@@ -84,7 +85,7 @@ class TestAgreement:
 
 
 class TestVerifyTuple:
-    """05 的可验证奖励：输入换成模型的输出，别的什么都不改。"""
+    """The same check with the claim coming from a model instead of the renderer."""
 
     def test_a_correct_tuple_passes_both_geometric_checks(self, canvas):
         r = rb.verify(canvas, box=BAR, claimed_value=42.3, axis=Y_AXIS, anchor="top")

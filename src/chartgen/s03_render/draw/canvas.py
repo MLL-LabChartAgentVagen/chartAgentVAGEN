@@ -1,11 +1,13 @@
-"""画布、面板、轴、图例的公共记录。**画和记不分开。**
+"""The canvas, its panels, axes and legend, and the record they write as they draw.
 
-每画一个图元，就在同一处把它的框、键、值写进记录——只有在画的那一刻，
-三者才同时在手。框由 matplotlib 自己的 `transData` 算出，不做事后解析图像。
+Drawing and recording are the same step. A mark's box, key and value are written
+together at the moment it is drawn, because that is the only moment all three are
+in hand; the box comes from the plotting library's own coordinate transform, never
+from parsing the finished image.
 
-**布局参数冻结**：图像尺寸、dpi、绘图区矩形三项写死。自动布局
-（`tight_layout` / `constrained_layout` / `savefig(bbox_inches=...)`）会在画完
-之后挪动绘图区，此时已经记下的框全部失效，而且不报错。
+Three layout parameters are frozen: image size, dpi, and the plotting rectangle.
+Auto-layout moves the plotting area after the drawing is done, which invalidates
+every box already recorded -- and does so without raising anything.
 """
 
 from __future__ import annotations
@@ -23,13 +25,13 @@ from ...interfaces.record import Axis, Channel, Element, LegendEntry, Mark, Pane
 from ...interfaces.style import StyleVector
 from ..style import BACKGROUND, GRID_COLOR, RGB, TEXT_COLOR, hex_of, resolve_font
 
-#: 绘图区四边留白（像素）。900×600 上得到 [96, 60, 860, 520]，与 03 §0 一致。
+#: Margins around the plotting area, in pixels.
 MARGINS = {"left": 96.0, "top": 60.0, "right": 40.0, "bottom": 80.0}
 
 
 @dataclass
 class PanelCanvas:
-    """一个面板：一个 matplotlib Axes，加上它记下来的轴与图元。"""
+    """One panel: a set of plotting axes, plus the axes and marks it has recorded."""
 
     panel_id: str
     ax: Axes
@@ -40,7 +42,7 @@ class PanelCanvas:
     marks: list[Mark] = field(default_factory=list)
     _right_ax: Axes | None = None
 
-    # ---- 坐标：数据 →（绘图库的轴变换）→ 像素，原点左上
+    # ---- coordinates: data, through the library's transform, to pixels with a top-left origin
 
     def to_pixel(self, x: float, y: float, right: bool = False) -> tuple[float, float]:
         ax = self._right_ax if right and self._right_ax is not None else self.ax
@@ -53,7 +55,7 @@ class PanelCanvas:
         b = self.to_pixel(x1, y1, right)
         return Box(a[0], a[1], b[0], b[1])
 
-    # ---- 记录
+    # ---- recording
 
     def record_axis(self, role: str, column: str | None = None,
                     scale: str = "linear") -> Axis:
@@ -85,7 +87,8 @@ class PanelCanvas:
 
 
 class Canvas:
-    """一张图像的画布。持有 figure，产出面板、图例与 L0 元素。"""
+    """The canvas for one image. Owns the figure and hands out panels, legend entries
+    and page elements."""
 
     def __init__(self, style: StyleVector) -> None:
         self.style = style
@@ -98,7 +101,7 @@ class Canvas:
         self.legend: list[LegendEntry] = []
         self.elements: list[Element] = []
 
-    # ---- 面板
+    # ---- panels
 
     def full_rect(self) -> Box:
         return axes_rect(self.style.image_size, **MARGINS)
@@ -124,16 +127,17 @@ class Canvas:
             ax.grid(axis="y", color=hex_of(GRID_COLOR), linewidth=0.8)
 
     def add_twin(self, panel: PanelCanvas) -> Axes:
-        """compound 的右轴。两条纵轴各记一份值域像素域。"""
+        """A second vertical axis. Each one records its own value and pixel range,
+        because the same pixel height then means two different values."""
         panel._right_ax = panel.ax.twinx()
         panel._right_ax.spines["right"].set_visible(True)
         panel._right_ax.tick_params(colors=hex_of(TEXT_COLOR), labelsize=self.style.font_size)
         return panel._right_ax
 
-    # ---- 文字与图例
+    # ---- text and legend
 
     def text_box(self, artist) -> Box:
-        """任何文字图元的像素框。渲染一次拿 renderer。"""
+        """The pixel box of any piece of text."""
         renderer = self.fig.canvas.get_renderer()
         bbox = artist.get_window_extent(renderer)
         h = self.style.image_size[1]
@@ -145,7 +149,7 @@ class Canvas:
     def add_element(self, box: Box, category: str) -> None:
         self.elements.append(Element(box, category))  # type: ignore[arg-type]
 
-    # ---- 落盘
+    # ---- saving
 
     def save(self, path: str | Path) -> Path:
         path = Path(path)
@@ -158,7 +162,7 @@ class Canvas:
 
 @dataclass
 class DrawContext:
-    """一个绘制函数需要的全部东西。按图元形状分文件的那些函数都收这一个参数。"""
+    """Everything a drawing function needs. Every drawing function takes just this."""
 
     canvas: Canvas
     panel: PanelCanvas
