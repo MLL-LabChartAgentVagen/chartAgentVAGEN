@@ -64,9 +64,9 @@
 | **ParseBench** | `2604.08538` | 约 2,000 页人工核验企业文档（保险 / 金融 / 政府）。五维度分开评分：Tables、**Charts**、Content Faithfulness、Semantic Formatting、**Visual Grounding** | 见下 |
 | **ChartArena** | `2606.01348` | 2,400 图 = 8 个图表族（含**流程图、思维导图**）× 中英双语 × 3 场景（数字渲染 / 翻拍 / 手绘）× 6 种输出格式 | Gemini 3.1 Pro 最好；radar 对所有模型都难；手绘场景显著退化；专用 chart parser 完全不支持图式结构 |
 
-**ParseBench 细节**（本方案的对齐目标）
+**ParseBench 细节**（本方案的对齐目标）。指标的逐条判定规则与 chart 分片的实测统计见 [`parsebench/`](../../parsebench/)。
 
-- **Charts 维度**：568 页 / 1,039 图（bar、line、pie、compound）。标注方式为每图 ≤10 个 spot-check 点，先由 Gemini 3.0 Flash agent 生成再逐点人工核验；容差为显式画出的值精确匹配、需估读的值 1% 相对容差。指标 `ChartDataPointMatch` 对表格转置不敏感、容忍数值格式差异。
+- **Charts 维度**：568 页 / 99 文档 / 1,039 图（bar、line、pie、compound）/ 4,864 条规则。标注方式为每图 ≤10 个 spot-check 点，先由 VLM 生成再逐点人工核验。容差按点标注：估读点的中位数 5%、四分位 [5%, 10%]，显式数值点的中位数 1%。指标 `ChartDataPointMatch` 对表格转置不敏感、容忍数值格式差异。
 - **策展划分轴**：刻意同时收录「显式写出数值的图」与「完全不写数值的图」；离散 vs 连续序列；稀疏 vs 稠密；单图页 vs **共享坐标轴的多图版面**。
 - **Visual Grounding 维度**：Element Pass Rate 要求三项同时成立——定位（IoA ≥ 0.50 从 GT 侧、≥ 0.20 反向）、分类（`Text / Table / Picture / Page-Header / Page-Footer`）、内容归属（token F1 ≥ 0.80，chart 类区域改用召回导向）。
 

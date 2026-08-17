@@ -11,6 +11,7 @@
 | [storyline/parsebench_chart/](storyline/parsebench_chart/) | 方案规格。流水线的唯一定义处，五个阶段文档共用一份贯穿示例 |
 | [storyline/parsebench_chart/chart_types.md](storyline/parsebench_chart/chart_types.md) | 能画哪些图、每种图要满足什么条件才能画 |
 | [IMPL_PLAN.md](IMPL_PLAN.md) | 实现计划：系统骨架、目录结构、数据接口、todo checklist |
+| [parsebench/](parsebench/) | ParseBench 对齐：Charts 维度的 review、评测指标拆解、chart 分片数据与统计、待改清单 |
 | [src/chartgen/](src/chartgen/) | 流水线本体 |
 | [src/llmkit/](src/llmkit/) | 与本项目无关的 LLM 调用层：调用 · 结构化输出 · 缓存 · 去重 · 批量。可单独复用 |
 | [tools/](tools/) | 辅助脚本：重生成接口样例、把框叠回图像 |
@@ -69,6 +70,8 @@ measures
 ## 对齐的基准
 
 主目标是 ParseBench 的 Charts 与 Visual Grounding 两个维度——现状是没有任何单一方法在这两项上同时强。此外覆盖 ChartREG++、ChartAB、LongChart VQA 的定位与指代任务，并要求在 ChartQA、CharXiv、ChartQAPro 上不退化。图表类型覆盖 6 族 13 型的常见形态，不局限于任何单一基准收录的那几种。
+
+ParseBench 的评测指标拆解、数据统计与据此得出的待改清单在 [parsebench/](parsebench/)。
 
 ## 状态
 
