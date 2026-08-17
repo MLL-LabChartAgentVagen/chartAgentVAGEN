@@ -1,0 +1,4949 @@
+{
+  "version": 1,
+  "created": "2026-08-17T19:24:55+00:00",
+  "stats": {
+    "tiers": {
+      "simple": 68,
+      "medium": 76,
+      "complex": 60
+    },
+    "topics": {
+      "Commercial Aviation Operations": 12,
+      "Retail Grocery Merchandising": 12,
+      "Pharmaceutical Clinical Trials": 12,
+      "Electric Utility Grid Load": 12,
+      "Automotive Manufacturing Quality": 12,
+      "Residential Real Estate Sales": 12,
+      "Commercial Banking Credit Risk": 12,
+      "Mobile Telecom Network Usage": 12,
+      "Hotel and Resort Occupancy": 12,
+      "Agricultural Crop Yields": 12,
+      "Marine Shipping and Port Logistics": 12,
+      "Video Game Player Engagement": 12,
+      "Municipal Public Transit Ridership": 12,
+      "Health Insurance Claims Processing": 12,
+      "Metal Mining and Ore Extraction": 12,
+      "Professional Sports Team Performance": 12,
+      "Streaming Media Subscriptions": 12
+    }
+  },
+  "topics": [
+    "Commercial Aviation Operations",
+    "Retail Grocery Merchandising",
+    "Pharmaceutical Clinical Trials",
+    "Electric Utility Grid Load",
+    "Automotive Manufacturing Quality",
+    "Residential Real Estate Sales",
+    "Commercial Banking Credit Risk",
+    "Mobile Telecom Network Usage",
+    "Hotel and Resort Occupancy",
+    "Agricultural Crop Yields",
+    "Marine Shipping and Port Logistics",
+    "Video Game Player Engagement",
+    "Municipal Public Transit Ridership",
+    "Health Insurance Claims Processing",
+    "Metal Mining and Ore Extraction",
+    "Professional Sports Team Performance",
+    "Streaming Media Subscriptions"
+  ],
+  "domains": [
+    {
+      "id": "dom_001",
+      "name": "Daily on-time departure rate by airport",
+      "topic": "Commercial Aviation Operations",
+      "complexity_tier": "simple",
+      "typical_entities_hint": [
+        "airport",
+        "airline"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "on-time departure rate",
+          "unit": "percent"
+        },
+        {
+          "name": "average departure delay",
+          "unit": "minutes"
+        }
+      ],
+      "temporal_granularity_hint": "daily"
+    },
+    {
+      "id": "dom_002",
+      "name": "Monthly passenger load factor per route",
+      "topic": "Commercial Aviation Operations",
+      "complexity_tier": "simple",
+      "typical_entities_hint": [
+        "route",
+        "aircraft type"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "load factor",
+          "unit": "percent"
+        },
+        {
+          "name": "passengers carried",
+          "unit": "passengers"
+        }
+      ],
+      "temporal_granularity_hint": "monthly"
+    },
+    {
+      "id": "dom_003",
+      "name": "Weekly jet fuel uplift volume by hub",
+      "topic": "Commercial Aviation Operations",
+      "complexity_tier": "simple",
+      "typical_entities_hint": [
+        "hub airport",
+        "fuel supplier"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "fuel uplifted",
+          "unit": "tonnes"
+        },
+        {
+          "name": "fuel price",
+          "unit": "USD per gallon"
+        }
+      ],
+      "temporal_granularity_hint": "weekly"
+    },
+    {
+      "id": "dom_004",
+      "name": "Daily flight cancellations by cause",
+      "topic": "Commercial Aviation Operations",
+      "complexity_tier": "simple",
+      "typical_entities_hint": [
+        "airline",
+        "cancellation cause"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "cancelled flights",
+          "unit": "flights"
+        },
+        {
+          "name": "cancellation rate",
+          "unit": "percent"
+        }
+      ],
+      "temporal_granularity_hint": "daily"
+    },
+    {
+      "id": "dom_005",
+      "name": "Aircraft utilization and turnaround performance",
+      "topic": "Commercial Aviation Operations",
+      "complexity_tier": "medium",
+      "typical_entities_hint": [
+        "aircraft tail number",
+        "aircraft type",
+        "station"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "block hours per day",
+          "unit": "hours"
+        },
+        {
+          "name": "turnaround time",
+          "unit": "minutes"
+        },
+        {
+          "name": "ground time buffer",
+          "unit": "minutes"
+        }
+      ],
+      "temporal_granularity_hint": "daily"
+    },
+    {
+      "id": "dom_006",
+      "name": "Baggage handling reliability across terminals",
+      "topic": "Commercial Aviation Operations",
+      "complexity_tier": "medium",
+      "typical_entities_hint": [
+        "terminal",
+        "airline",
+        "baggage system"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "mishandled bags per 1000 passengers",
+          "unit": "bags per 1000 pax"
+        },
+        {
+          "name": "bag delivery time",
+          "unit": "minutes"
+        },
+        {
+          "name": "claims cost",
+          "unit": "USD"
+        }
+      ],
+      "temporal_granularity_hint": "weekly"
+    },
+    {
+      "id": "dom_007",
+      "name": "Route profitability versus competitor capacity",
+      "topic": "Commercial Aviation Operations",
+      "complexity_tier": "medium",
+      "typical_entities_hint": [
+        "route",
+        "airline",
+        "aircraft type"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "RASK",
+          "unit": "US cents per ASK"
+        },
+        {
+          "name": "CASK",
+          "unit": "US cents per ASK"
+        },
+        {
+          "name": "available seat kilometres",
+          "unit": "million ASK"
+        }
+      ],
+      "temporal_granularity_hint": "monthly"
+    },
+    {
+      "id": "dom_008",
+      "name": "Crew rostering and overtime pressure",
+      "topic": "Commercial Aviation Operations",
+      "complexity_tier": "medium",
+      "typical_entities_hint": [
+        "crew base",
+        "crew rank",
+        "fleet"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "duty hours flown",
+          "unit": "hours"
+        },
+        {
+          "name": "reserve callout rate",
+          "unit": "percent"
+        },
+        {
+          "name": "overtime cost",
+          "unit": "USD"
+        }
+      ],
+      "temporal_granularity_hint": "weekly"
+    },
+    {
+      "id": "dom_009",
+      "name": "Air traffic flow and holding patterns by sector",
+      "topic": "Commercial Aviation Operations",
+      "complexity_tier": "medium",
+      "typical_entities_hint": [
+        "ATC sector",
+        "airport",
+        "airline"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "holding time",
+          "unit": "minutes"
+        },
+        {
+          "name": "sector traffic count",
+          "unit": "flights per hour"
+        },
+        {
+          "name": "excess fuel burn",
+          "unit": "kilograms"
+        }
+      ],
+      "temporal_granularity_hint": "daily"
+    },
+    {
+      "id": "dom_010",
+      "name": "Network delay propagation across hub banks",
+      "topic": "Commercial Aviation Operations",
+      "complexity_tier": "complex",
+      "typical_entities_hint": [
+        "hub airport",
+        "connecting bank",
+        "aircraft rotation",
+        "route"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "inbound delay",
+          "unit": "minutes"
+        },
+        {
+          "name": "propagated downstream delay",
+          "unit": "minutes"
+        },
+        {
+          "name": "misconnected passengers",
+          "unit": "passengers"
+        }
+      ],
+      "temporal_granularity_hint": "daily"
+    },
+    {
+      "id": "dom_011",
+      "name": "Fleet maintenance program and dispatch reliability",
+      "topic": "Commercial Aviation Operations",
+      "complexity_tier": "complex",
+      "typical_entities_hint": [
+        "fleet family",
+        "tail number",
+        "maintenance base",
+        "ATA chapter"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "technical dispatch reliability",
+          "unit": "percent"
+        },
+        {
+          "name": "aircraft on ground hours",
+          "unit": "hours"
+        },
+        {
+          "name": "maintenance cost per flight hour",
+          "unit": "USD per hour"
+        }
+      ],
+      "temporal_granularity_hint": "monthly"
+    },
+    {
+      "id": "dom_012",
+      "name": "Revenue management booking curves by fare class",
+      "topic": "Commercial Aviation Operations",
+      "complexity_tier": "complex",
+      "typical_entities_hint": [
+        "route",
+        "fare class",
+        "sales channel",
+        "departure cohort"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "bookings pace vs forecast",
+          "unit": "percent"
+        },
+        {
+          "name": "average fare yield",
+          "unit": "USD per passenger"
+        },
+        {
+          "name": "spill and spoilage seats",
+          "unit": "seats"
+        }
+      ],
+      "temporal_granularity_hint": "weekly"
+    },
+    {
+      "id": "dom_013",
+      "name": "Weekly milk category sales",
+      "topic": "Retail Grocery Merchandising",
+      "complexity_tier": "simple",
+      "typical_entities_hint": [
+        "product SKU",
+        "store"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "units sold",
+          "unit": "units"
+        },
+        {
+          "name": "net sales",
+          "unit": "USD"
+        }
+      ],
+      "temporal_granularity_hint": "weekly"
+    },
+    {
+      "id": "dom_014",
+      "name": "Daily fresh produce shrink",
+      "topic": "Retail Grocery Merchandising",
+      "complexity_tier": "simple",
+      "typical_entities_hint": [
+        "produce item",
+        "store"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "shrink value",
+          "unit": "USD"
+        },
+        {
+          "name": "shrink rate",
+          "unit": "percent of sales"
+        }
+      ],
+      "temporal_granularity_hint": "daily"
+    },
+    {
+      "id": "dom_015",
+      "name": "Private label penetration by category",
+      "topic": "Retail Grocery Merchandising",
+      "complexity_tier": "simple",
+      "typical_entities_hint": [
+        "category",
+        "brand tier"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "private label share",
+          "unit": "percent of category units"
+        }
+      ],
+      "temporal_granularity_hint": "monthly"
+    },
+    {
+      "id": "dom_016",
+      "name": "Out-of-stock rate on top sellers",
+      "topic": "Retail Grocery Merchandising",
+      "complexity_tier": "simple",
+      "typical_entities_hint": [
+        "SKU",
+        "store"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "on-shelf availability",
+          "unit": "percent"
+        },
+        {
+          "name": "lost sales estimate",
+          "unit": "USD"
+        }
+      ],
+      "temporal_granularity_hint": "daily"
+    },
+    {
+      "id": "dom_017",
+      "name": "End-cap promotion lift analysis",
+      "topic": "Retail Grocery Merchandising",
+      "complexity_tier": "medium",
+      "typical_entities_hint": [
+        "promotion",
+        "SKU",
+        "store cluster"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "incremental units",
+          "unit": "units"
+        },
+        {
+          "name": "promo lift",
+          "unit": "percent vs baseline"
+        },
+        {
+          "name": "promo margin",
+          "unit": "USD"
+        }
+      ],
+      "temporal_granularity_hint": "weekly"
+    },
+    {
+      "id": "dom_018",
+      "name": "Planogram compliance vs category sales",
+      "topic": "Retail Grocery Merchandising",
+      "complexity_tier": "medium",
+      "typical_entities_hint": [
+        "store",
+        "planogram",
+        "category"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "compliance score",
+          "unit": "percent"
+        },
+        {
+          "name": "sales per linear foot",
+          "unit": "USD per foot per week"
+        }
+      ],
+      "temporal_granularity_hint": "weekly"
+    },
+    {
+      "id": "dom_019",
+      "name": "Price elasticity of cereal SKUs",
+      "topic": "Retail Grocery Merchandising",
+      "complexity_tier": "medium",
+      "typical_entities_hint": [
+        "SKU",
+        "price zone",
+        "competitor banner"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "average unit retail",
+          "unit": "USD"
+        },
+        {
+          "name": "unit velocity",
+          "unit": "units per store per week"
+        },
+        {
+          "name": "elasticity coefficient",
+          "unit": "index"
+        }
+      ],
+      "temporal_granularity_hint": "weekly"
+    },
+    {
+      "id": "dom_020",
+      "name": "Bakery waste versus production plan",
+      "topic": "Retail Grocery Merchandising",
+      "complexity_tier": "medium",
+      "typical_entities_hint": [
+        "bakery item",
+        "store",
+        "daypart"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "units produced",
+          "unit": "units"
+        },
+        {
+          "name": "units marked down",
+          "unit": "units"
+        },
+        {
+          "name": "waste cost",
+          "unit": "USD"
+        }
+      ],
+      "temporal_granularity_hint": "daily"
+    },
+    {
+      "id": "dom_021",
+      "name": "Seasonal holiday assortment performance",
+      "topic": "Retail Grocery Merchandising",
+      "complexity_tier": "medium",
+      "typical_entities_hint": [
+        "seasonal program",
+        "SKU",
+        "region"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "sell-through",
+          "unit": "percent of receipts"
+        },
+        {
+          "name": "markdown depth",
+          "unit": "percent off"
+        }
+      ],
+      "temporal_granularity_hint": "weekly"
+    },
+    {
+      "id": "dom_022",
+      "name": "Category role profitability hierarchy",
+      "topic": "Retail Grocery Merchandising",
+      "complexity_tier": "complex",
+      "typical_entities_hint": [
+        "department",
+        "category",
+        "subcategory",
+        "SKU"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "gross margin",
+          "unit": "percent"
+        },
+        {
+          "name": "GMROI",
+          "unit": "ratio"
+        },
+        {
+          "name": "sales contribution",
+          "unit": "percent of department"
+        }
+      ],
+      "temporal_granularity_hint": "monthly"
+    },
+    {
+      "id": "dom_023",
+      "name": "Assortment rationalization impact across banners",
+      "topic": "Retail Grocery Merchandising",
+      "complexity_tier": "complex",
+      "typical_entities_hint": [
+        "banner",
+        "store cluster",
+        "category",
+        "SKU"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "SKU count",
+          "unit": "count"
+        },
+        {
+          "name": "sales transfer rate",
+          "unit": "percent"
+        },
+        {
+          "name": "category margin change",
+          "unit": "USD"
+        }
+      ],
+      "temporal_granularity_hint": "monthly"
+    },
+    {
+      "id": "dom_024",
+      "name": "Supply chain to shelf flow for perishables",
+      "topic": "Retail Grocery Merchandising",
+      "complexity_tier": "complex",
+      "typical_entities_hint": [
+        "distribution center",
+        "store",
+        "supplier",
+        "perishable SKU"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "fill rate",
+          "unit": "percent"
+        },
+        {
+          "name": "days of supply",
+          "unit": "days"
+        },
+        {
+          "name": "spoilage loss",
+          "unit": "USD"
+        }
+      ],
+      "temporal_granularity_hint": "weekly"
+    },
+    {
+      "id": "dom_025",
+      "name": "Patient enrollment pace per site",
+      "topic": "Pharmaceutical Clinical Trials",
+      "complexity_tier": "simple",
+      "typical_entities_hint": [
+        "trial site",
+        "patient"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "patients enrolled",
+          "unit": "patients"
+        },
+        {
+          "name": "cumulative enrollment vs target",
+          "unit": "percent"
+        }
+      ],
+      "temporal_granularity_hint": "weekly"
+    },
+    {
+      "id": "dom_026",
+      "name": "Screen failure rate tracking",
+      "topic": "Pharmaceutical Clinical Trials",
+      "complexity_tier": "simple",
+      "typical_entities_hint": [
+        "screening visit",
+        "protocol"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "screen failure rate",
+          "unit": "percent"
+        },
+        {
+          "name": "screenings performed",
+          "unit": "screenings"
+        }
+      ],
+      "temporal_granularity_hint": "monthly"
+    },
+    {
+      "id": "dom_027",
+      "name": "Serious adverse event reporting volume",
+      "topic": "Pharmaceutical Clinical Trials",
+      "complexity_tier": "simple",
+      "typical_entities_hint": [
+        "adverse event report",
+        "study arm"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "SAE count",
+          "unit": "events"
+        },
+        {
+          "name": "reporting latency",
+          "unit": "days"
+        }
+      ],
+      "temporal_granularity_hint": "weekly"
+    },
+    {
+      "id": "dom_028",
+      "name": "Patient dropout and retention curves",
+      "topic": "Pharmaceutical Clinical Trials",
+      "complexity_tier": "simple",
+      "typical_entities_hint": [
+        "patient cohort",
+        "trial phase"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "retention rate",
+          "unit": "percent"
+        },
+        {
+          "name": "withdrawals",
+          "unit": "patients"
+        }
+      ],
+      "temporal_granularity_hint": "monthly"
+    },
+    {
+      "id": "dom_029",
+      "name": "Protocol deviation types by site",
+      "topic": "Pharmaceutical Clinical Trials",
+      "complexity_tier": "medium",
+      "typical_entities_hint": [
+        "trial site",
+        "deviation category",
+        "monitor"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "deviations logged",
+          "unit": "deviations"
+        },
+        {
+          "name": "deviation rate per 100 visits",
+          "unit": "deviations/100 visits"
+        },
+        {
+          "name": "resolution time",
+          "unit": "days"
+        }
+      ],
+      "temporal_granularity_hint": "monthly"
+    },
+    {
+      "id": "dom_030",
+      "name": "Drug supply and kit inventory at sites",
+      "topic": "Pharmaceutical Clinical Trials",
+      "complexity_tier": "medium",
+      "typical_entities_hint": [
+        "depot",
+        "trial site",
+        "drug kit lot"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "kits on hand",
+          "unit": "kits"
+        },
+        {
+          "name": "kit wastage",
+          "unit": "percent"
+        },
+        {
+          "name": "resupply lead time",
+          "unit": "days"
+        }
+      ],
+      "temporal_granularity_hint": "weekly"
+    },
+    {
+      "id": "dom_031",
+      "name": "Query resolution in electronic data capture",
+      "topic": "Pharmaceutical Clinical Trials",
+      "complexity_tier": "medium",
+      "typical_entities_hint": [
+        "CRF form",
+        "data manager",
+        "trial site"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "open queries",
+          "unit": "queries"
+        },
+        {
+          "name": "median query age",
+          "unit": "days"
+        },
+        {
+          "name": "query rate per CRF page",
+          "unit": "queries/page"
+        }
+      ],
+      "temporal_granularity_hint": "weekly"
+    },
+    {
+      "id": "dom_032",
+      "name": "Treatment arm efficacy endpoint trends",
+      "topic": "Pharmaceutical Clinical Trials",
+      "complexity_tier": "medium",
+      "typical_entities_hint": [
+        "treatment arm",
+        "endpoint measure",
+        "patient subgroup"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "mean symptom score change",
+          "unit": "points"
+        },
+        {
+          "name": "responder rate",
+          "unit": "percent"
+        }
+      ],
+      "temporal_granularity_hint": "monthly"
+    },
+    {
+      "id": "dom_033",
+      "name": "Trial budget burn versus milestones",
+      "topic": "Pharmaceutical Clinical Trials",
+      "complexity_tier": "medium",
+      "typical_entities_hint": [
+        "cost category",
+        "CRO vendor",
+        "study"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "spend",
+          "unit": "USD thousands"
+        },
+        {
+          "name": "cost per enrolled patient",
+          "unit": "USD"
+        },
+        {
+          "name": "milestone completion",
+          "unit": "percent"
+        }
+      ],
+      "temporal_granularity_hint": "monthly"
+    },
+    {
+      "id": "dom_034",
+      "name": "Multi-region phase III portfolio oversight",
+      "topic": "Pharmaceutical Clinical Trials",
+      "complexity_tier": "complex",
+      "typical_entities_hint": [
+        "region",
+        "country",
+        "trial site",
+        "study phase"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "enrollment rate",
+          "unit": "patients/site/month"
+        },
+        {
+          "name": "data completeness",
+          "unit": "percent"
+        },
+        {
+          "name": "SAE incidence",
+          "unit": "events/100 patient-years"
+        }
+      ],
+      "temporal_granularity_hint": "monthly"
+    },
+    {
+      "id": "dom_035",
+      "name": "Dose-escalation safety and PK monitoring",
+      "topic": "Pharmaceutical Clinical Trials",
+      "complexity_tier": "complex",
+      "typical_entities_hint": [
+        "dose cohort",
+        "patient",
+        "toxicity grade",
+        "laboratory assay"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "dose-limiting toxicity rate",
+          "unit": "percent"
+        },
+        {
+          "name": "plasma Cmax",
+          "unit": "ng/mL"
+        },
+        {
+          "name": "dose administered",
+          "unit": "mg/kg"
+        }
+      ],
+      "temporal_granularity_hint": "daily"
+    },
+    {
+      "id": "dom_036",
+      "name": "Site performance scorecard and monitoring risk",
+      "topic": "Pharmaceutical Clinical Trials",
+      "complexity_tier": "complex",
+      "typical_entities_hint": [
+        "sponsor program",
+        "trial site",
+        "principal investigator",
+        "risk indicator"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "risk score",
+          "unit": "index 0-100"
+        },
+        {
+          "name": "source data verification backlog",
+          "unit": "pages"
+        },
+        {
+          "name": "visit compliance",
+          "unit": "percent"
+        }
+      ],
+      "temporal_granularity_hint": "weekly"
+    },
+    {
+      "id": "dom_037",
+      "name": "Daily peak demand tracking",
+      "topic": "Electric Utility Grid Load",
+      "complexity_tier": "simple",
+      "typical_entities_hint": [
+        "balancing authority",
+        "substation"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "peak load",
+          "unit": "MW"
+        },
+        {
+          "name": "time of peak",
+          "unit": "hour of day"
+        }
+      ],
+      "temporal_granularity_hint": "daily"
+    },
+    {
+      "id": "dom_038",
+      "name": "Residential feeder consumption",
+      "topic": "Electric Utility Grid Load",
+      "complexity_tier": "simple",
+      "typical_entities_hint": [
+        "distribution feeder",
+        "customer class"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "energy delivered",
+          "unit": "MWh"
+        }
+      ],
+      "temporal_granularity_hint": "daily"
+    },
+    {
+      "id": "dom_039",
+      "name": "System frequency deviation events",
+      "topic": "Electric Utility Grid Load",
+      "complexity_tier": "simple",
+      "typical_entities_hint": [
+        "interconnection"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "frequency excursions",
+          "unit": "count"
+        },
+        {
+          "name": "max deviation",
+          "unit": "Hz"
+        }
+      ],
+      "temporal_granularity_hint": "weekly"
+    },
+    {
+      "id": "dom_040",
+      "name": "Transformer loading vs nameplate rating",
+      "topic": "Electric Utility Grid Load",
+      "complexity_tier": "simple",
+      "typical_entities_hint": [
+        "substation transformer"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "loading ratio",
+          "unit": "% of rating"
+        },
+        {
+          "name": "top-oil temperature",
+          "unit": "°C"
+        }
+      ],
+      "temporal_granularity_hint": "daily"
+    },
+    {
+      "id": "dom_041",
+      "name": "Load forecast error by day-ahead model",
+      "topic": "Electric Utility Grid Load",
+      "complexity_tier": "medium",
+      "typical_entities_hint": [
+        "forecast model",
+        "load zone",
+        "weather station"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "MAPE",
+          "unit": "%"
+        },
+        {
+          "name": "forecast load",
+          "unit": "MW"
+        },
+        {
+          "name": "actual load",
+          "unit": "MW"
+        }
+      ],
+      "temporal_granularity_hint": "daily"
+    },
+    {
+      "id": "dom_042",
+      "name": "Rooftop solar impact on net load",
+      "topic": "Electric Utility Grid Load",
+      "complexity_tier": "medium",
+      "typical_entities_hint": [
+        "distribution circuit",
+        "DER fleet",
+        "utility"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "gross load",
+          "unit": "MW"
+        },
+        {
+          "name": "behind-meter PV output",
+          "unit": "MW"
+        },
+        {
+          "name": "net load ramp",
+          "unit": "MW/h"
+        }
+      ],
+      "temporal_granularity_hint": "daily"
+    },
+    {
+      "id": "dom_043",
+      "name": "Demand response event performance",
+      "topic": "Electric Utility Grid Load",
+      "complexity_tier": "medium",
+      "typical_entities_hint": [
+        "DR program",
+        "enrolled customer segment",
+        "load zone"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "load shed achieved",
+          "unit": "MW"
+        },
+        {
+          "name": "participation rate",
+          "unit": "%"
+        },
+        {
+          "name": "incentive cost",
+          "unit": "USD/MWh"
+        }
+      ],
+      "temporal_granularity_hint": "monthly"
+    },
+    {
+      "id": "dom_044",
+      "name": "EV charging load growth by charger type",
+      "topic": "Electric Utility Grid Load",
+      "complexity_tier": "medium",
+      "typical_entities_hint": [
+        "charger type",
+        "service territory",
+        "feeder"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "charging energy",
+          "unit": "MWh"
+        },
+        {
+          "name": "coincident peak contribution",
+          "unit": "MW"
+        }
+      ],
+      "temporal_granularity_hint": "monthly"
+    },
+    {
+      "id": "dom_045",
+      "name": "Heating vs cooling degree day load sensitivity",
+      "topic": "Electric Utility Grid Load",
+      "complexity_tier": "medium",
+      "typical_entities_hint": [
+        "climate zone",
+        "customer class",
+        "weather station"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "degree days",
+          "unit": "°F-day"
+        },
+        {
+          "name": "weather-normalized load",
+          "unit": "MWh"
+        },
+        {
+          "name": "load sensitivity",
+          "unit": "MW/°F"
+        }
+      ],
+      "temporal_granularity_hint": "weekly"
+    },
+    {
+      "id": "dom_046",
+      "name": "Generation stack dispatch versus load",
+      "topic": "Electric Utility Grid Load",
+      "complexity_tier": "complex",
+      "typical_entities_hint": [
+        "fuel type",
+        "generating unit",
+        "balancing authority",
+        "interchange tie"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "dispatched output",
+          "unit": "MW"
+        },
+        {
+          "name": "marginal price",
+          "unit": "USD/MWh"
+        },
+        {
+          "name": "reserve margin",
+          "unit": "%"
+        }
+      ],
+      "temporal_granularity_hint": "daily"
+    },
+    {
+      "id": "dom_047",
+      "name": "Outage-driven load restoration cascade",
+      "topic": "Electric Utility Grid Load",
+      "complexity_tier": "complex",
+      "typical_entities_hint": [
+        "region",
+        "substation",
+        "feeder",
+        "crew"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "customers interrupted",
+          "unit": "count"
+        },
+        {
+          "name": "unserved energy",
+          "unit": "MWh"
+        },
+        {
+          "name": "restoration time",
+          "unit": "hours"
+        }
+      ],
+      "temporal_granularity_hint": "daily"
+    },
+    {
+      "id": "dom_048",
+      "name": "Battery storage arbitrage and peak shaving portfolio",
+      "topic": "Electric Utility Grid Load",
+      "complexity_tier": "complex",
+      "typical_entities_hint": [
+        "storage asset",
+        "substation",
+        "market node",
+        "utility program"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "charge/discharge energy",
+          "unit": "MWh"
+        },
+        {
+          "name": "peak reduction",
+          "unit": "MW"
+        },
+        {
+          "name": "round-trip efficiency",
+          "unit": "%"
+        }
+      ],
+      "temporal_granularity_hint": "monthly"
+    },
+    {
+      "id": "dom_049",
+      "name": "Paint shop defect rate",
+      "topic": "Automotive Manufacturing Quality",
+      "complexity_tier": "simple",
+      "typical_entities_hint": [
+        "paint booth",
+        "vehicle model"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "defects per 100 units",
+          "unit": "defects/100 units"
+        },
+        {
+          "name": "rework rate",
+          "unit": "%"
+        }
+      ],
+      "temporal_granularity_hint": "daily"
+    },
+    {
+      "id": "dom_050",
+      "name": "Final assembly first-pass yield",
+      "topic": "Automotive Manufacturing Quality",
+      "complexity_tier": "simple",
+      "typical_entities_hint": [
+        "assembly line",
+        "shift"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "first-pass yield",
+          "unit": "%"
+        }
+      ],
+      "temporal_granularity_hint": "weekly"
+    },
+    {
+      "id": "dom_051",
+      "name": "Warranty claims per 1000 vehicles",
+      "topic": "Automotive Manufacturing Quality",
+      "complexity_tier": "simple",
+      "typical_entities_hint": [
+        "vehicle model",
+        "model year"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "claims per 1000 vehicles",
+          "unit": "claims/1000 units"
+        },
+        {
+          "name": "average claim cost",
+          "unit": "USD"
+        }
+      ],
+      "temporal_granularity_hint": "monthly"
+    },
+    {
+      "id": "dom_052",
+      "name": "Torque tool calibration drift",
+      "topic": "Automotive Manufacturing Quality",
+      "complexity_tier": "simple",
+      "typical_entities_hint": [
+        "torque tool",
+        "station"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "mean torque deviation",
+          "unit": "Nm"
+        }
+      ],
+      "temporal_granularity_hint": "weekly"
+    },
+    {
+      "id": "dom_053",
+      "name": "Supplier incoming part rejection",
+      "topic": "Automotive Manufacturing Quality",
+      "complexity_tier": "medium",
+      "typical_entities_hint": [
+        "supplier",
+        "part category",
+        "inspection site"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "PPM defective",
+          "unit": "ppm"
+        },
+        {
+          "name": "lots rejected",
+          "unit": "count"
+        },
+        {
+          "name": "on-time delivery",
+          "unit": "%"
+        }
+      ],
+      "temporal_granularity_hint": "monthly"
+    },
+    {
+      "id": "dom_054",
+      "name": "Weld spot inspection performance",
+      "topic": "Automotive Manufacturing Quality",
+      "complexity_tier": "medium",
+      "typical_entities_hint": [
+        "welding robot",
+        "body shop cell",
+        "vehicle model"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "failed weld spots",
+          "unit": "count"
+        },
+        {
+          "name": "ultrasonic pass rate",
+          "unit": "%"
+        },
+        {
+          "name": "robot uptime",
+          "unit": "%"
+        }
+      ],
+      "temporal_granularity_hint": "daily"
+    },
+    {
+      "id": "dom_055",
+      "name": "End-of-line test failures by subsystem",
+      "topic": "Automotive Manufacturing Quality",
+      "complexity_tier": "medium",
+      "typical_entities_hint": [
+        "test station",
+        "subsystem",
+        "vehicle model"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "failure rate",
+          "unit": "%"
+        },
+        {
+          "name": "retest cycle time",
+          "unit": "minutes"
+        }
+      ],
+      "temporal_granularity_hint": "daily"
+    },
+    {
+      "id": "dom_056",
+      "name": "Dimensional variation in body panels",
+      "topic": "Automotive Manufacturing Quality",
+      "complexity_tier": "medium",
+      "typical_entities_hint": [
+        "stamping press",
+        "panel type",
+        "measurement point"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "Cpk",
+          "unit": "index"
+        },
+        {
+          "name": "mean deviation",
+          "unit": "mm"
+        },
+        {
+          "name": "out-of-tolerance rate",
+          "unit": "%"
+        }
+      ],
+      "temporal_granularity_hint": "weekly"
+    },
+    {
+      "id": "dom_057",
+      "name": "Engine plant leak-test scrap and rework",
+      "topic": "Automotive Manufacturing Quality",
+      "complexity_tier": "medium",
+      "typical_entities_hint": [
+        "engine family",
+        "machining line",
+        "shift"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "scrap rate",
+          "unit": "%"
+        },
+        {
+          "name": "rework hours",
+          "unit": "hours"
+        },
+        {
+          "name": "scrap cost",
+          "unit": "USD"
+        }
+      ],
+      "temporal_granularity_hint": "weekly"
+    },
+    {
+      "id": "dom_058",
+      "name": "Plant-wide quality scorecard rollup",
+      "topic": "Automotive Manufacturing Quality",
+      "complexity_tier": "complex",
+      "typical_entities_hint": [
+        "plant",
+        "shop",
+        "line",
+        "shift"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "DPU",
+          "unit": "defects/unit"
+        },
+        {
+          "name": "first-time-through",
+          "unit": "%"
+        },
+        {
+          "name": "cost of poor quality",
+          "unit": "USD"
+        }
+      ],
+      "temporal_granularity_hint": "monthly"
+    },
+    {
+      "id": "dom_059",
+      "name": "Field failure to root-cause traceability",
+      "topic": "Automotive Manufacturing Quality",
+      "complexity_tier": "complex",
+      "typical_entities_hint": [
+        "vehicle model",
+        "component",
+        "supplier",
+        "production batch"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "failures per 1000 vehicles",
+          "unit": "failures/1000 units"
+        },
+        {
+          "name": "time-to-root-cause",
+          "unit": "days"
+        },
+        {
+          "name": "recall exposure cost",
+          "unit": "USD"
+        }
+      ],
+      "temporal_granularity_hint": "monthly"
+    },
+    {
+      "id": "dom_060",
+      "name": "Launch quality ramp for new model",
+      "topic": "Automotive Manufacturing Quality",
+      "complexity_tier": "complex",
+      "typical_entities_hint": [
+        "new model program",
+        "assembly zone",
+        "supplier",
+        "build phase"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "defects per unit",
+          "unit": "defects/unit"
+        },
+        {
+          "name": "open concerns",
+          "unit": "count"
+        },
+        {
+          "name": "build rate attainment",
+          "unit": "%"
+        }
+      ],
+      "temporal_granularity_hint": "weekly"
+    },
+    {
+      "id": "dom_061",
+      "name": "Median home sale price trend",
+      "topic": "Residential Real Estate Sales",
+      "complexity_tier": "simple",
+      "typical_entities_hint": [
+        "metro area",
+        "property type"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "median sale price",
+          "unit": "USD"
+        },
+        {
+          "name": "closed sales",
+          "unit": "count"
+        }
+      ],
+      "temporal_granularity_hint": "monthly"
+    },
+    {
+      "id": "dom_062",
+      "name": "Days on market for active listings",
+      "topic": "Residential Real Estate Sales",
+      "complexity_tier": "simple",
+      "typical_entities_hint": [
+        "listing",
+        "neighborhood"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "median days on market",
+          "unit": "days"
+        }
+      ],
+      "temporal_granularity_hint": "weekly"
+    },
+    {
+      "id": "dom_063",
+      "name": "New listings inventory count",
+      "topic": "Residential Real Estate Sales",
+      "complexity_tier": "simple",
+      "typical_entities_hint": [
+        "county",
+        "property type"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "new listings",
+          "unit": "count"
+        },
+        {
+          "name": "active inventory",
+          "unit": "count"
+        }
+      ],
+      "temporal_granularity_hint": "weekly"
+    },
+    {
+      "id": "dom_064",
+      "name": "Open house foot traffic",
+      "topic": "Residential Real Estate Sales",
+      "complexity_tier": "simple",
+      "typical_entities_hint": [
+        "listing",
+        "brokerage"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "visitors",
+          "unit": "count"
+        },
+        {
+          "name": "signed-in leads",
+          "unit": "count"
+        }
+      ],
+      "temporal_granularity_hint": "weekly"
+    },
+    {
+      "id": "dom_065",
+      "name": "Mortgage rate impact on pending sales",
+      "topic": "Residential Real Estate Sales",
+      "complexity_tier": "medium",
+      "typical_entities_hint": [
+        "lender",
+        "metro area",
+        "loan product"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "average 30-year rate",
+          "unit": "percent"
+        },
+        {
+          "name": "pending sales",
+          "unit": "count"
+        },
+        {
+          "name": "average loan amount",
+          "unit": "USD"
+        }
+      ],
+      "temporal_granularity_hint": "weekly"
+    },
+    {
+      "id": "dom_066",
+      "name": "List-to-sale price ratio by segment",
+      "topic": "Residential Real Estate Sales",
+      "complexity_tier": "medium",
+      "typical_entities_hint": [
+        "price tier",
+        "neighborhood",
+        "property type"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "list-to-sale ratio",
+          "unit": "percent"
+        },
+        {
+          "name": "price reductions",
+          "unit": "count"
+        },
+        {
+          "name": "median sale price",
+          "unit": "USD"
+        }
+      ],
+      "temporal_granularity_hint": "monthly"
+    },
+    {
+      "id": "dom_067",
+      "name": "Agent productivity and commission",
+      "topic": "Residential Real Estate Sales",
+      "complexity_tier": "medium",
+      "typical_entities_hint": [
+        "agent",
+        "brokerage",
+        "office"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "closed transactions",
+          "unit": "count"
+        },
+        {
+          "name": "gross commission income",
+          "unit": "USD"
+        },
+        {
+          "name": "sales volume",
+          "unit": "USD"
+        }
+      ],
+      "temporal_granularity_hint": "monthly"
+    },
+    {
+      "id": "dom_068",
+      "name": "Buyer lead funnel conversion",
+      "topic": "Residential Real Estate Sales",
+      "complexity_tier": "medium",
+      "typical_entities_hint": [
+        "lead source",
+        "agent",
+        "market"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "leads generated",
+          "unit": "count"
+        },
+        {
+          "name": "showings booked",
+          "unit": "count"
+        },
+        {
+          "name": "conversion rate",
+          "unit": "percent"
+        }
+      ],
+      "temporal_granularity_hint": "weekly"
+    },
+    {
+      "id": "dom_069",
+      "name": "New construction sales pipeline by builder community",
+      "topic": "Residential Real Estate Sales",
+      "complexity_tier": "complex",
+      "typical_entities_hint": [
+        "builder",
+        "community",
+        "floor plan",
+        "phase"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "net sales",
+          "unit": "count"
+        },
+        {
+          "name": "cancellation rate",
+          "unit": "percent"
+        },
+        {
+          "name": "average base price",
+          "unit": "USD"
+        }
+      ],
+      "temporal_granularity_hint": "monthly"
+    },
+    {
+      "id": "dom_070",
+      "name": "Regional affordability and absorption dynamics",
+      "topic": "Residential Real Estate Sales",
+      "complexity_tier": "complex",
+      "typical_entities_hint": [
+        "state",
+        "metro area",
+        "zip code",
+        "income bracket"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "affordability index",
+          "unit": "index"
+        },
+        {
+          "name": "months of supply",
+          "unit": "months"
+        },
+        {
+          "name": "absorption rate",
+          "unit": "percent"
+        }
+      ],
+      "temporal_granularity_hint": "monthly"
+    },
+    {
+      "id": "dom_071",
+      "name": "Escrow-to-close funnel with fallout drivers",
+      "topic": "Residential Real Estate Sales",
+      "complexity_tier": "complex",
+      "typical_entities_hint": [
+        "transaction",
+        "title company",
+        "lender",
+        "contingency type"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "contracts opened",
+          "unit": "count"
+        },
+        {
+          "name": "fallout rate",
+          "unit": "percent"
+        },
+        {
+          "name": "average close cycle time",
+          "unit": "days"
+        }
+      ],
+      "temporal_granularity_hint": "weekly"
+    },
+    {
+      "id": "dom_072",
+      "name": "Investor vs owner-occupant purchase mix by submarket",
+      "topic": "Residential Real Estate Sales",
+      "complexity_tier": "complex",
+      "typical_entities_hint": [
+        "buyer type",
+        "submarket",
+        "property type",
+        "financing type"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "share of purchases",
+          "unit": "percent"
+        },
+        {
+          "name": "median price per square foot",
+          "unit": "USD/sqft"
+        },
+        {
+          "name": "cash transaction share",
+          "unit": "percent"
+        }
+      ],
+      "temporal_granularity_hint": "monthly"
+    },
+    {
+      "id": "dom_073",
+      "name": "Monthly loan delinquency rate trend",
+      "topic": "Commercial Banking Credit Risk",
+      "complexity_tier": "simple",
+      "typical_entities_hint": [
+        "loan portfolio",
+        "branch"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "30+ day delinquency rate",
+          "unit": "percent"
+        },
+        {
+          "name": "delinquent balance",
+          "unit": "USD millions"
+        }
+      ],
+      "temporal_granularity_hint": "monthly"
+    },
+    {
+      "id": "dom_074",
+      "name": "Weekly new credit application volume",
+      "topic": "Commercial Banking Credit Risk",
+      "complexity_tier": "simple",
+      "typical_entities_hint": [
+        "application channel",
+        "product type"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "applications received",
+          "unit": "count"
+        },
+        {
+          "name": "approval rate",
+          "unit": "percent"
+        }
+      ],
+      "temporal_granularity_hint": "weekly"
+    },
+    {
+      "id": "dom_075",
+      "name": "Daily credit line utilization on revolving facilities",
+      "topic": "Commercial Banking Credit Risk",
+      "complexity_tier": "simple",
+      "typical_entities_hint": [
+        "corporate borrower",
+        "credit facility"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "utilization rate",
+          "unit": "percent"
+        },
+        {
+          "name": "drawn balance",
+          "unit": "USD millions"
+        }
+      ],
+      "temporal_granularity_hint": "daily"
+    },
+    {
+      "id": "dom_076",
+      "name": "Loan loss provision build by quarter-month",
+      "topic": "Commercial Banking Credit Risk",
+      "complexity_tier": "simple",
+      "typical_entities_hint": [
+        "business segment"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "provision expense",
+          "unit": "USD millions"
+        },
+        {
+          "name": "allowance coverage ratio",
+          "unit": "percent"
+        }
+      ],
+      "temporal_granularity_hint": "monthly"
+    },
+    {
+      "id": "dom_077",
+      "name": "Risk-rating migration across borrower grades",
+      "topic": "Commercial Banking Credit Risk",
+      "complexity_tier": "medium",
+      "typical_entities_hint": [
+        "borrower",
+        "internal risk grade",
+        "industry sector"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "upgrade rate",
+          "unit": "percent"
+        },
+        {
+          "name": "downgrade rate",
+          "unit": "percent"
+        },
+        {
+          "name": "exposure migrated",
+          "unit": "USD millions"
+        }
+      ],
+      "temporal_granularity_hint": "monthly"
+    },
+    {
+      "id": "dom_078",
+      "name": "Collateral valuation vs loan-to-value drift",
+      "topic": "Commercial Banking Credit Risk",
+      "complexity_tier": "medium",
+      "typical_entities_hint": [
+        "collateral type",
+        "loan",
+        "region"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "average LTV",
+          "unit": "percent"
+        },
+        {
+          "name": "appraised collateral value",
+          "unit": "USD millions"
+        },
+        {
+          "name": "revaluation haircut",
+          "unit": "percent"
+        }
+      ],
+      "temporal_granularity_hint": "monthly"
+    },
+    {
+      "id": "dom_079",
+      "name": "Covenant breach monitoring across corporate clients",
+      "topic": "Commercial Banking Credit Risk",
+      "complexity_tier": "medium",
+      "typical_entities_hint": [
+        "corporate client",
+        "covenant type",
+        "relationship manager"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "breach incidents",
+          "unit": "count"
+        },
+        {
+          "name": "exposure at risk",
+          "unit": "USD millions"
+        },
+        {
+          "name": "waiver rate",
+          "unit": "percent"
+        }
+      ],
+      "temporal_granularity_hint": "monthly"
+    },
+    {
+      "id": "dom_080",
+      "name": "Watchlist account inflow and cure rates",
+      "topic": "Commercial Banking Credit Risk",
+      "complexity_tier": "medium",
+      "typical_entities_hint": [
+        "watchlist account",
+        "industry sector",
+        "workout team"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "accounts entering watchlist",
+          "unit": "count"
+        },
+        {
+          "name": "cure rate",
+          "unit": "percent"
+        },
+        {
+          "name": "average days on watchlist",
+          "unit": "days"
+        }
+      ],
+      "temporal_granularity_hint": "weekly"
+    },
+    {
+      "id": "dom_081",
+      "name": "Expected credit loss decomposition by IFRS 9 stage",
+      "topic": "Commercial Banking Credit Risk",
+      "complexity_tier": "complex",
+      "typical_entities_hint": [
+        "portfolio",
+        "IFRS 9 stage",
+        "product line",
+        "macro scenario"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "probability of default",
+          "unit": "percent"
+        },
+        {
+          "name": "loss given default",
+          "unit": "percent"
+        },
+        {
+          "name": "expected credit loss",
+          "unit": "USD millions"
+        }
+      ],
+      "temporal_granularity_hint": "monthly"
+    },
+    {
+      "id": "dom_082",
+      "name": "Sector-region concentration and correlated exposure limits",
+      "topic": "Commercial Banking Credit Risk",
+      "complexity_tier": "complex",
+      "typical_entities_hint": [
+        "industry sector",
+        "geographic region",
+        "borrower group",
+        "limit framework"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "exposure at default",
+          "unit": "USD millions"
+        },
+        {
+          "name": "concentration index",
+          "unit": "HHI score"
+        },
+        {
+          "name": "limit utilization",
+          "unit": "percent"
+        }
+      ],
+      "temporal_granularity_hint": "monthly"
+    },
+    {
+      "id": "dom_083",
+      "name": "Vintage cohort default curves for SME lending",
+      "topic": "Commercial Banking Credit Risk",
+      "complexity_tier": "complex",
+      "typical_entities_hint": [
+        "origination vintage",
+        "SME borrower",
+        "credit score band",
+        "branch network"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "cumulative default rate",
+          "unit": "percent"
+        },
+        {
+          "name": "net charge-off rate",
+          "unit": "percent"
+        },
+        {
+          "name": "recovery rate",
+          "unit": "percent"
+        }
+      ],
+      "temporal_granularity_hint": "monthly"
+    },
+    {
+      "id": "dom_084",
+      "name": "Stress test loss projections across macro scenarios",
+      "topic": "Commercial Banking Credit Risk",
+      "complexity_tier": "complex",
+      "typical_entities_hint": [
+        "macro scenario",
+        "portfolio segment",
+        "capital tier",
+        "business unit"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "projected credit loss",
+          "unit": "USD millions"
+        },
+        {
+          "name": "CET1 ratio impact",
+          "unit": "basis points"
+        },
+        {
+          "name": "risk-weighted assets",
+          "unit": "USD billions"
+        }
+      ],
+      "temporal_granularity_hint": "monthly"
+    },
+    {
+      "id": "dom_085",
+      "name": "Daily mobile data volume per cell tower",
+      "topic": "Mobile Telecom Network Usage",
+      "complexity_tier": "simple",
+      "typical_entities_hint": [
+        "cell tower",
+        "region"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "data traffic",
+          "unit": "TB"
+        },
+        {
+          "name": "peak throughput",
+          "unit": "Gbps"
+        }
+      ],
+      "temporal_granularity_hint": "daily"
+    },
+    {
+      "id": "dom_086",
+      "name": "SMS volume decline by carrier",
+      "topic": "Mobile Telecom Network Usage",
+      "complexity_tier": "simple",
+      "typical_entities_hint": [
+        "carrier",
+        "country"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "SMS sent",
+          "unit": "millions of messages"
+        }
+      ],
+      "temporal_granularity_hint": "monthly"
+    },
+    {
+      "id": "dom_087",
+      "name": "Voice call minutes by time of day",
+      "topic": "Mobile Telecom Network Usage",
+      "complexity_tier": "simple",
+      "typical_entities_hint": [
+        "network operator",
+        "hour block"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "call minutes",
+          "unit": "million minutes"
+        },
+        {
+          "name": "concurrent calls",
+          "unit": "calls"
+        }
+      ],
+      "temporal_granularity_hint": "daily"
+    },
+    {
+      "id": "dom_088",
+      "name": "Prepaid top-up transactions per week",
+      "topic": "Mobile Telecom Network Usage",
+      "complexity_tier": "simple",
+      "typical_entities_hint": [
+        "retail channel",
+        "carrier"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "top-up count",
+          "unit": "transactions"
+        },
+        {
+          "name": "top-up value",
+          "unit": "USD"
+        }
+      ],
+      "temporal_granularity_hint": "weekly"
+    },
+    {
+      "id": "dom_089",
+      "name": "4G to 5G subscriber migration",
+      "topic": "Mobile Telecom Network Usage",
+      "complexity_tier": "medium",
+      "typical_entities_hint": [
+        "network generation",
+        "carrier",
+        "device tier"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "active subscribers",
+          "unit": "millions"
+        },
+        {
+          "name": "migration rate",
+          "unit": "% of base"
+        },
+        {
+          "name": "ARPU",
+          "unit": "USD/subscriber"
+        }
+      ],
+      "temporal_granularity_hint": "monthly"
+    },
+    {
+      "id": "dom_090",
+      "name": "Dropped call rate vs. cell congestion",
+      "topic": "Mobile Telecom Network Usage",
+      "complexity_tier": "medium",
+      "typical_entities_hint": [
+        "cell site",
+        "region",
+        "technology band"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "dropped call rate",
+          "unit": "%"
+        },
+        {
+          "name": "cell load",
+          "unit": "% capacity"
+        },
+        {
+          "name": "handover failures",
+          "unit": "count"
+        }
+      ],
+      "temporal_granularity_hint": "daily"
+    },
+    {
+      "id": "dom_091",
+      "name": "Roaming usage by destination country",
+      "topic": "Mobile Telecom Network Usage",
+      "complexity_tier": "medium",
+      "typical_entities_hint": [
+        "home carrier",
+        "visited country",
+        "subscriber segment"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "roaming data",
+          "unit": "GB"
+        },
+        {
+          "name": "roaming revenue",
+          "unit": "USD"
+        }
+      ],
+      "temporal_granularity_hint": "monthly"
+    },
+    {
+      "id": "dom_092",
+      "name": "App category share of mobile traffic",
+      "topic": "Mobile Telecom Network Usage",
+      "complexity_tier": "medium",
+      "typical_entities_hint": [
+        "app category",
+        "access technology",
+        "region"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "traffic volume",
+          "unit": "PB"
+        },
+        {
+          "name": "traffic share",
+          "unit": "%"
+        },
+        {
+          "name": "average session length",
+          "unit": "minutes"
+        }
+      ],
+      "temporal_granularity_hint": "weekly"
+    },
+    {
+      "id": "dom_093",
+      "name": "Network capacity planning across region-city-sector hierarchy",
+      "topic": "Mobile Telecom Network Usage",
+      "complexity_tier": "complex",
+      "typical_entities_hint": [
+        "region",
+        "city",
+        "cell sector",
+        "frequency band"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "utilization",
+          "unit": "% capacity"
+        },
+        {
+          "name": "offered traffic",
+          "unit": "TB"
+        },
+        {
+          "name": "spectral efficiency",
+          "unit": "bps/Hz"
+        }
+      ],
+      "temporal_granularity_hint": "monthly"
+    },
+    {
+      "id": "dom_094",
+      "name": "Subscriber churn drivers by plan and quality of experience",
+      "topic": "Mobile Telecom Network Usage",
+      "complexity_tier": "complex",
+      "typical_entities_hint": [
+        "tariff plan",
+        "customer segment",
+        "market",
+        "device brand"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "churn rate",
+          "unit": "% per month"
+        },
+        {
+          "name": "complaint tickets",
+          "unit": "per 1000 subs"
+        },
+        {
+          "name": "average download speed",
+          "unit": "Mbps"
+        }
+      ],
+      "temporal_granularity_hint": "monthly"
+    },
+    {
+      "id": "dom_095",
+      "name": "5G rollout progress vs. traffic offload and energy cost",
+      "topic": "Mobile Telecom Network Usage",
+      "complexity_tier": "complex",
+      "typical_entities_hint": [
+        "market",
+        "site type",
+        "vendor",
+        "radio band"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "sites live",
+          "unit": "count"
+        },
+        {
+          "name": "traffic offloaded from 4G",
+          "unit": "% of total"
+        },
+        {
+          "name": "energy consumption",
+          "unit": "MWh"
+        }
+      ],
+      "temporal_granularity_hint": "monthly"
+    },
+    {
+      "id": "dom_096",
+      "name": "Peak-hour QoS degradation across backhaul and core layers",
+      "topic": "Mobile Telecom Network Usage",
+      "complexity_tier": "complex",
+      "typical_entities_hint": [
+        "core node",
+        "backhaul link",
+        "cell cluster",
+        "service class"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "latency",
+          "unit": "ms"
+        },
+        {
+          "name": "packet loss",
+          "unit": "%"
+        },
+        {
+          "name": "link utilization",
+          "unit": "% capacity"
+        }
+      ],
+      "temporal_granularity_hint": "daily"
+    },
+    {
+      "id": "dom_097",
+      "name": "Daily occupancy rate for a single property",
+      "topic": "Hotel and Resort Occupancy",
+      "complexity_tier": "simple",
+      "typical_entities_hint": [
+        "hotel property",
+        "calendar date"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "occupancy rate",
+          "unit": "percent"
+        },
+        {
+          "name": "rooms sold",
+          "unit": "rooms"
+        }
+      ],
+      "temporal_granularity_hint": "daily"
+    },
+    {
+      "id": "dom_098",
+      "name": "Average daily rate trend by season",
+      "topic": "Hotel and Resort Occupancy",
+      "complexity_tier": "simple",
+      "typical_entities_hint": [
+        "resort",
+        "season"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "average daily rate",
+          "unit": "USD per room-night"
+        }
+      ],
+      "temporal_granularity_hint": "monthly"
+    },
+    {
+      "id": "dom_099",
+      "name": "Weekly cancellation counts",
+      "topic": "Hotel and Resort Occupancy",
+      "complexity_tier": "simple",
+      "typical_entities_hint": [
+        "hotel property",
+        "booking"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "cancellations",
+          "unit": "bookings"
+        },
+        {
+          "name": "cancellation rate",
+          "unit": "percent"
+        }
+      ],
+      "temporal_granularity_hint": "weekly"
+    },
+    {
+      "id": "dom_100",
+      "name": "No-show rate tracking",
+      "topic": "Hotel and Resort Occupancy",
+      "complexity_tier": "simple",
+      "typical_entities_hint": [
+        "hotel property",
+        "reservation"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "no-show rate",
+          "unit": "percent"
+        }
+      ],
+      "temporal_granularity_hint": "weekly"
+    },
+    {
+      "id": "dom_101",
+      "name": "RevPAR vs ADR and occupancy by room type",
+      "topic": "Hotel and Resort Occupancy",
+      "complexity_tier": "medium",
+      "typical_entities_hint": [
+        "hotel property",
+        "room type"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "RevPAR",
+          "unit": "USD"
+        },
+        {
+          "name": "average daily rate",
+          "unit": "USD"
+        },
+        {
+          "name": "occupancy rate",
+          "unit": "percent"
+        }
+      ],
+      "temporal_granularity_hint": "monthly"
+    },
+    {
+      "id": "dom_102",
+      "name": "Booking channel mix and commission cost",
+      "topic": "Hotel and Resort Occupancy",
+      "complexity_tier": "medium",
+      "typical_entities_hint": [
+        "booking channel",
+        "hotel property",
+        "guest segment"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "bookings",
+          "unit": "reservations"
+        },
+        {
+          "name": "commission cost",
+          "unit": "USD"
+        },
+        {
+          "name": "net ADR",
+          "unit": "USD"
+        }
+      ],
+      "temporal_granularity_hint": "monthly"
+    },
+    {
+      "id": "dom_103",
+      "name": "Lead time versus length of stay by guest segment",
+      "topic": "Hotel and Resort Occupancy",
+      "complexity_tier": "medium",
+      "typical_entities_hint": [
+        "guest segment",
+        "hotel property",
+        "booking"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "booking lead time",
+          "unit": "days"
+        },
+        {
+          "name": "average length of stay",
+          "unit": "nights"
+        }
+      ],
+      "temporal_granularity_hint": "weekly"
+    },
+    {
+      "id": "dom_104",
+      "name": "Housekeeping labor hours against room turnover",
+      "topic": "Hotel and Resort Occupancy",
+      "complexity_tier": "medium",
+      "typical_entities_hint": [
+        "hotel property",
+        "housekeeping team",
+        "room type"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "rooms cleaned",
+          "unit": "rooms"
+        },
+        {
+          "name": "labor hours",
+          "unit": "hours"
+        },
+        {
+          "name": "cost per occupied room",
+          "unit": "USD"
+        }
+      ],
+      "temporal_granularity_hint": "daily"
+    },
+    {
+      "id": "dom_105",
+      "name": "Resort ancillary spend versus occupancy",
+      "topic": "Hotel and Resort Occupancy",
+      "complexity_tier": "medium",
+      "typical_entities_hint": [
+        "resort",
+        "outlet (spa, F&B, golf)",
+        "guest segment"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "ancillary revenue per occupied room",
+          "unit": "USD"
+        },
+        {
+          "name": "occupancy rate",
+          "unit": "percent"
+        }
+      ],
+      "temporal_granularity_hint": "weekly"
+    },
+    {
+      "id": "dom_106",
+      "name": "Multi-brand portfolio performance across regions",
+      "topic": "Hotel and Resort Occupancy",
+      "complexity_tier": "complex",
+      "typical_entities_hint": [
+        "brand",
+        "region",
+        "property",
+        "room type"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "occupancy rate",
+          "unit": "percent"
+        },
+        {
+          "name": "RevPAR",
+          "unit": "USD"
+        },
+        {
+          "name": "gross operating profit per room",
+          "unit": "USD"
+        }
+      ],
+      "temporal_granularity_hint": "monthly"
+    },
+    {
+      "id": "dom_107",
+      "name": "Competitive set index benchmarking",
+      "topic": "Hotel and Resort Occupancy",
+      "complexity_tier": "complex",
+      "typical_entities_hint": [
+        "subject hotel",
+        "competitive set",
+        "market",
+        "room type"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "market penetration index",
+          "unit": "index"
+        },
+        {
+          "name": "ADR index",
+          "unit": "index"
+        },
+        {
+          "name": "RevPAR index",
+          "unit": "index"
+        }
+      ],
+      "temporal_granularity_hint": "monthly"
+    },
+    {
+      "id": "dom_108",
+      "name": "Overbooking, walk cost and yield optimization",
+      "topic": "Hotel and Resort Occupancy",
+      "complexity_tier": "complex",
+      "typical_entities_hint": [
+        "hotel property",
+        "rate plan",
+        "room type",
+        "booking channel"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "overbooking rate",
+          "unit": "percent"
+        },
+        {
+          "name": "walked guest cost",
+          "unit": "USD"
+        },
+        {
+          "name": "realized RevPAR",
+          "unit": "USD"
+        }
+      ],
+      "temporal_granularity_hint": "daily"
+    },
+    {
+      "id": "dom_109",
+      "name": "National wheat yield trend",
+      "topic": "Agricultural Crop Yields",
+      "complexity_tier": "simple",
+      "typical_entities_hint": [
+        "country",
+        "crop variety"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "yield",
+          "unit": "tonnes per hectare"
+        },
+        {
+          "name": "harvested area",
+          "unit": "hectares"
+        }
+      ],
+      "temporal_granularity_hint": "monthly"
+    },
+    {
+      "id": "dom_110",
+      "name": "Weekly farm irrigation water use",
+      "topic": "Agricultural Crop Yields",
+      "complexity_tier": "simple",
+      "typical_entities_hint": [
+        "farm",
+        "field plot"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "water applied",
+          "unit": "mm"
+        },
+        {
+          "name": "soil moisture",
+          "unit": "percent volumetric"
+        }
+      ],
+      "temporal_granularity_hint": "weekly"
+    },
+    {
+      "id": "dom_111",
+      "name": "Daily greenhouse tomato harvest volume",
+      "topic": "Agricultural Crop Yields",
+      "complexity_tier": "simple",
+      "typical_entities_hint": [
+        "greenhouse bay",
+        "cultivar"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "harvest weight",
+          "unit": "kg"
+        },
+        {
+          "name": "fruit count",
+          "unit": "units"
+        }
+      ],
+      "temporal_granularity_hint": "daily"
+    },
+    {
+      "id": "dom_112",
+      "name": "Maize planting-to-harvest progress by state",
+      "topic": "Agricultural Crop Yields",
+      "complexity_tier": "simple",
+      "typical_entities_hint": [
+        "state",
+        "crop stage"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "area planted",
+          "unit": "percent of intended"
+        },
+        {
+          "name": "area harvested",
+          "unit": "percent of planted"
+        }
+      ],
+      "temporal_granularity_hint": "weekly"
+    },
+    {
+      "id": "dom_113",
+      "name": "Fertilizer application vs yield response",
+      "topic": "Agricultural Crop Yields",
+      "complexity_tier": "medium",
+      "typical_entities_hint": [
+        "field trial plot",
+        "fertilizer type",
+        "crop"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "nitrogen applied",
+          "unit": "kg per hectare"
+        },
+        {
+          "name": "grain yield",
+          "unit": "tonnes per hectare"
+        },
+        {
+          "name": "nitrogen use efficiency",
+          "unit": "kg grain per kg N"
+        }
+      ],
+      "temporal_granularity_hint": "monthly"
+    },
+    {
+      "id": "dom_114",
+      "name": "Rainfall and drought impact on regional yields",
+      "topic": "Agricultural Crop Yields",
+      "complexity_tier": "medium",
+      "typical_entities_hint": [
+        "district",
+        "crop",
+        "weather station"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "cumulative rainfall",
+          "unit": "mm"
+        },
+        {
+          "name": "yield deviation from trend",
+          "unit": "percent"
+        },
+        {
+          "name": "drought index",
+          "unit": "index value"
+        }
+      ],
+      "temporal_granularity_hint": "monthly"
+    },
+    {
+      "id": "dom_115",
+      "name": "Organic vs conventional yield and cost comparison",
+      "topic": "Agricultural Crop Yields",
+      "complexity_tier": "medium",
+      "typical_entities_hint": [
+        "farm",
+        "management system",
+        "crop"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "yield",
+          "unit": "tonnes per hectare"
+        },
+        {
+          "name": "input cost",
+          "unit": "USD per hectare"
+        },
+        {
+          "name": "gross margin",
+          "unit": "USD per hectare"
+        }
+      ],
+      "temporal_granularity_hint": "monthly"
+    },
+    {
+      "id": "dom_116",
+      "name": "Pest and disease pressure vs crop loss",
+      "topic": "Agricultural Crop Yields",
+      "complexity_tier": "medium",
+      "typical_entities_hint": [
+        "scouting site",
+        "pest species",
+        "crop"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "pest incidence",
+          "unit": "percent of plants"
+        },
+        {
+          "name": "estimated yield loss",
+          "unit": "percent"
+        },
+        {
+          "name": "pesticide applications",
+          "unit": "count"
+        }
+      ],
+      "temporal_granularity_hint": "weekly"
+    },
+    {
+      "id": "dom_117",
+      "name": "Multi-region seed variety trial performance",
+      "topic": "Agricultural Crop Yields",
+      "complexity_tier": "complex",
+      "typical_entities_hint": [
+        "breeding program",
+        "variety",
+        "trial site",
+        "soil type"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "grain yield",
+          "unit": "tonnes per hectare"
+        },
+        {
+          "name": "moisture at harvest",
+          "unit": "percent"
+        },
+        {
+          "name": "lodging rate",
+          "unit": "percent of plants"
+        }
+      ],
+      "temporal_granularity_hint": "monthly"
+    },
+    {
+      "id": "dom_118",
+      "name": "Cooperative supply chain from field to silo",
+      "topic": "Agricultural Crop Yields",
+      "complexity_tier": "complex",
+      "typical_entities_hint": [
+        "cooperative",
+        "member farm",
+        "storage silo",
+        "crop"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "delivered tonnage",
+          "unit": "tonnes"
+        },
+        {
+          "name": "post-harvest loss",
+          "unit": "percent"
+        },
+        {
+          "name": "storage utilization",
+          "unit": "percent capacity"
+        }
+      ],
+      "temporal_granularity_hint": "weekly"
+    },
+    {
+      "id": "dom_119",
+      "name": "Precision agriculture zone productivity analytics",
+      "topic": "Agricultural Crop Yields",
+      "complexity_tier": "complex",
+      "typical_entities_hint": [
+        "farm",
+        "field",
+        "management zone",
+        "sensor type"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "NDVI",
+          "unit": "index 0-1"
+        },
+        {
+          "name": "zone yield",
+          "unit": "tonnes per hectare"
+        },
+        {
+          "name": "input cost per zone",
+          "unit": "USD per hectare"
+        }
+      ],
+      "temporal_granularity_hint": "weekly"
+    },
+    {
+      "id": "dom_120",
+      "name": "Global staple crop production and trade balance",
+      "topic": "Agricultural Crop Yields",
+      "complexity_tier": "complex",
+      "typical_entities_hint": [
+        "continent",
+        "country",
+        "crop",
+        "trade flow"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "production volume",
+          "unit": "million tonnes"
+        },
+        {
+          "name": "average yield",
+          "unit": "tonnes per hectare"
+        },
+        {
+          "name": "net exports",
+          "unit": "million tonnes"
+        }
+      ],
+      "temporal_granularity_hint": "monthly"
+    },
+    {
+      "id": "dom_121",
+      "name": "Container throughput at major ports",
+      "topic": "Marine Shipping and Port Logistics",
+      "complexity_tier": "simple",
+      "typical_entities_hint": [
+        "port",
+        "terminal"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "container volume",
+          "unit": "TEU"
+        },
+        {
+          "name": "loaded vs empty share",
+          "unit": "percent"
+        }
+      ],
+      "temporal_granularity_hint": "monthly"
+    },
+    {
+      "id": "dom_122",
+      "name": "Vessel berth waiting time",
+      "topic": "Marine Shipping and Port Logistics",
+      "complexity_tier": "simple",
+      "typical_entities_hint": [
+        "port",
+        "vessel"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "average waiting time at anchorage",
+          "unit": "hours"
+        }
+      ],
+      "temporal_granularity_hint": "daily"
+    },
+    {
+      "id": "dom_123",
+      "name": "Bunker fuel price tracking",
+      "topic": "Marine Shipping and Port Logistics",
+      "complexity_tier": "simple",
+      "typical_entities_hint": [
+        "bunkering port",
+        "fuel grade"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "VLSFO price",
+          "unit": "USD per metric ton"
+        },
+        {
+          "name": "MGO price",
+          "unit": "USD per metric ton"
+        }
+      ],
+      "temporal_granularity_hint": "weekly"
+    },
+    {
+      "id": "dom_124",
+      "name": "Spot freight rates on headhaul lanes",
+      "topic": "Marine Shipping and Port Logistics",
+      "complexity_tier": "simple",
+      "typical_entities_hint": [
+        "trade lane",
+        "index provider"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "spot rate",
+          "unit": "USD per FEU"
+        }
+      ],
+      "temporal_granularity_hint": "weekly"
+    },
+    {
+      "id": "dom_125",
+      "name": "Quay crane productivity by terminal",
+      "topic": "Marine Shipping and Port Logistics",
+      "complexity_tier": "medium",
+      "typical_entities_hint": [
+        "terminal",
+        "crane",
+        "shift"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "gross crane moves",
+          "unit": "moves per hour"
+        },
+        {
+          "name": "crane idle time",
+          "unit": "minutes per shift"
+        },
+        {
+          "name": "vessel turnaround",
+          "unit": "hours"
+        }
+      ],
+      "temporal_granularity_hint": "daily"
+    },
+    {
+      "id": "dom_126",
+      "name": "Schedule reliability by carrier and service loop",
+      "topic": "Marine Shipping and Port Logistics",
+      "complexity_tier": "medium",
+      "typical_entities_hint": [
+        "carrier",
+        "service loop",
+        "port of call"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "on-time arrival rate",
+          "unit": "percent"
+        },
+        {
+          "name": "average delay",
+          "unit": "days"
+        },
+        {
+          "name": "blank sailings",
+          "unit": "count"
+        }
+      ],
+      "temporal_granularity_hint": "monthly"
+    },
+    {
+      "id": "dom_127",
+      "name": "Empty container repositioning flows",
+      "topic": "Marine Shipping and Port Logistics",
+      "complexity_tier": "medium",
+      "typical_entities_hint": [
+        "depot",
+        "port",
+        "container type"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "empty units moved",
+          "unit": "TEU"
+        },
+        {
+          "name": "repositioning cost",
+          "unit": "USD per TEU"
+        },
+        {
+          "name": "depot dwell",
+          "unit": "days"
+        }
+      ],
+      "temporal_granularity_hint": "weekly"
+    },
+    {
+      "id": "dom_128",
+      "name": "Truck gate turn times and drayage queues",
+      "topic": "Marine Shipping and Port Logistics",
+      "complexity_tier": "medium",
+      "typical_entities_hint": [
+        "gate",
+        "trucking company",
+        "appointment window"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "gate turn time",
+          "unit": "minutes"
+        },
+        {
+          "name": "trucks processed",
+          "unit": "count per hour"
+        },
+        {
+          "name": "appointment no-show rate",
+          "unit": "percent"
+        }
+      ],
+      "temporal_granularity_hint": "daily"
+    },
+    {
+      "id": "dom_129",
+      "name": "Port emissions and shore power adoption",
+      "topic": "Marine Shipping and Port Logistics",
+      "complexity_tier": "complex",
+      "typical_entities_hint": [
+        "port",
+        "berth",
+        "vessel class",
+        "fuel type"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "CO2 at berth",
+          "unit": "tonnes"
+        },
+        {
+          "name": "shore power connection rate",
+          "unit": "percent of calls"
+        },
+        {
+          "name": "auxiliary fuel burned",
+          "unit": "metric tons"
+        }
+      ],
+      "temporal_granularity_hint": "monthly"
+    },
+    {
+      "id": "dom_130",
+      "name": "End-to-end container dwell across supply chain nodes",
+      "topic": "Marine Shipping and Port Logistics",
+      "complexity_tier": "complex",
+      "typical_entities_hint": [
+        "port",
+        "terminal yard",
+        "rail ramp",
+        "cargo owner"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "yard dwell",
+          "unit": "days"
+        },
+        {
+          "name": "rail transfer time",
+          "unit": "hours"
+        },
+        {
+          "name": "yard utilization",
+          "unit": "percent"
+        }
+      ],
+      "temporal_granularity_hint": "weekly"
+    },
+    {
+      "id": "dom_131",
+      "name": "Fleet capacity deployment and utilization by trade",
+      "topic": "Marine Shipping and Port Logistics",
+      "complexity_tier": "complex",
+      "typical_entities_hint": [
+        "carrier alliance",
+        "vessel class",
+        "trade route",
+        "charter market"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "deployed capacity",
+          "unit": "TEU"
+        },
+        {
+          "name": "load factor",
+          "unit": "percent"
+        },
+        {
+          "name": "idle fleet share",
+          "unit": "percent"
+        }
+      ],
+      "temporal_granularity_hint": "monthly"
+    },
+    {
+      "id": "dom_132",
+      "name": "Canal transit disruption and reroute economics",
+      "topic": "Marine Shipping and Port Logistics",
+      "complexity_tier": "complex",
+      "typical_entities_hint": [
+        "canal or chokepoint",
+        "trade lane",
+        "vessel class",
+        "insurance segment"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "daily transits",
+          "unit": "vessels per day"
+        },
+        {
+          "name": "added voyage distance",
+          "unit": "nautical miles"
+        },
+        {
+          "name": "war risk premium",
+          "unit": "percent of hull value"
+        }
+      ],
+      "temporal_granularity_hint": "weekly"
+    },
+    {
+      "id": "dom_133",
+      "name": "Daily active users for a single title",
+      "topic": "Video Game Player Engagement",
+      "complexity_tier": "simple",
+      "typical_entities_hint": [
+        "game title",
+        "player accounts"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "daily active users",
+          "unit": "players"
+        },
+        {
+          "name": "average session length",
+          "unit": "minutes"
+        }
+      ],
+      "temporal_granularity_hint": "daily"
+    },
+    {
+      "id": "dom_134",
+      "name": "New player day-1 retention",
+      "topic": "Video Game Player Engagement",
+      "complexity_tier": "simple",
+      "typical_entities_hint": [
+        "install cohort",
+        "game title"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "day-1 retention rate",
+          "unit": "percent"
+        }
+      ],
+      "temporal_granularity_hint": "daily"
+    },
+    {
+      "id": "dom_135",
+      "name": "Weekly playtime hours per platform",
+      "topic": "Video Game Player Engagement",
+      "complexity_tier": "simple",
+      "typical_entities_hint": [
+        "platform",
+        "game title"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "total playtime",
+          "unit": "hours"
+        },
+        {
+          "name": "sessions per player",
+          "unit": "sessions"
+        }
+      ],
+      "temporal_granularity_hint": "weekly"
+    },
+    {
+      "id": "dom_136",
+      "name": "Seasonal battle pass tier progression",
+      "topic": "Video Game Player Engagement",
+      "complexity_tier": "simple",
+      "typical_entities_hint": [
+        "battle pass season",
+        "player segment"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "average tier reached",
+          "unit": "tier"
+        },
+        {
+          "name": "pass completion rate",
+          "unit": "percent"
+        }
+      ],
+      "temporal_granularity_hint": "weekly"
+    },
+    {
+      "id": "dom_137",
+      "name": "Live event participation vs. baseline engagement",
+      "topic": "Video Game Player Engagement",
+      "complexity_tier": "medium",
+      "typical_entities_hint": [
+        "in-game event",
+        "game mode",
+        "player segment"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "event participation rate",
+          "unit": "percent"
+        },
+        {
+          "name": "daily sessions per player",
+          "unit": "sessions"
+        },
+        {
+          "name": "event-day playtime lift",
+          "unit": "percent"
+        }
+      ],
+      "temporal_granularity_hint": "daily"
+    },
+    {
+      "id": "dom_138",
+      "name": "Matchmaking queue times and match abandonment",
+      "topic": "Video Game Player Engagement",
+      "complexity_tier": "medium",
+      "typical_entities_hint": [
+        "game mode",
+        "skill bracket",
+        "region"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "median queue time",
+          "unit": "seconds"
+        },
+        {
+          "name": "match abandon rate",
+          "unit": "percent"
+        },
+        {
+          "name": "matches per session",
+          "unit": "matches"
+        }
+      ],
+      "temporal_granularity_hint": "daily"
+    },
+    {
+      "id": "dom_139",
+      "name": "Free-to-play monetization by spender segment",
+      "topic": "Video Game Player Engagement",
+      "complexity_tier": "medium",
+      "typical_entities_hint": [
+        "spender segment",
+        "store item category",
+        "platform"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "average revenue per daily active user",
+          "unit": "USD"
+        },
+        {
+          "name": "paying user conversion",
+          "unit": "percent"
+        },
+        {
+          "name": "purchases per payer",
+          "unit": "transactions"
+        }
+      ],
+      "temporal_granularity_hint": "weekly"
+    },
+    {
+      "id": "dom_140",
+      "name": "Content update impact on churn",
+      "topic": "Video Game Player Engagement",
+      "complexity_tier": "medium",
+      "typical_entities_hint": [
+        "patch release",
+        "player cohort",
+        "game title"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "weekly churn rate",
+          "unit": "percent"
+        },
+        {
+          "name": "returning player count",
+          "unit": "players"
+        },
+        {
+          "name": "playtime per active player",
+          "unit": "hours"
+        }
+      ],
+      "temporal_granularity_hint": "weekly"
+    },
+    {
+      "id": "dom_141",
+      "name": "Cross-title portfolio engagement for a publisher",
+      "topic": "Video Game Player Engagement",
+      "complexity_tier": "complex",
+      "typical_entities_hint": [
+        "publisher",
+        "game title",
+        "platform",
+        "player cohort"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "monthly active users",
+          "unit": "players"
+        },
+        {
+          "name": "cross-title overlap",
+          "unit": "percent"
+        },
+        {
+          "name": "average revenue per user",
+          "unit": "USD"
+        }
+      ],
+      "temporal_granularity_hint": "monthly"
+    },
+    {
+      "id": "dom_142",
+      "name": "Acquisition funnel from ad channel to retained player",
+      "topic": "Video Game Player Engagement",
+      "complexity_tier": "complex",
+      "typical_entities_hint": [
+        "ad channel",
+        "campaign",
+        "install cohort",
+        "geography"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "install-to-tutorial completion",
+          "unit": "percent"
+        },
+        {
+          "name": "day-30 retention",
+          "unit": "percent"
+        },
+        {
+          "name": "cost per retained player",
+          "unit": "USD"
+        }
+      ],
+      "temporal_granularity_hint": "weekly"
+    },
+    {
+      "id": "dom_143",
+      "name": "Guild and social graph engagement hierarchy",
+      "topic": "Video Game Player Engagement",
+      "complexity_tier": "complex",
+      "typical_entities_hint": [
+        "server",
+        "guild",
+        "player role",
+        "activity type"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "guild active member ratio",
+          "unit": "percent"
+        },
+        {
+          "name": "co-op sessions per member",
+          "unit": "sessions"
+        },
+        {
+          "name": "guild churn rate",
+          "unit": "percent"
+        }
+      ],
+      "temporal_granularity_hint": "weekly"
+    },
+    {
+      "id": "dom_144",
+      "name": "Esports viewership feeding in-game activity",
+      "topic": "Video Game Player Engagement",
+      "complexity_tier": "complex",
+      "typical_entities_hint": [
+        "tournament",
+        "streaming platform",
+        "region",
+        "game mode"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "peak concurrent viewers",
+          "unit": "viewers"
+        },
+        {
+          "name": "post-broadcast player concurrency",
+          "unit": "players"
+        },
+        {
+          "name": "ranked mode play share",
+          "unit": "percent"
+        }
+      ],
+      "temporal_granularity_hint": "daily"
+    },
+    {
+      "id": "dom_145",
+      "name": "Daily systemwide boardings",
+      "topic": "Municipal Public Transit Ridership",
+      "complexity_tier": "simple",
+      "typical_entities_hint": [
+        "transit agency",
+        "service day type"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "unlinked passenger trips",
+          "unit": "boardings"
+        },
+        {
+          "name": "day-over-day change",
+          "unit": "%"
+        }
+      ],
+      "temporal_granularity_hint": "daily"
+    },
+    {
+      "id": "dom_146",
+      "name": "Monthly bus route ridership ranking",
+      "topic": "Municipal Public Transit Ridership",
+      "complexity_tier": "simple",
+      "typical_entities_hint": [
+        "bus route",
+        "depot"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "average weekday ridership",
+          "unit": "riders/day"
+        }
+      ],
+      "temporal_granularity_hint": "monthly"
+    },
+    {
+      "id": "dom_147",
+      "name": "Subway station entry counts",
+      "topic": "Municipal Public Transit Ridership",
+      "complexity_tier": "simple",
+      "typical_entities_hint": [
+        "station",
+        "subway line"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "faregate entries",
+          "unit": "entries"
+        }
+      ],
+      "temporal_granularity_hint": "daily"
+    },
+    {
+      "id": "dom_148",
+      "name": "Monthly fare revenue collected",
+      "topic": "Municipal Public Transit Ridership",
+      "complexity_tier": "simple",
+      "typical_entities_hint": [
+        "fare media type",
+        "transit mode"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "fare revenue",
+          "unit": "USD"
+        },
+        {
+          "name": "average fare per boarding",
+          "unit": "USD"
+        }
+      ],
+      "temporal_granularity_hint": "monthly"
+    },
+    {
+      "id": "dom_149",
+      "name": "On-time performance vs ridership by route",
+      "topic": "Municipal Public Transit Ridership",
+      "complexity_tier": "medium",
+      "typical_entities_hint": [
+        "bus route",
+        "time-of-day period",
+        "depot"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "on-time performance",
+          "unit": "%"
+        },
+        {
+          "name": "weekday boardings",
+          "unit": "riders/day"
+        },
+        {
+          "name": "average headway deviation",
+          "unit": "minutes"
+        }
+      ],
+      "temporal_granularity_hint": "weekly"
+    },
+    {
+      "id": "dom_150",
+      "name": "Mode split shifts across bus, rail and ferry",
+      "topic": "Municipal Public Transit Ridership",
+      "complexity_tier": "medium",
+      "typical_entities_hint": [
+        "transit mode",
+        "service area",
+        "rider segment"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "boardings share",
+          "unit": "%"
+        },
+        {
+          "name": "total boardings",
+          "unit": "trips"
+        }
+      ],
+      "temporal_granularity_hint": "monthly"
+    },
+    {
+      "id": "dom_151",
+      "name": "Weather impact on daily boardings",
+      "topic": "Municipal Public Transit Ridership",
+      "complexity_tier": "medium",
+      "typical_entities_hint": [
+        "transit mode",
+        "weather condition category",
+        "service day type"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "boardings",
+          "unit": "trips"
+        },
+        {
+          "name": "precipitation",
+          "unit": "mm"
+        },
+        {
+          "name": "deviation from baseline",
+          "unit": "%"
+        }
+      ],
+      "temporal_granularity_hint": "daily"
+    },
+    {
+      "id": "dom_152",
+      "name": "Paratransit demand versus fixed-route usage",
+      "topic": "Municipal Public Transit Ridership",
+      "complexity_tier": "medium",
+      "typical_entities_hint": [
+        "service type",
+        "borough/district",
+        "rider eligibility category"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "trips delivered",
+          "unit": "trips"
+        },
+        {
+          "name": "cost per trip",
+          "unit": "USD"
+        },
+        {
+          "name": "unmet trip requests",
+          "unit": "requests"
+        }
+      ],
+      "temporal_granularity_hint": "monthly"
+    },
+    {
+      "id": "dom_153",
+      "name": "Peak-hour crowding across line segments",
+      "topic": "Municipal Public Transit Ridership",
+      "complexity_tier": "complex",
+      "typical_entities_hint": [
+        "rail line",
+        "line segment",
+        "direction",
+        "peak period"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "passengers per car",
+          "unit": "pax/car"
+        },
+        {
+          "name": "load factor",
+          "unit": "%"
+        },
+        {
+          "name": "scheduled capacity",
+          "unit": "seats/hour"
+        }
+      ],
+      "temporal_granularity_hint": "weekly"
+    },
+    {
+      "id": "dom_154",
+      "name": "Cost recovery by mode, division and route",
+      "topic": "Municipal Public Transit Ridership",
+      "complexity_tier": "complex",
+      "typical_entities_hint": [
+        "transit mode",
+        "operating division",
+        "route",
+        "fare category"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "farebox recovery ratio",
+          "unit": "%"
+        },
+        {
+          "name": "operating cost per revenue hour",
+          "unit": "USD/hour"
+        },
+        {
+          "name": "boardings per revenue hour",
+          "unit": "riders/hour"
+        }
+      ],
+      "temporal_granularity_hint": "monthly"
+    },
+    {
+      "id": "dom_155",
+      "name": "Service restoration and ridership recovery after disruption",
+      "topic": "Municipal Public Transit Ridership",
+      "complexity_tier": "complex",
+      "typical_entities_hint": [
+        "corridor",
+        "route",
+        "disruption event",
+        "substitute service"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "ridership recovery vs baseline",
+          "unit": "%"
+        },
+        {
+          "name": "revenue service hours delivered",
+          "unit": "hours"
+        },
+        {
+          "name": "average trip travel time",
+          "unit": "minutes"
+        }
+      ],
+      "temporal_granularity_hint": "weekly"
+    },
+    {
+      "id": "dom_156",
+      "name": "Transfer and origin-destination flows across network hubs",
+      "topic": "Municipal Public Transit Ridership",
+      "complexity_tier": "complex",
+      "typical_entities_hint": [
+        "origin zone",
+        "destination zone",
+        "interchange hub",
+        "transit mode"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "linked trips",
+          "unit": "trips"
+        },
+        {
+          "name": "transfer rate",
+          "unit": "transfers/linked trip"
+        },
+        {
+          "name": "average journey duration",
+          "unit": "minutes"
+        }
+      ],
+      "temporal_granularity_hint": "monthly"
+    },
+    {
+      "id": "dom_157",
+      "name": "Daily claims intake volume",
+      "topic": "Health Insurance Claims Processing",
+      "complexity_tier": "simple",
+      "typical_entities_hint": [
+        "claim",
+        "intake channel"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "claims submitted",
+          "unit": "claims/day"
+        },
+        {
+          "name": "electronic submission share",
+          "unit": "percent"
+        }
+      ],
+      "temporal_granularity_hint": "daily"
+    },
+    {
+      "id": "dom_158",
+      "name": "Average claim turnaround time",
+      "topic": "Health Insurance Claims Processing",
+      "complexity_tier": "simple",
+      "typical_entities_hint": [
+        "claim",
+        "processing center"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "mean cycle time",
+          "unit": "days"
+        },
+        {
+          "name": "claims closed",
+          "unit": "claims/week"
+        }
+      ],
+      "temporal_granularity_hint": "weekly"
+    },
+    {
+      "id": "dom_159",
+      "name": "First-pass claim denial rate",
+      "topic": "Health Insurance Claims Processing",
+      "complexity_tier": "simple",
+      "typical_entities_hint": [
+        "claim",
+        "payer plan"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "denial rate",
+          "unit": "percent"
+        },
+        {
+          "name": "denied claim value",
+          "unit": "USD"
+        }
+      ],
+      "temporal_granularity_hint": "monthly"
+    },
+    {
+      "id": "dom_160",
+      "name": "Pending claims backlog aging",
+      "topic": "Health Insurance Claims Processing",
+      "complexity_tier": "simple",
+      "typical_entities_hint": [
+        "claim",
+        "aging bucket"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "open claims",
+          "unit": "claims"
+        },
+        {
+          "name": "average age",
+          "unit": "days"
+        }
+      ],
+      "temporal_granularity_hint": "weekly"
+    },
+    {
+      "id": "dom_161",
+      "name": "Denial reasons by provider specialty",
+      "topic": "Health Insurance Claims Processing",
+      "complexity_tier": "medium",
+      "typical_entities_hint": [
+        "provider specialty",
+        "denial reason code",
+        "claim"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "denials",
+          "unit": "claims"
+        },
+        {
+          "name": "denied amount",
+          "unit": "USD"
+        },
+        {
+          "name": "overturn rate",
+          "unit": "percent"
+        }
+      ],
+      "temporal_granularity_hint": "monthly"
+    },
+    {
+      "id": "dom_162",
+      "name": "Prior authorization throughput",
+      "topic": "Health Insurance Claims Processing",
+      "complexity_tier": "medium",
+      "typical_entities_hint": [
+        "authorization request",
+        "service category",
+        "reviewer team"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "requests received",
+          "unit": "requests/day"
+        },
+        {
+          "name": "approval rate",
+          "unit": "percent"
+        },
+        {
+          "name": "decision latency",
+          "unit": "hours"
+        }
+      ],
+      "temporal_granularity_hint": "daily"
+    },
+    {
+      "id": "dom_163",
+      "name": "Adjuster workload and productivity",
+      "topic": "Health Insurance Claims Processing",
+      "complexity_tier": "medium",
+      "typical_entities_hint": [
+        "adjuster",
+        "claim type",
+        "regional office"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "claims per adjuster",
+          "unit": "claims/day"
+        },
+        {
+          "name": "rework rate",
+          "unit": "percent"
+        },
+        {
+          "name": "handling cost",
+          "unit": "USD/claim"
+        }
+      ],
+      "temporal_granularity_hint": "weekly"
+    },
+    {
+      "id": "dom_164",
+      "name": "Auto-adjudication rate by plan type",
+      "topic": "Health Insurance Claims Processing",
+      "complexity_tier": "medium",
+      "typical_entities_hint": [
+        "plan type",
+        "claim",
+        "adjudication rule set"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "auto-adjudicated share",
+          "unit": "percent"
+        },
+        {
+          "name": "manual touch count",
+          "unit": "touches/claim"
+        },
+        {
+          "name": "processing cost",
+          "unit": "USD/claim"
+        }
+      ],
+      "temporal_granularity_hint": "monthly"
+    },
+    {
+      "id": "dom_165",
+      "name": "Fraud detection funnel across regions",
+      "topic": "Health Insurance Claims Processing",
+      "complexity_tier": "complex",
+      "typical_entities_hint": [
+        "region",
+        "provider",
+        "flag rule",
+        "investigation case"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "flagged claims",
+          "unit": "claims"
+        },
+        {
+          "name": "confirmed fraud rate",
+          "unit": "percent"
+        },
+        {
+          "name": "recovered amount",
+          "unit": "USD"
+        }
+      ],
+      "temporal_granularity_hint": "monthly"
+    },
+    {
+      "id": "dom_166",
+      "name": "Appeals escalation pipeline by tier",
+      "topic": "Health Insurance Claims Processing",
+      "complexity_tier": "complex",
+      "typical_entities_hint": [
+        "appeal level",
+        "denial reason",
+        "payer plan",
+        "member cohort"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "appeals filed",
+          "unit": "appeals"
+        },
+        {
+          "name": "overturn rate",
+          "unit": "percent"
+        },
+        {
+          "name": "resolution time",
+          "unit": "days"
+        }
+      ],
+      "temporal_granularity_hint": "monthly"
+    },
+    {
+      "id": "dom_167",
+      "name": "Claims cost breakdown by service line and network status",
+      "topic": "Health Insurance Claims Processing",
+      "complexity_tier": "complex",
+      "typical_entities_hint": [
+        "service line",
+        "network status",
+        "facility",
+        "claim"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "billed amount",
+          "unit": "USD"
+        },
+        {
+          "name": "allowed-to-billed ratio",
+          "unit": "percent"
+        },
+        {
+          "name": "member out-of-pocket",
+          "unit": "USD"
+        }
+      ],
+      "temporal_granularity_hint": "monthly"
+    },
+    {
+      "id": "dom_168",
+      "name": "End-to-end claim lifecycle stage bottlenecks",
+      "topic": "Health Insurance Claims Processing",
+      "complexity_tier": "complex",
+      "typical_entities_hint": [
+        "processing stage",
+        "claim type",
+        "business unit",
+        "workflow queue"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "stage dwell time",
+          "unit": "hours"
+        },
+        {
+          "name": "queue backlog",
+          "unit": "claims"
+        },
+        {
+          "name": "SLA breach rate",
+          "unit": "percent"
+        }
+      ],
+      "temporal_granularity_hint": "weekly"
+    },
+    {
+      "id": "dom_169",
+      "name": "Daily crushed ore throughput at a single mill",
+      "topic": "Metal Mining and Ore Extraction",
+      "complexity_tier": "simple",
+      "typical_entities_hint": [
+        "processing plant",
+        "crusher line"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "ore throughput",
+          "unit": "tonnes/day"
+        },
+        {
+          "name": "mill uptime",
+          "unit": "percent"
+        }
+      ],
+      "temporal_granularity_hint": "daily"
+    },
+    {
+      "id": "dom_170",
+      "name": "Copper spot price tracking",
+      "topic": "Metal Mining and Ore Extraction",
+      "complexity_tier": "simple",
+      "typical_entities_hint": [
+        "commodity",
+        "exchange"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "spot price",
+          "unit": "USD/tonne"
+        }
+      ],
+      "temporal_granularity_hint": "daily"
+    },
+    {
+      "id": "dom_171",
+      "name": "Monthly waste rock stripping volume",
+      "topic": "Metal Mining and Ore Extraction",
+      "complexity_tier": "simple",
+      "typical_entities_hint": [
+        "open pit",
+        "bench"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "waste moved",
+          "unit": "bank cubic metres"
+        },
+        {
+          "name": "strip ratio",
+          "unit": "ratio"
+        }
+      ],
+      "temporal_granularity_hint": "monthly"
+    },
+    {
+      "id": "dom_172",
+      "name": "Haul truck fleet availability",
+      "topic": "Metal Mining and Ore Extraction",
+      "complexity_tier": "simple",
+      "typical_entities_hint": [
+        "haul truck",
+        "maintenance shop"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "mechanical availability",
+          "unit": "percent"
+        },
+        {
+          "name": "engine hours",
+          "unit": "hours/day"
+        }
+      ],
+      "temporal_granularity_hint": "daily"
+    },
+    {
+      "id": "dom_173",
+      "name": "Head grade versus recovery across concentrator circuits",
+      "topic": "Metal Mining and Ore Extraction",
+      "complexity_tier": "medium",
+      "typical_entities_hint": [
+        "concentrator circuit",
+        "ore type",
+        "shift crew"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "head grade",
+          "unit": "percent Cu"
+        },
+        {
+          "name": "metal recovery",
+          "unit": "percent"
+        },
+        {
+          "name": "concentrate output",
+          "unit": "tonnes"
+        }
+      ],
+      "temporal_granularity_hint": "weekly"
+    },
+    {
+      "id": "dom_174",
+      "name": "Mine site energy and water consumption",
+      "topic": "Metal Mining and Ore Extraction",
+      "complexity_tier": "medium",
+      "typical_entities_hint": [
+        "mine site",
+        "process area",
+        "utility source"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "electricity use",
+          "unit": "MWh"
+        },
+        {
+          "name": "fresh water draw",
+          "unit": "megalitres"
+        },
+        {
+          "name": "diesel burn",
+          "unit": "kilolitres"
+        }
+      ],
+      "temporal_granularity_hint": "monthly"
+    },
+    {
+      "id": "dom_175",
+      "name": "Drill and blast performance by pit bench",
+      "topic": "Metal Mining and Ore Extraction",
+      "complexity_tier": "medium",
+      "typical_entities_hint": [
+        "drill rig",
+        "bench",
+        "blast pattern"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "metres drilled",
+          "unit": "metres"
+        },
+        {
+          "name": "powder factor",
+          "unit": "kg/tonne"
+        },
+        {
+          "name": "fragmentation P80",
+          "unit": "millimetres"
+        }
+      ],
+      "temporal_granularity_hint": "weekly"
+    },
+    {
+      "id": "dom_176",
+      "name": "Safety incidents by mine department",
+      "topic": "Metal Mining and Ore Extraction",
+      "complexity_tier": "medium",
+      "typical_entities_hint": [
+        "mine site",
+        "department",
+        "incident class"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "lost time injury frequency",
+          "unit": "per million hours"
+        },
+        {
+          "name": "near misses",
+          "unit": "count"
+        },
+        {
+          "name": "exposure hours",
+          "unit": "hours"
+        }
+      ],
+      "temporal_granularity_hint": "monthly"
+    },
+    {
+      "id": "dom_177",
+      "name": "Unit cash cost breakdown across a multi-mine portfolio",
+      "topic": "Metal Mining and Ore Extraction",
+      "complexity_tier": "complex",
+      "typical_entities_hint": [
+        "mining company",
+        "mine site",
+        "cost category",
+        "commodity"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "C1 cash cost",
+          "unit": "USD/lb"
+        },
+        {
+          "name": "sustaining capex",
+          "unit": "USD million"
+        },
+        {
+          "name": "payable metal sold",
+          "unit": "tonnes"
+        }
+      ],
+      "temporal_granularity_hint": "monthly"
+    },
+    {
+      "id": "dom_178",
+      "name": "Ore reserve depletion and resource conversion by deposit",
+      "topic": "Metal Mining and Ore Extraction",
+      "complexity_tier": "complex",
+      "typical_entities_hint": [
+        "deposit",
+        "ore body zone",
+        "resource category",
+        "mine plan version"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "proven reserves",
+          "unit": "million tonnes"
+        },
+        {
+          "name": "contained metal",
+          "unit": "kilotonnes"
+        },
+        {
+          "name": "depletion rate",
+          "unit": "million tonnes/month"
+        }
+      ],
+      "temporal_granularity_hint": "monthly"
+    },
+    {
+      "id": "dom_179",
+      "name": "Tailings dam monitoring across storage facilities",
+      "topic": "Metal Mining and Ore Extraction",
+      "complexity_tier": "complex",
+      "typical_entities_hint": [
+        "tailings facility",
+        "piezometer station",
+        "embankment section",
+        "operator"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "pore water pressure",
+          "unit": "kPa"
+        },
+        {
+          "name": "crest displacement",
+          "unit": "millimetres"
+        },
+        {
+          "name": "freeboard",
+          "unit": "metres"
+        }
+      ],
+      "temporal_granularity_hint": "weekly"
+    },
+    {
+      "id": "dom_180",
+      "name": "Mine-to-mill value chain reconciliation",
+      "topic": "Metal Mining and Ore Extraction",
+      "complexity_tier": "complex",
+      "typical_entities_hint": [
+        "pit",
+        "stockpile",
+        "mill circuit",
+        "smelter"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "tonnes reconciled",
+          "unit": "tonnes"
+        },
+        {
+          "name": "grade variance",
+          "unit": "percent"
+        },
+        {
+          "name": "metal accounting discrepancy",
+          "unit": "kilograms"
+        }
+      ],
+      "temporal_granularity_hint": "monthly"
+    },
+    {
+      "id": "dom_181",
+      "name": "Weekly home attendance tracking",
+      "topic": "Professional Sports Team Performance",
+      "complexity_tier": "simple",
+      "typical_entities_hint": [
+        "team",
+        "home game"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "tickets sold",
+          "unit": "spectators"
+        },
+        {
+          "name": "stadium fill rate",
+          "unit": "percent"
+        }
+      ],
+      "temporal_granularity_hint": "weekly"
+    },
+    {
+      "id": "dom_182",
+      "name": "Team win percentage over a season",
+      "topic": "Professional Sports Team Performance",
+      "complexity_tier": "simple",
+      "typical_entities_hint": [
+        "team",
+        "matchday"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "win percentage",
+          "unit": "percent"
+        }
+      ],
+      "temporal_granularity_hint": "weekly"
+    },
+    {
+      "id": "dom_183",
+      "name": "Star player scoring output",
+      "topic": "Professional Sports Team Performance",
+      "complexity_tier": "simple",
+      "typical_entities_hint": [
+        "player",
+        "game"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "points scored",
+          "unit": "points per game"
+        }
+      ],
+      "temporal_granularity_hint": "weekly"
+    },
+    {
+      "id": "dom_184",
+      "name": "Monthly merchandise revenue by club",
+      "topic": "Professional Sports Team Performance",
+      "complexity_tier": "simple",
+      "typical_entities_hint": [
+        "club",
+        "merchandise category"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "merchandise revenue",
+          "unit": "USD thousands"
+        }
+      ],
+      "temporal_granularity_hint": "monthly"
+    },
+    {
+      "id": "dom_185",
+      "name": "Offense versus defense efficiency by team",
+      "topic": "Professional Sports Team Performance",
+      "complexity_tier": "medium",
+      "typical_entities_hint": [
+        "team",
+        "opponent",
+        "game"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "points scored per game",
+          "unit": "points"
+        },
+        {
+          "name": "points conceded per game",
+          "unit": "points"
+        },
+        {
+          "name": "point differential",
+          "unit": "points"
+        }
+      ],
+      "temporal_granularity_hint": "weekly"
+    },
+    {
+      "id": "dom_186",
+      "name": "Injury load and squad availability",
+      "topic": "Professional Sports Team Performance",
+      "complexity_tier": "medium",
+      "typical_entities_hint": [
+        "team",
+        "player",
+        "injury type"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "players unavailable",
+          "unit": "players"
+        },
+        {
+          "name": "days lost to injury",
+          "unit": "days"
+        },
+        {
+          "name": "training load",
+          "unit": "arbitrary units"
+        }
+      ],
+      "temporal_granularity_hint": "weekly"
+    },
+    {
+      "id": "dom_187",
+      "name": "Home versus away performance split",
+      "topic": "Professional Sports Team Performance",
+      "complexity_tier": "medium",
+      "typical_entities_hint": [
+        "team",
+        "venue",
+        "match"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "points per match",
+          "unit": "points"
+        },
+        {
+          "name": "goal difference",
+          "unit": "goals"
+        }
+      ],
+      "temporal_granularity_hint": "monthly"
+    },
+    {
+      "id": "dom_188",
+      "name": "Ticket pricing versus fan turnout",
+      "topic": "Professional Sports Team Performance",
+      "complexity_tier": "medium",
+      "typical_entities_hint": [
+        "club",
+        "seating tier",
+        "fixture"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "average ticket price",
+          "unit": "USD"
+        },
+        {
+          "name": "occupancy",
+          "unit": "percent"
+        },
+        {
+          "name": "gate revenue",
+          "unit": "USD thousands"
+        }
+      ],
+      "temporal_granularity_hint": "monthly"
+    },
+    {
+      "id": "dom_189",
+      "name": "Broadcast viewership by market and matchup",
+      "topic": "Professional Sports Team Performance",
+      "complexity_tier": "medium",
+      "typical_entities_hint": [
+        "broadcaster",
+        "market",
+        "fixture"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "average viewers",
+          "unit": "millions"
+        },
+        {
+          "name": "rating share",
+          "unit": "percent"
+        }
+      ],
+      "temporal_granularity_hint": "weekly"
+    },
+    {
+      "id": "dom_190",
+      "name": "League-wide standings and tier mobility",
+      "topic": "Professional Sports Team Performance",
+      "complexity_tier": "complex",
+      "typical_entities_hint": [
+        "conference",
+        "division",
+        "team",
+        "matchweek"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "cumulative points",
+          "unit": "points"
+        },
+        {
+          "name": "league rank",
+          "unit": "position"
+        },
+        {
+          "name": "playoff probability",
+          "unit": "percent"
+        }
+      ],
+      "temporal_granularity_hint": "weekly"
+    },
+    {
+      "id": "dom_191",
+      "name": "Player development pipeline across academy tiers",
+      "topic": "Professional Sports Team Performance",
+      "complexity_tier": "complex",
+      "typical_entities_hint": [
+        "club",
+        "academy level",
+        "player",
+        "position group"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "minutes played",
+          "unit": "minutes"
+        },
+        {
+          "name": "promotion rate",
+          "unit": "percent"
+        },
+        {
+          "name": "performance rating",
+          "unit": "index 0-100"
+        }
+      ],
+      "temporal_granularity_hint": "monthly"
+    },
+    {
+      "id": "dom_192",
+      "name": "Salary cap allocation versus on-field return",
+      "topic": "Professional Sports Team Performance",
+      "complexity_tier": "complex",
+      "typical_entities_hint": [
+        "franchise",
+        "position group",
+        "player",
+        "contract year"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "cap spend share",
+          "unit": "percent of cap"
+        },
+        {
+          "name": "wins above replacement",
+          "unit": "wins"
+        },
+        {
+          "name": "cost per win",
+          "unit": "USD millions"
+        }
+      ],
+      "temporal_granularity_hint": "monthly"
+    },
+    {
+      "id": "dom_193",
+      "name": "Monthly subscriber count growth",
+      "topic": "Streaming Media Subscriptions",
+      "complexity_tier": "simple",
+      "typical_entities_hint": [
+        "streaming platform",
+        "subscription plan"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "active subscribers",
+          "unit": "subscribers"
+        },
+        {
+          "name": "net additions",
+          "unit": "subscribers"
+        }
+      ],
+      "temporal_granularity_hint": "monthly"
+    },
+    {
+      "id": "dom_194",
+      "name": "Free trial conversion rate",
+      "topic": "Streaming Media Subscriptions",
+      "complexity_tier": "simple",
+      "typical_entities_hint": [
+        "trial cohort",
+        "platform"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "conversion rate",
+          "unit": "percent"
+        },
+        {
+          "name": "trials started",
+          "unit": "trials"
+        }
+      ],
+      "temporal_granularity_hint": "weekly"
+    },
+    {
+      "id": "dom_195",
+      "name": "Daily churn cancellations",
+      "topic": "Streaming Media Subscriptions",
+      "complexity_tier": "simple",
+      "typical_entities_hint": [
+        "subscription plan"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "cancellations",
+          "unit": "accounts"
+        },
+        {
+          "name": "churn rate",
+          "unit": "percent"
+        }
+      ],
+      "temporal_granularity_hint": "daily"
+    },
+    {
+      "id": "dom_196",
+      "name": "Ad-supported vs ad-free tier revenue",
+      "topic": "Streaming Media Subscriptions",
+      "complexity_tier": "simple",
+      "typical_entities_hint": [
+        "pricing tier"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "revenue",
+          "unit": "USD millions"
+        },
+        {
+          "name": "ARPU",
+          "unit": "USD per user"
+        }
+      ],
+      "temporal_granularity_hint": "monthly"
+    },
+    {
+      "id": "dom_197",
+      "name": "Regional subscriber mix and ARPU",
+      "topic": "Streaming Media Subscriptions",
+      "complexity_tier": "medium",
+      "typical_entities_hint": [
+        "region",
+        "platform",
+        "pricing tier"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "subscribers",
+          "unit": "millions"
+        },
+        {
+          "name": "ARPU",
+          "unit": "USD per user"
+        },
+        {
+          "name": "churn rate",
+          "unit": "percent"
+        }
+      ],
+      "temporal_granularity_hint": "monthly"
+    },
+    {
+      "id": "dom_198",
+      "name": "Device-level streaming hours vs plan type",
+      "topic": "Streaming Media Subscriptions",
+      "complexity_tier": "medium",
+      "typical_entities_hint": [
+        "device type",
+        "subscription plan",
+        "household"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "streaming hours",
+          "unit": "hours"
+        },
+        {
+          "name": "sessions",
+          "unit": "sessions"
+        },
+        {
+          "name": "average session length",
+          "unit": "minutes"
+        }
+      ],
+      "temporal_granularity_hint": "weekly"
+    },
+    {
+      "id": "dom_199",
+      "name": "Content release impact on signups",
+      "topic": "Streaming Media Subscriptions",
+      "complexity_tier": "medium",
+      "typical_entities_hint": [
+        "original title",
+        "genre",
+        "platform"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "new signups",
+          "unit": "accounts"
+        },
+        {
+          "name": "title viewing hours",
+          "unit": "million hours"
+        }
+      ],
+      "temporal_granularity_hint": "daily"
+    },
+    {
+      "id": "dom_200",
+      "name": "Password-sharing crackdown and paid sharing uptake",
+      "topic": "Streaming Media Subscriptions",
+      "complexity_tier": "medium",
+      "typical_entities_hint": [
+        "region",
+        "account type",
+        "extra-member add-on"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "extra member adds",
+          "unit": "accounts"
+        },
+        {
+          "name": "borrower conversions",
+          "unit": "accounts"
+        },
+        {
+          "name": "churn rate",
+          "unit": "percent"
+        }
+      ],
+      "temporal_granularity_hint": "monthly"
+    },
+    {
+      "id": "dom_201",
+      "name": "Bundle partnerships subscriber attribution",
+      "topic": "Streaming Media Subscriptions",
+      "complexity_tier": "medium",
+      "typical_entities_hint": [
+        "distribution partner",
+        "bundle package",
+        "platform"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "gross adds",
+          "unit": "subscribers"
+        },
+        {
+          "name": "partner revenue share",
+          "unit": "USD thousands"
+        }
+      ],
+      "temporal_granularity_hint": "monthly"
+    },
+    {
+      "id": "dom_202",
+      "name": "Cohort retention curves by acquisition channel",
+      "topic": "Streaming Media Subscriptions",
+      "complexity_tier": "complex",
+      "typical_entities_hint": [
+        "signup cohort",
+        "acquisition channel",
+        "plan tier",
+        "region"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "retention rate",
+          "unit": "percent"
+        },
+        {
+          "name": "cumulative LTV",
+          "unit": "USD per user"
+        },
+        {
+          "name": "CAC payback",
+          "unit": "months"
+        }
+      ],
+      "temporal_granularity_hint": "monthly"
+    },
+    {
+      "id": "dom_203",
+      "name": "Content catalog ROI across genres and regions",
+      "topic": "Streaming Media Subscriptions",
+      "complexity_tier": "complex",
+      "typical_entities_hint": [
+        "genre",
+        "title",
+        "region",
+        "license type"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "content spend",
+          "unit": "USD millions"
+        },
+        {
+          "name": "viewing share",
+          "unit": "percent"
+        },
+        {
+          "name": "retention lift",
+          "unit": "percentage points"
+        }
+      ],
+      "temporal_granularity_hint": "monthly"
+    },
+    {
+      "id": "dom_204",
+      "name": "Multi-platform household subscription stacking and churn cascade",
+      "topic": "Streaming Media Subscriptions",
+      "complexity_tier": "complex",
+      "typical_entities_hint": [
+        "household",
+        "platform",
+        "plan tier",
+        "billing cycle"
+      ],
+      "typical_metrics_hint": [
+        {
+          "name": "services per household",
+          "unit": "services"
+        },
+        {
+          "name": "monthly spend",
+          "unit": "USD per household"
+        },
+        {
+          "name": "serial churn rate",
+          "unit": "percent"
+        }
+      ],
+      "temporal_granularity_hint": "monthly"
+    }
+  ]
+}
