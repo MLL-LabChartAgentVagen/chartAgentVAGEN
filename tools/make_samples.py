@@ -80,6 +80,7 @@ def table_schema() -> TableSchema:
                           ("wait_minutes", "satisfaction"), "NONE", "relation"),
         ),
         n_rows=900,
+        script=EXAMPLE_OUTPUT["script"],
     )
 
 

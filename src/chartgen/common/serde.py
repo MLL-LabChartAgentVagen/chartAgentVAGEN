@@ -25,7 +25,9 @@ from ..interfaces.record import Record, RenderOutput
 from ..interfaces.style import StyleVector
 from ..interfaces.table import FactTable, TableSchema
 
-SCHEMA_VERSION = 1
+#: Raised on every interface change, so an artifact written by older code fails
+#: to load instead of being read with a field missing.
+SCHEMA_VERSION = 2
 
 T = TypeVar("T")
 

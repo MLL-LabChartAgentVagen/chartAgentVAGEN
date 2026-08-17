@@ -92,7 +92,13 @@ class IntentBinding:
 
 @dataclass(frozen=True)
 class TableSchema:
-    """The description of a generated table. Carries no values."""
+    """The description of a generated table. Carries no values.
+
+    `script` is the declaration text the table was generated from. It is kept
+    because the table is reproducible from the declarations and a seed, which is
+    only true if the declarations survive: without it a published table could
+    never be rebuilt, only re-downloaded.
+    """
 
     scenario_id: str
     scenario_title: str
@@ -102,6 +108,7 @@ class TableSchema:
     dependencies: tuple[tuple[str, str], ...] = ()   # edges between numeric columns
     intents: tuple[IntentBinding, ...] = ()
     n_rows: int = 0
+    script: str = ""
 
     def column(self, name: str) -> Column:
         for c in self.columns:

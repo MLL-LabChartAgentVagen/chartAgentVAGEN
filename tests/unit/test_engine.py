@@ -206,6 +206,16 @@ class TestDeterminism:
     def test_a_different_seed_gives_a_different_table(self, script, df):
         assert not df.equals(G.generate(script, SEED + 1))
 
+    def test_a_saved_schema_carries_enough_to_rebuild_its_table(self, script, df):
+        """The declarations travel with the schema, so a published table can be
+        regenerated rather than only re-downloaded."""
+        from chartgen.common import serde
+        from chartgen.interfaces.table import TableSchema
+
+        written = D.to_schema(script, scenario_id="er_wait", title="t", context="c")
+        read_back = serde.loads(TableSchema, serde.dumps(written))
+        pd.testing.assert_frame_equal(df, G.generate(D.run(read_back.script), SEED))
+
     def test_adding_a_measure_does_not_move_the_existing_columns(self, script, df):
         text = SAMPLE["script"].replace(
             "emit(900)", 'measure("extra", "gaussian(0, 1)", unit="u", additive=True)\nemit(900)')

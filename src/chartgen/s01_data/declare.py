@@ -111,6 +111,7 @@ class Script:
     time: TimeDecl | None
     measures: tuple[MeasureDecl, ...]
     n_rows: int
+    source: str = ""
 
     def dim(self, name: str) -> DimDecl:
         for d in self.dims:
@@ -143,7 +144,7 @@ def run(text: str) -> Script:
     except Exception as exc:  # noqa: BLE001 -- every failure must become feedback text
         raise DeclarationError(
             f"{_where(exc)}script failed: {type(exc).__name__}: {exc}") from exc
-    return collector.finish()
+    return collector.finish(text)
 
 
 def _where(exc: BaseException) -> str:
@@ -221,7 +222,7 @@ class _Collector:
 
     # ---- whole-script constraints
 
-    def finish(self) -> Script:
+    def finish(self, source: str = "") -> Script:
         if self.n_rows is None:
             raise DeclarationError("the script must end with emit(n)")
         if self.time_decl is not None:
@@ -239,7 +240,8 @@ class _Collector:
                 f"at least {MIN_GROUPS} dimension groups are required, got "
                 f"{sorted(groups) or 'none'} (columns on one hierarchy chain count as "
                 "one group; name a chain with group=)")
-        return Script(tuple(self.dims), self.time_decl, tuple(self.measures), self.n_rows)
+        return Script(tuple(self.dims), self.time_decl, tuple(self.measures),
+                      self.n_rows, source)
 
     # ---- internals
 
@@ -309,6 +311,7 @@ def to_schema(script: Script, *, scenario_id: str, title: str, context: str,
         dependencies=edges(tuple((m.name, m.expr) for m in script.measures)),
         intents=tuple(intents),
         n_rows=n_rows if n_rows is not None else script.n_rows,
+        script=script.source,
     )
 
 
