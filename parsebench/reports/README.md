@@ -15,8 +15,7 @@ reports/
   <page_stem>/
     report.md                   人读的报告，六节，格式见下
     analysis.json               机读的结构化输出，用于汇总
-    page.png                    整页 150 dpi
-    figures/f1.png f2.png ...   按框重渲染的 350 dpi 裁剪图
+    page.png                    整页 150 dpi，即 data/pages/<stem>.png
 ```
 
 `<page_stem>` 用 PDF 的 stem，例如 `2023-05-sigma-01-english_p24`。
@@ -27,7 +26,7 @@ reports/
 
 ### 1 · 样本
 
-页面图、来源文档、所属层、抽查点数与其中估读点数。一句话说明这页上有什么。
+页面图、来源文档、标签组、抽查点数与其中估读点数。一句话说明这页上有什么。
 
 ### 2 · 抽查点
 
@@ -67,15 +66,17 @@ reports/
 {
   "stem": "2023-05-sigma-01-english_p24",
   "document": "2023-05-sigma-01-english",
-  "stratum": "3d_chart+need_estimate",
+  "tags": "3d_chart+need_estimate",
   "figures": [
-    {"id": "f1", "bbox_norm": [0.06, 0.10, 0.94, 0.37], "type": "bar",
-     "panels": 1, "series": 2, "categories": 12, "marks": 24, "values_printed": false}
+    {"id": "f1", "caption": "Figure 16 Combined ratios, US property lines",
+     "type": "bar", "panels": 1, "series": 2, "categories": 12,
+     "marks": 24, "values_printed": false}
   ],
   "components": ["reference_line", "shared_legend", "rotated_x_ticks"],
   "new_components": [{"name": "...", "why_it_matters": "..."}],
   "hardest_step": 2,
   "difficulty_notes": "...",
+  "unreadable": [],
   "suggestions": [{"text": "...", "maps_to": "G5"}]
 }
 ```
@@ -147,7 +148,7 @@ reports/
 ![page](page.png)
 
 ## 1 · 样本
-| 来源文档 | 层 | 抽查点 | 其中估读 |
+| 来源文档 | 标签组 | 抽查点 | 其中估读 |
 |---|---|---|---|
 
 一句话说明这页上有什么。
@@ -182,4 +183,10 @@ reports/
 
 1. **组件频次** —— 每个 key 在多少页出现，按「我们无」的频次降序。这张表直接给出改造顺序。
 2. **新组件** —— 词表外发现的组件，出现页数与说明。出现 ≥3 次的应当并入词表。
-3. **难点分布** —— `hardest_step` 的分布，按层拆开。
+3. **难点分布** —— `hardest_step` 的分布，按标签组拆开。
+
+---
+
+## `unreadable`
+
+整页原图判不出来的，模型写进 `unreadable`，一项一个图 id 加原因。这些页事后单独按框重渲染再问一次——是异常处理，不是流程的一环（[review/05 §1](../review/05_analysis_design.md#唯一的回退)）。这个字段本身也是一个测量：它非空的页面比例，就是"整页够不够用"的答案。
