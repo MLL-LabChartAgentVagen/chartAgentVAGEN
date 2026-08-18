@@ -351,3 +351,15 @@ A 是所有人的前置。A 完成后 B–F 之间只靠样例文件耦合，可
 - [ ] G2 消融开关：L2 单独关闭 · 风格向量固定 · 全部写数值标注 · 去掉区域输出 · 去掉可验证奖励 · 只用 Tier 1 · 只用意图图
 - [ ] G3 其他导出（不在当前主线）：问答对 · 图表代码 · 风格配对 / 版面配对 / 多图一致性样本
 - [ ] G4 文档同步：规格与实现逐条对齐；README 补 CLI 与产物说明
+
+### H. ParseBench 对齐
+
+六项改进由 [`parsebench/review/04_pipeline_gap.md`](parsebench/review/04_pipeline_gap.md) 定义，编号 P1–P6。规格先写回 `storyline/parsebench_chart/`，实现落在下面已有的组别里，不另起模块。
+
+- [ ] H1 P1 `readable` 二值门 → 每图元的可达精度 ε（改 `chart_types.md` §4 与 `registry/channels.py`，牵动 E3 与 F1）
+- [ ] H2 P2 多面板图加 `panel_key`（改 `interfaces/` 的 FigureSpec 与 Record，牵动 A2 的样例与 `schema_version`）
+- [ ] H3 P3 整页 markdown 导出：图表为长表、图标题写成表前标题（F 组新增一个导出函数）
+- [ ] H4 P4 轮转图族采样的权重向量，默认维持均匀（改 C 组与 `configs/`）
+- [ ] H5 P5 抬高稠密度上限（改 `registry/charts.py` 的结构条件区间）
+- [ ] H6 P6 风格向量补三维：标注位置枚举、刻度格式与单位位置、负值与零线（改 D 组）
+- [ ] H7 用官方 `ChartDataPointRule` 在 568 页上自评，改造前后各一次

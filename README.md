@@ -82,6 +82,8 @@ ParseBench 的评测指标拆解、数据统计与据此得出的待改清单在
 - 03 的 bar 边画边记 — 已落地
 - 02 选图 / 03 其余类型 / 04 记录 / 05 输出 — 未开始
 
+ParseBench 对齐已完成基准与数据侧的调研，得出六项改进 P1–P6（[parsebench/](parsebench/)）；它们落在 IMPL_PLAN 的 H 组，尚未开工。
+
 ## 历史
 
 本分支从 `py_parsebench` 切出，清空了与本方案无关的全部内容（VAGEN 时期的 chart generator、问答生成流水线、其他研究方向的 storyline）。这些内容仍在原分支上：

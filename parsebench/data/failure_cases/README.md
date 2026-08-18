@@ -26,7 +26,7 @@ failure_cases/
 |---|---|
 | 输出里根本没有表，图表被写成自然语言描述或被跳过 | 输出格式，不是图表理解能力 |
 | 有表，但值不在容差内 | 估读精度。对照该点的 `need_estimate` 与 `relative_tolerance` |
-| 值对，但标签没关联上（表结构错，或第三个键丢了） | 表结构。对照 [04_pipeline_gap.md G2](../../review/04_pipeline_gap.md#g2--面板维进入键) |
+| 值对，但标签没关联上（表结构错，或第三个键丢了） | 表结构。对照 [04_pipeline_gap.md P2](../../review/04_pipeline_gap.md#p2--面板维进入键) |
 | 值对标签对，但量纲错（写了底层原值而非图上刻度） | 见 [02_chart_metric.md §4 结论 3](../../review/02_chart_metric.md#4-三条对输出格式的直接结论) |
 | 同页多图时只转了其中一张 | 版面，对照 [04_pipeline_gap.md 待核实](../../review/04_pipeline_gap.md#4-待核实) |
 | 系列张冠李戴（值取自相邻系列） | 图例绑定 |

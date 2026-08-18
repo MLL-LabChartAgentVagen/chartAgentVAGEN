@@ -100,23 +100,24 @@ parsebench/data/
   - [ ] A2 跑完 48 页，产出 `reports/<stem>/`（格式见 [reports/README.md](reports/README.md)）
   - [ ] A3 汇总 `reports/INDEX.md`：组件频次、新组件、难点分布
   - [ ] A4 回填组件词表里的「待核实」（读 `storyline/` 规格即可，不需要模型）
+  - [ ] A5 *（等 03 能出整页后）* [反向差集](review/05_analysis_design.md#9-反向差集同一套词表也跑我们自己的页面)——同一 prompt、同一词表跑我们自己的页面，得到「我们有而基准没有」的无效产能向量
 
 - [ ] **B · 从报告与失败案例定改动**
   - [ ] B1 组件频次表里「我们无」的排序 → 直接给出改造顺序
-  - [ ] B2 出现 ≥3 次的新组件并入词表，评估是否要新增 G 项
+  - [ ] B2 出现 ≥3 次的新组件并入词表，评估是否要新增 P 项
   - [ ] B3 失败六类归因（无表 / 值不准 / 标签没关联 / 量纲错 / 漏图 / 串系列）
   - [ ] B4 饼图在 5% 容差下的可读比例 → 决定饼图是否进值目标
-  - [ ] B5 稠密度与失败率的相关性 → 若显著，即为 [G5](review/04_pipeline_gap.md#g5--稠密度上限抬高把稠密度变成一个可控自变量) 的直接证据
+  - [ ] B5 稠密度与失败率的相关性 → 若显著，即为 [P5](review/04_pipeline_gap.md#p5--稠密度上限抬高把稠密度变成一个可控自变量) 的直接证据
 
-- [ ] **C · 流水线改造**（规格写回 `storyline/`，实现进 `src/chartgen/`）
-  - [ ] C1 [G1](review/04_pipeline_gap.md#g1--readable-从二值门改为按可达精度分级) `readable` 二值门 → 每 mark 的可达精度 ε；角度画法按同式重算
-  - [ ] C2 [G2](review/04_pipeline_gap.md#g2--面板维进入键) 多面板图加 `panel_key`
-  - [ ] C3 [G3](review/04_pipeline_gap.md#g3--加一个整页-markdown-导出) 整页 markdown 导出（长表 + 表前标题）
-  - [ ] C4 [G4](review/04_pipeline_gap.md#g4--轮转图的族采样加权重向量) 族采样权重向量，默认维持均匀
-  - [ ] C5 [G5](review/04_pipeline_gap.md#g5--稠密度上限抬高把稠密度变成一个可控自变量) 抬高稠密度上限
-  - [ ] C6 [G6](review/04_pipeline_gap.md#g6--风格向量补三维) 风格向量补三维：标注形态、刻度格式与单位位置、负值零线
+- [ ] **C · 流水线改造**（规格写回 `storyline/`，实现进 `src/chartgen/`，对应 [IMPL_PLAN 的 H 组](../IMPL_PLAN.md#h-parsebench-对齐)）
+  - [ ] C1 [P1](review/04_pipeline_gap.md#p1--readable-从二值门改为按可达精度分级) `readable` 二值门 → 每 mark 的可达精度 ε；角度画法按同式重算
+  - [ ] C2 [P2](review/04_pipeline_gap.md#p2--面板维进入键) 多面板图加 `panel_key`
+  - [ ] C3 [P3](review/04_pipeline_gap.md#p3--加一个整页-markdown-导出) 整页 markdown 导出（长表 + 表前标题）
+  - [ ] C4 [P4](review/04_pipeline_gap.md#p4--轮转图的族采样加权重向量) 族采样权重向量，默认维持均匀
+  - [ ] C5 [P5](review/04_pipeline_gap.md#p5--稠密度上限抬高把稠密度变成一个可控自变量) 抬高稠密度上限
+  - [ ] C6 [P6](review/04_pipeline_gap.md#p6--风格向量补三维) 风格向量补三维：标注形态、刻度格式与单位位置、负值零线
 
-- [ ] **D · 评测闭环**（全量 568 页只在这一组出现，[理由](review/05_analysis_design.md#4-不跑全量评测)）
+- [ ] **D · 评测闭环**（全量 568 页只在这一组出现，[理由](review/05_analysis_design.md#4-组件分析与全量评测是两件事)）
   - [ ] D1 `tools/score_pages.py`——接官方 `ChartDataPointRule`，`parse_bench` 按可选依赖装
   - [ ] D2 改造前基线：568 页跑一遍 parse 并打分，与 [01 §4](review/01_benchmark.md#4-榜单) 同口径
   - [ ] D3 改造后复评；Charts 与 Visual Grounding 两维同时报告
