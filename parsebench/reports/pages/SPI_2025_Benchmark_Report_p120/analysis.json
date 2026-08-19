@@ -1,0 +1,276 @@
+{
+  "stem": "SPI_2025_Benchmark_Report_p120",
+  "document": "SPI_2025_Benchmark_Report",
+  "tags": "untagged",
+  "page_note": "该页含 Figure 25（三面板柱状图，2020–2024 的三项客户关系 KPI 趋势）与 Table 117（客户关系支柱五年趋势数据表），以及正文段落。",
+  "figures": [
+    {
+      "id": "f1",
+      "heading": {
+        "figure_number": "Figure 25",
+        "title": "Client Relationships Trends of Note",
+        "subtitle": "",
+        "unit_text": "",
+        "placement": "above"
+      },
+      "type": "bar",
+      "type_other": "",
+      "orientation": "vertical",
+      "panels": 3,
+      "panel_names": [
+        "Year-over-year Change in PS Revenue",
+        "Percentage of New Clients",
+        "Service discount given"
+      ],
+      "series": 1,
+      "series_names": [],
+      "categories": 5,
+      "category_names": [
+        "2020",
+        "2021",
+        "2022",
+        "2023",
+        "2024"
+      ],
+      "marks": 15,
+      "values_printed": "all",
+      "value_axis_ticks": "0%, 2%, 4%, 6%, 8%, 10%, 12% | 25%, 26%, 27%, 28%, 29%, 30%, 31%, 32% | 0%, 1%, 2%, 3%, 4%, 5%, 6%, 7%, 8%, 9%, 10%",
+      "source_line": "Source: SPI Research, February 2025"
+    },
+    {
+      "id": "f2",
+      "heading": {
+        "figure_number": "Table 117",
+        "title": "Client Relationships Pillar 5-year Trend",
+        "subtitle": "",
+        "unit_text": "",
+        "placement": "above"
+      },
+      "type": "other",
+      "type_other": "data table",
+      "orientation": "na",
+      "panels": 1,
+      "panel_names": [],
+      "series": 6,
+      "series_names": [
+        "5-year avg.",
+        "2020",
+        "2021",
+        "2022",
+        "2023",
+        "2024"
+      ],
+      "categories": 4,
+      "category_names": [
+        "Year-over-year change in PS revenue",
+        "Current clients - existing services",
+        "Current clients - new services",
+        "New logo clients - existing services"
+      ],
+      "marks": 24,
+      "values_printed": "all",
+      "value_axis_ticks": "",
+      "source_line": ""
+    }
+  ],
+  "components": [
+    {
+      "key": "panel_title_per_panel",
+      "figure_id": "f1",
+      "evidence": "bold small titles over each panel: \"Year-over-year Change in PS Revenue\", \"Percentage of New Clients\", \"Service discount given\""
+    },
+    {
+      "key": "small_multiples_4",
+      "figure_id": "f1",
+      "evidence": "three same-form bar panels side by side, each with years 2020-2024"
+    },
+    {
+      "key": "per_panel_axis_range",
+      "figure_id": "f1",
+      "evidence": "left panel tops at 12%, middle runs 25%-32%, right runs 0%-10%"
+    },
+    {
+      "key": "axis_starts_above_zero",
+      "figure_id": "f1",
+      "evidence": "middle panel's lowest tick is \"25%\", bars for 28.2% and 31.3% look far apart"
+    },
+    {
+      "key": "value_label_inside",
+      "figure_id": "f1",
+      "evidence": "\"8.7%\", \"10.6%\", \"29.3%\", \"9.1%\" printed inside the top of each bar"
+    },
+    {
+      "key": "hgrid_only",
+      "figure_id": "f1",
+      "evidence": "horizontal rules at each percent tick, no vertical rules in the panels"
+    },
+    {
+      "key": "panel_background",
+      "figure_id": "f1",
+      "evidence": "the whole plot area behind the bars carries a cream/beige tint"
+    },
+    {
+      "key": "source_note_lines",
+      "figure_id": "f1",
+      "evidence": "\"Source: SPI Research, February 2025\" in small bold italics under the figure frame"
+    },
+    {
+      "key": "data_table_as_figure",
+      "figure_id": "f2",
+      "evidence": "bordered table with orange header row \"Key Performance Indicator (KPI)\", captioned \"Table 117: ...\""
+    },
+    {
+      "key": "highlighted_category",
+      "figure_id": "f2",
+      "evidence": "the \"5-year avg.\" column cells are tinted cream while other value cells are white/grey"
+    },
+    {
+      "key": "multi_figure_page",
+      "figure_id": "page",
+      "evidence": "\"Figure 25:  Client Relationships Trends of Note\" and \"Table 117:  Client Relationships Pillar 5-year Trend\" separately numbered"
+    },
+    {
+      "key": "wrapped_category_labels",
+      "figure_id": "f2",
+      "evidence": "row labels like \"New logo clients - existing services\" fill a wide left column"
+    }
+  ],
+  "new_components": [
+    {
+      "name": "rounded_frame_around_panels",
+      "figure_id": "f1",
+      "evidence": "an orange rounded-rectangle border encloses all three panels and their titles as one block",
+      "why_it_matters": "边框把三个面板包成一个图形单元，读值时必须先按面板标题切分，否则会把三条不同量纲的轴混为一张表。"
+    },
+    {
+      "name": "percent_sign_on_every_tick",
+      "figure_id": "f1",
+      "evidence": "every tick reads \"2%\", \"27%\", \"9%\"; no separate unit line anywhere on the figure",
+      "why_it_matters": "单位只存在于刻度文字里，表格导出时若丢掉百分号，数值 9.1 与 9.1% 无法区分。"
+    },
+    {
+      "name": "table_column_header_band",
+      "figure_id": "f2",
+      "evidence": "solid orange header band with white text: \"Key Performance Indicator (KPI)  5-year avg.  2020 ... 2024\"",
+      "why_it_matters": "列头是唯一的年份定位键，若解析器把彩带当图像而非表头，行内数值将失去年份标签。"
+    }
+  ],
+  "spot_checks": [
+    {
+      "value": "10.6%",
+      "figure_id": "f1",
+      "mark": "the 2021 bar in the \"Year-over-year Change in PS Revenue\" panel (also the 2021 cell of the same-named row in Table 117)",
+      "printed_on_figure": true,
+      "addressing_keys": [
+        "Year-over-year Change in PS Revenue",
+        "2021"
+      ]
+    },
+    {
+      "value": "29.3%",
+      "figure_id": "f1",
+      "mark": "the 2022 bar in the \"Percentage of New Clients\" panel",
+      "printed_on_figure": true,
+      "addressing_keys": [
+        "Percentage of New Clients",
+        "2022"
+      ]
+    },
+    {
+      "value": "7.6%",
+      "figure_id": "f1",
+      "mark": "the 2020 bar in the \"Service discount given\" panel",
+      "printed_on_figure": true,
+      "addressing_keys": [
+        "Service discount given",
+        "2020"
+      ]
+    },
+    {
+      "value": "9.1%",
+      "figure_id": "f1",
+      "mark": "the 2024 bar in the \"Service discount given\" panel",
+      "printed_on_figure": true,
+      "addressing_keys": [
+        "Service discount given",
+        "2024"
+      ]
+    }
+  ],
+  "hardest_step": 4,
+  "difficulty_notes": "四个待测值都以标签形式印在柱上（10.6%、29.3%、7.6%、9.1%），读数本身不成问题；中间面板 1% 一格、轴从 25% 起，如果靠像素读 29.3% 误差会超过 5% 容差，但标签已给出。真正卡住的是上下文：三个面板的类别轴完全相同（2020–2024），要唯一定位 9.1% 必须同时带 \"Service discount given\" 与 \"2024\"，而面板标题只是图内小号粗体文字，既不是图题也不是表头；一旦解析器只输出一个 5 列表格而丢掉面板名，2020 列会同时对应 8.7%、28.2%、7.6% 三个值。此外 10.6% 在 Table 117 中另有一份带行名的副本，容易与图内标签串位。",
+  "unreadable": [],
+  "suggestions": [
+    {
+      "what_to_add": "per_panel_axis_range 与 axis_starts_above_zero（中间面板 25%–32%）",
+      "where_to_change": "条件行中新增“同一图内各面板轴起点/量程不一致”的样式字段，并在记录里为每个面板单独存 axis_min/axis_max",
+      "new_ablation_row": "轴起点是否为零 × 各面板量程是否一致，对读值误差率的影响",
+      "generality": "common",
+      "maps_to": "P6"
+    },
+    {
+      "what_to_add": "panel_title_per_panel（面板名进入定位键）",
+      "where_to_change": "导出记录的 key 结构增加 panel_key，面板标题以粗体行写在对应子表之上",
+      "new_ablation_row": "面板名作为表上方粗体标题 vs 作为表内一列 vs 缺失，三档对定位命中率的影响",
+      "generality": "general",
+      "maps_to": "P2"
+    },
+    {
+      "what_to_add": "图题拆分字段（Figure 25 / 标题 / Source 行）与 data_table_as_figure（Table 117）并存",
+      "where_to_change": "页面级 markdown 导出：图号+标题作为标题行、Source 作为图下小字行；表格类图形单独标记",
+      "new_ablation_row": "同页“图+表”双编号时，标题块位置（表上/表下）对上下文匹配的影响",
+      "generality": "general",
+      "maps_to": "P7"
+    },
+    {
+      "what_to_add": "highlighted_category（表中 \"5-year avg.\" 列单独着色）",
+      "where_to_change": "样式字段中加入“汇总列/行着色”开关，记录里标注该列为聚合而非时间点",
+      "new_ablation_row": "是否存在着色汇总列，对模型误把均值当年度值的比例的影响",
+      "generality": "house_style",
+      "maps_to": "P6"
+    }
+  ],
+  "rules": [
+    {
+      "value": "10.6%",
+      "labels": [
+        "Year-over-year Change in PS Revenue",
+        "2021"
+      ],
+      "tolerance": 0.01,
+      "max_diffs": 2,
+      "figure": "f1"
+    },
+    {
+      "value": "29.3%",
+      "labels": [
+        "Percentage of New Clients",
+        "2022"
+      ],
+      "tolerance": 0.01,
+      "max_diffs": 2,
+      "figure": "f1"
+    },
+    {
+      "value": "7.6%",
+      "labels": [
+        "Service discount given",
+        "2020"
+      ],
+      "tolerance": 0.01,
+      "max_diffs": 2,
+      "figure": "f1"
+    },
+    {
+      "value": "9.1%",
+      "labels": [
+        "Service discount given",
+        "2024"
+      ],
+      "tolerance": 0.01,
+      "max_diffs": 2,
+      "figure": "f1"
+    }
+  ],
+  "crosscheck": []
+}

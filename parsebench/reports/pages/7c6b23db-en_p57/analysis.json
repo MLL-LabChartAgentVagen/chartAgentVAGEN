@@ -1,0 +1,426 @@
+{
+  "stem": "7c6b23db-en_p57",
+  "document": "7c6b23db-en",
+  "tags": "3d_chart+need_estimate",
+  "page_note": "该页为IEA《Energy Technology Perspectives 2023》第57页，正文两段加一幅编号图1.11，图内含三个异质面板：两个堆叠柱面板（Average yearly CAPEX、Cumulative CAPEX）和一个用双箭头表示投资决策可用时间的时间轴面板。",
+  "figures": [
+    {
+      "id": "f1",
+      "heading": {
+        "figure_number": "Figure 1.11",
+        "title": "Global investment in selected clean energy supply chains needed to bring online enough capacity in 2030 in the NZE Scenario, by supply chain step",
+        "subtitle": "",
+        "unit_text": "Billion USD",
+        "placement": "above"
+      },
+      "type": "compound",
+      "type_other": "",
+      "orientation": "vertical",
+      "panels": 3,
+      "panel_names": [
+        "Average yearly CAPEX",
+        "Cumulative CAPEX",
+        "Time available for final investment decision"
+      ],
+      "series": 4,
+      "series_names": [
+        "Copper mining",
+        "Other Critical mineral mining",
+        "Critical mineral processing",
+        "Clean technology manufacuring"
+      ],
+      "categories": 2,
+      "category_names": [
+        "2016-2021",
+        "2023-2030",
+        "2023",
+        "2024",
+        "2025",
+        "2026",
+        "2027",
+        "2028",
+        "2029",
+        "2030"
+      ],
+      "marks": 16,
+      "values_printed": "none",
+      "value_axis_ticks": "0, 50, 100, 150, 200 (Average yearly CAPEX); 0, 500, 1 000, 1 500 (Cumulative CAPEX); x ticks 2023, 2024, 2025, 2026, 2027, 2028, 2029, 2030 (Time available for final investment decision)",
+      "source_line": "Sources: IEA analysis based on company announcement; Bartholomeusz (2022); S&P Capital (2022)."
+    }
+  ],
+  "components": [
+    {
+      "key": "stacked_bar",
+      "figure_id": "f1",
+      "evidence": "each bar in 'Average yearly CAPEX' and 'Cumulative CAPEX' stacks red, orange, yellow, blue segments"
+    },
+    {
+      "key": "heterogeneous_panel_types",
+      "figure_id": "f1",
+      "evidence": "two stacked-bar panels beside 'Time available for final investment decision' drawn as double-headed arrows"
+    },
+    {
+      "key": "panel_title_per_panel",
+      "figure_id": "f1",
+      "evidence": "bold titles 'Average yearly CAPEX', 'Cumulative CAPEX', 'Time available for final investment decision' above each panel"
+    },
+    {
+      "key": "shared_legend",
+      "figure_id": "f1",
+      "evidence": "one legend row under all three panels: 'Copper mining ... Clean technology manufacuring'"
+    },
+    {
+      "key": "legend_below_plot",
+      "figure_id": "f1",
+      "evidence": "legend sits below the three plots, above the 'IEA. CC BY 4.0.' line"
+    },
+    {
+      "key": "per_panel_axis_range",
+      "figure_id": "f1",
+      "evidence": "left panel axis 0-200, middle panel axis 0-1 500; readings cannot be carried across"
+    },
+    {
+      "key": "rotated_axis_title",
+      "figure_id": "f1",
+      "evidence": "'Billion USD' set vertically along the left axis of the first two panels"
+    },
+    {
+      "key": "unit_in_axis_or_title",
+      "figure_id": "f1",
+      "evidence": "ticks are bare numbers 0, 50, 100...; scale word only in axis title 'Billion USD'"
+    },
+    {
+      "key": "axis_title_below_plot",
+      "figure_id": "f1",
+      "evidence": "'Final investment decision year' printed under the 2023-2030 tick row of the third panel"
+    },
+    {
+      "key": "source_note_lines",
+      "figure_id": "f1",
+      "evidence": "'Notes: CAPEX = capital expenditures...' and 'Sources: IEA analysis based on company announcement...' under the plot"
+    },
+    {
+      "key": "hgrid_only",
+      "figure_id": "f1",
+      "evidence": "faint horizontal rules at 50/100/150/200 and 500/1 000/1 500; no vertical rules"
+    },
+    {
+      "key": "footnote_marker",
+      "figure_id": "page",
+      "evidence": "superscript 7 after 'around USD 1.2 trillion,' with footnote 7 at page bottom"
+    },
+    {
+      "key": "nonstandard_time_ticks",
+      "figure_id": "f1",
+      "evidence": "category ticks read '2016-2021' and '2023-2030', multi-year ranges rather than single years"
+    }
+  ],
+  "new_components": [
+    {
+      "name": "arrow_range_timeline_panel",
+      "figure_id": "f1",
+      "evidence": "third panel shows four double-headed arrows spanning 2023 to about 2025-2028 on a year axis",
+      "why_it_matters": "读数不是柱高而是箭头两端的年份区间，行键必须给出起止年而非单一数值。"
+    },
+    {
+      "name": "category_identified_by_legend_colour_only",
+      "figure_id": "f1",
+      "evidence": "the four arrows carry no labels; only colour matches the legend series names",
+      "why_it_matters": "第三面板每条箭头无文字标签，表格行只能靠图例颜色名称对应，解析器易漏掉该面板全部行。"
+    },
+    {
+      "name": "key_message_line_below_figure",
+      "figure_id": "f1",
+      "evidence": "bold blue line 'Most of the supply chain investments needed to meet NZE Scenario targets in 2030...' under sources",
+      "why_it_matters": "图的核心结论（七倍、2023-2025）写在图外正文行里，取值时的语境需从该行而非表格获得。"
+    },
+    {
+      "name": "licence_line_below_figure",
+      "figure_id": "f1",
+      "evidence": "'IEA. CC BY 4.0.' printed right-aligned between legend and the Notes block",
+      "why_it_matters": "该行夹在图例与注释之间，容易被当作来源行，影响注释/来源的切分与定位。"
+    },
+    {
+      "name": "space_grouped_thousands_ticks",
+      "figure_id": "f1",
+      "evidence": "middle panel ticks printed '1 000' and '1 500' with a space separator",
+      "why_it_matters": "千位用空格分隔，数值检索时'1 000'与'1000'不匹配，取值字符串需归一化。"
+    }
+  ],
+  "spot_checks": [
+    {
+      "value": "7",
+      "figure_id": "not_found",
+      "mark": "no mark of this size can be isolated; '7' appears only as the footnote marker after 'USD 1.2 trillion' in body text",
+      "printed_on_figure": false,
+      "addressing_keys": []
+    },
+    {
+      "value": "40",
+      "figure_id": "f1",
+      "mark": "total height of the 2016-2021 stacked bar in the left panel",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "Figure 1.11",
+        "Average yearly CAPEX",
+        "2016-2021",
+        "Billion USD"
+      ]
+    },
+    {
+      "value": "35",
+      "figure_id": "f1",
+      "mark": "the 2016-2021 'Clean technology manufacuring' (blue) segment in the left panel",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "Figure 1.11",
+        "Average yearly CAPEX",
+        "2016-2021",
+        "Clean technology manufacuring"
+      ]
+    },
+    {
+      "value": "75",
+      "figure_id": "f1",
+      "mark": "the 2023-2030 'Clean technology manufacuring' (blue) segment in the left panel",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "Figure 1.11",
+        "Average yearly CAPEX",
+        "2023-2030",
+        "Clean technology manufacuring"
+      ]
+    },
+    {
+      "value": "150",
+      "figure_id": "f1",
+      "mark": "total height of the 2023-2030 stacked bar in the left panel (also a printed tick label '150')",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "Figure 1.11",
+        "Average yearly CAPEX",
+        "2023-2030",
+        "Billion USD"
+      ]
+    },
+    {
+      "value": "250",
+      "figure_id": "f1",
+      "mark": "the 'Copper mining' (red) segment of the 2023-2030 bar in the middle panel",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "Figure 1.11",
+        "Cumulative CAPEX",
+        "2023-2030",
+        "Copper mining"
+      ]
+    },
+    {
+      "value": "150",
+      "figure_id": "f1",
+      "mark": "the 'Other Critical mineral mining' (orange) segment of the 2023-2030 bar in the middle panel",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "Figure 1.11",
+        "Cumulative CAPEX",
+        "2023-2030",
+        "Other Critical mineral mining"
+      ]
+    },
+    {
+      "value": "150",
+      "figure_id": "f1",
+      "mark": "the 'Critical mineral processing' (yellow) segment of the 2023-2030 bar in the middle panel",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "Figure 1.11",
+        "Cumulative CAPEX",
+        "2023-2030",
+        "Critical mineral processing"
+      ]
+    },
+    {
+      "value": "650",
+      "figure_id": "f1",
+      "mark": "the 'Clean technology manufacuring' (blue) segment of the 2023-2030 bar in the middle panel",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "Figure 1.11",
+        "Cumulative CAPEX",
+        "2023-2030",
+        "Clean technology manufacuring"
+      ]
+    },
+    {
+      "value": "1200",
+      "figure_id": "f1",
+      "mark": "total height of the 2023-2030 stacked bar in the middle panel (the 'USD 1.2 trillion' total)",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "Figure 1.11",
+        "Cumulative CAPEX",
+        "2023-2030",
+        "Billion USD"
+      ]
+    }
+  ],
+  "hardest_step": 2,
+  "difficulty_notes": "取值精度是最大瓶颈。中间面板轴刻度为0、500、1 000、1 500，四段共约200像素高，1个单位约0.4像素；要把150这一段读到±5%（即±7.5 Billion USD）只有约3像素余量，而三段150/150/250彼此仅相差约100单位（约40像素），颜色带又极窄，几乎无法在容差内区分。左面板刻度间隔50，读35与40（相差5，约6像素）同样紧张。标签层面虽然需要面板名+期间+图例名三个键（且150在三处重复），但这些标签都是页面上逐字可得的；第三面板箭头无数值可读，只能给区间。",
+  "unreadable": [],
+  "suggestions": [
+    {
+      "what_to_add": "新组件 arrow_range_timeline_panel（双箭头时间区间面板）与 heterogeneous_panel_types 的组合",
+      "where_to_change": "图形族生成条件行：允许同一编号图内混合堆叠柱面板与箭头区间面板，并为箭头记录起止年字段",
+      "new_ablation_row": "异质面板图（柱+箭头区间）开/关，对比含箭头面板时行键与数值召回率",
+      "generality": "common",
+      "maps_to": "new"
+    },
+    {
+      "what_to_add": "per_panel_axis_range 与 panel_title_per_panel 一并进入行键（panel_key）",
+      "where_to_change": "记录字段：给每个数值加 panel_key='Average yearly CAPEX'/'Cumulative CAPEX'",
+      "new_ablation_row": "panel_key 进入键 vs 不进入：同页出现三个数值均为150时的唯一定位成功率",
+      "generality": "general",
+      "maps_to": "P2"
+    },
+    {
+      "what_to_add": "unit_in_axis_or_title + rotated_axis_title（'Billion USD' 竖排轴标题，刻度为裸数字）",
+      "where_to_change": "样式字段：单位位置增加“竖排轴标题”选项，刻度不带单位",
+      "new_ablation_row": "单位位置（竖排轴标题 / 标题内 / 刻度内）三档，对数值+单位联合检索命中率",
+      "generality": "general",
+      "maps_to": "P6"
+    },
+    {
+      "what_to_add": "刻度数字格式 space_grouped_thousands_ticks（'1 000'、'1 500'）",
+      "where_to_change": "样式字段 tick_format：千位分隔符可为空格、逗号或无",
+      "new_ablation_row": "千位分隔符三档，对四位数值（1200、1 000）字符串匹配率的影响",
+      "generality": "common",
+      "maps_to": "P6"
+    },
+    {
+      "what_to_add": "标题拆分与图外结论行（two-line 标题 + key_message_line_below_figure + 'IEA. CC BY 4.0.'）",
+      "where_to_change": "heading 字段：figure_number/title/subtitle/unit 与结论行位置分别建模",
+      "new_ablation_row": "标题块导出为粗体标题 vs 并入表格前后文：图号+双行标题的语境命中率",
+      "generality": "house_style",
+      "maps_to": "P7"
+    }
+  ],
+  "rules": [
+    {
+      "value": "7",
+      "labels": [
+        "Average yearly CAPEX",
+        "2016-2021",
+        "Copper mining"
+      ],
+      "tolerance": 0.5,
+      "max_diffs": 2,
+      "figure": "f1"
+    },
+    {
+      "value": "40",
+      "labels": [
+        "Average yearly CAPEX",
+        "2016-2021"
+      ],
+      "tolerance": 0.2,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "35",
+      "labels": [
+        "Average yearly CAPEX",
+        "2023-2030",
+        "Copper mining"
+      ],
+      "tolerance": 0.2,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "75",
+      "labels": [
+        "Average yearly CAPEX",
+        "2023-2030",
+        "Clean technology manufacuring"
+      ],
+      "tolerance": 0.1,
+      "max_diffs": 2,
+      "figure": "f1"
+    },
+    {
+      "value": "150",
+      "labels": [
+        "Average yearly CAPEX",
+        "2023-2030"
+      ],
+      "tolerance": 0.1,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "250",
+      "labels": [
+        "Cumulative CAPEX",
+        "2023-2030",
+        "Copper mining"
+      ],
+      "tolerance": 0.2,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "150",
+      "labels": [
+        "Cumulative CAPEX",
+        "2023-2030",
+        "Other Critical mineral mining"
+      ],
+      "tolerance": 0.2,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "150",
+      "labels": [
+        "Cumulative CAPEX",
+        "2023-2030",
+        "Critical mineral processing"
+      ],
+      "tolerance": 0.2,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "650",
+      "labels": [
+        "Cumulative CAPEX",
+        "2023-2030",
+        "Clean technology manufacuring"
+      ],
+      "tolerance": 0.1,
+      "max_diffs": 2,
+      "figure": "f1"
+    },
+    {
+      "value": "1200",
+      "labels": [
+        "Cumulative CAPEX",
+        "2023-2030"
+      ],
+      "tolerance": 0.05,
+      "max_diffs": 0,
+      "figure": "f1"
+    }
+  ],
+  "crosscheck": [
+    {
+      "code": "values_not_placed",
+      "detail": "1 of 10 values could not be put on a mark"
+    },
+    {
+      "code": "addressing_keys_wrong",
+      "detail": "1 of 10 predicted key sets miss a rule label: 35"
+    }
+  ]
+}

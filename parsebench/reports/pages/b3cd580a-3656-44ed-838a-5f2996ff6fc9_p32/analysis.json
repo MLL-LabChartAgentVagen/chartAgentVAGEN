@@ -1,0 +1,350 @@
+{
+  "stem": "b3cd580a-3656-44ed-838a-5f2996ff6fc9_p32",
+  "document": "b3cd580a-3656-44ed-838a-5f2996ff6fc9",
+  "tags": "need_estimate",
+  "page_note": "页面上半部是EIU《Industry outlook 2025》的正文两栏文字与一幅无编号折线图「Wind and solar are taking over」(六种电源2023–2033发电量, GWh, 数值轴在右侧), 下半部是新章节标题与正文。",
+  "figures": [
+    {
+      "id": "f1",
+      "heading": {
+        "figure_number": "",
+        "title": "Wind and solar are taking over",
+        "subtitle": "",
+        "unit_text": "Power generation by source; GWh",
+        "placement": "beside"
+      },
+      "type": "line",
+      "type_other": "",
+      "orientation": "vertical",
+      "panels": 1,
+      "panel_names": [],
+      "series": 6,
+      "series_names": [
+        "Coal",
+        "Gas",
+        "Solar",
+        "Wind",
+        "Hydro",
+        "Nuclear"
+      ],
+      "categories": 11,
+      "category_names": [
+        "2023",
+        "2024",
+        "2025",
+        "2026",
+        "2027",
+        "2028",
+        "2029",
+        "2030",
+        "2031",
+        "2032",
+        "2033"
+      ],
+      "marks": 66,
+      "values_printed": "none",
+      "value_axis_ticks": "12,000, 10,000, 8,000, 6,000, 4,000, 2,000, 0",
+      "source_line": "Source: EIU."
+    }
+  ],
+  "components": [
+    {
+      "key": "right_side_y_axis",
+      "figure_id": "f1",
+      "evidence": "the only value scale, 12,000 down to 0, is printed along the right edge of the plot"
+    },
+    {
+      "key": "hgrid_only",
+      "figure_id": "f1",
+      "evidence": "faint horizontal rules at 12,000/10,000/8,000/6,000/4,000/2,000/0; no vertical rules between year ticks"
+    },
+    {
+      "key": "legend_beside_plot",
+      "figure_id": "f1",
+      "evidence": "two-column legend 'Coal Gas / Solar Wind / Hydro Nuclear' sits in the left side column level with the plot"
+    },
+    {
+      "key": "unit_in_axis_or_title",
+      "figure_id": "f1",
+      "evidence": "'Power generation by source; GWh' above the legend; right-hand ticks are bare numbers 12,000...0"
+    },
+    {
+      "key": "source_note_lines",
+      "figure_id": "f1",
+      "evidence": "'Source: EIU.' with 'Copyright © The Economist Intelligence Unit 2024. All rights reserved.' below it"
+    }
+  ],
+  "new_components": [
+    {
+      "name": "unnumbered_figure",
+      "figure_id": "f1",
+      "evidence": "no 'Figure n' or 'Chart n' anywhere near the heading 'Wind and solar are taking over'",
+      "why_it_matters": "表格行无法用图号定位, 只能靠标题文字作为上下文键, 抽取时易与正文标题混淆。"
+    },
+    {
+      "name": "copyright_line_below_source",
+      "figure_id": "f1",
+      "evidence": "'Copyright © The Economist Intelligence Unit 2024. All rights reserved.' printed under 'Source: EIU.'",
+      "why_it_matters": "图下小字有两块, 解析器可能把版权行当作注释或数据说明, 干扰对源行的识别。"
+    },
+    {
+      "name": "crossing_line_bundle",
+      "figure_id": "f1",
+      "evidence": "Solar, Wind, Hydro and Nuclear lines cross one another between 2029 and 2031 in a 2,000–4,500 band",
+      "why_it_matters": "交叉区内四条线相距不足半格(1,000 GWh), 逐系列取值时极易串线, 影响读数归属。"
+    }
+  ],
+  "spot_checks": [
+    {
+      "value": "10200",
+      "figure_id": "f1",
+      "mark": "the leftmost point of the black Coal line, at 2023",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "Coal",
+        "2023",
+        "Power generation by source; GWh"
+      ]
+    },
+    {
+      "value": "6500",
+      "figure_id": "f1",
+      "mark": "the leftmost point of the gold Gas line, at 2023 (just above the 6,000 gridline)",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "Gas",
+        "2023",
+        "Power generation by source; GWh"
+      ]
+    },
+    {
+      "value": "1800",
+      "figure_id": "f1",
+      "mark": "the Solar (red) line in the mid-2020s, about the 2025 point",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "Solar",
+        "2025",
+        "Power generation by source; GWh"
+      ]
+    },
+    {
+      "value": "2200",
+      "figure_id": "f1",
+      "mark": "the leftmost point of the Wind (light green) line, at 2023",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "Wind",
+        "2023",
+        "Power generation by source; GWh"
+      ]
+    },
+    {
+      "value": "3800",
+      "figure_id": "f1",
+      "mark": "the rightmost point of the Solar (red) line, at 2033",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "Solar",
+        "2033",
+        "Power generation by source; GWh"
+      ]
+    },
+    {
+      "value": "9400",
+      "figure_id": "f1",
+      "mark": "the rightmost point of the Coal (black) line, at 2033",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "Coal",
+        "2033",
+        "Power generation by source; GWh"
+      ]
+    },
+    {
+      "value": "7900",
+      "figure_id": "f1",
+      "mark": "the rightmost point of the Gas (gold) line, at 2033",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "Gas",
+        "2033",
+        "Power generation by source; GWh"
+      ]
+    },
+    {
+      "value": "4200",
+      "figure_id": "f1",
+      "mark": "the rightmost point of the Wind (light green) line, at 2033, the topmost of the lower bundle",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "Wind",
+        "2033",
+        "Power generation by source; GWh"
+      ]
+    },
+    {
+      "value": "5000",
+      "figure_id": "not_found",
+      "mark": "no line passes near 5,000 at any year tick: the lower bundle tops out near 4,400 (Wind 2033) and Gas starts around 6,000 in 2023, leaving that band empty",
+      "printed_on_figure": false,
+      "addressing_keys": []
+    },
+    {
+      "value": "3700",
+      "figure_id": "f1",
+      "mark": "the leftmost point of the Hydro (blue) line, at 2023, just under the 4,000 gridline",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "Hydro",
+        "2023",
+        "Power generation by source; GWh"
+      ]
+    }
+  ],
+  "hardest_step": 2,
+  "difficulty_notes": "数值轴每格2,000 GWh, 全图高约286像素, 即1像素≈60 GWh, 而图上无任何数据标签、无点标记。对下方束(Solar/Wind/Hydro/Nuclear, 1,200–4,400)来说, 5%容差在3,700时只有±185 GWh, 折合约3像素; 而四条2px粗线在2029–2031区间彼此相距仅几像素并相互交叉, 逐年读数几乎无法稳定落在容差内。相比之下行标签只需「系列+年份」两个键, 图例六项与11个年份刻度都逐个印出, 定位并不难; 因此瓶颈在像素读值。",
+  "unreadable": [],
+  "suggestions": [
+    {
+      "what_to_add": "right_side_y_axis(值轴只画在右侧)",
+      "where_to_change": "样式字段中的value_axis_side, 允许在折线图上把唯一刻度列放到绘图区右缘",
+      "new_ablation_row": "「值轴位于右侧 vs 左侧」一行: 比较解析器把右缘刻度与线端对齐的成功率",
+      "generality": "common",
+      "maps_to": "P6"
+    },
+    {
+      "what_to_add": "P7的heading拆分, 特别是placement=beside与空figure_number",
+      "where_to_change": "图题记录: number/title/subtitle/unit分列, 且heading块可放在与绘图区并列的左侧栏",
+      "new_ablation_row": "「标题+图例位于侧栏且无图号 vs 标题在上方带图号」一行",
+      "generality": "house_style",
+      "maps_to": "P7"
+    },
+    {
+      "what_to_add": "legend_beside_plot(图例作为侧栏两列排布)",
+      "where_to_change": "布局条件行的legend_position增加beside_left, 并支持图例分两列",
+      "new_ablation_row": "「图例在侧栏 vs 图例在下方」对六系列折线的系列名归属一行",
+      "generality": "common",
+      "maps_to": "P3"
+    },
+    {
+      "what_to_add": "新组件crossing_line_bundle(多线在窄带内交叉)",
+      "where_to_change": "折线生成器的数据条件: 允许4条系列在小于1格的值域内互相交叉",
+      "new_ablation_row": "「线间距<0.5刻度格 vs >1刻度格」一行, 使可读性成为每个标记的精度上限",
+      "generality": "general",
+      "maps_to": "P1"
+    }
+  ],
+  "rules": [
+    {
+      "value": "10200",
+      "labels": [
+        "Coal",
+        "2023"
+      ],
+      "tolerance": 0.1,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "6500",
+      "labels": [
+        "Gas",
+        "2023"
+      ],
+      "tolerance": 0.1,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "1800",
+      "labels": [
+        "Solar",
+        "2023"
+      ],
+      "tolerance": 0.2,
+      "max_diffs": 2,
+      "figure": "f1"
+    },
+    {
+      "value": "2200",
+      "labels": [
+        "Wind",
+        "2023"
+      ],
+      "tolerance": 0.2,
+      "max_diffs": 2,
+      "figure": "f1"
+    },
+    {
+      "value": "3800",
+      "labels": [
+        "Hydro",
+        "2023"
+      ],
+      "tolerance": 0.15,
+      "max_diffs": 2,
+      "figure": "f1"
+    },
+    {
+      "value": "9400",
+      "labels": [
+        "Coal",
+        "2033"
+      ],
+      "tolerance": 0.1,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "7900",
+      "labels": [
+        "Gas",
+        "2033"
+      ],
+      "tolerance": 0.1,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "4200",
+      "labels": [
+        "Solar",
+        "2033"
+      ],
+      "tolerance": 0.2,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "5000",
+      "labels": [
+        "Wind",
+        "2033"
+      ],
+      "tolerance": 0.2,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "3700",
+      "labels": [
+        "Nuclear",
+        "2033"
+      ],
+      "tolerance": 0.2,
+      "max_diffs": 0,
+      "figure": "f1"
+    }
+  ],
+  "crosscheck": [
+    {
+      "code": "values_not_placed",
+      "detail": "1 of 10 values could not be put on a mark"
+    },
+    {
+      "code": "addressing_keys_wrong",
+      "detail": "4 of 10 predicted key sets miss a rule label: 1800, 3800, 4200, 3700"
+    }
+  ]
+}

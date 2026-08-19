@@ -1,0 +1,358 @@
+{
+  "stem": "2025-EIS_p12",
+  "document": "2025-EIS",
+  "tags": "need_estimate",
+  "page_note": "该页为《European Innovation Scoreboard 2025》第10页，仅含Figure 2一幅横向条形图，展示EU27成员国2025年创新绩效（以2018年EU为基准的指数），条形按四类创新群体着色并叠加2024年得分的刻度标记。",
+  "figures": [
+    {
+      "id": "f1",
+      "heading": {
+        "figure_number": "Figure 2",
+        "title": "Innovation performance of the EU27 Member States in 2025, indexed to the EU in 2018",
+        "subtitle": "",
+        "unit_text": "Summary innovation index in 2025 (indexed to the EU in 2018)",
+        "placement": "above"
+      },
+      "type": "bar",
+      "type_other": "",
+      "orientation": "horizontal",
+      "panels": 1,
+      "panel_names": [],
+      "series": 5,
+      "series_names": [
+        "Emerging innovators",
+        "Moderate innovators",
+        "Strong innovators",
+        "Innovation leaders",
+        "Score in 2024"
+      ],
+      "categories": 28,
+      "category_names": [
+        "Sweden",
+        "Denmark",
+        "Netherlands",
+        "Finland",
+        "Ireland",
+        "Belgium",
+        "Luxembourg",
+        "Austria",
+        "Germany",
+        "France",
+        "Estonia",
+        "EU"
+      ],
+      "marks": 56,
+      "values_printed": "none",
+      "value_axis_ticks": "0, 20, 40, 60, 80, 100, 120, 140, 160",
+      "source_line": ""
+    }
+  ],
+  "components": [
+    {
+      "key": "horizontal_bars",
+      "figure_id": "f1",
+      "evidence": "country names sit on the y axis, bars grow rightwards to a 0-160 axis at the bottom"
+    },
+    {
+      "key": "tick_marker_as_series",
+      "figure_id": "f1",
+      "evidence": "legend entry \"Score in 2024\" is a short vertical dash placed at each country's bar row"
+    },
+    {
+      "key": "mixed_marks",
+      "figure_id": "f1",
+      "evidence": "bars plus overlaid short vertical dash markers in the same panel, on the same axis"
+    },
+    {
+      "key": "color_encodes_extra_attribute",
+      "figure_id": "f1",
+      "evidence": "fill colour marks performance class: \"Emerging innovators\", \"Moderate innovators\", \"Strong innovators\", \"Innovation leaders\""
+    },
+    {
+      "key": "highlighted_category",
+      "figure_id": "f1",
+      "evidence": "the \"EU\" row is drawn in dark blue, unlike the four group colours around it"
+    },
+    {
+      "key": "legend_below_plot",
+      "figure_id": "f1",
+      "evidence": "five legend entries in swatch columns below the axis title, outside the plot"
+    },
+    {
+      "key": "axis_title_below_plot",
+      "figure_id": "f1",
+      "evidence": "\"Summary innovation index in 2025 (indexed to the EU in 2018)\" printed under the 0-160 tick row"
+    },
+    {
+      "key": "unit_in_axis_or_title",
+      "figure_id": "f1",
+      "evidence": "bare ticks 0...160; the scale word only in axis title \"Summary innovation index in 2025 (indexed to the EU in 2018)\""
+    },
+    {
+      "key": "rebased_index_values",
+      "figure_id": "f1",
+      "evidence": "title reads \"indexed to the EU in 2018\"; axis title repeats \"(indexed to the EU in 2018)\""
+    },
+    {
+      "key": "wrapped_category_labels",
+      "figure_id": "f1",
+      "evidence": "28 country labels stacked down the y axis, from \"Sweden\" to \"Romania\""
+    },
+    {
+      "key": "vgrid_only",
+      "figure_id": "f1",
+      "evidence": "faint vertical rules at each 20-unit tick cross the bars; no horizontal rules"
+    }
+  ],
+  "new_components": [
+    {
+      "name": "sorted_category_axis",
+      "figure_id": "f1",
+      "evidence": "countries ordered by 2025 value, Sweden top to Romania bottom, with EU inserted at its rank",
+      "why_it_matters": "类别顺序本身携带信息（排名），行标签无法从字母序推断；读值时需按排名定位，且相邻行数值差可小于1个单位。"
+    },
+    {
+      "name": "aggregate_inserted_in_ranking",
+      "figure_id": "f1",
+      "evidence": "the \"EU\" aggregate row sits between \"Estonia\" and \"Malta\" inside the country ranking",
+      "why_it_matters": "聚合值与成员国值混在同一序列中，表格若不额外标注会把EU当成一个国家行，影响定位与核对。"
+    },
+    {
+      "name": "prior_year_marker_offset",
+      "figure_id": "f1",
+      "evidence": "\"Score in 2024\" dash sometimes inside the bar (Malta, Italy), sometimes beyond it (Cyprus, Denmark)",
+      "why_it_matters": "同一行有两个数值且相差仅1-6个单位，必须依靠标记相对条形端点的左右位置判断哪一个是2024年，否则两值互换。"
+    }
+  ],
+  "spot_checks": [
+    {
+      "value": "155",
+      "figure_id": "f1",
+      "mark": "the Sweden 2025 bar (Innovation leaders), longest bar, ending just short of 160",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "Sweden",
+        "Innovation leaders",
+        "Summary innovation index in 2025 (indexed to the EU in 2018)"
+      ]
+    },
+    {
+      "value": "153",
+      "figure_id": "f1",
+      "mark": "the Denmark \"Score in 2024\" dash, drawn just beyond the end of the Denmark bar",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "Denmark",
+        "Score in 2024"
+      ]
+    },
+    {
+      "value": "152",
+      "figure_id": "f1",
+      "mark": "the Denmark 2025 bar (Innovation leaders), second longest",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "Denmark",
+        "Innovation leaders",
+        "Summary innovation index in 2025 (indexed to the EU in 2018)"
+      ]
+    },
+    {
+      "value": "137",
+      "figure_id": "f1",
+      "mark": "the Belgium 2025 bar (Strong innovators), between the 120 and 140 gridlines",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "Belgium",
+        "Strong innovators",
+        "Summary innovation index in 2025 (indexed to the EU in 2018)"
+      ]
+    },
+    {
+      "value": "129",
+      "figure_id": "f1",
+      "mark": "the Luxembourg 2025 bar (Strong innovators), just past the mid-point between 120 and 140",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "Luxembourg",
+        "Strong innovators",
+        "Summary innovation index in 2025 (indexed to the EU in 2018)"
+      ]
+    },
+    {
+      "value": "108",
+      "figure_id": "f1",
+      "mark": "the Malta 2025 bar (Moderate innovators), first bar below the EU row",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "Malta",
+        "Moderate innovators",
+        "Summary innovation index in 2025 (indexed to the EU in 2018)"
+      ]
+    },
+    {
+      "value": "109",
+      "figure_id": "f1",
+      "mark": "the EU row: either the dark blue 2025 bar or its \"Score in 2024\" dash at the bar end; the two coincide within a pixel or two",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "EU",
+        "Score in 2024",
+        "Summary innovation index in 2025 (indexed to the EU in 2018)"
+      ]
+    },
+    {
+      "value": "42",
+      "figure_id": "f1",
+      "mark": "the Romania 2025 bar (Emerging innovators), bottom row, ending just past 40",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "Romania",
+        "Emerging innovators",
+        "Summary innovation index in 2025 (indexed to the EU in 2018)"
+      ]
+    },
+    {
+      "value": "51",
+      "figure_id": "f1",
+      "mark": "the Bulgaria 2025 bar (Emerging innovators), just past the mid-point between 40 and 60",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "Bulgaria",
+        "Emerging innovators",
+        "Summary innovation index in 2025 (indexed to the EU in 2018)"
+      ]
+    }
+  ],
+  "hardest_step": 3,
+  "difficulty_notes": "卡点在标签寻址。每个国家行有两个数值：2025年条形与\"Score in 2024\"刻度标记，两者差常在1-6个单位（Sweden 155 vs 153约1.3%，Romania 42 vs 42几乎重合），远小于5%容差，因此只给国家名的表格行会同时命中两个值而无法区分；必须同时携带国家名与系列名（\"Score in 2024\"或所属群体名如\"Innovation leaders\"）。此外条形颜色代表四类群体而非年份，颜色图例并不构成年份维度，解析器很容易把群体名当作唯一系列。相比之下读数本身较宽松：刻度每20单位、5%容差在108处约±5.4单位（约四分之一格间距），肉眼定位可达；28行×2值共56个marks也不算密。",
+  "unreadable": [],
+  "suggestions": [
+    {
+      "what_to_add": "tick_marker_as_series（把某一系列画成置于类别位置的短刻度线，与条形共用同一数值轴）",
+      "where_to_change": "图表样式条件行中新增\"prior-period marker\"渲染选项，并在记录字段中为该系列单独保存series_name与数值",
+      "new_ablation_row": "同一类别下\"条形+刻度标记\"两系列 vs 仅条形：考察系列名进入寻址键后取值正确率的变化",
+      "generality": "common",
+      "maps_to": "P6"
+    },
+    {
+      "what_to_add": "color_encodes_extra_attribute（填色编码分组属性而非系列身份，图例项为\"Emerging/Moderate/Strong innovators、Innovation leaders\"）",
+      "where_to_change": "配色与图例生成条件行：增加group-colour映射字段，使图例项对应类别分组而不是数据系列",
+      "new_ablation_row": "颜色=分组属性 vs 颜色=系列：检验模型是否把分组名误当年份/系列名写入表头",
+      "generality": "common",
+      "maps_to": "P6"
+    },
+    {
+      "what_to_add": "新组件sorted_category_axis与aggregate_inserted_in_ranking（28行按值降序、EU聚合行插在Estonia与Malta之间并另用深蓝）",
+      "where_to_change": "类别轴排序与highlight字段：增加sort_by_value与aggregate_row位置参数",
+      "new_ablation_row": "排序类别轴且含插入的聚合行 vs 固定顺序无聚合行：考察行定位与聚合值误配率",
+      "generality": "general",
+      "maps_to": "new"
+    },
+    {
+      "what_to_add": "axis_title_below_plot + unit_in_axis_or_title（唯一的量纲说明位于刻度行下方的\"Summary innovation index in 2025 (indexed to the EU in 2018)\"）",
+      "where_to_change": "标题/单位版式字段：新增unit位置枚举值\"below-axis\"，与figure_number、title分离",
+      "new_ablation_row": "单位置于轴下标题 vs 置于图题内：考察导出markdown表头是否保留指数基准信息",
+      "generality": "general",
+      "maps_to": "P7"
+    }
+  ],
+  "rules": [
+    {
+      "value": "155",
+      "labels": [
+        "Sweden",
+        "Innovation leaders"
+      ],
+      "tolerance": 0.05,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "153",
+      "labels": [
+        "Sweden",
+        "Score in 2024"
+      ],
+      "tolerance": 0.05,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "152",
+      "labels": [
+        "Denmark",
+        "Innovation leaders"
+      ],
+      "tolerance": 0.05,
+      "max_diffs": 2,
+      "figure": "f1"
+    },
+    {
+      "value": "137",
+      "labels": [
+        "Ireland",
+        "Strong innovators"
+      ],
+      "tolerance": 0.05,
+      "max_diffs": 2,
+      "figure": "f1"
+    },
+    {
+      "value": "129",
+      "labels": [
+        "Austria",
+        "Strong innovators"
+      ],
+      "tolerance": 0.05,
+      "max_diffs": 2,
+      "figure": "f1"
+    },
+    {
+      "value": "108",
+      "labels": [
+        "Malta",
+        "Moderate innovators"
+      ],
+      "tolerance": 0.05,
+      "max_diffs": 2,
+      "figure": "f1"
+    },
+    {
+      "value": "109",
+      "labels": [
+        "Cyprus",
+        "Score in 2024"
+      ],
+      "tolerance": 0.05,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "42",
+      "labels": [
+        "Romania",
+        "Emerging innovators"
+      ],
+      "tolerance": 0.05,
+      "max_diffs": 2,
+      "figure": "f1"
+    },
+    {
+      "value": "51",
+      "labels": [
+        "Bulgaria",
+        "Emerging innovators"
+      ],
+      "tolerance": 0.1,
+      "max_diffs": 2,
+      "figure": "f1"
+    }
+  ],
+  "crosscheck": [
+    {
+      "code": "addressing_keys_wrong",
+      "detail": "4 of 9 predicted key sets miss a rule label: 153, 137, 129, 109"
+    }
+  ]
+}

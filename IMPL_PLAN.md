@@ -354,7 +354,9 @@ A 是所有人的前置。A 完成后 B–F 之间只靠样例文件耦合，可
 
 ### H. ParseBench 对齐
 
-六项改进由 [`parsebench/review/04_pipeline_gap.md`](parsebench/review/04_pipeline_gap.md) 定义，编号 P1–P6。规格先写回 `storyline/parsebench_chart/`，实现落在下面已有的组别里，不另起模块。
+七项改进由 [`parsebench/review/04_pipeline_gap.md`](parsebench/review/04_pipeline_gap.md) 定义，编号 P1–P7。规格先写回 `storyline/parsebench_chart/`，实现落在下面已有的组别里，不另起模块。
+
+改造顺序由 [`parsebench/reports/INDEX.md §1`](parsebench/reports/INDEX.md) 给出：192 页随机样本上「我们画不出来」的出现频次，组件与图表类型两张表。**排序看的是文档分布不是页数**——同一份文档里出现 20 次是那家出版方的习惯，20 份文档里各出现一次才是通用的作图习惯（[§2](parsebench/reports/INDEX.md)）。
 
 - [ ] H1 P1 `readable` 二值门 → 每图元的可达精度 ε（改 `chart_types.md` §4 与 `registry/channels.py`，牵动 E3 与 F1）
 - [ ] H2 P2 多面板图加 `panel_key`（改 `interfaces/` 的 FigureSpec 与 Record，牵动 A2 的样例与 `schema_version`）
@@ -362,4 +364,7 @@ A 是所有人的前置。A 完成后 B–F 之间只靠样例文件耦合，可
 - [ ] H4 P4 轮转图族采样的权重向量，默认维持均匀（改 C 组与 `configs/`）
 - [ ] H5 P5 抬高稠密度上限（改 `registry/charts.py` 的结构条件区间）
 - [ ] H6 P6 风格向量补三维：标注位置枚举、刻度格式与单位位置、负值与零线（改 D 组）
-- [ ] H7 用官方 `ChartDataPointRule` 在 568 页上自评，改造前后各一次
+- [ ] H7 P7 图标题成为一等公民：FigureSpec 加 `title`（图号 / 主标题 / 副标题 / 单位 / **位置**四值），轮转图与多面板图按声明模板合成，图号由页面合成器编（改 `interfaces/figure.py` 与 D 组的页面合成，牵动 A2 的样例与 `schema_version`）
+- [ ] H8 用官方 `ChartDataPointRule` 在 568 页上自评，改造前后各一次
+
+P1–P7 之外还有一类：**条件表根本没有的图族**（地图、仪表盘，以及基准里报 `other` 的那些形式）。P4 的权重向量只在已有 13 型之间分配配额，管不到它。要不要加，按同一条标准定——看文档分布，见 [`parsebench/README.md`](parsebench/README.md) 的 TODO B3 第五项。

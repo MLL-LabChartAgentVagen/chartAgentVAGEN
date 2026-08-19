@@ -1,0 +1,369 @@
+{
+  "stem": "2024_Annual_Financial_Review_Upstream_FINAL_p14",
+  "document": "2024_Annual_Financial_Review_Upstream_FINAL",
+  "tags": "need_estimate",
+  "page_note": "这是一页EIA幻灯片式报告，含一个未编号的瀑布图，展示158家能源公司2024年已探明储量从年初到年末的变化，各步骤条按地区堆叠，纵轴带断轴符号。",
+  "figures": [
+    {
+      "id": "f1",
+      "heading": {
+        "figure_number": "",
+        "title": "Change in proved reserves from beginning to end of year for select energy companies",
+        "subtitle": "",
+        "unit_text": "billion barrels of oil equivalent",
+        "placement": "above"
+      },
+      "type": "waterfall",
+      "type_other": "",
+      "orientation": "vertical",
+      "panels": 1,
+      "panel_names": [],
+      "series": 7,
+      "series_names": [
+        "other world and associates",
+        "Asia Pacific, Russia, and Central Asia",
+        "Middle East and Africa",
+        "Europe",
+        "Latin America",
+        "Canada",
+        "United States"
+      ],
+      "categories": 6,
+      "category_names": [
+        "total proved reserves, start of year",
+        "improved recovery, extensions, discoveries, and revisions",
+        "purchases",
+        "sales",
+        "production",
+        "total proved reserves, end of year"
+      ],
+      "marks": 23,
+      "values_printed": "none",
+      "value_axis_ticks": "270, 260, 250, 240, 230, //, 0",
+      "source_line": "Data source: Evaluate Energy"
+    }
+  ],
+  "components": [
+    {
+      "key": "stacked_bar",
+      "figure_id": "f1",
+      "evidence": "the purchases, sales and production bars are split into colour-coded regional segments within one bar"
+    },
+    {
+      "key": "broken_axis",
+      "figure_id": "f1",
+      "evidence": "a `//` break glyph is drawn on the y axis between the 230 and 0 tick labels"
+    },
+    {
+      "key": "annotation_callout",
+      "figure_id": "f1",
+      "evidence": "bold `net -0.1 billion barrels of oil equivalent` printed inside the plot at the right"
+    },
+    {
+      "key": "legend_inside_plot",
+      "figure_id": "f1",
+      "evidence": "seven colour-matched region names stacked as text over the plot area between the sales and Latin America bars"
+    },
+    {
+      "key": "hgrid_only",
+      "figure_id": "f1",
+      "evidence": "thin horizontal rules at 270, 260, 250, 240, 230; no vertical rules"
+    },
+    {
+      "key": "source_note_lines",
+      "figure_id": "f1",
+      "evidence": "`Data source: Evaluate Energy` and `Note: Mergers and acquisitions between companies may affect net reserve changes...` below the plot"
+    },
+    {
+      "key": "unit_in_axis_or_title",
+      "figure_id": "f1",
+      "evidence": "`billion barrels of oil equivalent` under the bold heading; axis shows bare 270, 260, 250"
+    },
+    {
+      "key": "axis_title_above_axis",
+      "figure_id": "f1",
+      "evidence": "the unit line sits directly above the top tick `270`, left-aligned with the axis"
+    },
+    {
+      "key": "wrapped_category_labels",
+      "figure_id": "f1",
+      "evidence": "`improved recovery, extensions, discoveries, and revisions` wraps onto four tick lines"
+    },
+    {
+      "key": "highlighted_category",
+      "figure_id": "f1",
+      "evidence": "the start-of-year and end-of-year total bars are solid black, unlike the colour-stacked step bars"
+    }
+  ],
+  "new_components": [
+    {
+      "name": "waterfall_connector_line",
+      "figure_id": "f1",
+      "evidence": "thin blue horizontal lines join the top of each bar to the base of the next bar",
+      "why_it_matters": "每个浮动条的数值必须由连接线给出的起点与条顶之差读出，而不是条顶的绝对刻度值。"
+    },
+    {
+      "name": "floating_bars_off_baseline",
+      "figure_id": "f1",
+      "evidence": "the four step bars hang between 232 and 260, none touches the 0 baseline",
+      "why_it_matters": "读值时须先确定条的底部高度，长度即变化量；直接读顶端会得到累计储量而非该步骤的增减。"
+    },
+    {
+      "name": "signed_step_drawn_above_zero",
+      "figure_id": "f1",
+      "evidence": "sales and production are decreases yet drawn as positive-height bars above zero; only the callout shows a minus sign",
+      "why_it_matters": "负号无法从图形几何判断，必须依据类别名（sales、production）为读出的段长补上负号。"
+    },
+    {
+      "name": "narrative_slide_title_above_figure_heading",
+      "figure_id": "page",
+      "evidence": "large blue sentence `After net purchases and production... unchanged in 2024` above the bold figure heading",
+      "why_it_matters": "标题层级有两层：结论句与图表标题，表格上下文若只取一层会丢失单位或主题定位。"
+    }
+  ],
+  "spot_checks": [
+    {
+      "value": "232.5",
+      "figure_id": "f1",
+      "mark": "the first black bar, total at start of year, top just above the 230 gridline",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "total proved reserves, start of year"
+      ]
+    },
+    {
+      "value": "232.4",
+      "figure_id": "f1",
+      "mark": "the last black bar, total at end of year",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "total proved reserves, end of year"
+      ]
+    },
+    {
+      "value": "6.5",
+      "figure_id": "f1",
+      "mark": "the dark-blue United States segment at the base of the improved recovery / extensions bar",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "improved recovery, extensions, discoveries, and revisions",
+        "United States"
+      ]
+    },
+    {
+      "value": "1",
+      "figure_id": "not_found",
+      "mark": "a roughly one-unit thin band; several such bands exist (Europe/Canada in different step bars) and cannot be separated at this resolution",
+      "printed_on_figure": false,
+      "addressing_keys": []
+    },
+    {
+      "value": "8.5",
+      "figure_id": "f1",
+      "mark": "the large dark-blue United States segment at the base of the purchases bar",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "purchases",
+        "United States"
+      ]
+    },
+    {
+      "value": "-7.5",
+      "figure_id": "f1",
+      "mark": "the dark-blue United States segment at the base of the production bar (bottom to about the 240 line)",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "production",
+        "United States"
+      ]
+    },
+    {
+      "value": "-6.5",
+      "figure_id": "f1",
+      "mark": "the dark-blue United States segment of the sales bar, its dominant lower portion",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "sales",
+        "United States"
+      ]
+    },
+    {
+      "value": "-3.5",
+      "figure_id": "not_found",
+      "mark": "one of the gold/olive bands inside the production bar; the Middle East and Africa vs Asia Pacific bands are 2-4 px apart and cannot be told apart",
+      "printed_on_figure": false,
+      "addressing_keys": []
+    },
+    {
+      "value": "-3.0",
+      "figure_id": "not_found",
+      "mark": "another ~3-unit band in the production or sales stack; region cannot be identified at this rendering",
+      "printed_on_figure": false,
+      "addressing_keys": []
+    },
+    {
+      "value": "2.0",
+      "figure_id": "not_found",
+      "mark": "a ~2-unit light-blue or grey band; occurs in more than one step bar, not resolvable to a single mark",
+      "printed_on_figure": false,
+      "addressing_keys": []
+    }
+  ],
+  "hardest_step": 2,
+  "difficulty_notes": "轴上10个单位约占57像素，即1单位≈5.7像素。两端的总量条（232.5、232.4）5%容差达±11.6单位，几乎无法读错；但被打分的其余数值是地区堆叠段，量级只有1到8.5，5%容差分别只有0.05到0.43单位，即0.3到2.5像素——薄段（1.0、2.0、-3.0、-3.5）的边界本身在这一渲染下就有1到2像素的不确定性，加之瀑布条悬空、需先由连接线定底部再取段高，取值精度根本达不到。相比之下标签虽需“类别名+地区名”两键，且地区名以彩色文字置于图内而非图例，尚可在表头中承载。",
+  "unreadable": [],
+  "suggestions": [
+    {
+      "what_to_add": "waterfall 家族与 waterfall_connector_line / floating_bars_off_baseline（浮动条+连接线）",
+      "where_to_change": "图表族条件行中新增 waterfall 类型，样式字段加入“连接线开关”和“条底基准（零基/累计基）”",
+      "new_ablation_row": "有/无连接线与浮动条基准的瀑布图，对比每段取值误差与被跳过率",
+      "generality": "common",
+      "maps_to": "new"
+    },
+    {
+      "what_to_add": "broken_axis（`//` 断轴符号）与断轴下的刻度格式",
+      "where_to_change": "轴样式字段增加 axis_break 位置与符号形状，刻度序列允许 230 与 0 之间断开",
+      "new_ablation_row": "断轴 vs 起点非零 vs 全零基三种轴设置下的读值精度",
+      "generality": "common",
+      "maps_to": "P6"
+    },
+    {
+      "what_to_add": "signed_step_drawn_above_zero（负向步骤仍画在零上方，符号只在类别名/批注里）",
+      "where_to_change": "记录字段增加 sign 与 geometry 分离标记；负值与零线样式维度",
+      "new_ablation_row": "符号可见（穿越零线）与符号仅由标签给出的两类负值图，对比符号错判率",
+      "generality": "common",
+      "maps_to": "P6"
+    },
+    {
+      "what_to_add": "legend_inside_plot（七个彩色地区名以文字块置于绘图区内，无图例框）",
+      "where_to_change": "图例位置样式字段增加 inside_plot_colored_text 取值",
+      "new_ablation_row": "图例在图内彩色文字 vs 图外方框图例时，系列名到段的绑定正确率",
+      "generality": "house_style",
+      "maps_to": "new"
+    },
+    {
+      "what_to_add": "标题分层：叙述式幻灯片结论句 + 加粗图表标题 + 单位行（unit 位于顶刻度上方）",
+      "where_to_change": "heading 记录拆分为 number/title/subtitle/unit/placement，并区分页级结论句",
+      "new_ablation_row": "单位行在顶刻度上方 vs 轴旁 vs 系列名内三种位置下，单位还原率",
+      "generality": "common",
+      "maps_to": "P7"
+    },
+    {
+      "what_to_add": "per-mark 可读精度（薄堆叠段 1-2 单位 vs 总量条 232）",
+      "where_to_change": "评分条件行把 readable 改为按段高/像素比给出的可达精度",
+      "new_ablation_row": "按段高分档（<2、2-5、>5 单位）统计 5% 容差内命中率",
+      "generality": "general",
+      "maps_to": "P1"
+    }
+  ],
+  "rules": [
+    {
+      "value": "232.5",
+      "labels": [
+        "total proved reserves, start of year"
+      ],
+      "tolerance": 0.05,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "232.4",
+      "labels": [
+        "total proved reserves, end of year"
+      ],
+      "tolerance": 0.05,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "6.5",
+      "labels": [
+        "improved recovery, extensions, discoveries, and revisions",
+        "United States"
+      ],
+      "tolerance": 0.1,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "1",
+      "labels": [
+        "improved recovery, extensions, discoveries, and revisions",
+        "Canada"
+      ],
+      "tolerance": 0.2,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "8.5",
+      "labels": [
+        "purchases",
+        "United States"
+      ],
+      "tolerance": 0.1,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "-7.5",
+      "labels": [
+        "sales",
+        "United States"
+      ],
+      "tolerance": 0.1,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "-6.5",
+      "labels": [
+        "production",
+        "United States"
+      ],
+      "tolerance": 0.1,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "-3.5",
+      "labels": [
+        "production",
+        "Asia Pacific, Russia, and Central Asia"
+      ],
+      "tolerance": 0.2,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "-3.0",
+      "labels": [
+        "production",
+        "Middle East and Africa"
+      ],
+      "tolerance": 0.1,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "2.0",
+      "labels": [
+        "improved recovery, extensions, discoveries, and revisions",
+        "Middle East and Africa"
+      ],
+      "tolerance": 0.1,
+      "max_diffs": 0,
+      "figure": "f1"
+    }
+  ],
+  "crosscheck": [
+    {
+      "code": "values_not_placed",
+      "detail": "4 of 10 values could not be put on a mark"
+    },
+    {
+      "code": "addressing_keys_wrong",
+      "detail": "2 of 10 predicted key sets miss a rule label: -7.5, -6.5"
+    }
+  ]
+}

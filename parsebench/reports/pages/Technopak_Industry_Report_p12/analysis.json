@@ -1,0 +1,271 @@
+{
+  "stem": "Technopak_Industry_Report_p12",
+  "document": "Technopak_Industry_Report",
+  "tags": "untagged",
+  "page_note": "报告第12页正文讨论城镇化、气候变化与可再生能源，中部含一幅柱状图 Exhibit 2.4: Solar Energy Capacity Forecast (FY)，展示2020至2027P年太阳能装机容量及30%增长箭头注释。",
+  "figures": [
+    {
+      "id": "f1",
+      "heading": {
+        "figure_number": "Exhibit 2.4:",
+        "title": "Solar Energy Capacity Forecast (FY)",
+        "subtitle": "",
+        "unit_text": "",
+        "placement": "above"
+      },
+      "type": "bar",
+      "type_other": "",
+      "orientation": "vertical",
+      "panels": 1,
+      "panel_names": [],
+      "series": 1,
+      "series_names": [],
+      "categories": 8,
+      "category_names": [
+        "2020",
+        "2021",
+        "2022",
+        "2023",
+        "2024",
+        "2025P",
+        "2026P",
+        "2027P"
+      ],
+      "marks": 8,
+      "values_printed": "all",
+      "value_axis_ticks": "",
+      "source_line": "Source: Secondary Research"
+    }
+  ],
+  "components": [
+    {
+      "key": "no_value_axis",
+      "figure_id": "f1",
+      "evidence": "only a baseline under the bars; no value ticks drawn on either side of the plot"
+    },
+    {
+      "key": "value_label_outside",
+      "figure_id": "f1",
+      "evidence": "bold numbers 34.6, 40.1 ... 185.6 printed above the tops of the bars"
+    },
+    {
+      "key": "annotation_callout",
+      "figure_id": "f1",
+      "evidence": "a diagonal arrow across the plot from 2023 to 2027P labelled \"30%\""
+    },
+    {
+      "key": "source_note_lines",
+      "figure_id": "f1",
+      "evidence": "\"Source: Secondary Research\" in italics below the plot"
+    },
+    {
+      "key": "nonstandard_time_ticks",
+      "figure_id": "f1",
+      "evidence": "category ticks read \"2025P\", \"2026P\", \"2027P\" with a P suffix for projected years"
+    }
+  ],
+  "new_components": [
+    {
+      "name": "cagr_growth_arrow",
+      "figure_id": "f1",
+      "evidence": "arrow spanning 2023 to 2027P bars carries \"30%\", a growth rate not a plotted bar value",
+      "why_it_matters": "读者可能把箭头上的30%误当成某一年的数据点；它是跨类别的增长率注释，不属于任何单一柱子。"
+    },
+    {
+      "name": "projection_suffix_in_ticks",
+      "figure_id": "f1",
+      "evidence": "\"2025P\", \"2026P\", \"2027P\" mark forecast years while 2020-2024 are actuals",
+      "why_it_matters": "同一系列内实际值与预测值只靠刻度后缀P区分，取值时必须连同后缀一起作为行标签。"
+    }
+  ],
+  "spot_checks": [
+    {
+      "value": "34.6",
+      "figure_id": "f1",
+      "mark": "the 2020 bar",
+      "printed_on_figure": true,
+      "addressing_keys": [
+        "Exhibit 2.4: Solar Energy Capacity Forecast (FY)",
+        "2020"
+      ]
+    },
+    {
+      "value": "40.1",
+      "figure_id": "f1",
+      "mark": "the 2021 bar",
+      "printed_on_figure": true,
+      "addressing_keys": [
+        "Exhibit 2.4: Solar Energy Capacity Forecast (FY)",
+        "2021"
+      ]
+    },
+    {
+      "value": "54.0",
+      "figure_id": "f1",
+      "mark": "the 2022 bar",
+      "printed_on_figure": true,
+      "addressing_keys": [
+        "Exhibit 2.4: Solar Energy Capacity Forecast (FY)",
+        "2022"
+      ]
+    },
+    {
+      "value": "65.0",
+      "figure_id": "f1",
+      "mark": "the 2023 bar",
+      "printed_on_figure": true,
+      "addressing_keys": [
+        "Exhibit 2.4: Solar Energy Capacity Forecast (FY)",
+        "2023"
+      ]
+    },
+    {
+      "value": "90.8",
+      "figure_id": "f1",
+      "mark": "the 2024 bar",
+      "printed_on_figure": true,
+      "addressing_keys": [
+        "Exhibit 2.4: Solar Energy Capacity Forecast (FY)",
+        "2024"
+      ]
+    },
+    {
+      "value": "113.3",
+      "figure_id": "f1",
+      "mark": "the 2025P bar",
+      "printed_on_figure": true,
+      "addressing_keys": [
+        "Exhibit 2.4: Solar Energy Capacity Forecast (FY)",
+        "2025P"
+      ]
+    },
+    {
+      "value": "145.0",
+      "figure_id": "f1",
+      "mark": "the 2026P bar",
+      "printed_on_figure": true,
+      "addressing_keys": [
+        "Exhibit 2.4: Solar Energy Capacity Forecast (FY)",
+        "2026P"
+      ]
+    },
+    {
+      "value": "185.6",
+      "figure_id": "f1",
+      "mark": "the 2027P bar",
+      "printed_on_figure": true,
+      "addressing_keys": [
+        "Exhibit 2.4: Solar Energy Capacity Forecast (FY)",
+        "2027P"
+      ]
+    }
+  ],
+  "hardest_step": 1,
+  "difficulty_notes": "八个数值全部以粗体印在柱顶，单一系列只需一个年份键即可定位，读数与标签都不构成障碍；真正的风险是解析器把这张无值轴的图当作散落文本，不生成任何表格——柱顶数字与年份刻度在版面上相距上百像素，年份行与数值行容易被拆成两串互不关联的文字，同时箭头上的\"30%\"会作为第九个数字混入同一串，使\"185.6\"与\"2027P\"无法配对。另外图题以斜体\"Exhibit 2.4:\"形式置于图上方的横线之间，若未被识别为标题，行上下文也会丢失。",
+  "unreadable": [],
+  "suggestions": [
+    {
+      "what_to_add": "no_value_axis 与 value_label_outside 的组合（仅靠柱顶标签读数、无刻度轴）",
+      "where_to_change": "图表样式条件行：value_axis 显示开关与 value-label placement 字段",
+      "new_ablation_row": "新增一行：无值轴且值标签外置的柱图，其数值召回率与有刻度轴版本对比",
+      "generality": "common",
+      "maps_to": "P6"
+    },
+    {
+      "what_to_add": "annotation_callout 中的增长率箭头（cagr_growth_arrow）",
+      "where_to_change": "绘制记录中新增跨类别注释对象（起止类别 + 文本），并在导出时标记为非数据数字",
+      "new_ablation_row": "新增一行：图内含非数据数字注释时，误把注释值当作某类别取值的比例",
+      "generality": "common",
+      "maps_to": "new"
+    },
+    {
+      "what_to_add": "图题拆分为编号、标题、单位与位置字段（\"Exhibit 2.4:\" + \"Solar Energy Capacity Forecast (FY)\"，无单位文本）",
+      "where_to_change": "图题记录字段：figure_number / title / unit_text / placement",
+      "new_ablation_row": "新增一行：图题以自定义编号前缀（Exhibit）且缺失单位文本时，上下文键的匹配率",
+      "generality": "general",
+      "maps_to": "P7"
+    },
+    {
+      "what_to_add": "nonstandard_time_ticks 中的预测年后缀（2025P/2026P/2027P）",
+      "where_to_change": "类别轴刻度格式字段：时间刻度模板增加预测后缀选项",
+      "new_ablation_row": "新增一行：刻度带预测后缀时，行标签逐字匹配（含P）与去后缀匹配的差异",
+      "generality": "common",
+      "maps_to": "P6"
+    }
+  ],
+  "rules": [
+    {
+      "value": "34.6",
+      "labels": [
+        "2020"
+      ],
+      "tolerance": 0.01,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "40.1",
+      "labels": [
+        "2021"
+      ],
+      "tolerance": 0.01,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "54.0",
+      "labels": [
+        "2022"
+      ],
+      "tolerance": 0.01,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "65.0",
+      "labels": [
+        "2023"
+      ],
+      "tolerance": 0.01,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "90.8",
+      "labels": [
+        "2024"
+      ],
+      "tolerance": 0.01,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "113.3",
+      "labels": [
+        "2025P"
+      ],
+      "tolerance": 0.01,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "145.0",
+      "labels": [
+        "2026P"
+      ],
+      "tolerance": 0.01,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "185.6",
+      "labels": [
+        "2027P"
+      ],
+      "tolerance": 0.01,
+      "max_diffs": 0,
+      "figure": "f1"
+    }
+  ],
+  "crosscheck": []
+}

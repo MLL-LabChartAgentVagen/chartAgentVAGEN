@@ -1,0 +1,252 @@
+{
+  "stem": "Technopak_Industry_Report_p14",
+  "document": "Technopak_Industry_Report",
+  "tags": "untagged",
+  "page_note": "本页顶部为一幅柱状图（Exhibit 2.5：印度历年通电村庄数量），其余为2.4节潜在增长领域的正文段落。",
+  "figures": [
+    {
+      "id": "f1",
+      "heading": {
+        "figure_number": "Exhibit 2.5",
+        "title": "Number of Villages Electrified in India (CY)",
+        "subtitle": "",
+        "unit_text": "",
+        "placement": "above"
+      },
+      "type": "bar",
+      "type_other": "",
+      "orientation": "vertical",
+      "panels": 1,
+      "panel_names": [],
+      "series": 1,
+      "series_names": [],
+      "categories": 7,
+      "category_names": [
+        "1950",
+        "1961",
+        "1969",
+        "1980",
+        "1990",
+        "2002",
+        "2022"
+      ],
+      "marks": 7,
+      "values_printed": "all",
+      "value_axis_ticks": "",
+      "source_line": "Source: Press Information Bureau (PIB)"
+    }
+  ],
+  "components": [
+    {
+      "key": "no_value_axis",
+      "figure_id": "f1",
+      "evidence": "only a thin baseline under the bars; no value ticks or gridlines drawn anywhere"
+    },
+    {
+      "key": "value_label_outside",
+      "figure_id": "f1",
+      "evidence": "each number, e.g. \"5,97,464\", printed in bold above the top of its bar"
+    },
+    {
+      "key": "source_note_lines",
+      "figure_id": "f1",
+      "evidence": "\"Source: Press Information Bureau (PIB)\" in italics under the plot"
+    },
+    {
+      "key": "nonstandard_time_ticks",
+      "figure_id": "f1",
+      "evidence": "title says \"(CY)\" and ticks are unevenly spaced years 1950, 1961, 1969, 1980, 1990, 2002, 2022"
+    }
+  ],
+  "new_components": [
+    {
+      "name": "indian_digit_grouping",
+      "figure_id": "f1",
+      "evidence": "labels use lakh grouping: \"2,49,799\", \"4,70,838\", \"5,12,153\", \"5,97,464\"",
+      "why_it_matters": "数字分组为印度记数法（2,49,799 而非 249,799），字符串匹配与数值解析都需按此格式处理，否则取值会失配。"
+    },
+    {
+      "name": "unequal_time_axis_spacing",
+      "figure_id": "f1",
+      "evidence": "category slots equally spaced though years jump 1950, 1961, 1969, 1980, 1990, 2002, 2022",
+      "why_it_matters": "时间轴按类别等距排列，不能按年份线性插值读数，只能逐个类别对应标签取值。"
+    },
+    {
+      "name": "near_zero_bar_invisible",
+      "figure_id": "f1",
+      "evidence": "1950 bar (3,061) has no visible height; 1961 bar is a thin sliver above baseline",
+      "why_it_matters": "最小两个柱几乎无像素高度，读值完全依赖印刷标签，无法从图形本身估计。"
+    }
+  ],
+  "spot_checks": [
+    {
+      "value": "3,061",
+      "figure_id": "f1",
+      "mark": "the 1950 bar (effectively zero height)",
+      "printed_on_figure": true,
+      "addressing_keys": [
+        "1950",
+        "Number of Villages Electrified in India (CY)"
+      ]
+    },
+    {
+      "value": "21,759",
+      "figure_id": "f1",
+      "mark": "the 1961 bar",
+      "printed_on_figure": true,
+      "addressing_keys": [
+        "1961",
+        "Number of Villages Electrified in India (CY)"
+      ]
+    },
+    {
+      "value": "73,739",
+      "figure_id": "f1",
+      "mark": "the 1969 bar",
+      "printed_on_figure": true,
+      "addressing_keys": [
+        "1969",
+        "Number of Villages Electrified in India (CY)"
+      ]
+    },
+    {
+      "value": "2,49,799",
+      "figure_id": "f1",
+      "mark": "the 1980 bar",
+      "printed_on_figure": true,
+      "addressing_keys": [
+        "1980",
+        "Number of Villages Electrified in India (CY)"
+      ]
+    },
+    {
+      "value": "4,70,838",
+      "figure_id": "f1",
+      "mark": "the 1990 bar",
+      "printed_on_figure": true,
+      "addressing_keys": [
+        "1990",
+        "Number of Villages Electrified in India (CY)"
+      ]
+    },
+    {
+      "value": "5,12,153",
+      "figure_id": "f1",
+      "mark": "the 2002 bar",
+      "printed_on_figure": true,
+      "addressing_keys": [
+        "2002",
+        "Number of Villages Electrified in India (CY)"
+      ]
+    },
+    {
+      "value": "5,97,464",
+      "figure_id": "f1",
+      "mark": "the 2022 bar",
+      "printed_on_figure": true,
+      "addressing_keys": [
+        "2022",
+        "Number of Villages Electrified in India (CY)"
+      ]
+    }
+  ],
+  "hardest_step": 1,
+  "difficulty_notes": "图中七个数值全部以粗体印在柱顶，无需读像素，第2步不构成障碍；寻址也只需「年份」一个键加图题，第3步很轻。真正的风险在第1步：该图无数值轴、无网格、无图例，只有一条基线和七个浮动数字标签，解析器极易把它当作散落文本或整体跳过，导致 3,061 与 1950 之间的行结构丢失。此外标签用印度记数法（2,49,799），若解析器重排千分位，匹配也会失败。",
+  "unreadable": [],
+  "suggestions": [
+    {
+      "what_to_add": "no_value_axis 与 value_label_outside 组合（仅基线+柱顶标签的极简柱图）",
+      "where_to_change": "样式条件行：新增「无数值轴、无网格、标签全外置」的渲染档",
+      "new_ablation_row": "有数值轴 vs 仅基线：比较解析器抽出可寻址表格的成功率",
+      "generality": "common",
+      "maps_to": "P6"
+    },
+    {
+      "what_to_add": "新组件 indian_digit_grouping（千分位分组格式作为刻度/标签格式维度）",
+      "where_to_change": "记录字段：数值标签的 number_format（含 lakh/crore 分组）",
+      "new_ablation_row": "西式 249,799 vs 印式 2,49,799 标签下的数值匹配命中率",
+      "generality": "common",
+      "maps_to": "P6"
+    },
+    {
+      "what_to_add": "新组件 unequal_time_axis_spacing（年份不等距但类别等距）",
+      "where_to_change": "数据生成条件行：时间类别取非等间隔年份序列",
+      "new_ablation_row": "等间隔年份 vs 不等间隔年份类别轴对行寻址正确率的影响",
+      "generality": "common",
+      "maps_to": "P4"
+    },
+    {
+      "what_to_add": "图题号与斜体标题、来源行的分离（Exhibit 2.5 + 标题 + Source 行）",
+      "where_to_change": "标题字段：figure_number/title/source 分列，及其相对表格的位置",
+      "new_ablation_row": "图题作为粗体标题输出 vs 混入正文时，上下文键的可得性",
+      "generality": "general",
+      "maps_to": "P7"
+    }
+  ],
+  "rules": [
+    {
+      "value": "3,061",
+      "labels": [
+        "1950"
+      ],
+      "tolerance": 0.01,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "21,759",
+      "labels": [
+        "1961"
+      ],
+      "tolerance": 0.01,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "73,739",
+      "labels": [
+        "1969"
+      ],
+      "tolerance": 0.01,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "2,49,799",
+      "labels": [
+        "1980"
+      ],
+      "tolerance": 0.01,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "4,70,838",
+      "labels": [
+        "1990"
+      ],
+      "tolerance": 0.01,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "5,12,153",
+      "labels": [
+        "2002"
+      ],
+      "tolerance": 0.01,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "5,97,464",
+      "labels": [
+        "2022"
+      ],
+      "tolerance": 0.01,
+      "max_diffs": 0,
+      "figure": "f1"
+    }
+  ],
+  "crosscheck": []
+}

@@ -1,0 +1,687 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<title>ParseBench 失败样本 · ppdoclayoutv3_lean_qwen</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+:root{
+  --ground:#F6F7F9; --surface:#FFFFFF; --raised:#EDF0F4;
+  --ink:#151A21; --muted:#5A6472; --line:#DFE4EA;
+  --gap:#A93E26; --gap-soft:#A93E2614; --have:#2E6A55; --have-soft:#2E6A5512;
+  --key:#2F5DA8; --key-soft:#2F5DA814;
+  --shadow:0 1px 2px rgba(21,26,33,.05), 0 8px 24px -16px rgba(21,26,33,.25);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#0E1216; --surface:#161C23; --raised:#1E2630;
+    --ink:#E7EBF0; --muted:#98A3B1; --line:#28313B;
+    --gap:#E4795A; --gap-soft:#E4795A1C; --have:#68BC9A; --have-soft:#68BC9A16;
+    --key:#7FA8E8; --key-soft:#7FA8E81C;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -16px rgba(0,0,0,.7);
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#0E1216; --surface:#161C23; --raised:#1E2630;
+  --ink:#E7EBF0; --muted:#98A3B1; --line:#28313B;
+  --gap:#E4795A; --gap-soft:#E4795A1C; --have:#68BC9A; --have-soft:#68BC9A16;
+  --key:#7FA8E8; --key-soft:#7FA8E81C;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -16px rgba(0,0,0,.7);
+}
+*{box-sizing:border-box}
+body{margin:0; background:var(--ground); color:var(--ink);
+  font-family:"IBM Plex Sans","Noto Sans CJK SC","Source Han Sans SC","PingFang SC",
+              "Microsoft YaHei",system-ui,sans-serif;
+  font-size:15px; line-height:1.65; -webkit-font-smoothing:antialiased}
+code,.mono,td.num,th.num{font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,monospace}
+code{background:var(--raised); padding:1px 5px; border-radius:4px; font-size:.88em}
+a{color:inherit; text-underline-offset:3px; text-decoration-color:var(--line)}
+a:hover{text-decoration-color:currentColor}
+
+.masthead{border-bottom:1px solid var(--line); background:var(--surface)}
+.masthead .inner{max-width:1240px; margin:0 auto; padding:24px 24px 18px;
+  display:flex; flex-wrap:wrap; gap:18px 40px; align-items:flex-end}
+h1{margin:0; font-size:21px; font-weight:600; letter-spacing:-.01em}
+.tagline{margin:4px 0 0; color:var(--muted); font-size:13px; max-width:64ch}
+.facts{display:flex; flex-wrap:wrap; gap:6px 26px; margin-left:auto}
+.fact{display:flex; flex-direction:column}
+.fact b{font-family:"IBM Plex Mono",monospace; font-size:17px; font-weight:500;
+  font-variant-numeric:tabular-nums}
+.fact span{font-size:11px; letter-spacing:.07em; text-transform:uppercase; color:var(--muted)}
+
+.lede-block{border-bottom:1px solid var(--line); background:var(--surface)}
+.lede-block .inner{max-width:1240px; margin:0 auto; padding:14px 24px 18px}
+.lede-block p{margin:0; font-size:14.5px; max-width:96ch}
+
+.shell{max-width:1240px; margin:0 auto; padding:0 24px 80px;
+  display:grid; grid-template-columns:200px minmax(0,1fr); gap:44px; align-items:start}
+nav{position:sticky; top:0; padding:26px 0; display:flex; flex-direction:column; gap:2px;
+  max-height:100vh; overflow-y:auto}
+nav button{appearance:none; border:0; background:none; color:var(--muted); cursor:pointer;
+  font:inherit; font-size:14px; text-align:left; padding:7px 12px; border-radius:6px;
+  border-left:2px solid transparent; display:flex; justify-content:space-between; gap:10px}
+nav button:hover{background:var(--raised); color:var(--ink)}
+nav button[aria-selected="true"]{color:var(--ink); font-weight:600;
+  border-left-color:var(--gap); background:var(--raised)}
+nav button i{font-style:normal; font-family:"IBM Plex Mono",monospace; font-size:12px;
+  color:var(--muted); font-variant-numeric:tabular-nums}
+ul.toc{list-style:none; margin:2px 0 12px; padding:0 0 0 14px;
+  border-left:1px solid var(--line)}
+ul.toc li{margin:0}
+ul.toc a{display:block; padding:4px 8px; font-size:12.5px; color:var(--muted);
+  text-decoration:none; border-radius:5px; line-height:1.35}
+ul.toc a:hover{background:var(--raised); color:var(--ink)}
+ul.toc a.at{color:var(--gap); background:var(--gap-soft); font-weight:500}
+
+section{padding:26px 0 0}
+section[hidden]{display:none}
+h2{margin:0 0 6px; font-size:19px; font-weight:600}
+h3.band{margin:38px 0 4px; font-size:16px; font-weight:600;
+  display:flex; align-items:baseline; gap:12px; flex-wrap:wrap;
+  border-top:1px solid var(--line); padding-top:16px}
+h3.band span{font-size:12.5px; font-weight:400; color:var(--muted)}
+h3:first-of-type{border-top:0; margin-top:20px}
+p{margin:0 0 12px} p.lede{color:var(--muted); font-size:14px; max-width:88ch}
+.explain{background:var(--surface); border:1px solid var(--line); border-radius:12px;
+  padding:14px 18px; margin:12px 0 6px; box-shadow:var(--shadow)}
+.explain p:last-child{margin-bottom:0}
+.scroll{overflow-x:auto; margin:10px 0 16px}
+table{border-collapse:collapse; width:100%; font-size:13.5px}
+th,td{border-bottom:1px solid var(--line); padding:6px 10px; text-align:left;
+  vertical-align:top}
+th{font-weight:600; font-size:12px; letter-spacing:.03em; color:var(--muted);
+  text-transform:uppercase; white-space:nowrap}
+td.num,th.num{text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap}
+tbody tr:hover td{background:var(--raised)}
+.bar{position:relative; height:9px; border-radius:5px; background:var(--raised);
+  min-width:110px; overflow:hidden}
+.bar i{position:absolute; inset:0 auto 0 0; border-radius:5px; background:var(--have)}
+.bar i.low{background:var(--gap)}
+
+.ev{background:var(--surface); border:1px solid var(--line); border-radius:14px;
+  margin:16px 0; box-shadow:var(--shadow); display:grid; overflow:hidden;
+  grid-template-columns:250px minmax(0,1fr);
+  grid-template-areas:"fig body" "vs vs" "tail tail"}
+.ev > figure{grid-area:fig; margin:0; background:var(--raised);
+  border-right:1px solid var(--line); display:flex; align-items:flex-start}
+.ev > figure img{display:block; width:100%; height:auto; max-height:340px;
+  object-fit:contain; object-position:top}
+.ev > .body{grid-area:body; padding:14px 18px 8px; min-width:0}
+.ev > .vs{grid-area:vs}
+.ev > .tail{grid-area:tail; padding:0 18px 16px}
+.ev.no-image{grid-template-columns:minmax(0,1fr);
+  grid-template-areas:"body" "vs" "tail"}
+.ev.no-image > figure{display:none}
+.vs{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+  border-top:1px solid var(--line)}
+.vs > div{padding:12px 18px 14px; min-width:0}
+.vs > div + div{border-left:1px solid var(--line)}
+.vs .bad{background:var(--gap-soft)}
+.vs .good{background:var(--have-soft)}
+.side-h{font-size:12.5px; font-weight:600; margin:0 0 8px; letter-spacing:.02em}
+.vs .bad .side-h{color:var(--gap)}
+.vs .good .side-h{color:var(--have)}
+.why{font-size:12.5px; color:var(--muted); margin:8px 0 0; line-height:1.55}
+.why b{color:var(--ink)}
+@media (max-width:1000px){.vs{grid-template-columns:minmax(0,1fr)}
+  .vs > div + div{border-left:0; border-top:1px solid var(--line)}}
+.ev h4{margin:0 0 4px; font-size:15px; font-weight:600}
+.ev .meta{color:var(--muted); font-size:12.5px; margin:0 0 10px}
+.ev p{margin:0 0 10px; font-size:14px}
+@media (max-width:900px){.ev{grid-template-columns:minmax(0,1fr);
+    grid-template-areas:"fig" "body" "vs" "tail"}
+  .ev > figure{border-right:0; border-bottom:1px solid var(--line)}}
+
+.rule-line{background:var(--raised); border-radius:8px; padding:7px 11px;
+  font-size:13px; margin:0 0 10px}
+.rule-line b{font-family:"IBM Plex Mono",monospace}
+.grid-cap{font-size:12px; color:var(--muted); margin:0 0 4px}
+table.excerpt{font-size:12.5px; font-family:"IBM Plex Mono",monospace}
+table.excerpt td{padding:4px 8px; border:1px solid var(--line); white-space:nowrap}
+table.excerpt td.head{background:var(--raised); font-weight:600}
+table.excerpt td.hit{background:var(--have-soft); color:var(--have); font-weight:600;
+  outline:1.5px solid var(--have)}
+table.excerpt td.wrong{background:var(--gap-soft); color:var(--gap); font-weight:600;
+  outline:1.5px solid var(--gap)}
+table.excerpt td.key{background:var(--key-soft); color:var(--key)}
+table.excerpt.good td{border-color:var(--have)}
+table.excerpt.good td.head{background:var(--have-soft); color:var(--have)}
+.egs{display:flex; gap:10px; flex-wrap:wrap; margin:6px 0 18px}
+.egs a{display:block; width:150px; text-decoration:none}
+.egs img{display:block; width:150px; height:104px; object-fit:cover;
+  object-position:top; border:1px solid var(--line); border-radius:8px;
+  background:var(--raised)}
+.egs span{display:block; font-size:11.5px; color:var(--muted); margin-top:3px;
+  line-height:1.35; overflow-wrap:anywhere}
+.card p.eg{background:var(--raised); border-radius:8px; padding:8px 11px;
+  font-size:13px}
+.card p.price{font-size:13px; color:var(--muted)}
+.card p.price b,.card p.eg b{color:var(--ink); margin-right:2px}
+.verdict{font-size:12px; color:var(--muted); font-family:"IBM Plex Mono",monospace;
+  background:var(--raised); border-radius:8px; padding:7px 11px; margin:0 0 10px;
+  overflow-x:auto; white-space:pre-wrap; word-break:break-word}
+.ctx{font-size:12.5px; color:var(--muted); border-left:2px solid var(--line);
+  padding:2px 0 2px 10px; margin:0 0 10px}
+.pull{border-left:3px solid var(--gap); padding-left:14px; margin:12px 0; font-size:14px}
+.chip{display:inline-block; padding:1px 8px; border-radius:999px; font-size:11.5px;
+  border:1px solid var(--line); color:var(--muted); white-space:nowrap}
+.chip.gap{background:var(--gap-soft); border-color:transparent; color:var(--gap)}
+.chip.have{background:var(--have-soft); border-color:transparent; color:var(--have)}
+.chip.key{background:var(--key-soft); border-color:transparent; color:var(--key)}
+.two{display:grid; grid-template-columns:repeat(auto-fit,minmax(320px,1fr)); gap:14px}
+.card{background:var(--surface); border:1px solid var(--line); border-radius:14px;
+  padding:15px 18px; box-shadow:var(--shadow)}
+.card h4{margin:0 0 4px; font-size:14.5px}
+.card p{margin:0 0 8px; font-size:13.5px}
+.card p:last-child{margin-bottom:0}
+footer{max-width:1240px; margin:0 auto; padding:0 24px 60px; color:var(--muted);
+  font-size:12.5px}
+</style>
+</head>
+<body>
+<header class="masthead"><div class="inner">
+  <div>
+    <h1>ParseBench Charts · 失败样本分析</h1>
+    <p class="tagline"><code>ppdoclayoutv3_lean_qwen</code> ·
+      PP-DocLayoutV3 lean + <code>Qwen/Qwen3.8-27B-FP8</code> ·
+      文字版 <a href="INDEX.md">INDEX.md</a>，逐页 <code>cases/</code></p>
+  </div>
+  <div class="facts"><div class="fact"><b>82.7%</b><span>按页平均</span></div><div class="fact"><b>568</b><span>页</span></div><div class="fact"><b>4864</b><span>抽查点</span></div><div class="fact"><b>896</b><span>失败</span></div><div class="fact"><b>72%</b><span>寻址失败占比</span></div><div class="fact"><b>10</b><span>实例页</span></div></div>
+</div></header>
+<div class="lede-block"><div class="inner">
+  <p>这一跑按页平均 <b>82.75%</b>，比榜单上任何方法都高
+    （最高 LlamaParse Agentic 78.11%）。它剩下的 896 个失败里，
+    <b>72% 不是把数读错了，而是那个数在表里找不到能对上的键</b>——
+    其中 79% 的失联键就写在同一张表里，
+    只是不在值那一行。所以第一顺位不是「画得更准」，而是
+    <b>「每个图元都带着它的全部键」</b>，那正是输出单位 <code>(键, 值, 区域)</code> 的定义；
+    第二顺位是稠密度：≤20 图元 85.5% →
+    &gt;400 图元 57.9%。</p>
+</div></div>
+<div class="shell">
+  <nav role="tablist"><button data-tab="forms" role="tab" aria-controls="forms" aria-selected="false">失败长什么样<i>896</i></button><button data-tab="hard" role="tab" aria-controls="hard" aria-selected="false">什么图更容易失败<i>192</i></button><button data-tab="changes" role="tab" aria-controls="changes" aria-selected="false">翻成流水线改动<i>10</i></button><button data-tab="trust" role="tab" aria-controls="trust" aria-selected="false">能不能信<i>568</i></button></nav>
+  <main><section id="forms" role="tabpanel">
+  <h2>失败长什么样</h2>
+  <div class="explain">
+    <p><b>判分只有两步能出错：数字读得对不对，以及表里说不说得清这个数字是谁的。</b>
+      官方报告只给「值找不到」和「标签关联不上」两句话，下面把它们拆成六种能改的形状。
+      <b>每一种后面立刻并排两张表</b>：左边红色是解析器实际写的，
+      右边绿色是同一页写成什么样就能全过。</p>
+    <p>表格里的记号：<span class="chip have">绿框</span>规则要的那个数落在这一格 ·
+      <span class="chip gap">红框</span>写错的地方 ·
+      <span class="chip key">蓝底</span>定位键在表里的位置。</p>
+    <p><b>72% 的失败是「键对不上」</b>——数字本身是对的；
+      剩下 28% 才是数读错了或量级写错了。
+      分母是 568 页 · 4864 个抽查点 · 896 个不通过。</p>
+  </div>
+  <div class="scroll"><table><thead><tr><th>形态</th><th>是什么</th>
+    <th class="num">个数</th><th class="num">占比</th><th></th><th>指向</th></tr></thead>
+    <tbody><tr><td><code>label_unlinked</code></td><td>数字对，但表里说不清这个数字是谁的</td><td class="num">599</td><td class="num">66.9%</td><td><div class="bar"><i class="low" style="width:66.9%"></i></div></td><td>导出成一行一个值、键写全（P3 · P2）</td></tr><tr><td><code>value_off</code></td><td>数字读错了</td><td class="num">199</td><td class="num">22.2%</td><td><div class="bar"><i class="" style="width:22.2%"></i></div></td><td>记下每个图元能读到多准，并且能画更密的图（P1 · P5）</td></tr><tr><td><code>row_missing</code></td><td>有个键压根没写进表</td><td class="num">48</td><td class="num">5.4%</td><td><div class="bar"><i class="low" style="width:5.4%"></i></div></td><td>图号 / 面板名 / 系列名要能写进键（P7 · P2）</td></tr><tr><td><code>unit_mismatch</code></td><td>数字写在了错的量级上</td><td class="num">36</td><td class="num">4.0%</td><td><div class="bar"><i class="" style="width:4.0%"></i></div></td><td>单位写在哪、刻度怎么写，要能调（P6）</td></tr><tr><td><code>value_absent</code></td><td>键都在，就是没写这个数</td><td class="num">14</td><td class="num">1.6%</td><td><div class="bar"><i class="" style="width:2.0%"></i></div></td><td>太密的图元要么画得开，要么标出来读不了（P1 · P5）</td></tr><tr><td><code>no_table</code></td><td>整页没输出表</td><td class="num">0</td><td class="num">0.0%</td><td><div class="bar"><i class="" style="width:2.0%"></i></div></td><td>输出格式的问题，不是看不看得懂图</td></tr></tbody></table></div>
+  <p class="lede"><b>没有一页交白卷。</b>568 页全都至少写出了一张表，
+    <code>no_table</code> 一例没有——榜单上 &lt;6% 的那几个专用 OCR 全卡在这一步。</p>
+  <h3 class="band">数字对，但表里说不清这个数字是谁的<span>599 个 · 占失败 67% · <code>label_unlinked</code></span></h3><p class="lede">表里确实有这个数。但它那一行、那一列、那个表头，没有一个写着规则要的键——所以判分程序不知道这个数属于谁，判 0。</p><p class="lede">→ <b>要让它不再发生，流水线得会：导出成一行一个值、键写全（P3 · P2）</b></p><p class="lede">这一档最值得看的是：<b>那个对不上的键，其实在哪</b>。把判分点名的键在解析器输出里再找一遍，791 次落位：</p><div class="scroll"><table><thead><tr><th>它在哪</th><th class="num">次数</th><th class="num">占比</th><th></th></tr></thead><tbody><tr><td>就在同一张表里，只是不在这个数的行 / 列 / 表头上</td><td class="num">627</td><td class="num">79.3%</td><td><div class="bar"><i class="" style="width:79.3%"></i></div></td></tr><tr><td>写在了另一张表里</td><td class="num">38</td><td class="num">4.8%</td><td><div class="bar"><i class="" style="width:4.8%"></i></div></td></tr><tr><td>在页面上，但只是一句普通正文</td><td class="num">57</td><td class="num">7.2%</td><td><div class="bar"><i class="" style="width:7.2%"></i></div></td></tr><tr><td>整页输出里找不到这个键</td><td class="num">46</td><td class="num">5.8%</td><td><div class="bar"><i class="" style="width:5.8%"></i></div></td></tr><tr><td>是粗体 / 标题，但排在表后面（判分只看表前面的）</td><td class="num">18</td><td class="num">2.3%</td><td><div class="bar"><i class="" style="width:2.3%"></i></div></td></tr><tr><td>在表前面且是粗体 / 标题（这一条判分本该认）</td><td class="num">5</td><td class="num">0.6%</td><td><div class="bar"><i class="" style="width:2.0%"></i></div></td></tr></tbody></table></div><div class="pull"><b>79% 的键就在同一张表里</b>——解析器看见了、也写下来了，只是放在了这个数够不着的位置。所以这不是「没看懂图」，是<b>表的形状不对</b>。<br>把 647 个「键对不上」全部改对，按页平均从 <b>82.75% 抬到 95.41%</b>（上界，不是预测：它假设换了表的形状而读数一个不变）。</div><article class="ev">
+  <figure><a href="assets/pwc-semiconductor-and-beyond-2026-full-report_p17.jpg" target="_blank" rel="noopener">
+    <img loading="lazy" src="assets/pwc-semiconductor-and-beyond-2026-full-report_p17.jpg" alt="pwc-semiconductor-and-beyond-2026-full-report_p17"
+      onerror="this.closest('article').classList.add('no-image')"></a></figure>
+  <div class="body">
+    <h4><b>列名写成了颜色</b>：Gray / Orange，而图例上写的是 Conventional / AI-driven demand</h4>
+    <p class="meta"><code>pwc-semiconductor-and-beyond-2026-full-report_p17</code> ·
+      该页 0 / 10 通过 ·
+      <a href="cases/pwc-semiconductor-and-beyond-2026-full-report_p17/case.md">逐条与整页输出</a></p>
+    <p><b>十个数字一个不差，十个点全判 0。</b></p><p>图例在右上角，两个色块分别标着 <code>Conventional demand</code>（灰）与 <code>AI-driven demand</code>（橙）。解析器没有把色块和柱子对起来，列名直接写成了 <code>Gray</code> / <code>Orange</code>。规则要「<code>&#x27;19</code> 这一年的 <code>Conventional demand</code> 是多少」，而表里从头到尾没出现过 <code>Conventional demand</code> 这几个字。</p><p><b>还多出来一列。</b> 两根柱子之间那条浅橙色的连接带是装饰，不是数据，解析器把它当成第三个系列写成了 <code>Light orange band</code>。</p>
+  </div>
+  <div class="vs">
+    <div class="bad">
+      <p class="side-h">✗ 解析器实际写的</p>
+      <p class="rule-line">这一条规则要的是 <b>22</b>，
+        定位键 <code>&#x27;19</code> · <code>Conventional demand</code>（容差 0.1）</p>
+      <p class="grid-cap">解析器第 1 张表，第 1–7 行</p><div class="scroll"><table class="excerpt"><tbody><tr><td class="head">Year</td><td class="wrong">Gray</td><td class="wrong">Orange</td><td class="wrong">Light orange band</td></tr><tr><td class="key">&#x27;19</td><td class="hit">21</td><td class="">1</td><td class="">22</td></tr><tr><td class="">&#x27;20</td><td class="">29</td><td class="">2</td><td class="">31</td></tr><tr><td class="">&#x27;21</td><td class="">35</td><td class="">3</td><td class="">38</td></tr><tr><td class="">&#x27;22</td><td class="">45</td><td class="">11</td><td class="">58</td></tr><tr><td class="">&#x27;23</td><td class="">52</td><td class="">15</td><td class="">86</td></tr><tr><td class="">&#x27;24</td><td class="">57</td><td class="">22</td><td class="">98</td></tr></tbody></table></div>
+      <p class="why"><b>值落在第 2 行第 2 列；<code>&#x27;19</code> 在同一行；<code>Conventional demand</code> 不在这一行、这一列，也不在表头</b></p>
+      
+    </div>
+    <div class="good">
+      <p class="side-h">✓ 写成这样，这一页 10 个点全过</p>
+      <p class="rule-line">一行一个值，<b>所有键和值写在同一行</b>——
+        判定第三步一次通过，不用任何回退</p>
+      <div class="scroll"><table class="excerpt good"><tbody><tr><td class="head">键 1</td><td class="head">键 2</td><td class="head">值</td></tr><tr><td>&#x27;19</td><td>Conventional demand</td><td>22</td></tr><tr><td>&#x27;19</td><td>AI-driven demand</td><td>1</td></tr><tr><td>&#x27;22</td><td>Conventional demand</td><td>46</td></tr><tr><td>&#x27;22</td><td>AI-driven demand</td><td>11</td></tr><tr><td>&#x27;25F</td><td>Conventional demand</td><td>62</td></tr><tr><td>&#x27;25F</td><td>AI-driven demand</td><td>33</td></tr><tr><td colspan="3" class="head">⋮ 还有 4 行</td></tr></tbody></table></div>
+      <p class="why">这正是我们记录层的形状：一个图元 = 一条
+        <code>(键, 值, 区域)</code>。所谓「长表导出」就是把它原样写出来。</p>
+    </div>
+  </div>
+  <div class="tail">
+    <p class="verdict">判分程序的原话：Value found but labels not associated: Value at (1, 1) missing labels: [&#x27;conventional demand&#x27;] (data labels [&quot;&#x27;19&quot;] in table, title labels [] in context); Value at (1, 3) missing labels: [&#x27;conventiona</p>
+    <div class="pull"><p><b>「哪个颜色是哪个系列」这件事，现在没有任何训练目标在教。</b></p><p>我们画图的时候，每个图元的颜色和它的系列名都是已知的，多导出一条「色块 → 系列名」的配对是纯加法，而现有 chart 数据集没有这项标注。</p><p>顺带这一页也给「图里的装饰元素」定了价：一条不是数据的色带被当成数据列，代价是整页 0 分。</p></div>
+  </div>
+</article><article class="ev">
+  <figure><a href="assets/Technopak_Industry_Report_p18.jpg" target="_blank" rel="noopener">
+    <img loading="lazy" src="assets/Technopak_Industry_Report_p18.jpg" alt="Technopak_Industry_Report_p18"
+      onerror="this.closest('article').classList.add('no-image')"></a></figure>
+  <div class="body">
+    <h4><b>三张饼拆成三张小表</b>，年份和类目名分别丢在不同的表里</h4>
+    <p class="meta"><code>Technopak_Industry_Report_p18</code> ·
+      该页 0 / 6 通过 ·
+      <a href="cases/Technopak_Industry_Report_p18/case.md">逐条与整页输出</a></p>
+    <p><b>六个数字全部写对，六个点全判 0。</b></p><p>页面上是同一个图号下的三张饼（2019 / 2024 / 2029P），年份写在每张饼的上方，<code>Branded Play</code> / <code>Unbranded Play</code> 的图例只画在中间那张饼下面。</p><p>解析器照着版面输出了三张两列小表：<b>2019 和 2029P 那两张只有数字，没有类目名；中间那张有类目名，没有年份。</b>每张表都少一个键，所以每个点都对不上。</p>
+  </div>
+  <div class="vs">
+    <div class="bad">
+      <p class="side-h">✗ 解析器实际写的</p>
+      <p class="rule-line">这一条规则要的是 <b>78</b>，
+        定位键 <code>2019</code> · <code>Branded Play</code>（容差 0.01）</p>
+      <p class="grid-cap">解析器第 1 张表（共 3 张），第 1–3 行</p><div class="scroll"><table class="excerpt"><tbody><tr><td class="head"></td><td class="key">2019</td></tr><tr><td class="hit">78%</td><td class="">78%</td></tr><tr><td class="">22%</td><td class="">22%</td></tr></tbody></table></div>
+      <p class="why"><b>值落在第 2 行第 1 列；<code>2019</code> 在同一行；<code>Branded Play</code> 不在这一行、这一列，也不在表头</b></p>
+      <p class="why"><code>branded play</code> → The water purifier product market in India has steadily transitioned towards branded play, with branded players commanding a substantial 83% market sh …</p><p class="why"><code>branded play</code> → *Exhibit 3.5: Share of Branded Play in Indian Water Purifier (Product) Market- By Value (in %) (FY)*</p>
+    </div>
+    <div class="good">
+      <p class="side-h">✓ 写成这样，这一页 6 个点全过</p>
+      <p class="rule-line">一行一个值，<b>所有键和值写在同一行</b>——
+        判定第三步一次通过，不用任何回退</p>
+      <div class="scroll"><table class="excerpt good"><tbody><tr><td class="head">键 1</td><td class="head">键 2</td><td class="head">值</td></tr><tr><td>2019</td><td>Branded Play</td><td>78</td></tr><tr><td>2019</td><td>Unbranded Play</td><td>22</td></tr><tr><td>2024</td><td>Branded Play</td><td>83</td></tr><tr><td>2024</td><td>Unbranded Play</td><td>17</td></tr><tr><td>2029P</td><td>Branded Play</td><td>88</td></tr><tr><td>2029P</td><td>Unbranded Play</td><td>12</td></tr></tbody></table></div>
+      <p class="why">这正是我们记录层的形状：一个图元 = 一条
+        <code>(键, 值, 区域)</code>。所谓「长表导出」就是把它原样写出来。</p>
+    </div>
+  </div>
+  <div class="tail">
+    <p class="verdict">判分程序的原话：Value found but labels not associated: Value at (1, 0) missing labels: [&#x27;2019&#x27;, &#x27;branded play&#x27;] (data labels [] in table, title labels [] in context); Value at (1, 1) missing labels: [&#x27;branded play&#x27;] </p>
+    <div class="pull"><p><b>这就是 P2（面板名进键）要解决的情形。</b>面板名如果只是个 id、不作为键写出去，每张面板表都会少一个键。</p><p>更值得注意的是：这一页的数值<b>全部印在图上</b>，读数根本没出错。读得准和写得对，在这个度量下是两件独立的事。</p></div>
+  </div>
+</article><article class="ev">
+  <figure><a href="assets/Digital_News-Report_2022_p46.jpg" target="_blank" rel="noopener">
+    <img loading="lazy" src="assets/Digital_News-Report_2022_p46.jpg" alt="Digital_News-Report_2022_p46"
+      onerror="this.closest('article').classList.add('no-image')"></a></figure>
+  <div class="body">
+    <h4><b>值那一列的表头</b>写成了整段问卷题干，规则要的是 <code>Percentage</code></h4>
+    <p class="meta"><code>Digital_News-Report_2022_p46</code> ·
+      该页 0 / 4 通过 ·
+      <a href="cases/Digital_News-Report_2022_p46/case.md">逐条与整页输出</a></p>
+    <p>42 个国家的横向条形图，数字全部印在条末，解析器一行不差地抄进了一张 43 行的长表——<b>表的形状是对的</b>。</p><p>问题在值那一列的表头：解析器写的是问卷原题 <code>Q10. Thinking about how you got news online…</code>，而规则的第二个键是 <b><code>Percentage</code></b>——标注者从百分数轴上取的测度名。</p><p>国家名对上了，测度名对不上，四个点全判 0。</p>
+  </div>
+  <div class="vs">
+    <div class="bad">
+      <p class="side-h">✗ 解析器实际写的</p>
+      <p class="rule-line">这一条规则要的是 <b>24</b>，
+        定位键 <code>Austria</code> · <code>Percentage</code>（容差 0.01）</p>
+      <p class="grid-cap">解析器第 1 张表，第 1–7 行</p><div class="scroll"><table class="excerpt"><tbody><tr><td class="head">Market</td><td class="wrong">Q10. Thinking about how you got news onlin…</td></tr><tr><td class="key">Austria</td><td class="hit">24</td></tr><tr><td class="">Belgium</td><td class="">23</td></tr><tr><td class="">USA</td><td class="">22</td></tr><tr><td class="">Portugal</td><td class="">22</td></tr><tr><td class="">Switzerland</td><td class="">20</td></tr><tr><td class="">Brazil</td><td class="">20</td></tr></tbody></table></div>
+      <p class="why"><b>值落在第 2 行第 2 列；<code>Austria</code> 在同一行；<code>Percentage</code> 不在这一行、这一列，也不在表头</b></p>
+      
+    </div>
+    <div class="good">
+      <p class="side-h">✓ 写成这样，这一页 4 个点全过</p>
+      <p class="rule-line">一行一个值，<b>所有键和值写在同一行</b>——
+        判定第三步一次通过，不用任何回退</p>
+      <div class="scroll"><table class="excerpt good"><tbody><tr><td class="head">键 1</td><td class="head">键 2</td><td class="head">值</td></tr><tr><td>Austria</td><td>Percentage</td><td>24</td></tr><tr><td>USA</td><td>Percentage</td><td>22</td></tr><tr><td>Norway</td><td>Percentage</td><td>11</td></tr><tr><td>UK</td><td>Percentage</td><td>9</td></tr></tbody></table></div>
+      <p class="why">这正是我们记录层的形状：一个图元 = 一条
+        <code>(键, 值, 区域)</code>。所谓「长表导出」就是把它原样写出来。</p>
+    </div>
+  </div>
+  <div class="tail">
+    <p class="verdict">判分程序的原话：Value found but labels not associated: Value at (1, 1) missing labels: [&#x27;percentage&#x27;] (data labels [&#x27;austria&#x27;] in table, title labels [] in context)</p>
+    <div class="pull"><p><b>值那一列的表头本身就是一个键。</b></p><p>它的名字应该来自测度声明（我们的 schema 里 measure 有名字有单位），而不是页面上离得最近的一句话。这也是 <code>unit_in_axis_or_title</code>（149 / 192 页，基准里最通用的组件）在判分侧的具体形态。</p></div>
+  </div>
+</article><article class="ev">
+  <figure><a href="assets/ac8b3538-en_p62.jpg" target="_blank" rel="noopener">
+    <img loading="lazy" src="assets/ac8b3538-en_p62.jpg" alt="ac8b3538-en_p62"
+      onerror="this.closest('article').classList.add('no-image')"></a></figure>
+  <div class="body">
+    <h4><b>两条线的名字没进表</b>：图例被写成页顶一行普通文字，9 个失败点里 7 个卡在这里</h4>
+    <p class="meta"><code>ac8b3538-en_p62</code> ·
+      该页 1 / 10 通过 ·
+      <a href="cases/ac8b3538-en_p62/case.md">逐条与整页输出</a></p>
+    <p>一页排了 15 个国家的小折线，每个面板一个国名，两条线（<code>Nominal minimum wage</code> / <code>Real minimum wage</code>），横轴 61 个半年刻度，<b>全页 1,830 个图元，一个数值都不写</b>。</p><p><b>结构其实选对了。</b> 一个面板一张表，行是时间、列是两条线，国名写成表前面的 <code>## <b>Japan</b></code> 标题——判分程序就是靠这个标题认出 <code>Japan</code> 的，它的原话是 <code>title labels [&#x27;japan&#x27;] in context</code>。</p><p><b>挂在系列名上。</b> 图例那行 <code>Nominal minimum wage    Real minimum wage</code> 被写成了页顶一行<b>普通正文</b>：既不在任何表头里（第一张表的表头写成了截断的 <code>Nomini</code>），也不是粗体或标题，所以表外回退那一步不认它。9 个失败点里 7 个的缺失键含这个系列名，其中 <b>4 个只缺这一个</b>。</p><p>国名接错是次要的：<code>Japan</code> 那张表的表头写着 <code>Lithuania</code>、<code>Korea</code> 那张的第二列写着 <code>Luxembourg</code>，只影响 4 个点。</p><p>唯一通过的那个点还是蒙对的——<code><b>Real minimum wage</b></code> 与 <code>Nominal minimum wage</code> 的相似度 0.81，而回退只要 0.60，把「实际」当成「名义」放了过去。</p>
+  </div>
+  <div class="vs">
+    <div class="bad">
+      <p class="side-h">✗ 解析器实际写的</p>
+      <p class="rule-line">这一条规则要的是 <b>10</b>，
+        定位键 <code>Japan</code> · <code>Nominal minimum wage</code> · <code>Nov-22</code>（容差 0.1）</p>
+      <p class="grid-cap">解析器第 1 张表（共 15 张），第 1–12 行</p><div class="scroll"><table class="excerpt"><tbody><tr><td colspan="99" class="head">⋮</td></tr><tr><td class="head">Lithuania</td><td class="wrong">Nomini</td><td class="head"></td></tr><tr><td class="">May-21</td><td class="">3</td><td class="">4</td></tr><tr><td class="">Nov-21</td><td class="">6</td><td class="">6</td></tr><tr><td class="">May-22</td><td class="">6</td><td class="">5</td></tr><tr><td class="key">Nov-22</td><td class="hit">10</td><td class="">6</td></tr><tr><td class="">May-23</td><td class="">10</td><td class="">6</td></tr><tr><td class="">Nov-23</td><td class="">15</td><td class="">5</td></tr><tr><td class="">May-24</td><td class="">15</td><td class="">7</td></tr></tbody></table></div>
+      <p class="why"><b>值落在第 9 行第 2 列；<code>Nov-22</code> 在同一行；<code>Nominal minimum wage</code> 不在这一行、这一列，也不在表头</b></p>
+      <p class="why"><code>nominal minimum wage</code> → Nominal minimum wage    Real minimum wage</p>
+    </div>
+    <div class="good">
+      <p class="side-h">✓ 写成这样，这一页 9 个点全过</p>
+      <p class="rule-line">一行一个值，<b>所有键和值写在同一行</b>——
+        判定第三步一次通过，不用任何回退</p>
+      <div class="scroll"><table class="excerpt good"><tbody><tr><td class="head">键 1</td><td class="head">键 2</td><td class="head">键 3</td><td class="head">值</td></tr><tr><td>Japan</td><td>Nominal minimum wage</td><td>Nov-22</td><td>10</td></tr><tr><td>Latvia</td><td>Real minimum wage</td><td>May-24</td><td>17</td></tr><tr><td>Mexico</td><td>Real minimum wage</td><td>May-24</td><td>90</td></tr><tr><td>Netherlands</td><td>Nominal minimum wage</td><td>May-24</td><td>42</td></tr><tr><td>Poland</td><td>Real minimum wage</td><td>May-24</td><td>35</td></tr><tr><td>Portugal</td><td>Nominal minimum wage</td><td>May-24</td><td>38</td></tr><tr><td colspan="4" class="head">⋮ 还有 3 行</td></tr></tbody></table></div>
+      <p class="why">这正是我们记录层的形状：一个图元 = 一条
+        <code>(键, 值, 区域)</code>。所谓「长表导出」就是把它原样写出来。</p>
+    </div>
+  </div>
+  <div class="tail">
+    <p class="verdict">判分程序的原话：Value found but labels not associated: Value at (8, 1) missing labels: [&#x27;nominal minimum wage&#x27;] (data labels [&#x27;nov-22&#x27;] in table, title labels [&#x27;japan&#x27;] in context); Value at (9, 1) missing labels: [&#x27;</p>
+    <div class="pull"><p><b>P2：系列名要能作为一个键导出去，不能只画在图例里。</b></p><p>我们记录层里系列名本来就是键的一维。这一页说明的是导出时它必须落进表头或标题，写成一行普通文字等于没写——这正好是可以拿来训的一条：图例上的名字，要跟着它那条线一起写进表。</p><p><b>P5：这一页我们一张也生成不出来。</b><code>chart_types.md</code> 现在 line 的系列上限是 6、grouped_bar 的 |P|·|S| ≤ 24，画不到 1,830 个图元这一档。</p></div>
+  </div>
+</article><p class="lede">同一形态还发生在这些页上（这一形态吃掉的点最多的几页，未逐页人工读过）：</p><div class="egs"><a href="assets/employment_and_social_developments_in_europe_esde_2024_report_p90.jpg" target="_blank" rel="noopener"><img loading="lazy" src="assets/employment_and_social_developments_in_europe_esde_2024_report_p90.jpg" alt="employment_and_social_developments_in_europe_esde_2024_report_p90"><span>employment_and_social_developments<br>0% 通过</span></a><a href="assets/ac8b3538-en_p64.jpg" target="_blank" rel="noopener"><img loading="lazy" src="assets/ac8b3538-en_p64.jpg" alt="ac8b3538-en_p64"><span>ac8b3538-en_p64<br>0% 通过</span></a><a href="assets/b3cd580a-3656-44ed-838a-5f2996ff6fc9_p49.jpg" target="_blank" rel="noopener"><img loading="lazy" src="assets/b3cd580a-3656-44ed-838a-5f2996ff6fc9_p49.jpg" alt="b3cd580a-3656-44ed-838a-5f2996ff6fc9_p49"><span>b3cd580a-3656-44ed-838a-5f2996ff6f<br>0% 通过</span></a><a href="assets/pdf_f270146f8ca7_p4.jpg" target="_blank" rel="noopener"><img loading="lazy" src="assets/pdf_f270146f8ca7_p4.jpg" alt="pdf_f270146f8ca7_p4"><span>pdf_f270146f8ca7_p4<br>10% 通过</span></a></div><h3 class="band">数字读错了<span>199 个 · 占失败 22% · <code>value_off</code></span></h3><p class="lede">键指得对，格子也找得到，就是格子里的数与图上的真值差太远，超出了这个点的容差。</p><p class="lede">→ <b>要让它不再发生，流水线得会：记下每个图元能读到多准，并且能画更密的图（P1 · P5）</b></p><p class="lede">错多少：中位 15%，把容差放宽一倍救不回一半——多数不是「差一点」，是读到了别的东西。</p><div class="scroll"><table><thead><tr><th>相对误差</th><th class="num">累计</th><th class="num">占比</th><th></th></tr></thead><tbody><tr><td>≤ 5%</td><td class="num">26</td><td class="num">13%</td><td><div class="bar"><i class="low" style="width:13.1%"></i></div></td></tr><tr><td>≤ 10%</td><td class="num">71</td><td class="num">36%</td><td><div class="bar"><i class="low" style="width:35.7%"></i></div></td></tr><tr><td>≤ 20%</td><td class="num">120</td><td class="num">60%</td><td><div class="bar"><i class="low" style="width:60.3%"></i></div></td></tr><tr><td>≤ 50%</td><td class="num">163</td><td class="num">82%</td><td><div class="bar"><i class="low" style="width:81.9%"></i></div></td></tr></tbody></table></div><article class="ev">
+  <figure><a href="assets/sri-sigma-natural-catastrophes-1-2025_p10.jpg" target="_blank" rel="noopener">
+    <img loading="lazy" src="assets/sri-sigma-natural-catastrophes-1-2025_p10.jpg" alt="sri-sigma-natural-catastrophes-1-2025_p10"
+      onerror="this.closest('article').classList.add('no-image')"></a></figure>
+  <div class="body">
+    <h4><b>每根柱子都读低了正好半格</b>：1→0、4→3.5、8→7.5</h4>
+    <p class="meta"><code>sri-sigma-natural-catastrophes-1-2025_p10</code> ·
+      该页 2 / 10 通过 ·
+      <a href="cases/sri-sigma-natural-catastrophes-1-2025_p10/case.md">逐条与整页输出</a></p>
+    <p>直方图的纵轴是「有多少年落在这个区间」，<b>只能是整数</b>。</p><p>八个失败点，<b>每一个都正好比真值低 0.5</b>：1→0 · 4→3.5 · 8→7.5 · 2→1.5 · 4→3.5 · 3→2.5 · 2→1.5 · 1→0.5。唯一通过的那个 5→4.5 也是同样的偏移，只是 10% 的容差刚好收住了它。</p><p><b>这不是噪声，是把柱顶读到了两条格线中间。</b></p>
+  </div>
+  <div class="vs">
+    <div class="bad">
+      <p class="side-h">✗ 解析器实际写的</p>
+      <p class="rule-line">这一条规则要的是 <b>1</b>，
+        定位键 <code>-75%</code> · <code>Secondary perils</code>（容差 0.1）</p>
+      <p class="grid-cap">解析器第 1 张表，第 1–8 行</p><div class="scroll"><table class="excerpt"><tbody><tr><td colspan="99" class="head">⋮</td></tr><tr><td class="head">Deviations from trend</td><td class="head">Primary perils</td><td class="key">Secondary perils</td><td class="head">Year</td></tr><tr><td class="">-150%</td><td class="">0</td><td class="">0</td><td class=""></td></tr><tr><td class="">-125%</td><td class="">0</td><td class="">0</td><td class=""></td></tr><tr><td class="">-100%</td><td class="">4.5</td><td class="">0</td><td class=""></td></tr><tr><td class="key">-75%</td><td class="">5.5</td><td class="wrong">0</td><td class=""></td></tr><tr><td class="">-50%</td><td class="">3.5</td><td class="">3.5</td><td class=""></td></tr><tr><td class="">-25%</td><td class="">2.5</td><td class="">7.5</td><td class=""></td></tr><tr><td class="">0%</td><td class="">1.5</td><td class="">10.5</td><td class=""></td></tr></tbody></table></div>
+      <p class="why"><b>第 5 行第 3 列 写着 <code>0</code>，标注值是 <code>1</code>，相对差 100%，该点容差 0.1</b></p>
+      
+    </div>
+    <div class="good">
+      <p class="side-h">✓ 写成这样，这一页 8 个点全过</p>
+      <p class="rule-line">一行一个值，<b>所有键和值写在同一行</b>——
+        判定第三步一次通过，不用任何回退</p>
+      <div class="scroll"><table class="excerpt good"><tbody><tr><td class="head">键 1</td><td class="head">键 2</td><td class="head">值</td></tr><tr><td>-75%</td><td>Secondary perils</td><td>1</td></tr><tr><td>-50%</td><td>Primary perils</td><td>4</td></tr><tr><td>-25%</td><td>Secondary perils</td><td>8</td></tr><tr><td>0%</td><td>Primary perils</td><td>2</td></tr><tr><td>25%</td><td>Secondary perils</td><td>4</td></tr><tr><td>50%</td><td>Primary perils</td><td>3</td></tr><tr><td colspan="3" class="head">⋮ 还有 2 行</td></tr></tbody></table></div>
+      <p class="why">这正是我们记录层的形状：一个图元 = 一条
+        <code>(键, 值, 区域)</code>。所谓「长表导出」就是把它原样写出来。</p>
+    </div>
+  </div>
+  <div class="tail">
+    <p class="verdict">判分程序的原话：Value &#x27;1&#x27; not found in any table</p>
+    <div class="pull"><p><b>P1 还差一条：测度自己的取值域。</b></p><p>「这个图元能读到 ±3%」（可达精度 ε）描述不了「这个量只能取整数」。计数型测度四舍五入到整数，这八个点里有几个就能救回来。</p><p>我们的 schema 里 measure 已经声明了类型，把它传进值目标与自检是零成本的，而现有工作没有这一项标注。</p></div>
+  </div>
+</article><article class="ev">
+  <figure><a href="assets/World_Inequality_Report_2026_p79.jpg" target="_blank" rel="noopener">
+    <img loading="lazy" src="assets/World_Inequality_Report_2026_p79.jpg" alt="World_Inequality_Report_2026_p79"
+      onerror="this.closest('article').classList.add('no-image')"></a></figure>
+  <div class="body">
+    <h4><b>表的形状完全正确</b>，4,000 个图元照样只对了一个点</h4>
+    <p class="meta"><code>World_Inequality_Report_2026_p79</code> ·
+      该页 1 / 10 通过 ·
+      <a href="cases/World_Inequality_Report_2026_p79/case.md">逐条与整页输出</a></p>
+    <p>两个面板、9 条线、1800–2025，<b>4,000 个图元，一个数值都不写</b>。</p><p>解析器这次把表写成了长表：<code>Year | Panel | 九个地区</code>——<b>面板维进了表，正是 P2 想要的形状</b>。</p><p>十个点仍然只对了一个，剩下九个是数字本身落错了行或落错了列。</p>
+  </div>
+  <div class="vs">
+    <div class="bad">
+      <p class="side-h">✗ 解析器实际写的</p>
+      <p class="rule-line">这一条规则要的是 <b>25</b>，
+        定位键 <code>Europe</code> · <code>1920</code> · <code>As % of regional GDP</code>（容差 0.1）</p>
+      <p class="grid-cap">解析器第 1 张表（共 2 张），第 1–7 行</p><div class="scroll"><table class="excerpt"><tbody><tr><td class="head">Year</td><td class="head">Panel</td><td class="head">East Asia</td><td class="head">Latin America</td><td class="head">North America &amp; Oceania</td><td class="head">South &amp; Southeast Asia</td><td class="head">World</td><td class="key">Europe</td><td class="head">MENA</td><td class="head">…</td></tr><tr><td class="">1800</td><td class="key">As % of regional GDP</td><td class="">0%</td><td class="">0%</td><td class="">0%</td><td class="">0%</td><td class="">0%</td><td class="">0%</td><td class="">0%</td><td class="head">…</td></tr><tr><td class="">1800</td><td class="">As % of world GDP</td><td class="">0%</td><td class="">0%</td><td class="">0%</td><td class="">0%</td><td class="">0%</td><td class="">0%</td><td class="">0%</td><td class="head">…</td></tr><tr><td class="">1830</td><td class="key">As % of regional GDP</td><td class="">0%</td><td class="">-30%</td><td class="">10%</td><td class="">-30%</td><td class="">0%</td><td class="wrong">30%</td><td class="">-30%</td><td class="head">…</td></tr><tr><td class="">1830</td><td class="">As % of world GDP</td><td class="">0%</td><td class="">-1%</td><td class="">0%</td><td class="">-3%</td><td class="">0%</td><td class="">15%</td><td class="">-1%</td><td class="head">…</td></tr><tr><td class="">1860</td><td class="key">As % of regional GDP</td><td class="">-30%</td><td class="">-50%</td><td class="">-10%</td><td class="">-50%</td><td class="">0%</td><td class="">40%</td><td class="">-40%</td><td class="head">…</td></tr><tr><td class="">1860</td><td class="">As % of world GDP</td><td class="">-1%</td><td class="">-2%</td><td class="">0%</td><td class="">-5%</td><td class="">0%</td><td class="">20%</td><td class="">-2%</td><td class="head">…</td></tr></tbody></table></div>
+      <p class="why"><b>第 4 行第 8 列 写着 <code>30%</code>，标注值是 <code>25</code>，相对差 17%，该点容差 0.1</b></p>
+      
+    </div>
+    <div class="good">
+      <p class="side-h">✓ 写成这样，这一页 9 个点全过</p>
+      <p class="rule-line">一行一个值，<b>所有键和值写在同一行</b>——
+        判定第三步一次通过，不用任何回退</p>
+      <div class="scroll"><table class="excerpt good"><tbody><tr><td class="head">键 1</td><td class="head">键 2</td><td class="head">键 3</td><td class="head">值</td></tr><tr><td>Europe</td><td>1920</td><td>As % of regional GDP</td><td>25</td></tr><tr><td>North America &amp; Oceania</td><td>2010</td><td>As % of regional GDP</td><td>-25</td></tr><tr><td>MENA</td><td>2010</td><td>As % of regional GDP</td><td>45</td></tr><tr><td>East Asia</td><td>2010</td><td>As % of regional GDP</td><td>40</td></tr><tr><td>Sub-Saharan Africa</td><td>1980</td><td>As % of regional GDP</td><td>-25</td></tr><tr><td>Europe</td><td>1920</td><td>As % of world GDP</td><td>8</td></tr><tr><td colspan="4" class="head">⋮ 还有 3 行</td></tr></tbody></table></div>
+      <p class="why">这正是我们记录层的形状：一个图元 = 一条
+        <code>(键, 值, 区域)</code>。所谓「长表导出」就是把它原样写出来。</p>
+    </div>
+  </div>
+  <div class="tail">
+    <p class="verdict">判分程序的原话：Value &#x27;25&#x27; not found in any table</p>
+    <div class="pull"><p><b>这是唯一的反向证据：键写对了不等于能拿分。</b></p><p>长表导出能解决 599 个「键对不上」，解决不了稠密度。两件事要分开验收——P3 / P2 看键，P1 / P5 看这一档的读数。</p></div>
+  </div>
+</article><p class="lede">同一形态还发生在这些页上（这一形态吃掉的点最多的几页，未逐页人工读过）：</p><div class="egs"><a href="assets/The_State_of_UK_Competition_Report_2024_p31.jpg" target="_blank" rel="noopener"><img loading="lazy" src="assets/The_State_of_UK_Competition_Report_2024_p31.jpg" alt="The_State_of_UK_Competition_Report_2024_p31"><span>The_State_of_UK_Competition_Report<br>0% 通过</span></a><a href="assets/MonthlyTreasuryStatement_202509_p6.jpg" target="_blank" rel="noopener"><img loading="lazy" src="assets/MonthlyTreasuryStatement_202509_p6.jpg" alt="MonthlyTreasuryStatement_202509_p6"><span>MonthlyTreasuryStatement_202509_p6<br>0% 通过</span></a><a href="assets/ac8b3538-en_p158.jpg" target="_blank" rel="noopener"><img loading="lazy" src="assets/ac8b3538-en_p158.jpg" alt="ac8b3538-en_p158"><span>ac8b3538-en_p158<br>10% 通过</span></a><a href="assets/m-trends-2025-en_p41.jpg" target="_blank" rel="noopener"><img loading="lazy" src="assets/m-trends-2025-en_p41.jpg" alt="m-trends-2025-en_p41"><span>m-trends-2025-en_p41<br>22% 通过</span></a></div><h3 class="band">有个键压根没写进表<span>48 个 · 占失败 5% · <code>row_missing</code></span></h3><p class="lede">某个键（系列名、面板名、图号）在整张表里一个字都没有。它通常只画在图例、线端或图题上，解析器没把它写成表的一部分。</p><p class="lede">→ <b>要让它不再发生，流水线得会：图号 / 面板名 / 系列名要能写进键（P7 · P2）</b></p><article class="ev">
+  <figure><a href="assets/mts0625_p6.jpg" target="_blank" rel="noopener">
+    <img loading="lazy" src="assets/mts0625_p6.jpg" alt="mts0625_p6"
+      onerror="this.closest('article').classList.add('no-image')"></a></figure>
+  <div class="body">
+    <h4><b>一页两张图都叫 Receipts</b>，不写图号就分不清是哪一张</h4>
+    <p class="meta"><code>mts0625_p6</code> ·
+      该页 0 / 10 通过 ·
+      <a href="cases/mts0625_p6/case.md">逐条与整页输出</a></p>
+    <p>页面上是 Figure 3（月度）和 Figure 4（累计），两张图的系列名一模一样：<code>Receipts</code> / <code>Outlays</code> / <code>Deficit(-)/Surplus</code>。</p><p>所以规则用了<b>四个键</b>来定位一个值，第四个键就是 <b><code>Figure 3.</code></b>。</p><p>解析器把两张图合并成了一张表，没有图号这一列，十个点全判 0。</p>
+  </div>
+  <div class="vs">
+    <div class="bad">
+      <p class="side-h">✗ 解析器实际写的</p>
+      <p class="rule-line">这一条规则要的是 <b>770</b>，
+        定位键 <code>Receipts</code> · <code>Apr</code> · <code>2024</code> · <code>Figure 3.</code>（容差 0.05）</p>
+      <p class="grid-cap">解析器第 2 张表（共 2 张），第 1–22 行</p><div class="scroll"><table class="excerpt"><tbody><tr><td colspan="99" class="head">⋮</td></tr><tr><td class="head">Month</td><td class="head">Year</td><td class="key">Receipts</td><td class="head">Outlays</td><td class="head">Deficit(-)/Surplus</td></tr><tr><td class="">Jan</td><td class="">2025</td><td class="">$1,500B</td><td class="">($2,400B)</td><td class="">($900B)</td></tr><tr><td class="">Feb</td><td class="">2025</td><td class="">$1,800B</td><td class="">($3,000B)</td><td class="">($1,200B)</td></tr><tr><td class="">Mar</td><td class="">2025</td><td class="">$2,200B</td><td class="">($3,900B)</td><td class="">($1,350B)</td></tr><tr><td class="key">Apr</td><td class="">2025</td><td class="wrong">$3,000B</td><td class="">($4,400B)</td><td class="">($1,100B)</td></tr><tr><td class="">May</td><td class="">2025</td><td class="">$3,400B</td><td class="">($4,900B)</td><td class="">($1,400B)</td></tr><tr><td class="">Jun</td><td class="">2025</td><td class="">$4,000B</td><td class="">($5,500B)</td><td class="">($1,300B)</td></tr></tbody></table></div>
+      <p class="why"><b>这个值不在任何表里；<code>Figure 3.</code> 一个字都没进表</b></p>
+      <p class="why"><code>Figure 3.</code> → Figure 3. Monthly Receipts, Outlays, and Budget Deficit/Surplus of the U.S. Government, Fiscal Years 2024 and 2025</p>
+    </div>
+    <div class="good">
+      <p class="side-h">✓ 写成这样，这一页 10 个点全过</p>
+      <p class="rule-line">一行一个值，<b>所有键和值写在同一行</b>——
+        判定第三步一次通过，不用任何回退</p>
+      <div class="scroll"><table class="excerpt good"><tbody><tr><td class="head">键 1</td><td class="head">键 2</td><td class="head">键 3</td><td class="head">键 4</td><td class="head">值</td></tr><tr><td>Receipts</td><td>Apr</td><td>2024</td><td>Figure 3.</td><td>770</td></tr><tr><td>Outlays</td><td>Apr</td><td>2024</td><td>Figure 3.</td><td>-560</td></tr><tr><td>Deficit(-)/Surplus</td><td>Apr</td><td>2024</td><td>Figure 3.</td><td>210</td></tr><tr><td>Receipts</td><td>Sep</td><td>2024</td><td>Figure 3.</td><td>530</td></tr><tr><td>Receipts</td><td>Apr</td><td>2025</td><td>Figure 3.</td><td>850</td></tr><tr><td>Receipts</td><td>Sep</td><td>2024</td><td>Figure 4.</td><td>4890</td></tr><tr><td colspan="5" class="head">⋮ 还有 4 行</td></tr></tbody></table></div>
+      <p class="why">这正是我们记录层的形状：一个图元 = 一条
+        <code>(键, 值, 区域)</code>。所谓「长表导出」就是把它原样写出来。</p>
+    </div>
+  </div>
+  <div class="tail">
+    <p class="verdict">判分程序的原话：Value &#x27;770&#x27; not found in any table</p>
+    <div class="pull"><p><b>「一页多图」和「图号进键」是同一件事的两面。</b></p><p>只要一页上放两张系列名相同的图，图号就必须既画得出来、也导得进键。</p><p>P7 原本的判断是「图号基本不影响分数」（4,864 条规则里只有 14 条拿图号当键）——这一页就是那 14 条里的一整页，结论不变，但它说明这条路是通的。</p></div>
+  </div>
+</article><article class="ev">
+  <figure><a href="assets/VPEG6_SIV_Information_Memorandum__June_2025__p11.jpg" target="_blank" rel="noopener">
+    <img loading="lazy" src="assets/VPEG6_SIV_Information_Memorandum__June_2025__p11.jpg" alt="VPEG6_SIV_Information_Memorandum__June_2025__p11"
+      onerror="this.closest('article').classList.add('no-image')"></a></figure>
+  <div class="body">
+    <h4><b>系列名只画在图里当文字</b>，一个字都没进表</h4>
+    <p class="meta"><code>VPEG6_SIV_Information_Memorandum__June_2025__p11</code> ·
+      该页 0 / 5 通过 ·
+      <a href="cases/VPEG6_SIV_Information_Memorandum__June_2025__p11/case.md">逐条与整页输出</a></p>
+    <p>两个系列 <code>VANTAGE</code> 和 <code>GLOBAL PRIVATE EQUITY</code>，在图上是绘图区里的两行文字标签，不是图例。</p><p>解析器把它们原样抄成了表<b>外面</b>的两行普通正文，表头则自己起了名：<code>Quartile TVPI (x)</code> / <code>Vantage TVPI (x)</code>。</p><p><b><code>GLOBAL PRIVATE EQUITY</code> 在整张表里一个字都没有</b>，四个点因此判 0；第五个点的值 2.1 只出现在一句加粗的句子里，表里根本没有。</p>
+  </div>
+  <div class="vs">
+    <div class="bad">
+      <p class="side-h">✗ 解析器实际写的</p>
+      <p class="rule-line">这一条规则要的是 <b>2.5</b>，
+        定位键 <code>GLOBAL PRIVATE EQUITY</code> · <code>Quartile 1</code>（容差 0.01）</p>
+      <p class="grid-cap">解析器第 1 张表，第 1–5 行</p><div class="scroll"><table class="excerpt"><tbody><tr><td class="head">Category</td><td class="head">Quartile TVPI (x)</td><td class="head">Vantage TVPI (x)</td></tr><tr><td class="key">Quartile 1</td><td class="">2.5x</td><td class="">2.0x</td></tr><tr><td class="">Quartile 2</td><td class="">1.7x</td><td class="">2.0x</td></tr><tr><td class="">Quartile 3</td><td class="">1.35x</td><td class="">2.0x</td></tr><tr><td class="">Quartile 4</td><td class="">0.95x</td><td class="">2.0x</td></tr></tbody></table></div>
+      <p class="why"><b>这个值不在任何表里；<code>GLOBAL PRIVATE EQUITY</code> 一个字都没进表</b></p>
+      <p class="why"><code>GLOBAL PRIVATE EQUITY</code> → ### <b>Vantage vs Global Private Equity (Direct Buyout Funds) TVPI - 2009-2018</b></p><p class="why"><code>GLOBAL PRIVATE EQUITY</code> → GLOBAL PRIVATE EQUITY</p>
+    </div>
+    <div class="good">
+      <p class="side-h">✓ 写成这样，这一页 5 个点全过</p>
+      <p class="rule-line">一行一个值，<b>所有键和值写在同一行</b>——
+        判定第三步一次通过，不用任何回退</p>
+      <div class="scroll"><table class="excerpt good"><tbody><tr><td class="head">键 1</td><td class="head">键 2</td><td class="head">值</td></tr><tr><td>VANTAGE</td><td>Quartile 1</td><td>2.1</td></tr><tr><td>GLOBAL PRIVATE EQUITY</td><td>Quartile 1</td><td>2.5</td></tr><tr><td>GLOBAL PRIVATE EQUITY</td><td>Quartile 2</td><td>1.7</td></tr><tr><td>GLOBAL PRIVATE EQUITY</td><td>Quartile 3</td><td>1.4</td></tr><tr><td>GLOBAL PRIVATE EQUITY</td><td>Quartile 4</td><td>1.0</td></tr></tbody></table></div>
+      <p class="why">这正是我们记录层的形状：一个图元 = 一条
+        <code>(键, 值, 区域)</code>。所谓「长表导出」就是把它原样写出来。</p>
+    </div>
+  </div>
+  <div class="tail">
+    <p class="verdict">判分程序的原话：Value &#x27;2.5&#x27; not found in any table</p>
+    <div class="pull"><p><b>系列名画在哪里，决定了它会不会进表。</b></p><p>图例、线端文字、绘图区内标签——这三种画法现在不是风格向量的一维，而它们的后果完全不同。P6 的「标注形态」应该把系列名标签一起收进去。</p></div>
+  </div>
+</article><p class="lede">同一形态还发生在这些页上（这一形态吃掉的点最多的几页，未逐页人工读过）：</p><div class="egs"><a href="assets/MonthlyTreasuryStatement_202411_p8.jpg" target="_blank" rel="noopener"><img loading="lazy" src="assets/MonthlyTreasuryStatement_202411_p8.jpg" alt="MonthlyTreasuryStatement_202411_p8"><span>MonthlyTreasuryStatement_202411_p8<br>0% 通过</span></a><a href="assets/pdf_f270146f8ca7_p25.jpg" target="_blank" rel="noopener"><img loading="lazy" src="assets/pdf_f270146f8ca7_p25.jpg" alt="pdf_f270146f8ca7_p25"><span>pdf_f270146f8ca7_p25<br>0% 通过</span></a><a href="assets/semiconductor_sector_study_p22.jpg" target="_blank" rel="noopener"><img loading="lazy" src="assets/semiconductor_sector_study_p22.jpg" alt="semiconductor_sector_study_p22"><span>semiconductor_sector_study_p22<br>0% 通过</span></a><a href="assets/MonthlyTreasuryStatement_202509_p8.jpg" target="_blank" rel="noopener"><img loading="lazy" src="assets/MonthlyTreasuryStatement_202509_p8.jpg" alt="MonthlyTreasuryStatement_202509_p8"><span>MonthlyTreasuryStatement_202509_p8<br>50% 通过</span></a></div><h3 class="band">数字写在了错的量级上<span>36 个 · 占失败 4% · <code>unit_mismatch</code></span></h3><p class="lede">同一个数写成了另一个量级。轴上写 101、图题写 BILLIONS，解析器写成 $101B——判分程序把 B 读成 ×10⁹，于是 101 和 1,010 亿对不上。</p><p class="lede">→ <b>要让它不再发生，流水线得会：单位写在哪、刻度怎么写，要能调（P6）</b></p><article class="ev">
+  <figure><a href="assets/The_State_of_UK_Competition_Report_2024_p31.jpg" target="_blank" rel="noopener">
+    <img loading="lazy" src="assets/The_State_of_UK_Competition_Report_2024_p31.jpg" alt="The_State_of_UK_Competition_Report_2024_p31"
+      onerror="this.closest('article').classList.add('no-image')"></a></figure>
+  <div class="body">
+    <h4><b>刻度写的是 <code>.4</code> 不是 <code>0.4</code></b>，整张图读大了 10 倍</h4>
+    <p class="meta"><code>The_State_of_UK_Competition_Report_2024_p31</code> ·
+      该页 0 / 9 通过 ·
+      <a href="cases/The_State_of_UK_Competition_Report_2024_p31/case.md">逐条与整页输出</a></p>
+    <p>横向系数点图（Stata 默认样式），系数轴的刻度标签是斜排的 <code>-.4  -.2  0  .2  .4  .6  .8  1</code>——<b>省掉了整数位的 0</b>。</p><p>解析器写下 4.4 / 1.5 / −1.6 / −2.3，真值是 0.45 / 0.15 / −0.2 / −0.25：<b>九个点整体差一个数量级，方向和相对大小全对。</b></p>
+  </div>
+  <div class="vs">
+    <div class="bad">
+      <p class="side-h">✗ 解析器实际写的</p>
+      <p class="rule-line">这一条规则要的是 <b>0.45</b>，
+        定位键 <code>Berry ratio</code> · <code>Year FE</code>（容差 0.1）</p>
+      <p class="grid-cap">解析器第 1 张表，第 1–5 行</p><div class="scroll"><table class="excerpt"><tbody><tr><td class="head">Variable</td><td class="key">Year FE</td><td class="head">+ Firm FE</td><td class="head">+ sales-weighted</td></tr><tr><td class="key">Berry ratio</td><td class="wrong">4.4</td><td class="">1.5</td><td class="">0.8</td></tr><tr><td class="">Debt ratio</td><td class="">-1.6</td><td class="">0.6</td><td class="">0.7</td></tr><tr><td class="">Liquidity ratio</td><td class="">-2.3</td><td class="">-3.3</td><td class="">-2.8</td></tr><tr><td class="">Labour share</td><td class="">8.3</td><td class="">3.0</td><td class="">2.8</td></tr></tbody></table></div>
+      <p class="why"><b>第 2 行第 2 列 写着 <code>4.4</code>，标注值是 <code>0.45</code>——度量把它读成差 ×10¹</b></p>
+      
+    </div>
+    <div class="good">
+      <p class="side-h">✓ 写成这样，这一页 9 个点全过</p>
+      <p class="rule-line">一行一个值，<b>所有键和值写在同一行</b>——
+        判定第三步一次通过，不用任何回退</p>
+      <div class="scroll"><table class="excerpt good"><tbody><tr><td class="head">键 1</td><td class="head">键 2</td><td class="head">值</td></tr><tr><td>Berry ratio</td><td>Year FE</td><td>0.45</td></tr><tr><td>Berry ratio</td><td>+ Firm FE</td><td>0.15</td></tr><tr><td>Berry ratio</td><td>+ sales-weighted</td><td>0.05</td></tr><tr><td>Debt ratio</td><td>Year FE</td><td>-0.2</td></tr><tr><td>Liquidity ratio</td><td>Year FE</td><td>-0.25</td></tr><tr><td>Liquidity ratio</td><td>+ Firm FE</td><td>-0.1</td></tr><tr><td colspan="3" class="head">⋮ 还有 3 行</td></tr></tbody></table></div>
+      <p class="why">这正是我们记录层的形状：一个图元 = 一条
+        <code>(键, 值, 区域)</code>。所谓「长表导出」就是把它原样写出来。</p>
+    </div>
+  </div>
+  <div class="tail">
+    <p class="verdict">判分程序的原话：Value &#x27;0.45&#x27; not found in any table</p>
+    <div class="pull"><p><b>刻度标签怎么写，直接决定读数的量级</b>，而风格向量里现在没有这一维。</p><p>P6 的「刻度格式」要细到：省不省前导零、标签斜不斜、负号是 <code>-</code> 还是 <code>−</code>。</p><p>另外这张图是横向系数点图（带误差棒），条件表里没有这一族。</p></div>
+  </div>
+</article><article class="ev">
+  <figure><a href="assets/Activate_Consulting_Technology_%26_Media_Outlook_2026_%2810%29_p60.jpg" target="_blank" rel="noopener">
+    <img loading="lazy" src="assets/Activate_Consulting_Technology_%26_Media_Outlook_2026_%2810%29_p60.jpg" alt="Activate_Consulting_Technology_&amp;_Media_Outlook_2026_(10)_p60"
+      onerror="this.closest('article').classList.add('no-image')"></a></figure>
+  <div class="body">
+    <h4><b>图上写 $101B，规则要 101</b>，多写一个 B 就全错</h4>
+    <p class="meta"><code>Activate_Consulting_Technology_&amp;_Media_Outlook_2026_(10)_p60</code> ·
+      该页 2 / 10 通过 ·
+      <a href="cases/Activate_Consulting_Technology_%26_Media_Outlook_2026_%2810%29_p60/case.md">逐条与整页输出</a></p>
+    <p>图题写着 <code>BILLIONS USD</code>，柱子上的标注写的是 <code>$101B</code>，而规则的值是 <code>101</code>。</p><p>解析器照抄了柱子上的标注 <code>$101B</code>——<b>看起来完全忠实</b>，但判分程序把后缀 <code>B</code> 读成 ×10⁹，于是 101 和 101,000,000,000 对不上，八个点判 0。</p><p>同一页两个 CAGR 百分点（16% / 10%）判对了，因为百分号不带量级。</p>
+  </div>
+  <div class="vs">
+    <div class="bad">
+      <p class="side-h">✗ 解析器实际写的</p>
+      <p class="rule-line">这一条规则要的是 <b>101</b>，
+        定位键 <code>Rest of World</code> · <code>2019</code>（容差 0.01）</p>
+      <p class="grid-cap">解析器第 1 张表，第 1–7 行</p><div class="scroll"><table class="excerpt"><tbody><tr><td class="head">Year</td><td class="head">U.S.</td><td class="key">REST OF WORLD</td><td class="head">Total</td></tr><tr><td class="key">2019</td><td class="">$35B</td><td class="wrong">$101B</td><td class="">$136B</td></tr><tr><td class="">2021</td><td class="">$48B</td><td class="">$121B</td><td class="">$169B</td></tr><tr><td class="">2025E</td><td class="">$50B</td><td class="">$130B</td><td class="">$180B</td></tr><tr><td class="">2029E</td><td class="">$59B</td><td class="">$155B</td><td class="">$214B</td></tr><tr><td class="">2019-2021 CAGR:</td><td class="">16%</td><td class="">10%</td><td class="">11%</td></tr><tr><td class="">2021-2025E CAGR:</td><td class="">1%</td><td class="">2%</td><td class="">2%</td></tr></tbody></table></div>
+      <p class="why"><b>第 2 行第 3 列 写着 <code>$101B</code>，标注值是 <code>101</code>——度量把它读成差 ×10⁹</b></p>
+      
+    </div>
+    <div class="good">
+      <p class="side-h">✓ 写成这样，这一页 8 个点全过</p>
+      <p class="rule-line">一行一个值，<b>所有键和值写在同一行</b>——
+        判定第三步一次通过，不用任何回退</p>
+      <div class="scroll"><table class="excerpt good"><tbody><tr><td class="head">键 1</td><td class="head">键 2</td><td class="head">值</td></tr><tr><td>Rest of World</td><td>2019</td><td>101</td></tr><tr><td>U.S.</td><td>2019</td><td>35</td></tr><tr><td>Rest of World</td><td>2021</td><td>121</td></tr><tr><td>U.S.</td><td>2021</td><td>48</td></tr><tr><td>Rest of World</td><td>2025E</td><td>130</td></tr><tr><td>U.S.</td><td>2025E</td><td>50</td></tr><tr><td colspan="3" class="head">⋮ 还有 2 行</td></tr></tbody></table></div>
+      <p class="why">这正是我们记录层的形状：一个图元 = 一条
+        <code>(键, 值, 区域)</code>。所谓「长表导出」就是把它原样写出来。</p>
+    </div>
+  </div>
+  <div class="tail">
+    <p class="verdict">判分程序的原话：Value &#x27;101&#x27; not found in any table</p>
+    <div class="pull"><p><b>最通用的那个组件（单位只写在轴 / 图题里，149 / 192 页），造出来的失败恰恰是「解析器太老实」。</b></p><p>对我们的导出：格子里只写和轴刻度同尺度的裸数字，量纲写进表头或表前的标题。</p><p>对训练数据：值和量纲必须是两个字段，不能拼成一个字符串。</p></div>
+  </div>
+</article><p class="lede">同一形态还发生在这些页上（这一形态吃掉的点最多的几页，未逐页人工读过）：</p><div class="egs"><a href="assets/employment_and_social_developments_in_europe_esde_2024_report_p94.jpg" target="_blank" rel="noopener"><img loading="lazy" src="assets/employment_and_social_developments_in_europe_esde_2024_report_p94.jpg" alt="employment_and_social_developments_in_europe_esde_2024_report_p94"><span>employment_and_social_developments<br>0% 通过</span></a><a href="assets/MonthlyTreasuryStatement_202509_p6.jpg" target="_blank" rel="noopener"><img loading="lazy" src="assets/MonthlyTreasuryStatement_202509_p6.jpg" alt="MonthlyTreasuryStatement_202509_p6"><span>MonthlyTreasuryStatement_202509_p6<br>0% 通过</span></a><a href="assets/7c6b23db-en_p57.jpg" target="_blank" rel="noopener"><img loading="lazy" src="assets/7c6b23db-en_p57.jpg" alt="7c6b23db-en_p57"><span>7c6b23db-en_p57<br>60% 通过</span></a><a href="assets/ac8b3538-en_p253.jpg" target="_blank" rel="noopener"><img loading="lazy" src="assets/ac8b3538-en_p253.jpg" alt="ac8b3538-en_p253"><span>ac8b3538-en_p253<br>20% 通过</span></a></div><h3 class="band">键都在，就是没写这个数<span>14 个 · 占失败 2% · <code>value_absent</code></span></h3><p class="lede">所有键都在表里，但没有任何一格放着这个数。这个图元被跳过了。</p><p class="lede">→ <b>要让它不再发生，流水线得会：太密的图元要么画得开，要么标出来读不了（P1 · P5）</b></p><p class="lede">同一形态还发生在这些页上（这一形态吃掉的点最多的几页，未逐页人工读过）：</p><div class="egs"><a href="assets/sri-sigma-natural-catastrophes-1-2025_p4.jpg" target="_blank" rel="noopener"><img loading="lazy" src="assets/sri-sigma-natural-catastrophes-1-2025_p4.jpg" alt="sri-sigma-natural-catastrophes-1-2025_p4"><span>sri-sigma-natural-catastrophes-1-2<br>60% 通过</span></a><a href="assets/2025-EIS_p86.jpg" target="_blank" rel="noopener"><img loading="lazy" src="assets/2025-EIS_p86.jpg" alt="2025-EIS_p86"><span>2025-EIS_p86<br>70% 通过</span></a><a href="assets/SIA_State-of-Industry-Report_2024_final_091124_p23.jpg" target="_blank" rel="noopener"><img loading="lazy" src="assets/SIA_State-of-Industry-Report_2024_final_091124_p23.jpg" alt="SIA_State-of-Industry-Report_2024_final_091124_p23"><span>SIA_State-of-Industry-Report_2024_<br>80% 通过</span></a><a href="assets/VPEG6_SIV_Information_Memorandum__June_2025__p11.jpg" target="_blank" rel="noopener"><img loading="lazy" src="assets/VPEG6_SIV_Information_Memorandum__June_2025__p11.jpg" alt="VPEG6_SIV_Information_Memorandum__June_2025__p11"><span>VPEG6_SIV_Information_Memorandum__<br>0% 通过</span></a></div>
+</section><section id="hard" role="tabpanel" hidden>
+  <h2>什么样的图更容易失败</h2>
+  <div class="explain">
+    <p>分母在这里变小：只有 192 页有图表描述，落在其上的
+      1658 个抽查点——<b>「要几个键」那一条例外</b>，
+      它只需要规则本身，用的是全量 568 页。
+      <b>每一行都是相关，不是因果</b>，理由在「能不能信」。</p>
+  </div>
+  <h3 class="band">要几个键才能定位一个数<span>全 568 页 · 不依赖图表描述，是最硬的一条</span></h3><p class="lede">「2020 年的营收」是两个键，「北美面板里 2020 年的营收」是三个键。<b>键越多越容易失败，而面板数几乎不影响</b>——单面板图只要「类目 × 系列 × 测度」要三个键，就和小倍数一样难。</p><div class="scroll"><table><thead><tr><th>分档</th><th class="num">点数</th><th class="num">通过率</th><th></th><th class="num">95% 区间</th></tr></thead><tbody><tr><td>2 键</td><td class="num">3847</td><td class="num">83.3%</td><td><div class="bar"><i class="" style="width:83.3%"></i></div></td><td class="num">[82%, 84%]</td></tr><tr><td>3 键</td><td class="num">715</td><td class="num">69.0%</td><td><div class="bar"><i class="" style="width:69.0%"></i></div></td><td class="num">[65%, 72%]</td></tr><tr><td>4 键</td><td class="num">34</td><td class="num">55.9%</td><td><div class="bar"><i class="low" style="width:55.9%"></i></div></td><td class="num">[39%, 71%]</td></tr></tbody></table></div><div class="scroll"><table><thead><tr><th>分档</th><th class="num">点数</th><th class="num">通过率</th><th></th><th class="num">95% 区间</th></tr></thead><tbody><tr><td>1 面板</td><td class="num">1211</td><td class="num">82.0%</td><td><div class="bar"><i class="" style="width:82.0%"></i></div></td><td class="num">[80%, 84%]</td></tr><tr><td>2 面板</td><td class="num">239</td><td class="num">80.3%</td><td><div class="bar"><i class="" style="width:80.3%"></i></div></td><td class="num">[75%, 85%]</td></tr><tr><td>3+ 面板</td><td class="num">194</td><td class="num">79.4%</td><td><div class="bar"><i class="low" style="width:79.4%"></i></div></td><td class="num">[73%, 84%]</td></tr></tbody></table></div><p class="lede"><b>四个键长什么样</b>：<code>mts0625_p6</code> 一页两张图，系列名完全相同（都是 Receipts / Outlays / Deficit），规则只好写成 <code>Receipts · Apr · 2024 · Figure 3.</code>——第四个键是图号。解析器合并成一张表、没写图号，十个点全 0。</p><div class="egs"><a href="assets/mts0625_p6.jpg" target="_blank" rel="noopener"><img loading="lazy" src="assets/mts0625_p6.jpg" alt="mts0625_p6"><span>mts0625_p6<br>0% 通过</span></a><a href="assets/MonthlyTreasuryStatement_202411_p8.jpg" target="_blank" rel="noopener"><img loading="lazy" src="assets/MonthlyTreasuryStatement_202411_p8.jpg" alt="MonthlyTreasuryStatement_202411_p8"><span>MonthlyTreasuryStatement_202411_p8<br>0% 通过</span></a></div><h3 class="band">图元有多少个<span>落差最大的一条 · 下面两档我们画不出来</span></h3><p class="lede"><code>chart_types.md</code> 现在的上限（grouped_bar |面板|×|系列| ≤ 24、line 最多 6 条线）算下来全落在最上面那一档，<b>基准里真正难的那两档我们一张也生成不出来</b>。</p><div class="scroll"><table><thead><tr><th>分档</th><th class="num">点数</th><th class="num">通过率</th><th></th><th class="num">95% 区间</th></tr></thead><tbody><tr><td>≤20</td><td class="num">414</td><td class="num">85.5%</td><td><div class="bar"><i class="" style="width:85.5%"></i></div></td><td class="num">[82%, 89%]</td></tr><tr><td>21–60</td><td class="num">644</td><td class="num">83.1%</td><td><div class="bar"><i class="" style="width:83.1%"></i></div></td><td class="num">[80%, 86%]</td></tr><tr><td>61–150</td><td class="num">398</td><td class="num">81.4%</td><td><div class="bar"><i class="" style="width:81.4%"></i></div></td><td class="num">[77%, 85%]</td></tr><tr><td>151–400</td><td class="num">87</td><td class="num">67.8%</td><td><div class="bar"><i class="" style="width:67.8%"></i></div></td><td class="num">[57%, 77%]</td></tr><tr><td>&gt;400</td><td class="num">76</td><td class="num">57.9%</td><td><div class="bar"><i class="low" style="width:57.9%"></i></div></td><td class="num">[47%, 68%]</td></tr></tbody></table></div><div class="egs"><a href="assets/ac8b3538-en_p62.jpg" target="_blank" rel="noopener"><img loading="lazy" src="assets/ac8b3538-en_p62.jpg" alt="ac8b3538-en_p62"><span>ac8b3538-en_p62<br>10% 通过</span></a><a href="assets/World_Inequality_Report_2026_p79.jpg" target="_blank" rel="noopener"><img loading="lazy" src="assets/World_Inequality_Report_2026_p79.jpg" alt="World_Inequality_Report_2026_p79"><span>World_Inequality_Report_2026_p79<br>10% 通过</span></a></div><p class="lede">左：15 个面板 1,830 个图元，表头整体接错国家。右：两个面板 4,000 个图元，表的形状全对、十个点只中一个。</p><h3 class="band">数字有没有印在图上<span>单独就值十九个点</span></h3><p class="lede">基准里 <b>56% 的图一个数字都不写</b>，必须照着轴估读。这一维也是下面组件表的控制变量——不控住它，每一行都在重复这同一件事。</p><div class="scroll"><table><thead><tr><th>分档</th><th class="num">点数</th><th class="num">通过率</th><th></th><th class="num">95% 区间</th></tr></thead><tbody><tr><td>全部写出</td><td class="num">381</td><td class="num">94.5%</td><td><div class="bar"><i class="" style="width:94.5%"></i></div></td><td class="num">[92%, 96%]</td></tr><tr><td>部分写出</td><td class="num">125</td><td class="num">92.0%</td><td><div class="bar"><i class="" style="width:92.0%"></i></div></td><td class="num">[86%, 96%]</td></tr><tr><td>一个不写</td><td class="num">1138</td><td class="num">75.9%</td><td><div class="bar"><i class="low" style="width:75.9%"></i></div></td><td class="num">[73%, 78%]</td></tr></tbody></table></div><div class="egs"><a href="assets/Technopak_Industry_Report_p18.jpg" target="_blank" rel="noopener"><img loading="lazy" src="assets/Technopak_Industry_Report_p18.jpg" alt="Technopak_Industry_Report_p18"><span>Technopak_Industry_Report_p18<br>0% 通过</span></a><a href="assets/Digital_News-Report_2022_p46.jpg" target="_blank" rel="noopener"><img loading="lazy" src="assets/Digital_News-Report_2022_p46.jpg" alt="Digital_News-Report_2022_p46"><span>Digital_News-Report_2022_p46<br>0% 通过</span></a></div><p class="lede"><b>但印了也不保险</b>：这两页的数字全部印在图上、解析器也全抄对了，照样 0 分——错的是键。读得准和写得对，是两条独立的曲线。</p><h3 class="band">整页有多少字<span>不单调 · 原因未定</span></h3><p class="lede">按 PDF 文字层实测、按四分位分档。两端低、中间高，而图元个数、每页图数、数字是否印出这三项在四档之间都没有对应的差别。<b>原因未定，不做推测。</b></p><div class="scroll"><table><thead><tr><th>分档</th><th class="num">点数</th><th class="num">通过率</th><th></th><th class="num">95% 区间</th></tr></thead><tbody><tr><td>≤240 词</td><td class="num">1257</td><td class="num">78.4%</td><td><div class="bar"><i class="low" style="width:78.4%"></i></div></td><td class="num">[76%, 81%]</td></tr><tr><td>241–360 词</td><td class="num">1239</td><td class="num">83.6%</td><td><div class="bar"><i class="" style="width:83.6%"></i></div></td><td class="num">[81%, 86%]</td></tr><tr><td>361–500 词</td><td class="num">1277</td><td class="num">84.7%</td><td><div class="bar"><i class="" style="width:84.7%"></i></div></td><td class="num">[83%, 87%]</td></tr><tr><td>&gt;500 词</td><td class="num">1091</td><td class="num">79.4%</td><td><div class="bar"><i class="" style="width:79.4%"></i></div></td><td class="num">[77%, 82%]</td></tr></tbody></table></div>
+  <h3 class="band">哪种画法最贵<span>控制组内 · 只列 95% 区间不重叠的</span></h3>
+  <p class="lede">控制组是<b>图上一个数字都不写</b>的 1138 个点
+    （通过率 75.9%）。<b>「文档」这一列比 n 重要</b>——
+    n 数的是抽查点，一页最多十个，n=60 有可能只来自六页两份报告，
+    那是一家出版方的习惯，不是通用的作图习惯。</p>
+  <div class="scroll"><table><thead><tr><th>画法</th><th class="num">页</th>
+    <th class="num">文档</th><th class="num">有</th><th class="num">n</th>
+    <th class="num">无</th><th class="num">差</th></tr></thead>
+    <tbody><tr><td>值轴画在右边<br><code>right_side_y_axis</code></td><td class="num">6</td><td class="num">4</td><td class="num">48.3%</td><td class="num">60</td><td class="num">77.5%</td><td class="num"><b>-29.1%</b></td></tr><tr><td>图例竖在图的左右侧<br><code>legend_beside_plot</code></td><td class="num">14</td><td class="num">12</td><td class="num">52.8%</td><td class="num">72</td><td class="num">77.5%</td><td class="num"><b>-24.7%</b></td></tr><tr><td>图里有批注框 / 引线说明<br><code>annotation_callout</code></td><td class="num">33</td><td class="num">23</td><td class="num">65.9%</td><td class="num">164</td><td class="num">77.6%</td><td class="num"><b>-11.8%</b></td></tr><tr><td>图里有参考线（目标值、平均线）<br><code>reference_line</code></td><td class="num">43</td><td class="num">22</td><td class="num">67.3%</td><td class="num">297</td><td class="num">79.0%</td><td class="num"><b>-11.6%</b></td></tr><tr><td>多个面板共用一个图例<br><code>shared_legend</code></td><td class="num">24</td><td class="num">13</td><td class="num">67.1%</td><td class="num">149</td><td class="num">77.2%</td><td class="num"><b>-10.1%</b></td></tr><tr><td>时间刻度写法特别（2015/2016、1Q-24）<br><code>nonstandard_time_ticks</code></td><td class="num">34</td><td class="num">26</td><td class="num">68.3%</td><td class="num">218</td><td class="num">77.7%</td><td class="num"><b>-9.4%</b></td></tr><tr><td>有负值，零线在中间<br><code>negative_values</code></td><td class="num">42</td><td class="num">21</td><td class="num">69.5%</td><td class="num">298</td><td class="num">78.2%</td><td class="num"><b>-8.8%</b></td></tr></tbody></table></div>
+  <p class="lede"><b>值轴画在右边</b>（<code>right_side_y_axis</code>，-29.1%）——最差的三页：</p><div class="egs"><a href="assets/pdf_f270146f8ca7_p4.jpg" target="_blank" rel="noopener"><img loading="lazy" src="assets/pdf_f270146f8ca7_p4.jpg" alt="pdf_f270146f8ca7_p4"><span>pdf_f270146f8ca7_p4<br>10% 通过</span></a><a href="assets/sigma-1-2021-en_p9.jpg" target="_blank" rel="noopener"><img loading="lazy" src="assets/sigma-1-2021-en_p9.jpg" alt="sigma-1-2021-en_p9"><span>sigma-1-2021-en_p9<br>10% 通过</span></a><a href="assets/b3cd580a-3656-44ed-838a-5f2996ff6fc9_p32.jpg" target="_blank" rel="noopener"><img loading="lazy" src="assets/b3cd580a-3656-44ed-838a-5f2996ff6fc9_p32.jpg" alt="b3cd580a-3656-44ed-838a-5f2996ff6fc9_p32"><span>b3cd580a-3656-44ed-838a-5f2996ff6f<br>40% 通过</span></a></div><p class="lede"><b>图例竖在图的左右侧</b>（<code>legend_beside_plot</code>，-24.7%）——最差的三页：</p><div class="egs"><a href="assets/VPEG6_SIV_Information_Memorandum__June_2025__p11.jpg" target="_blank" rel="noopener"><img loading="lazy" src="assets/VPEG6_SIV_Information_Memorandum__June_2025__p11.jpg" alt="VPEG6_SIV_Information_Memorandum__June_2025__p11"><span>VPEG6_SIV_Information_Memorandum__<br>0% 通过</span></a><a href="assets/sigma-1-2021-en_p9.jpg" target="_blank" rel="noopener"><img loading="lazy" src="assets/sigma-1-2021-en_p9.jpg" alt="sigma-1-2021-en_p9"><span>sigma-1-2021-en_p9<br>10% 通过</span></a><a href="assets/2024_Annual_Financial_Review_Upstream_FINAL_p19.jpg" target="_blank" rel="noopener"><img loading="lazy" src="assets/2024_Annual_Financial_Review_Upstream_FINAL_p19.jpg" alt="2024_Annual_Financial_Review_Upstream_FINAL_p19"><span>2024_Annual_Financial_Review_Upstr<br>33% 通过</span></a></div><p class="lede"><b>图里有批注框 / 引线说明</b>（<code>annotation_callout</code>，-11.8%）——最差的三页：</p><div class="egs"><a href="assets/Digital_News-Report_2022_p46.jpg" target="_blank" rel="noopener"><img loading="lazy" src="assets/Digital_News-Report_2022_p46.jpg" alt="Digital_News-Report_2022_p46"><span>Digital_News-Report_2022_p46<br>0% 通过</span></a><a href="assets/VPEG6_SIV_Information_Memorandum__June_2025__p11.jpg" target="_blank" rel="noopener"><img loading="lazy" src="assets/VPEG6_SIV_Information_Memorandum__June_2025__p11.jpg" alt="VPEG6_SIV_Information_Memorandum__June_2025__p11"><span>VPEG6_SIV_Information_Memorandum__<br>0% 通过</span></a><a href="assets/pwc-semiconductor-and-beyond-2026-full-report_p17.jpg" target="_blank" rel="noopener"><img loading="lazy" src="assets/pwc-semiconductor-and-beyond-2026-full-report_p17.jpg" alt="pwc-semiconductor-and-beyond-2026-full-report_p17"><span>pwc-semiconductor-and-beyond-2026-<br>0% 通过</span></a></div><p class="lede"><b>图里有参考线（目标值、平均线）</b>（<code>reference_line</code>，-11.6%）——最差的三页：</p><div class="egs"><a href="assets/Digital_News-Report_2022_p39.jpg" target="_blank" rel="noopener"><img loading="lazy" src="assets/Digital_News-Report_2022_p39.jpg" alt="Digital_News-Report_2022_p39"><span>Digital_News-Report_2022_p39<br>0% 通过</span></a><a href="assets/Digital_News-Report_2022_p46.jpg" target="_blank" rel="noopener"><img loading="lazy" src="assets/Digital_News-Report_2022_p46.jpg" alt="Digital_News-Report_2022_p46"><span>Digital_News-Report_2022_p46<br>0% 通过</span></a><a href="assets/VPEG6_SIV_Information_Memorandum__June_2025__p11.jpg" target="_blank" rel="noopener"><img loading="lazy" src="assets/VPEG6_SIV_Information_Memorandum__June_2025__p11.jpg" alt="VPEG6_SIV_Information_Memorandum__June_2025__p11"><span>VPEG6_SIV_Information_Memorandum__<br>0% 通过</span></a></div>
+  <p class="lede">反过来那一端（轴不从零开始、图下有数据下载链接、图号标题齐全）
+    不要当杠杆读：它们标记的是「这是一家会好好做图的出版方」，
+    不是「加上这个组件就会变好」。</p>
+  <h3 class="band">密的图错在键，稀的图才错在数<span></span></h3>
+  <div class="scroll"><table><thead><tr><th>图元个数</th><th class="num">失败数</th>
+    <th class="num">键对不上</th><th class="num">数读错了</th></tr></thead>
+    <tbody><tr><td>≤20</td><td class="num">60</td><td class="num">40%</td><td class="num">60%</td></tr><tr><td>21–60</td><td class="num">109</td><td class="num">74%</td><td class="num">26%</td></tr><tr><td>61–150</td><td class="num">74</td><td class="num">78%</td><td class="num">22%</td></tr><tr><td>151–400</td><td class="num">28</td><td class="num">79%</td><td class="num">21%</td></tr><tr><td>&gt;400</td><td class="num">32</td><td class="num">78%</td><td class="num">22%</td></tr></tbody></table></div>
+  <p class="lede">只有最稀疏那一档以读错数为主。图一旦超过二十个图元，
+    失败就固定在四分之三是键对不上——这条链不是「越密越读不准」，
+    而是<b>「越密越写不成一张对得上号的表」</b>。</p>
+</section>
+<section id="changes" role="tabpanel" hidden>
+  <h2>翻成流水线改动</h2>
+  <div class="explain">
+    <p>十项，每一条都带着给它定价的那个数。前八项这次数据给出了价，第九项只给了相关，
+      第十项没给证据但保留。<b>「通用」这一列问的是同一个问题：ParseBench 不存在，
+      这条还值不值得做。</b></p>
+  </div>
+  <h3 class="band">十项改动<span>按这次数据能给出的价排</span></h3>
+  <div class="two"><article class="card"><h4>1 · 导出的时候，一行只放一个值，把它的所有键写在同一行</h4><p class="meta"><span class="chip">P3</span> <span class="chip have">通用</span></p><p>现在把图转成表，习惯写成<b>宽表</b>——行是年份，列是系列，数字在交叉格里。判分程序查的是「这个数所在的<b>那一行、那一列、那个表头</b>里有没有出现这个键」，宽表一旦被拆开、或者表头写错，键就够不着了。改成<b>长表</b>：<code>年份 | 系列 | 值</code>，一行一条，键永远和值在同一行，怎么拆都拆不散。</p><p class="eg"><b>例子</b>　<code>Technopak_Industry_Report_p18</code> 三张饼拆成三张小表，年份和类目名分别丢；<code>pwc-…_p17</code> 列名写成了颜色。两页都是数字全对、全判 0。每张卡片右边那张绿色的表，就是长表长什么样。</p><p class="price"><b>价</b>　占全部失败的 67%；其中 79% 的键就在同一张表里，只是不在这个数的行 / 列 / 表头上</p></article><article class="card"><h4>2 · 多面板图，把面板名也当成一个键写出去</h4><p class="meta"><span class="chip">P2</span> <span class="chip have">通用</span></p><p>小倍数图（一个图号下面并排好几张小图）里，「这是哪张小图」本身就是一个键。我们现在只给面板一个内部编号，导出的表里没有这一列，于是每张面板表都比规则少一个键。</p><p class="eg"><b>例子</b>　<code>Technopak_…_p18</code>（三张饼 = 三个面板名）· <code>ac8b3538-en_p62</code>（15 个国家面板，表头整体错位一格）。</p><p class="price"><b>价</b>　2 键 83.3% → 3 键 69.0% → 4 键 55.9%；3 键的点失败时 82% 是键对不上</p></article><article class="card"><h4>3 · 让模型学会「哪个颜色是哪个系列」</h4><p class="meta"><span class="chip">新</span> <span class="chip have">通用</span></p><p>堆叠柱、多系列折线，系列名只写在图例的色块旁边。把色块和柱子对起来这件事，现在没有任何训练目标在教。我们画图时每个图元的颜色和系列名都是已知的，多导出一条配对是纯加法。</p><p class="eg"><b>例子</b>　<code>pwc-…_p17</code>：列名写成 <code>Gray</code> / <code>Orange</code>，十个数字一个不差，十个点全 0。</p><p class="price"><b>价</b>　图例离图越远越贵：<code>legend_beside_plot</code> -24.7%（n=72）、<code>shared_legend</code> -10.1%（n=149）（控制组内，95% 区间不重叠）</p></article><article class="card"><h4>4 · 能画更密的图</h4><p class="meta"><span class="chip">P5</span> <span class="chip have">通用</span></p><p><code>chart_types.md</code> 现在的上限是 grouped_bar 的 |面板|×|系列| ≤ 24、line 最多 6 条线，算下来全部落在「图元 ≤ 60」这一档——<b>也就是最容易的那一档</b>。基准里真正难的那些页在 400 图元以上，我们连一张都生成不出来。</p><p class="eg"><b>例子</b>　<code>ac8b3538-en_p62</code> 15 个面板 1,830 个图元；<code>World_Inequality_Report_2026_p79</code> 两个面板 4,000 个图元。</p><p class="price"><b>价</b>　≤20 图元 85.5% → &gt;400 图元 57.9%，95% 区间不重叠</p></article><article class="card"><h4>5 · 记下每个图元能读到多准，还要记下这个量只能取整数</h4><p class="meta"><span class="chip">P1</span> <span class="chip have">通用</span></p><p>现在 <code>readable</code> 只有能读 / 不能读两种。改成记一个数 ε——「这个图元在当前像素几何下能读到 ±3%」。但光有 ε 还不够：有些量<b>只能取整数</b>（比如「有多少年」），这条先验能直接把读数四舍五入回来。</p><p class="eg"><b>例子</b>　<code>sri-sigma-…_p10</code>：纵轴是年份个数，八个失败点每一个都正好低 0.5 格。四舍五入到整数就能救回其中几个。</p><p class="price"><b>价</b>　读错数的失败 199 个，相对误差中位 15.0%，只有 13.1% 落在 5% 以内</p></article><article class="card"><h4>6 · 刻度怎么写、单位写在哪，要能调</h4><p class="meta"><span class="chip">P6</span> <span class="chip have">通用</span></p><p>刻度标签的写法直接决定读数的量级：<code>.4</code> 和 <code>0.4</code> 差十倍。单位写在图题里还是写在格子里，也决定了判分认不认。这一维现在完全不在风格向量里。</p><p class="eg"><b>例子</b>　<code>The_State_of_UK_Competition_…_p31</code>：刻度写 <code>.4</code>，整张图读大十倍；<code>Activate_…_p60</code>：图题写 BILLIONS、标注写 <code>$101B</code>，规则要 <code>101</code>。</p><p class="price"><b>价</b>　量级错的失败 36 个，两种写法各有一整页的实例</p></article><article class="card"><h4>7 · 负值和零线</h4><p class="meta"><span class="chip">P6</span> <span class="chip have">通用</span></p><p>三份规格都没写过零线：测度的值域能不能跨零、柱子能不能从零线往两边长。而基准里 399 条规则的值是负数。</p><p class="eg"><b>例子</b>　<code>05021ff2-en_p19</code> 右面板零线居中，柱子往左右两边长。</p><p class="price"><b>价</b>　负值的点通过率 67.4%，全体 81.6%（都按点算）；<code>negative_values</code> 在控制组内 -8.8%（n=298）</p></article><article class="card"><h4>8 · 参考线、批注框、阴影带这些不是数据的东西</h4><p class="meta"><span class="chip">新</span> <span class="chip have">通用</span></p><p>目标线、平均线、引线说明框、区间阴影——它们画在图里但不是任何一个数据点，<code>chart_types.md</code> 里没有这种形状。<b>它们不是装饰噪声，是会被当成数据的。</b></p><p class="eg"><b>例子</b>　<code>pwc-…_p17</code> 把两根柱之间的浅橙色连接带当成了第三个数据系列。</p><p class="price"><b>价</b>　<code>annotation_callout</code> -11.8%（n=164）、<code>reference_line</code> -11.6%（n=297）（控制组内，95% 区间不重叠）</p></article><article class="card"><h4>9 · 图要有标题和图号</h4><p class="meta"><span class="chip">P7</span> <span class="chip have">通用，但这一行的数字不能当因果读</span></p><p>94% 的真实图有标题、一半带 <code>Figure N</code>，而我们八张图里五张连标题文本的来源都没有。一页放两张图的时候，图号还会直接变成一个键。</p><p class="eg"><b>例子</b>　<code>mts0625_p6</code>：一页两张图的系列名完全相同（都是 Receipts / Outlays），规则只好用四个键，第四个键就是 <code>Figure 3.</code>。</p><p class="price"><b>价</b>　无标题的图 65.5% vs 图上方 82.1%——<b>这是相关不是因果</b>（见「能不能信」）</p></article><article class="card"><h4>10 · 页面文字量给个目标</h4><p class="meta"><span class="chip">B3 第三项</span> <span class="chip have">通用</span></p><p><code>03 §5 页面合成</code> 要求把图嵌进有正文的版面，但没给量。基准 568 页的整页文字量中位 355 词，94% 的页 ≥100 词。</p><p class="eg"><b>例子</b>　这一条这次<b>没有找到分数上的证据</b>：按文字量四分位分档，曲线是两端低中间高的非单调形状，查过的三个混淆项都解释不了它。</p><p class="price"><b>价</b>　≤240 词 78.4% · 241–360 词 83.6% · 361–500 词 84.7% · &gt;500 词 79.4%——非单调，原因未定</p></article></div>
+</section><section id="trust" role="tabpanel" hidden>
+  <h2>能不能信</h2>
+  <h3 class="band">通过与否从来不是这里判的</h3>
+  <p>每个点的 <code>passed</code> 都取自运行目录里的
+    <code>_evaluation_report.json</code>——官方 metric 跑出来的原值，本目录一行都没有重判。
+    这里只做一件事：在解析器的输出里把这个值和这些键<b>再找一遍</b>，看它们落在哪，
+    好给失败起一个能改的名字。上面每张卡片里的表格片段就是这一步的产物。</p>
+  <p>那份「再找一遍」是轻量实现（<code>difflib</code> 而不是 <code>rapidfuzz</code>，
+    不展开 colspan）。它与官方在「值找没找到」这一问上的一致率是
+    <b>99.84%</b>，4864 个点里分歧
+    8 个。</p>
+  <h3 class="band">两种形态没能分出来</h3>
+  <p>六类归因里，「串系列」与「读了累计值」这次<b>没有分辨出来</b>：全量上只有
+    10 个候选，而它们写下的数与真值都只差一格刻度，
+    巧合能同样好地解释。这些点已并入读数失败。<b>原因未定，不做推测。</b></p>
+  <h3 class="band">「什么图更容易失败」全部是相关</h3>
+  <p>组件之间高度共现，控制组只控住了最大的那一个混淆项。
+    「无标题的图通过率低二十个点」很可能是「无标题的图多半是仪表盘式的密集版面」，
+    不是标题本身在起作用。要变成因果只有一条路：我们自己按单变量生成两组图、
+    其余维度固定——那正是消融行的定义。</p>
+  <h3 class="band">这一份跑的是什么</h3>
+  <p><code>ppdoclayoutv3_lean_qwen</code>：PP-DocLayoutV3 lean +
+    <code>Qwen/Qwen3.8-27B-FP8</code>，200 dpi，verify_rounds=4，整页一次，
+    中位 91 秒 / 页。按页平均 <b>82.75%</b>，
+    micro 81.58%，满分 296 页、零分 15 页。</p>
+  <p>同口径下这个分数高于榜单上的所有方法（最高 LlamaParse Agentic 78.11%）。
+    榜单行是否用同一版评测代码算出来，本目录无法核实，所以不写「新 SOTA」；
+    能写的是——<b>这里分析的失败，是一个已经很强的系统剩下的失败</b>。</p>
+  <h3 class="band">没有测的</h3>
+  <ul>
+    <li>只有一个模型、一条流水线。形态分布是这一套系统的，不是「模型普遍如此」。</li>
+    <li>Visual Grounding 一维没碰，这次运行只有 parse 产物。</li>
+    <li>192 页与全量不独立，是同一批页面的随机子集——
+      那些相关只能提假设，不能当验收。</li>
+    <li>图表描述来自另一个模型（<code>parsebench/reports/</code> 那一轮，claude-opus-5），
+      它的错会原样传进来。有意思的是它可以反过来核：它当时逐页预测过「这一页最难的是第几步」，按那个预测分组，实际通过率是 step 2 77%（n=1103） · step 3 90%（n=460） · step 4 100%（n=62）——预测第二步（读值）最难的那些页，确实是最低的一档。</li>
+  </ul>
+</section></main>
+</div>
+<footer>同一份数据的文字版在 <a href="INDEX.md">INDEX.md</a>，逐页在 <code>cases/</code>，
+  机读汇总在 <code>../../data/stats/failures_ppdoclayoutv3_lean_qwen.json</code>。
+  页面特征描述取自 <code>parsebench/reports/</code>，那一份不动。</footer>
+<script>
+const tabs=[...document.querySelectorAll('nav button')];
+tabs.forEach(tab=>{
+  const section=document.getElementById(tab.dataset.tab);
+  const heads=[...section.querySelectorAll('h3.band')];
+  if(!heads.length) return;
+  const list=document.createElement('ul');
+  list.className='toc'; list.dataset.for=tab.dataset.tab;
+  heads.forEach((h,i)=>{
+    h.id=tab.dataset.tab+'-h'+i;
+    const item=document.createElement('li');
+    const a=document.createElement('a');
+    a.href='#'+h.id;
+    a.textContent=(h.firstChild&&h.firstChild.nodeType===3?h.firstChild.textContent
+      :h.textContent).trim();
+    a.addEventListener('click',e=>{e.preventDefault();
+      h.scrollIntoView({behavior:'smooth',block:'start'});
+      history.replaceState(null,'','#'+h.id);});
+    item.appendChild(a); list.appendChild(item);
+  });
+  tab.after(list);
+});
+const marks=[...document.querySelectorAll('.toc a')];
+const show=id=>{
+  tabs.forEach(t=>t.setAttribute('aria-selected',String(t.dataset.tab===id)));
+  document.querySelectorAll('main > section').forEach(s=>{s.hidden=(s.id!==id)});
+  document.querySelectorAll('.toc').forEach(u=>{u.hidden=(u.dataset.for!==id)});
+  window.scrollTo({top:0});
+};
+tabs.forEach(t=>t.addEventListener('click',()=>{
+  history.replaceState(null,'','#'+t.dataset.tab); show(t.dataset.tab)}));
+const spy=()=>{
+  let here=null;
+  document.querySelectorAll('main > section:not([hidden]) h3.band').forEach(h=>{
+    if(h.getBoundingClientRect().top<140) here=h.id;
+  });
+  marks.forEach(a=>a.classList.toggle('at',a.getAttribute('href')==='#'+here));
+};
+addEventListener('scroll',spy,{passive:true});
+const wanted=location.hash.slice(1);
+const owner=tabs.find(t=>t.dataset.tab===wanted)
+  ||tabs.find(t=>wanted.startsWith(t.dataset.tab+'-h'));
+show(owner?owner.dataset.tab:tabs[0].dataset.tab);
+if(wanted&&!tabs.some(t=>t.dataset.tab===wanted)){
+  const target=document.getElementById(wanted);
+  if(target) target.scrollIntoView({block:'start'});
+}
+spy();
+</script>
+</body>
+</html>

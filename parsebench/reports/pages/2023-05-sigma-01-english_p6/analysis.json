@@ -1,0 +1,382 @@
+{
+  "stem": "2023-05-sigma-01-english_p6",
+  "document": "2023-05-sigma-01-english",
+  "tags": "need_estimate",
+  "page_note": "这是Swiss Re Institute sigma 1/2023第6页，正文讨论2022年对流风暴、洪水、冬季风暴与干旱损失，中部为Figure 2——左侧为按灾种堆叠的水平条形（USD十亿），右侧为2022年损失高于各期平均值的百分比条形。",
+  "figures": [
+    {
+      "id": "f1",
+      "heading": {
+        "figure_number": "Figure 2",
+        "title": "Global insured losses from natural catastrophes in 2022 by category, in USD billion at 2022 prices",
+        "subtitle": "",
+        "unit_text": "in USD billion at 2022 prices",
+        "placement": "above"
+      },
+      "type": "compound",
+      "type_other": "",
+      "orientation": "horizontal",
+      "panels": 2,
+      "panel_names": [],
+      "series": 9,
+      "series_names": [
+        "Earthquakes",
+        "Tropical cyclones",
+        "Floods",
+        "Severe convective storms",
+        "Wildfires",
+        "European winter storms",
+        "Other secondary perils",
+        "Droughts",
+        "2022 insured loss over previous year averages"
+      ],
+      "categories": 5,
+      "category_names": [
+        "30-year average (1992−2021)",
+        "15-year average (2007−2021)",
+        "10-year average (2012−2021)",
+        "5-year average (2017−2021)",
+        "2022"
+      ],
+      "marks": 42,
+      "values_printed": "some",
+      "value_axis_ticks": "0, 20, 40, 60, 80, 100, 120, 140",
+      "source_line": "Source: Swiss Re Institute"
+    }
+  ],
+  "components": [
+    {
+      "key": "stacked_bar",
+      "figure_id": "f1",
+      "evidence": "each row is one bar built of coloured peril segments whose total length is the loss"
+    },
+    {
+      "key": "horizontal_bars",
+      "figure_id": "f1",
+      "evidence": "category labels '30-year average (1992−2021)' ... '2022' sit on the y axis, bars grow right"
+    },
+    {
+      "key": "vgrid_only",
+      "figure_id": "f1",
+      "evidence": "vertical rules at 0, 20, 40 ... 140 cross the rows; no horizontal grid lines"
+    },
+    {
+      "key": "legend_below_plot",
+      "figure_id": "f1",
+      "evidence": "two legend rows 'Earthquakes ... Droughts' printed under the axis tick row"
+    },
+    {
+      "key": "shared_legend",
+      "figure_id": "f1",
+      "evidence": "one legend block below covers both the USD-billion stacks and '2022 insured loss over previous year averages'"
+    },
+    {
+      "key": "shared_axis",
+      "figure_id": "f1",
+      "evidence": "row labels drawn once at the left serve both the stacked panel and the purple percentage panel"
+    },
+    {
+      "key": "no_value_axis",
+      "figure_id": "f1",
+      "evidence": "the purple bars on the right have no ticks or baseline numbers, only 115%, 62%, 54%, 14%"
+    },
+    {
+      "key": "value_label_outside",
+      "figure_id": "f1",
+      "evidence": "'115%', '62%', '54%', '14%' printed to the right of each purple bar"
+    },
+    {
+      "key": "unit_in_axis_or_title",
+      "figure_id": "f1",
+      "evidence": "heading ends 'in USD billion at 2022 prices'; axis itself reads bare 0, 20 ... 140"
+    },
+    {
+      "key": "source_note_lines",
+      "figure_id": "f1",
+      "evidence": "'Source: Swiss Re Institute' in small print below the legend"
+    },
+    {
+      "key": "panel_background",
+      "figure_id": "f1",
+      "evidence": "the whole figure block, plot area included, sits on a pale blue tint"
+    },
+    {
+      "key": "heterogeneous_panel_types",
+      "figure_id": "f1",
+      "evidence": "left panel multi-segment USD stacks; right panel single percentage bars with printed labels, no axis"
+    }
+  ],
+  "new_components": [
+    {
+      "name": "companion_panel_different_unit",
+      "figure_id": "f1",
+      "evidence": "right panel bars are percentages ('115%') beside left panel USD billion stacks, one shared legend",
+      "why_it_matters": "同一图号下两套单位：读数前必须先判定某个数字属于USD十亿面板还是百分比面板，否则115与115%会混淆。"
+    },
+    {
+      "name": "panel_covers_subset_of_categories",
+      "figure_id": "f1",
+      "evidence": "the '2022' row has no purple bar; only the four average rows carry percentages",
+      "why_it_matters": "行标签在两面板间不是一一对应，表格若按行罗列会在2022行留空，需说明该空缺是设计而非缺数。"
+    },
+    {
+      "name": "period_range_in_category_label",
+      "figure_id": "f1",
+      "evidence": "row labels carry parenthetical ranges with an en dash: '30-year average (1992−2021)'",
+      "why_it_matters": "定位115%等值必须逐字复制含破折号的括号区间，字符替换会导致标签匹配失败。"
+    },
+    {
+      "name": "mixed_period_and_average_categories",
+      "figure_id": "f1",
+      "evidence": "axis mixes multi-year averages with a single year: '5-year average (2017−2021)' and '2022'",
+      "why_it_matters": "同一坐标轴上平均值与单年值并列，读某段长度时须先分清它是年度值还是均值。"
+    }
+  ],
+  "spot_checks": [
+    {
+      "value": "115%",
+      "figure_id": "f1",
+      "mark": "the purple bar on the 30-year average (1992−2021) row",
+      "printed_on_figure": true,
+      "addressing_keys": [
+        "30-year average (1992−2021)",
+        "2022 insured loss over previous year averages"
+      ]
+    },
+    {
+      "value": "62%",
+      "figure_id": "f1",
+      "mark": "the purple bar on the 15-year average (2007−2021) row",
+      "printed_on_figure": true,
+      "addressing_keys": [
+        "15-year average (2007−2021)",
+        "2022 insured loss over previous year averages"
+      ]
+    },
+    {
+      "value": "54%",
+      "figure_id": "f1",
+      "mark": "the purple bar on the 10-year average (2012−2021) row",
+      "printed_on_figure": true,
+      "addressing_keys": [
+        "10-year average (2012−2021)",
+        "2022 insured loss over previous year averages"
+      ]
+    },
+    {
+      "value": "14%",
+      "figure_id": "f1",
+      "mark": "the purple bar on the 5-year average (2017−2021) row",
+      "printed_on_figure": true,
+      "addressing_keys": [
+        "5-year average (2017−2021)",
+        "2022 insured loss over previous year averages"
+      ]
+    },
+    {
+      "value": "61",
+      "figure_id": "f1",
+      "mark": "the long green Tropical cyclones segment in the 2022 row",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "2022",
+        "Tropical cyclones"
+      ]
+    },
+    {
+      "value": "33",
+      "figure_id": "f1",
+      "mark": "the blue Severe convective storms segment in the 2022 row (body text says 'At over USD 33 billion')",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "2022",
+        "Severe convective storms"
+      ]
+    },
+    {
+      "value": "15",
+      "figure_id": "f1",
+      "mark": "most likely the light-green Floods segment in the 2022 row, read as the gap between two segment edges",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "2022",
+        "Floods"
+      ]
+    },
+    {
+      "value": "45",
+      "figure_id": "f1",
+      "mark": "most likely the green Tropical cyclones segment in the 5-year average (2017−2021) row",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "5-year average (2017−2021)",
+        "Tropical cyclones"
+      ]
+    },
+    {
+      "value": "13",
+      "figure_id": "f1",
+      "mark": "most likely the blue Severe convective storms segment in the 30-year average (1992−2021) row",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "30-year average (1992−2021)",
+        "Severe convective storms"
+      ]
+    },
+    {
+      "value": "6",
+      "figure_id": "f1",
+      "mark": "most likely the dark-teal Earthquakes segment at the left end of the 30-year average (1992−2021) row",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "30-year average (1992−2021)",
+        "Earthquakes"
+      ]
+    }
+  ],
+  "hardest_step": 2,
+  "difficulty_notes": "轴刻度只有0, 20, 40 ... 140，20个单位约合68像素，即1像素≈0.3 USD十亿。除四个百分比外全部数值都不印在图上，且堆叠段必须靠两条边界之差读出：6要求±0.3、13要求±0.65，也就是1–2像素的边界判定精度，而彩色段之间几乎没有分隔线；15与13这类窄段（约20–45像素宽）在双边界误差叠加后极易超出5%容差。相比之下标签只需“行名+灾种名”两个键，行名与图例都逐字印在页面上，反而不是瓶颈。",
+  "unreadable": [],
+  "suggestions": [
+    {
+      "what_to_add": "新组件 companion_panel_different_unit（配套面板换单位）",
+      "where_to_change": "条件行中增加“同一图号内第二面板使用不同单位/无轴”的开关，并在记录字段里为每个面板单列 unit 与 panel_key",
+      "new_ablation_row": "单面板单单位 vs 复合面板双单位（USD十亿 + %）下的取值命中率对比",
+      "generality": "common",
+      "maps_to": "P2"
+    },
+    {
+      "what_to_add": "heading 五段拆分：figure_number=‘Figure 2’、标题行内嵌 unit_text=‘in USD billion at 2022 prices’",
+      "where_to_change": "样式字段 heading.placement=above 与 unit 位置（并入标题行而非独立副标题）",
+      "new_ablation_row": "单位在独立副标题 vs 单位并入标题末尾时，导出表格能否恢复标度",
+      "generality": "general",
+      "maps_to": "P7"
+    },
+    {
+      "what_to_add": "no_value_axis 配 value_label_outside（右侧百分比条只有外置标签）",
+      "where_to_change": "样式维度中的“值标签位置/是否绘制值轴”组合",
+      "new_ablation_row": "有轴无标签 vs 无轴仅外置标签两种面板的读数正确率",
+      "generality": "common",
+      "maps_to": "P6"
+    },
+    {
+      "what_to_add": "新组件 panel_covers_subset_of_categories（副面板行数少于主面板）",
+      "where_to_change": "记录字段允许某面板在部分类别上无标记，并在导出表中标注空缺",
+      "new_ablation_row": "面板类别完全对齐 vs 副面板缺一行时的行对位错误率",
+      "generality": "common",
+      "maps_to": "P2"
+    }
+  ],
+  "rules": [
+    {
+      "value": "115%",
+      "labels": [
+        "30-year average (1992–2021)",
+        "2022 insured loss over previous year averages"
+      ],
+      "tolerance": 0.01,
+      "max_diffs": 2,
+      "figure": "f1"
+    },
+    {
+      "value": "62%",
+      "labels": [
+        "15-year average (2007–2021)",
+        "2022 insured loss over previous year averages"
+      ],
+      "tolerance": 0.01,
+      "max_diffs": 2,
+      "figure": "f1"
+    },
+    {
+      "value": "54%",
+      "labels": [
+        "10-year average (2012–2021)",
+        "2022 insured loss over previous year averages"
+      ],
+      "tolerance": 0.01,
+      "max_diffs": 2,
+      "figure": "f1"
+    },
+    {
+      "value": "14%",
+      "labels": [
+        "5-year average (2017–2021)",
+        "2022 insured loss over previous year averages"
+      ],
+      "tolerance": 0.01,
+      "max_diffs": 2,
+      "figure": "f1"
+    },
+    {
+      "value": "61",
+      "labels": [
+        "2022",
+        "Tropical cyclones"
+      ],
+      "tolerance": 0.1,
+      "max_diffs": 2,
+      "figure": "f1"
+    },
+    {
+      "value": "33",
+      "labels": [
+        "2022",
+        "Severe convective storms"
+      ],
+      "tolerance": 0.1,
+      "max_diffs": 2,
+      "figure": "f1"
+    },
+    {
+      "value": "15",
+      "labels": [
+        "2022",
+        "Other secondary perils"
+      ],
+      "tolerance": 0.2,
+      "max_diffs": 2,
+      "figure": "f1"
+    },
+    {
+      "value": "45",
+      "labels": [
+        "5-year average (2017–2021)",
+        "Tropical cyclones"
+      ],
+      "tolerance": 0.1,
+      "max_diffs": 2,
+      "figure": "f1"
+    },
+    {
+      "value": "13",
+      "labels": [
+        "10-year average (2012–2021)",
+        "Floods"
+      ],
+      "tolerance": 0.2,
+      "max_diffs": 2,
+      "figure": "f1"
+    },
+    {
+      "value": "6",
+      "labels": [
+        "2022",
+        "Droughts"
+      ],
+      "tolerance": 0.2,
+      "max_diffs": 2,
+      "figure": "f1"
+    }
+  ],
+  "crosscheck": [
+    {
+      "code": "addressing_keys_wrong",
+      "detail": "3 of 10 predicted key sets miss a rule label: 15, 13, 6"
+    },
+    {
+      "code": "panel_names_count_mismatch",
+      "detail": "f1: panels=2, 0 names"
+    }
+  ]
+}

@@ -1,0 +1,228 @@
+{
+  "stem": "(Web_version)_E-Government_Survey_2024_1392024_p62",
+  "document": "(Web_version)_E-Government_Survey_2024_1392024",
+  "tags": "untagged",
+  "page_note": "该页为报告第37页，正文讨论各EGDI组国家数量变化，中部为唯一一幅图 Figure 2.2 的四系列纵向堆叠柱状图（2014–2024，每段标注",
+  "figures": [
+    {
+      "id": "f1",
+      "heading": {
+        "figure_number": "Figure 2.2",
+        "title": "Number and percentage of countries in each EGDI group, 2014 to 2024",
+        "subtitle": "",
+        "unit_text": "",
+        "placement": "above"
+      },
+      "type": "stacked_bar",
+      "type_other": "",
+      "orientation": "vertical",
+      "panels": 1,
+      "panel_names": [],
+      "series": 4,
+      "series_names": [
+        "Low EGDI",
+        "Middle EGDI",
+        "High EGDI",
+        "Very high EGDI"
+      ],
+      "categories": 6,
+      "category_names": [
+        "2014",
+        "2016",
+        "2018",
+        "2020",
+        "2022",
+        "2024"
+      ],
+      "marks": 24,
+      "values_printed": "all",
+      "value_axis_ticks": "0, 20, 40, 60, 80, 100, 120, 140, 160, 180, 200",
+      "source_line": "Sources: 2014-2024 United Nations E-Government Surveys."
+    }
+  ],
+  "components": [
+    {
+      "key": "stacked_bar",
+      "figure_id": "f1",
+      "evidence": "four coloured segments stacked in each year's bar, e.g. 2024 stacks 11, 44, 62, 76"
+    },
+    {
+      "key": "value_label_inside",
+      "figure_id": "f1",
+      "evidence": "`25 (13.0%)`, `74 (38.3%)` printed on top of each segment"
+    },
+    {
+      "key": "legend_below_plot",
+      "figure_id": "f1",
+      "evidence": "`Low EGDI  Middle EGDI  High EGDI  Very high EGDI` row under the 2014-2024 tick row"
+    },
+    {
+      "key": "source_note_lines",
+      "figure_id": "f1",
+      "evidence": "`Sources: 2014-2024 United Nations E-Government Surveys.` in small italic-led print below the plot box"
+    },
+    {
+      "key": "thin_segment_label",
+      "figure_id": "f1",
+      "evidence": "`8 (4.1%)` and `7 (3.6%)` sit in bottom segments only ~4 units tall, label taller than segment"
+    },
+    {
+      "key": "unit_in_axis_or_title",
+      "figure_id": "f1",
+      "evidence": "axis reads 0...200 bare; only the title says `Number and percentage of countries`"
+    }
+  ],
+  "new_components": [
+    {
+      "name": "count_and_share_in_one_label",
+      "figure_id": "f1",
+      "evidence": "every segment label pairs count and percent: `62 (32.1%)`, `44 (22.8%)`",
+      "why_it_matters": "一个标签同时承载两个量（国家数与占比），取值时必须决定抽取哪一个，且括号内百分比与柱高无关，不能按坐标轴校验"
+    },
+    {
+      "name": "duplicate_label_text_across_categories",
+      "figure_id": "f1",
+      "evidence": "`73 (37.8%)` appears in both 2018 and 2022; `62 (32.1%)` in 2014 and 2024",
+      "why_it_matters": "同一字符串在图上出现两次，只搜数值无法定位，必须同时用年份和系列名两个键才能唯一指向某个段"
+    }
+  ],
+  "spot_checks": [
+    {
+      "value": "25 (13.0%)",
+      "figure_id": "f1",
+      "mark": "the 2014 Very high EGDI top segment",
+      "printed_on_figure": true,
+      "addressing_keys": [
+        "2014",
+        "Very high EGDI"
+      ]
+    },
+    {
+      "value": "74 (38.3%)",
+      "figure_id": "f1",
+      "mark": "the 2014 Middle EGDI segment",
+      "printed_on_figure": true,
+      "addressing_keys": [
+        "2014",
+        "Middle EGDI"
+      ]
+    },
+    {
+      "value": "73 (37.8%)",
+      "figure_id": "f1",
+      "mark": "ambiguous: the same text labels both the 2018 High EGDI segment and the 2022 High EGDI segment",
+      "printed_on_figure": true,
+      "addressing_keys": [
+        "2018",
+        "2022",
+        "High EGDI"
+      ]
+    },
+    {
+      "value": "76 (39.4%)",
+      "figure_id": "f1",
+      "mark": "the 2024 Very high EGDI top segment",
+      "printed_on_figure": true,
+      "addressing_keys": [
+        "2024",
+        "Very high EGDI"
+      ]
+    },
+    {
+      "value": "7 (3.6%)",
+      "figure_id": "f1",
+      "mark": "the 2022 Low EGDI bottom segment",
+      "printed_on_figure": true,
+      "addressing_keys": [
+        "2022",
+        "Low EGDI"
+      ]
+    }
+  ],
+  "hardest_step": 3,
+  "difficulty_notes": "读数不构成障碍：24个段全部印有`74 (38.3%)`这类标签，无需按20一格的刻度估读。真正卡住的是定位键：`73 (37.8%)`在2018与2022各出现一次，`62 (32.1%)`在2014与2024各出现一次，`32 (16.6%)`在2014与2016重复，因此任一行必须同时携带年份（六个之一）与EGDI组名（Low/Middle/High/Very high）两个键，缺一即无法与另一处同文本的段区分；而图例在绘图区下方、年份在x轴上，解析器若把标签展平成一列数字，键就丢了。",
+  "unreadable": [],
+  "suggestions": [
+    {
+      "what_to_add": "新组件 count_and_share_in_one_label（标签内同时含计数与百分比）",
+      "where_to_change": "样式字段中的 value_label 格式项，增加“单标签双量”模板如 `{value} ({share}%)`",
+      "new_ablation_row": "标签为单一数值 vs 标签为“计数(占比%)”复合串时，数值抽取准确率对比",
+      "generality": "common",
+      "maps_to": "P6"
+    },
+    {
+      "what_to_add": "新组件 duplicate_label_text_across_categories（同一标签文本跨类别重复）",
+      "where_to_change": "记录字段：生成数据时允许重复值，并要求评分行同时给出 category_key 与 series_key",
+      "new_ablation_row": "表内存在重复数值 vs 全部数值唯一时，定位所需键数（1键 vs 2键）的命中率对比",
+      "generality": "general",
+      "maps_to": "P2"
+    },
+    {
+      "what_to_add": "unit_in_axis_or_title（0–200 裸刻度，量纲只在标题“Number and percentage of countries”里）",
+      "where_to_change": "标题字段拆分：figure_number / title / subtitle / unit 及 placement=above",
+      "new_ablation_row": "量纲写在坐标轴 vs 只写在标题时，导出表格是否保留量纲信息",
+      "generality": "general",
+      "maps_to": "P7"
+    },
+    {
+      "what_to_add": "thin_segment_label（`7 (3.6%)`挤在约4单位高的薄段中）",
+      "where_to_change": "样式条件行：堆叠段高度低于标签行高时的标签避让策略（内置/外移/引线）",
+      "new_ablation_row": "薄段标签内置 vs 外移时，该段数值被正确归属到对应系列的比例",
+      "generality": "common",
+      "maps_to": "P6"
+    }
+  ],
+  "rules": [
+    {
+      "value": "25 (13.0%)",
+      "labels": [
+        "Very high EGDI",
+        "2014"
+      ],
+      "tolerance": 0.01,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "74 (38.3%)",
+      "labels": [
+        "Middle EGDI",
+        "2014"
+      ],
+      "tolerance": 0.01,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "73 (37.8%)",
+      "labels": [
+        "High EGDI",
+        "2018"
+      ],
+      "tolerance": 0.01,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "76 (39.4%)",
+      "labels": [
+        "Very high EGDI",
+        "2024"
+      ],
+      "tolerance": 0.01,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "7 (3.6%)",
+      "labels": [
+        "Low EGDI",
+        "2022"
+      ],
+      "tolerance": 0.01,
+      "max_diffs": 0,
+      "figure": "f1"
+    }
+  ],
+  "crosscheck": []
+}

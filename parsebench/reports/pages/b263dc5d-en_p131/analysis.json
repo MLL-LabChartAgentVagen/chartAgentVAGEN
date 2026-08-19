@@ -1,0 +1,431 @@
+{
+  "stem": "b263dc5d-en_p131",
+  "document": "b263dc5d-en",
+  "tags": "3d_chart+need_estimate",
+  "page_note": "该页为OECD报告第129页，含一幅编号图3.15，用两个上下堆叠的面板（本土出生/外国出生成人）以柱形加菱形标记展示25个国家两轮周期间读写能力平均分差（含调整与未调整值）。",
+  "figures": [
+    {
+      "id": "f1",
+      "heading": {
+        "figure_number": "Figure 3.15.",
+        "title": "Change in literacy proficiency between cycles, by immigrant background",
+        "subtitle": "Adjusted and unadjusted difference in mean literacy scores between cycles (Cycle 2 minus Cycle 1)",
+        "unit_text": "Score-point difference",
+        "placement": "above"
+      },
+      "type": "bar",
+      "type_other": "",
+      "orientation": "vertical",
+      "panels": 2,
+      "panel_names": [
+        "Native-born adults, native-born parents",
+        "Foreign-born adults, foreign-born parents"
+      ],
+      "series": 2,
+      "series_names": [
+        "Unadjusted",
+        "Adjusted"
+      ],
+      "categories": 25,
+      "category_names": [
+        "Finland",
+        "Denmark",
+        "Sweden",
+        "Canada",
+        "Estonia",
+        "Italy",
+        "Norway",
+        "England (UK)",
+        "Czechia",
+        "Spain",
+        "Ireland",
+        "Netherlands"
+      ],
+      "marks": 100,
+      "values_printed": "none",
+      "value_axis_ticks": "30, 20, 10, 0, -10, -20, -30, -40",
+      "source_line": "Source: OECD (2018[4]; 2015[5]; 2012[6]), Survey of Adult Skills (PIAAC) databases, http://www.oecd.org/skills/piaac/publicdataandanalysis/ (accessed on 23 September 2024); Table A.3.14 (L) in Annex A."
+    }
+  ],
+  "components": [
+    {
+      "key": "mixed_marks",
+      "figure_id": "f1",
+      "evidence": "diamond markers for `Adjusted` overlaid on the `Unadjusted` bars in both panels"
+    },
+    {
+      "key": "negative_values",
+      "figure_id": "f1",
+      "evidence": "ticks run 30 down to -40; most bars hang below the 0 line in both panels"
+    },
+    {
+      "key": "reference_line",
+      "figure_id": "f1",
+      "evidence": "a thick horizontal rule at 0 in each panel from which bars grow up and down"
+    },
+    {
+      "key": "color_encodes_extra_attribute",
+      "figure_id": "f1",
+      "evidence": "`Darker colours denote differences that are statistically significant at the 5% level.`"
+    },
+    {
+      "key": "shaded_band",
+      "figure_id": "f1",
+      "evidence": "beige vertical bands between Korea and Lithuania and between New Zealand and Hungary"
+    },
+    {
+      "key": "two_level_x_ticks",
+      "figure_id": "f1",
+      "evidence": "grey banner `Round, Cycle 1:` with segments `1`, `2`, `3` above the country tick labels"
+    },
+    {
+      "key": "rotated_x_ticks",
+      "figure_id": "f1",
+      "evidence": "country names set vertically, e.g. `Flemish Region (BE)`, `Slovak Republic`"
+    },
+    {
+      "key": "highlighted_category",
+      "figure_id": "f1",
+      "evidence": "`England (UK)` and `Flemish Region (BE)` tick labels printed in blue, others in black"
+    },
+    {
+      "key": "small_multiples_4",
+      "figure_id": "f1",
+      "evidence": "two stacked panels of the same bar-plus-diamond chart, same 25 countries"
+    },
+    {
+      "key": "shared_legend",
+      "figure_id": "f1",
+      "evidence": "single `Unadjusted` / `Adjusted` legend above both panels"
+    },
+    {
+      "key": "shared_axis",
+      "figure_id": "f1",
+      "evidence": "one set of country columns aligned through both panels, vertical separators continuous"
+    },
+    {
+      "key": "legend_above_plot",
+      "figure_id": "f1",
+      "evidence": "legend row sits between the subtitle and the `Round, Cycle 1:` banner"
+    },
+    {
+      "key": "panel_title_per_panel",
+      "figure_id": "f1",
+      "evidence": "dark blue filled boxes at the right read `Native-born adults, native-born parents` and `Foreign-born adults, foreign-born parents`"
+    },
+    {
+      "key": "axis_title_above_axis",
+      "figure_id": "f1",
+      "evidence": "`Score-point difference` printed above the top tick `30` at the left"
+    },
+    {
+      "key": "unit_in_axis_or_title",
+      "figure_id": "f1",
+      "evidence": "axis ticks are bare numbers 30...-40; scale word only in `Score-point difference`"
+    },
+    {
+      "key": "source_note_lines",
+      "figure_id": "f1",
+      "evidence": "`Note: Adults aged 16-65; ...` and `Source: OECD (2018[4]; ...` below the plot"
+    },
+    {
+      "key": "dense_marks_100plus",
+      "figure_id": "f1",
+      "evidence": "25 countries x 2 series x 2 panels = 100 drawn marks"
+    },
+    {
+      "key": "wrapped_category_labels",
+      "figure_id": "f1",
+      "evidence": "25 vertical country labels stacked along the axis, longest `Flemish Region (BE)`"
+    }
+  ],
+  "new_components": [
+    {
+      "name": "dual_glyph_legend_entry",
+      "figure_id": "f1",
+      "evidence": "each legend entry shows two glyphs: pale+dark square for `Unadjusted`, hollow+filled diamond for `Adjusted`",
+      "why_it_matters": "一个图例项对应两种填色，读值时必须把显著/不显著两种色调都归到同一系列，否则会误判为四个系列。"
+    },
+    {
+      "name": "category_labels_at_both_panel_edges",
+      "figure_id": "f1",
+      "evidence": "the 25 country names are printed vertically above the top panel and again below the bottom panel",
+      "why_it_matters": "同一类别轴标签出现两次，解析成表格时可能被拆成两组行头，需确认哪一组对应哪个面板。"
+    },
+    {
+      "name": "grouping_banner_row_label",
+      "figure_id": "f1",
+      "evidence": "`Round, Cycle 1:` label at the left of the grey banner naming its `1`/`2`/`3` segments",
+      "why_it_matters": "分组行本身带名称，定位一个国家的值时还需知道它属于第1/2/3轮，构成额外的键。"
+    },
+    {
+      "name": "sort_order_stated_in_note",
+      "figure_id": "f1",
+      "evidence": "`Countries and economies are ranked in descending order of the unadjusted change ... among foreign-born adults`",
+      "why_it_matters": "类别顺序由下面板的数值决定，读上面板时不能假设其自身单调，避免按位置推断数值。"
+    }
+  ],
+  "spot_checks": [
+    {
+      "value": "18",
+      "figure_id": "f1",
+      "mark": "the Finland Unadjusted bar in the top panel",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "Finland",
+        "Unadjusted",
+        "Native-born adults, native-born parents"
+      ]
+    },
+    {
+      "value": "-22",
+      "figure_id": "f1",
+      "mark": "the Korea Unadjusted bar in the top panel",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "Korea",
+        "Unadjusted",
+        "Native-born adults, native-born parents"
+      ]
+    },
+    {
+      "value": "-28",
+      "figure_id": "f1",
+      "mark": "the Lithuania Unadjusted bar in the top panel (deepest bar there)",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "Lithuania",
+        "Unadjusted",
+        "Native-born adults, native-born parents"
+      ]
+    },
+    {
+      "value": "18",
+      "figure_id": "f1",
+      "mark": "the Finland Adjusted diamond in the top panel",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "Finland",
+        "Adjusted",
+        "Native-born adults, native-born parents"
+      ]
+    },
+    {
+      "value": "18",
+      "figure_id": "f1",
+      "mark": "the Denmark Adjusted diamond in the bottom panel, sitting above its bar",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "Denmark",
+        "Adjusted",
+        "Foreign-born adults, foreign-born parents"
+      ]
+    },
+    {
+      "value": "4",
+      "figure_id": "f1",
+      "mark": "the Singapore Adjusted diamond in the top panel, the only marker clearly above 0 in the Round 2 block",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "Singapore",
+        "Adjusted",
+        "Native-born adults, native-born parents"
+      ]
+    },
+    {
+      "value": "-21",
+      "figure_id": "f1",
+      "mark": "the Slovak Republic Unadjusted bar in the top panel",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "Slovak Republic",
+        "Unadjusted",
+        "Native-born adults, native-born parents"
+      ]
+    },
+    {
+      "value": "-33",
+      "figure_id": "f1",
+      "mark": "the Korea Unadjusted bar in the bottom panel, the deepest bar on the figure",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "Korea",
+        "Unadjusted",
+        "Foreign-born adults, foreign-born parents"
+      ]
+    },
+    {
+      "value": "-30",
+      "figure_id": "f1",
+      "mark": "the New Zealand Unadjusted bar in the bottom panel",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "New Zealand",
+        "Unadjusted",
+        "Foreign-born adults, foreign-born parents"
+      ]
+    },
+    {
+      "value": "-25",
+      "figure_id": "f1",
+      "mark": "the Hungary Unadjusted bar in the bottom panel (Round 3 block)",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "Hungary",
+        "Unadjusted",
+        "Foreign-born adults, foreign-born parents"
+      ]
+    }
+  ],
+  "hardest_step": 2,
+  "difficulty_notes": "两个面板的刻度都是 30,20,10,0,-10,-20,-30,-40，10 分一格在 150 dpi 下只有约 28 像素；要把 4 这样的小值读到 5% 即 ±0.2 分，相当于 0.6 像素，纯像素读值不可能，-21 与 -22 之间的差别也只有 2.8 像素，而本图 100 个标记全部无数字标注（values_printed=none）。相比之下第 3 步虽然每个值需要国家＋Unadjusted/Adjusted＋面板名三个键（外加显著性色调与 Round 分组），仍可由表头承载，因此读值是真正的瓶颈。",
+  "unreadable": [],
+  "suggestions": [
+    {
+      "what_to_add": "panel_title_per_panel 与面板名进入行键（此处为右侧深蓝填充框内的 `Native-born adults, native-born parents` / `Foreign-born adults, foreign-born parents`）",
+      "where_to_change": "记录字段增加 panel_key，样式字段允许面板名放在绘图区侧边填充色块中",
+      "new_ablation_row": "有/无 panel_key 时，上下两面板同一国家同名系列值的错配率对比",
+      "generality": "common",
+      "maps_to": "P2"
+    },
+    {
+      "what_to_add": "color_encodes_extra_attribute（浅/深两种填色表示 5% 显著性）与 dual_glyph_legend_entry",
+      "where_to_change": "条件行中系列定义允许一个图例项绑定两种填色；样式字段加入 significance_shading",
+      "new_ablation_row": "图例项含双glyph时，系列数被误判为 4 而非 2 的比例",
+      "generality": "common",
+      "maps_to": "P6"
+    },
+    {
+      "what_to_add": "axis_title_above_axis + unit_in_axis_or_title（`Score-point difference` 置于顶刻度 30 上方）",
+      "where_to_change": "标题块字段拆分：number/title/subtitle/unit 与 unit 位置（above_axis）",
+      "new_ablation_row": "单位置于轴顶上方 vs 置于副标题时，导出表格能否恢复“分数点差”量纲",
+      "generality": "general",
+      "maps_to": "P7"
+    },
+    {
+      "what_to_add": "dense_marks_100plus（25 类别×2 系列×2 面板=100 个标记，无数值标签）",
+      "where_to_change": "密度上限参数与 readable 的按标记精度定义",
+      "new_ablation_row": "每格 10 单位、无数值标签时，各标记可达精度随类别数 25→50 的变化曲线",
+      "generality": "general",
+      "maps_to": "P1"
+    }
+  ],
+  "rules": [
+    {
+      "value": "18",
+      "labels": [
+        "Native-born adults, native-born parents",
+        "Unadjusted",
+        "Finland"
+      ],
+      "tolerance": 0.1,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "-22",
+      "labels": [
+        "Native-born adults, native-born parents",
+        "Unadjusted",
+        "Korea"
+      ],
+      "tolerance": 0.1,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "-28",
+      "labels": [
+        "Native-born adults, native-born parents",
+        "Unadjusted",
+        "Lithuania"
+      ],
+      "tolerance": 0.1,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "18",
+      "labels": [
+        "Foreign-born adults, foreign-born parents",
+        "Unadjusted",
+        "Finland"
+      ],
+      "tolerance": 0.1,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "18",
+      "labels": [
+        "Foreign-born adults, foreign-born parents",
+        "Adjusted",
+        "Denmark"
+      ],
+      "tolerance": 0.1,
+      "max_diffs": 2,
+      "figure": "f1"
+    },
+    {
+      "value": "4",
+      "labels": [
+        "Foreign-born adults, foreign-born parents",
+        "Unadjusted",
+        "Canada"
+      ],
+      "tolerance": 0.1,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "-21",
+      "labels": [
+        "Foreign-born adults, foreign-born parents",
+        "Unadjusted",
+        "Germany"
+      ],
+      "tolerance": 0.1,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "-33",
+      "labels": [
+        "Foreign-born adults, foreign-born parents",
+        "Unadjusted",
+        "Korea"
+      ],
+      "tolerance": 0.1,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "-30",
+      "labels": [
+        "Foreign-born adults, foreign-born parents",
+        "Unadjusted",
+        "New Zealand"
+      ],
+      "tolerance": 0.1,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "-25",
+      "labels": [
+        "Foreign-born adults, foreign-born parents",
+        "Unadjusted",
+        "Hungary"
+      ],
+      "tolerance": 0.1,
+      "max_diffs": 0,
+      "figure": "f1"
+    }
+  ],
+  "crosscheck": [
+    {
+      "code": "addressing_keys_wrong",
+      "detail": "3 of 10 predicted key sets miss a rule label: 18, 4, -21"
+    }
+  ]
+}

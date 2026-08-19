@@ -1,0 +1,290 @@
+{
+  "stem": "World_Inequality_Report_2026_p18",
+  "document": "World_Inequality_Report_2026",
+  "tags": "need_estimate",
+  "page_note": "本页为报告执行摘要第18页，顶部是编号为 Figure 6 的双面板柱状图（左为按性别的工作小时堆叠柱、右为女性时薪占男性比例），下方为解释与注释文字，页面下半是两栏正文。",
+  "figures": [
+    {
+      "id": "f1",
+      "heading": {
+        "figure_number": "Figure 6.",
+        "title": "After including domestic labor, women earn only 32% of men's hourly income",
+        "subtitle": "Gender gap including domestic labor hours, 2020–2025",
+        "unit_text": "",
+        "placement": "above"
+      },
+      "type": "compound",
+      "type_other": "",
+      "orientation": "vertical",
+      "panels": 2,
+      "panel_names": [
+        "Hours worked per week",
+        "Women's hourly income (% of men's)"
+      ],
+      "series": 4,
+      "series_names": [
+        "Domestic labor",
+        "Economic labor",
+        "Excluding domestic labor",
+        "Including domestic labor"
+      ],
+      "categories": 2,
+      "category_names": [
+        "Women",
+        "Men",
+        "Conventional",
+        "Real"
+      ],
+      "marks": 6,
+      "values_printed": "some",
+      "value_axis_ticks": "left panel: 0, 10, 20, 30, 40, 50, 60, 70; right panel: 0%, 10%, 20%, 30%, 40%, 50%, 60%, 70%",
+      "source_line": "Sources and series: Andreescu et al. (2025)."
+    }
+  ],
+  "components": [
+    {
+      "key": "stacked_bar",
+      "figure_id": "f1",
+      "evidence": "left panel bars split into a solid lower part and a dotted upper part, totals 53 and 43"
+    },
+    {
+      "key": "heterogeneous_panel_types",
+      "figure_id": "f1",
+      "evidence": "left panel stacked bars of hours, right panel plain single bars of percentages"
+    },
+    {
+      "key": "per_panel_axis_range",
+      "figure_id": "f1",
+      "evidence": "left axis 0–70 hours, right axis 0%–70%, separate axes per panel"
+    },
+    {
+      "key": "per_panel_legend",
+      "figure_id": "f1",
+      "evidence": "'Domestic labor / Economic labor' for left panel, 'Excluding / Including domestic labor' for right"
+    },
+    {
+      "key": "legend_below_plot",
+      "figure_id": "f1",
+      "evidence": "both legend rows sit under the plots, below the 'Women / Men' and 'Conventional / Real' ticks"
+    },
+    {
+      "key": "panel_title_per_panel",
+      "figure_id": "f1",
+      "evidence": "'Hours worked per week' and \"Women's hourly income (% of men's)\" set above each panel"
+    },
+    {
+      "key": "rotated_axis_title",
+      "figure_id": "f1",
+      "evidence": "'Average labor time (hours per week) (15–to–64–year–old) (2020–2025)' set vertically along left axis"
+    },
+    {
+      "key": "unit_in_axis_or_title",
+      "figure_id": "f1",
+      "evidence": "bare ticks 0–70 explained only by rotated title '(hours per week)'; right panel '(% male hourly income)'"
+    },
+    {
+      "key": "value_label_outside",
+      "figure_id": "f1",
+      "evidence": "'53' and '43' printed above the bar tops; '61%' and '32%' above the right-panel bars"
+    },
+    {
+      "key": "hgrid_only",
+      "figure_id": "f1",
+      "evidence": "dotted horizontal rules at each 10-unit tick across both panels, no vertical rules"
+    },
+    {
+      "key": "source_note_lines",
+      "figure_id": "f1",
+      "evidence": "'Interpretation.', 'Notes.' and 'Sources and series: Andreescu et al. (2025).' printed under the figure"
+    },
+    {
+      "key": "color_encodes_extra_attribute",
+      "figure_id": "f1",
+      "evidence": "left bars green for Women, red for Men, while series identity is carried by dotted vs solid fill"
+    }
+  ],
+  "new_components": [
+    {
+      "name": "pattern_fill_series",
+      "figure_id": "f1",
+      "evidence": "legend swatches: dotted-hatch box for 'Domestic labor', empty white box for 'Economic labor'",
+      "why_it_matters": "同一根柱的两段靠点状填充与空白填充区分，而颜色只表示性别，读某一段的数值必须先按填充纹理判断它属于哪个系列。"
+    },
+    {
+      "name": "segment_boundary_only_readable",
+      "figure_id": "f1",
+      "evidence": "only stack totals 53 and 43 are printed; the internal split must be read at the dotted boundary line",
+      "why_it_matters": "堆叠段的数值只能通过段边界与0–70刻度比对推得，误差直接受10单位刻度间距限制。"
+    },
+    {
+      "name": "category_is_series",
+      "figure_id": "f1",
+      "evidence": "right panel: 'Conventional' bar is blue = 'Excluding domestic labor', 'Real' = 'Including domestic labor'",
+      "why_it_matters": "右面板每个类别只有一根柱且与图例一一对应，定位一个值时类别名与系列名冗余，表格行可能只保留其中一个。"
+    }
+  ],
+  "spot_checks": [
+    {
+      "value": "20",
+      "figure_id": "f1",
+      "mark": "the Women bar's lower solid 'Economic labor' segment in the left panel",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "Hours worked per week",
+        "Women",
+        "Economic labor"
+      ]
+    },
+    {
+      "value": "33",
+      "figure_id": "f1",
+      "mark": "the Women bar's upper dotted 'Domestic labor' segment (53 minus the economic part)",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "Hours worked per week",
+        "Women",
+        "Domestic labor"
+      ]
+    },
+    {
+      "value": "33",
+      "figure_id": "f1",
+      "mark": "the Men bar's lower solid 'Economic labor' segment in the left panel",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "Hours worked per week",
+        "Men",
+        "Economic labor"
+      ]
+    },
+    {
+      "value": "10",
+      "figure_id": "f1",
+      "mark": "the Men bar's upper dotted 'Domestic labor' segment (43 minus the economic part)",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "Hours worked per week",
+        "Men",
+        "Domestic labor"
+      ]
+    },
+    {
+      "value": "61",
+      "figure_id": "f1",
+      "mark": "the 'Conventional' blue bar in the right panel, labelled 61%",
+      "printed_on_figure": true,
+      "addressing_keys": [
+        "Women's hourly income (% of men's)",
+        "Conventional",
+        "Excluding domestic labor"
+      ]
+    },
+    {
+      "value": "32",
+      "figure_id": "f1",
+      "mark": "the 'Real' orange bar in the right panel, labelled 32%",
+      "printed_on_figure": true,
+      "addressing_keys": [
+        "Women's hourly income (% of men's)",
+        "Real",
+        "Including domestic labor"
+      ]
+    }
+  ],
+  "hardest_step": 2,
+  "difficulty_notes": "六个目标值里只有 61% 和 32% 被印在图上，左面板四个堆叠段一个数字都没印：柱顶只标了 53 与 43。要得到 20、33、33、10 必须在 0,10,…,70 的刻度上量段边界，刻度间距10单位而 10 这个段 5% 容差只有 ±0.5 单位，约为一格的二十分之一；Men 柱的边界又与 30 到 40 之间的虚线网格错开，几乎无法在容差内读出。相比之下定位标签只需 3 个键（面板名+Women/Men+Domestic/Economic labor），面板标题以粗体形式存在，反而不是主要障碍。",
+  "unreadable": [],
+  "suggestions": [
+    {
+      "what_to_add": "per_panel_axis_range 与 panel_title_per_panel 的组合（面板维度进入行键）",
+      "where_to_change": "记录字段中为每个 mark 增加 panel_key，并要求面板标题逐面板输出为加粗行首",
+      "new_ablation_row": "有/无 panel_key 时，双面板不同单位（hours vs %）图的取值命中率对比",
+      "generality": "general",
+      "maps_to": "P2"
+    },
+    {
+      "what_to_add": "new_components 中的 pattern_fill_series（点状填充 vs 空白填充区分系列）",
+      "where_to_change": "样式条件行新增 fill_pattern 维度，与颜色编码解耦",
+      "new_ablation_row": "系列由纹理而非颜色区分时，堆叠段归属判定的准确率一行",
+      "generality": "common",
+      "maps_to": "P6"
+    },
+    {
+      "what_to_add": "segment_boundary_only_readable：只标堆叠总量、不标分段值",
+      "where_to_change": "value-label 放置样式字段增加 total_only 选项（总量印在柱顶，分段不印）",
+      "new_ablation_row": "分段值印出 vs 仅印总量两种条件下，堆叠段读数在5%容差内的达成率",
+      "generality": "common",
+      "maps_to": "P1"
+    },
+    {
+      "what_to_add": "标题五段切分（figure number / title / subtitle / 旋转轴标题里的单位）",
+      "where_to_change": "P7 的标题记录字段，允许单位只存在于旋转的纵轴标题而非标题行",
+      "new_ablation_row": "单位位于旋转轴标题 vs 位于副标题时，导出表能否携带正确单位一行",
+      "generality": "general",
+      "maps_to": "P7"
+    }
+  ],
+  "rules": [
+    {
+      "value": "20",
+      "labels": [
+        "Women",
+        "Economic labor"
+      ],
+      "tolerance": 0.1,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "33",
+      "labels": [
+        "Women",
+        "Domestic labor"
+      ],
+      "tolerance": 0.1,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "33",
+      "labels": [
+        "Men",
+        "Economic labor"
+      ],
+      "tolerance": 0.1,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "10",
+      "labels": [
+        "Men",
+        "Domestic labor"
+      ],
+      "tolerance": 0.1,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "61",
+      "labels": [
+        "Conventional",
+        "Excluding domestic labor"
+      ],
+      "tolerance": 0.01,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "32",
+      "labels": [
+        "Real",
+        "Including domestic labor"
+      ],
+      "tolerance": 0.01,
+      "max_diffs": 0,
+      "figure": "f1"
+    }
+  ],
+  "crosscheck": []
+}

@@ -1,0 +1,325 @@
+{
+  "stem": "timevalue_p9",
+  "document": "timevalue",
+  "tags": "need_estimate",
+  "page_note": "这是一张幻灯片式报告页，标题为\"Holding Period and Value\"，页面主体是一幅三条折线的图，比较$100投资在不同持有年限下的未来价值（股票、长期国债、短期国库券）。",
+  "figures": [
+    {
+      "id": "f1",
+      "heading": {
+        "figure_number": "",
+        "title": "Holding Period and Value",
+        "subtitle": "",
+        "unit_text": "Future value of $100 investment",
+        "placement": "above"
+      },
+      "type": "line",
+      "type_other": "",
+      "orientation": "vertical",
+      "panels": 1,
+      "panel_names": [],
+      "series": 3,
+      "series_names": [
+        "Stocks ($)",
+        "Treasury Bonds ($)",
+        "Treasury Bills ($)"
+      ],
+      "categories": 6,
+      "category_names": [
+        "1",
+        "5",
+        "10",
+        "20",
+        "30",
+        "40"
+      ],
+      "marks": 18,
+      "values_printed": "none",
+      "value_axis_ticks": "0, 500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500",
+      "source_line": ""
+    }
+  ],
+  "components": [
+    {
+      "key": "legend_beside_plot",
+      "figure_id": "f1",
+      "evidence": "\"Stocks ($)\", \"Treasury Bonds ($)\", \"Treasury Bills ($)\" stacked in a column at the right of the plot"
+    },
+    {
+      "key": "hgrid_only",
+      "figure_id": "f1",
+      "evidence": "horizontal rules at 500-intervals across the panel, no vertical rules"
+    },
+    {
+      "key": "unit_in_series_name",
+      "figure_id": "f1",
+      "evidence": "legend entries carry \"($)\": \"Stocks ($)\", \"Treasury Bonds ($)\", \"Treasury Bills ($)\""
+    },
+    {
+      "key": "unit_in_axis_or_title",
+      "figure_id": "f1",
+      "evidence": "y axis reads bare 0..4500; scale word only in axis title \"Future value of $100 investment\""
+    },
+    {
+      "key": "rotated_axis_title",
+      "figure_id": "f1",
+      "evidence": "\"Future value of $100 investment\" set vertically alongside the left value axis"
+    }
+  ],
+  "new_components": [
+    {
+      "name": "category_axis_title_below_plot",
+      "figure_id": "f1",
+      "evidence": "\"Holding period (in years)\" printed in bold under the x tick row",
+      "why_it_matters": "类别轴的含义（年限）只写在图下方一行，表格若不带这行就无法说明列头\"1,5,10...\"是年数。"
+    },
+    {
+      "name": "numeric_categorical_x_axis",
+      "figure_id": "f1",
+      "evidence": "x ticks 1, 5, 10, 20, 30, 40 drawn at equal spacing though intervals differ",
+      "why_it_matters": "横轴数值间距不等但等距绘制，不能按线性内插定位点，只能逐个类别读取。"
+    },
+    {
+      "name": "marker_shape_per_series",
+      "figure_id": "f1",
+      "evidence": "square markers on Stocks, star markers on Treasury Bonds, x markers on Treasury Bills, repeated in legend",
+      "why_it_matters": "三线在低值区几乎重叠，只能靠标记形状区分是哪条序列的点。"
+    }
+  ],
+  "spot_checks": [
+    {
+      "value": "3850",
+      "figure_id": "f1",
+      "mark": "the Stocks ($) point at holding period 40",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "Stocks ($)",
+        "40",
+        "Holding period (in years)",
+        "Future value of $100 investment"
+      ]
+    },
+    {
+      "value": "1550",
+      "figure_id": "f1",
+      "mark": "the Stocks ($) point at holding period 30",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "Stocks ($)",
+        "30",
+        "Holding period (in years)",
+        "Future value of $100 investment"
+      ]
+    },
+    {
+      "value": "620",
+      "figure_id": "f1",
+      "mark": "the Stocks ($) point at holding period 20",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "Stocks ($)",
+        "20",
+        "Holding period (in years)",
+        "Future value of $100 investment"
+      ]
+    },
+    {
+      "value": "240",
+      "figure_id": "f1",
+      "mark": "the Stocks ($) point at holding period 10, just above the baseline",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "Stocks ($)",
+        "10",
+        "Holding period (in years)",
+        "Future value of $100 investment"
+      ]
+    },
+    {
+      "value": "700",
+      "figure_id": "f1",
+      "mark": "the Treasury Bonds ($) point at holding period 40",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "Treasury Bonds ($)",
+        "40",
+        "Holding period (in years)",
+        "Future value of $100 investment"
+      ]
+    },
+    {
+      "value": "420",
+      "figure_id": "f1",
+      "mark": "the Treasury Bonds ($) point at holding period 30",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "Treasury Bonds ($)",
+        "30",
+        "Holding period (in years)",
+        "Future value of $100 investment"
+      ]
+    },
+    {
+      "value": "250",
+      "figure_id": "f1",
+      "mark": "the Treasury Bonds ($) point at holding period 20 (could equally be the Treasury Bills ($) point at 30; the two sit within one gridline gap)",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "Treasury Bonds ($)",
+        "20",
+        "Holding period (in years)",
+        "Future value of $100 investment"
+      ]
+    },
+    {
+      "value": "420",
+      "figure_id": "f1",
+      "mark": "the Treasury Bills ($) point at holding period 40",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "Treasury Bills ($)",
+        "40",
+        "Holding period (in years)",
+        "Future value of $100 investment"
+      ]
+    },
+    {
+      "value": "280",
+      "figure_id": "f1",
+      "mark": "the Treasury Bills ($) point at holding period 30",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "Treasury Bills ($)",
+        "30",
+        "Holding period (in years)",
+        "Future value of $100 investment"
+      ]
+    }
+  ],
+  "hardest_step": 2,
+  "difficulty_notes": "最大的障碍是读数精度：值轴每500一格（约52像素），而待核的九个值里有六个小于700，全挤在最低那一格半之内。240的5%容差只有±12，相当于1.2像素；250与280之间只差3像素，三条线在1–20年区间几乎重叠，连区分是Treasury Bonds ($)还是Treasury Bills ($)都要靠标记形状。图上没有任何数值标签，也没有Source行，全部数字必须靠像素对齐横向网格线推算，这比标签寻址（每个值只需序列名+年限两个键）困难得多。",
+  "unreadable": [],
+  "suggestions": [
+    {
+      "what_to_add": "unit_in_axis_or_title 与旋转轴标题作为独立的\"标题拆分\"字段（图号为空、标题来自页眉、单位来自轴标题）",
+      "where_to_change": "记录层的heading字段：figure_number/title/subtitle/unit_text/placement，允许figure_number为空且title取自幻灯片标题",
+      "new_ablation_row": "新增一行：图无编号、单位只出现在旋转的纵轴标题中时，导出表格能否带出量纲",
+      "generality": "common",
+      "maps_to": "P7"
+    },
+    {
+      "what_to_add": "新组件 numeric_categorical_x_axis（1,5,10,20,30,40等距绘制）",
+      "where_to_change": "条件行中的类别轴生成器：允许数值型不等间距类别按等距摆放",
+      "new_ablation_row": "新增一行：不等间距数值类别轴与真线性时间轴，对定位单点读数误差的影响对比",
+      "generality": "common",
+      "maps_to": "new"
+    },
+    {
+      "what_to_add": "低值区多序列重叠时的可读精度（per-mark attainable precision）",
+      "where_to_change": "评分侧的readable判定：按每个标记与网格间距的比值给出可达精度，而非全图布尔门",
+      "new_ablation_row": "新增一行：标记值小于最小刻度间距一半时，5%容差下的命中率",
+      "generality": "general",
+      "maps_to": "P1"
+    },
+    {
+      "what_to_add": "新组件 marker_shape_per_series（方块/星形/叉形区分三条线）",
+      "where_to_change": "样式字段：line marker shape 作为序列身份编码的一个维度，与颜色并列",
+      "new_ablation_row": "新增一行：仅靠颜色区分序列 vs 颜色+标记形状区分，重叠线区域的序列归属正确率",
+      "generality": "general",
+      "maps_to": "P6"
+    }
+  ],
+  "rules": [
+    {
+      "value": "3850",
+      "labels": [
+        "40",
+        "Stocks ($)"
+      ],
+      "tolerance": 0.05,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "1550",
+      "labels": [
+        "30",
+        "Stocks ($)"
+      ],
+      "tolerance": 0.05,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "620",
+      "labels": [
+        "20",
+        "Stocks ($)"
+      ],
+      "tolerance": 0.05,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "240",
+      "labels": [
+        "10",
+        "Stocks ($)"
+      ],
+      "tolerance": 0.05,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "700",
+      "labels": [
+        "40",
+        "Treasury Bonds ($)"
+      ],
+      "tolerance": 0.1,
+      "max_diffs": 2,
+      "figure": "f1"
+    },
+    {
+      "value": "420",
+      "labels": [
+        "30",
+        "Treasury Bonds ($)"
+      ],
+      "tolerance": 0.05,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "250",
+      "labels": [
+        "20",
+        "Treasury Bonds ($)"
+      ],
+      "tolerance": 0.05,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "420",
+      "labels": [
+        "40",
+        "Treasury Bills ($)"
+      ],
+      "tolerance": 0.1,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "280",
+      "labels": [
+        "30",
+        "Treasury Bills ($)"
+      ],
+      "tolerance": 0.05,
+      "max_diffs": 0,
+      "figure": "f1"
+    }
+  ],
+  "crosscheck": []
+}

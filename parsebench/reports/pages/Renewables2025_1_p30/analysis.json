@@ -1,0 +1,386 @@
+{
+  "stem": "Renewables2025_1_p30",
+  "document": "Renewables2025_1",
+  "tags": "3d_chart+need_estimate",
+  "page_note": "本页为IEA《Renewables 2025》第30页正文，中部含一幅无编号图：五个欧洲国家2021-2024年居民电价（柱、左轴EUR/MWh）与净新增装机（折线、右轴GW）的组合图。",
+  "figures": [
+    {
+      "id": "f1",
+      "heading": {
+        "figure_number": "",
+        "title": "Residential sector retail electricity prices and annual capacity additions in selected European countries, 2021-2024",
+        "subtitle": "",
+        "unit_text": "EUR/MWh",
+        "placement": "above"
+      },
+      "type": "compound",
+      "type_other": "",
+      "orientation": "vertical",
+      "panels": 1,
+      "panel_names": [],
+      "series": 5,
+      "series_names": [
+        "2024",
+        "2023",
+        "2022",
+        "2021",
+        "Net additions (right axis)"
+      ],
+      "categories": 5,
+      "category_names": [
+        "Belgium",
+        "Germany",
+        "Italy",
+        "Netherlands",
+        "Spain"
+      ],
+      "marks": 40,
+      "values_printed": "none",
+      "value_axis_ticks": "0, 100, 200, 300, 400, 500, 600, 700, 800",
+      "source_line": ""
+    }
+  ],
+  "components": [
+    {
+      "key": "grouped_bar",
+      "figure_id": "f1",
+      "evidence": "four coloured bars (2021, 2022, 2023, 2024) side by side within each country slot"
+    },
+    {
+      "key": "dual_axis",
+      "figure_id": "f1",
+      "evidence": "left axis 'EUR/MWh' 0-800, right axis 'GW' 0.0-4.0 for 'Net additions (right axis)'"
+    },
+    {
+      "key": "mixed_marks",
+      "figure_id": "f1",
+      "evidence": "bars plus a black line with open circle markers in the same panel"
+    },
+    {
+      "key": "legend_below_plot",
+      "figure_id": "f1",
+      "evidence": "legend row '2024 2023 2022 2021 Net additions (right axis)' sits under the country axis"
+    },
+    {
+      "key": "rotated_axis_title",
+      "figure_id": "f1",
+      "evidence": "'EUR/MWh' set vertically at left, 'GW' set vertically at right"
+    },
+    {
+      "key": "unit_in_axis_or_title",
+      "figure_id": "f1",
+      "evidence": "bare ticks 0-800 and 0.0-4.0; scale only from 'EUR/MWh' and 'GW' axis titles"
+    },
+    {
+      "key": "unit_in_series_name",
+      "figure_id": "f1",
+      "evidence": "legend entry reads 'Net additions (right axis)' pointing to the GW axis"
+    },
+    {
+      "key": "hgrid_only",
+      "figure_id": "f1",
+      "evidence": "faint horizontal rules across the plot at 100-unit steps, no vertical rules"
+    },
+    {
+      "key": "two_level_x_ticks",
+      "figure_id": "f1",
+      "evidence": "country names under bracketed group separators spanning each set of four bars"
+    },
+    {
+      "key": "source_note_lines",
+      "figure_id": "f1",
+      "evidence": "'IEA. CC BY 4.0.' small print under the plot area"
+    }
+  ],
+  "new_components": [
+    {
+      "name": "line_series_break_between_groups",
+      "figure_id": "f1",
+      "evidence": "the net-additions line restarts within each country group, not connected across Belgium-Germany-Italy",
+      "why_it_matters": "折线是每国内部四年的独立段，读点必须先定国家再定年份，否则会跨国错配数值。"
+    },
+    {
+      "name": "license_credit_line",
+      "figure_id": "f1",
+      "evidence": "'IEA. CC BY 4.0.' printed right-aligned below the figure instead of a Source: line",
+      "why_it_matters": "该图没有Source行，只有版权行；解析器若按Source定位图尾，会漏掉图注边界。"
+    },
+    {
+      "name": "reversed_legend_order",
+      "figure_id": "f1",
+      "evidence": "legend order 2024, 2023, 2022, 2021 while bars are drawn 2021 to 2024 left to right",
+      "why_it_matters": "图例顺序与柱的绘制顺序相反，按图例次序取值会把年份系列整体颠倒。"
+    }
+  ],
+  "spot_checks": [
+    {
+      "value": "290",
+      "figure_id": "f1",
+      "mark": "the Belgium 2021 bar (yellow, leftmost of the group)",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "Belgium",
+        "2021",
+        "EUR/MWh"
+      ]
+    },
+    {
+      "value": "390",
+      "figure_id": "f1",
+      "mark": "the Belgium 2022 bar (orange)",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "Belgium",
+        "2022",
+        "EUR/MWh"
+      ]
+    },
+    {
+      "value": "350",
+      "figure_id": "f1",
+      "mark": "the Italy 2023 bar (red), just under 360",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "Italy",
+        "2023",
+        "EUR/MWh"
+      ]
+    },
+    {
+      "value": "80",
+      "figure_id": "f1",
+      "mark": "the Netherlands 2022 bar (orange), the shortest bar on the figure",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "Netherlands",
+        "2022",
+        "EUR/MWh"
+      ]
+    },
+    {
+      "value": "230",
+      "figure_id": "f1",
+      "mark": "the Italy 2021 bar (yellow); Spain 2023/2024 bars are also near this height",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "Italy",
+        "2021",
+        "EUR/MWh"
+      ]
+    },
+    {
+      "value": "1.1",
+      "figure_id": "f1",
+      "mark": "a net-additions point on the right GW axis, e.g. the Belgium 2023 marker near the 1.0 gridline",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "Belgium",
+        "2023",
+        "Net additions (right axis)",
+        "GW"
+      ]
+    },
+    {
+      "value": "3.5",
+      "figure_id": "f1",
+      "mark": "the Germany 2023 net-additions marker, the highest point on the line (between 3.0 and 4.0)",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "Germany",
+        "2023",
+        "Net additions (right axis)",
+        "GW"
+      ]
+    },
+    {
+      "value": "1.2",
+      "figure_id": "f1",
+      "mark": "a net-additions marker slightly above 1.0, e.g. Italy 2022",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "Italy",
+        "2022",
+        "Net additions (right axis)",
+        "GW"
+      ]
+    },
+    {
+      "value": "1.3",
+      "figure_id": "f1",
+      "mark": "a net-additions marker between 1.0 and 2.0, e.g. Belgium 2022 or Netherlands 2021",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "Netherlands",
+        "2021",
+        "Net additions (right axis)",
+        "GW"
+      ]
+    },
+    {
+      "value": "0.3",
+      "figure_id": "f1",
+      "mark": "a low net-additions marker just above the 0.0 line, e.g. Spain 2021",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "Spain",
+        "2021",
+        "Net additions (right axis)",
+        "GW"
+      ]
+    }
+  ],
+  "hardest_step": 2,
+  "difficulty_notes": "右轴GW只有0.0/1.0/2.0/3.0/4.0五个刻度，约1.0单位对应26像素；要把1.1、1.2、1.3区分到5%容差（即±0.06 GW）需分辨约1.5像素，而折线标记本身直径就有5像素以上，实际不可达；左轴柱虽有100间隔的水平网格，290与350这类值的5%容差（±15与±17.5）仍要求半格以内判读，且图上完全没有数值标签。相比之下标签只需三键（国家+年份+系列/单位），并不构成主要障碍。",
+  "unreadable": [],
+  "suggestions": [
+    {
+      "what_to_add": "dual_axis 与 mixed_marks 的组合（柱+右轴折线）作为独立生成条件",
+      "where_to_change": "图表族条件表中新增“双轴混合标记”一行，样式字段需指定右轴系列名带(right axis)",
+      "new_ablation_row": "左轴柱值 vs 右轴折线值分别计算命中率，检验解析器是否把折线点错读到左轴刻度",
+      "generality": "general",
+      "maps_to": "P6"
+    },
+    {
+      "what_to_add": "new_components 中的 line_series_break_between_groups（分组内断开的折线）",
+      "where_to_change": "记录字段增加 group_id，使折线按类别组分段绘制",
+      "new_ablation_row": "折线连续跨组 vs 按组断开两种设置下，点值定位到正确国家的准确率",
+      "generality": "common",
+      "maps_to": "new"
+    },
+    {
+      "what_to_add": "每个刻度间隔较大的次级轴（0.0–4.0仅5格）对应的 per-mark 可读精度评估",
+      "where_to_change": "评测的 readable 判定改为按标记给出可达精度（依据像素/刻度比）",
+      "new_ablation_row": "按标记可达精度分档（≤2%、2–5%、>5%）分别统计得分",
+      "generality": "general",
+      "maps_to": "P1"
+    },
+    {
+      "what_to_add": "无编号图但有粗体彩色标题+版权行的页面结构（含 rotated_axis_title 与 two_level_x_ticks）",
+      "where_to_change": "标题字段拆分为 number/title/subtitle/unit/placement，允许 number 为空、unit 落在旋转轴标题上",
+      "new_ablation_row": "标题无编号且单位仅在旋转轴标题时，表格上下文命中率对比有编号图",
+      "generality": "house_style",
+      "maps_to": "P7"
+    }
+  ],
+  "rules": [
+    {
+      "value": "290",
+      "labels": [
+        "Belgium",
+        "2021"
+      ],
+      "tolerance": 0.05,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "390",
+      "labels": [
+        "Germany",
+        "2024"
+      ],
+      "tolerance": 0.05,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "350",
+      "labels": [
+        "Italy",
+        "2023"
+      ],
+      "tolerance": 0.05,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "80",
+      "labels": [
+        "Netherlands",
+        "2022"
+      ],
+      "tolerance": 0.1,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "230",
+      "labels": [
+        "Spain",
+        "2024"
+      ],
+      "tolerance": 0.05,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "1.1",
+      "labels": [
+        "Belgium",
+        "2024",
+        "Net additions (right axis)"
+      ],
+      "tolerance": 0.1,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "3.5",
+      "labels": [
+        "Germany",
+        "2023",
+        "Net additions (right axis)"
+      ],
+      "tolerance": 0.1,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "1.2",
+      "labels": [
+        "Italy",
+        "2022",
+        "Net additions (right axis)"
+      ],
+      "tolerance": 0.1,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "1.3",
+      "labels": [
+        "Netherlands",
+        "2021",
+        "Net additions (right axis)"
+      ],
+      "tolerance": 0.1,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "0.3",
+      "labels": [
+        "Spain",
+        "2024",
+        "Net additions (right axis)"
+      ],
+      "tolerance": 0.2,
+      "max_diffs": 0,
+      "figure": "f1"
+    }
+  ],
+  "crosscheck": [
+    {
+      "code": "component_without_the_layout_it_needs",
+      "detail": "shared_legend dropped: 1 figures, at most 1 panel(s)"
+    },
+    {
+      "code": "addressing_keys_wrong",
+      "detail": "4 of 10 predicted key sets miss a rule label: 390, 230, 1.1, 0.3"
+    },
+    {
+      "code": "keys_missing",
+      "detail": "rules need 3 keys, the richest figure offers 2"
+    }
+  ]
+}

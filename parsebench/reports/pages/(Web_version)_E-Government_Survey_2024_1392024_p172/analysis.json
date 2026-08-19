@@ -1,0 +1,247 @@
+{
+  "stem": "(Web_version)_E-Government_Survey_2024_1392024_p172",
+  "document": "(Web_version)_E-Government_Survey_2024_1392024",
+  "tags": "untagged",
+  "page_note": "本页为报告第147页，包含正文段落与一幅编号为 Figure 4.10 的横向分组条形图，比较2022与2024年城市门户网站服务提供指标的实施率。",
+  "figures": [
+    {
+      "id": "f1",
+      "heading": {
+        "figure_number": "Figure 4.10",
+        "title": "Implementation of services provision indicators in city portals",
+        "subtitle": "",
+        "unit_text": "",
+        "placement": "above"
+      },
+      "type": "grouped_bar",
+      "type_other": "",
+      "orientation": "horizontal",
+      "panels": 1,
+      "panel_names": [],
+      "series": 2,
+      "series_names": [
+        "2022",
+        "2024"
+      ],
+      "categories": 22,
+      "category_names": [
+        "Waste and recycling information",
+        "Public tranportation information",
+        "Online fee payment",
+        "Evidence of mobile phone apps",
+        "Procurement platform",
+        "Online tax declaration",
+        "Online building permit",
+        "Online vacancies",
+        "Water payment",
+        "Online business licence",
+        "Electricity/gas payment",
+        "Online police declaration"
+      ],
+      "marks": 44,
+      "values_printed": "all",
+      "value_axis_ticks": "0%, 10%, 20%, 30%, 40%, 50%",
+      "source_line": ""
+    }
+  ],
+  "components": [
+    {
+      "key": "grouped_bar",
+      "figure_id": "f1",
+      "evidence": "two bars per row, blue `2022` above orange `2024`, in each indicator slot"
+    },
+    {
+      "key": "horizontal_bars",
+      "figure_id": "f1",
+      "evidence": "indicator names on the y axis, bars grow rightwards to the 0%-50% axis"
+    },
+    {
+      "key": "legend_below_plot",
+      "figure_id": "f1",
+      "evidence": "`2022` and `2024` swatches printed under the 0%-50% axis line"
+    },
+    {
+      "key": "value_label_outside",
+      "figure_id": "f1",
+      "evidence": "`48%`, `51%` printed just beyond each bar end, e.g. top two rows"
+    },
+    {
+      "key": "vgrid_only",
+      "figure_id": "f1",
+      "evidence": "vertical dotted rules at 10%, 20%, 30%, 40%, 50%; no horizontal rules"
+    },
+    {
+      "key": "wrapped_category_labels",
+      "figure_id": "f1",
+      "evidence": "22 long labels stacked down the y axis, e.g. `Online environment-related permit`"
+    },
+    {
+      "key": "unit_in_axis_or_title",
+      "figure_id": "f1",
+      "evidence": "axis ticks themselves carry `%`: `0%, 10%, ... 50%`"
+    }
+  ],
+  "new_components": [
+    {
+      "name": "percent_sign_on_ticks_and_labels",
+      "figure_id": "f1",
+      "evidence": "every tick and every value label ends in `%`: `0%`...`50%`, `48%`, `12%`",
+      "why_it_matters": "数值本身自带百分号，解析后文本为 `51%` 而非 `51`，检索时必须匹配带百分号的形式。"
+    },
+    {
+      "name": "figure_caption_rule_bar",
+      "figure_id": "f1",
+      "evidence": "a solid blue horizontal bar drawn between the caption line and the plot frame",
+      "why_it_matters": "标题块与绘图区之间的装饰条可能被解析为分隔元素，影响标题与表格的归属判断。"
+    },
+    {
+      "name": "plot_frame_box",
+      "figure_id": "f1",
+      "evidence": "a thin rectangular border encloses the whole plot, labels and legend",
+      "why_it_matters": "外框可能被误判为表格边界，使图形被当作表格结构提取。"
+    }
+  ],
+  "spot_checks": [
+    {
+      "value": "51%",
+      "figure_id": "f1",
+      "mark": "the `Waste and recycling information` 2024 (orange) bar, top row",
+      "printed_on_figure": true,
+      "addressing_keys": [
+        "Waste and recycling information",
+        "2024"
+      ]
+    },
+    {
+      "value": "47%",
+      "figure_id": "f1",
+      "mark": "the `Public tranportation information` 2022 (blue) bar",
+      "printed_on_figure": true,
+      "addressing_keys": [
+        "Public tranportation information",
+        "2022"
+      ]
+    },
+    {
+      "value": "42%",
+      "figure_id": "f1",
+      "mark": "ambiguous: printed both for `Procurement platform` 2024 and `Online tax declaration` 2024",
+      "printed_on_figure": true,
+      "addressing_keys": [
+        "Procurement platform",
+        "2024"
+      ]
+    },
+    {
+      "value": "24%",
+      "figure_id": "f1",
+      "mark": "ambiguous: `Online police declaration` 2022 bar and `Online marriage certificate` 2024 bar both read 24%",
+      "printed_on_figure": true,
+      "addressing_keys": [
+        "Online police declaration",
+        "2022"
+      ]
+    },
+    {
+      "value": "12%",
+      "figure_id": "f1",
+      "mark": "the `Online vehicle registration` 2024 (orange) bar, bottom row",
+      "printed_on_figure": true,
+      "addressing_keys": [
+        "Online vehicle registration",
+        "2024"
+      ]
+    }
+  ],
+  "hardest_step": 3,
+  "difficulty_notes": "数值全部印在图上，读数不构成障碍（步骤2容易）；真正的瓶颈是定位：22个类别×2个年份共44个标记，而42%、24%、27%、21%、38%等数字在图中重复出现2次以上，因此每个值必须同时携带完整的指标名（如 `Online police declaration`）和年份列（`2022`/`2024`）才能唯一定位。若解析器只输出一列数字或把两年份合并，检索到的 42% 无法区分 Procurement platform 与 Online tax declaration。",
+  "unreadable": [],
+  "suggestions": [
+    {
+      "what_to_add": "grouped_bar 与 horizontal_bars 组合下的高类别数（22行×2系列）生成条件",
+      "where_to_change": "条件行中的 categories 上限与 orientation=horizontal 组合，marks 提升至44",
+      "new_ablation_row": "新增一行：横向分组条形，类别数≥20，考察行标签唯一寻址成功率",
+      "generality": "general",
+      "maps_to": "P5"
+    },
+    {
+      "what_to_add": "value_label_outside 且标签带百分号的样式维度",
+      "where_to_change": "style 字段中的 value-label 位置与 tick 格式（`0%`形式）",
+      "new_ablation_row": "新增一行：刻度与数值标签是否附带单位符号，对检索匹配率的影响",
+      "generality": "common",
+      "maps_to": "P6"
+    },
+    {
+      "what_to_add": "figure 标题块（`Figure 4.10` + 标题）作为独立字段并置于表格上方为粗体标题",
+      "where_to_change": "record 的 heading 字段拆分（number/title/unit/placement=above）",
+      "new_ablation_row": "新增一行：标题以粗体标题行输出 vs 仅存于图内，考察上下文命中率",
+      "generality": "general",
+      "maps_to": "P7"
+    },
+    {
+      "what_to_add": "vgrid_only（横向条形常见的纵向网格）作为样式选项",
+      "where_to_change": "style 字段的网格方向开关",
+      "new_ablation_row": "新增一行：网格方向与条形方向匹配/不匹配时的读数误差",
+      "generality": "common",
+      "maps_to": "P6"
+    }
+  ],
+  "rules": [
+    {
+      "value": "51%",
+      "labels": [
+        "Waste and recycling information",
+        "2024"
+      ],
+      "tolerance": 0.01,
+      "max_diffs": 2,
+      "figure": "f1"
+    },
+    {
+      "value": "47%",
+      "labels": [
+        "Public tranportation information",
+        "2022"
+      ],
+      "tolerance": 0.01,
+      "max_diffs": 2,
+      "figure": "f1"
+    },
+    {
+      "value": "42%",
+      "labels": [
+        "Online tax declaration",
+        "2024"
+      ],
+      "tolerance": 0.01,
+      "max_diffs": 2,
+      "figure": "f1"
+    },
+    {
+      "value": "24%",
+      "labels": [
+        "Online police declaration",
+        "2022"
+      ],
+      "tolerance": 0.01,
+      "max_diffs": 2,
+      "figure": "f1"
+    },
+    {
+      "value": "12%",
+      "labels": [
+        "Online vehicle registration",
+        "2024"
+      ],
+      "tolerance": 0.01,
+      "max_diffs": 2,
+      "figure": "f1"
+    }
+  ],
+  "crosscheck": [
+    {
+      "code": "addressing_keys_wrong",
+      "detail": "1 of 5 predicted key sets miss a rule label: 42%"
+    }
+  ]
+}

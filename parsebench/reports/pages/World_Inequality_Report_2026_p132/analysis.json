@@ -1,0 +1,356 @@
+{
+  "stem": "World_Inequality_Report_2026_p132",
+  "document": "World_Inequality_Report_2026",
+  "tags": "need_estimate",
+  "page_note": "本页上半部为 Figure 7.2 的多国折线图（按收入分位组的有效所得税率），下半部为两栏正文，图下有 Interpretation 与来源说明。",
+  "figures": [
+    {
+      "id": "f1",
+      "heading": {
+        "figure_number": "Figure 7.2.",
+        "title": "The super-rich pay proportionately less than others",
+        "subtitle": "Effective income tax rates by income groups",
+        "unit_text": "Effective income tax rates by income groups  and for billionaires (% of pre–tax income)",
+        "placement": "above"
+      },
+      "type": "line",
+      "type_other": "",
+      "orientation": "vertical",
+      "panels": 1,
+      "panel_names": [],
+      "series": 5,
+      "series_names": [
+        "Brazil",
+        "France",
+        "Netherlands",
+        "Spain",
+        "United States"
+      ],
+      "categories": 16,
+      "category_names": [
+        "P0–10",
+        "P10–20",
+        "P20–30",
+        "P30–40",
+        "P40–50",
+        "P50–60",
+        "P60–70",
+        "P70–80",
+        "P80–90",
+        "P90–95",
+        "P95–99",
+        "P99–99.9"
+      ],
+      "marks": 77,
+      "values_printed": "none",
+      "value_axis_ticks": "0%, 5%, 10%, 15%, 20%, 25%",
+      "source_line": "Interpretation. This figure shows effective income tax rates by pre–tax income group and for U.S. dollar billionaires in Brazil, France, the Netherlands, Spain, and the United States. Income tax rates include only individual income taxes and equivalent levies. All values are expressed as a share of pre–tax income, defined as all national income before taxes and transfers, after pensions. P0–10 denotes the bottom 10% of the income distribution, P10–20 the next decile, etc. Sources and series: Artola et al. (2022), Bozio et al. (2024), Bozio et al. (2020), Bruil et al. (2024), Palomo et al. (2025), Saez and Zucman (2019), and Zucman (2024)."
+    }
+  ],
+  "components": [
+    {
+      "key": "annotation_callout",
+      "figure_id": "f1",
+      "evidence": "boxed note over the plot: \"99% of the population are located in the shaded area.\""
+    },
+    {
+      "key": "shaded_band",
+      "figure_id": "f1",
+      "evidence": "grey vertical tint spanning P0–10 through P95–99 behind the lines"
+    },
+    {
+      "key": "legend_below_plot",
+      "figure_id": "f1",
+      "evidence": "row under plot: \"Brazil  France  Netherlands  Spain  United States\""
+    },
+    {
+      "key": "source_note_lines",
+      "figure_id": "f1",
+      "evidence": "small print below: \"Interpretation. ... Sources and series: Artola et al. (2022), ...\""
+    },
+    {
+      "key": "rotated_axis_title",
+      "figure_id": "f1",
+      "evidence": "y-axis title set vertically: \"Effective income tax rates by income groups and for billionaires (% of pre–tax income)\""
+    },
+    {
+      "key": "unit_in_axis_or_title",
+      "figure_id": "f1",
+      "evidence": "scale phrase \"(% of pre–tax income)\" only in the rotated y-axis title"
+    },
+    {
+      "key": "rotated_x_ticks",
+      "figure_id": "f1",
+      "evidence": "category labels \"P0–10\" ... \"Billionaires\" turned about 45 degrees"
+    },
+    {
+      "key": "abbrev_category_axis",
+      "figure_id": "f1",
+      "evidence": "axis reads percentile codes \"P90–95\", \"P99.99–P99.999\", explained only in the note"
+    }
+  ],
+  "new_components": [
+    {
+      "name": "unequal_bin_category_axis",
+      "figure_id": "f1",
+      "evidence": "equal-width slots hold deciles then P90–95, P95–99, P99–99.9 ... and \"Billionaires\"",
+      "why_it_matters": "横轴槽位宽度相同但代表的人口份额差异极大，读者不能按等距时间/等距类别方式插值，取值必须严格绑定到具体分位标签。"
+    },
+    {
+      "name": "series_starts_late_gap",
+      "figure_id": "f1",
+      "evidence": "Netherlands has no marker at P0–10; Spain's light-blue line begins near P20–30",
+      "why_it_matters": "某些序列在左端缺点位，若表格按类别逐行列出，需区分“缺失”与“接近0”，否则会把空槽误读成低值。"
+    },
+    {
+      "name": "callout_explains_shading",
+      "figure_id": "f1",
+      "evidence": "the boxed text names the tint: \"99% of the population are located in the shaded area.\"",
+      "why_it_matters": "阴影本身不是数据而是人口覆盖注释，读数时不能把带边界当作数值参考线。"
+    }
+  ],
+  "spot_checks": [
+    {
+      "value": "9",
+      "figure_id": "f1",
+      "mark": "the United States point at Billionaires (red line right endpoint, just above the 5%–10% band)",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "United States",
+        "Billionaires"
+      ]
+    },
+    {
+      "value": "18",
+      "figure_id": "f1",
+      "mark": "the United States point at P99–99.9, on the rise toward the red peak",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "United States",
+        "P99–99.9"
+      ]
+    },
+    {
+      "value": "15",
+      "figure_id": "f1",
+      "mark": "the France point at P95–99 (dark blue, level with the 15% grid line)",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "France",
+        "P95–99"
+      ]
+    },
+    {
+      "value": "16",
+      "figure_id": "f1",
+      "mark": "the France point at P99–99.9, the dark-blue peak just above 15%",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "France",
+        "P99–99.9"
+      ]
+    },
+    {
+      "value": "18",
+      "figure_id": "f1",
+      "mark": "the Netherlands point at P80–90 (orange line approaching its plateau)",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "Netherlands",
+        "P80–90"
+      ]
+    },
+    {
+      "value": "7",
+      "figure_id": "f1",
+      "mark": "the France point at P50–60 (dark blue, midway between 5% and 10%)",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "France",
+        "P50–60"
+      ]
+    },
+    {
+      "value": "12.5",
+      "figure_id": "f1",
+      "mark": "the France point at P90–95 (dark blue, between 10% and 15%)",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "France",
+        "P90–95"
+      ]
+    },
+    {
+      "value": "15",
+      "figure_id": "f1",
+      "mark": "the France point at P99.9–99.99, falling back from the peak",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "France",
+        "P99.9–99.99"
+      ]
+    },
+    {
+      "value": "10",
+      "figure_id": "f1",
+      "mark": "the Brazil point at P95–99 (green line's maximum, at the 10% grid line)",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "Brazil",
+        "P95–99"
+      ]
+    },
+    {
+      "value": "10",
+      "figure_id": "f1",
+      "mark": "alternative reading: the Spain point at P99.99–P99.999 (light blue, just above 10%)",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "Spain",
+        "P99.99–P99.999"
+      ]
+    }
+  ],
+  "hardest_step": 2,
+  "difficulty_notes": "网格线只有 0%/5%/10%/15%/20%/25% 六档，档距 5 个百分点约 33 像素；要把 7 读到 ±0.35、把 12.5 读到 ±0.63，等于要在一格里分辨 1/14 到 1/8 的位置，且五条折线在 P95–99 到 P99.9–99.99 段互相交叠（France 16.5、Spain 15.5、United States 18 挤在同一片区域），标记直径本身就约等于 1 个百分点。图上完全没有数值标签（values_printed = none），因此像素读数的 5% 容差是主要瓶颈；相比之下寻址只需“序列名+分位标签”两个键，且两组名称都逐字印在图例与横轴上。",
+  "unreadable": [],
+  "suggestions": [
+    {
+      "what_to_add": "shaded_band 与 annotation_callout 的组合：带状阴影加框内说明文字",
+      "where_to_change": "样式条件行新增 band_annotation 字段（阴影起止类别 + 框内文本），并在渲染时置于绘图区上层",
+      "new_ablation_row": "有/无“阴影带+框内注释”时，模型是否把注释框文字误当数据标签或把带边界误当参考线",
+      "generality": "common",
+      "maps_to": "new"
+    },
+    {
+      "what_to_add": "新组件 series_starts_late_gap（序列在左端缺点位）",
+      "where_to_change": "记录字段允许某序列在部分类别上为空，折线断开且不画标记",
+      "new_ablation_row": "含缺失前导点的折线 vs 完整折线，导出表中空槽与 0 的区分正确率",
+      "generality": "general",
+      "maps_to": "P1"
+    },
+    {
+      "what_to_add": "把 unit_in_axis_or_title 与 rotated_axis_title 一并纳入标题字段化",
+      "where_to_change": "P7 标题记录：figure_number（\"Figure 7.2.\"）、title、subtitle（\"Effective income tax rates by income groups\"）、unit_text 放入旋转的纵轴标题",
+      "new_ablation_row": "单位仅出现在旋转纵轴标题（而非副标题）时，导出表能否恢复“%\" of pre–tax income”的量纲",
+      "generality": "common",
+      "maps_to": "P7"
+    },
+    {
+      "what_to_add": "新组件 unequal_bin_category_axis（等宽槽位承载不等宽分位）",
+      "where_to_change": "类别轴生成器增加“分位/不等宽分组”类别名模板，并配合 rotated_x_ticks",
+      "new_ablation_row": "等距时间轴 vs 不等宽分位轴，取值是否被错误插值到相邻槽位",
+      "generality": "common",
+      "maps_to": "new"
+    },
+    {
+      "what_to_add": "按标记可达精度评分（5 档网格、无数值标签的折线）",
+      "where_to_change": "P1 中把 readable 改为每个点的可达精度，用网格档距/标记直径估算",
+      "new_ablation_row": "档距 5 个百分点、77 个标记的折线图上，容差 5% 与 10% 下的通过率对比",
+      "generality": "general",
+      "maps_to": "P1"
+    }
+  ],
+  "rules": [
+    {
+      "value": "9",
+      "labels": [
+        "United States",
+        "Billionaires"
+      ],
+      "tolerance": 0.1,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "18",
+      "labels": [
+        "Netherlands",
+        "P80-90"
+      ],
+      "tolerance": 0.05,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "15",
+      "labels": [
+        "France",
+        "P95-99"
+      ],
+      "tolerance": 0.05,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "16",
+      "labels": [
+        "Spain",
+        "P99-99.9"
+      ],
+      "tolerance": 0.05,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "18",
+      "labels": [
+        "United States",
+        "P99-99.9"
+      ],
+      "tolerance": 0.05,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "7",
+      "labels": [
+        "Brazil",
+        "P90-95"
+      ],
+      "tolerance": 0.05,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "12.5",
+      "labels": [
+        "Netherlands",
+        "P50-60"
+      ],
+      "tolerance": 0.05,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "15",
+      "labels": [
+        "France",
+        "P99.9-99.99"
+      ],
+      "tolerance": 0.05,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "10",
+      "labels": [
+        "Spain",
+        "P99.99-P99.999"
+      ],
+      "tolerance": 0.1,
+      "max_diffs": 0,
+      "figure": "f1"
+    }
+  ],
+  "crosscheck": [
+    {
+      "code": "spot_check_count_mismatch",
+      "detail": "9 values given, 10 answered"
+    },
+    {
+      "code": "addressing_keys_wrong",
+      "detail": "6 of 9 predicted key sets miss a rule label: 18, 16, 18, 7, 12.5, 10"
+    }
+  ]
+}

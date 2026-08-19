@@ -1,0 +1,320 @@
+{
+  "stem": "2024-ltra_corrected_july_2025_p29",
+  "document": "2024-ltra_corrected_july_2025",
+  "tags": "need_estimate",
+  "page_note": "这是一页NERC《2024 Long-Term Reliability Assessment》正文页，左栏为天然气发电与管道容量的论述文字，右栏含一张编号Figure 16的堆叠柱状图（美国年度天然气管道容量新增，Interstate/Intrastate，2017–2024）。",
+  "figures": [
+    {
+      "id": "f1",
+      "heading": {
+        "figure_number": "Figure 16",
+        "title": "Annual U.S. Natural Gas Pipeline Capacity Additions by Type (2017–2024)",
+        "subtitle": "",
+        "unit_text": "Bcf/d",
+        "placement": "below"
+      },
+      "type": "stacked_bar",
+      "type_other": "",
+      "orientation": "vertical",
+      "panels": 1,
+      "panel_names": [],
+      "series": 2,
+      "series_names": [
+        "Interstate",
+        "Intrastate"
+      ],
+      "categories": 8,
+      "category_names": [
+        "2017",
+        "2018",
+        "2019",
+        "2020",
+        "2021",
+        "2022",
+        "2023",
+        "2024"
+      ],
+      "marks": 14,
+      "values_printed": "none",
+      "value_axis_ticks": "0, 5, 10, 15, 20, 25, 30",
+      "source_line": "(Source: U.S. Energy Information Administration)"
+    }
+  ],
+  "components": [
+    {
+      "key": "stacked_bar",
+      "figure_id": "f1",
+      "evidence": "each year is one bar with a dark 'Intrastate' base and light 'Interstate' segment above"
+    },
+    {
+      "key": "legend_below_plot",
+      "figure_id": "f1",
+      "evidence": "'Interstate' and 'Intrastate' swatches in a row under the year axis"
+    },
+    {
+      "key": "rotated_axis_title",
+      "figure_id": "f1",
+      "evidence": "'Pipeline Additions' set vertically along the left value axis"
+    },
+    {
+      "key": "unit_in_axis_or_title",
+      "figure_id": "f1",
+      "evidence": "axis ticks are bare 0, 5 ... 30; 'Bcf/d' appears only in the caption"
+    },
+    {
+      "key": "hgrid_only",
+      "figure_id": "f1",
+      "evidence": "faint horizontal rules at 5, 10, 15, 20, 25, 30; no vertical rules"
+    },
+    {
+      "key": "side_text_bullets",
+      "figure_id": "f1",
+      "evidence": "left column of body text ('The 2024 LTRA projects...') runs level with the plot"
+    }
+  ],
+  "new_components": [
+    {
+      "name": "source_in_caption_parenthetical",
+      "figure_id": "f1",
+      "evidence": "caption ends '(Source: U.S. Energy Information Administration)' inside the bold figure caption, no separate source line",
+      "why_it_matters": "来源与单位都被并入同一行粗体标题，解析器导出时容易把'Bcf/d'和来源一起当作标题文字，导致单位无法作为独立字段与数值绑定。"
+    },
+    {
+      "name": "empty_series_slot_in_stack",
+      "figure_id": "f1",
+      "evidence": "2022 bar shows only light Interstate; 2024 shows only a sliver of dark Intrastate",
+      "why_it_matters": "某些年份某一系列为零或极小，表格里该单元格是缺失还是零无法从图上区分，读值时需明确该槽位是否存在。"
+    }
+  ],
+  "spot_checks": [
+    {
+      "value": "16.2",
+      "figure_id": "f1",
+      "mark": "the 2017 Interstate segment (upper light segment, ~1.2 to ~17.4)",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "2017",
+        "Interstate"
+      ]
+    },
+    {
+      "value": "1.2",
+      "figure_id": "f1",
+      "mark": "the 2017 Intrastate segment (dark base of the 2017 bar)",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "2017",
+        "Intrastate"
+      ]
+    },
+    {
+      "value": "21.2",
+      "figure_id": "f1",
+      "mark": "the 2018 Interstate segment (light segment above ~5.6 up to ~26.8)",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "2018",
+        "Interstate"
+      ]
+    },
+    {
+      "value": "5.6",
+      "figure_id": "f1",
+      "mark": "the 2018 Intrastate segment (dark base of the tallest bar)",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "2018",
+        "Intrastate"
+      ]
+    },
+    {
+      "value": "10.8",
+      "figure_id": "f1",
+      "mark": "the 2019 Interstate segment (light segment from ~4.2 to ~15.0)",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "2019",
+        "Interstate"
+      ]
+    },
+    {
+      "value": "4.2",
+      "figure_id": "f1",
+      "mark": "the 2019 Intrastate segment (dark base of the 2019 bar)",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "2019",
+        "Intrastate"
+      ]
+    },
+    {
+      "value": "8.7",
+      "figure_id": "f1",
+      "mark": "the 2020 Interstate segment (light segment from ~1.6 to ~10.3)",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "2020",
+        "Interstate"
+      ]
+    },
+    {
+      "value": "1.6",
+      "figure_id": "f1",
+      "mark": "the 2020 Intrastate segment (dark base of the 2020 bar)",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "2020",
+        "Intrastate"
+      ]
+    },
+    {
+      "value": "8.5",
+      "figure_id": "f1",
+      "mark": "the 2021 Interstate segment (light segment from ~7.3 to ~15.8)",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "2021",
+        "Interstate"
+      ]
+    },
+    {
+      "value": "7.3",
+      "figure_id": "f1",
+      "mark": "the 2021 Intrastate segment (dark base of the 2021 bar)",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "2021",
+        "Intrastate"
+      ]
+    }
+  ],
+  "hardest_step": 2,
+  "difficulty_notes": "图上没有任何数值标签，刻度只有0/5/10/15/20/25/30，5个单位约占74像素，即1像素≈0.07 Bcf/d。要判定的十个值里有1.2、1.6、4.2这类小段，5%容差分别只有±0.06、±0.08、±0.21，几乎等于1–3像素，靠插值读不到；而Interstate段（16.2、21.2、10.8、8.7、8.5）并非从零起算的柱长，必须用堆叠顶端减去深色底段两次读数相减，误差叠加后更难落在5%内。相比之下寻址只需'2017'+'Interstate'两个键，标题为粗体独立行，第3、4步都不是瓶颈。",
+  "unreadable": [],
+  "suggestions": [
+    {
+      "what_to_add": "stacked_bar中分段（非从零起算）读数的可达精度评估",
+      "where_to_change": "评测配置里readable的判定字段：把布尔门改为按mark给出的精度上限，并对堆叠中间段单独记录",
+      "new_ablation_row": "新增一行：堆叠分段 vs 从零起算柱，在同一刻度密度下的5%命中率对比",
+      "generality": "general",
+      "maps_to": "P1"
+    },
+    {
+      "what_to_add": "unit_in_axis_or_title（单位只在图题内、坐标轴为裸数字）",
+      "where_to_change": "样式条件表中的单位位置维度：增加“单位仅出现在图题末尾”的取值",
+      "new_ablation_row": "新增一行：单位在轴标题 vs 单位在图题末尾时，数值+单位联合检索的召回差异",
+      "generality": "common",
+      "maps_to": "P6"
+    },
+    {
+      "what_to_add": "new_components中的source_in_caption_parenthetical（标题号+标题+单位+来源同一行且位于图下）",
+      "where_to_change": "记录字段：把figure heading拆成number/title/unit/source并标注placement=below",
+      "new_ablation_row": "新增一行：来源作为独立行 vs 内嵌括号在标题内时，标题字段抽取正确率",
+      "generality": "house_style",
+      "maps_to": "P7"
+    }
+  ],
+  "rules": [
+    {
+      "value": "16.2",
+      "labels": [
+        "2017",
+        "Interstate"
+      ],
+      "tolerance": 0.5,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "1.2",
+      "labels": [
+        "2017",
+        "Intrastate"
+      ],
+      "tolerance": 1.0,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "21.2",
+      "labels": [
+        "2018",
+        "Interstate"
+      ],
+      "tolerance": 0.4,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "5.6",
+      "labels": [
+        "2018",
+        "Intrastate"
+      ],
+      "tolerance": 0.2,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "10.8",
+      "labels": [
+        "2019",
+        "Interstate"
+      ],
+      "tolerance": 0.3,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "4.2",
+      "labels": [
+        "2019",
+        "Intrastate"
+      ],
+      "tolerance": 0.5,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "8.7",
+      "labels": [
+        "2020",
+        "Interstate"
+      ],
+      "tolerance": 0.2,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "1.6",
+      "labels": [
+        "2020",
+        "Intrastate"
+      ],
+      "tolerance": 1.0,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "8.5",
+      "labels": [
+        "2021",
+        "Interstate"
+      ],
+      "tolerance": 0.3,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "7.3",
+      "labels": [
+        "2021",
+        "Intrastate"
+      ],
+      "tolerance": 0.4,
+      "max_diffs": 0,
+      "figure": "f1"
+    }
+  ],
+  "crosscheck": []
+}

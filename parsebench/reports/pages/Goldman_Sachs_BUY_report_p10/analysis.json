@@ -1,0 +1,360 @@
+{
+  "stem": "Goldman_Sachs_BUY_report_p10",
+  "document": "Goldman_Sachs_BUY_report",
+  "tags": "untagged",
+  "page_note": "页面为投资研究报告的\"Strategic direction\"章节，正文讨论高盛业务结构，中部为Exhibit 3的百分比堆叠柱状图\"Historical revenue mix\"，展示FY 2010A–FY 2015A六个财年六类业务收入占比。",
+  "figures": [
+    {
+      "id": "f1",
+      "heading": {
+        "figure_number": "Exhibit 3",
+        "title": "Historical revenue mix",
+        "subtitle": "",
+        "unit_text": "",
+        "placement": "above"
+      },
+      "type": "stacked_bar",
+      "type_other": "",
+      "orientation": "vertical",
+      "panels": 1,
+      "panel_names": [],
+      "series": 6,
+      "series_names": [
+        "Underwriting",
+        "Financial advisory",
+        "Equities",
+        "FICC",
+        "Investing and lending",
+        "Investment management"
+      ],
+      "categories": 6,
+      "category_names": [
+        "FY 2010A",
+        "FY 2011A",
+        "FY 2012A",
+        "FY 2013A",
+        "FY 2014A",
+        "FY 2015A"
+      ],
+      "marks": 36,
+      "values_printed": "all",
+      "value_axis_ticks": "",
+      "source_line": ""
+    }
+  ],
+  "components": [
+    {
+      "key": "stacked_bar",
+      "figure_id": "f1",
+      "evidence": "each FY column is one bar split into six coloured segments labelled 13%, 19%, 35%, 21%, 5%, 7%"
+    },
+    {
+      "key": "pct_stacked",
+      "figure_id": "f1",
+      "evidence": "all six FY bars reach identical height and segment labels sum to 100% per year"
+    },
+    {
+      "key": "no_value_axis",
+      "figure_id": "f1",
+      "evidence": "no tick labels along the left edge; only faint horizontal rules and printed percentages"
+    },
+    {
+      "key": "value_label_inside",
+      "figure_id": "f1",
+      "evidence": "percentages such as \"31%\", \"29%\", \"12%\" printed on top of each coloured segment"
+    },
+    {
+      "key": "legend_below_plot",
+      "figure_id": "f1",
+      "evidence": "two rows of legend entries \"Underwriting ... Investment management\" sit under the FY axis labels"
+    },
+    {
+      "key": "hgrid_only",
+      "figure_id": "f1",
+      "evidence": "light horizontal rules cross the plot; no vertical grid lines drawn"
+    },
+    {
+      "key": "thin_segment_label",
+      "figure_id": "f1",
+      "evidence": "bottom segments \"5%\"/\"7%\" and \"6%\"/\"12%\" labels are squeezed into very narrow bands"
+    },
+    {
+      "key": "panel_background",
+      "figure_id": "f1",
+      "evidence": "the figure sits inside a blue-bordered box with the title inset into its top border"
+    }
+  ],
+  "new_components": [
+    {
+      "name": "title_inset_in_frame_border",
+      "figure_id": "f1",
+      "evidence": "\"Historical revenue mix\" is set into a gap in the top line of the figure's border box",
+      "why_it_matters": "标题嵌入边框线中而非独立标题行，解析器可能把它当作框线注释丢失，从而使表格失去图名上下文。"
+    },
+    {
+      "name": "exhibit_number_separate_from_title",
+      "figure_id": "f1",
+      "evidence": "\"Exhibit 3\" is a standalone blue heading above the framed box holding \"Historical revenue mix\"",
+      "why_it_matters": "编号与图名被水平分割线分成两块，取值时需同时定位两处才能完整寻址该图。"
+    },
+    {
+      "name": "no_unit_text_anywhere",
+      "figure_id": "f1",
+      "evidence": "no \"%\" axis title or subtitle; scale recoverable only from the in-segment labels",
+      "why_it_matters": "单位只能由标签自身的百分号推断，若解析器丢掉%号则数值失去量纲。"
+    }
+  ],
+  "spot_checks": [
+    {
+      "value": "13%",
+      "figure_id": "f1",
+      "mark": "the FY 2010A Investment management segment (top, dark green)",
+      "printed_on_figure": true,
+      "addressing_keys": [
+        "Historical revenue mix",
+        "FY 2010A",
+        "Investment management"
+      ]
+    },
+    {
+      "value": "7%",
+      "figure_id": "f1",
+      "mark": "ambiguous: FY 2010A Underwriting bottom segment 7%, FY 2011A Investing and lending 7%, FY 2011A Financial advisory 7%, FY 2014A Financial advisory 7%",
+      "printed_on_figure": true,
+      "addressing_keys": [
+        "Historical revenue mix",
+        "FY 2010A",
+        "Underwriting"
+      ]
+    },
+    {
+      "value": "24%",
+      "figure_id": "f1",
+      "mark": "the FY 2012A FICC segment",
+      "printed_on_figure": true,
+      "addressing_keys": [
+        "Historical revenue mix",
+        "FY 2012A",
+        "FICC"
+      ]
+    },
+    {
+      "value": "25%",
+      "figure_id": "f1",
+      "mark": "the FY 2013A Equities segment (also FY 2014A Equities is 25%)",
+      "printed_on_figure": true,
+      "addressing_keys": [
+        "Historical revenue mix",
+        "FY 2013A",
+        "Equities"
+      ]
+    },
+    {
+      "value": "7%",
+      "figure_id": "f1",
+      "mark": "the FY 2014A Financial advisory segment (repeats elsewhere)",
+      "printed_on_figure": true,
+      "addressing_keys": [
+        "Historical revenue mix",
+        "FY 2014A",
+        "Financial advisory"
+      ]
+    },
+    {
+      "value": "11%",
+      "figure_id": "f1",
+      "mark": "the FY 2015A Underwriting segment (bottom, dark navy)",
+      "printed_on_figure": true,
+      "addressing_keys": [
+        "Historical revenue mix",
+        "FY 2015A",
+        "Underwriting"
+      ]
+    },
+    {
+      "value": "21%",
+      "figure_id": "f1",
+      "mark": "the FY 2010A FICC segment (also FY 2013A FICC 21% and FY 2013A Investing and lending 21%)",
+      "printed_on_figure": true,
+      "addressing_keys": [
+        "Historical revenue mix",
+        "FY 2010A",
+        "FICC"
+      ]
+    },
+    {
+      "value": "12%",
+      "figure_id": "f1",
+      "mark": "the FY 2013A Underwriting segment (FY 2014A Underwriting is also 12%)",
+      "printed_on_figure": true,
+      "addressing_keys": [
+        "Historical revenue mix",
+        "FY 2013A",
+        "Underwriting"
+      ]
+    },
+    {
+      "value": "18%",
+      "figure_id": "f1",
+      "mark": "the FY 2015A Investment management segment (top)",
+      "printed_on_figure": true,
+      "addressing_keys": [
+        "Historical revenue mix",
+        "FY 2015A",
+        "Investment management"
+      ]
+    },
+    {
+      "value": "31%",
+      "figure_id": "f1",
+      "mark": "the FY 2011A Equities segment",
+      "printed_on_figure": true,
+      "addressing_keys": [
+        "Historical revenue mix",
+        "FY 2011A",
+        "Equities"
+      ]
+    }
+  ],
+  "hardest_step": 3,
+  "difficulty_notes": "数值本身全部印在色块内（13%、31%、11% 等），读数不成问题，也无刻度轴需要插值；但36个色块中重复值极多：7% 出现四次（FY 2010A Underwriting、FY 2011A Financial advisory、FY 2011A Investing and lending、FY 2014A Financial advisory），12%、21%、25%、17% 各出现两到三次，因此任何一个值必须同时携带年份键（FY 2013A）与业务键（Underwriting）两级标签才能唯一寻址；而图上没有值轴、图例分两行置于横轴下方，解析器很容易把六个系列名与年份的对应关系打散，只输出一串裸百分数，使行列标签无法成对。",
+  "unreadable": [],
+  "suggestions": [
+    {
+      "what_to_add": "pct_stacked 与 no_value_axis 组合（无值轴的百分比堆叠）",
+      "where_to_change": "条件行中新增\"堆叠且所有标签内嵌、无刻度\"的样式组合，记录字段需强制输出 series×category 双键",
+      "new_ablation_row": "有值轴 vs 完全无值轴的百分比堆叠图，比较取值命中率",
+      "generality": "common",
+      "maps_to": "P6"
+    },
+    {
+      "what_to_add": "new_components 中的 title_inset_in_frame_border 与 exhibit_number_separate_from_title",
+      "where_to_change": "标题样式字段：图号、图名分离，且图名嵌入边框线",
+      "new_ablation_row": "图号与图名同处一行 vs 被分割线分离时，图名能否进入表格上下文",
+      "generality": "house_style",
+      "maps_to": "P7"
+    },
+    {
+      "what_to_add": "thin_segment_label（窄段标签）",
+      "where_to_change": "样式字段中标签放置策略：段高<8%时标签仍内嵌并可能重叠",
+      "new_ablation_row": "窄段标签内嵌 vs 外移引线时的数值可读性",
+      "generality": "common",
+      "maps_to": "P6"
+    },
+    {
+      "what_to_add": "重复值的多键寻址要求（series+category 必须成对）",
+      "where_to_change": "记录字段：为每个 mark 生成 (category_name, series_name) 复合键而非单值",
+      "new_ablation_row": "含重复数值的图（如 7% 出现四次）在单键 vs 双键寻址下的评分差异",
+      "generality": "general",
+      "maps_to": "P2"
+    }
+  ],
+  "rules": [
+    {
+      "value": "13%",
+      "labels": [
+        "Investment management",
+        "FY 2010A"
+      ],
+      "tolerance": 0.01,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "7%",
+      "labels": [
+        "Investing and lending",
+        "FY 2011A"
+      ],
+      "tolerance": 0.01,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "24%",
+      "labels": [
+        "Equities",
+        "FY 2012A"
+      ],
+      "tolerance": 0.01,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "25%",
+      "labels": [
+        "FICC",
+        "FY 2013A"
+      ],
+      "tolerance": 0.01,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "7%",
+      "labels": [
+        "Financial advisory",
+        "FY 2014A"
+      ],
+      "tolerance": 0.01,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "11%",
+      "labels": [
+        "Underwriting",
+        "FY 2015A"
+      ],
+      "tolerance": 0.01,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "21%",
+      "labels": [
+        "Equities",
+        "FY 2010A"
+      ],
+      "tolerance": 0.01,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "12%",
+      "labels": [
+        "Underwriting",
+        "FY 2013A"
+      ],
+      "tolerance": 0.01,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "18%",
+      "labels": [
+        "Investment management",
+        "FY 2015A"
+      ],
+      "tolerance": 0.01,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "31%",
+      "labels": [
+        "FICC",
+        "FY 2011A"
+      ],
+      "tolerance": 0.01,
+      "max_diffs": 0,
+      "figure": "f1"
+    }
+  ],
+  "crosscheck": [
+    {
+      "code": "addressing_keys_wrong",
+      "detail": "5 of 10 predicted key sets miss a rule label: 7%, 24%, 25%, 21%, 31%"
+    }
+  ]
+}

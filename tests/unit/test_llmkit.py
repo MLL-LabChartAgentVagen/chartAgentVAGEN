@@ -170,6 +170,28 @@ class TestBatch:
         got = llm.map([("s", "u1"), ("s", "u2"), ("s", "u3")], workers=1)
         assert [r.text if r else None for r in got] == ["a", None, "c"]
 
+    def test_a_schema_makes_every_item_come_back_parsed(self, llm_factory):
+        schema = {"type": "object", "properties": {"title": {"type": "string"}},
+                  "required": ["title"], "additionalProperties": False}
+        llm, provider = llm_factory(['{"title": "a"}', '{"title": "b"}'])
+        assert llm.map([("s", "u1"), ("s", "u2")], workers=1, schema=schema) == \
+            [{"title": "a"}, {"title": "b"}]
+        assert provider.calls[0]["schema"] == schema
+
+    def test_a_schema_batch_retries_one_bad_reply_without_failing_the_rest(self, llm_factory):
+        schema = {"type": "object", "properties": {"title": {"type": "string"}},
+                  "required": ["title"], "additionalProperties": False}
+        llm, _ = llm_factory(["not json", '{"title": "a"}', '{"title": "b"}'],
+                             max_content_retries=2)
+        assert llm.map([("s", "u1"), ("s", "u2")], workers=1, schema=schema) == \
+            [{"title": "a"}, {"title": "b"}]
+
+    def test_images_ride_along_in_a_batch(self, llm_factory):
+        llm, provider = llm_factory(["ok"])
+        image = Image("image/png", "aGVsbG8=")
+        llm.map([("s", "u", (image,))], workers=1)
+        assert provider.calls[0]["messages"][0].images == (image,)
+
 
 class TestImages:
     """An image rides on a message; the bytes reach the provider, the digest reaches

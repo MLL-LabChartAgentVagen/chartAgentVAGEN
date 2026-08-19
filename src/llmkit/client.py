@@ -8,6 +8,7 @@
 from __future__ import annotations
 
 import json as jsonlib
+import threading
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from typing import Callable, Iterable, Sequence
@@ -48,6 +49,8 @@ class LLM:
         self.extra = dict(extra or {})
         self.cache = ResponseCache(cache_dir) if cache_dir else None
         self.usage = Usage()
+        # `map` runs calls on several threads and they all bill to one tally.
+        self._usage_lock = threading.Lock()
 
     # ---------------------------------------------------------------- one call
 
@@ -64,7 +67,8 @@ class LLM:
             model=self.model, system=system, messages=msgs,
             max_tokens=self.max_tokens, effort=self.effort,
             schema=schema, extra=self.extra)
-        self.usage = self.usage + response.usage
+        with self._usage_lock:
+            self.usage = self.usage + response.usage
         _check(response, self.max_tokens)          # declined and cut-off replies are not cached
         if self.cache is not None:
             self.cache.put(key, response)
@@ -98,18 +102,23 @@ class LLM:
 
     # ---------------------------------------------------------------- batches
 
-    def map(self, prompts: Iterable[Sequence], *, workers: int = 4,
-            on_error: Callable[[Exception], None] | None = None) -> list[Response | None]:
+    def map(self, prompts: Iterable[Sequence], *, workers: int = 4, schema: dict | None = None,
+            on_error: Callable[[Exception], None] | None = None) -> list[Response | dict | None]:
         """Run a batch concurrently, keeping input order. A failed item comes back as None.
 
-        An item is `(system, user)` or `(system, user, images)`.
+        An item is `(system, user)` or `(system, user, images)`. With a schema every
+        item goes through `json` instead of `complete`, so a batch gets the same
+        parse-failure feedback a single structured call gets, and comes back as dicts.
         """
         items = list(prompts)
 
-        def run(item: Sequence) -> Response | None:
+        def run(item: Sequence) -> Response | dict | None:
             system, user, *rest = item
+            images = rest[0] if rest else ()
             try:
-                return self.complete(system, user, images=rest[0] if rest else ())
+                if schema is not None:
+                    return self.json(system, user, schema=schema, images=images)
+                return self.complete(system, user, images=images)
             except Exception as exc:  # noqa: BLE001 -- one failure must not stop the batch
                 if on_error:
                     on_error(exc)

@@ -1,0 +1,418 @@
+{
+  "stem": "Goldman_Sachs_BUY_report_p6",
+  "document": "Goldman_Sachs_BUY_report",
+  "tags": "need_estimate",
+  "page_note": "该页为报告第6页,标题“Business overview and drivers”,主体是“Exhibit 1 – GS revenue driver dashboard”,由F1–F6六个带边框小图组成的折线图仪表盘,每个小图有自己的图例、纵轴刻度和“Performance indexed to 100”副标题。",
+  "figures": [
+    {
+      "id": "f1",
+      "heading": {
+        "figure_number": "Exhibit 1",
+        "title": "GS revenue driver dashboard",
+        "subtitle": "Performance indexed to 100",
+        "unit_text": "Performance indexed to 100",
+        "placement": "above"
+      },
+      "type": "line",
+      "type_other": "",
+      "orientation": "vertical",
+      "panels": 6,
+      "panel_names": [
+        "F1: IB: DCM revenues",
+        "F2: IB: ECM revenues",
+        "F3: IB: Financial advisory revenues",
+        "F4: IB: Overall investment banking revenues",
+        "F5: ICS: FICC revenues",
+        "F6: ICS: Equities revenues"
+      ],
+      "series": 17,
+      "series_names": [
+        "DCM deal value",
+        "Deal count",
+        "GS debt underwriting revenues",
+        "Global IPO deal count",
+        "Global IPO value",
+        "GS equity underwriting revenue",
+        "Global M&A deal count",
+        "Global M&A deal volume",
+        "GS Financial advisory revenue",
+        "US corporate profits",
+        "GS investment banking revenues",
+        "Interest rate (US 10yr)",
+        "High yield spread (inverted)",
+        "GS FICC revenues",
+        "S&P 500 volume",
+        "Vix index",
+        "GS ICS equity revenues"
+      ],
+      "categories": 8,
+      "category_names": [
+        "FY2008",
+        "FY2009",
+        "FY2010",
+        "FY2011",
+        "FY2012",
+        "FY2013",
+        "FY2014",
+        "FY2015"
+      ],
+      "marks": 450,
+      "values_printed": "none",
+      "value_axis_ticks": "F1: 200, 150, 100, 50, --; F2: 400, 300, 200, 100, --; F3: 225, 175, 125, 75, 25; F4: 170, 150, 130, 110, 90, 70, 50; F5: 200, 150, 100, 50, --; F6: 240, 190, 140, 90, 40",
+      "source_line": ""
+    }
+  ],
+  "components": [
+    {
+      "key": "small_multiples_5plus",
+      "figure_id": "f1",
+      "evidence": "six boxed line panels F1 through F6 under one heading 'Exhibit 1 – GS revenue driver dashboard'"
+    },
+    {
+      "key": "panel_title_per_panel",
+      "figure_id": "f1",
+      "evidence": "each box carries its own name in the frame: 'F1: IB: DCM revenues', 'F5: ICS: FICC revenues'"
+    },
+    {
+      "key": "per_panel_legend",
+      "figure_id": "f1",
+      "evidence": "each panel has its own legend row, e.g. 'Interest rate (US 10yr)', 'High yield spread (inverted)', 'GS FICC revenues'"
+    },
+    {
+      "key": "legend_below_plot",
+      "figure_id": "f1",
+      "evidence": "legends sit under each plot, below the FY tick row, inside the panel frame"
+    },
+    {
+      "key": "per_panel_axis_range",
+      "figure_id": "f1",
+      "evidence": "F1 tops at 200, F2 at 400, F3 runs 25-225, F4 50-170, F6 40-240"
+    },
+    {
+      "key": "axis_starts_above_zero",
+      "figure_id": "f1",
+      "evidence": "lowest ticks are '25' in F3, '50' in F4, '40' in F6 with no axis break drawn"
+    },
+    {
+      "key": "rotated_x_ticks",
+      "figure_id": "f1",
+      "evidence": "F2, F3 and F4 print 'FY2008'...'FY2015' turned about 45 degrees"
+    },
+    {
+      "key": "sparse_time_ticks",
+      "figure_id": "f1",
+      "evidence": "lines carry roughly four points per year but ticks read only FY2008 ... FY2015"
+    },
+    {
+      "key": "nonstandard_time_ticks",
+      "figure_id": "f1",
+      "evidence": "time axis labelled 'FY2012', 'FY2013', 'FY2014', 'FY2015' rather than calendar years"
+    },
+    {
+      "key": "hgrid_only",
+      "figure_id": "f1",
+      "evidence": "faint horizontal rules at each tick level in every panel, no vertical rules"
+    },
+    {
+      "key": "dense_marks_100plus",
+      "figure_id": "f1",
+      "evidence": "six panels x up to 3 series x quarterly points over 4-8 fiscal years, several hundred plotted points"
+    },
+    {
+      "key": "rebased_index_values",
+      "figure_id": "f1",
+      "evidence": "every panel subtitled 'Performance indexed to 100'"
+    },
+    {
+      "key": "unit_in_axis_or_title",
+      "figure_id": "f1",
+      "evidence": "axes show bare numbers (200, 150, 100, 50); scale only from 'Performance indexed to 100' above the plot"
+    }
+  ],
+  "new_components": [
+    {
+      "name": "zero_tick_as_dash",
+      "figure_id": "f1",
+      "evidence": "in F1, F2 and F5 the bottom axis label is printed '--' instead of '0'",
+      "why_it_matters": "最低刻度不是数字,读者需推断“--”代表0才能按比例换算纵轴位置,否则整段线的取值会被系统性抬高或压低。"
+    },
+    {
+      "name": "panel_title_in_frame_gap",
+      "figure_id": "f1",
+      "evidence": "each panel's border is interrupted at top-left by its caption, e.g. 'F3: IB: Financial advisory revenues'",
+      "why_it_matters": "面板名嵌在边框缺口中而非普通标题行,解析器易把它当边框装饰丢弃,导致取值缺少面板键。"
+    },
+    {
+      "name": "index_base_period_unstated",
+      "figure_id": "f1",
+      "evidence": "'Performance indexed to 100' given, but no base date such as 'FY2008 = 100' anywhere",
+      "why_it_matters": "指数基期缺失,同一数值在不同面板(起点FY2008或FY2010)含义不同,跨面板对照读数会错。"
+    },
+    {
+      "name": "transform_noted_in_series_name",
+      "figure_id": "f1",
+      "evidence": "legend entry 'High yield spread (inverted)' states the series is plotted inverted",
+      "why_it_matters": "该系列数值方向被反转,读出的100不代表原始利差水平,必须连同括注一起报告。"
+    }
+  ],
+  "spot_checks": [
+    {
+      "value": "70",
+      "figure_id": "f1",
+      "mark": "the FY2014 local peak of the 'DCM deal value' line in panel F1",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "F1: IB: DCM revenues",
+        "DCM deal value",
+        "FY2014"
+      ]
+    },
+    {
+      "value": "200",
+      "figure_id": "f1",
+      "mark": "the 'Global IPO deal count' line around FY2012 in panel F2, level with the '200' gridline",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "F2: IB: ECM revenues",
+        "Global IPO deal count",
+        "FY2012"
+      ]
+    },
+    {
+      "value": "195",
+      "figure_id": "f1",
+      "mark": "the end-of-series point of 'Global IPO value' at the right edge of panel F2",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "F2: IB: ECM revenues",
+        "Global IPO value",
+        "FY2015"
+      ]
+    },
+    {
+      "value": "130",
+      "figure_id": "f1",
+      "mark": "the 'US corporate profits' line crossing the 130 level around FY2010 in panel F4",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "F4: IB: Overall investment banking revenues",
+        "US corporate profits",
+        "FY2010"
+      ]
+    },
+    {
+      "value": "74",
+      "figure_id": "f1",
+      "mark": "a trough of 'Interest rate (US 10yr)' near FY2012 in panel F5, between the 50 and 100 gridlines",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "F5: ICS: FICC revenues",
+        "Interest rate (US 10yr)",
+        "FY2012"
+      ]
+    },
+    {
+      "value": "60",
+      "figure_id": "f1",
+      "mark": "the early dip of 'GS FICC revenues' near FY2010 in panel F5",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "F5: ICS: FICC revenues",
+        "GS FICC revenues",
+        "FY2010"
+      ]
+    },
+    {
+      "value": "155",
+      "figure_id": "f1",
+      "mark": "the FY2014 peak of 'US corporate profits' in panel F4, just above the 150 gridline",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "F4: IB: Overall investment banking revenues",
+        "US corporate profits",
+        "FY2014"
+      ]
+    },
+    {
+      "value": "50",
+      "figure_id": "f1",
+      "mark": "a low point of 'GS FICC revenues' around FY2013 in panel F5, at the 50 gridline",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "F5: ICS: FICC revenues",
+        "GS FICC revenues",
+        "FY2013"
+      ]
+    },
+    {
+      "value": "80",
+      "figure_id": "f1",
+      "mark": "the flat stretch of 'GS Financial advisory revenue' near FY2010-FY2011 in panel F3",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "F3: IB: Financial advisory revenues",
+        "GS Financial advisory revenue",
+        "FY2010"
+      ]
+    },
+    {
+      "value": "245",
+      "figure_id": "f1",
+      "mark": "the tall FY2011 spike of the 'Vix index' line in panel F6, above the 240 gridline",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "F6: ICS: Equities revenues",
+        "Vix index",
+        "FY2011"
+      ]
+    }
+  ],
+  "hardest_step": 2,
+  "difficulty_notes": "取值最难。全页没有任何数字标签,F1/F5网格间距为50个指数点,5%容差对70这类值只有±3.5,即不到网格间距的1/14;F2跨度到400,单条网格代表100,读195须精确到±10以内。更糟的是三条折线在F3、F5中反复交叉重叠且颜色仅深蓝/中蓝/浅蓝三级,单点归属难辨;时间轴只有年度FY刻度而数据是季度点,想把某个峰值定位到具体季度也只能估算,使读数与标签同时失准。",
+  "unreadable": [],
+  "suggestions": [
+    {
+      "what_to_add": "per_panel_axis_range 与 small_multiples_5plus 组合(6面板各自不同轴范围)",
+      "where_to_change": "条件行中加入 panel_key 维度,记录字段为每面板单独的 axis_min/axis_max",
+      "new_ablation_row": "“同图多面板且各面板轴范围不同”对照“各面板共享轴”,比较取值命中率",
+      "generality": "common",
+      "maps_to": "P2"
+    },
+    {
+      "what_to_add": "new_components 中的 zero_tick_as_dash(最低刻度写作“--”)",
+      "where_to_change": "样式字段 tick_format 增加 zero_label 选项(0 / -- / 空)",
+      "new_ablation_row": "“零刻度以破折号呈现”对照“零刻度写0”,检验基线定位误差",
+      "generality": "house_style",
+      "maps_to": "P6"
+    },
+    {
+      "what_to_add": "panel_title_per_panel + Exhibit 编号/副标题的三层拆分(Exhibit 1 – 标题、F1: … 面板名、Performance indexed to 100)",
+      "where_to_change": "记录字段将 heading 拆为 number/title/panel_name/unit,并规定面板名相对表格的位置",
+      "new_ablation_row": "“面板名写在边框缺口中”对照“面板名作为加粗标题行”,比较上下文键的可检索性",
+      "generality": "house_style",
+      "maps_to": "P3"
+    },
+    {
+      "what_to_add": "sparse_time_ticks 的加强版:季度数据点仅有年度刻度",
+      "where_to_change": "条件行的时间轴设置增加 tick_every 与 points_per_tick 两个参数",
+      "new_ablation_row": "“每刻度含4个数据点”对照“每点一刻度”,检验时间键能否唯一定位一个点",
+      "generality": "general",
+      "maps_to": "P5"
+    },
+    {
+      "what_to_add": "rebased_index_values 且基期缺失(index_base_period_unstated)",
+      "where_to_change": "heading 的 unit_text 字段允许“有基值无基期”的取值",
+      "new_ablation_row": "“指数标注含基期”对照“仅标注indexed to 100”,检验跨面板数值解释一致性",
+      "generality": "common",
+      "maps_to": "P7"
+    }
+  ],
+  "rules": [
+    {
+      "value": "70",
+      "labels": [
+        "FY2014",
+        "DCM deal value"
+      ],
+      "tolerance": 0.1,
+      "max_diffs": 2,
+      "figure": "f1"
+    },
+    {
+      "value": "200",
+      "labels": [
+        "FY2010",
+        "Global IPO deal count"
+      ],
+      "tolerance": 0.1,
+      "max_diffs": 2,
+      "figure": "f1"
+    },
+    {
+      "value": "195",
+      "labels": [
+        "FY2015",
+        "Global IPO value"
+      ],
+      "tolerance": 0.1,
+      "max_diffs": 2,
+      "figure": "f1"
+    },
+    {
+      "value": "130",
+      "labels": [
+        "FY2015",
+        "Global M&A deal count"
+      ],
+      "tolerance": 0.1,
+      "max_diffs": 2,
+      "figure": "f1"
+    },
+    {
+      "value": "74",
+      "labels": [
+        "FY2013",
+        "GS Financial advisory revenue"
+      ],
+      "tolerance": 0.1,
+      "max_diffs": 2,
+      "figure": "f1"
+    },
+    {
+      "value": "60",
+      "labels": [
+        "FY2011",
+        "GS investment banking revenues"
+      ],
+      "tolerance": 0.1,
+      "max_diffs": 2,
+      "figure": "f1"
+    },
+    {
+      "value": "155",
+      "labels": [
+        "FY2014",
+        "US corporate profits"
+      ],
+      "tolerance": 0.1,
+      "max_diffs": 2,
+      "figure": "f1"
+    },
+    {
+      "value": "50",
+      "labels": [
+        "FY2014",
+        "High yield spread (inverted)"
+      ],
+      "tolerance": 0.2,
+      "max_diffs": 2,
+      "figure": "f1"
+    },
+    {
+      "value": "80",
+      "labels": [
+        "FY2011",
+        "GS FICC revenues"
+      ],
+      "tolerance": 0.1,
+      "max_diffs": 2,
+      "figure": "f1"
+    },
+    {
+      "value": "245",
+      "labels": [
+        "FY2011",
+        "Vix index"
+      ],
+      "tolerance": 0.1,
+      "max_diffs": 2,
+      "figure": "f1"
+    }
+  ],
+  "crosscheck": [
+    {
+      "code": "addressing_keys_wrong",
+      "detail": "6 of 10 predicted key sets miss a rule label: 200, 130, 74, 60, 50, 80"
+    }
+  ]
+}

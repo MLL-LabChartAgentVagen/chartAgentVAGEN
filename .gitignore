@@ -23,9 +23,17 @@ cache/
 # generated artifacts
 data/generated/
 
-# ParseBench chart split (re-fetch: parsebench/tools/download_chart_split.py)
+# ParseBench chart split (re-fetch: parsebench/tools/dataset/download_chart_split.py)
 parsebench/data/raw/
 parsebench/data/pages/
+# ...and the downscaled copies the viewer reads
+parsebench/reports/assets/
 # ...but hand-picked example and failure-case pages are tracked
 !parsebench/data/examples/**/*.png
 !parsebench/data/failure_cases/**/*.png
+
+# ParseBench parser runs (the zip the harness produced, and what it unpacks to)
+parsebench/data/runs/
+# ...and the downscaled copies the failure viewer reads
+parsebench/failures/*/assets/
+parsebench/synthesis/assets/

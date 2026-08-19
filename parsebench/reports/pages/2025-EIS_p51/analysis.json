@@ -1,0 +1,399 @@
+{
+  "stem": "2025-EIS_p51",
+  "document": "2025-EIS",
+  "tags": "need_estimate",
+  "page_note": "该页是《European Innovation Scoreboard 2025》第49页，只有一幅图（Figure 18），用横向条形图加两种标记符号展示EU27成员国在“Intellectual assets”维度上2025年得分，并叠加2018与2024年得分。",
+  "figures": [
+    {
+      "id": "f1",
+      "heading": {
+        "figure_number": "Figure 18",
+        "title": "Innovation performance of the EU27 Member States in the Intellectual assets dimension",
+        "subtitle": "Intellectual assets",
+        "unit_text": "Score for dimension 3.3 in 2025 (indexed to the EU in 2018)",
+        "placement": "above"
+      },
+      "type": "compound",
+      "type_other": "",
+      "orientation": "horizontal",
+      "panels": 1,
+      "panel_names": [],
+      "series": 6,
+      "series_names": [
+        "Emerging innovators",
+        "Strong innovators",
+        "Score in 2018",
+        "Score in 2024",
+        "Moderate innovators",
+        "Innovation leaders"
+      ],
+      "categories": 28,
+      "category_names": [
+        "Austria",
+        "Sweden",
+        "Finland",
+        "Denmark",
+        "Luxembourg",
+        "Estonia",
+        "Germany",
+        "Netherlands",
+        "Italy",
+        "Malta",
+        "Cyprus",
+        "EU"
+      ],
+      "marks": 84,
+      "values_printed": "none",
+      "value_axis_ticks": "0, 20, 40, 60, 80, 100, 120, 140, 160",
+      "source_line": ""
+    }
+  ],
+  "components": [
+    {
+      "key": "horizontal_bars",
+      "figure_id": "f1",
+      "evidence": "country names on the y axis, bars grow rightwards to ticks 0 ... 160"
+    },
+    {
+      "key": "mixed_marks",
+      "figure_id": "f1",
+      "evidence": "each row carries a coloured bar plus a diamond and a short vertical tick"
+    },
+    {
+      "key": "tick_marker_as_series",
+      "figure_id": "f1",
+      "evidence": "legend '| Score in 2024' drawn as a short vertical dash on each bar row"
+    },
+    {
+      "key": "color_encodes_extra_attribute",
+      "figure_id": "f1",
+      "evidence": "bar fill = 'Emerging innovators', 'Moderate innovators', 'Strong innovators', 'Innovation leaders' group"
+    },
+    {
+      "key": "highlighted_category",
+      "figure_id": "f1",
+      "evidence": "the 'EU' row bar is dark blue, unlike the four group colours around it"
+    },
+    {
+      "key": "legend_below_plot",
+      "figure_id": "f1",
+      "evidence": "two rows of legend swatches sit under the axis title, outside the plot"
+    },
+    {
+      "key": "axis_title_below_plot",
+      "figure_id": "f1",
+      "evidence": "'Score for dimension 3.3 in 2025 (indexed to the EU in 2018)' printed under the x ticks"
+    },
+    {
+      "key": "unit_in_axis_or_title",
+      "figure_id": "f1",
+      "evidence": "x ticks are bare numbers 0-160; scale word only in '(indexed to the EU in 2018)'"
+    },
+    {
+      "key": "rebased_index_values",
+      "figure_id": "f1",
+      "evidence": "'indexed to the EU in 2018'; note: 'scores are relative to that of the EU in 2018'"
+    },
+    {
+      "key": "source_note_lines",
+      "figure_id": "f1",
+      "evidence": "'Note: All performance scores are relative to that of the EU in 2018 for each dimension...'"
+    },
+    {
+      "key": "wrapped_category_labels",
+      "figure_id": "f1",
+      "evidence": "28 country names stacked down the y axis, from Austria to Romania"
+    },
+    {
+      "key": "panel_title_per_panel",
+      "figure_id": "f1",
+      "evidence": "blue bold 'Intellectual assets' set above the plot area, below the figure caption"
+    }
+  ],
+  "new_components": [
+    {
+      "name": "primary_series_unnamed_in_legend",
+      "figure_id": "f1",
+      "evidence": "legend names only the four colour groups plus 'Score in 2018'/'Score in 2024'; 2025 bars unnamed",
+      "why_it_matters": "读条形长度得到的是2025年得分，但图例没有任何“2025”条目，只能从轴标题“Score for dimension 3.3 in 2025”推断，表格行若缺此键会与2018/2024标记混淆。"
+    },
+    {
+      "name": "value_sorted_category_axis",
+      "figure_id": "f1",
+      "evidence": "bars run monotonically from Austria (longest) down to Romania (shortest)",
+      "why_it_matters": "排序本身给出取值上下界约束，可用相邻国家条长互相校验读数，减少±5%容差内的误配。"
+    },
+    {
+      "name": "encoding_explained_in_note",
+      "figure_id": "f1",
+      "evidence": "note states bars = 2025, diamonds = 2018, vertical bars = 2024 performance",
+      "why_it_matters": "三种标记的年份含义只写在图下注释里，解析表格若丢掉注释就无法把数值绑定到正确年份。"
+    },
+    {
+      "name": "legend_mixed_swatch_and_glyph",
+      "figure_id": "f1",
+      "evidence": "legend row mixes filled colour squares with a diamond glyph and a dash glyph",
+      "why_it_matters": "同一图例既编码类别配色又编码标记序列，读者必须区分“颜色=分组”与“形状=年份”两套映射。"
+    }
+  ],
+  "spot_checks": [
+    {
+      "value": "112",
+      "figure_id": "f1",
+      "mark": "the Austria 2025 bar (longest bar, top row)",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "Austria",
+        "Intellectual assets",
+        "Score for dimension 3.3 in 2025 (indexed to the EU in 2018)"
+      ]
+    },
+    {
+      "value": "125",
+      "figure_id": "f1",
+      "mark": "the Austria 'Score in 2024' vertical tick (near 126 on the axis); could also be the Germany 'Score in 2018' diamond",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "Austria",
+        "Score in 2024",
+        "Intellectual assets"
+      ]
+    },
+    {
+      "value": "122",
+      "figure_id": "f1",
+      "mark": "the Denmark 'Score in 2024' vertical tick, just left of 120-140",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "Denmark",
+        "Score in 2024",
+        "Intellectual assets"
+      ]
+    },
+    {
+      "value": "100",
+      "figure_id": "f1",
+      "mark": "the Luxembourg 2025 bar, ending at the 100 tick",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "Luxembourg",
+        "Intellectual assets",
+        "Score for dimension 3.3 in 2025 (indexed to the EU in 2018)"
+      ]
+    },
+    {
+      "value": "95",
+      "figure_id": "f1",
+      "mark": "the Netherlands 2025 bar",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "Netherlands",
+        "Intellectual assets",
+        "Score for dimension 3.3 in 2025 (indexed to the EU in 2018)"
+      ]
+    },
+    {
+      "value": "92",
+      "figure_id": "f1",
+      "mark": "the Italy 2025 bar",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "Italy",
+        "Intellectual assets",
+        "Score for dimension 3.3 in 2025 (indexed to the EU in 2018)"
+      ]
+    },
+    {
+      "value": "35",
+      "figure_id": "f1",
+      "mark": "the Romania 2025 bar (bottom row, shortest)",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "Romania",
+        "Intellectual assets",
+        "Score for dimension 3.3 in 2025 (indexed to the EU in 2018)"
+      ]
+    },
+    {
+      "value": "119",
+      "figure_id": "f1",
+      "mark": "the Malta 'Score in 2024' vertical tick, set far right of the Malta bar",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "Malta",
+        "Score in 2024",
+        "Intellectual assets"
+      ]
+    },
+    {
+      "value": "46",
+      "figure_id": "f1",
+      "mark": "the Lithuania 'Score in 2018' diamond, detached far left of its bar; the Croatia/Hungary 2025 bar ends nearby",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "Lithuania",
+        "Score in 2018",
+        "Intellectual assets"
+      ]
+    },
+    {
+      "value": "82",
+      "figure_id": "f1",
+      "mark": "the EU 2025 bar (dark blue row)",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "EU",
+        "Intellectual assets",
+        "Score for dimension 3.3 in 2025 (indexed to the EU in 2018)"
+      ]
+    }
+  ],
+  "hardest_step": 3,
+  "difficulty_notes": "最难的是寻址。一行共有三个可读数的标记（2025条、Score in 2018菱形、Score in 2024竖线），而2025这一序列在图例里根本没有名字，只能借轴标题“Score for dimension 3.3 in 2025”命名，所以一个数值至少需要“国家名 + 年份序列 + Intellectual assets（维度3.3）”三个键。更糟的是数值在28行×3标记=84个标记中重复：46既接近Lithuania的2018菱形又接近Croatia/Hungary的2025条，100既可以是Luxembourg条又是Netherlands的2024竖线，125可对应Austria的2024竖线或Germany的2018菱形；缺一个键就会命中错误标记。读数本身相对宽松：刻度每20单位约84像素，5%容差在112上是±5.6单位≈23像素，肉眼可及，只有35这类小值容差仅±1.75单位≈7像素稍紧。",
+  "unreadable": [],
+  "suggestions": [
+    {
+      "what_to_add": "tick_marker_as_series 与 mixed_marks 组合（条形+菱形+竖线三种标记共用同一数值轴）",
+      "where_to_change": "图表族条件行中新增“horizontal_bar + 两个点状/短划标记序列”的生成模板，series 记录需允许 mark_shape 字段",
+      "new_ablation_row": "带/不带“短划标记序列”的横向条形图对比行，考察模型能否把竖线读成与条形同轴的独立序列",
+      "generality": "common",
+      "maps_to": "P6"
+    },
+    {
+      "what_to_add": "new_components 的 primary_series_unnamed_in_legend（主序列只在轴标题里被命名）",
+      "where_to_change": "记录字段中把 series_name 允许为空并由 axis_title 提供年份，导出时 P3 的表头需回填该名称",
+      "new_ablation_row": "图例是否包含主序列名称的两种版本，检验寻址键从轴标题恢复的能力",
+      "generality": "house_style",
+      "maps_to": "P3"
+    },
+    {
+      "what_to_add": "panel_title_per_panel + axis_title_below_plot + rebased_index_values 的标题四拆（编号/正题/维度小标题/指数基准）",
+      "where_to_change": "P7 的 heading 结构字段：figure_number、title、subtitle（“Intellectual assets”）、unit_text（“…indexed to the EU in 2018”）及 placement",
+      "new_ablation_row": "单位短语放在轴下方 vs 放进标题的两行对比，测量数值被赋予正确量纲的比例",
+      "generality": "general",
+      "maps_to": "P7"
+    },
+    {
+      "what_to_add": "color_encodes_extra_attribute 与 highlighted_category（颜色=创新分组，EU行单独深蓝）",
+      "where_to_change": "样式条件行增加“填色编码分组变量 + 一行聚合高亮”，并在记录中区分 group 与 series",
+      "new_ablation_row": "颜色是否携带额外分组变量的对照行，考察模型不把颜色误当序列身份",
+      "generality": "common",
+      "maps_to": "P6"
+    },
+    {
+      "what_to_add": "new_components 的 value_sorted_category_axis（类别按值降序排列，28行）",
+      "where_to_change": "类别轴生成条件行中加入排序开关，并把类别数上限提高到28以上",
+      "new_ablation_row": "排序/未排序 × 类别数28 的密度行，检验密集横向条形下读数与行名对齐",
+      "generality": "general",
+      "maps_to": "P5"
+    }
+  ],
+  "rules": [
+    {
+      "value": "112",
+      "labels": [
+        "Austria",
+        "Strong innovators"
+      ],
+      "tolerance": 0.05,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "125",
+      "labels": [
+        "Sweden",
+        "Score in 2018"
+      ],
+      "tolerance": 0.05,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "122",
+      "labels": [
+        "Denmark",
+        "Score in 2024"
+      ],
+      "tolerance": 0.05,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "100",
+      "labels": [
+        "EU",
+        "Score in 2018"
+      ],
+      "tolerance": 0.05,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "95",
+      "labels": [
+        "Netherlands",
+        "Innovation leaders"
+      ],
+      "tolerance": 0.05,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "92",
+      "labels": [
+        "Italy",
+        "Moderate innovators"
+      ],
+      "tolerance": 0.05,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "35",
+      "labels": [
+        "Romania",
+        "Emerging innovators"
+      ],
+      "tolerance": 0.05,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "119",
+      "labels": [
+        "Malta",
+        "Score in 2024"
+      ],
+      "tolerance": 0.05,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "46",
+      "labels": [
+        "Lithuania",
+        "Score in 2018"
+      ],
+      "tolerance": 0.05,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "82",
+      "labels": [
+        "Belgium",
+        "Score in 2024"
+      ],
+      "tolerance": 0.05,
+      "max_diffs": 0,
+      "figure": "f1"
+    }
+  ],
+  "crosscheck": [
+    {
+      "code": "addressing_keys_wrong",
+      "detail": "7 of 10 predicted key sets miss a rule label: 112, 125, 100, 95, 92, 35"
+    }
+  ]
+}

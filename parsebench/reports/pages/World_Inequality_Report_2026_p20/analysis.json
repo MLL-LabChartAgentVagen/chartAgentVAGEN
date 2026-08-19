@@ -1,0 +1,402 @@
+{
+  "stem": "World_Inequality_Report_2026_p20",
+  "document": "World_Inequality_Report_2026",
+  "tags": "3d_chart+need_estimate",
+  "page_note": "本页为《Executive Summary》第20页，含Figure 8（收入与财富在各区域内部的不平等，双面板分组柱状图）及其解释注释，下方为",
+  "figures": [
+    {
+      "id": "f1",
+      "heading": {
+        "figure_number": "Figure 8.",
+        "title": "Income and, even more, wealth are extremely concentrated at the top in every region",
+        "subtitle": "Inequality within regions, 2025",
+        "unit_text": "Share of national income (%)",
+        "placement": "above"
+      },
+      "type": "grouped_bar",
+      "type_other": "",
+      "orientation": "vertical",
+      "panels": 2,
+      "panel_names": [
+        "Income",
+        "Wealth"
+      ],
+      "series": 3,
+      "series_names": [
+        "Bottom 50%",
+        "Middle 40%",
+        "Top 10%"
+      ],
+      "categories": 8,
+      "category_names": [
+        "EURO",
+        "EASA",
+        "NAOC",
+        "RUCA",
+        "SSAF",
+        "SSEA",
+        "MENA",
+        "LATA"
+      ],
+      "marks": 48,
+      "values_printed": "none",
+      "value_axis_ticks": "0%, 10%, 20%, 30%, 40%, 50%, 60%, 70%, 80%",
+      "source_line": "Sources and series: wir2026.wid.world/methodology."
+    }
+  ],
+  "components": [
+    {
+      "key": "grouped_bar",
+      "figure_id": "f1",
+      "evidence": "three bars (blue, green, red) stand side by side in each region slot, e.g. over EURO"
+    },
+    {
+      "key": "shared_legend",
+      "figure_id": "f1",
+      "evidence": "one legend row 'Bottom 50% / Middle 40% / Top 10%' below both Income and Wealth panels"
+    },
+    {
+      "key": "legend_below_plot",
+      "figure_id": "f1",
+      "evidence": "legend swatches sit centred beneath the two plots, above the 'Interpretation.' text"
+    },
+    {
+      "key": "small_multiples_4",
+      "figure_id": "f1",
+      "evidence": "two side-by-side panels of the same grouped-bar design, titled 'Income' and 'Wealth'"
+    },
+    {
+      "key": "panel_title_per_panel",
+      "figure_id": "f1",
+      "evidence": "bold 'Income' above the left plot, bold 'Wealth' above the right plot"
+    },
+    {
+      "key": "rotated_axis_title",
+      "figure_id": "f1",
+      "evidence": "'Share of national income (%)' and 'Share of personal wealth (%)' set vertically along each y axis"
+    },
+    {
+      "key": "unit_in_axis_or_title",
+      "figure_id": "f1",
+      "evidence": "the '(%)' scale sits in the rotated axis titles; bars carry no printed numbers"
+    },
+    {
+      "key": "rotated_x_ticks",
+      "figure_id": "f1",
+      "evidence": "region codes EURO, EASA, NAOC... are turned about 45 degrees under both axes"
+    },
+    {
+      "key": "abbrev_category_axis",
+      "figure_id": "f1",
+      "evidence": "category axis reads codes 'EURO, EASA, NAOC, RUCA, SSAF, SSEA, MENA, LATA'"
+    },
+    {
+      "key": "hgrid_only",
+      "figure_id": "f1",
+      "evidence": "dotted horizontal rules at each 10% level in both panels, no vertical rules"
+    },
+    {
+      "key": "source_note_lines",
+      "figure_id": "f1",
+      "evidence": "small print below: 'Interpretation. ... Notes. EASA: East Asia ... Sources and series: wir2026.wid.world/methodology.'"
+    },
+    {
+      "key": "footnote_marker",
+      "figure_id": "f1",
+      "evidence": "bold lead-in markers 'Interpretation.', 'Notes.', 'Sources and series:' introduce the note block under the plots"
+    }
+  ],
+  "new_components": [
+    {
+      "name": "per_panel_category_order",
+      "figure_id": "f1",
+      "evidence": "Income axis order EURO, EASA, NAOC, RUCA...; Wealth axis order EURO, SSEA, NAOC, LATA, EASA...",
+      "why_it_matters": "同一区域在两个面板处于不同横轴位置，读值时不能按位置对应，必须同时用面板名与区域码定位，否则会把 Income 的第2槽误读为 Wealth 的第2槽。"
+    },
+    {
+      "name": "sorted_by_one_series",
+      "figure_id": "f1",
+      "evidence": "note says 'The figures are arranged according to top 10% shares'; red bars rise left to right in each panel",
+      "why_it_matters": "类别顺序由 Top 10% 系列大小决定而非固定名单，读表时行序本身携带信息，重排会破坏与图的一致性。"
+    },
+    {
+      "name": "near_zero_mark",
+      "figure_id": "f1",
+      "evidence": "Wealth panel Bottom 50% bars for NAOC, SSAF, MENA are hairlines barely above the 0% baseline",
+      "why_it_matters": "这些柱高不足一个像素级刻度间距的1/10，按5%相对容差读数不可行，只能标注为约0–1%。"
+    }
+  ],
+  "spot_checks": [
+    {
+      "value": "19",
+      "figure_id": "f1",
+      "mark": "Income panel, EURO, blue Bottom 50% bar (just below the 20% gridline)",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "Income",
+        "EURO",
+        "Bottom 50%",
+        "Share of national income (%)"
+      ]
+    },
+    {
+      "value": "42",
+      "figure_id": "f1",
+      "mark": "Income panel, EASA, green Middle 40% bar (just above 40%)",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "Income",
+        "EASA",
+        "Middle 40%",
+        "Share of national income (%)"
+      ]
+    },
+    {
+      "value": "57",
+      "figure_id": "f1",
+      "mark": "Income panel, MENA, red Top 10% bar (between 50% and 60%, level with LATA)",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "Income",
+        "MENA",
+        "Top 10%",
+        "Share of national income (%)"
+      ]
+    },
+    {
+      "value": "10",
+      "figure_id": "f1",
+      "mark": "Income panel, SSAF, blue Bottom 50% bar (at the 10% gridline)",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "Income",
+        "SSAF",
+        "Bottom 50%",
+        "Share of national income (%)"
+      ]
+    },
+    {
+      "value": "73",
+      "figure_id": "f1",
+      "mark": "Wealth panel, MENA, red Top 10% bar (just above 70%)",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "Wealth",
+        "MENA",
+        "Top 10%",
+        "Share of personal wealth (%)"
+      ]
+    },
+    {
+      "value": "59",
+      "figure_id": "f1",
+      "mark": "Wealth panel, EURO, red Top 10% bar (the lowest red bar, at about 60%)",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "Wealth",
+        "EURO",
+        "Top 10%",
+        "Share of personal wealth (%)"
+      ]
+    },
+    {
+      "value": "1",
+      "figure_id": "f1",
+      "mark": "Wealth panel, NAOC, blue Bottom 50% hairline bar just above the baseline",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "Wealth",
+        "NAOC",
+        "Bottom 50%",
+        "Share of personal wealth (%)"
+      ]
+    },
+    {
+      "value": "30",
+      "figure_id": "f1",
+      "mark": "Wealth panel, SSEA, green Middle 40% bar (at the 30% gridline)",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "Wealth",
+        "SSEA",
+        "Middle 40%",
+        "Share of personal wealth (%)"
+      ]
+    },
+    {
+      "value": "70",
+      "figure_id": "f1",
+      "mark": "Wealth panel, EASA, red Top 10% bar (at the 70% gridline)",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "Wealth",
+        "EASA",
+        "Top 10%",
+        "Share of personal wealth (%)"
+      ]
+    },
+    {
+      "value": "1",
+      "figure_id": "f1",
+      "mark": "Wealth panel, SSAF (or MENA), blue Bottom 50% hairline bar; the two are indistinguishable",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "Wealth",
+        "SSAF",
+        "Bottom 50%",
+        "Share of personal wealth (%)"
+      ]
+    }
+  ],
+  "hardest_step": 2,
+  "difficulty_notes": "刻度间距为10个百分点，图上一格约27像素，故1个百分点≈2.7像素。Wealth 面板中 NAOC、SSAF、MENA 的 Bottom 50% 柱只有1–2像素高，要落在1的±5%（即0.95–1.05）区间内在物理上不可能；59、73 这类无标注的红柱也只能凭0%–80%共9条网格线目测，误差常达±1.5个百分点，对59而言容差仅±2.95，勉强边缘。相比之下定址虽需三键（面板名 Income/Wealth + 区域码 + 系列名），但这些标签都以粗体面板标题、旋转轴刻度和图例文字明确印出，可被表格承载。",
+  "unreadable": [],
+  "suggestions": [
+    {
+      "what_to_add": "新组件 per_panel_category_order（面板各自排序的类别轴）",
+      "where_to_change": "记录字段：为每个 panel 单独存 category order，并在 panel_key 中携带面板名",
+      "new_ablation_row": "两面板类别顺序一致 vs 不一致时的取值命中率对比",
+      "generality": "common",
+      "maps_to": "P2"
+    },
+    {
+      "what_to_add": "新组件 near_zero_mark（接近0的极细柱）",
+      "where_to_change": "readable 判定：把每个 mark 的可达精度改为随柱高变化的连续量，而非整图布尔门",
+      "new_ablation_row": "柱高<3像素的 mark 单独统计可读精度上限",
+      "generality": "general",
+      "maps_to": "P1"
+    },
+    {
+      "what_to_add": "panel_title_per_panel 与 rotated_axis_title 的表外语境",
+      "where_to_change": "整页 markdown 导出：面板名以粗体小标题写在对应表格上方，轴标题作为单位列",
+      "new_ablation_row": "面板名写为粗体标题 vs 仅在表头单元格内时的定址成功率",
+      "generality": "general",
+      "maps_to": "P3"
+    },
+    {
+      "what_to_add": "unit_in_axis_or_title（单位只存在于旋转轴标题的 '(%)'）",
+      "where_to_change": "样式维度：单位位置（轴标题/副标题/系列名）作为可控变量",
+      "new_ablation_row": "单位在旋转轴标题 vs 在副标题时的单位恢复率",
+      "generality": "general",
+      "maps_to": "P6"
+    }
+  ],
+  "rules": [
+    {
+      "value": "19",
+      "labels": [
+        "Income",
+        "EURO",
+        "Bottom 50%"
+      ],
+      "tolerance": 0.05,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "42",
+      "labels": [
+        "Income",
+        "EASA",
+        "Middle 40%"
+      ],
+      "tolerance": 0.05,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "57",
+      "labels": [
+        "Income",
+        "LATA",
+        "Top 10%"
+      ],
+      "tolerance": 0.05,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "10",
+      "labels": [
+        "Income",
+        "MENA",
+        "Bottom 50%"
+      ],
+      "tolerance": 0.05,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "73",
+      "labels": [
+        "Wealth",
+        "RUCA",
+        "Top 10%"
+      ],
+      "tolerance": 0.05,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "59",
+      "labels": [
+        "Wealth",
+        "EURO",
+        "Top 10%"
+      ],
+      "tolerance": 0.05,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "1",
+      "labels": [
+        "Wealth",
+        "LATA",
+        "Bottom 50%"
+      ],
+      "tolerance": 0.1,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "30",
+      "labels": [
+        "Wealth",
+        "SSEA",
+        "Middle 40%"
+      ],
+      "tolerance": 0.05,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "70",
+      "labels": [
+        "Wealth",
+        "EASA",
+        "Top 10%"
+      ],
+      "tolerance": 0.05,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "1",
+      "labels": [
+        "Wealth",
+        "NAOC",
+        "Bottom 50%"
+      ],
+      "tolerance": 0.1,
+      "max_diffs": 0,
+      "figure": "f1"
+    }
+  ],
+  "crosscheck": [
+    {
+      "code": "addressing_keys_wrong",
+      "detail": "5 of 10 predicted key sets miss a rule label: 57, 10, 73, 1, 1"
+    }
+  ]
+}

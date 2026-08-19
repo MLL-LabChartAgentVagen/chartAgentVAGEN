@@ -1,0 +1,418 @@
+{
+  "stem": "ac8b3538-en_p61",
+  "document": "ac8b3538-en",
+  "tags": "3d_chart+need_estimate",
+  "page_note": "该页为 OECD 就业展望附录图 1.C.1，用 15 个小倍图折线面板展示 2019 年 5 月至 2024 年 5 月各国名义与实际最低工资的累计百分比变化。",
+  "figures": [
+    {
+      "id": "f1",
+      "heading": {
+        "figure_number": "Annex Figure 1.C.1.",
+        "title": "Minimum wage evolution, May 2019 to May 2024",
+        "subtitle": "Nominal and real minimum wage, cumulative percentage change since May 2019",
+        "unit_text": "cumulative percentage change since May 2019",
+        "placement": "above"
+      },
+      "type": "line",
+      "type_other": "",
+      "orientation": "vertical",
+      "panels": 15,
+      "panel_names": [
+        "Australia",
+        "Belgium",
+        "Canada Federal Jurisiction",
+        "Canada Weighted",
+        "Chile",
+        "Colombia",
+        "Costa Rica",
+        "Czechia",
+        "Estonia",
+        "France",
+        "Germany",
+        "Greece",
+        "Hungary",
+        "Ireland",
+        "Israel"
+      ],
+      "series": 2,
+      "series_names": [
+        "Nominal minimum wage",
+        "Real minimum wage"
+      ],
+      "categories": 11,
+      "category_names": [
+        "May-19",
+        "Nov-19",
+        "May-20",
+        "Nov-20",
+        "May-21",
+        "Nov-21",
+        "May-22",
+        "Nov-22",
+        "May-23",
+        "Nov-23",
+        "May-24"
+      ],
+      "marks": 1830,
+      "values_printed": "none",
+      "value_axis_ticks": "60, 50, 40, 30, 20, 10, 0, -10, -20 (most panels); Canada Federal Jurisiction: 160, 120, 80, 40, 0, -40; Canada Weighted: 60, 40, 20, 0, -20; Hungary: 90, 75, 60, 45, 30, 15, 0, -15, -30",
+      "source_line": ""
+    }
+  ],
+  "components": [
+    {
+      "key": "small_multiples_5plus",
+      "figure_id": "f1",
+      "evidence": "15 identical line panels in a 3-column grid, Australia through Israel"
+    },
+    {
+      "key": "panel_title_per_panel",
+      "figure_id": "f1",
+      "evidence": "each panel carries its own name above it: \"Australia\", \"Belgium\", \"Chile\", \"Hungary\""
+    },
+    {
+      "key": "shared_legend",
+      "figure_id": "f1",
+      "evidence": "one grey legend strip above all panels governing every panel"
+    },
+    {
+      "key": "legend_above_plot",
+      "figure_id": "f1",
+      "evidence": "legend strip sits between the subtitle line and the first row of panels"
+    },
+    {
+      "key": "per_panel_axis_range",
+      "figure_id": "f1",
+      "evidence": "Canada Federal Jurisiction runs -40 to 160, Hungary -30 to 90, others -20 to 60"
+    },
+    {
+      "key": "negative_values",
+      "figure_id": "f1",
+      "evidence": "Estonia real line reaches about -10; ticks -10, -20 printed on most panels"
+    },
+    {
+      "key": "reference_line",
+      "figure_id": "f1",
+      "evidence": "a black horizontal rule drawn at 0 across each panel"
+    },
+    {
+      "key": "step_line_series",
+      "figure_id": "f1",
+      "evidence": "Nominal minimum wage moves in flat treads with vertical risers, e.g. Australia at May-22"
+    },
+    {
+      "key": "rotated_x_ticks",
+      "figure_id": "f1",
+      "evidence": "\"May-19\"..\"May-24\" tick text is turned about 45 degrees under every panel"
+    },
+    {
+      "key": "nonstandard_time_ticks",
+      "figure_id": "f1",
+      "evidence": "time written as \"May-19\", \"Nov-23\" rather than ISO dates"
+    },
+    {
+      "key": "sparse_time_ticks",
+      "figure_id": "f1",
+      "evidence": "lines move monthly but ticks appear only every six months, May and Nov"
+    },
+    {
+      "key": "unit_in_axis_or_title",
+      "figure_id": "f1",
+      "evidence": "axes show bare numbers; \"cumulative percentage change since May 2019\" only in the heading line"
+    },
+    {
+      "key": "panel_background",
+      "figure_id": "f1",
+      "evidence": "every plot area carries a light grey fill instead of white"
+    },
+    {
+      "key": "dense_marks_100plus",
+      "figure_id": "f1",
+      "evidence": "15 panels x 2 monthly series x ~61 months of plotted points"
+    }
+  ],
+  "new_components": [
+    {
+      "name": "panel_title_two_line_qualifier",
+      "figure_id": "f1",
+      "evidence": "\"Canada\" appears twice, disambiguated only by a second line: \"Federal Jurisiction\" and \"Weighted\"",
+      "why_it_matters": "仅用面板主标题无法唯一定位数值，必须把第二行限定词一起作为寻址键，否则两个 Canada 面板会混淆。"
+    },
+    {
+      "name": "stepped_and_sawtooth_series_pair",
+      "figure_id": "f1",
+      "evidence": "nominal series is a pure step line while the real series is a sawtooth eroding between steps",
+      "why_it_matters": "同一面板内两条线形态不同，读取某月数值时须先判断该系列是台阶平台还是持续下滑段。"
+    }
+  ],
+  "spot_checks": [
+    {
+      "value": "5",
+      "figure_id": "f1",
+      "mark": "the Australia Real minimum wage line at May-24",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "Australia",
+        "Real minimum wage",
+        "May-24"
+      ]
+    },
+    {
+      "value": "9",
+      "figure_id": "f1",
+      "mark": "the Ireland Real minimum wage line at its May-24 endpoint",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "Ireland",
+        "Real minimum wage",
+        "May-24"
+      ]
+    },
+    {
+      "value": "53",
+      "figure_id": "f1",
+      "mark": "the Chile Nominal minimum wage line at its May-24 plateau",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "Chile",
+        "Nominal minimum wage",
+        "May-24"
+      ]
+    },
+    {
+      "value": "9",
+      "figure_id": "f1",
+      "mark": "the Estonia Real minimum wage line at May-24",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "Estonia",
+        "Real minimum wage",
+        "May-24"
+      ]
+    },
+    {
+      "value": "0",
+      "figure_id": "f1",
+      "mark": "both series at the May-19 base point in every panel, e.g. Australia Nominal minimum wage at May-19",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "Australia",
+        "Nominal minimum wage",
+        "May-19"
+      ]
+    },
+    {
+      "value": "10",
+      "figure_id": "f1",
+      "mark": "the Czechia Nominal minimum wage step plateau running from Nov-19 to Nov-21",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "Czechia",
+        "Nominal minimum wage",
+        "Nov-20"
+      ]
+    },
+    {
+      "value": "2",
+      "figure_id": "f1",
+      "mark": "the France Real minimum wage line at May-24, just above the zero rule",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "France",
+        "Real minimum wage",
+        "May-24"
+      ]
+    },
+    {
+      "value": "36",
+      "figure_id": "f1",
+      "mark": "the Germany Nominal minimum wage line at its final May-24 level",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "Germany",
+        "Nominal minimum wage",
+        "May-24"
+      ]
+    },
+    {
+      "value": "34",
+      "figure_id": "f1",
+      "mark": "the Germany Nominal minimum wage step plateau after the Nov-22 riser",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "Germany",
+        "Nominal minimum wage",
+        "Nov-22"
+      ]
+    },
+    {
+      "value": "-1",
+      "figure_id": "f1",
+      "mark": "the Australia Real minimum wage line dipping just below the zero rule around Nov-22",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "Australia",
+        "Real minimum wage",
+        "Nov-22"
+      ]
+    }
+  ],
+  "hardest_step": 2,
+  "difficulty_notes": "面板极小（每个绘图区高度约 130 px，覆盖 -20 到 60 共 80 个单位，10 个单位刻度间距仅约 16 px），要把 5 读到 ±0.25、把 2 读到 ±0.1、把 -1 判成负号而非 0，都远超像素分辨能力；Canada Federal Jurisiction 一格 40 个单位更甚。相比之下寻址虽需三个键（面板名+系列名+月份），但键都是印在页上的文字，仍可写入表格；真正卡住的是数值本身。",
+  "unreadable": [],
+  "suggestions": [
+    {
+      "what_to_add": "per_panel_axis_range 与面板键（panel_key）",
+      "where_to_change": "记录字段中为每个面板单独存 y 轴范围与刻度序列，寻址键加入面板名",
+      "new_ablation_row": "面板数 ≥12 且各面板轴范围不同时的数值命中率对比统一轴范围的小倍图",
+      "generality": "general",
+      "maps_to": "P2"
+    },
+    {
+      "what_to_add": "step_line_series 作为线型风格维度",
+      "where_to_change": "折线族的 style 字段增加 step/线性插值开关",
+      "new_ablation_row": "台阶线 vs 直连线在同一取值任务下的读数误差行",
+      "generality": "common",
+      "maps_to": "P6"
+    },
+    {
+      "what_to_add": "新建 panel_title_two_line_qualifier（面板副标题）",
+      "where_to_change": "面板标题字段拆为 name + qualifier，并在导出的表格上方以粗体写出",
+      "new_ablation_row": "面板主名重复、仅靠第二行限定词区分时的上下文命中率",
+      "generality": "common",
+      "maps_to": "P3"
+    },
+    {
+      "what_to_add": "逐标记可达精度（readable 改为连续量）",
+      "where_to_change": "评分条件行：按面板像素高度/轴跨度计算容差，而非固定 5%",
+      "new_ablation_row": "面板高度 <150 px 且刻度间距 <20 px 时的可读性阈值行",
+      "generality": "general",
+      "maps_to": "P1"
+    },
+    {
+      "what_to_add": "标题五分拆（编号/标题/副标题/单位/位置）",
+      "where_to_change": "图头记录字段，单位短语来自副标题而非轴",
+      "new_ablation_row": "单位只出现在副标题时的单位识别行",
+      "generality": "general",
+      "maps_to": "P7"
+    }
+  ],
+  "rules": [
+    {
+      "value": "5",
+      "labels": [
+        "Australia",
+        "Nominal minimum wage",
+        "May-21"
+      ],
+      "tolerance": 0.2,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "9",
+      "labels": [
+        "Belgium",
+        "Real minimum wage",
+        "May-24"
+      ],
+      "tolerance": 0.15,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "53",
+      "labels": [
+        "Chile",
+        "Nominal minimum wage",
+        "May-24"
+      ],
+      "tolerance": 0.05,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "9",
+      "labels": [
+        "Colombia",
+        "Real minimum wage",
+        "May-23"
+      ],
+      "tolerance": 0.15,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "0",
+      "labels": [
+        "Costa Rica",
+        "Nominal minimum wage",
+        "May-19"
+      ],
+      "tolerance": 0.01,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "10",
+      "labels": [
+        "Estonia",
+        "Nominal minimum wage",
+        "May-21"
+      ],
+      "tolerance": 0.05,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "2",
+      "labels": [
+        "France",
+        "Real minimum wage",
+        "May-24"
+      ],
+      "tolerance": 0.2,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "36",
+      "labels": [
+        "Germany",
+        "Nominal minimum wage",
+        "May-24"
+      ],
+      "tolerance": 0.05,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "34",
+      "labels": [
+        "Hungary",
+        "Nominal minimum wage",
+        "Nov-22"
+      ],
+      "tolerance": 0.05,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "-1",
+      "labels": [
+        "Israel",
+        "Real minimum wage",
+        "May-24"
+      ],
+      "tolerance": 0.2,
+      "max_diffs": 0,
+      "figure": "f1"
+    }
+  ],
+  "crosscheck": [
+    {
+      "code": "addressing_keys_wrong",
+      "detail": "7 of 10 predicted key sets miss a rule label: 5, 9, 9, 0, 10, 34"
+    }
+  ]
+}

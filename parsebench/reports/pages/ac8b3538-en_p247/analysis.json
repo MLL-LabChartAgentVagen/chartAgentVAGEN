@@ -1,0 +1,358 @@
+{
+  "stem": "ac8b3538-en_p247",
+  "document": "ac8b3538-en",
+  "tags": "need_estimate",
+  "page_note": "该页为OECD《Employment Outlook 2024》第245页，正文两段外含单幅折线图Figure 5.6，展示五个国家家庭消费排放按排放分位数的分布，并附注释、来源与StatLink链接。",
+  "figures": [
+    {
+      "id": "f1",
+      "heading": {
+        "figure_number": "Figure 5.6.",
+        "title": "Emissions from household consumption are very unequal across and within countries",
+        "subtitle": "Emissions from household consumption, tCO2 per household at different points in the national emissions distribution",
+        "unit_text": "Tonne of CO2 per household",
+        "placement": "above"
+      },
+      "type": "line",
+      "type_other": "",
+      "orientation": "vertical",
+      "panels": 1,
+      "panel_names": [],
+      "series": 5,
+      "series_names": [
+        "France",
+        "Germany",
+        "Mexico",
+        "Poland",
+        "Türkiye"
+      ],
+      "categories": 10,
+      "category_names": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "10"
+      ],
+      "marks": 50,
+      "values_printed": "none",
+      "value_axis_ticks": "25, 20, 15, 10, 5, 0",
+      "source_line": "Source: OECD calculations using IEA emissions factors for different fuels, World Input-Output Database (WIOD) as well as household budget surveys (2015 for EU countries, 2016 for Mexico, 2019 for Türkiye)."
+    }
+  ],
+  "components": [
+    {
+      "key": "legend_above_plot",
+      "figure_id": "f1",
+      "evidence": "grey legend strip with France, Germany, Mexico, Poland, Türkiye sits between subtitle and plot area"
+    },
+    {
+      "key": "panel_background",
+      "figure_id": "f1",
+      "evidence": "the plot area itself is filled light grey behind the five lines"
+    },
+    {
+      "key": "source_note_lines",
+      "figure_id": "f1",
+      "evidence": "small print below plot: \"Note: Average emissions across the national emissions distribution...\" and \"Source: OECD calculations...\""
+    },
+    {
+      "key": "data_link_below_figure",
+      "figure_id": "f1",
+      "evidence": "\"StatLink\" glyph with \"https://stat.link/snwjx0\" under the source line"
+    },
+    {
+      "key": "unit_in_axis_or_title",
+      "figure_id": "f1",
+      "evidence": "subtitle reads \"tCO2 per household at different points in the national emissions distribution\"; axis shows bare 0–25"
+    },
+    {
+      "key": "axis_title_above_axis",
+      "figure_id": "f1",
+      "evidence": "\"Tonne of CO2 per household\" printed above the top tick \"25\""
+    }
+  ],
+  "new_components": [
+    {
+      "name": "category_axis_title_at_axis_end",
+      "figure_id": "f1",
+      "evidence": "\"Emissions decile\" printed below the right end of the x tick row, not centred under the plot",
+      "why_it_matters": "分位数轴的名称只在轴右端出现一次，表格若不带此标签，1–10这些纯数字刻度无法说明其含义。"
+    },
+    {
+      "name": "subscript_unit_glyph",
+      "figure_id": "f1",
+      "evidence": "unit written with subscript 2: \"Tonne of CO2 per household\" and \"tCO2\" in subtitle",
+      "why_it_matters": "解析后可能变成\"tCO 2\"或\"tCO2\"，单位字符串匹配会失败，影响用单位定位数值。"
+    },
+    {
+      "name": "duplicated_unit_text",
+      "figure_id": "f1",
+      "evidence": "unit appears twice: \"tCO2 per household\" in subtitle and \"Tonne of CO2 per household\" above axis",
+      "why_it_matters": "同一单位有两种写法，抽取时需判断以哪一处为准，否则表头单位与图不一致。"
+    }
+  ],
+  "spot_checks": [
+    {
+      "value": "1.8",
+      "figure_id": "f1",
+      "mark": "the France line at emissions decile 2 (low-decile point read against the axis)",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "France",
+        "2",
+        "Emissions decile",
+        "Tonne of CO2 per household"
+      ]
+    },
+    {
+      "value": "21.0",
+      "figure_id": "f1",
+      "mark": "the France line at emissions decile 10, the highest endpoint",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "France",
+        "10",
+        "Emissions decile",
+        "Tonne of CO2 per household"
+      ]
+    },
+    {
+      "value": "6.8",
+      "figure_id": "f1",
+      "mark": "the Germany line at emissions decile 6",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "Germany",
+        "6",
+        "Emissions decile",
+        "Tonne of CO2 per household"
+      ]
+    },
+    {
+      "value": "18.0",
+      "figure_id": "f1",
+      "mark": "the Germany line at emissions decile 10",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "Germany",
+        "10",
+        "Emissions decile",
+        "Tonne of CO2 per household"
+      ]
+    },
+    {
+      "value": "1.0",
+      "figure_id": "f1",
+      "mark": "the Poland line at emissions decile 1, the lowest of the three upper lines",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "Poland",
+        "1",
+        "Emissions decile",
+        "Tonne of CO2 per household"
+      ]
+    },
+    {
+      "value": "17.0",
+      "figure_id": "f1",
+      "mark": "the Poland line at emissions decile 10",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "Poland",
+        "10",
+        "Emissions decile",
+        "Tonne of CO2 per household"
+      ]
+    },
+    {
+      "value": "0.2",
+      "figure_id": "f1",
+      "mark": "the Mexico line at emissions decile 1, hugging the zero baseline",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "Mexico",
+        "1",
+        "Emissions decile",
+        "Tonne of CO2 per household"
+      ]
+    },
+    {
+      "value": "3.8",
+      "figure_id": "f1",
+      "mark": "the Mexico line at emissions decile 10",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "Mexico",
+        "10",
+        "Emissions decile",
+        "Tonne of CO2 per household"
+      ]
+    },
+    {
+      "value": "0.2",
+      "figure_id": "f1",
+      "mark": "the Türkiye line at emissions decile 1, overlapping Mexico at the baseline",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "Türkiye",
+        "1",
+        "Emissions decile",
+        "Tonne of CO2 per household"
+      ]
+    },
+    {
+      "value": "3.8",
+      "figure_id": "f1",
+      "mark": "the Türkiye line at emissions decile 10",
+      "printed_on_figure": false,
+      "addressing_keys": [
+        "Türkiye",
+        "10",
+        "Emissions decile",
+        "Tonne of CO2 per household"
+      ]
+    }
+  ],
+  "hardest_step": 2,
+  "difficulty_notes": "纵轴0–25每5个单位一格（约26像素/格，即约0.19 tCO2/像素），且图上没有任何数值标签。要在5%容差内命中0.2这个点，允许误差仅±0.01 tCO2，相当于不到十分之一像素；Mexico与Türkiye两条线在1–8分位几乎重合在基线上，连区分两条线都困难。即便是21.0这样的大值，5%容差为±1.05，尚在半格以内可读，但十个待查值中有四个落在0.2–3.8区间，读值精度成为主要瓶颈；标签方面只需\"国家名+分位数\"两个键，反而不难。",
+  "unreadable": [],
+  "suggestions": [
+    {
+      "what_to_add": "把readable改为逐点可达精度（针对同一轴上量级相差百倍的折线，如0.2与21.0共用0–25轴）",
+      "where_to_change": "评测条件行中的readable门限字段，改为按mark记录axis_span与可达绝对误差",
+      "new_ablation_row": "新增一行：同一数值轴上最小值/最大值比≤1/50时，低值点的容差按像素分辨率而非5%相对误差评分",
+      "generality": "general",
+      "maps_to": "P1"
+    },
+    {
+      "what_to_add": "new_components中的category_axis_title_at_axis_end（\"Emissions decile\"置于x轴右端）",
+      "where_to_change": "样式字段新增category_axis_title位置选项（axis_end / centered_below / none）",
+      "new_ablation_row": "新增一行：类别轴标题仅出现在轴末端时，导出表格是否仍能给出类别列名",
+      "generality": "common",
+      "maps_to": "P6"
+    },
+    {
+      "what_to_add": "标题五段拆分（figure_number / title / subtitle / unit_text / placement），本页单位同时出现在副标题与轴上方",
+      "where_to_change": "记录字段中的heading结构，允许unit_text有两个落点（subtitle与above_axis）",
+      "new_ablation_row": "新增一行：单位只在副标题、只在轴上方、两处重复三种情形下的单位识别率",
+      "generality": "general",
+      "maps_to": "P7"
+    },
+    {
+      "what_to_add": "data_link_below_figure与source_note_lines同时存在时的整页markdown导出顺序",
+      "where_to_change": "页面级导出模板：图题（粗体）→表格→Note→Source→StatLink链接",
+      "new_ablation_row": "新增一行：图题作为标题行放在表上方与放在表下方时，值+标签联合命中率对比",
+      "generality": "house_style",
+      "maps_to": "P3"
+    }
+  ],
+  "rules": [
+    {
+      "value": "1.8",
+      "labels": [
+        "France",
+        "1"
+      ],
+      "tolerance": 0.1,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "21.0",
+      "labels": [
+        "France",
+        "10"
+      ],
+      "tolerance": 0.1,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "6.8",
+      "labels": [
+        "Germany",
+        "5"
+      ],
+      "tolerance": 0.1,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "18.0",
+      "labels": [
+        "Germany",
+        "10"
+      ],
+      "tolerance": 0.1,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "1.0",
+      "labels": [
+        "Poland",
+        "1"
+      ],
+      "tolerance": 0.1,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "17.0",
+      "labels": [
+        "Poland",
+        "10"
+      ],
+      "tolerance": 0.1,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "0.2",
+      "labels": [
+        "Mexico",
+        "1"
+      ],
+      "tolerance": 0.1,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "3.8",
+      "labels": [
+        "Mexico",
+        "10"
+      ],
+      "tolerance": 0.1,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "0.2",
+      "labels": [
+        "Türkiye",
+        "1"
+      ],
+      "tolerance": 0.1,
+      "max_diffs": 0,
+      "figure": "f1"
+    },
+    {
+      "value": "3.8",
+      "labels": [
+        "Türkiye",
+        "10"
+      ],
+      "tolerance": 0.1,
+      "max_diffs": 0,
+      "figure": "f1"
+    }
+  ],
+  "crosscheck": []
+}
