@@ -400,7 +400,7 @@ class TestAnthropicProviderShape:
         from llmkit.providers import AnthropicProvider
         from llmkit.types import LLMError
 
-        schema = {"type": "object", "additionalProperties": False,
+        schema = {"type": "object", "additionalProperties": False, "required": ["items"],
                   "properties": {"items": {"type": "array", "items": {"type": "object"}}}}
         with pytest.raises(LLMError, match=r"schema\.items\[\]"):
             AnthropicProvider.build_request(
@@ -418,3 +418,223 @@ class TestAnthropicProviderShape:
         import llmkit
 
         assert llmkit.DEFAULT_MODEL == "claude-opus-5"
+
+
+# --------------------------------------------------------------------------- #
+# The three providers, side by side                                            #
+# --------------------------------------------------------------------------- #
+
+#: How to read the same thing out of each vendor's request body. Comparing across
+#: models only means something if these three requests say the same thing, so the
+#: tests below are written once and run against all three.
+SHAPES = {
+    "anthropic": {
+        "cap": lambda b: b["max_tokens"],
+        "system": lambda b: b.get("system"),
+        "effort": lambda b: b["output_config"]["effort"],
+        "schema": lambda b: b["output_config"]["format"]["schema"],
+        "parts": lambda b: b["messages"][0]["content"],
+        "image": {"type": "image",
+                  "source": {"type": "base64", "media_type": "image/png", "data": "aGVsbG8="}},
+        "text": {"type": "text", "text": "U"},
+        "max_effort": "max",
+    },
+    "openai": {
+        "cap": lambda b: b["max_output_tokens"],
+        "system": lambda b: b.get("instructions"),
+        "effort": lambda b: b["reasoning"]["effort"],
+        "schema": lambda b: b["text"]["format"]["schema"],
+        "parts": lambda b: b["input"][0]["content"],
+        "image": {"type": "input_image", "image_url": "data:image/png;base64,aGVsbG8="},
+        "text": {"type": "input_text", "text": "U"},
+        "max_effort": "xhigh",
+    },
+    "gemini": {
+        "cap": lambda b: b["config"]["max_output_tokens"],
+        "system": lambda b: b["config"].get("system_instruction"),
+        "effort": lambda b: b["config"]["thinking_config"]["thinking_level"],
+        "schema": lambda b: b["config"]["response_json_schema"],
+        "parts": lambda b: b["contents"][0]["parts"],
+        "image": {"inline_data": {"mime_type": "image/png", "data": b"hello"}},
+        "text": {"text": "U"},
+        "max_effort": "HIGH",
+    },
+}
+
+SCHEMA = {"type": "object", "additionalProperties": False, "required": ["title"],
+          "properties": {"title": {"type": "string"}}}
+
+
+def build(vendor: str, **kw):
+    """One request body from the named vendor's provider, with sane defaults."""
+    from llmkit import providers
+
+    cls = getattr(providers, {"anthropic": "AnthropicProvider", "openai": "OpenAIProvider",
+                              "gemini": "GeminiProvider"}[vendor])
+    call = {"model": "m", "system": "S", "messages": [Message("user", "U")],
+            "max_tokens": 8000, "effort": None, "schema": None, "extra": {}}
+    return cls.build_request(**{**call, **kw})
+
+
+@pytest.mark.parametrize("vendor", sorted(SHAPES))
+class TestProvidersAgree:
+    """The three request bodies must say the same thing in each vendor's words."""
+
+    def test_the_system_prompt_reaches_the_vendors_field(self, vendor):
+        assert SHAPES[vendor]["system"](build(vendor)) == "S"
+
+    def test_the_output_cap_reaches_the_vendors_field(self, vendor):
+        assert SHAPES[vendor]["cap"](build(vendor)) == 8000
+
+    def test_one_effort_word_maps_onto_each_vendors_scale(self, vendor):
+        assert SHAPES[vendor]["effort"](build(vendor, effort="high")) in ("high", "HIGH")
+        assert SHAPES[vendor]["effort"](build(vendor, effort="max")) == SHAPES[vendor]["max_effort"]
+
+    def test_an_effort_outside_the_shared_domain_is_refused_before_the_request(self, vendor):
+        from llmkit.types import LLMError
+
+        with pytest.raises(LLMError, match="is not an effort level"):
+            build(vendor, effort="ultra")
+
+    def test_no_effort_means_the_field_is_absent(self, vendor):
+        with pytest.raises((KeyError, TypeError)):
+            SHAPES[vendor]["effort"](build(vendor))
+
+    def test_the_same_schema_dict_reaches_the_vendors_schema_field(self, vendor):
+        assert SHAPES[vendor]["schema"](build(vendor, schema=SCHEMA)) == SCHEMA
+
+    def test_a_schema_that_is_not_strict_is_caught_before_the_request(self, vendor):
+        from llmkit.types import LLMError
+
+        with pytest.raises(LLMError, match="additionalProperties"):
+            build(vendor, schema={"type": "object", "properties": {}})
+
+    def test_a_schema_with_an_optional_field_is_accepted(self, vendor):
+        """Optional fields are legitimate here; only OpenAI's strict mode forbids
+        them, and that is settled inside that provider."""
+        loose = {"type": "object", "additionalProperties": False, "required": [],
+                 "properties": {"title": {"type": "string"}}}
+        assert SHAPES[vendor]["schema"](build(vendor, schema=loose)) == loose
+
+    def test_an_image_becomes_that_vendors_image_part_ahead_of_the_text(self, vendor):
+        body = build(vendor, messages=[Message("user", "U", (Image("image/png", "aGVsbG8="),))])
+        assert SHAPES[vendor]["parts"](body) == [SHAPES[vendor]["image"], SHAPES[vendor]["text"]]
+
+    def test_no_sampling_parameters_are_sent(self, vendor):
+        body = json.dumps(build(vendor, effort="high", schema=SCHEMA), default=str)
+        assert "temperature" not in body and "top_p" not in body and "top_k" not in body
+
+
+class TestProviderForModel:
+    """Naming a model is enough to pick the vendor, which is what a three-model
+    comparison needs: one call site, three model names, no branch on vendor."""
+
+    @pytest.mark.parametrize("model,vendor", [
+        ("claude-opus-5", "anthropic"),
+        ("gpt-5.2", "openai"),
+        ("o3-mini", "openai"),
+        ("gemini-3.1-pro-preview", "gemini"),
+        ("openai/gpt-5.6-luna", "openai"),      # a gateway prefix does not change the vendor
+    ])
+    def test_a_model_name_picks_its_vendor(self, model, vendor, monkeypatch):
+        from llmkit import providers
+
+        seen = {}
+        for key in ("anthropic", "openai", "gemini"):
+            monkeypatch.setitem(providers.VENDORS, key,
+                                lambda key=key: seen.setdefault("vendor", key))
+        providers.provider_for(model)
+        assert seen["vendor"] == vendor
+
+    def test_an_unclaimed_model_name_says_so(self):
+        from llmkit.providers import provider_for
+        from llmkit.types import LLMError
+
+        with pytest.raises(LLMError, match="no provider claims"):
+            provider_for("llama-4")
+
+    def test_two_providers_do_not_share_a_cache_entry(self, tmp_path):
+        """The reply is keyed by provider as well as by model, so the same prompt
+        answered by two vendors keeps two answers."""
+        one, two = FakeProvider(["from one"]), FakeProvider(["from two"])
+        two.name = "other"
+        assert LLM(model="m", provider=one, cache_dir=tmp_path).complete("s", "u").text == "from one"
+        assert LLM(model="m", provider=two, cache_dir=tmp_path).complete("s", "u").text == "from two"
+
+
+class TestOpenAIStrictMode:
+    """Strict mode also demands that every declared property be required. A schema
+    that does not qualify still goes out -- the client checks the reply against it."""
+
+    def test_a_schema_that_requires_everything_goes_out_strict(self):
+        assert build("openai", schema=SCHEMA)["text"]["format"]["strict"] is True
+
+    def test_a_schema_with_an_optional_field_goes_out_non_strict(self):
+        loose = {"type": "object", "additionalProperties": False, "required": [],
+                 "properties": {"title": {"type": "string"}}}
+        assert build("openai", schema=loose)["text"]["format"]["strict"] is False
+
+    def test_an_optional_field_nested_in_an_array_is_found(self):
+        nested = {"type": "object", "additionalProperties": False, "required": ["rows"],
+                  "properties": {"rows": {"type": "array", "items": {
+                      "type": "object", "additionalProperties": False, "required": [],
+                      "properties": {"a": {"type": "string"}}}}}}
+        assert build("openai", schema=nested)["text"]["format"]["strict"] is False
+
+
+class TestVendorReplies:
+    """Each vendor reports a cut-off or declined reply its own way; the client
+    above them checks one word, so the mapping happens in the provider."""
+
+    class Obj:
+        def __init__(self, **kw):
+            self.__dict__.update(kw)
+
+    def test_openai_reports_a_cut_off_reply(self):
+        from llmkit.providers.openai import OpenAIProvider
+
+        response = self.Obj(output=[], incomplete_details=self.Obj(reason="max_output_tokens"))
+        assert OpenAIProvider.stop_reason(response) == "max_tokens"
+
+    def test_openai_reports_a_refusal_part(self):
+        from llmkit.providers.openai import OpenAIProvider
+
+        response = self.Obj(output=[self.Obj(content=[self.Obj(type="refusal")])],
+                            incomplete_details=None)
+        assert OpenAIProvider.stop_reason(response) == "refusal"
+
+    def test_openai_reports_a_finished_reply(self):
+        from llmkit.providers.openai import OpenAIProvider
+
+        response = self.Obj(output=[self.Obj(content=[self.Obj(type="output_text")])],
+                            incomplete_details=None)
+        assert OpenAIProvider.stop_reason(response) == "end_turn"
+
+    def test_gemini_reports_a_cut_off_reply(self):
+        from llmkit.providers.gemini import GeminiProvider
+
+        response = self.Obj(prompt_feedback=None,
+                            candidates=[self.Obj(finish_reason=self.Obj(name="MAX_TOKENS"))])
+        assert GeminiProvider.stop_reason(response) == "max_tokens"
+
+    def test_gemini_reports_a_blocked_reply(self):
+        from llmkit.providers.gemini import GeminiProvider
+
+        response = self.Obj(prompt_feedback=None,
+                            candidates=[self.Obj(finish_reason=self.Obj(name="SAFETY"))])
+        assert GeminiProvider.stop_reason(response) == "refusal"
+
+    def test_gemini_counts_thinking_tokens_as_output(self):
+        from llmkit.providers.gemini import GeminiProvider
+
+        meta = self.Obj(prompt_token_count=100, candidates_token_count=20,
+                        thoughts_token_count=300, cached_content_token_count=None)
+        usage = GeminiProvider.usage_of(self.Obj(usage_metadata=meta))
+        assert (usage.input_tokens, usage.output_tokens, usage.cache_read_tokens) == (100, 320, 0)
+
+    def test_gemini_leaves_the_thought_summary_out_of_the_text(self):
+        from llmkit.providers.gemini import GeminiProvider
+
+        parts = [self.Obj(text="thinking about it", thought=True), self.Obj(text="the answer", thought=False)]
+        response = self.Obj(candidates=[self.Obj(content=self.Obj(parts=parts))])
+        assert GeminiProvider.text_of(response) == "the answer"

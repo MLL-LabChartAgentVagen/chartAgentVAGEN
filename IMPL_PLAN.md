@@ -63,7 +63,11 @@
 │
 ├── src/llmkit/                  ── 与 chartgen 无关的 LLM 调用层，可单独复用
 │   ├── types.py                 Message · Usage · Response · 三类异常
-│   ├── providers.py             Provider 接口 + Anthropic 实现（换家只加一个文件）
+│   ├── providers/               Provider 接口 + 三家实现（换家只加一个文件）
+│   │   ├── __init__.py          协议 · effort 词表 · schema 严格性检查 · 按模型名选家
+│   │   ├── anthropic.py         Anthropic
+│   │   ├── openai.py            OpenAI（Responses API）
+│   │   └── gemini.py            Gemini（google-genai）
 │   ├── client.py                LLM：complete · json（结构化输出 + 回喂重试）· map（批量评测）
 │   ├── parse.py                 从散文 / 围栏里挖 JSON + schema 校验
 │   ├── cache.py                 按请求内容哈希缓存回复
@@ -173,7 +177,7 @@ Record        上面这些 + rows=372 + readable=true
 
 ## 5. 模块划分的决定
 
-**LLM 调用层独立成包。** `src/llmkit/` 不认识 chartgen，只做「调模型、要 JSON、缓存、去重、批量」五件事。01 用它，将来横向评测多个模型也用它。换一家模型只加一个 provider 文件。
+**LLM 调用层独立成包。** `src/llmkit/` 不认识 chartgen，只做「调模型、要 JSON、缓存、去重、批量」五件事。01 用它，横向评测多个模型也用它。换一家模型只加一个 provider 文件——写模型名就换家（`LLM("gemini-3.1-pro-preview")`），三家的图像输入、结构化输出、推理强度落在同一个调用面上，缓存键含 provider 与 model，互不覆盖。
 
 **LLM 只在"定义"时出现，不在"选择"时出现。** 01 定义场景、列、单位、可加性、有序性与意图绑定；此后构造、推导、采样、拒绝、组版全部是规则，每次运行可复现。
 
@@ -356,7 +360,7 @@ A 是所有人的前置。A 完成后 B–F 之间只靠样例文件耦合，可
 
 七项改进由 [`parsebench/review/04_pipeline_gap.md`](parsebench/review/04_pipeline_gap.md) 定义，编号 P1–P7。规格先写回 `storyline/parsebench_chart/`，实现落在下面已有的组别里，不另起模块。
 
-改造顺序由 [`parsebench/reports/INDEX.md §1`](parsebench/reports/INDEX.md) 给出：192 页随机样本上「我们画不出来」的出现频次，组件与图表类型两张表。**排序看的是文档分布不是页数**——同一份文档里出现 20 次是那家出版方的习惯，20 份文档里各出现一次才是通用的作图习惯（[§2](parsebench/reports/INDEX.md)）。
+改造顺序由样例分析与失败样本分析给出，两份分析正在按 [`parsebench/TODO.md`](parsebench/TODO.md) 重跑（上一轮的结论只有一个观察者，已作废；数字留档在该文件的附录里）。重跑的输出契约见 [`parsebench/review/06_output_contract.md`](parsebench/review/06_output_contract.md)（机读版 `parsebench/tools/contract/format.py`）：**只有三家模型一致的项才直接进改造清单**，且每条改动要写出它给流水线加了什么能力、消融表因此多哪一行。
 
 - [ ] H1 P1 `readable` 二值门 → 每图元的可达精度 ε（改 `chart_types.md` §4 与 `registry/channels.py`，牵动 E3 与 F1）
 - [ ] H2 P2 多面板图加 `panel_key`（改 `interfaces/` 的 FigureSpec 与 Record，牵动 A2 的样例与 `schema_version`）
@@ -367,4 +371,4 @@ A 是所有人的前置。A 完成后 B–F 之间只靠样例文件耦合，可
 - [ ] H7 P7 图标题成为一等公民：FigureSpec 加 `title`（图号 / 主标题 / 副标题 / 单位 / **位置**四值），轮转图与多面板图按声明模板合成，图号由页面合成器编（改 `interfaces/figure.py` 与 D 组的页面合成，牵动 A2 的样例与 `schema_version`）
 - [ ] H8 用官方 `ChartDataPointRule` 在 568 页上自评，改造前后各一次
 
-P1–P7 之外还有一类：**条件表根本没有的图族**（地图、仪表盘，以及基准里报 `other` 的那些形式）。P4 的权重向量只在已有 13 型之间分配配额，管不到它。要不要加，按同一条标准定——看文档分布，见 [`parsebench/README.md`](parsebench/README.md) 的 TODO B3 第五项。
+P1–P7 之外还有一类：**条件表根本没有的图族**（地图、仪表盘，以及基准里报 `other` 的那些形式）。P4 的权重向量只在已有 13 型之间分配配额，管不到它。要不要加，按同一条标准定——看文档分布，等重跑后的差异表。

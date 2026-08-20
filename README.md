@@ -13,7 +13,7 @@
 | [IMPL_PLAN.md](IMPL_PLAN.md) | 实现计划：系统骨架、目录结构、数据接口、todo checklist |
 | [parsebench/](parsebench/) | ParseBench 对齐：Charts 维度的 review、评测指标拆解、chart 分片数据与统计、待改清单 |
 | [src/chartgen/](src/chartgen/) | 流水线本体 |
-| [src/llmkit/](src/llmkit/) | 与本项目无关的 LLM 调用层：调用 · 结构化输出 · 缓存 · 去重 · 批量。可单独复用 |
+| [src/llmkit/](src/llmkit/) | 与本项目无关的 LLM 调用层：调用 · 结构化输出 · 缓存 · 去重 · 批量。Anthropic / OpenAI / Gemini 三家同一个调用面，写模型名就换家。可单独复用 |
 | [tools/](tools/) | 辅助脚本：重生成接口样例、把框叠回图像 |
 | [data/domains/](data/domains/) | 领域池（进版本库，整个项目只建一次） |
 | `data/generated/` | 运行产物（不进版本库） |

@@ -15,7 +15,7 @@ from typing import Callable, Iterable, Sequence
 
 from .cache import ResponseCache
 from .parse import ParseError, extract_json, validate
-from .providers import DEFAULT_MODEL, AnthropicProvider, Effort, Provider
+from .providers import DEFAULT_MODEL, Effort, Provider, provider_for
 from .types import Image, LLMError, Message, Refusal, Response, Truncated, Usage
 
 #: Sent back after a parse failure. It carries the original text and the specific
@@ -42,7 +42,7 @@ class LLM:
                  cache_dir: str | Path | None = None,
                  max_content_retries: int = 3, extra: dict | None = None) -> None:
         self.model = model
-        self.provider = provider or AnthropicProvider()
+        self.provider = provider or provider_for(model)
         self.max_tokens = max_tokens
         self.effort = effort
         self.max_content_retries = max_content_retries
