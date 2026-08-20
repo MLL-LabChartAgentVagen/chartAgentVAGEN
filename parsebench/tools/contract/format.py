@@ -194,11 +194,20 @@ _COMPONENT = {
 PAGE_SCHEMA = {
     "type": "object",
     "additionalProperties": False,
-    "required": ["page_note", "figures", "components", "new_components", "spot_checks",
-                 "hardest_step", "difficulty_notes", "unreadable", "suggestions"],
+    "required": ["page_note", "report_md", "figures", "components", "new_components",
+                 "spot_checks", "hardest_step", "difficulty_notes", "unreadable",
+                 "suggestions"],
     "properties": {
         "page_note": {"type": "string",
                       "description": "one sentence in Chinese: what is on this page"},
+        "report_md": {"type": "string",
+                      "description": "Chinese markdown, at most 150 words: your own reading "
+                                     "of this page -- what a chart generator would have to "
+                                     "be able to draw to produce it, what makes a value hard "
+                                     "to address here, what you are unsure of. This is your "
+                                     "report on the page, not a restatement of the fields "
+                                     "above; it is printed as written and read beside the "
+                                     "other models'"},
         "figures": {"type": "array", "items": _FIGURE},
         "components": {"type": "array", "items": _COMPONENT,
                        "description": "every vocabulary key present anywhere on the page, "
@@ -319,6 +328,81 @@ PAGE_SCHEMA = {
 }
 
 
+#: The overview a model writes once, after its own pages (or its own attributions)
+#: are done. It is handed the program's tables for its own run, so the prose is
+#: written against real counts instead of against what it remembers reporting.
+#:
+#: `numbers_cited` is why the prose is worth having in a schema at all: every
+#: number the model uses in its report comes back as a field, so the program can
+#: hold each one against its own table. That check -- 模型自报 vs 程序实测 -- is
+#: one of the things the three-model run was for, and it does not exist unless
+#: the models write reports.
+OVERVIEW_SCHEMA = {
+    "type": "object",
+    "additionalProperties": False,
+    "required": ["headline", "ranked_items", "numbers_cited", "report_md", "limits"],
+    "properties": {
+        "headline": {"type": "string",
+                     "description": "Chinese, at most 40 words: the one claim this whole "
+                                    "report makes. If it needs a `但是`, it is two claims"},
+        "ranked_items": {
+            "type": "array",
+            "description": "your own ordering of what matters, most first. This is the "
+                           "part three models are compared on",
+            "items": {
+                "type": "object",
+                "additionalProperties": False,
+                "required": ["what", "why", "evidence", "affects", "score_effect",
+                             "capability_effect", "maps_to"],
+                "properties": {
+                    "what": {"type": "string",
+                             "description": "Chinese: the gap or the mechanism, named with a "
+                                            "vocabulary key or a mechanism name where one fits"},
+                    "why": {"type": "string",
+                            "description": "Chinese, at most 40 words: why it is at this "
+                                           "position. Argue from the tables you were given"},
+                    "evidence": {"type": "array", "items": {"type": "string"},
+                                 "description": "the pages or case ids this rests on, by name"},
+                    "affects": _AFFECTS,
+                    "score_effect": {"type": "string",
+                                     "description": "Chinese, at most 30 words; write "
+                                                    "`度量看不见它` when `affects` is empty"},
+                    "capability_effect": {"type": "string",
+                                          "description": "Chinese, at most 30 words: what the "
+                                                         "generation pipeline can do afterwards "
+                                                         "that it cannot do now"},
+                    "maps_to": {"type": "string", "enum": list(GAP_ITEMS)},
+                },
+            },
+        },
+        "numbers_cited": {
+            "type": "array",
+            "description": "every number your report_md uses, one entry each. The program "
+                           "checks each against its own table; a mismatch is recorded, not "
+                           "corrected",
+            "items": {
+                "type": "object",
+                "additionalProperties": False,
+                "required": ["claim", "value", "source"],
+                "properties": {
+                    "claim": {"type": "string", "description": "Chinese: what the number counts"},
+                    "value": {"type": "string", "description": "the number as you wrote it"},
+                    "source": {"type": "string",
+                               "description": "which table you took it from, or `自己数的`"},
+                },
+            },
+        },
+        "report_md": {"type": "string",
+                      "description": "Chinese markdown, at most 600 words: your report. "
+                                     "Printed as written, beside the other two models'"},
+        "limits": {"type": "string",
+                   "description": "Chinese, at most 60 words: what this report cannot "
+                                  "support -- sample size, what you could not see, where "
+                                  "you guessed"},
+    },
+}
+
+
 # --------------------------------------------------------------------------- #
 # 3 · One failure attribution                                                   #
 # --------------------------------------------------------------------------- #
@@ -431,39 +515,49 @@ assert set(MECHANISM_STEP.values()) <= set(STEPS) | {0}
 # The raw answers stay on disk as JSON, machine-readable, one file per
 # (model, page); every table below is computed from them.
 #
-# Three hands, split by what each is good for. A model answers one page in JSON,
-# because three answers can only be compared column by column -- prose cannot be
-# aligned, counted, or re-rendered when the report format changes. The program
-# renders: every per-page file and every counting table is a mechanical function
-# of those answers plus the annotation, so it is written by code and can be
-# regenerated at any time. The agent judges: it adjudicates the conflicts and
-# writes the one reading of the whole thing, `INDEX.md` and its `view.html`.
+# Three hands, and each of the three writes reports.
 #
-# The one rule is that the agent never produces a number of its own.
+# Every model writes three: one per page it read, one overview of its own pages,
+# one overview of its own attributions. The structured fields travel in the same
+# answer, so a report is comparable column by column *and* readable as prose --
+# and one check exists only because of this: every number a model puts in its
+# report comes back in `numbers_cited`, and the program holds it against its own
+# table. 模型自报 vs 程序实测 is not measurable when the models only fill fields.
+#
+# The program renders the side-by-side files: three answers on one page, the
+# counting tables, the agreement rates. Mechanical, regenerable, and the only
+# source of a number.
+#
+# The agent adjudicates the conflicts and writes the one reading over everything,
+# `INDEX.md` and its `view.html`. The agent never produces a number of its own.
 #
 # Every table below says what one row is and which columns it carries, because
 # that is what fixes the analysis: three models can only be compared per column.
 
 PROVENANCE = ("rule_checkable", "program_measured", "model_claim")
 
-#: Who writes what.
+#: Who writes what. All three write reports; only one of them may state a number.
 AUTHORSHIP = {
-    "模型": "一页一份 JSON 答案。JSON 是输出格式不是产物——三家只能逐列比，散文对不齐、"
-            "数不了、报告格式一改还得重跑",
-    "程序": "把答案渲染成逐页报告与全部汇总表：计数、一致率、判分、失败统计。"
-            "机械的部分全在这里，随时可重跑",
-    "agent": "判断的部分：裁决三家的冲突（写进 `verdicts.json`，渲染时填进逐页报告），"
-             "以及读完上面三样之后的那一份 `INDEX.md` 与它的 `view.html`。"
-             "**不产生任何数字**——每一句结论都指回一张程序算出的表或一份逐页报告",
+    "模型": "**每家写三份报告**：逐页报告（每页一份，散文 + 它自己的结构化答案）· "
+            "样例分析 overview（一份）· 失败归因 overview（一份）。结构化字段与散文在同一次"
+            "回答里出，所以三家既能逐列比、又能并排读",
+    "程序": "把三家的答案渲染成并排文件与全部汇总表：计数、一致率、判分、失败统计，"
+            "以及模型自报数字与程序实测的对账。**唯一的数字来源**，随时可重跑",
+    "agent": "裁决三家的冲突（写进 `verdicts.json`），以及读完全部之后的那一份 `INDEX.md` "
+             "与它的 `view.html`。**不产生任何数字**——每句结论指回一张程序算出的表或"
+             "一份报告",
 }
 
 #: How many calls each model makes, and of what. A model is never asked to write
 #: a report -- it answers one page, or one failure case, in the schema.
 WORKLOAD = {
-    "页面分析": "每家 × 20 页 = 60 次调用，schema 是 `PAGE_SCHEMA`",
-    "无词表对照": "三家取一家 × 20 页 = 20 次，同一个 schema，prompt 里不给词表",
-    "失败归因": "每家 × 抽样的 case = 每形态 10 条（不足 10 的全取，约 50 条）× 3 = 约 150 次，"
-                "schema 是 `FAILURE_SCHEMA`",
+    "页面分析": "每家 × 20 页 = 60 次调用，`PAGE_SCHEMA`。每次的 `report_md` 就是这一页的报告",
+    "失败归因": "每家 × 抽样的 case（每形态 10 条，不足 10 的全取，约 50 条）= 约 150 次，"
+                "`FAILURE_SCHEMA`",
+    "样例 overview": "每家 1 次 = 3 次，`OVERVIEW_SCHEMA`。输入是它自己的 20 份答案 + "
+                     "程序为它算好的表",
+    "失败 overview": "每家 1 次 = 3 次，同一个 schema，输入换成它自己的归因与形态统计",
+    "无词表对照": "三家取一家 × 20 页 = 20 次，`PAGE_SCHEMA`，prompt 里不给词表",
 }
 
 #: Which failure cases the models are asked about. Equal size per form rather than
@@ -515,10 +609,64 @@ class Report:
 #: The reports are built from these, never by hand.
 RAW_ANSWERS = "parsebench/data/analysis/<model>/<page>.json"
 
+#: What each model writes. Three reports per model: one per page, one over its own
+#: pages, one over its own attributions. `<model>` is the model id, `<page>` the
+#: page stem.
+MODEL_PAGE_REPORT = Report(
+    "parsebench/reports/<model>/pages/<page>.md", "模型",
+    "这一家对这一页的报告：它自己的散文解读，加上它填的结构化字段渲染成的表",
+    (
+        Section("1", "这一页", "这家怎么读这一页", (
+            Table("解读", "一段散文", ("report_md（≤150 词，原样印出）",), "model_claim"),
+        )),
+        Section("2", "它看到什么", "结构化字段渲染成表", (
+            Table("图表分解", "一张图",
+                  ("图序号", "类型", "图元数", "图号", "标题位置", "数值印不印"),
+                  "model_claim"),
+            Table("组件命中", "一个 key", ("key", "证据原文"), "model_claim"),
+            Table("抽查点", "一个抽查点",
+                  ("值", "落在哪张图哪个图元", "预测的定位键", "规则的真实标签", "对错"),
+                  "rule_checkable"),
+        )),
+    ),
+)
+
+MODEL_SAMPLE_OVERVIEW = Report(
+    "parsebench/reports/<model>/sample.md", "模型",
+    "这一家读完自己的 20 页之后写的 overview。一次调用，输入是它自己的全部答案"
+    "加上程序为它算好的表，所以散文是对着真实计数写的",
+    (
+        Section("1", "一句话结论", "这份报告的全部主张", (
+            Table("headline", "一句话", ("headline（≤40 词）",), "model_claim"),
+        )),
+        Section("2", "它的排序", "什么最要紧，为什么", (
+            Table("排序", "一条",
+                  ("what", "why", "证据页", "affects", "对分数", "对能力", "归入哪条 P"),
+                  "model_claim"),
+        )),
+        Section("3", "报告正文", "原样印出", (
+            Table("正文", "一段散文", ("report_md（≤600 词）", "limits（≤60 词）"),
+                  "model_claim"),
+        )),
+        Section("4", "它引用的数字", "逐条与程序的表对账", (
+            Table("对账", "一个数字",
+                  ("claim", "模型自报的值", "它说的来源", "程序实测的值", "一致否"),
+                  "program_measured"),
+        )),
+    ),
+)
+
+MODEL_FAILURE_OVERVIEW = Report(
+    "parsebench/reports/<model>/failures.md", "模型",
+    "这一家读完自己的归因之后写的 overview。结构与上一份相同，输入换成它自己的"
+    "归因与程序算好的形态统计",
+    MODEL_SAMPLE_OVERVIEW.sections,
+)
+
 #: One file per sampled page, three models against the same image. `<page>` is the
 #: page stem; the rows of `SAMPLE_REPORT` link here, and adjudication happens here.
 PAGE_FILE = Report(
-    "parsebench/reports/pages/<page>.md", "程序",
+    "parsebench/reports/compare/pages/<page>.md", "程序",
     "一页一份：三家的答案与同一张图并排，供核对与裁决。渲染自三份 JSON、`chart.jsonl` "
     "的规则与失败运行的结果，裁决列填的是 agent 写在 `verdicts.json` 里的裁决",
     (
@@ -553,7 +701,7 @@ PAGE_FILE = Report(
 )
 
 SAMPLE_REPORT = Report(
-    "parsebench/reports/sample.md", "程序",
+    "parsebench/reports/compare/sample.md", "程序",
     "20 页 × 三家模型的汇总表：基准里有、而 storyline 没有定义的东西。全是数字，结论在 `INDEX.md`",
     (
         Section("1", "缺口表", "基准里有、而 storyline 没有定义的东西，逐项列出。"
@@ -591,12 +739,16 @@ SAMPLE_REPORT = Report(
                   ("模型", "有词表报出的 key 数", "无词表那次映回词表后重合的 key 数", "重合率"),
                   "program_measured"),
             Table("交叉核对", "一类矛盾", ("矛盾", "三家各自的页数"), "program_measured"),
+            Table("自报 vs 实测", "(模型, 一个被引用的数字)",
+                  ("模型", "claim", "模型自报", "程序实测", "一致否"), "program_measured"),
+            Table("三家的排序", "一个名次",
+                  ("名次", "三家各自排在这一位的项", "是否一致"), "model_claim"),
         )),
     ),
 )
 
 FAILURE_REPORT = Report(
-    "parsebench/reports/failures.md", "程序",
+    "parsebench/reports/compare/failures.md", "程序",
     "一次解析器运行的全部失败：形态由程序算，机制由三家模型归因。一份总报告，"
     "没有逐 case 文件——实例是报告里的一列，指回 case_id 与页名",
     (
@@ -681,7 +833,8 @@ VIEW = Report(
     ),
 )
 
-REPORTS = (PAGE_FILE, SAMPLE_REPORT, FAILURE_REPORT, INDEX_REPORT, VIEW)
+REPORTS = (MODEL_PAGE_REPORT, MODEL_SAMPLE_OVERVIEW, MODEL_FAILURE_OVERVIEW,
+           PAGE_FILE, SAMPLE_REPORT, FAILURE_REPORT, INDEX_REPORT, VIEW)
 
 #: Numbers a model must never be the source of. Each is computable without a model,
 #: and each was a place the last round could have drifted had it not been.
@@ -735,6 +888,13 @@ SAMPLE_QUANTITIES = (
              "model_claim", "P7 的图号与位置两维"),
     Quantity("卡在哪一步", "页", "hardest_step 相同",
              "model_claim", "与失败运行实测的步对照，校准模型的判断"),
+    Quantity("模型自报 vs 程序实测", "(模型, 一个被引用的数字)",
+             "模型 overview 里 `numbers_cited` 的值与程序同一张表里的值相等",
+             "program_measured",
+             "报告可不可信的直接检验；只有模型写了 overview 才存在这一项"),
+    Quantity("排序", "(模型, 排在前三的项)",
+             "三家的 `ranked_items` 前三名按 `what` 归一化后的集合相同",
+             "model_claim", "改造清单的次序——上一轮的次序只有一个观察者"),
     Quantity("定位键预测", "(页, 抽查点)",
              "与规则的真实标签逐条判对错，三家各自得一个分——这一项问「谁对」，"
              "不问「谁和谁一致」",

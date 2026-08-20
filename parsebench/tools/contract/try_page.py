@@ -97,6 +97,7 @@ def main() -> None:
     print(f"=== {args.model}  effort={args.effort}  {took:.1f}s  "
           f"in={llm.usage.input_tokens} out={llm.usage.output_tokens}")
     print("page_note :", answer["page_note"])
+    print("report_md :", answer["report_md"].replace("\n", " ")[:220], "…")
     for figure in answer["figures"]:
         heading = figure["heading"]
         print(f"  {figure['id']} {figure['type']:<12} marks={figure['marks']:<4} "

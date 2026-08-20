@@ -6,37 +6,42 @@
 
 ## 0. 产物与分工
 
+**三家模型各写三份报告**，程序做并排与全部数字，agent 做裁决与最后那一份结论。
+
 | 产物 | 谁写 | 内容 |
 |---|---|---|
-| `data/analysis/<model>/<page>.json` | **模型** | 原始答案，一页一家一份 |
-| `reports/pages/<page>.md`（20 份） | **程序** | 逐页：三家的答案与同一张图并排，供核对与裁决 |
-| `reports/sample.md` | **程序** | 样例分析的全部汇总表：频次、一致率、判分、类型配比 |
-| `reports/failures.md` | **程序** | 失败分析的全部汇总表：形态、单变量、机制 |
-| `reports/INDEX.md` | **agent** | 读完上面三份之后的那一份：裁决分歧、得出改造清单、每条标可信度。**唯一有结论的报告** |
-| `reports/view.html` | **agent** | `INDEX.md` 的图示版，三个分区一一对应，每项配一页实例与证据原文，自足 |
-| `data/analysis/verdicts.json` | **agent** | 冲突的裁决，一条 (页, 量) 一项。裁决是数据，逐页报告随时可重渲染而不丢它 |
+| `reports/<model>/pages/<page>.md`（每家 20 份） | **模型** | 这一家对这一页的报告：`report_md` 散文（≤150 词）+ 它填的结构化字段渲染成的表 |
+| `reports/<model>/sample.md`（每家 1 份） | **模型** | 这一家读完自己 20 页后写的 overview：一句话结论 · 它自己的排序 · 正文 · 局限 |
+| `reports/<model>/failures.md`（每家 1 份） | **模型** | 同上，输入换成它自己的归因 |
+| `reports/compare/pages/<page>.md`（20 份） | **程序** | 三家并排在同一张图旁边 + 抽查点判分 + 冲突表。裁决面 |
+| `reports/compare/sample.md` | **程序** | 全部汇总表：频次、一致率、判分、**自报 vs 实测的对账**、三家的排序 |
+| `reports/compare/failures.md` | **程序** | 形态、单变量、机制一致率 |
+| `reports/INDEX.md` | **agent** | 读完全部之后的那一份：裁决分歧、改造清单、每条标可信度 |
+| `reports/view.html` | **agent** | `INDEX.md` 的图示版，自足 |
+| `data/analysis/<model>/…json` | 模型 | 原始答案。三份报告都由它渲染 |
+| `data/analysis/verdicts.json` | agent | 冲突的裁决，一条 (页, 量) 一项 |
 
-**每家模型跑两样，都不是报告。** 一次调用答一页，或答一个失败 case，都落在 schema 上：
+### 每家模型跑几次
 
-| 模型做什么 | 次数 | schema |
+| 做什么 | 次数 | schema |
 |---|---|---|
-| 页面分析 | 每家 × 20 页 = **60 次** | `PAGE_SCHEMA` |
-| 无词表对照 | 三家取一家 × 20 页 = **20 次** | 同一个 schema，prompt 里不给词表 |
-| 失败归因 | 每家 × 抽样的 case（每形态 10 条，不足 10 的全取，约 50 条）= **约 150 次** | `FAILURE_SCHEMA` |
+| 页面分析（每页的报告） | 每家 20 次 = **60** | `PAGE_SCHEMA`，其中 `report_md` 就是这一页的报告正文 |
+| 失败归因 | 每家约 50 次 = **约 150** | `FAILURE_SCHEMA` |
+| 样例 overview | 每家 1 次 = **3** | `OVERVIEW_SCHEMA`，输入是它自己的 20 份答案 + 程序为它算好的表 |
+| 失败 overview | 每家 1 次 = **3** | 同上，输入换成它自己的归因与形态统计 |
+| 无词表对照 | 一家 20 次 = **20** | `PAGE_SCHEMA`，prompt 不给词表 |
 
-**失败 case 按形态等量抽，不按比例抽**：稀有形态才是未知机制可能藏身的地方，而 `label_unlinked` 占全运行三分之二，按比例抽会吃掉整个样本。代价是这个样本上的机制计数不等于全运行的计数——所以报告给的是**每种形态内部**的机制分布，要折算到全运行就用程序在**全部失败**上算出的形态计数加权。形态计数本身不抽样。
+**散文与结构化字段在同一次回答里出**，所以一份报告既能并排读、又能逐列比。overview 的输入里带程序已经算好的表，散文因此是对着真实计数写的，不是对着模型记得自己报过什么写的。
 
-**为什么模型只交 JSON。** JSON 是模型的输出格式，不是给人读的产物。三家要**逐列对齐**才能比：散文对不齐、数不了、报告格式一改还得重跑模型。逐页报告确实存在——它是那三份 JSON 加上 `chart.jsonl` 的规则、加上失败运行结果的**渲染**。
+**`numbers_cited` 让报告可查**：模型在正文里用的每个数字都要单独回填一条，程序逐条与自己的表对账。**模型自报 vs 程序实测**——这一项检验只有在模型写了报告之后才存在，也是 [T4](../TODO.md) 一开始就要求的三项对齐之一。数字对不上时**记录不改写**。
 
-**分工按「机械 vs 判断」切。** 逐页文件与每一张计数表都是原始答案的函数，所以由程序渲染，随时可重跑、不会漂；需要判断的只有两件事——裁决三家的冲突、读完之后得出结论——那是 agent 的。**agent 不产生任何数字**，每一句结论指回一张程序算出的表或一份逐页报告。
-
-**逐页报告是裁决面**：三家的分解、组件命中与证据原文、抽查点的判分并排在同一张图旁边，不用同时开三个 JSON 和一张 PNG。`INDEX.md` 的实例列链到它。
+**唯一的数字来源仍是程序。** 模型报告里的数字是 `model_claim`，旁边永远有程序实测那一列；agent 不产生任何数字。
 
 **失败分析没有逐 case 文件**，与逐页报告的差别是规模不是原则：一次运行约 900 个失败，一个 case 是报告里的一行（带证据与 `case_id`），有冲突的集中列在裁决表里。
 
 ---
 
-## 1. 逐页报告 `reports/pages/<page>.md`
+## 1. 并排逐页 `reports/compare/pages/<page>.md`
 
 | 节 | 表 | 一行是什么 | 列 |
 |---|---|---|---|
@@ -46,13 +51,13 @@
 | | 词表外的自拟名字 | 一个名字 | 名字 · 哪家报的 · `affects` · 证据原文 |
 | §3 抽查点 | 定位键 | 一个抽查点 | 值 · **规则的真实标签** · 三家各自预测的键 · 三家各自对错 · 这个点在失败运行里过没过 |
 | §4 分歧与裁决 | 冲突 | 一个冲突项 | 量 · 三家各自的取值 · **人工裁决** · 裁决理由 |
-| §5 原始答案 | 原始答案 | 一家模型 | 模型 · JSON 路径 |
+| §5 原始答案 | 原始答案 | 一家模型 | 模型 · JSON 路径 · 这一家自己那份逐页报告的链接 |
 
 §3 把三样东西放在同一行：模型的预测、`chart.jsonl` 的真实标签、这个点在失败运行里的实际结果。这一行是「模型的判断可不可信」的唯一直接证据，也是 §4 裁决时的依据。
 
 ---
 
-## 2. 汇总表 A · 样例分析 `reports/sample.md`
+## 2. 汇总表 A · 样例分析 `reports/compare/sample.md`
 
 全是数字，没有结论——结论在 `INDEX.md`。
 
@@ -80,7 +85,7 @@
 
 ---
 
-## 3. 汇总表 B · 失败分析 `reports/failures.md`
+## 3. 汇总表 B · 失败分析 `reports/compare/failures.md`
 
 | 节 | 表 | 一行是什么 | 列 |
 |---|---|---|---|
@@ -137,7 +142,9 @@
 | 稠密度档 | `marks` 落在同一档（≤20 / 21–60 / 61–150 / 151–400 / >400） | P5 的稠密度上限 |
 | 标题 | 图号有无相同、位置四值相同（**标题正文不比**） | P7 的图号与位置两维 |
 | 卡在哪一步 | `hardest_step` 相同 | 与失败运行实测的步对照，校准模型的判断 |
-| 定位键预测 | 与规则的真实标签逐条判对错 | **唯一可核**，校准上面六条；同时是 P2 的证据 |
+| 模型自报 vs 程序实测 | overview 的 `numbers_cited` 与程序同一张表相等 | 报告可不可信的直接检验；**模型不写报告就没有这一项** |
+| 排序 | 三家 `ranked_items` 前三名归一化后集合相同 | 改造清单的次序——上一轮的次序只有一个观察者 |
+| 定位键预测 | 与规则的真实标签逐条判对错 | **唯一可核**，校准上面几条；同时是 P2 的证据 |
 
 失败报告另有一条：**失败机制**（`mechanism` 相同，`affects` 不同记为冲突）。
 
@@ -167,7 +174,9 @@
 
 ### 每页返回什么
 
-九个顶层字段：`page_note` · `figures[]` · `components[]` · `new_components[]` · `spot_checks[]` · `hardest_step` · `difficulty_notes` · `unreadable[]` · `suggestions[]`。
+十个顶层字段：`page_note` · **`report_md`** · `figures[]` · `components[]` · `new_components[]` · `spot_checks[]` · `hardest_step` · `difficulty_notes` · `unreadable[]` · `suggestions[]`。
+
+**`report_md` 就是这一页的报告正文**（中文 markdown ≤150 词）：这一家自己怎么读这一页——要画出这一页得有什么能力、这里的值为什么难定位、它自己不确定什么。原样印进 `reports/<model>/pages/<page>.md`，与另外两家并排读。
 
 `figures[]` 逐图记：`heading`（图号 / 主标题 / 副标题 / 单位 / 位置）· `type`（19 型）· `type_other`（`other` 必须命名）· `orientation` · `panels` / `panel_names` · `series` / `series_names` · `categories` / `category_names` · `marks` · `values_printed` · `value_axis_ticks` · `source_line`。
 
@@ -178,6 +187,18 @@
 - **`spot_checks[].addressing_keys` 是唯一被打分的字段**——值送进 prompt、标签不送，所以它是预测，`chart.jsonl` 的 `labels` 判分。
 
 长度上限写在字段描述里，不做程序截断：`evidence` ≤20 词 · `difficulty_notes` ≤60 词 · `score_effect` / `capability_effect` ≤30 词 · `category_names` ≤12 项。
+
+### overview 返回什么
+
+每家跑完自己那批之后一次调用，`OVERVIEW_SCHEMA` 五个字段：
+
+| 字段 | 内容 |
+|---|---|
+| `headline` | 一句话结论，中文 ≤40 词。需要「但是」就说明是两个结论 |
+| `ranked_items[]` | 它自己的排序，一条 = what · why（≤40 词，要对着给它的表说）· 证据页 · `affects` · `score_effect` · `capability_effect` · `maps_to` |
+| `numbers_cited[]` | 正文里用到的每个数字一条：claim · value · source。程序逐条与自己的表对账 |
+| `report_md` | 报告正文，中文 markdown ≤600 词，原样印出 |
+| `limits` | 它自己知道的局限，≤60 词 |
 
 ### 归因返回什么
 

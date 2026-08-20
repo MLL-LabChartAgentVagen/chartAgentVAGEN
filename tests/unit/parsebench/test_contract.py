@@ -18,11 +18,13 @@ from llmkit.providers import check_strict  # noqa: E402
 
 
 class TestStructuredOutput:
-    @pytest.mark.parametrize("schema", [contract.PAGE_SCHEMA, contract.FAILURE_SCHEMA])
+    @pytest.mark.parametrize("schema", [contract.PAGE_SCHEMA, contract.FAILURE_SCHEMA,
+                                        contract.OVERVIEW_SCHEMA])
     def test_both_schemas_are_accepted_for_structured_output(self, schema):
         check_strict(schema)
 
-    @pytest.mark.parametrize("schema", [contract.PAGE_SCHEMA, contract.FAILURE_SCHEMA])
+    @pytest.mark.parametrize("schema", [contract.PAGE_SCHEMA, contract.FAILURE_SCHEMA,
+                                        contract.OVERVIEW_SCHEMA])
     def test_every_declared_field_is_required(self, schema):
         """No optional fields: a field that some models fill and others omit reads
         as a disagreement about the page."""
@@ -108,34 +110,52 @@ class TestTheReports:
 
     def test_every_deliverable_says_who_writes_it(self):
         assert [(r.path, r.by) for r in contract.REPORTS] == [
-            ("parsebench/reports/pages/<page>.md", "程序"),
-            ("parsebench/reports/sample.md", "程序"),
-            ("parsebench/reports/failures.md", "程序"),
+            ("parsebench/reports/<model>/pages/<page>.md", "模型"),
+            ("parsebench/reports/<model>/sample.md", "模型"),
+            ("parsebench/reports/<model>/failures.md", "模型"),
+            ("parsebench/reports/compare/pages/<page>.md", "程序"),
+            ("parsebench/reports/compare/sample.md", "程序"),
+            ("parsebench/reports/compare/failures.md", "程序"),
             ("parsebench/reports/INDEX.md", "agent"),
             ("parsebench/reports/view.html", "agent"),
         ]
         assert all(r.by in contract.AUTHORSHIP for r in contract.REPORTS)
 
-    def test_what_is_mechanical_is_rendered_and_what_is_judgement_is_written(self):
-        """Every per-page file and every counting table is a function of the raw
-        answers, so it is code. Only the reading of them is the agent's."""
-        rendered = {r.path for r in contract.REPORTS if r.by == "程序"}
-        assert "parsebench/reports/pages/<page>.md" in rendered
-        assert set(contract.AUTHORSHIP) == {"模型", "程序", "agent"}
+    def test_each_model_writes_three_reports_of_its_own(self):
+        """One per page it read, one over its pages, one over its attributions."""
+        mine = [r for r in contract.REPORTS if r.by == "模型"]
+        assert len(mine) == 3 and all("<model>" in r.path for r in mine)
+
+    def test_a_page_answer_carries_the_models_own_reading_of_the_page(self):
+        assert "report_md" in contract.PAGE_SCHEMA["required"]
+
+    def test_an_overview_is_a_report_with_its_numbers_pinned(self):
+        """Prose plus every number it uses, so the program can hold each one
+        against its own table -- the check that model-written reports exist for."""
+        assert set(contract.OVERVIEW_SCHEMA["required"]) == {
+            "headline", "ranked_items", "numbers_cited", "report_md", "limits"}
+
+    def test_the_program_stays_the_only_source_of_a_number(self):
+        assert "唯一的数字来源" in contract.AUTHORSHIP["程序"]
         assert "不产生任何数字" in contract.AUTHORSHIP["agent"]
 
     def test_a_verdict_is_data_so_a_re_render_does_not_lose_it(self):
         assert contract.VERDICTS.endswith(".json")
 
-    def test_a_model_answers_one_page_or_one_case_and_never_writes_a_report(self):
-        """The workload is calls against a schema, not documents."""
-        assert set(contract.WORKLOAD) == {"页面分析", "无词表对照", "失败归因"}
-        assert not [r for r in contract.REPORTS if r.by == "模型"]
+    def test_the_workload_covers_every_report_a_model_owes(self):
+        """Three reports per model: the per-page ones ride on the page calls, the
+        two overviews are one call each."""
+        assert set(contract.WORKLOAD) == {"页面分析", "失败归因", "样例 overview",
+                                          "失败 overview", "无词表对照"}
 
     def test_the_failure_cases_are_sampled_evenly_across_forms(self):
         """A count over that sample is a count within a form, not over the run --
         the rule says so, because the two would otherwise be read as one."""
         assert "每形态" in contract.CASE_SAMPLE and "全部失败" in contract.CASE_SAMPLE
+
+    def test_the_self_report_check_exists_only_because_models_write_reports(self):
+        names = {q.name for q in contract.SAMPLE_QUANTITIES}
+        assert "模型自报 vs 程序实测" in names and "排序" in names
 
     def test_the_page_file_is_where_a_conflict_is_adjudicated(self):
         """The contract sends conflicts to a person looking at the page, so the
