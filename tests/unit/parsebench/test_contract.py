@@ -106,12 +106,24 @@ class TestTheReports:
     """Three files, each section a set of tables, each table a row definition and
     its columns -- three models can only be compared per column."""
 
-    def test_three_reports_each_with_a_file_of_its_own(self):
+    def test_the_deliverables_are_one_file_per_page_and_three_summaries(self):
         assert [r.path for r in contract.REPORTS] == [
+            "parsebench/reports/pages/<page>.md",
             "parsebench/reports/sample.md",
             "parsebench/reports/failures.md",
             "parsebench/reports/overview.md",
         ]
+
+    def test_the_page_file_is_where_a_conflict_is_adjudicated(self):
+        """The contract sends conflicts to a person looking at the page, so the
+        page file has to hold the three answers, the image and a verdict column."""
+        columns = [c for s in contract.PAGE_FILE.sections for t in s.tables for c in t.columns]
+        assert "人工裁决" in columns and "页面图像路径" in columns
+
+    def test_the_page_file_puts_the_prediction_beside_what_can_check_it(self):
+        spot = [t for s in contract.PAGE_FILE.sections for t in s.tables if t.title == "定位键"][0]
+        assert spot.provenance == "rule_checkable"
+        assert "规则的真实标签" in spot.columns
 
     def test_the_failure_analysis_is_one_report_not_a_directory_of_cases(self):
         columns = [c for s in contract.FAILURE_REPORT.sections for t in s.tables for c in t.columns]

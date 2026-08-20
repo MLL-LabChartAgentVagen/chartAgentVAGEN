@@ -418,11 +418,18 @@ assert set(MECHANISM_STEP.values()) <= set(STEPS) | {0}
 # 4 · The three reports                                                         #
 # --------------------------------------------------------------------------- #
 #
-# The deliverable is three markdown files, not a directory of per-page pages. A
-# per-page report was worth writing when the sample was 192 pages and one model;
-# with 20 pages and three models the interesting unit is the disagreement, and
-# that is a column in the summary table, not a file. The raw answers stay on disk
-# as JSON, machine-readable, one file per (model, page).
+# Three summary reports and one file per sampled page. The page file is where the
+# three answers sit side by side against the same image, so it is where a conflict
+# is adjudicated and where a row in the summary can be checked back to what was
+# actually on the page. Twenty pages, twenty files.
+#
+# The failure analysis has no per-case file, and the asymmetry is a matter of
+# scale rather than of principle: a run holds some 900 failures, so a case is a
+# row with its evidence in the report, and the conflicting ones are listed
+# together in the adjudication table.
+#
+# The raw answers stay on disk as JSON, machine-readable, one file per
+# (model, page); every report is generated from them and none is written by hand.
 #
 # Every table below says what one row is and which columns it carries, because
 # that is what fixes the analysis: three models can only be compared per column.
@@ -463,6 +470,42 @@ class Report:
 #: The reports are built from these, never by hand.
 RAW_ANSWERS = "parsebench/data/analysis/<model>/<page>.json"
 
+#: One file per sampled page, three models against the same image. `<page>` is the
+#: page stem; the rows of `SAMPLE_REPORT` link here, and adjudication happens here.
+PAGE_FILE = Report(
+    "parsebench/reports/pages/<page>.md",
+    "一页一份：三家的答案与同一张图并排，供核对与裁决",
+    (
+        Section("1", "这一页", "看的是什么", (
+            Table("页面", "这一页",
+                  ("页名", "文档", "文档级 tags", "抽查点数", "页面图像路径"),
+                  "program_measured"),
+        )),
+        Section("2", "三家怎么读这一页", "同一张图，三份分解", (
+            Table("图表分解", "(模型, 图序号)",
+                  ("模型", "图序号", "类型", "图元数", "图号", "标题位置", "数值印不印"),
+                  "model_claim"),
+            Table("组件命中", "一个 key",
+                  ("key", "三家各自报没报", "每家的证据原文"), "model_claim"),
+            Table("词表外的自拟名字", "一个名字",
+                  ("名字", "哪家报的", "affects", "证据原文"), "model_claim"),
+        )),
+        Section("3", "抽查点", "值给了模型、标签没给，所以这一节是判分", (
+            Table("定位键", "一个抽查点",
+                  ("值", "规则的真实标签", "三家各自预测的键", "三家各自对错",
+                   "这个点在失败运行里过没过"),
+                  "rule_checkable"),
+        )),
+        Section("4", "分歧与裁决", "这一页上三家说法不同的地方", (
+            Table("冲突", "一个冲突项",
+                  ("量", "三家各自的取值", "人工裁决", "裁决理由"), "model_claim"),
+        )),
+        Section("5", "原始答案", "报告的每一行都能回到这里", (
+            Table("原始答案", "一家模型", ("模型", "JSON 路径"), "program_measured"),
+        )),
+    ),
+)
+
 SAMPLE_REPORT = Report(
     "parsebench/reports/sample.md",
     "20 页 × 三家模型：基准里有、而 storyline 没有定义的东西",
@@ -470,7 +513,8 @@ SAMPLE_REPORT = Report(
         Section("1", "要改什么", "哪些缺口进改造清单，哪些不进", (
             Table("组件缺口", "一个词表 key",
                   ("key", "三家各自的页数", "一致性", "affects", "文档分布",
-                   "我们画不画得出", "归入哪条 P", "对分数", "对能力", "一页实例与证据原文"),
+                   "我们画不画得出", "归入哪条 P", "对分数", "对能力",
+                   "一页实例（链到该页的页报告）与证据原文"),
                   "model_claim"),
             Table("词表外的观察", "一个自拟名字，归并后",
                   ("名字", "哪几家报了", "页数", "affects", "证据原文"),
@@ -552,7 +596,7 @@ OVERVIEW_REPORT = Report(
     ),
 )
 
-REPORTS = (SAMPLE_REPORT, FAILURE_REPORT, OVERVIEW_REPORT)
+REPORTS = (PAGE_FILE, SAMPLE_REPORT, FAILURE_REPORT, OVERVIEW_REPORT)
 
 #: Numbers a model must never be the source of. Each is computable without a model,
 #: and each was a place the last round could have drifted had it not been.

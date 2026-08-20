@@ -64,7 +64,7 @@
 - [x] `DEFAULT_MODEL` 不变；加一家只加一个文件；`client.py` 的调用面不变，写模型名就换家（`LLM("gemini-3.1-pro-preview")`），provider 类按名字延迟导入，只装一家的 SDK 也能用
 - [x] 测试：`tests/unit/test_llmkit.py` 三家参数化（system / 上限 / effort / schema / 图像 / 不发采样参数各一条），加按模型名选家与各家的截断、拒答、思考 token 计法
 - [x] 真跑 Gemini 与 Anthropic：`gemini-3.1-pro-preview` 跑一页 ParseBench 真实页面（整页图 + `format.PAGE_SCHEMA` + `effort=high`），填满契约、五个抽查点的定位键预测全对；`claude-opus-5` 同路径回归一次
-- [ ] **OpenAI 官方端点没跑通**：环境里的 `OPENAI_API_KEY` 返回 401（`Incorrect API key provided`，key 本身无效），两次直连都没成功，`~/.bashrc` 里也只有这一个 key。`OpenAIProvider` 的请求形状按 Responses API 写，并经 `--base-url https://openrouter.ai/api/v1` + `OPENROUTER_API_KEY` 用 `openai/gpt-5.6-sol` 跑通了同一页（结果同样填满契约、定位键预测全对），所以代码路径是验过的、缺的是一个有效的官方 key。换上之后 `python parsebench/tools/contract/try_page.py --model gpt-5.2` 即可直连复核
+- [x] 真跑 OpenAI：换 key 之后 `gpt-5.6-sol` 直连同一页跑通（63.6s，填满契约、五个定位键预测全对）。三家至此都在同一份契约上跑通过
 
 ## T4 · 先定输出格式，再跑模型
 
@@ -75,7 +75,7 @@
 - [x] **一份契约一个文件**：要读的是 `review/06_output_contract.md`，机读的是 `tools/contract/format.py`，两边字段一一对应；词表 `vocabulary.py` 是数据表，单独放
 - [x] **分析 schema** `format.PAGE_SCHEMA`：九个顶层字段，取值域全部闭合（19 型图表表 · 65 项组件词表 · 四步 · P1–P7 · 通用度三档）；证据字段 ≤20 词，其余长度上限写在字段描述里
 - [x] **归因 schema** `format.FAILURE_SCHEMA`：程序给形态、模型给机制，13 项机制闭集，每项自带它属于四步的哪一步；`passed` 不进 schema
-- [x] **报告结构** `format.REPORTS`：三份报告各一个文件——`reports/sample.md`（样例分析三节）· `reports/failures.md`（失败分析四节，**只有一份总报告，没有逐 case 文件**）· `reports/overview.md`（T7 的合并）。每节列出它的表，每张表写清「一行是什么」与列名，因为三家只能逐列比。原始答案留在 `data/analysis/<model>/<page>.json`，报告全部由它生成。**不做逐页报告**：20 页 × 三家时值得看的单位是分歧，那是一列不是一个文件。这一轮不做 `view.html`
+- [x] **报告结构** `format.REPORTS`：逐页报告 `reports/pages/<page>.md`（20 份）+ 三份汇总 `reports/sample.md` · `reports/failures.md` · `reports/overview.md`。每节列出它的表，每张表写清「一行是什么」与列名，因为三家只能逐列比。原始答案留在 `data/analysis/<model>/<page>.json`，所有报告由它生成。**逐页报告是裁决面**：契约要求冲突项由人看页面裁决，逐页报告就是那个地方——三家的分解、组件命中与证据、抽查点判分（模型预测 · 规则真实标签 · 失败运行里过没过）并排在同一张图旁边，汇总表的实例列链到它。失败分析没有逐 case 文件，差别是规模不是原则（一次运行约 900 个失败）。这一轮不做 `view.html`
 - [x] **比较口径** `format.SAMPLE_QUANTITIES`（7 条）+ `FAILURE_QUANTITIES`（1 条）。上一版列了十条，是照着 schema 字段列的；按「有没有东西消费它」重排后：留下组件命中 · 类型判定 · 数值印不印 · 稠密度档 · 标题（只比图号有无与位置）· 卡在哪一步（改为与失败运行实测对照）· 定位键预测（唯一可核）。刻意不对齐的四项连理由写进 `NOT_ALIGNED`，防止下一轮反射性加回去
 - [x] **词表的性质写在明处**：65 项枚举是上一轮由**单个模型**在 192 页上长出来的（29 → 56 → 69 → 65），`affects` 是按度量定义作出的指派而非测量。仍然用它，因为没有闭集则 20 页上的自由命名相加不起来（上一轮 289 个自拟名字对应 26 个概念）；代价是三家拿同一份清单会把一致率抬高，因此配两条**不可选**的控制 `CONTROLS`：词表外残差、无词表对照（取一家再跑 20 页、prompt 不给词表，映回词表比重合率）。**不按上一轮频次裁剪词表**
 - [x] 三层可信度写进 `format.PROVENANCE`：`rule_checkable`（`chart.jsonl` 可核）· `program_measured` · `model_claim`；十个对齐量里只有「定位键预测」是可核的，它问的是「谁对」不是「谁和谁一致」
