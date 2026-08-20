@@ -429,12 +429,27 @@ assert set(MECHANISM_STEP.values()) <= set(STEPS) | {0}
 # together in the adjudication table.
 #
 # The raw answers stay on disk as JSON, machine-readable, one file per
-# (model, page); every report is generated from them and none is written by hand.
+# (model, page); every table below is computed from them.
+#
+# Three hands touch a report, and the split is what keeps the numbers honest:
+# the models write only the raw answers, the program computes every count, rate
+# and score into the tables, and the agent writes the prose around those tables,
+# adjudicates the conflicts and renders the HTML view. `AUTHORSHIP` states it;
+# the one rule is that the agent never produces a number of its own.
 #
 # Every table below says what one row is and which columns it carries, because
 # that is what fixes the analysis: three models can only be compared per column.
 
 PROVENANCE = ("rule_checkable", "program_measured", "model_claim")
+
+#: Who writes what. A report is a program-computed table set with prose around it,
+#: not a document someone writes while reading JSON.
+AUTHORSHIP = {
+    "模型": "只产出 `data/analysis/<model>/<page>.json`，此外什么都不写",
+    "程序": "全部计数、一致率、判分、失败统计，写成下面每一张表。这些数字进报告时原样引用",
+    "agent": "表之外的东西：逐页报告的裁决列与理由 · 三份汇总报告的结论散文 · `view.html`。"
+             "**不产生任何数字**——每一句结论都要指回一张程序算出的表或一份逐页报告",
+}
 
 
 @dataclass(frozen=True)
@@ -596,7 +611,34 @@ OVERVIEW_REPORT = Report(
     ),
 )
 
-REPORTS = (PAGE_FILE, SAMPLE_REPORT, FAILURE_REPORT, OVERVIEW_REPORT)
+#: The illustrated version of the three summaries, written by the agent from the
+#: same tables:
+#: three panels matching the three reports, each row carrying the page it came
+#: from and the model's own evidence line. Self-contained -- readable without
+#: opening the markdown.
+VIEW = Report(
+    "parsebench/reports/view.html",
+    "三份汇总报告的图示版，三个分区一一对应；每一项配一页实例与证据原文，自足",
+    (
+        Section("1", "要改什么", "报告 A §1 的分区", (
+            Table("组件缺口卡片", "一个词表 key",
+                  ("key", "三家各自的页数", "一致性", "affects", "对分数", "对能力",
+                   "实例页图像", "证据原文"), "model_claim"),
+        )),
+        Section("2", "失败长什么样", "报告 B §1–§3 的分区", (
+            Table("失败卡片", "一个机制",
+                  ("机制", "归入哪一步", "条数", "一致率", "实例页图像", "证据原文"),
+                  "model_claim"),
+        )),
+        Section("3", "要加的能力", "报告 C §1 的分区", (
+            Table("能力卡片", "一条能力",
+                  ("能力", "证据来自哪一份", "可信度层", "对分数", "对能力", "新增的消融行"),
+                  "model_claim"),
+        )),
+    ),
+)
+
+REPORTS = (PAGE_FILE, SAMPLE_REPORT, FAILURE_REPORT, OVERVIEW_REPORT, VIEW)
 
 #: Numbers a model must never be the source of. Each is computable without a model,
 #: and each was a place the last round could have drifted had it not been.

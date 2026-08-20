@@ -106,13 +106,20 @@ class TestTheReports:
     """Three files, each section a set of tables, each table a row definition and
     its columns -- three models can only be compared per column."""
 
-    def test_the_deliverables_are_one_file_per_page_and_three_summaries(self):
+    def test_the_deliverables_are_one_file_per_page_three_summaries_and_a_view(self):
         assert [r.path for r in contract.REPORTS] == [
             "parsebench/reports/pages/<page>.md",
             "parsebench/reports/sample.md",
             "parsebench/reports/failures.md",
             "parsebench/reports/overview.md",
+            "parsebench/reports/view.html",
         ]
+
+    def test_three_hands_touch_a_report_and_only_one_may_produce_a_number(self):
+        """Models write the raw answers, the program computes every count, the
+        agent writes the prose. The split is what keeps the numbers checkable."""
+        assert set(contract.AUTHORSHIP) == {"模型", "程序", "agent"}
+        assert "不产生任何数字" in contract.AUTHORSHIP["agent"]
 
     def test_the_page_file_is_where_a_conflict_is_adjudicated(self):
         """The contract sends conflicts to a person looking at the page, so the

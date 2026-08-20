@@ -23,7 +23,7 @@ ParseBench 的 Charts 维度考的是：**从一张企业报告页面上，把�
 | [review/03_chart_characteristics.md](review/03_chart_characteristics.md) | 难度构成与视觉多样性，来自 4,864 条标注与 568 页 |
 | [review/04_pipeline_gap.md](review/04_pipeline_gap.md) | **七项流水线改进** P1–P7 + 与 storyline 的关系 |
 | [review/05_analysis_design.md](review/05_analysis_design.md) | 样例分析怎么做：一次调用、整页原图、随机抽样、不做 agent、不接 OCR |
-| [review/06_output_contract.md](review/06_output_contract.md) | **输出契约，跑模型之前只读这一份**：要出的报告（逐页 + 三份汇总）、每张表一行是什么与列名、哪些数字必须程序算、三家按什么对齐、模型返回什么 |
+| [review/06_output_contract.md](review/06_output_contract.md) | **输出契约，跑模型之前只读这一份**：要出的报告（逐页 + 三份汇总 + 图示版）、谁写哪一部分、每张表一行是什么与列名、哪些数字必须程序算、三家按什么对齐、模型返回什么 |
 | [TODO.md](TODO.md) | **分析重做的待办 T0–T7**，附录里是上一轮两份分析的数字与口径留档 |
 | `tools/contract/` | 契约的机读半边，与 `review/06` 同一份内容：`format.py` 全部 schema 与口径 · `vocabulary.py` 65 项组件词表 · `try_page.py` 一页一模型的验证脚本（全英文） |
 | `tools/dataset/` | 下载、渲染、标注统计（全英文） |
@@ -114,9 +114,9 @@ parsebench/data/
   - [ ] A2 删除 `reports/` · `failures/` · `synthesis/` 与对应的 `tools/analysis/` · `tools/failures/` · `tools/synthesis/`
   - [x] A3 llmkit 支持三家模型：`providers/` 下 Anthropic / OpenAI / Gemini 各一个文件，图像输入、结构化输出、推理强度三条通路等价，缓存键含 provider 与 model
   - [x] A4 输出契约先于跑模型：[review/06](review/06_output_contract.md) 与 `tools/contract/format.py`，定死三份报告的表与列；每个观察项带 `affects`、每条意见双栏结论；词表配两条控制
-  - [ ] A5 样例分析重跑：抽 20 页，三家模型跑同一批，另加一次无词表对照；出差异表，只有三家一致的项进改造清单
+  - [ ] A5 样例分析重跑：抽 20 页，三家模型跑同一批，另加一次无词表对照；程序算差异表，agent 写逐页报告与汇总，只有三家一致的项进改造清单
   - [ ] A6 失败样本分析重跑：输入仍是 `data/runs/` 已有的运行，模型只做归因，形态统计仍由程序算
-  - [ ] A7 合并成一份 pipeline overview，每条结论标三层可信度（`chart.jsonl` 可核 · 三家一致 · 单家）
+  - [ ] A7 合并成一份 pipeline overview 与 `reports/view.html`，每条结论标三层可信度（`chart.jsonl` 可核 · 三家一致 · 单家）
 
 - [ ] **B · 把分析结论翻成改动**（输入是 A5 / A6 的两份差异表）
   - [ ] B1 改造顺序按两条依据出：频次（基准里有多少这种图）与失败率（这种图要付多少代价），两条分开写，不合成一列
