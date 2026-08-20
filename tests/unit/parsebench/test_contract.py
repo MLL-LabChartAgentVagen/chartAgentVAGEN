@@ -106,20 +106,26 @@ class TestTheReports:
     """Three files, each section a set of tables, each table a row definition and
     its columns -- three models can only be compared per column."""
 
-    def test_the_deliverables_are_one_file_per_page_three_summaries_and_a_view(self):
-        assert [r.path for r in contract.REPORTS] == [
-            "parsebench/reports/pages/<page>.md",
-            "parsebench/reports/sample.md",
-            "parsebench/reports/failures.md",
-            "parsebench/reports/overview.md",
-            "parsebench/reports/view.html",
+    def test_every_deliverable_says_who_writes_it(self):
+        assert [(r.path, r.by) for r in contract.REPORTS] == [
+            ("parsebench/reports/pages/<page>.md", "程序"),
+            ("parsebench/reports/sample.md", "程序"),
+            ("parsebench/reports/failures.md", "程序"),
+            ("parsebench/reports/INDEX.md", "agent"),
+            ("parsebench/reports/view.html", "agent"),
         ]
+        assert all(r.by in contract.AUTHORSHIP for r in contract.REPORTS)
 
-    def test_three_hands_touch_a_report_and_only_one_may_produce_a_number(self):
-        """Models write the raw answers, the program computes every count, the
-        agent writes the prose. The split is what keeps the numbers checkable."""
+    def test_what_is_mechanical_is_rendered_and_what_is_judgement_is_written(self):
+        """Every per-page file and every counting table is a function of the raw
+        answers, so it is code. Only the reading of them is the agent's."""
+        rendered = {r.path for r in contract.REPORTS if r.by == "程序"}
+        assert "parsebench/reports/pages/<page>.md" in rendered
         assert set(contract.AUTHORSHIP) == {"模型", "程序", "agent"}
         assert "不产生任何数字" in contract.AUTHORSHIP["agent"]
+
+    def test_a_verdict_is_data_so_a_re_render_does_not_lose_it(self):
+        assert contract.VERDICTS.endswith(".json")
 
     def test_the_page_file_is_where_a_conflict_is_adjudicated(self):
         """The contract sends conflicts to a person looking at the page, so the
@@ -146,7 +152,7 @@ class TestTheReports:
 
     def test_the_two_conclusion_columns_survive_into_the_reports(self):
         """The one place the score and the capability could be silently merged."""
-        for report in (contract.SAMPLE_REPORT, contract.OVERVIEW_REPORT):
+        for report in (contract.SAMPLE_REPORT, contract.INDEX_REPORT):
             columns = [c for s in report.sections for t in s.tables for c in t.columns]
             assert "对分数" in columns and "对能力" in columns
 

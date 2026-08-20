@@ -431,25 +431,36 @@ assert set(MECHANISM_STEP.values()) <= set(STEPS) | {0}
 # The raw answers stay on disk as JSON, machine-readable, one file per
 # (model, page); every table below is computed from them.
 #
-# Three hands touch a report, and the split is what keeps the numbers honest:
-# the models write only the raw answers, the program computes every count, rate
-# and score into the tables, and the agent writes the prose around those tables,
-# adjudicates the conflicts and renders the HTML view. `AUTHORSHIP` states it;
-# the one rule is that the agent never produces a number of its own.
+# Three hands, split by what each is good for. A model answers one page in JSON,
+# because three answers can only be compared column by column -- prose cannot be
+# aligned, counted, or re-rendered when the report format changes. The program
+# renders: every per-page file and every counting table is a mechanical function
+# of those answers plus the annotation, so it is written by code and can be
+# regenerated at any time. The agent judges: it adjudicates the conflicts and
+# writes the one reading of the whole thing, `INDEX.md` and its `view.html`.
+#
+# The one rule is that the agent never produces a number of its own.
 #
 # Every table below says what one row is and which columns it carries, because
 # that is what fixes the analysis: three models can only be compared per column.
 
 PROVENANCE = ("rule_checkable", "program_measured", "model_claim")
 
-#: Who writes what. A report is a program-computed table set with prose around it,
-#: not a document someone writes while reading JSON.
+#: Who writes what.
 AUTHORSHIP = {
-    "模型": "只产出 `data/analysis/<model>/<page>.json`，此外什么都不写",
-    "程序": "全部计数、一致率、判分、失败统计，写成下面每一张表。这些数字进报告时原样引用",
-    "agent": "表之外的东西：逐页报告的裁决列与理由 · 三份汇总报告的结论散文 · `view.html`。"
-             "**不产生任何数字**——每一句结论都要指回一张程序算出的表或一份逐页报告",
+    "模型": "一页一份 JSON 答案。JSON 是输出格式不是产物——三家只能逐列比，散文对不齐、"
+            "数不了、报告格式一改还得重跑",
+    "程序": "把答案渲染成逐页报告与全部汇总表：计数、一致率、判分、失败统计。"
+            "机械的部分全在这里，随时可重跑",
+    "agent": "判断的部分：裁决三家的冲突（写进 `verdicts.json`，渲染时填进逐页报告），"
+             "以及读完上面三样之后的那一份 `INDEX.md` 与它的 `view.html`。"
+             "**不产生任何数字**——每一句结论都指回一张程序算出的表或一份逐页报告",
 }
+
+#: The agent's verdicts on conflicting items, as data rather than as hand-edited
+#: markdown: the per-page files stay regenerable, and a verdict survives a
+#: re-render. One entry per (page, quantity).
+VERDICTS = "parsebench/data/analysis/verdicts.json"
 
 
 @dataclass(frozen=True)
@@ -474,9 +485,10 @@ class Section:
 
 @dataclass(frozen=True)
 class Report:
-    """One file that gets written, and what it is for."""
+    """One file that gets written, who writes it, and what it is for."""
 
     path: str
+    by: str                      # a key of `AUTHORSHIP`
     what: str
     sections: tuple[Section, ...]
 
@@ -488,8 +500,9 @@ RAW_ANSWERS = "parsebench/data/analysis/<model>/<page>.json"
 #: One file per sampled page, three models against the same image. `<page>` is the
 #: page stem; the rows of `SAMPLE_REPORT` link here, and adjudication happens here.
 PAGE_FILE = Report(
-    "parsebench/reports/pages/<page>.md",
-    "一页一份：三家的答案与同一张图并排，供核对与裁决",
+    "parsebench/reports/pages/<page>.md", "程序",
+    "一页一份：三家的答案与同一张图并排，供核对与裁决。渲染自三份 JSON、`chart.jsonl` "
+    "的规则与失败运行的结果，裁决列填的是 agent 写在 `verdicts.json` 里的裁决",
     (
         Section("1", "这一页", "看的是什么", (
             Table("页面", "这一页",
@@ -522,10 +535,11 @@ PAGE_FILE = Report(
 )
 
 SAMPLE_REPORT = Report(
-    "parsebench/reports/sample.md",
-    "20 页 × 三家模型：基准里有、而 storyline 没有定义的东西",
+    "parsebench/reports/sample.md", "程序",
+    "20 页 × 三家模型的汇总表：基准里有、而 storyline 没有定义的东西。全是数字，结论在 `INDEX.md`",
     (
-        Section("1", "要改什么", "哪些缺口进改造清单，哪些不进", (
+        Section("1", "缺口表", "基准里有、而 storyline 没有定义的东西，逐项列出。"
+                "哪些进改造清单是 `INDEX.md` 的事，这里只出数", (
             Table("组件缺口", "一个词表 key",
                   ("key", "三家各自的页数", "一致性", "affects", "文档分布",
                    "我们画不画得出", "归入哪条 P", "对分数", "对能力",
@@ -564,7 +578,7 @@ SAMPLE_REPORT = Report(
 )
 
 FAILURE_REPORT = Report(
-    "parsebench/reports/failures.md",
+    "parsebench/reports/failures.md", "程序",
     "一次解析器运行的全部失败：形态由程序算，机制由三家模型归因。一份总报告，"
     "没有逐 case 文件——实例是报告里的一列，指回 case_id 与页名",
     (
@@ -591,46 +605,57 @@ FAILURE_REPORT = Report(
     ),
 )
 
-OVERVIEW_REPORT = Report(
-    "parsebench/reports/overview.md",
-    "两份报告合并成一份对流水线的总结：要加什么能力，证据来自哪一份",
+INDEX_REPORT = Report(
+    "parsebench/reports/INDEX.md", "agent",
+    "读完上面三份之后的那一份：裁决分歧、得出要加什么能力、每条标可信度。"
+    "**唯一由 agent 写的报告**，也是唯一一份可以有结论的",
     (
-        Section("1", "要加的能力", "每条改动加了什么，证据是哪一行", (
-            Table("能力轴", "一条要加的能力",
-                  ("能力", "证据来自哪一份", "可信度层", "对分数", "对能力",
-                   "新增的消融行", "归入哪条 P"), "model_claim"),
+        Section("1", "要改什么", "缺口里哪些进改造清单，依据是哪一行", (
+            Table("改造清单", "一条要加的能力",
+                  ("能力", "证据来自哪一份表", "三家一致性", "可信度层", "affects",
+                   "对分数", "对能力", "新增的消融行", "归入哪条 P",
+                   "一页实例（链到逐页报告）"), "model_claim"),
         )),
-        Section("2", "与 P1–P7 的对齐", "扩哪一条、加哪一条新的、删哪一条", (
-            Table("P 对齐", "一条 P",
-                  ("P", "扩 / 加 / 删", "依据"), "model_claim"),
+        Section("2", "失败说明什么", "失败形态与机制翻成能力，以及每条的价", (
+            Table("机制 → 能力", "一个机制",
+                  ("机制", "归入哪一步", "占失败", "三家一致性", "要加的能力",
+                   "一个实例（case_id + 页名）"), "model_claim"),
         )),
-        Section("3", "没进清单的", "报了但不做的，以及为什么", (
+        Section("3", "与 P1–P7 的对齐", "扩哪一条、加哪一条新的、删哪一条", (
+            Table("P 对齐", "一条 P", ("P", "扩 / 加 / 删", "依据"), "model_claim"),
+        )),
+        Section("4", "没进清单的与还没裁决的", "报了但不做的，以及为什么", (
             Table("不做", "一条被排除的意见",
-                  ("意见", "排除理由（只有一家 / 冲突未裁决 / 不加能力）"), "model_claim"),
+                  ("意见", "排除理由（只有一家 / 不加能力 / 证据不足）"), "model_claim"),
+            Table("待裁决", "一个还没裁决的冲突",
+                  ("量", "页", "三家各自的取值", "为什么还没定"), "model_claim"),
+        )),
+        Section("5", "能不能信", "这一份的结论建立在什么上", (
+            Table("折价", "一条口径",
+                  ("口径", "内容（三层可信度的分布 · 词表控制的重合率 · "
+                   "定位键预测的命中率 · 分母）"), "program_measured"),
         )),
     ),
 )
 
-#: The illustrated version of the three summaries, written by the agent from the
-#: same tables:
-#: three panels matching the three reports, each row carrying the page it came
-#: from and the model's own evidence line. Self-contained -- readable without
-#: opening the markdown.
+#: `INDEX.md` as a page: three panels matching its three sections, each row
+#: carrying the page it came from and the model's own evidence line.
+#: Self-contained -- readable without opening any markdown.
 VIEW = Report(
-    "parsebench/reports/view.html",
-    "三份汇总报告的图示版，三个分区一一对应；每一项配一页实例与证据原文，自足",
+    "parsebench/reports/view.html", "agent",
+    "`INDEX.md` 的图示版，三个分区一一对应；每一项配一页实例与证据原文，自足",
     (
-        Section("1", "要改什么", "报告 A §1 的分区", (
+        Section("1", "要改什么", "`INDEX.md` §1 的分区", (
             Table("组件缺口卡片", "一个词表 key",
                   ("key", "三家各自的页数", "一致性", "affects", "对分数", "对能力",
                    "实例页图像", "证据原文"), "model_claim"),
         )),
-        Section("2", "失败长什么样", "报告 B §1–§3 的分区", (
+        Section("2", "失败长什么样", "`INDEX.md` §2 的分区", (
             Table("失败卡片", "一个机制",
                   ("机制", "归入哪一步", "条数", "一致率", "实例页图像", "证据原文"),
                   "model_claim"),
         )),
-        Section("3", "要加的能力", "报告 C §1 的分区", (
+        Section("3", "要加的能力", "`INDEX.md` §3 的分区", (
             Table("能力卡片", "一条能力",
                   ("能力", "证据来自哪一份", "可信度层", "对分数", "对能力", "新增的消融行"),
                   "model_claim"),
@@ -638,7 +663,7 @@ VIEW = Report(
     ),
 )
 
-REPORTS = (PAGE_FILE, SAMPLE_REPORT, FAILURE_REPORT, OVERVIEW_REPORT, VIEW)
+REPORTS = (PAGE_FILE, SAMPLE_REPORT, FAILURE_REPORT, INDEX_REPORT, VIEW)
 
 #: Numbers a model must never be the source of. Each is computable without a model,
 #: and each was a place the last round could have drifted had it not been.
