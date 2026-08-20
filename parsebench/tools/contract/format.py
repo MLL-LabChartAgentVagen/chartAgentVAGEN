@@ -415,66 +415,144 @@ assert set(MECHANISM_STEP.values()) <= set(STEPS) | {0}
 
 
 # --------------------------------------------------------------------------- #
-# 4 · What a report contains, and who computed each number                      #
+# 4 · The three reports                                                         #
 # --------------------------------------------------------------------------- #
+#
+# The deliverable is three markdown files, not a directory of per-page pages. A
+# per-page report was worth writing when the sample was 192 pages and one model;
+# with 20 pages and three models the interesting unit is the disagreement, and
+# that is a column in the summary table, not a file. The raw answers stay on disk
+# as JSON, machine-readable, one file per (model, page).
+#
+# Every table below says what one row is and which columns it carries, because
+# that is what fixes the analysis: three models can only be compared per column.
 
 PROVENANCE = ("rule_checkable", "program_measured", "model_claim")
 
 
 @dataclass(frozen=True)
+class Table:
+    """One table in a report: what a row is, and what the columns say about it."""
+
+    title: str
+    row: str
+    columns: tuple[str, ...]
+    provenance: str
+
+
+@dataclass(frozen=True)
 class Section:
-    """One section of a report: the question it answers and the rows it prints."""
+    """One section of a report: the question it answers, and its tables."""
 
     id: str
     title: str
     question: str
-    rows: str
-    provenance: tuple[str, ...]
+    tables: tuple[Table, ...]
 
 
-#: The page analysis. Three sections, each answering one question, no overlap.
-#: `view.html` renders the same three, one panel each, every row carrying the page
-#: it came from and the model's own evidence line.
-PAGE_REPORT = (
-    Section("1", "要改什么",
-            "基准里出现、而 storyline 没有定义的东西，哪些保留、哪些舍弃",
-            "一项一行：组件 key 或图表类型 · 三家各自的页数 · 一致性（三家 / 两家 / 一家）· "
-            "affects · 文档分布 · 归入哪条 P · 双栏结论（对分数 / 对能力）",
-            ("model_claim", "program_measured")),
-    Section("2", "基准长什么样",
-            "这批页面实际是什么样，包括我们已经画得出来的部分",
-            "类型配比、标题五字段、数值印不印、难点分布、词表全表；每一格三家并列，"
-            "并列不合并",
-            ("model_claim", "program_measured")),
-    Section("3", "能不能信",
-            "这些数字是怎么来的",
-            "调用口径（模型、effort、图像分辨率、一次调用）· 三家的判分（定位键预测 vs "
-            "规则标签）· 交叉核对的矛盾计数 · 三家差异表",
-            ("rule_checkable", "program_measured")),
+@dataclass(frozen=True)
+class Report:
+    """One file that gets written, and what it is for."""
+
+    path: str
+    what: str
+    sections: tuple[Section, ...]
+
+
+#: Where the raw answers live: one JSON per (model, page), the schema above.
+#: The reports are built from these, never by hand.
+RAW_ANSWERS = "parsebench/data/analysis/<model>/<page>.json"
+
+SAMPLE_REPORT = Report(
+    "parsebench/reports/sample.md",
+    "20 页 × 三家模型：基准里有、而 storyline 没有定义的东西",
+    (
+        Section("1", "要改什么", "哪些缺口进改造清单，哪些不进", (
+            Table("组件缺口", "一个词表 key",
+                  ("key", "三家各自的页数", "一致性", "affects", "文档分布",
+                   "我们画不画得出", "归入哪条 P", "对分数", "对能力", "一页实例与证据原文"),
+                  "model_claim"),
+            Table("词表外的观察", "一个自拟名字，归并后",
+                  ("名字", "哪几家报了", "页数", "affects", "证据原文"),
+                  "model_claim"),
+            Table("类型缺口", "一个图表类型",
+                  ("类型", "三家各自的图数", "一致性", "条件表有没有这一族"),
+                  "model_claim"),
+        )),
+        Section("2", "基准长什么样", "这批页面实际是什么样。描述，没有待办", (
+            Table("类型配比", "一个图表类型", ("类型", "三家各自的图数", "一致性"), "model_claim"),
+            Table("数值印不印", "all / some / none 三档", ("档", "三家各自的图数"), "model_claim"),
+            Table("稠密度", "五档图元数", ("档", "三家各自的图数"), "model_claim"),
+            Table("标题", "图号有无 · 位置四值", ("取值", "三家各自的图数"), "model_claim"),
+            Table("卡在哪一步", "四步之一",
+                  ("步", "三家各自的页数", "同一批页在失败运行里实际卡住的步"),
+                  "model_claim"),
+        )),
+        Section("3", "能不能信", "这些数字是怎么来的", (
+            Table("调用口径", "一家模型",
+                  ("模型", "effort", "图像 dpi", "调用次数", "输入 / 输出 token", "用时"),
+                  "program_measured"),
+            Table("定位键预测的判分", "一家模型",
+                  ("模型", "落位的值数", "对的数", "命中率"), "rule_checkable"),
+            Table("一致率", "一个对齐量",
+                  ("量", "三家一致", "两家", "一家", "冲突", "一致率"), "program_measured"),
+            Table("词表控制", "一个模型的两次跑法",
+                  ("模型", "有词表报出的 key 数", "无词表那次映回词表后重合的 key 数", "重合率"),
+                  "program_measured"),
+            Table("交叉核对", "一类矛盾", ("矛盾", "三家各自的页数"), "program_measured"),
+        )),
+    ),
 )
 
-#: The failure analysis. `passed` is never recomputed, so section 1 is entirely
-#: program-measured and section 2 entirely rule-checkable.
-FAILURE_REPORT = (
-    Section("1", "失败长什么样",
-            "896 个失败各是什么形态，失联的键在哪",
-            "形态 × 个数 × 占比；失联键的去向分布；三家的归因一致率",
-            ("program_measured", "model_claim")),
-    Section("2", "什么样的图更容易失败",
-            "哪些自变量与通过率单调相关",
-            "自变量 × 分档 × 通过率 × n × 95% 区间；控制组内的组件差值",
-            ("rule_checkable", "program_measured")),
-    Section("3", "翻成流水线改动",
-            "每条改动加了什么能力，证据是哪一行",
-            "改动一行：机制 · 三家一致性 · 双栏结论（对分数 / 对能力）· 新增的消融行 · "
-            "归入哪条 P",
-            ("model_claim", "program_measured")),
-    Section("4", "能不能信",
-            "口径与没有测到的东西",
-            "passed 的来源 · 分母（哪些统计只覆盖有图表描述的页）· 相关而非因果的声明 · "
-            "没能分开的形态",
-            ("program_measured",)),
+FAILURE_REPORT = Report(
+    "parsebench/reports/failures.md",
+    "一次解析器运行的全部失败：形态由程序算，机制由三家模型归因。一份总报告，"
+    "没有逐 case 文件——实例是报告里的一列，指回 case_id 与页名",
+    (
+        Section("1", "失败长什么样", "失败各是什么形态，失联的键在哪", (
+            Table("失败形态", "一种形态", ("形态", "个数", "占失败"), "program_measured"),
+            Table("失联键的去向", "一个去向", ("去向", "个数", "占 label_unlinked"),
+                  "program_measured"),
+        )),
+        Section("2", "什么样的图更容易失败", "哪些自变量与通过率相关", (
+            Table("单变量", "一个自变量的一档",
+                  ("自变量", "档", "通过率", "n", "95% 区间"), "rule_checkable"),
+            Table("控制组内的组件差值", "一个组件",
+                  ("组件", "页", "文档", "有", "无", "差"), "rule_checkable"),
+        )),
+        Section("3", "机制", "什么样的画法产生了这种失败", (
+            Table("机制", "一个机制",
+                  ("机制", "归入哪一步", "三家各自的条数", "一致率", "冲突数",
+                   "一个实例（case_id + 页名）", "要加什么能力"), "model_claim"),
+        )),
+        Section("4", "能不能信", "口径与没有测到的东西", (
+            Table("口径", "一条声明",
+                  ("声明", "内容"), "program_measured"),
+        )),
+    ),
 )
+
+OVERVIEW_REPORT = Report(
+    "parsebench/reports/overview.md",
+    "两份报告合并成一份对流水线的总结：要加什么能力，证据来自哪一份",
+    (
+        Section("1", "要加的能力", "每条改动加了什么，证据是哪一行", (
+            Table("能力轴", "一条要加的能力",
+                  ("能力", "证据来自哪一份", "可信度层", "对分数", "对能力",
+                   "新增的消融行", "归入哪条 P"), "model_claim"),
+        )),
+        Section("2", "与 P1–P7 的对齐", "扩哪一条、加哪一条新的、删哪一条", (
+            Table("P 对齐", "一条 P",
+                  ("P", "扩 / 加 / 删", "依据"), "model_claim"),
+        )),
+        Section("3", "没进清单的", "报了但不做的，以及为什么", (
+            Table("不做", "一条被排除的意见",
+                  ("意见", "排除理由（只有一家 / 冲突未裁决 / 不加能力）"), "model_claim"),
+        )),
+    ),
+)
+
+REPORTS = (SAMPLE_REPORT, FAILURE_REPORT, OVERVIEW_REPORT)
 
 #: Numbers a model must never be the source of. Each is computable without a model,
 #: and each was a place the last round could have drifted had it not been.
@@ -485,13 +563,20 @@ PROGRAM_ONLY = {
     "规则实际用了几个标签": "chart.jsonl 的 labels 长度",
     "定位键预测的对错": "规则标签与模型预测的双向子串匹配，与基准自己的匹配方式一致",
     "页面文字量": "PDF 文字层实测",
-    "三家的一致性": "对齐后按 compare.py 的判据算，不问模型",
+    "三家的一致性与一致率": "对齐后按下面的判据算，不问模型",
 }
 
 
 # --------------------------------------------------------------------------- #
 # 5 · How three models' answers are compared                                    #
 # --------------------------------------------------------------------------- #
+#
+# The comparison is per page and per quantity, never per report: two reports that
+# agree on totals can disagree on every page and cancel out.
+#
+# A quantity is on this list only because a decision consumes it. That is the same
+# test the change list is held to, applied to the analysis itself -- a column that
+# nothing reads is a column that gets argued about for free.
 
 @dataclass(frozen=True)
 class Quantity:
@@ -500,39 +585,45 @@ class Quantity:
     name: str
     unit: str            # what one comparable item is
     equal_when: str      # when two models are counted as saying the same thing
-    provenance: str      # `report.PROVENANCE`; `rule_checkable` ones are also graded
+    provenance: str
+    consumer: str        # the decision that reads it; without one it is not here
 
 
-QUANTITIES = (
-    Quantity("图表类型判定", "(页, 图序号)",
-             "两家给出同一个 type；`other` 还要求 type_other 归一化后相同",
-             "model_claim"),
-    Quantity("图的个数与图元数", "(页, 图序号)",
-             "图数完全相同；图元数落在同一个稠密度档（≤20 / 21–60 / 61–150 / 151–400 / >400）",
-             "model_claim"),
+SAMPLE_QUANTITIES = (
     Quantity("组件命中集合", "(页, key)",
-             "同一页同一个 key 都被报出；差异表按 key 记三家 / 两家 / 一家",
-             "model_claim"),
-    Quantity("标题五字段", "(页, 图序号, 字段)",
-             "figure_number 与 placement 完全相同；title / subtitle / unit_text 去空白与"
-             "大小写后相同",
-             "model_claim"),
-    Quantity("数值印不印", "(页, 图序号)", "values_printed 三值相同", "model_claim"),
-    Quantity("卡在哪一步", "页", "hardest_step 相同", "model_claim"),
-    Quantity("抽查点落到哪张图", "(页, 抽查点序号)",
-             "figure_id 相同；`not_found` 也算一个取值",
-             "model_claim"),
-    Quantity("定位键预测", "(页, 抽查点序号)",
-             "与规则的真实标签逐条判对错，三家各自得一个分；这一项不是「谁和谁一致」，"
-             "而是「谁对」",
-             "rule_checkable"),
-    Quantity("改进意见", "(maps_to, what_to_add 归一化后)",
-             "落在同一条 P 且指向同一个组件 key；affects 不同则记为冲突",
-             "model_claim"),
-    Quantity("失败归因", "(case_id)",
-             "mechanism 相同；affects 不同则记为冲突",
-             "model_claim"),
+             "同一页同一个 key 都被报出",
+             "model_claim", "改造清单第 1 节的每一行"),
+    Quantity("图表类型判定", "(页, 图序号)",
+             "type 相同；`other` 还要 type_other 归一化后相同",
+             "model_claim", "类型配比 → P4 的族权重向量"),
+    Quantity("数值印不印", "(页, 图序号)", "values_printed 三值相同",
+             "model_claim", "P6 的标注形态；也是失败分析里最大的控制变量"),
+    Quantity("稠密度档", "(页, 图序号)",
+             "marks 落在同一档（≤20 / 21–60 / 61–150 / 151–400 / >400）",
+             "model_claim", "P5 的稠密度上限"),
+    Quantity("标题", "(页, 图序号)",
+             "figure_number 有无相同，且 placement 四值相同。标题正文不比",
+             "model_claim", "P7 的图号与位置两维"),
+    Quantity("卡在哪一步", "页", "hardest_step 相同",
+             "model_claim", "与失败运行实测的步对照，校准模型的判断"),
+    Quantity("定位键预测", "(页, 抽查点)",
+             "与规则的真实标签逐条判对错，三家各自得一个分——这一项问「谁对」，"
+             "不问「谁和谁一致」",
+             "rule_checkable", "唯一可核的量，用来校准上面五条的可信度；同时是 P2 的证据"),
 )
+
+FAILURE_QUANTITIES = (
+    Quantity("失败机制", "case_id", "mechanism 相同；affects 不同记为冲突",
+             "model_claim", "失败报告第 3 节，以及 overview 里的能力轴"),
+)
+
+#: Dropped on purpose, so the next round does not re-add them by reflex.
+NOT_ALIGNED = {
+    "改进意见": "由组件命中派生，对齐它等于把同一件事数两遍。三家的意见原样附在报告里给人读",
+    "抽查点落到哪张图": "与定位键预测是同一条链，并入那一项",
+    "标题正文": "比的是抄写差异不是读图差异；只比图号有无与位置",
+    "系列名 / 类目名": "同上",
+}
 
 #: 三家一致 / 两家 / 一家，以及冲突的定义。差异表按这四类分栏。
 AGREEMENT = {
@@ -553,3 +644,14 @@ DECISION = {
 #: 一致率怎么算：分母是至少一家报过的项，分子是 unanimous 的项。按页算再平均，
 #: 与基准自己的按页平均口径一致。
 AGREEMENT_RATE = "unanimous / (unanimous + majority + single + conflict)，按页平均"
+
+#: Two controls on the vocabulary itself. It was grown by one model over the last
+#: round's 192 pages, so handing the same 65 keys to three models makes some of
+#: their agreement an artefact of the list rather than of the pages. Neither
+#: control is optional: without them the agreement rate cannot be read.
+CONTROLS = {
+    "词表外残差": "每家 new_components 的条数与占全部观察的比例。词表覆盖不了的部分越大，"
+                  "词表越该扩",
+    "无词表对照": "三家里取一家，同一批页再跑一次、prompt 不给词表；程序把自由名字映回词表，"
+                  "与有词表那次比重合率。重合率低说明这份枚举在造一致，一致率要按此折价",
+}

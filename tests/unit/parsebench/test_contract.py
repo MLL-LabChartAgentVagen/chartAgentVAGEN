@@ -102,21 +102,57 @@ class TestFailureAttribution:
         assert "other" in contract.FAILURE_SCHEMA["properties"]["mechanism_note"]["description"]
 
 
-class TestReportAndComparison:
-    def test_every_section_declares_where_its_numbers_come_from(self):
-        for section in contract.PAGE_REPORT + contract.FAILURE_REPORT:
-            assert section.provenance and set(section.provenance) <= set(contract.PROVENANCE)
+class TestTheReports:
+    """Three files, each section a set of tables, each table a row definition and
+    its columns -- three models can only be compared per column."""
+
+    def test_three_reports_each_with_a_file_of_its_own(self):
+        assert [r.path for r in contract.REPORTS] == [
+            "parsebench/reports/sample.md",
+            "parsebench/reports/failures.md",
+            "parsebench/reports/overview.md",
+        ]
+
+    def test_the_failure_analysis_is_one_report_not_a_directory_of_cases(self):
+        columns = [c for s in contract.FAILURE_REPORT.sections for t in s.tables for c in t.columns]
+        assert any("case_id" in c for c in columns), "an example is a column, not a file"
+
+    def test_every_table_says_what_a_row_is_and_where_its_numbers_come_from(self):
+        for report in contract.REPORTS:
+            for section in report.sections:
+                assert section.tables, section.title
+                for table in section.tables:
+                    assert table.row and table.columns
+                    assert table.provenance in contract.PROVENANCE
+
+    def test_the_two_conclusion_columns_survive_into_the_reports(self):
+        """The one place the score and the capability could be silently merged."""
+        for report in (contract.SAMPLE_REPORT, contract.OVERVIEW_REPORT):
+            columns = [c for s in report.sections for t in s.tables for c in t.columns]
+            assert "对分数" in columns and "对能力" in columns
 
     def test_the_numbers_a_model_must_not_be_the_source_of_are_listed(self):
         assert "通过率与 95% 区间" in contract.PROGRAM_ONLY
 
-    def test_every_aligned_quantity_says_when_two_answers_are_equal(self):
-        for q in contract.QUANTITIES:
-            assert q.unit and q.equal_when and q.provenance in contract.PROVENANCE
+    def test_the_raw_answers_are_kept_per_model_and_page(self):
+        assert "<model>" in contract.RAW_ANSWERS and "<page>" in contract.RAW_ANSWERS
+
+
+class TestComparison:
+    def test_every_aligned_quantity_names_the_decision_that_reads_it(self):
+        """A column nothing consumes is a column that gets argued about for free."""
+        for q in contract.SAMPLE_QUANTITIES + contract.FAILURE_QUANTITIES:
+            assert q.unit and q.equal_when and q.consumer
+            assert q.provenance in contract.PROVENANCE
 
     def test_the_scored_quantity_is_the_one_the_annotation_can_check(self):
-        scored = [q for q in contract.QUANTITIES if q.provenance == "rule_checkable"]
+        scored = [q for q in contract.SAMPLE_QUANTITIES if q.provenance == "rule_checkable"]
         assert [q.name for q in scored] == ["定位键预测"]
+
+    def test_what_is_deliberately_not_aligned_is_written_down_with_a_reason(self):
+        aligned = {q.name for q in contract.SAMPLE_QUANTITIES + contract.FAILURE_QUANTITIES}
+        assert not (aligned & set(contract.NOT_ALIGNED))
+        assert all(reason for reason in contract.NOT_ALIGNED.values())
 
     def test_every_agreement_class_has_a_decision(self):
         assert set(contract.AGREEMENT) == set(contract.DECISION)
@@ -124,3 +160,8 @@ class TestReportAndComparison:
     def test_only_a_unanimous_item_goes_straight_into_the_change_list(self):
         assert contract.DECISION["unanimous"] == "直接进改造清单"
         assert "不进清单" in contract.DECISION["single"]
+
+    def test_the_shared_vocabulary_comes_with_its_own_controls(self):
+        """The 65 keys are last round's product, so some of the agreement they
+        produce is an artefact of the list. Both controls measure how much."""
+        assert set(contract.CONTROLS) == {"词表外残差", "无词表对照"}
