@@ -89,15 +89,15 @@
 | 阶段 | 谁 | 做什么 |
 |---|---|---|
 | ① 跑 | 模型 | 每家 20 页 = 60 次，`report_md` 就是那一页的报告；外加一家 20 次无词表对照 |
-| ② 写 | 模型 | 每家 1 次 overview = 3 次，输入是它自己的 20 份答案 + 程序为它算好的表 |
-| ③ 算 | 程序 | 渲染每家的逐页报告与 overview · 并排文件 `reports/compare/pages/<page>.md` · 汇总表 `reports/compare/sample.md`（含自报 vs 实测的对账） |
+| ② 写 | 模型 | 每家 1 次样例 overview = 3 次，输入是它自己的 20 份答案 + 程序为它算好的表 |
+| ③ 算 | 程序 | 渲染 20 份逐页文件 `reports/pages/<page>.md`（三家并排 + 判分 + 冲突）· 每家的 `reports/<model>.md` · 汇总 `reports/compare.md`（含自报 vs 实测的对账） |
 | ④ 判 | agent | 裁决冲突，写进 `verdicts.json` |
 
 - [ ] **① 跑** 抽 **20 页**（不是 96/192），抽样口径写进 `data/stats/`，三家模型跑同一批页，原始答案落 `data/analysis/<model>/<page>.json`
-- [ ] **① 跑** 加跑一次**无词表对照**（三家里取一家，同 20 页，prompt 不给词表），按 `format.CONTROLS` 算重合率——一致率要按它折价
+- [ ] **① 跑** 两条控制（`format.CONTROLS`，都不是可选项）：**无词表对照**（一家，同 20 页，prompt 不给词表，映回词表比重合率）· **自身重跑**（一家，同 20 页原样再跑一次，同一家两次的一致率就是本底噪声，跨家分歧要减掉它）。各 20 次调用
 - [ ] **② 写** 每家跑一次样例 overview（`OVERVIEW_SCHEMA`）：一句话结论 · 它自己的排序 · 正文 ≤600 词 · 局限；正文里用到的每个数字回填 `numbers_cited`
-- [ ] **③ 算** 程序渲染每家的 20 份逐页报告 `reports/<model>/pages/<page>.md` 与 overview `reports/<model>/sample.md`
-- [ ] **③ 算** 程序按 T4 的九个对齐量做差异表：三家一致 / 两家 / 一家 / 冲突，加定位键预测的判分、**自报 vs 实测的对账**、三家排序的比对、词表外残差、交叉核对，渲染 `reports/compare/pages/<page>.md` 与 `reports/compare/sample.md`
+- [ ] **③ 算** 程序按 T4 的十个对齐量做差异表：三家一致 / 两家 / 一家 / 冲突，加定位键预测的判分、**自报 vs 实测的对账**、三家排序的比对、词表外残差、交叉核对
+- [ ] **③ 算** 程序渲染 `reports/pages/<page>.md` 20 份 · 每家的 `reports/<model>.md` · `reports/compare.md`
 - [ ] **④ 判** agent 逐条裁决冲突，写进 `data/analysis/verdicts.json`（裁决是数据，并排文件可重渲染而不丢它）
 - [ ] 对结论的处理：**只有三家一致的项才直接进改造清单**；分歧项单列，裁决结果写进 `verdicts.json`，不改模型原答案
 
@@ -105,21 +105,19 @@
 
 | 阶段 | 谁 | 做什么 |
 |---|---|---|
-| ① 跑 | 模型 | 每家约 50 个 case = 约 150 次，只做归因 |
-| ② 写 | 模型 | 每家 1 次失败 overview = 3 次，输入是它自己的归因 + 程序算好的形态统计 |
-| ③ 算 | 程序 | 全部失败上的形态计数与统计 · 渲染每家的 `reports/<model>/failures.md` 与并排的 `reports/compare/failures.md` |
-| ④ 判 | agent | 裁决归因冲突，写进 `verdicts.json` |
+| ① 跑 | 模型 | 每家 **1 次**：抽样的 case 一次全给，返回逐条归因 + 这一家的失败 overview |
+| ② 算 | 程序 | 全部失败上的形态计数与统计 · 三家的归类一致率 · 渲染进 `reports/<model>.md` §2 与 `reports/compare.md` §3 |
+| ③ 判 | agent | 裁决归因冲突，写进 `verdicts.json` |
 
-- [ ] **① 跑** 输入仍是 `data/runs/` 里已有的运行（`passed` 取自官方 `_evaluation_report.json`，不重判分）；模型只做**归因**（机制），形态由程序给
-- [ ] **① 跑** case 按 `format.CASE_SAMPLE` 抽：**每形态 10 条**（不足 10 的全取，约 50 条），按种子抽，三家跑同一批。等量抽不按比例抽，因为稀有形态才是未知机制可能藏身的地方；代价是机制计数只在**形态内部**成立，要折算到全运行用程序在全部失败上算的形态计数加权
-- [ ] **② 写** 每家跑一次失败 overview（同一个 `OVERVIEW_SCHEMA`），正文里的数字同样回填 `numbers_cited` 供对账
-- [ ] **③ 算** 程序出形态计数、失联键去向、单变量通过率与 95% 区间、控制组内的组件差值，以及三家的归类一致率与冲突集中在哪几类
-- [ ] **③ 算** 程序渲染每家的 `reports/<model>/failures.md`，与并排的 `reports/compare/failures.md`（没有逐 case 文件）：§1 §2 是程序的表，§3 机制表带实例（`case_id` + 页名），冲突集中在裁决表里
-- [ ] **④ 判** agent 裁决归因冲突，同样写进 `verdicts.json`
+- [ ] **① 跑** 输入仍是 `data/runs/` 里已有的运行（`passed` 取自官方 `_evaluation_report.json`，不重判分）；模型只做**归因**（机制），形态由程序给，`affects` 由程序从机制推出
+- [ ] **① 跑** case 按 `format.CASE_SAMPLE` 抽：**每形态 10 条**（不足 10 的全取，约 50 条），按种子抽，三家跑同一批。等量抽不按比例抽，因为稀有形态才是未知机制可能藏身的地方；代价是机制计数只在**形态内部**成立，折算到全运行要用程序在全部失败上算的形态计数加权
+- [ ] **① 跑** **一次调用给完整批**（`FAILURE_SCHEMA` = 逐条归因 + 这一家的失败 overview）。逐 case 的输出要留（三家只能逐条比），逐 case 的调用不必——case 是文本、一次装得下，刚读完 50 条的那个模型正是该写 overview 的那个
+- [ ] **② 算** 程序出形态计数、失联键去向、单变量通过率与 95% 区间、控制组内的组件差值，以及三家的归类一致率与冲突集中在哪几类
+- [ ] **③ 判** agent 裁决归因冲突，写进 `verdicts.json`
 
 ## T7 · 合并成一份 pipeline overview
 
-- [ ] **④ 写** agent 读三家各自的六份报告、并排文件与两份汇总表，写 `reports/INDEX.md`（**唯一有结论的报告**）：五节——要改什么 · 失败说明什么 · 与 P1–P7 的对齐 · 没进清单的与还没裁决的 · 能不能信
+- [ ] **④ 写** agent 读 20 份逐页文件、三份 `reports/<model>.md` 与 `reports/compare.md`，写 `reports/INDEX.md`（**唯一有结论的报告**）：五节——要改什么 · 失败说明什么 · 与 P1–P7 的对齐 · 没进清单的与还没裁决的 · 能不能信
 - [ ] **④ 写** agent 写 `reports/view.html`：`INDEX.md` 前三节的图示版，一节一个分区，每项配一页实例与证据原文，自足；数字只从程序算出的表里来，不重新计算
 - [ ] 每条结论标注三层可信度：`chart.jsonl` 可核的 · 三家模型一致的 · 单家模型的
 - [ ] 与 `review/04_pipeline_gap.md` 的 P1–P7 对齐：扩哪一条、加哪一条新的、删哪一条

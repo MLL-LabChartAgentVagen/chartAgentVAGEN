@@ -96,7 +96,6 @@ def main() -> None:
 
     print(f"=== {args.model}  effort={args.effort}  {took:.1f}s  "
           f"in={llm.usage.input_tokens} out={llm.usage.output_tokens}")
-    print("page_note :", answer["page_note"])
     print("report_md :", answer["report_md"].replace("\n", " ")[:220], "…")
     for figure in answer["figures"]:
         heading = figure["heading"]
@@ -110,9 +109,6 @@ def main() -> None:
         print(f"  {check['value']:>7} -> {check['figure_id']:<4} {hit} "
               f"predicted={check['addressing_keys']}  actual={rule['labels']}")
     print("hardest_step:", answer["hardest_step"])
-    for suggestion in answer["suggestions"]:
-        print(f"  {suggestion['maps_to']} affects={suggestion['affects']} | "
-              f"分数 {suggestion['score_effect'][:36]} | 能力 {suggestion['capability_effect'][:36]}")
 
 
 if __name__ == "__main__":

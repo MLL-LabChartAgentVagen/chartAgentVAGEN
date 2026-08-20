@@ -62,9 +62,10 @@ class TestTheTwoRules:
     """§T0 of the redo: every observation says which step it can change, and every
     suggestion answers two questions that are not on one scale."""
 
-    @pytest.mark.parametrize("field", ["new_components", "suggestions"])
-    def test_what_the_model_proposes_carries_affects(self, field):
-        item = contract.PAGE_SCHEMA["properties"][field]["items"]
+    @pytest.mark.parametrize("schema,field", [("PAGE_SCHEMA", "new_components"),
+                                             ("OVERVIEW_SCHEMA", "ranked_items")])
+    def test_what_the_model_proposes_carries_affects(self, schema, field):
+        item = getattr(contract, schema)["properties"][field]["items"]
         assert "affects" in item["required"]
         assert item["properties"]["affects"]["items"]["enum"] == [1, 2, 3, 4]
 
@@ -73,26 +74,29 @@ class TestTheTwoRules:
         assert "affects" not in component["properties"]
         assert all(set(c.affects) <= {1, 2, 3, 4} for c in vocabulary.VOCABULARY)
 
-    def test_a_suggestion_has_both_columns_and_they_stay_apart(self):
-        item = contract.PAGE_SCHEMA["properties"]["suggestions"]["items"]
+    def test_a_ranked_item_has_both_columns_and_they_stay_apart(self):
+        item = contract.OVERVIEW_SCHEMA["properties"]["ranked_items"]["items"]
         assert {"score_effect", "capability_effect"} <= set(item["required"])
 
-    def test_a_suggestion_names_the_ablation_row_it_adds(self):
-        item = contract.PAGE_SCHEMA["properties"]["suggestions"]["items"]
+    def test_a_ranked_item_names_the_ablation_row_it_adds(self):
+        item = contract.OVERVIEW_SCHEMA["properties"]["ranked_items"]["items"]
         assert "new_ablation_row" in item["required"]
 
     def test_an_empty_affects_is_a_normal_answer(self):
         """`度量看不见它` is a finding about the metric, not a missing field."""
-        assert "Empty array" in contract.PAGE_SCHEMA["properties"]["suggestions"]["items"][
-            "properties"]["affects"]["description"]
+        item = contract.OVERVIEW_SCHEMA["properties"]["ranked_items"]["items"]
+        assert "normal answer" in item["properties"]["affects"]["description"]
+        assert "度量看不见它" in item["properties"]["score_effect"]["description"]
 
 
 class TestFailureAttribution:
     def test_the_model_never_decides_whether_a_point_passed(self):
-        assert "passed" not in contract.FAILURE_SCHEMA["properties"]
+        item = contract.FAILURE_SCHEMA["properties"]["attributions"]["items"]
+        assert "passed" not in item["properties"]
 
     def test_the_form_is_computed_by_the_program_not_asked_of_the_model(self):
-        assert "form" not in contract.FAILURE_SCHEMA["properties"]
+        item = contract.FAILURE_SCHEMA["properties"]["attributions"]["items"]
+        assert "form" not in item["properties"]
         assert set(contract.FORMS) >= {"no_table", "label_unlinked", "value_off"}
 
     def test_every_mechanism_maps_back_onto_a_judgement_step(self):
@@ -100,8 +104,14 @@ class TestFailureAttribution:
         assert set(mapped.values()) <= set(contract.STEPS)
 
     def test_the_one_unmapped_mechanism_must_carry_a_note(self):
+        item = contract.FAILURE_SCHEMA["properties"]["attributions"]["items"]
         assert contract.MECHANISM_STEP["other"] == 0
-        assert "other" in contract.FAILURE_SCHEMA["properties"]["mechanism_note"]["description"]
+        assert "other" in item["properties"]["mechanism_note"]["description"]
+
+    def test_the_program_derives_affects_from_the_mechanism(self):
+        """One less thing to ask for, and one less place the two can disagree."""
+        item = contract.FAILURE_SCHEMA["properties"]["attributions"]["items"]
+        assert "affects" not in item["properties"]
 
 
 class TestTheReports:
@@ -110,24 +120,29 @@ class TestTheReports:
 
     def test_every_deliverable_says_who_writes_it(self):
         assert [(r.path, r.by) for r in contract.REPORTS] == [
-            ("parsebench/reports/<model>/pages/<page>.md", "模型"),
-            ("parsebench/reports/<model>/sample.md", "模型"),
-            ("parsebench/reports/<model>/failures.md", "模型"),
-            ("parsebench/reports/compare/pages/<page>.md", "程序"),
-            ("parsebench/reports/compare/sample.md", "程序"),
-            ("parsebench/reports/compare/failures.md", "程序"),
+            ("parsebench/reports/pages/<page>.md", "模型 + 程序"),
+            ("parsebench/reports/<model>.md", "模型"),
+            ("parsebench/reports/compare.md", "程序"),
             ("parsebench/reports/INDEX.md", "agent"),
             ("parsebench/reports/view.html", "agent"),
         ]
-        assert all(r.by in contract.AUTHORSHIP for r in contract.REPORTS)
+        for report in contract.REPORTS:
+            assert all(hand in contract.AUTHORSHIP for hand in report.by.split(" + "))
 
-    def test_each_model_writes_three_reports_of_its_own(self):
-        """One per page it read, one over its pages, one over its attributions."""
-        mine = [r for r in contract.REPORTS if r.by == "模型"]
-        assert len(mine) == 3 and all("<model>" in r.path for r in mine)
+    def test_one_page_is_one_file_with_the_three_reports_in_it(self):
+        """Split by model and comparing one page means opening three files."""
+        page = contract.PAGE_FILE
+        assert page.path.count("<") == 1 and "<page>" in page.path
+        rows = [t.row for s in page.sections for t in s.tables]
+        assert "一家模型" in rows
 
     def test_a_page_answer_carries_the_models_own_reading_of_the_page(self):
         assert "report_md" in contract.PAGE_SCHEMA["required"]
+
+    def test_a_page_answer_carries_no_opinions(self):
+        """Opinions need the batch and its counts; a page answer has neither."""
+        assert "suggestions" not in contract.PAGE_SCHEMA["properties"]
+        assert "ranked_items" in contract.OVERVIEW_SCHEMA["properties"]
 
     def test_an_overview_is_a_report_with_its_numbers_pinned(self):
         """Prose plus every number it uses, so the program can hold each one
@@ -142,11 +157,15 @@ class TestTheReports:
     def test_a_verdict_is_data_so_a_re_render_does_not_lose_it(self):
         assert contract.VERDICTS.endswith(".json")
 
-    def test_the_workload_covers_every_report_a_model_owes(self):
-        """Three reports per model: the per-page ones ride on the page calls, the
-        two overviews are one call each."""
-        assert set(contract.WORKLOAD) == {"页面分析", "失败归因", "样例 overview",
-                                          "失败 overview", "无词表对照"}
+    def test_a_model_makes_three_kinds_of_call_and_no_more(self):
+        """Twenty pages, one overview of them, one failure batch. The failure batch
+        returns every case attributed *and* that model's report on them, so a call
+        per case would buy nothing."""
+        assert set(contract.WORKLOAD) == {"页面分析", "样例 overview", "失败批次",
+                                          "无词表对照"}
+        assert "attributions" in contract.FAILURE_SCHEMA["properties"]
+        assert set(contract.OVERVIEW_SCHEMA["properties"]) <= set(
+            contract.FAILURE_SCHEMA["properties"])
 
     def test_the_failure_cases_are_sampled_evenly_across_forms(self):
         """A count over that sample is a count within a form, not over the run --
@@ -164,13 +183,14 @@ class TestTheReports:
         assert "人工裁决" in columns and "页面图像路径" in columns
 
     def test_the_page_file_puts_the_prediction_beside_what_can_check_it(self):
-        spot = [t for s in contract.PAGE_FILE.sections for t in s.tables if t.title == "定位键"][0]
+        spot = [t for s in contract.PAGE_FILE.sections for t in s.tables
+                if t.title == "定位键"][0]
         assert spot.provenance == "rule_checkable"
         assert "规则的真实标签" in spot.columns
 
-    def test_the_failure_analysis_is_one_report_not_a_directory_of_cases(self):
-        columns = [c for s in contract.FAILURE_REPORT.sections for t in s.tables for c in t.columns]
-        assert any("case_id" in c for c in columns), "an example is a column, not a file"
+    def test_a_failure_case_is_a_row_with_its_evidence_not_a_file(self):
+        columns = [c for s in contract.COMPARE_REPORT.sections for t in s.tables for c in t.columns]
+        assert any("case_id" in c for c in columns)
 
     def test_every_table_says_what_a_row_is_and_where_its_numbers_come_from(self):
         for report in contract.REPORTS:
@@ -182,7 +202,7 @@ class TestTheReports:
 
     def test_the_two_conclusion_columns_survive_into_the_reports(self):
         """The one place the score and the capability could be silently merged."""
-        for report in (contract.SAMPLE_REPORT, contract.INDEX_REPORT):
+        for report in (contract.MODEL_REPORT, contract.INDEX_REPORT):
             columns = [c for s in report.sections for t in s.tables for c in t.columns]
             assert "对分数" in columns and "对能力" in columns
 
@@ -216,7 +236,9 @@ class TestComparison:
         assert contract.DECISION["unanimous"] == "直接进改造清单"
         assert "不进清单" in contract.DECISION["single"]
 
-    def test_the_shared_vocabulary_comes_with_its_own_controls(self):
-        """The 65 keys are last round's product, so some of the agreement they
-        produce is an artefact of the list. Both controls measure how much."""
-        assert set(contract.CONTROLS) == {"词表外残差", "无词表对照"}
+    def test_the_agreement_rate_comes_with_the_controls_that_read_it(self):
+        """Two of them measure how much of the agreement the shared 65-key list
+        manufactures; the third measures the noise floor -- the same model run
+        twice does not agree with itself, and cross-model disagreement has to be
+        read against that."""
+        assert set(contract.CONTROLS) == {"词表外残差", "无词表对照", "自身重跑"}
