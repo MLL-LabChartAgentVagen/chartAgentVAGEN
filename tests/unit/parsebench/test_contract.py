@@ -127,6 +127,16 @@ class TestTheReports:
     def test_a_verdict_is_data_so_a_re_render_does_not_lose_it(self):
         assert contract.VERDICTS.endswith(".json")
 
+    def test_a_model_answers_one_page_or_one_case_and_never_writes_a_report(self):
+        """The workload is calls against a schema, not documents."""
+        assert set(contract.WORKLOAD) == {"页面分析", "无词表对照", "失败归因"}
+        assert not [r for r in contract.REPORTS if r.by == "模型"]
+
+    def test_the_failure_cases_are_sampled_evenly_across_forms(self):
+        """A count over that sample is a count within a form, not over the run --
+        the rule says so, because the two would otherwise be read as one."""
+        assert "每形态" in contract.CASE_SAMPLE and "全部失败" in contract.CASE_SAMPLE
+
     def test_the_page_file_is_where_a_conflict_is_adjudicated(self):
         """The contract sends conflicts to a person looking at the page, so the
         page file has to hold the three answers, the image and a verdict column."""

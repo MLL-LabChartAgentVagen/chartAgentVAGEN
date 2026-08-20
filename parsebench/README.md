@@ -115,7 +115,7 @@ parsebench/data/
   - [x] A3 llmkit 支持三家模型：`providers/` 下 Anthropic / OpenAI / Gemini 各一个文件，图像输入、结构化输出、推理强度三条通路等价，缓存键含 provider 与 model
   - [x] A4 输出契约先于跑模型：[review/06](review/06_output_contract.md) 与 `tools/contract/format.py`，定死三份报告的表与列；每个观察项带 `affects`、每条意见双栏结论；词表配两条控制
   - [ ] A5 样例分析重跑：抽 20 页，三家模型跑同一批，另加一次无词表对照；程序算差异表，程序渲染逐页报告与汇总表，agent 裁决冲突，只有三家一致的项进改造清单
-  - [ ] A6 失败样本分析重跑：输入仍是 `data/runs/` 已有的运行，模型只做归因，形态统计仍由程序算
+  - [ ] A6 失败样本分析重跑：输入仍是 `data/runs/` 已有的运行，模型只对抽样的 case（每形态 10 条）做归因，形态统计仍在全部失败上由程序算
   - [ ] A7 agent 写 `reports/INDEX.md` 与 `reports/view.html`，每条结论标三层可信度（`chart.jsonl` 可核 · 三家一致 · 单家）
 
 - [ ] **B · 把分析结论翻成改动**（输入是 A5 / A6 的两份差异表）

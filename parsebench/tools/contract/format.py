@@ -457,6 +457,24 @@ AUTHORSHIP = {
              "**不产生任何数字**——每一句结论都指回一张程序算出的表或一份逐页报告",
 }
 
+#: How many calls each model makes, and of what. A model is never asked to write
+#: a report -- it answers one page, or one failure case, in the schema.
+WORKLOAD = {
+    "页面分析": "每家 × 20 页 = 60 次调用，schema 是 `PAGE_SCHEMA`",
+    "无词表对照": "三家取一家 × 20 页 = 20 次，同一个 schema，prompt 里不给词表",
+    "失败归因": "每家 × 抽样的 case = 每形态 10 条（不足 10 的全取，约 50 条）× 3 = 约 150 次，"
+                "schema 是 `FAILURE_SCHEMA`",
+}
+
+#: Which failure cases the models are asked about. Equal size per form rather than
+#: proportional: the rare forms are where an unknown mechanism would hide, and
+#: `label_unlinked` at two thirds of the run would otherwise take the whole sample.
+#: The cost is that a mechanism count over this sample is not a count over the run
+#: -- so the report gives the mechanism distribution *within each form*, and any
+#: run-level number is that distribution weighted by the program's full-run form
+#: counts, which are computed over all failures and not sampled at all.
+CASE_SAMPLE = "每形态 10 条（不足 10 的全取），按种子抽；形态计数仍在全部失败上算"
+
 #: The agent's verdicts on conflicting items, as data rather than as hand-edited
 #: markdown: the per-page files stay regenerable, and a verdict survives a
 #: re-render. One entry per (page, quantity).
