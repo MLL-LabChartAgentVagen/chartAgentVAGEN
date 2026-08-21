@@ -27,6 +27,7 @@ ParseBench 的 Charts 维度考的是：**从一张企业报告页面上，把�
 | [TODO.md](TODO.md) | **分析重做的待办 T0–T7**，附录里是上一轮两份分析的数字与口径留档 |
 | [reports/view.html](reports/view.html) | **先看这一份**：自足的图示版。开头用<u>一张真实的图上的一个真实的数字</u>把「键 / 值 / 区域」和基准的四步判定讲清楚，然后两个分区——**要改什么**（第一页是一张<u>总表</u>，十条改动一屏看完；后面按三家展开：键要说全 · 读法要记下来 · 图要像真的；最后是「先做哪个」。只看这一个分区就够）与**凭什么这么说**（100 页看到什么 · 568 页失败在哪 · 五个失败逐张看 · 三个模型说的一样吗）。每条改动配着它是从哪张图上看出来的，图可以点开看整页原图；单文件约 4.6 MB |
 | [reports/INDEX.md](reports/INDEX.md) | 同一份结论的纯文字版，与 view.html **由同一份文案和同一批数字生成**，不会说不同的话 |
+| [`../IMPROVEMENT_PLAN.md`](../IMPROVEMENT_PLAN.md) | **这十条怎么落进流水线**：八个设计决定、七个跨阶段连锁、模块划分与六步顺序 |
 | [reports/compare.md](reports/compare.md) | 程序算的全部数字，三家并列，没有结论 |
 | `reports/<model>.md` · `reports/pages/` | 每家自己写的两份 overview；逐页三家并排 + 判分 + 裁决（裁决面） |
 | `tools/contract/` | 契约的机读半边，与 `review/06` 同一份内容：`format.py` 全部 schema 与口径 · `vocabulary.py` 65 项组件词表 · `try_page.py` 一页一模型的验证脚本（全英文） |
