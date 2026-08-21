@@ -1,0 +1,206 @@
+{
+  "stem": "TRS241_Web_p88",
+  "document": "TRS241_Web",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "repeat",
+  "effort": "high",
+  "dpi": 150,
+  "seconds": 54.9,
+  "usage": {
+    "input_tokens": 4455,
+    "output_tokens": 7355,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "此页面包含一个非常复杂的复合图表，将时间序列饼图与双轴折线图结合在一起。图表生成器需要能够绘制异构面板（`heterogeneous_panel_types`），并支持使用指示箭头连接独立的饼图以表示时间轴的推进。折线图部分存在双Y轴，且线段上直接标注了带括号的增长率（如`(7.97 %)`），这属于特殊的线段斜率标注，而非绝对数值的标注。由于折线图的实际数据点没有印出具体数值，且完全依赖于刻度线较宽的网格进行视觉估算，这导致数据点极难在允许的误差范围内被准确读取（主要难点在于步骤2）。此外，图表内外混合了多种缩写和脚注符号，要求解析器在重构表格时能够准确地将各个图注与其对应的系列相关联。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "FIG.2.10.",
+          "title": "Energy and nuclear power planning study for Algeria: past and future trends in overall and per capita GDP and distribution by sector (in Algerian dinars (DA)).",
+          "subtitle": "A: Agriculture. MI: Manufacturing industries. C: Construction. E: Energy. EI: Extractive industries. S: Services (including transport).",
+          "unit_text": "in Algerian dinars (DA)",
+          "placement": "below"
+        },
+        "type": "compound",
+        "type_other": "",
+        "panels": 5,
+        "series": 8,
+        "categories": 10,
+        "marks": 44,
+        "values_printed": "some"
+      }
+    ],
+    "components": [
+      {
+        "key": "dual_axis",
+        "figure_id": "f1",
+        "evidence": "Left axis for Overall GDP, right axis for Per capita GDP"
+      },
+      {
+        "key": "heterogeneous_panel_types",
+        "figure_id": "f1",
+        "evidence": "The figure contains four pie charts and one line chart"
+      },
+      {
+        "key": "rotated_axis_title",
+        "figure_id": "f1",
+        "evidence": "The y-axis titles are set vertically alongside the axes"
+      },
+      {
+        "key": "footnote_marker",
+        "figure_id": "f1",
+        "evidence": "The superscript (1) is attached to the Overall GDP label"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "The y-axes include (10^9 DA 1979) and (10^3 DA 1979)"
+      },
+      {
+        "key": "inline_series_labels",
+        "figure_id": "f1",
+        "evidence": "Overall GDP and GDP per capita are written next to their lines"
+      },
+      {
+        "key": "dashed_line_series",
+        "figure_id": "f1",
+        "evidence": "GDP per capita is drawn as a dash-dotted line"
+      },
+      {
+        "key": "value_label_outside",
+        "figure_id": "f1",
+        "evidence": "Pie chart percentages are printed outside slices with leader lines"
+      },
+      {
+        "key": "annotation_callout",
+        "figure_id": "f1",
+        "evidence": "Bracketed percentages like (7.97 %) hover inside the plot"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "flow_arrows_between_panels",
+        "figure_id": "f1",
+        "evidence": "Arrows connect the four pie charts to show chronological progression",
+        "affects": [
+          4
+        ]
+      },
+      {
+        "name": "segment_slope_labels",
+        "figure_id": "f1",
+        "evidence": "Bracketed percentages explicitly annotate the line segments for growth rates",
+        "affects": [
+          1,
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "30.7",
+        "figure_id": "f1",
+        "mark": "the 1969 EI pie slice",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "1969",
+          "EI"
+        ]
+      },
+      {
+        "value": "38.8",
+        "figure_id": "f1",
+        "mark": "the 1969 S pie slice",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "1969",
+          "S"
+        ]
+      },
+      {
+        "value": "6.1",
+        "figure_id": "f1",
+        "mark": "the 1979 A pie slice",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "1979",
+          "A"
+        ]
+      },
+      {
+        "value": "12.3",
+        "figure_id": "f1",
+        "mark": "the 1979 C pie slice",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "1979",
+          "C"
+        ]
+      },
+      {
+        "value": "19.6",
+        "figure_id": "f1",
+        "mark": "the 2000 MI pie slice",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "2000",
+          "MI"
+        ]
+      },
+      {
+        "value": "7.1",
+        "figure_id": "f1",
+        "mark": "the 2000 E pie slice",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "2000",
+          "E"
+        ]
+      },
+      {
+        "value": "20.5",
+        "figure_id": "f1",
+        "mark": "the 2015 C pie slice",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "2015",
+          "C"
+        ]
+      },
+      {
+        "value": "41.2",
+        "figure_id": "f1",
+        "mark": "the 2015 S pie slice",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "2015",
+          "S"
+        ]
+      },
+      {
+        "value": "200",
+        "figure_id": "f1",
+        "mark": "the left y-axis tick label, not a data point",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Overall GDP (10^9 DA 1979)"
+        ]
+      },
+      {
+        "value": "12.5",
+        "figure_id": "f1",
+        "mark": "the 1979 MI pie slice",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "1979",
+          "MI"
+        ]
+      }
+    ],
+    "hardest_step": 2
+  }
+}

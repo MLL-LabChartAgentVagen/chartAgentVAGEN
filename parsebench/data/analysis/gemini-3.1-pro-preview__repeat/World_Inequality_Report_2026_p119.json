@@ -1,0 +1,220 @@
+{
+  "stem": "World_Inequality_Report_2026_p119",
+  "document": "World_Inequality_Report_2026",
+  "tags": "untagged",
+  "model": "gemini-3.1-pro-preview",
+  "control": "repeat",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 33.7,
+  "usage": {
+    "input_tokens": 5318,
+    "output_tokens": 4468,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n这是一个标准的分组柱状图（Grouped Bar Chart）。需要能够绘制每组两并排的柱子，并在每根柱子的顶部外侧准确放置带有百分号的数值标签（如`10%`）。Y轴位于左侧，标题为`Share in total emissions`，并做了90度旋转；刻度带百分号，范围从0%到90%。背景仅有水平虚线网格，图例放置在底部X轴之下。\n\n### 定位一个值难在哪\n以定位“Middle 40%”类别下的“Consumption”值为例（图上标为`43%`）。其难度非常低，因为类别标签在X轴上直接给出，系列名称在底部图例中由颜色清晰指示，且数值直接印在柱子上方。唯一的挑战在于生成的Markdown表格能否完好保留图例与数据列的映射关系，以及表外的副标题上下文。\n\n### 不确定的\n页面正文段落中提及了“Figure 6.4”，但在当前页面中并未出现该图表，可能是跨页引用。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 6.2.",
+          "title": "Emissions are highly concentrated among the rich, especially when looking at ownership",
+          "subtitle": "Emissions shares by groups",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "grouped_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 4,
+        "marks": 8,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Share in total emissions",
+            "low": "0%",
+            "high": "90%",
+            "serves": "all bars"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "Bottom 50%",
+            "high": "Top 1%",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Bottom 50%"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Consumption"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Middle 40%",
+            "Consumption"
+          ],
+          "value": "43%",
+          "value_source": "printed",
+          "why_hard": "Values are printed directly on the marks and categories are clearly labeled, making it easy."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "grouped_bar",
+        "figure_id": "f1",
+        "evidence": "two bars side by side per category group"
+      },
+      {
+        "key": "rotated_axis_title",
+        "figure_id": "f1",
+        "evidence": "the 'Share in total emissions' y-axis title is rotated 90 degrees"
+      },
+      {
+        "key": "value_label_outside",
+        "figure_id": "f1",
+        "evidence": "percentages such as 10% and 43% are printed above the bars"
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "the Consumption and Private ownership legend sits below the x-axis"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "horizontal dashed lines span the plot area with no vertical lines"
+      }
+    ],
+    "new_components": [],
+    "spot_checks": [
+      {
+        "value": "10",
+        "figure_id": "f1",
+        "mark": "the Bottom 50% Consumption bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Bottom 50%",
+          "Consumption"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "3",
+        "figure_id": "f1",
+        "mark": "the Bottom 50% Private ownership bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Bottom 50%",
+          "Private ownership"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "43",
+        "figure_id": "f1",
+        "mark": "the Middle 40% Consumption bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Middle 40%",
+          "Consumption"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "20",
+        "figure_id": "f1",
+        "mark": "the Middle 40% Private ownership bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Middle 40%",
+          "Private ownership"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "47",
+        "figure_id": "f1",
+        "mark": "the Top 10% Consumption bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Top 10%",
+          "Consumption"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "77",
+        "figure_id": "f1",
+        "mark": "the Top 10% Private ownership bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Top 10%",
+          "Private ownership"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "15",
+        "figure_id": "f1",
+        "mark": "the Top 1% Consumption bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Top 1%",
+          "Consumption"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "41",
+        "figure_id": "f1",
+        "mark": "the Top 1% Private ownership bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Top 1%",
+          "Private ownership"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      }
+    ],
+    "hardest_step": 3,
+    "hardest_step_why": "图表非常清晰且数值已标注，但在解析成表格时，解析器可能难以将底部的图例颜色（如Private ownership）正确关联到相应的列并作为表头输出。",
+    "examples": [
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "Figure 6.2. Emissions are highly concentrated among the rich, especially when looking at ownership",
+        "why": "当前的生成管线需要将图表标题、图号以及紧随其后的副标题分离并分别放置，以完美复原原始版面结构。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "10% printed above the green bar",
+        "why": "当前的渲染引擎需要支持将数据值标签放置在柱状图顶部外侧，这是保持数据直观易读的常见设计。"
+      }
+    ]
+  }
+}

@@ -1,0 +1,194 @@
+{
+  "stem": "article_thebeatjun2025_p12",
+  "document": "article_thebeatjun2025",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "repeat",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 79.9,
+  "usage": {
+    "input_tokens": 5286,
+    "output_tokens": 10076,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n页面包含一个堆叠柱状图，其显著特征是顶部带有代表整柱总和的数据标签（如 `8.1%`、`7.9%`），而各个堆叠内部的子段没有标注数值。y轴的刻度从 `0%` 到 `9%`，每个刻度都带有 `%` 符号。图例放置在x轴下方，横向排列。\n\n### 定位一个值难在哪\n图表中各分段的值未直接打印，只能通过坐标轴像素读取并相减来推算。以 `3.3%`（`EM Hard Currency` 的 `Option-Adjusted Spread (OAS)` 分段）为例，其5%容差仅为 `0.165%`。在网格线间距为 `1%` 的图中，要求视觉或像素解析达到此等精度几乎不可能，这必然在第二步（容差内读取数值）产生阻塞。\n\n### 不确定的\n提示给出的 `2.5%` 在图中没有明确对应的标签或明显的分段边界。文本中提到对冲带来的额外收益是 `2.4%`，以此推测图表中顶部的浅蓝色对冲分段高度应为 `2.4%`。`2.5%` 可能是 `EUR IG Corp` 对冲分段的视觉误差读数，或者是在人工读取时产生的偏差。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "European HY Credit Offers the Highest Yield on USD-Hedged Basis",
+          "subtitle": "Yield decomposition across major credit asset classes",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "stacked_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 3,
+        "categories": 5,
+        "marks": 12,
+        "values_printed": "some",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "0%",
+            "high": "9%",
+            "serves": "all bars"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "EUR High Yield",
+            "high": "USD IG Corp",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "EUR High Yield"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Option-Adjusted Spread (OAS)"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "EM Hard Currency",
+            "Option-Adjusted Spread (OAS)"
+          ],
+          "value": "3.3%",
+          "value_source": "axis_read",
+          "why_hard": "The segment value is not printed; one must subtract boundary readings against the axis."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "stacked_bar",
+        "figure_id": "f1",
+        "evidence": "bars contain stacked colored segments for different yield components"
+      },
+      {
+        "key": "value_label_outside",
+        "figure_id": "f1",
+        "evidence": "totals like 8.1% and 7.9% are printed above the bars"
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "the legend with Base Rate and OAS sits under the x-axis"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "horizontal grey lines at each 1% mark, no vertical lines"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "page",
+        "evidence": "Source: Bloomberg, MSIM... printed in small text at the bottom"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "stacked_bar_total_label",
+        "figure_id": "f1",
+        "evidence": "8.1%, 7.9% printed above each stacked bar as a sum",
+        "affects": [
+          1,
+          2
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "2.5%",
+        "figure_id": "f1",
+        "mark": "likely the EUR IG Corp EURUSD 3m Hedging Income segment, read with some error",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "EUR IG Corp",
+          "EURUSD 3m Hedging Income"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "3.3%",
+        "figure_id": "f1",
+        "mark": "the EM Hard Currency Option-Adjusted Spread (OAS) segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "EM Hard Currency",
+          "Option-Adjusted Spread (OAS)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "4.4%",
+        "figure_id": "f1",
+        "mark": "the USD High Yield Base Rate segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "USD High Yield",
+          "Base Rate"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "2.3%",
+        "figure_id": "f1",
+        "mark": "the EUR IG Corp Base Rate segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "EUR IG Corp",
+          "Base Rate"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "4.5%",
+        "figure_id": "f1",
+        "mark": "the USD IG Corp Base Rate segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "USD IG Corp",
+          "Base Rate"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "堆叠分段未标数值，需靠坐标轴读取。以3.3%为例，其5%容差仅0.165%，在1%间距的网格上极难达到视觉读取的精度要求，导致容差校验失败。",
+    "examples": [
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "8.1% printed above the EUR High Yield bar",
+        "why": "需要支持在堆叠柱状图外部上方单独标注整柱总和，而不强制要求标注各分段数值。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "0%, 1% ... 9% on the y axis",
+        "why": "需要支持将百分比等单位符号附加在每一个数值轴刻度标签上，而非单独抽离为轴标题。"
+      }
+    ]
+  }
+}

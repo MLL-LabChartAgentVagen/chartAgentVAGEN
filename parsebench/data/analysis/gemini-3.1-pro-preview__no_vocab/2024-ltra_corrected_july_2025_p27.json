@@ -1,0 +1,322 @@
+{
+  "stem": "2024-ltra_corrected_july_2025_p27",
+  "document": "2024-ltra_corrected_july_2025",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "no_vocab",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 52.2,
+  "usage": {
+    "input_tokens": 3205,
+    "output_tokens": 7280,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n本页包含两个堆叠柱状图，两者的图表标题（Figure 13和Figure 14）均位于绘图区正下方。图13的X轴标签倾斜约45度显示，图例位于X轴和底部标题之间。图14包含一个特殊的带有省略号的X轴时间刻度（\"2029 ... 2034\"），以及一条贯穿整个绘图区的黑色水平参考线。该参考线附带一个灰底的文本框注释（\"2023 LTRA Total Retirements\"），通过一条引线与参考线相连。两个图表的Y轴单位文本（\"MW (dc)\"和\"MW\"）均垂直旋转90度位于左侧。\n\n### 定位一个值难在哪\n以图14中的 `37000` 为例，它是 \"2029 ... 2034\" 柱子中的 \"Unconfirmed\" 堆叠段。由于数值并未标注在图表上，必须通过观察它在Y轴上的起始点和终止点（大约从 78,000 到 115,000）并作减法来获取。然而，Y轴的刻度间距高达 20,000 且没有任何次级网格线辅助，肉眼估算的误差远远超过5%的容错范围，因此极难准确读取。\n\n### 不确定的\n图14中的水平参考线的精确Y值并未在图上明确标出（视觉上大约在116,000左右），无法确认其精确数值。此外，\"2029 ... 2034\" 这一带有省略号的刻度在解析时是被当作离散的分类标签还是特殊的时间跨度，依赖于具体的数据模型定义。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 13:",
+          "title": "Solar PV DER Capacity Existing and Planned through 2034",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "below"
+        },
+        "type": "stacked_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 10,
+        "marks": 20,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "MW (dc)",
+            "low": "0",
+            "high": "40,000",
+            "serves": "all bars"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "NPCC-New England",
+            "high": "WECC-SW",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "WECC-CAMX"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Existing"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "WECC-CAMX",
+            "Existing"
+          ],
+          "value": "23000",
+          "value_source": "axis_read",
+          "why_hard": "Sits between 20,000 and 25,000 ticks with no minor gridlines, making 5% accuracy impossible to guarantee visually."
+        }
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "Figure 14:",
+          "title": "Projected Generation Retirement Capacity through 2034",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "below"
+        },
+        "type": "stacked_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 6,
+        "marks": 12,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "MW",
+            "low": "0",
+            "high": "140,000",
+            "serves": "all bars"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "2024",
+            "high": "2029 ... 2034",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2026"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Unconfirmed"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "2026",
+            "Unconfirmed"
+          ],
+          "value": "10000",
+          "value_source": "axis_read",
+          "why_hard": "Stacked segment requires visual subtraction of two Y-values against a coarse 20,000-unit grid."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "heading_below_plot",
+        "figure_id": "page",
+        "evidence": "both Figure 13 and Figure 14 have their titles below the x-axis",
+        "affects": [
+          4
+        ]
+      },
+      {
+        "key": "y_axis_title_rotated",
+        "figure_id": "page",
+        "evidence": "\"MW (dc)\" and \"MW\" are rotated 90 degrees leftwards",
+        "affects": []
+      },
+      {
+        "key": "angled_x_axis_labels",
+        "figure_id": "f1",
+        "evidence": "labels like \"NPCC-New England\" are angled at 45 degrees",
+        "affects": []
+      },
+      {
+        "key": "legend_below_x_axis",
+        "figure_id": "page",
+        "evidence": "legends are placed under the category/time ticks and above the figure titles",
+        "affects": []
+      },
+      {
+        "key": "horizontal_reference_line",
+        "figure_id": "f2",
+        "evidence": "a solid black line spans horizontally across the plot around 116,000",
+        "affects": []
+      }
+    ],
+    "new_components": [
+      {
+        "name": "callout_box_to_reference_line",
+        "figure_id": "f2",
+        "evidence": "grey box with \"2023 LTRA Total Retirements\" points a line to the reference line",
+        "affects": []
+      },
+      {
+        "name": "ellipsis_tick_label",
+        "figure_id": "f2",
+        "evidence": "\"2029 ... 2034\" uses an ellipsis to denote a multi-year range on a single tick",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "23000",
+        "figure_id": "f1",
+        "mark": "the WECC-CAMX Existing bottom segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "WECC-CAMX",
+          "Existing"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "16000",
+        "figure_id": "f1",
+        "mark": "the WECC-CAMX Planned top segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "WECC-CAMX",
+          "Planned"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "20000",
+        "figure_id": "f1",
+        "mark": "the Texas RE-ERCOT Planned top segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Texas RE-ERCOT",
+          "Planned"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "8200",
+        "figure_id": "f1",
+        "mark": "the PJM Existing bottom segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "PJM",
+          "Existing"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "5600",
+        "figure_id": "f1",
+        "mark": "the NPCC-New York Existing bottom segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "NPCC-New York",
+          "Existing"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "7000",
+        "figure_id": "f2",
+        "mark": "the 2024 Confirmed bottom segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2024",
+          "Confirmed"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "48000",
+        "figure_id": "f2",
+        "mark": "the 2028 Confirmed bottom segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2028",
+          "Confirmed"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "35000",
+        "figure_id": "f2",
+        "mark": "the 2026 Confirmed bottom segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2026",
+          "Confirmed"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "78000",
+        "figure_id": "f2",
+        "mark": "the 2029 ... 2034 Confirmed bottom segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2029 ... 2034",
+          "Confirmed"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "37000",
+        "figure_id": "f2",
+        "mark": "the 2029 ... 2034 Unconfirmed top segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2029 ... 2034",
+          "Unconfirmed"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "所有目标值均未在图表中标出，必须依据Y轴读取。图14的刻度间距达到20,000，诸如 37,000 这样的堆叠段需肉眼读出顶底差值，毫无可能满足5%精度的提取容忍度。",
+    "examples": [
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "Figure 13: Solar PV DER Capacity Existing and Planned through 2034",
+        "why": "当前的图表生成器将标题默认置于图表上方，而本页的标题明确作为格式化文本块放置在X轴和图例的下方。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f2",
+        "quote": "the grey text box '2023 LTRA Total Retirements' with a line pointing to a horizontal threshold",
+        "why": "图表生成器目前不支持生成带有任意文本框、连接线并指向特定阈值的自定义注释层。"
+      }
+    ]
+  }
+}

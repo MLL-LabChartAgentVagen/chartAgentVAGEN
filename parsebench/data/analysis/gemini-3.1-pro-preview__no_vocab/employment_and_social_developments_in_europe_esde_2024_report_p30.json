@@ -1,0 +1,322 @@
+{
+  "stem": "employment_and_social_developments_in_europe_esde_2024_report_p30",
+  "document": "employment_and_social_developments_in_europe_esde_2024_report",
+  "tags": "3d_chart+need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "no_vocab",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 80.4,
+  "usage": {
+    "input_tokens": 3182,
+    "output_tokens": 11671,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n这页包含两个复杂的图表。图1.16是一个复合图表（Compound Chart），结合了堆叠柱状图和多条折线图，且其x轴具有年份和季度的双层级结构（例如2012年下辖Q1和Q3）。图例位于图表右侧。图1.17是一个大型分组柱状图，包含多达18个分类，其x轴的分类标签为了适应空间全部垂直旋转了90度显示，且部分较长的标签（如“Fuels and lubricants...”）被截断成了多行文本；其图例直接放置在绘图区内部的顶部。\n\n### 定位一个值难在哪\n以图1.17中“Electricity, gas and other fuels”在2022年的值（42.5）为例。该图表没有任何数据标签，完全依赖左侧的y轴来读取数值。y轴的刻度间距宽达10个单位（0, 10, 20... 50），要凭借肉眼从图表上读取出42.5这样精确到小数点后一位的数值，并且保证误差在5%以内是完全不可能的。同样地，读取1.2或-4.1等较小的值也会因缺乏细密的网格线而导致严重偏离。\n\n### 不确定的\n图1.16的x轴上每个年份只标出了Q1和Q3两个刻度标签，对于Q2和Q4的数据点，读者只能通过柱子之间的空隙位置去推断。图1.17中由于个别柱子数值极小（接近0），肉眼难以确切判断它们是否为正数或负数。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Chart 1.16",
+          "title": "Real GDP growth, real GDHI growth and its main components",
+          "subtitle": "Real GDHI and real GDP (% change on previous year), and contribution of GDHI components (pp), 2012-2023, EU",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "compound",
+        "type_other": "",
+        "panels": 1,
+        "series": 8,
+        "categories": 48,
+        "marks": 384,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "% change on previous year",
+            "low": "-16",
+            "high": "16",
+            "serves": "all bars and lines"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "2012",
+            "high": "2023",
+            "serves": "all series"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Net social benefits"
+          },
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2021"
+          },
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "Q1"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Net social benefits",
+            "2021",
+            "Q1"
+          ],
+          "value": "~ -4",
+          "value_source": "axis_read",
+          "why_hard": "stacked bar segment, difficult to read precise start and end values against the 4-unit axis"
+        }
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "Chart 1.17",
+          "title": "Prices of items continued to increase in 2023 compared to 2022 and 2021",
+          "subtitle": "Price index of household final consumption expenditure (year-on-year change), by COICOP, HICP annual data, EU",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "grouped_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 3,
+        "categories": 18,
+        "marks": 54,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "-10",
+            "high": "50",
+            "serves": "all bars"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "All-items HICP",
+            "high": "Insurance",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Motor cars"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "2023"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Motor cars",
+            "2023"
+          ],
+          "value": "5",
+          "value_source": "axis_read",
+          "why_hard": "reading an unlabelled bar from a y-axis with wide 10-unit intervals"
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "compound_chart",
+        "figure_id": "f1",
+        "evidence": "Chart 1.16 combines stacked bars and line series in the same plot",
+        "affects": [
+          1,
+          2
+        ]
+      },
+      {
+        "key": "hierarchical_x_axis",
+        "figure_id": "f1",
+        "evidence": "Q1 and Q3 ticks are nested under year labels like 2012",
+        "affects": [
+          1,
+          3
+        ]
+      },
+      {
+        "key": "rotated_axis_labels",
+        "figure_id": "f2",
+        "evidence": "x-axis category labels are rotated 90 degrees vertically",
+        "affects": []
+      },
+      {
+        "key": "multiline_axis_labels",
+        "figure_id": "f2",
+        "evidence": "some long x-axis labels wrap across multiple lines",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "legend_inside_plot",
+        "figure_id": "f2",
+        "evidence": "the legend sits inside the top middle of the grid area",
+        "affects": []
+      }
+    ],
+    "new_components": [
+      {
+        "name": "hierarchical_axis_labels",
+        "figure_id": "f1",
+        "evidence": "Q1 and Q3 ticks grouped under year ticks",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "3",
+        "figure_id": "f2",
+        "mark": "the 2023 Actual rentals paid by tenants bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Actual rentals paid by tenants",
+          "2023"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "1.2",
+        "figure_id": "f2",
+        "mark": "the 2022 Actual rentals paid by tenants bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Actual rentals paid by tenants",
+          "2022"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "6",
+        "figure_id": "f2",
+        "mark": "the 2023 Water supply bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Water supply",
+          "2023"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "6.4",
+        "figure_id": "f2",
+        "mark": "the 2023 All-items HICP bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "All-items HICP",
+          "2023"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "11.9",
+        "figure_id": "f2",
+        "mark": "the 2022 Food and non-alcoholic beverages bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Food and non-alcoholic beverages",
+          "2022"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "42.5",
+        "figure_id": "f2",
+        "mark": "the 2022 Electricity, gas and other fuels bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Electricity, gas and other fuels",
+          "2022"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "17.2",
+        "figure_id": "f2",
+        "mark": "the 2021 Fuels and lubricants for personal transport equipment bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Fuels and lubricants for personal transport equipment",
+          "2021"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "-4.1",
+        "figure_id": "f2",
+        "mark": "the 2023 Fuels and lubricants for personal transport equipment bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Fuels and lubricants for personal transport equipment",
+          "2023"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "2.5",
+        "figure_id": "f2",
+        "mark": "the 2021 All-items HICP bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "All-items HICP",
+          "2021"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "所有的点检值均需从图1.17的坐标轴读取。坐标轴的主刻度间距宽达10个单位，要求从这样的刻度中将数值（如42.5或1.2）精确读取到5%的容差范围内是不可能的。",
+    "examples": [
+      {
+        "gap": "P1",
+        "figure_id": "f2",
+        "quote": "the y axis reads -10, 0, 10 ... 50",
+        "why": "坐标轴的间距过大，从中强行读取42.5或1.2等精确到小数点的值注定会超出5%的误差要求，需引入动态的读取精度上限。"
+      },
+      {
+        "gap": "P9",
+        "figure_id": "f1",
+        "quote": "Chart 1.16 draws stacked bars and two line series together",
+        "why": "图表混合了堆叠柱状图和折线图，目前的生成器需要能够支持在同一个绘图区内混排多种类型的图形及对应的图例结构。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "the x axis has Q1, Q3 labels grouped under year labels 2012 to 2023",
+        "why": "x轴拥有包含年份和季度的双层嵌套结构，模型需要能够解析和生成这种多层级的分类标签。"
+      }
+    ]
+  }
+}

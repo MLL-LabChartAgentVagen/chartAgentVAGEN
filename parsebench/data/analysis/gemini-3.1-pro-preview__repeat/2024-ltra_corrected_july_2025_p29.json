@@ -1,0 +1,243 @@
+{
+  "stem": "2024-ltra_corrected_july_2025_p29",
+  "document": "2024-ltra_corrected_july_2025",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "repeat",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 32.8,
+  "usage": {
+    "input_tokens": 5342,
+    "output_tokens": 4447,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n生成器需要能够绘制带有图例在底部的堆叠柱状图（Stacked Bar）。Y轴需要支持旋转的轴标题（Pipeline Additions），并绘制水平网格线。图表的标题位于整个图表区域的下方，包含了图表编号、主标题、单位（Bcf/d）以及括号内的数据来源说明。\n\n### 定位一个值难在哪\n以 21.2 这个值为例。它位于2018年的“Interstate”数据段中。由于是堆叠柱状图，该分段并没有从零基线开始，读者需要先估读其顶部的数值（约26.8），再减去底部的数值（约5.6），才能得到21.2的实际量。Y轴的主刻度间距为 5，没有任何数据标签直接印在柱子上，肉眼两次估读叠加后，其误差极易超过 5%（即 ±1.06）的容差。\n\n### 不确定的\n2022年和2024年柱子由于数值较低或存在缺失，无法完全确定是否两个系列都包含数值；尤其是2024年柱状极矮，难以从图上分辨属于哪一个分类。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 16",
+          "title": "Annual U.S. Natural Gas Pipeline Capacity Additions by Type (2017–2024)",
+          "subtitle": "(Source: U.S. Energy Information Administration)",
+          "unit_text": "Bcf/d",
+          "placement": "below"
+        },
+        "type": "stacked_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 8,
+        "marks": 16,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Pipeline Additions",
+            "low": "0",
+            "high": "30",
+            "serves": "all bars"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "2017",
+            "high": "2024",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2018"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Interstate"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "2018",
+            "Interstate"
+          ],
+          "value": "21.2",
+          "value_source": "axis_read",
+          "why_hard": "Requires subtracting the bottom reading from the top reading of a stacked segment against a tick gap of 5."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "stacked_bar",
+        "figure_id": "f1",
+        "evidence": "bars are split vertically into dark and light blue segments"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "horizontal lines run across the plot area at intervals of 5"
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "Interstate and Intrastate legend sits beneath the x-axis"
+      },
+      {
+        "key": "rotated_axis_title",
+        "figure_id": "f1",
+        "evidence": "the label 'Pipeline Additions' is rotated vertically alongside the y-axis"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "'Bcf/d' is written at the end of the figure title"
+      },
+      {
+        "key": "side_text_bullets",
+        "figure_id": "page",
+        "evidence": "a column of body text runs alongside the figure on the left"
+      }
+    ],
+    "new_components": [],
+    "spot_checks": [
+      {
+        "value": "16.2",
+        "figure_id": "f1",
+        "mark": "the 2017 Interstate segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2017",
+          "Interstate"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "1.2",
+        "figure_id": "f1",
+        "mark": "the 2017 Intrastate segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2017",
+          "Intrastate"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "21.2",
+        "figure_id": "f1",
+        "mark": "the 2018 Interstate segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2018",
+          "Interstate"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "5.6",
+        "figure_id": "f1",
+        "mark": "the 2018 Intrastate segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2018",
+          "Intrastate"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "10.8",
+        "figure_id": "f1",
+        "mark": "the 2019 Interstate segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2019",
+          "Interstate"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "4.2",
+        "figure_id": "f1",
+        "mark": "the 2019 Intrastate segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2019",
+          "Intrastate"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "8.7",
+        "figure_id": "f1",
+        "mark": "the 2020 Interstate segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2020",
+          "Interstate"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "1.6",
+        "figure_id": "f1",
+        "mark": "the 2020 Intrastate segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2020",
+          "Intrastate"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "8.5",
+        "figure_id": "f1",
+        "mark": "the 2021 Interstate segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2021",
+          "Interstate"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "7.3",
+        "figure_id": "f1",
+        "mark": "the 2021 Intrastate segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2021",
+          "Intrastate"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "堆叠柱状图中如21.2这样的悬空分段需要两次肉眼估读，在刻度间距为5的Y轴上，读数的误差范围远大于目标精度的5%（约1）。",
+    "examples": [
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "Figure 16: Annual U.S. Natural Gas Pipeline Capacity Additions by Type (2017–2024) Bcf/d (Source: U.S. Energy Information Administration)",
+        "why": "图表标题放置在整个图表的底部，并且其不仅包含编号和主标题，还融合了单位Bcf/d和数据源声明。"
+      }
+    ]
+  }
+}

@@ -1,0 +1,270 @@
+{
+  "stem": "FPA-guide-to-data-visualization_p8",
+  "document": "FPA-guide-to-data-visualization",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 91.5,
+  "usage": {
+    "input_tokens": 5349,
+    "output_tokens": 11744,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n需要支持混合图表（折线图结合面积图）。x 轴需要支持时间刻度的特殊排版（如“Jan”下方换行显示“14”）。y 轴单位“$m”需放置在轴顶端刻度的正上方，且 y 轴从 100 起始。图例需要横向排列在标题和绘图区之间。最关键的是，需要能够将某个系列绘制为带有渐变或固定颜色的不规则阴影区域（Scenarios），以及将某些系列绘制为横跨整个坐标轴的水平参考线（Budget 和 Prior Year）。\n\n### 定位一个值难在哪\n以 Forecast 在 Feb 的值 216 为例。图表中没有任何数据标签，必须依靠肉眼将数据点与 y 轴对齐。y 轴刻度间隔为 20，在 200 到 220 之间读取 216 需要高精度的视觉插值。此外，Scenarios 作为一个表示范围的阴影面，在图例中只有一个条目对应了两个不同颜色的色块，它在每个月对应上限和下限多个界限，这使得通过标准的“系列+时间”键值对来定位阴影区内特定的数值变得非常困难。\n\n### 不确定的\nScenarios 阴影区域具体的上下限数值是未知的，只能大致估算。同时，Budget 和 Prior Year 表现为贯穿全年的水平线，无法确定它们在底层数据表里是作为一个单独的标量存储，还是在每个月都有一个相同数值的数据点。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "Western Europe Net Sales Windsock",
+          "subtitle": "",
+          "unit_text": "$m",
+          "placement": "above"
+        },
+        "type": "other",
+        "type_other": "windsock chart",
+        "panels": 1,
+        "series": 4,
+        "categories": 12,
+        "marks": 15,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "$m",
+            "low": "100",
+            "high": "220",
+            "serves": "all series"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "Jan 14",
+            "high": "Dec",
+            "serves": "all series"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Forecast"
+          },
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "Feb"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Forecast",
+            "Feb"
+          ],
+          "value": "216",
+          "value_source": "axis_read",
+          "why_hard": "Interpolating 216 between 200 and 220 without printed labels."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "mixed_marks",
+        "figure_id": "f1",
+        "evidence": "Forecast is a line segment, Scenarios is a shaded area"
+      },
+      {
+        "key": "legend_above_plot",
+        "figure_id": "f1",
+        "evidence": "legend sits horizontally between the title and the plot"
+      },
+      {
+        "key": "axis_title_above_axis",
+        "figure_id": "f1",
+        "evidence": "$m sits directly above the top y-axis tick label"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "only horizontal dashed grid lines are drawn"
+      },
+      {
+        "key": "axis_starts_above_zero",
+        "figure_id": "f1",
+        "evidence": "the lowest tick on the y-axis is 100"
+      },
+      {
+        "key": "nonstandard_time_ticks",
+        "figure_id": "f1",
+        "evidence": "14 is printed on a second line below Jan"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "the unit $m is written on the axis"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "shaded_range_series",
+        "figure_id": "f1",
+        "evidence": "Scenarios series is drawn as a shaded area bounding a range",
+        "affects": [
+          1,
+          2
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "218",
+        "figure_id": "f1",
+        "mark": "Budget line at Jan",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Budget",
+          "Jan 14"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 1
+      },
+      {
+        "value": "218",
+        "figure_id": "f1",
+        "mark": "Budget line at Feb",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Budget",
+          "Feb"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "166",
+        "figure_id": "f1",
+        "mark": "Prior Year line at Jan",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Prior Year",
+          "Jan 14"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 1
+      },
+      {
+        "value": "166",
+        "figure_id": "f1",
+        "mark": "Prior Year line at Feb",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Prior Year",
+          "Feb"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "166",
+        "figure_id": "f1",
+        "mark": "Prior Year line at Mar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Prior Year",
+          "Mar"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "218",
+        "figure_id": "f1",
+        "mark": "Forecast line at Jan",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Forecast",
+          "Jan 14"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 1
+      },
+      {
+        "value": "216",
+        "figure_id": "f1",
+        "mark": "Forecast line at Feb",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Forecast",
+          "Feb"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "212",
+        "figure_id": "f1",
+        "mark": "Forecast line at Mar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Forecast",
+          "Mar"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "210",
+        "figure_id": "f1",
+        "mark": "Forecast line at Apr",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Forecast",
+          "Apr"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "200",
+        "figure_id": "f1",
+        "mark": "Forecast line at May",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Forecast",
+          "May"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      }
+    ],
+    "hardest_step": 1,
+    "hardest_step_why": "图表的Scenarios为不规则阴影区，且Budget为贯穿全轴的常数线，解析器极难提取为完整的二维表格。",
+    "examples": [
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "Two different grey squares in the legend share the single label \"Scenarios\" and map to nested shaded bands.",
+        "why": "管线无法处理图例中多个颜色方块共用同一系列名称，并在图中渲染为嵌套多边形阴影的情况。"
+      },
+      {
+        "gap": "P9",
+        "figure_id": "f1",
+        "quote": "The panel mixes full-width reference lines, a short line segment for Forecast, and a shaded area.",
+        "why": "需要在一个面板内支持混合局部折线、全轴常数线以及表示范围的不规则面积图。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "The y-axis unit $m is placed exactly above the top tick label 220.",
+        "why": "需要新维度来支持将单位符号直接放置在最上方刻度值的正上方。"
+      }
+    ]
+  }
+}

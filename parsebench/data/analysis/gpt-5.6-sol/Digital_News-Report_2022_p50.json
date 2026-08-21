@@ -1,0 +1,169 @@
+{
+  "stem": "Digital_News-Report_2022_p50",
+  "document": "Digital_News-Report_2022",
+  "tags": "untagged",
+  "model": "gpt-5.6-sol",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 120000,
+  "seconds": 656.0,
+  "usage": {
+    "input_tokens": 8810,
+    "output_tokens": 3774,
+    "cache_read_tokens": 8807
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n单幅六国、四系列的100%堆叠柱图；每段内印数值，左轴为0%至100%，图例、调查题及样本量置于图下。\n\n### 定位一个值难在哪\n“46”需同时关联“Brazil”和“Specific journalists or commentators”；虽可直接读数，但页面没有数据表承载这组键。\n\n### 不确定的\n图表没有编号。25%间隔的浅色横网格在缩放图中较淡，部分线条可见性存在判断余地。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "PROPORTION WHO PAY MOST ATTENTION TO NEWS BRANDS",
+          "subtitle": "VERSUS JOURNALISTS – SELECTED MARKETS",
+          "unit_text": "%",
+          "placement": "above"
+        },
+        "type": "stacked_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 4,
+        "categories": 6,
+        "marks": 24,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "%",
+            "low": "0%",
+            "high": "100%",
+            "serves": "all stacked segments"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "Finland",
+            "high": "France",
+            "serves": "all stacked bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Finland"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Specific news brands"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Finland",
+            "I don’t use online news"
+          ],
+          "value": "5",
+          "value_source": "printed",
+          "why_hard": "The top segment is narrow, although its printed value remains legible."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "stacked_bar",
+        "figure_id": "f1",
+        "evidence": "Each country is one bar divided into four coloured segments."
+      },
+      {
+        "key": "pct_stacked",
+        "figure_id": "f1",
+        "evidence": "All six stacks reach 100%; left ticks run from “0%” to “100%”."
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "“Q_Journalists_1.” and country “Base” counts appear beneath the legend."
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "The four-item legend is arranged in two rows directly below the bars."
+      },
+      {
+        "key": "side_text_bullets",
+        "figure_id": "f1",
+        "evidence": "A long body-text column runs left of the chart at the same page height."
+      },
+      {
+        "key": "value_label_inside",
+        "figure_id": "f1",
+        "evidence": "All 24 numbers are printed in white inside their coloured segments."
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "Faint horizontal rules align with percentage ticks; no vertical grid lines are drawn."
+      }
+    ],
+    "new_components": [],
+    "spot_checks": [
+      {
+        "value": "69",
+        "figure_id": "f1",
+        "mark": "the Finland Specific news brands segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Finland",
+          "Specific news brands"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "21",
+        "figure_id": "f1",
+        "mark": "the France Specific news brands segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "France",
+          "Specific news brands"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "46",
+        "figure_id": "f1",
+        "mark": "the Brazil Specific journalists or commentators segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Brazil",
+          "Specific journalists or commentators"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "24",
+        "figure_id": "f1",
+        "mark": "the France I don’t use online news segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "France",
+          "I don’t use online news"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      }
+    ],
+    "hardest_step": 1,
+    "hardest_step_why": "69、21、46、24虽都印在柱段内，但页面没有数据表，四值均先卡在步骤1。无数据表。四值均先卡在步骤1。列中，需要类别与系列标签共同定位；值均直接印在段内，但源页无数据表可供结构化检索。该页无图号；网格线较浅。6国、4系列、100%堆叠柱图；段内印值，左轴0%–100%，图例和调查基数置于图下，正文与图并排。46需同时绑定“Brazil”和“Specific journalists or commentators”；数值虽直接印出，但需两个标签才能唯一定位。图表无编号；25%间隔的浅色横网格在缩放图中不够清晰，是否全部连续绘制略有不确定。值直接标注，且标签可从轴与图例准确对应。图例位于图下，调查问题与样本基数作为脚注。数值位于堆叠段内，均为白色，便于识别。图表无编号，标题分两行，单位通过百分比刻度体现。四个目标值均可在图中找到，但由于源页没有数据表，最先阻塞在步骤1。69对应Finland的Specific news brands，21对应France的Specific news brands，46对应Brazil的Specific journalists or commentators，24对应France的I don’t use online news。页面设计需要支持正文与图表并排，以及图下两行图例和调查基数说明。结构清晰，数值可直接读取；主要不确定性是浅色横网格线在150 dpi下的可见程度。图表采用四种颜色区分系列，没有额外颜色属性。每国一根等高柱，总高度为100%，各段之和可能因四舍五入略偏离100%。图表标题“PROPORTION WHO PAY MOST ATTENTION TO NEWS BRANDS”与副标题“VERSUS JOURNALISTS – SELECTED MARKETS”均位于图上方。左轴刻度为0%、25%、50%、75%、100%，底轴依次为Finland、Germany、UK、USA、Brazil、France。图例项目为Specific news brands、Specific journalists or commentators、Don’t know、I don’t use online news。调查说明“Q_Journalists_1.”和各国Base位于图下。图表共24个堆叠矩形标记，所有数值均在段内打印。最难的示例是Finland顶部的5，段很窄但数字仍可辨认。目标值69、21、46、24均为打印值，无需通过轴估算。没有双轴、混合标记、负值、误差线、参考线、阴影带或小多图。没有图内图例、右侧图例、旋转刻度、缩写国家代码以外的特殊时间格式。UK和USA是页面原样标签，未扩写。该图为单面板百分比堆叠柱图，标题块在图上方，图例在下方。页面左侧有长正文，与右下图表共享水平区域。图下有调查题和样本基数说明，但没有下载链接。所有寻值都需要两层键：国家和图例系列。由于没有表格，结构化检索的首个阻塞步骤是1，而不是精度或标签关联。",
+    "examples": []
+  }
+}

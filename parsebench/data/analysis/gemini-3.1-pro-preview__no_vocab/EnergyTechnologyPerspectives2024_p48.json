@@ -1,0 +1,278 @@
+{
+  "stem": "EnergyTechnologyPerspectives2024_p48",
+  "document": "EnergyTechnologyPerspectives2024",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "no_vocab",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 72.2,
+  "usage": {
+    "input_tokens": 3177,
+    "output_tokens": 10199,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n生成器需要支持：\n1. **层次化类别标签（Hierarchical/Panel Labels）**：左侧 y 轴分为 6 个面板（如 `Batteries`、`Solar PV` 等），并将文本垂直排布作为分组标题。\n2. **堆叠柱状图与散点组合（Mixed Marks）**：主体为 100% 堆叠的水平柱状图，每个类别上同时叠加了一个表示 2021 年数据的散点（`China in 2021`）。\n3. **图例与颜色映射**：底部并排的图例块包含 7 个带有颜色的正方形（代表地区）以及 1 个圆点（代表历史年份）。\n\n### 定位一个值难在哪\n以 `Other -> Heat pumps -> European Union` 的内部柱段值 `10` 为例。图表中所有数值均未直接标注，只能通过顶部 x 轴进行估读。该柱段起点约为 48%，终点约为 58%，只能利用起止差值计算长度。在刻度间距宽达 20% 的坐标轴上，要求肉眼分辨差值并精确到 5% 的容差（即 ±0.5）是完全不可能的。\n\n### 不确定的\n大部分细小内部柱段（如 `United States` 或 `Japan`）的精确起始边界无法确定。由于某些图例项颜色相近且存在抗锯齿边缘模糊，微小柱段（如 `Wind -> Towers -> Purple`）的估值具有极高的不确定性。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 1.11",
+          "title": "Installed manufacturing capacity by country/region, 2023",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "stacked_bar",
+        "type_other": "",
+        "panels": 6,
+        "series": 8,
+        "categories": 18,
+        "marks": 136,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "top",
+            "role": "value",
+            "unit_text": "",
+            "low": "0%",
+            "high": "100%",
+            "serves": "all bars and dots"
+          },
+          {
+            "side": "left",
+            "role": "category",
+            "unit_text": "",
+            "low": "Anodes",
+            "high": "Steel",
+            "serves": "all bars and dots"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "panel",
+            "label_source": "panel_title",
+            "example": "Batteries"
+          },
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Anodes"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "China"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Other",
+            "Heat pumps",
+            "European Union"
+          ],
+          "value": "10",
+          "value_source": "axis_read",
+          "why_hard": "Internal segment length must be estimated from differences along an axis with 20% intervals."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "vertical_panel_grouping",
+        "figure_id": "f1",
+        "evidence": "Batteries, EV, etc. are written vertically to group categories",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "stacked_bar_with_overlay_dot",
+        "figure_id": "f1",
+        "evidence": "China in 2021 is a cyan dot plotted over the stacked bars",
+        "affects": [
+          2,
+          3
+        ]
+      },
+      {
+        "key": "legend_with_mixed_shapes",
+        "figure_id": "f1",
+        "evidence": "Legend has square icons for regions and a circle for 2021",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "new_components": [
+      {
+        "name": "hierarchical_category_axis_vertical",
+        "figure_id": "f1",
+        "evidence": "vertical text like Batteries groups the left axis labels",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "name": "overlay_point_on_stacked_bar",
+        "figure_id": "f1",
+        "evidence": "cyan dot for China in 2021 overlaid on the bars",
+        "affects": [
+          2,
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "92",
+        "figure_id": "f1",
+        "mark": "the Cathodes China segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Batteries",
+          "Cathodes",
+          "China"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "70",
+        "figure_id": "f1",
+        "mark": "the Cells China in 2021 dot under Batteries",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Batteries",
+          "Cells",
+          "China in 2021"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "16",
+        "figure_id": "f1",
+        "mark": "the Electrolysers United States segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Other",
+          "Electrolysers",
+          "United States"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "10",
+        "figure_id": "f1",
+        "mark": "the Heat pumps European Union segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Other",
+          "Heat pumps",
+          "European Union"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "91",
+        "figure_id": "f1",
+        "mark": "the Polysilicon China segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Solar PV",
+          "Polysilicon",
+          "China"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "8",
+        "figure_id": "f1",
+        "mark": "the Ammonia European Union segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Materials",
+          "Ammonia",
+          "European Union"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "18",
+        "figure_id": "f1",
+        "mark": "the Ammonia United States segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Materials",
+          "Ammonia",
+          "United States"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "41",
+        "figure_id": "f1",
+        "mark": "the Heat pumps China in 2021 dot",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Other",
+          "Heat pumps",
+          "China in 2021"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "30",
+        "figure_id": "f1",
+        "mark": "the Ammonia China segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Materials",
+          "Ammonia",
+          "China"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "53",
+        "figure_id": "f1",
+        "mark": "the Towers China segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Wind",
+          "Towers",
+          "China"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "图表中所有数值均未标注。以 Ammonia 欧盟段（值为8）为例，必须在刻度间距为 20% 的坐标轴上估读内部段差值，肉眼绝对无法精确到 5%（即 ±0.4）的容差范围内。",
+    "examples": [
+      {
+        "gap": "P2",
+        "figure_id": "f1",
+        "quote": "Batteries and Solar PV both have a category named Cells",
+        "why": "左侧的垂直文本（如 Batteries）作为面板维度必须进入 key 中，否则生成的表格无法区分同名类别（Cells）。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "China in 2021 is a cyan dot overlaid on the stacked bars",
+        "why": "当前流程不支持在同一个横轴和堆叠柱状图上直接叠加绘制散点标记，需要拓展支持同一系列下的混合图元。"
+      }
+    ]
+  }
+}

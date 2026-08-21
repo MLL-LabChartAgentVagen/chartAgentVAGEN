@@ -1,0 +1,329 @@
+{
+  "stem": "employment_and_social_developments_in_europe_esde_2024_report_p76",
+  "document": "employment_and_social_developments_in_europe_esde_2024_report",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 77.9,
+  "usage": {
+    "input_tokens": 5341,
+    "output_tokens": 10300,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n需要能够绘制常规的堆叠柱状图（图3.4），以及结合了柱状图与折线图的双Y轴混合图表（图3.5）。生成器应当能够处理非零起点的坐标轴（如左轴从470开始），并按需只绘制水平网格线。此外，还需要支持在图例内部直接通过文字声明系列所属的坐标轴（如“(left axis)”），并在图表外部的数据来源下方附加带下划线的功能性下载链接文本。\n\n### 定位一个值难在哪\n页面所有图表均未直接打印具体数值。以图3.4中的 `17.5` 为例，这是一个位于上层的堆叠柱段（对应2014年Tertiary类别），定位后读者必须分别向左平视估算该段顶部和底部在Y轴上的绝对位置（约87.5%和70%），再进行相减得出结论。由于Y轴的主刻度步长高达20%且完全没有次级刻度线，加上堆叠带来的累计误差，要在这样的图表中实现5%以内的读取精度是极其困难的。\n\n### 不确定的\n图3.4的Y轴最高刻度带有“%”单位符号，但各年份柱子的累加总高度均维持在85%左右，并未达到100%，页面中虽然有注释提到其他分类未包含，但并未在图上直观体现。此外，提取清单中给定的数值 `1` 在页面的任何图表、坐标轴刻度及明显正文中均无法找到，判定为无效或无法溯源的值。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Chart 3.4",
+          "title": "School education receives the largest share of public expenditure on education",
+          "subtitle": "Weighted average EU share of government expenditure on education, by education level, 2012-2022",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "stacked_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 3,
+        "categories": 11,
+        "marks": 33,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "0%",
+            "high": "100%",
+            "serves": "all bars"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "2012",
+            "high": "2022",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2012"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Pre-primary and primary"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "2014",
+            "Tertiary"
+          ],
+          "value": "17.5",
+          "value_source": "axis_read",
+          "why_hard": "Value belongs to a stacked segment without printed labels, requiring two visual alignments to a sparse y-axis and subtraction."
+        }
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "Chart 3.5",
+          "title": "Basic skills and efficiency of cumulative expenditure on education per student decreased post-COVID-19 pandemic",
+          "subtitle": "Average EU PISA score across reading, mathematics and science, and PISA EU efficiency score, 2012-2022",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "other",
+        "type_other": "bar and line",
+        "panels": 1,
+        "series": 2,
+        "categories": 4,
+        "marks": 8,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "470",
+            "high": "500",
+            "serves": "bars"
+          },
+          {
+            "side": "right",
+            "role": "value",
+            "unit_text": "",
+            "low": "0",
+            "high": "9",
+            "serves": "line"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "2012",
+            "high": "2022",
+            "serves": "bars and line"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2012"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "PISA average score (left axis)"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "2022",
+            "PISA average score (left axis)"
+          ],
+          "value": "474",
+          "value_source": "axis_read",
+          "why_hard": "The axis starts at 470 rather than zero, making visual proportional estimation highly sensitive to tiny misalignments."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "stacked_bar",
+        "figure_id": "f1",
+        "evidence": "Chart 3.4 uses color-coded segments stacked vertically within each yearly bar"
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "page",
+        "evidence": "legends are placed beneath the x-axis on both charts"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "page",
+        "evidence": "Note: and Source: lines printed below the plot areas on both charts"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "page",
+        "evidence": "horizontal dashed lines guide values, with no vertical gridlines present"
+      },
+      {
+        "key": "data_link_below_figure",
+        "figure_id": "page",
+        "evidence": "'Click here to download chart.' links appear beneath the source text"
+      },
+      {
+        "key": "dual_axis",
+        "figure_id": "f2",
+        "evidence": "Chart 3.5 has axes from 470-500 on left and 0-9 on right"
+      },
+      {
+        "key": "mixed_marks",
+        "figure_id": "f2",
+        "evidence": "Chart 3.5 displays a line series plotted over a bar series"
+      },
+      {
+        "key": "axis_starts_above_zero",
+        "figure_id": "f2",
+        "evidence": "left y-axis of Chart 3.5 begins at 470, not zero"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "axis_indicator_in_series_name",
+        "figure_id": "f2",
+        "evidence": "Chart 3.5 legend series explicitly state '(left axis)' and '(right axis)'",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "31.5",
+        "figure_id": "f1",
+        "mark": "the 2012 Pre-primary and primary segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2012",
+          "Pre-primary and primary"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "39.0",
+        "figure_id": "f1",
+        "mark": "the 2012 Secondary segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2012",
+          "Secondary"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "17.5",
+        "figure_id": "f1",
+        "mark": "the 2014 Tertiary segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2014",
+          "Tertiary"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "34.0",
+        "figure_id": "f1",
+        "mark": "the 2022 Pre-primary and primary segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2022",
+          "Pre-primary and primary"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "37.0",
+        "figure_id": "f1",
+        "mark": "the 2019 Secondary segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2019",
+          "Secondary"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "17.0",
+        "figure_id": "f1",
+        "mark": "the 2022 Tertiary segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2022",
+          "Tertiary"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "492",
+        "figure_id": "f2",
+        "mark": "the 2012 PISA average score bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2012",
+          "PISA average score (left axis)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "474",
+        "figure_id": "f2",
+        "mark": "the 2022 PISA average score bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2022",
+          "PISA average score (left axis)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "7",
+        "figure_id": "f2",
+        "mark": "the 2018 PISA efficiency score point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2018",
+          "PISA efficiency score (right axis)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "1",
+        "figure_id": "not_found",
+        "mark": "cannot be located on any figure or clearly identified in the text",
+        "printed_on_figure": false,
+        "addressing_keys": [],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "页面没有提供任何印在图表上的数据标签，读取诸如17.5这种处于堆叠中间的图块需要进行两次纵坐标估读和一次减法，在20%步长的稀疏网格中视读误差远超5%。",
+    "examples": [
+      {
+        "gap": "P9",
+        "figure_id": "f2",
+        "quote": "legend strings explicitly read 'PISA average score (left axis)' and 'PISA efficiency score (right axis)'",
+        "why": "图表通过图例文字直接声明数据系列与双Y轴的映射关系。管道需要具备将这种描述性文字关联到对应轴的机制，以确保混合图表的解析准确。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "page",
+        "quote": "'Click here to download chart.' underneath the source lines",
+        "why": "图表下方附加了独立的功能性交互文本（下载链接），当前的管道模型缺乏为此类脱离注释逻辑的附属文本分配存储结构的设计。"
+      }
+    ]
+  }
+}

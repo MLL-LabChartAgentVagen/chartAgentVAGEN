@@ -1,0 +1,388 @@
+{
+  "stem": "9f653ca1-en_p29",
+  "document": "9f653ca1-en",
+  "tags": "need_estimate",
+  "model": "claude-opus-5",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 98.2,
+  "usage": {
+    "input_tokens": 13828,
+    "output_tokens": 8091,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "## 画出来要什么\n一个图号（Figure 1.15）下两个异质面板：A 面板是**浮动区间条**（绿色矩形表示 Interquartile range (Jan 1999 to Nov 2025)，不落在零点上），上面叠两组点标记（红=January 2000，黑=November 2025）；B 面板是六条月度指数线，颜色分国家、虚实分板块，配 100 处的黑色参考线。两面板各有自己的板内图例、各自的标题（A./B.）、各自的量纲词（“Ratio” 与 “Index Jan 2020 = 100”，都写在最高刻度上方）与完全不同的轴范围（0–75 对 60–260，后者不从零起）。\n\n## 定位一个值难在哪\n以 138 为例：它是 B 面板 Europe - all sectors 蓝实线 2025 年末的读数。图上没有任何数字，刻度间隔 20，而 5% 容差只有 ±6.9，需要在两条刻度间目测三分之一格；地址还要“B. Corporate 12-month forward earnings per share + Europe - all sectors + 一个未印出的月份”，时间轴只印到年份。\n\n## 不确定的\nB 面板是否有淡横向网格线看不清；末端点落在 2025 刻度之后，具体月份无法读出；GBR 的红点被压成短横，与绿条重叠，Jan 2000 值难以确认；142/165 归属哪条线属于推断。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 1.15.",
+          "title": "Elevated equity valuations are supported by the higher expected earnings of technology companies",
+          "subtitle": "",
+          "unit_text": "Index Jan 2020 = 100",
+          "placement": "above"
+        },
+        "type": "compound",
+        "type_other": "",
+        "panels": 2,
+        "series": 9,
+        "categories": 6,
+        "marks": 444,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Ratio",
+            "low": "0",
+            "high": "75",
+            "serves": "Panel A green range bars and red/black dots"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "USA",
+            "high": "CAN",
+            "serves": "the six country slots in Panel A"
+          },
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Index Jan 2020 = 100",
+            "low": "60",
+            "high": "260",
+            "serves": "all six lines in Panel B"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "2020",
+            "high": "2025",
+            "serves": "all six lines in Panel B"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "panel",
+            "label_source": "panel_title",
+            "example": "B. Corporate 12-month forward earnings per share"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Japan - Technology"
+          },
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "JPN"
+          },
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2025"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "B. Corporate 12-month forward earnings per share",
+            "Japan - Technology",
+            "",
+            "2025"
+          ],
+          "value": "181",
+          "value_source": "axis_read",
+          "why_hard": "Dotted line, no printed values, ticks 20 apart, endpoint sits past the 2025 tick"
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "mixed_marks",
+        "figure_id": "f1",
+        "evidence": "Panel A: green range rectangles with red and black dot markers drawn over them"
+      },
+      {
+        "key": "reference_line",
+        "figure_id": "f1",
+        "evidence": "Panel B: solid black horizontal rule drawn across the plot at the 100 tick"
+      },
+      {
+        "key": "heterogeneous_panel_types",
+        "figure_id": "f1",
+        "evidence": "Panel A range bars with dots beside Panel B six-line time series"
+      },
+      {
+        "key": "panel_title_per_panel",
+        "figure_id": "f1",
+        "evidence": "'A. Cyclically adjusted price-to-earnings ratio'; 'B. Corporate 12-month forward earnings per share'"
+      },
+      {
+        "key": "per_panel_legend",
+        "figure_id": "f1",
+        "evidence": "Panel A legend of three entries; Panel B separate legend of six series"
+      },
+      {
+        "key": "legend_inside_plot",
+        "figure_id": "f1",
+        "evidence": "Both legends drawn over the plot areas, upper right in A, upper left in B"
+      },
+      {
+        "key": "per_panel_axis_range",
+        "figure_id": "f1",
+        "evidence": "Panel A left axis 0-75 'Ratio'; Panel B left axis 60-260 index"
+      },
+      {
+        "key": "axis_starts_above_zero",
+        "figure_id": "f1",
+        "evidence": "Panel B lowest tick reads 60, no break glyph on the axis"
+      },
+      {
+        "key": "abbrev_category_axis",
+        "figure_id": "f1",
+        "evidence": "Panel A x ticks read USA, JPN, DEU, FRA, GBR, CAN"
+      },
+      {
+        "key": "rebased_index_values",
+        "figure_id": "f1",
+        "evidence": "'Index Jan 2020 = 100' above the Panel B value axis"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "'Ratio' and 'Index Jan 2020 = 100'; ticks themselves are bare numbers"
+      },
+      {
+        "key": "axis_title_above_axis",
+        "figure_id": "f1",
+        "evidence": "'Ratio' sits above the 75 tick; 'Index Jan 2020 = 100' above the 260 tick"
+      },
+      {
+        "key": "dashed_line_series",
+        "figure_id": "f1",
+        "evidence": "Technology series drawn dotted, all-sectors series solid, same three colours"
+      },
+      {
+        "key": "sparse_time_ticks",
+        "figure_id": "f1",
+        "evidence": "Monthly lines but Panel B ticks read only 2020, 2021 ... 2025"
+      },
+      {
+        "key": "dense_marks_100plus",
+        "figure_id": "f1",
+        "evidence": "Six Panel B lines over about 71 months, roughly 420 plotted points"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "'Note: Panel A shows monthly values...'; 'Source: LSEG; and OECD calculations.'"
+      },
+      {
+        "key": "shared_axis",
+        "figure_id": "f1",
+        "evidence": "Panel A's category ticks and Panel B's year ticks each drawn once at panel base"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "floating_range_bar",
+        "figure_id": "f1",
+        "evidence": "Panel A green rectangles span quartile to quartile, not anchored to the zero baseline",
+        "affects": [
+          2,
+          3
+        ]
+      },
+      {
+        "name": "date_as_series_name",
+        "figure_id": "f1",
+        "evidence": "Panel A legend entries are dates: 'January 2000', 'November 2025', marking two observations",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "name": "legend_entry_with_period_qualifier",
+        "figure_id": "f1",
+        "evidence": "'Interquartile range (Jan 1999 to Nov 2025)' wraps a sample window into the legend text",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "name": "line_style_encodes_second_attribute",
+        "figure_id": "f1",
+        "evidence": "Colour carries country, dotted vs solid carries all sectors vs Technology in Panel B",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "42",
+        "figure_id": "f1",
+        "mark": "Panel A USA red dot, January 2000",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. Cyclically adjusted price-to-earnings ratio",
+          "USA",
+          "January 2000"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "38",
+        "figure_id": "f1",
+        "mark": "Panel A USA black dot, November 2025",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. Cyclically adjusted price-to-earnings ratio",
+          "USA",
+          "November 2025"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "67",
+        "figure_id": "f1",
+        "mark": "Panel A JPN red dot, January 2000, high above the green box",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. Cyclically adjusted price-to-earnings ratio",
+          "JPN",
+          "January 2000"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "16",
+        "figure_id": "f1",
+        "mark": "Panel A DEU black dot, November 2025, sitting on the green box",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. Cyclically adjusted price-to-earnings ratio",
+          "DEU",
+          "November 2025"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "230",
+        "figure_id": "f1",
+        "mark": "Panel B red dotted United States - Technology line, late 2025",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "B. Corporate 12-month forward earnings per share",
+          "United States - Technology",
+          "2025"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "142",
+        "figure_id": "f1",
+        "mark": "Panel B red solid United States - all sectors line, 2025",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "B. Corporate 12-month forward earnings per share",
+          "United States - all sectors",
+          "2025"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "181",
+        "figure_id": "f1",
+        "mark": "Panel B green dotted Japan - Technology line, end of series",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "B. Corporate 12-month forward earnings per share",
+          "Japan - Technology",
+          "2025"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "145",
+        "figure_id": "f1",
+        "mark": "Panel B blue dotted Europe - Technology line, end of series",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "B. Corporate 12-month forward earnings per share",
+          "Europe - Technology",
+          "2025"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "165",
+        "figure_id": "f1",
+        "mark": "Panel B green solid Japan - all sectors line, 2025 plateau",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "B. Corporate 12-month forward earnings per share",
+          "Japan - all sectors",
+          "2025"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "138",
+        "figure_id": "f1",
+        "mark": "Panel B blue solid Europe - all sectors line, end of series",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "B. Corporate 12-month forward earnings per share",
+          "Europe - all sectors",
+          "2025"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "B面板无数字、刻度间隔20，138的5%容差仅±6.9；A面板刻度15，42与38相差不足半格，均需目测插值。",
+    "examples": [
+      {
+        "gap": "P2",
+        "figure_id": "f1",
+        "quote": "'A. Cyclically adjusted price-to-earnings ratio' and 'B. Corporate 12-month forward earnings per share' head two panels under one figure number",
+        "why": "两面板单位与轴范围完全不同（Ratio 0–75 对 指数60–260），面板名必须进入键。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "'Interquartile range (Jan 1999 to Nov 2025)' green boxes float between quartiles with red and black dated dots overlaid",
+        "why": "需要不落零的浮动区间条＋以日期命名的点系列；当前管线只画从零起的柱。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "'Figure 1.15.' title above; 'Ratio' and 'Index Jan 2020 = 100' each set above their top tick",
+        "why": "图号、标题与两处量纲词分处三个位置，标题需拆成带位置的字段。"
+      },
+      {
+        "gap": "P1",
+        "figure_id": "f1",
+        "quote": "Panel B y ticks read 60, 80, 100 ... 260; no value is printed on any of the six lines",
+        "why": "约420个点、20一格，可达精度按标记而非整图判定才合理。"
+      }
+    ]
+  }
+}

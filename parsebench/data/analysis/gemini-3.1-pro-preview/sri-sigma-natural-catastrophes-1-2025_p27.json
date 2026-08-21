@@ -1,0 +1,362 @@
+{
+  "stem": "sri-sigma-natural-catastrophes-1-2025_p27",
+  "document": "sri-sigma-natural-catastrophes-1-2025",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 63.9,
+  "usage": {
+    "input_tokens": 5333,
+    "output_tokens": 9101,
+    "cache_read_tokens": 2320
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n该页面包含两个高密度的堆叠柱状图。X轴为时间轴但刻度稀疏（`sparse_time_ticks`），需要图表引擎能够自动将分类数据对齐到未标出具体年份的位置。图18需要在绘图区内生成带有折线和圆点的文本注释框（`annotation_callout`）以精准指向特定的数据柱。图19是复合图表，在堆叠柱状图上叠加了一条平滑的指数趋势线（`mixed_marks`）。两个图表的图例均需要并排显示在图表底部。此外，图19的Y轴单位直接放置在顶部刻度数值的同一行。\n\n### 定位一个值难在哪\n以图18中的“55”（2011年地震/海啸损失）为例，首先X轴并未标出“2011”的刻度标签，无法直接使用文本进行关联匹配；其次，该值位于总高度约165的柱子底部，Y轴的最大值为250且刻度间隔高达50，缺乏网格线的辅助，肉眼极难将其精确读取至5%的误差范围内。\n\n### 不确定的\n图19中指数趋势线的具体平滑算法和数学公式未知。部分在正文文本中引用的数值（如2024年的1370亿自然灾害损失）实际上是图表中多个数据段（地震/海啸与气候相关灾害）的组合叠加，无法直接通过单一标志或图例拆解出来。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 18",
+          "title": "Insured catastrophe losses, 1970 – 2024 (USD bn, 2024 prices)",
+          "subtitle": "",
+          "unit_text": "USD bn, 2024 prices",
+          "placement": "above"
+        },
+        "type": "stacked_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 3,
+        "categories": 55,
+        "marks": 140,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "0",
+            "high": "250",
+            "serves": "all bars"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "1970",
+            "high": "2024",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2024"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Earthquake/tsunami"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "2011",
+            "Earthquake/tsunami"
+          ],
+          "value": "55",
+          "value_source": "axis_read",
+          "why_hard": "The 2011 tick is not printed, and reading from a 250-range axis lacks precision."
+        }
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "Figure 19",
+          "title": "Global insured losses from primary and secondary perils, 1970 – 2024, in USD billion at 2024 prices",
+          "subtitle": "",
+          "unit_text": "in USD billion at 2024 prices",
+          "placement": "above"
+        },
+        "type": "compound",
+        "type_other": "",
+        "panels": 1,
+        "series": 3,
+        "categories": 55,
+        "marks": 165,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Insured losses (USD bn)",
+            "low": "0",
+            "high": "200",
+            "serves": "all series"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "1970",
+            "high": "2024",
+            "serves": "all series"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2024"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Secondary perils"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "2024",
+            "Secondary perils"
+          ],
+          "value": "75",
+          "value_source": "axis_read",
+          "why_hard": "Reading stacked segment height off a y-axis without exact value labels."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "stacked_bar",
+        "figure_id": "f1",
+        "evidence": "segments stacked inside one bar"
+      },
+      {
+        "key": "stacked_bar",
+        "figure_id": "f2",
+        "evidence": "segments stacked inside one bar"
+      },
+      {
+        "key": "mixed_marks",
+        "figure_id": "f2",
+        "evidence": "bars and a trend line in the same panel"
+      },
+      {
+        "key": "annotation_callout",
+        "figure_id": "f1",
+        "evidence": "boxed notes like 'Hurricane Ian' drawn over the plot area"
+      },
+      {
+        "key": "axis_title_above_axis",
+        "figure_id": "f2",
+        "evidence": "Insured losses (USD bn) sits above the top tick 200"
+      },
+      {
+        "key": "sparse_time_ticks",
+        "figure_id": "f1",
+        "evidence": "x-axis ticks are every 3 years but bars are yearly"
+      },
+      {
+        "key": "sparse_time_ticks",
+        "figure_id": "f2",
+        "evidence": "x-axis ticks are every 3 years but bars are yearly"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "horizontal rules across the panel, no vertical ones"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f2",
+        "evidence": "horizontal rules across the panel, no vertical ones"
+      },
+      {
+        "key": "dense_marks_100plus",
+        "figure_id": "page",
+        "evidence": "both figures contain over 100 drawn marks across 55 years"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "page",
+        "evidence": "Source: Swiss Re Institute below both plots"
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "legend sits below the x-axis"
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f2",
+        "evidence": "legend sits below the x-axis"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "page",
+        "evidence": "unit in the title of f1 and axis of f2"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "annotation_connector_line",
+        "figure_id": "f1",
+        "evidence": "lines with dots map floating annotation boxes to specific bars",
+        "affects": [
+          2,
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "55",
+        "figure_id": "f1",
+        "mark": "the 2011 Earthquake/tsunami segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2011",
+          "Earthquake/tsunami"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "165",
+        "figure_id": "f1",
+        "mark": "the 2011 total bar height",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2011",
+          "Total"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "75",
+        "figure_id": "f2",
+        "mark": "the 2024 Secondary perils segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2024",
+          "Secondary perils"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "180",
+        "figure_id": "f2",
+        "mark": "the 2017 total bar height",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2017",
+          "Total"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "137",
+        "figure_id": "f1",
+        "mark": "the 2024 sum of Earthquake/tsunami and Weather-related catastrophes",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2024",
+          "Earthquake/tsunami",
+          "Weather-related catastrophes"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "45",
+        "figure_id": "f2",
+        "mark": "the 1999 total bar height",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "1999",
+          "Total"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "145",
+        "figure_id": "f1",
+        "mark": "the 2005 total bar height",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2005",
+          "Total"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "76",
+        "figure_id": "f2",
+        "mark": "the 2022 Secondary perils segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2022",
+          "Secondary perils"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "81",
+        "figure_id": "f2",
+        "mark": "the 2023 Secondary perils segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2023",
+          "Secondary perils"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "56",
+        "figure_id": "f2",
+        "mark": "the 2008 Secondary perils segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2008",
+          "Secondary perils"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "在满量程250且间隔50的Y轴上，没有数据标签辅助，肉眼读取如55或81的堆叠段高度极易超过5%的容错率。此外，多处指定的年份（如2011、2017）并未在稀疏的X轴刻度上标出。",
+    "examples": [
+      {
+        "gap": "P1",
+        "figure_id": "page",
+        "quote": "y-axis ticks 0, 50, 100, 150, 200, 250 without value labels",
+        "why": "堆叠柱状图缺乏具体数据标签，且Y轴刻度稀疏，直接导致读取精度过低，将连续坐标值转化为精准数字无法达到常规容差要求。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f2",
+        "quote": "Insured losses (USD bn) is on the same line as the top tick 200",
+        "why": "图19的Y轴单位直接紧随在顶部刻度所在行，而非作为独立的轴标题，目前的组件生成逻辑可能无法完美还原这种文本混排的样式。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "boxed notes with lines pointing to specific bars",
+        "why": "生成器需要支持“带连线的注释框”，要求能在指定坐标区间内自动布局文本框，并通过连接线和端点圆点精准指向目标数据柱。"
+      }
+    ]
+  }
+}

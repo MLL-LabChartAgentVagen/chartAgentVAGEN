@@ -1,0 +1,341 @@
+{
+  "stem": "World_Inequality_Report_2026_p78",
+  "document": "World_Inequality_Report_2026",
+  "tags": "3d_chart+need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "repeat",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 95.3,
+  "usage": {
+    "input_tokens": 5337,
+    "output_tokens": 13625,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "过程分析\n\n**画出来要什么**\n要绘制此页面，生成器需要支持：带三个并排小面积分面（Small Multiples）的折线图，其中分面标题不仅仅是分类文本，还包含数学符号（`=` 和 `+`）以表达跨图逻辑。第一、二分面共享相同的y轴范围（0%-750%），第三分面拥有独立的y轴范围和刻度（包含负值区域，但未标注负值刻度）。图表需要支持共享图例并置于图表下方，y轴标题需旋转并仅显示在最左侧分面旁边。同时，还需支持带有密集数据点（每年）但x轴时间刻度极度稀疏（每10年一个）的平滑连线样式。\n\n**定位一个值难在哪**\n以第三分面中2025年的 `70` 为例：该值属于MENA序列，但由于整个图表完全没有任何数据标签，且y轴刻度跨度极大（第三分面标称0%-200%，每格代表100%），该点仅位于0%和100%之间的某个视觉估计位置。读取该值不仅依赖于颜色的正确匹配，还必须在没有任何辅助线段的情况下通过肉眼粗略估算，这使得任何工具或人类都极难将其读取到5%的容差范围内。\n\n**不确定的**\n抽查值 `900` 在图表或附带正文中均无法找到明确对应的点，正文提到的超过600%的数值指向了未展示在这一页的 Figure 3.5。此外，由于第三分面没有打印0%以下的刻度标签，最底部的网格线具体代表 -100% 还是其他值只能靠视觉对称性进行猜测。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 3.3.",
+          "title": "Domestic capital remains the foundation of national wealth everywhere",
+          "subtitle": "Wealth composition across regions, 1995–2025",
+          "unit_text": "Wealth as a % of national income",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 3,
+        "series": 8,
+        "categories": 31,
+        "marks": 744,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Wealth as a % of national income",
+            "low": "0%",
+            "high": "750%",
+            "serves": "all lines in the first panel"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "1995",
+            "high": "2025",
+            "serves": "all lines in the first panel"
+          },
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "0%",
+            "high": "750%",
+            "serves": "all lines in the second panel"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "1995",
+            "high": "2025",
+            "serves": "all lines in the second panel"
+          },
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "0%",
+            "high": "200%",
+            "serves": "all lines in the third panel"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "1995",
+            "high": "2025",
+            "serves": "all lines in the third panel"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "panel",
+            "label_source": "panel_title",
+            "example": "Net foreign assets"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "East Asia"
+          },
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2025"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Net foreign assets",
+            "East Asia",
+            "2025"
+          ],
+          "value": "30",
+          "value_source": "axis_read",
+          "why_hard": "No data labels and an unlabelled y-axis region for negative values make precision reading impossible."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "small_multiples_4",
+        "figure_id": "f1",
+        "evidence": "three line chart panels side by side"
+      },
+      {
+        "key": "shared_legend",
+        "figure_id": "f1",
+        "evidence": "one legend block governing all three panels"
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "legend sits below the panels"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "Interpretation., Notes. and Sources and series: below the chart"
+      },
+      {
+        "key": "rotated_axis_title",
+        "figure_id": "f1",
+        "evidence": "Wealth as a % of national income is set vertically"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "unit % is in the axis title and on ticks"
+      },
+      {
+        "key": "panel_title_per_panel",
+        "figure_id": "f1",
+        "evidence": "Net national wealth = and others sit above each panel"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "only horizontal dotted lines across the panels"
+      },
+      {
+        "key": "dense_marks_100plus",
+        "figure_id": "f1",
+        "evidence": "8 series across 3 panels and 31 years"
+      },
+      {
+        "key": "sparse_time_ticks",
+        "figure_id": "f1",
+        "evidence": "x-axis ticks are every 10 years for continuous annual data"
+      },
+      {
+        "key": "negative_values",
+        "figure_id": "f1",
+        "evidence": "lines in the third panel drop well below 0%"
+      },
+      {
+        "key": "per_panel_axis_range",
+        "figure_id": "f1",
+        "evidence": "third panel scales to 200% instead of 750%"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "equation_panel_titles",
+        "figure_id": "f1",
+        "evidence": "panel titles end with = and + forming a math equation",
+        "affects": [
+          3,
+          4
+        ]
+      },
+      {
+        "name": "unlabeled_negative_gridline",
+        "figure_id": "f1",
+        "evidence": "grid line below 0% in panel 3 has no text label",
+        "affects": [
+          2
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "625",
+        "figure_id": "f1",
+        "mark": "the Russia & Central Asia line in 1995 in the Domestic capital + panel",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Domestic capital +",
+          "Russia & Central Asia",
+          "1995"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "360",
+        "figure_id": "f1",
+        "mark": "the Latin America line in 1995 in the Net national wealth = panel",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Net national wealth =",
+          "Latin America",
+          "1995"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "600",
+        "figure_id": "f1",
+        "mark": "the Russia & Central Asia line in 1995 in the Net national wealth = panel",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Net national wealth =",
+          "Russia & Central Asia",
+          "1995"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "900",
+        "figure_id": "not_found",
+        "mark": "cannot be reliably placed on any specific mark or text",
+        "printed_on_figure": false,
+        "addressing_keys": [],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "380",
+        "figure_id": "f1",
+        "mark": "the Sub-Saharan Africa line in 1995 in the Net national wealth = panel",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Net national wealth =",
+          "Sub-Saharan Africa",
+          "1995"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "430",
+        "figure_id": "f1",
+        "mark": "the North America & Oceania line in 1995 in the Net national wealth = panel",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Net national wealth =",
+          "North America & Oceania",
+          "1995"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "30",
+        "figure_id": "f1",
+        "mark": "the East Asia line in 2025 in the Net foreign assets panel",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Net foreign assets",
+          "East Asia",
+          "2025"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "70",
+        "figure_id": "f1",
+        "mark": "the MENA line in 2025 in the Net foreign assets panel",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Net foreign assets",
+          "MENA",
+          "2025"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-80",
+        "figure_id": "f1",
+        "mark": "the Sub-Saharan Africa line in 2025 in the Net foreign assets panel",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Net foreign assets",
+          "Sub-Saharan Africa",
+          "2025"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-60",
+        "figure_id": "f1",
+        "mark": "the North America & Oceania line in 2025 in the Net foreign assets panel",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Net foreign assets",
+          "North America & Oceania",
+          "2025"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "折线图无数据标签，y轴网格线跨度极大（每格高达100%或250%）。目标值如 -80 或 70 均落在宽阔的刻度区间内，完全靠视觉估算，无法满足5%的精度要求。",
+    "examples": [
+      {
+        "gap": "P1",
+        "figure_id": "f1",
+        "quote": "Net foreign assets lines around 0% with 100% spacing",
+        "why": "图表网格线跨度高达100%且无数据标签，类似 -80 或 70 等数值根本无法被解析至5%的精确度，需将读取精度控制放宽为每标记可达精度。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "Net national wealth =, Domestic capital +",
+        "why": "分面标题不仅是分类标签，更构成了跨越各小面板的数学等式，生成器需要全新的分面命名组装和布局逻辑来处理此类跨图关系。"
+      }
+    ]
+  }
+}

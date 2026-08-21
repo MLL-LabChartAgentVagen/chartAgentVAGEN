@@ -1,0 +1,299 @@
+{
+  "stem": "employment_and_social_developments_in_europe_esde_2024_report_p40",
+  "document": "employment_and_social_developments_in_europe_esde_2024_report",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 107.4,
+  "usage": {
+    "input_tokens": 5357,
+    "output_tokens": 14836,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n\n要重新绘制此页面上的图表，生成器需要支持在一个图表（`Chart 1`）下放置两个平行的折线图面板（`Panel A`和`Panel B`）。每个面板都需要有自己的标题，并且拥有独立的Y轴（一个起点为0，另一个起点为0.5）和内置图例。X轴为时间，且年份间隔不一致（如2014到2017差3年，2017到2021差4年），但在图表上各类别的节点需等间距排列。同时需支持仅显示横向虚线网格线，并在图表区域下方渲染多行的注释与数据来源说明。\n\n### 定位一个值难在哪\n\n所有的值均为非打印值，完全依赖视觉对齐刻度线。以Panel A为例，Y轴最大范围达`180 000`且网格间隔达`20 000`，要在5%的容差内读取特定的数据点（如2014年的`145000`）难度极大，极其容易因肉眼读数偏差而阻塞在第2步。\n\n### 不确定的\n\nPanel A中`19 countries`在2014年的折线节点目测略低于`120 000`的网格线（大约为115000），但由于这是提供的最接近考点`120000`的值，因此假设该点即为目标点。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Chart 1",
+          "title": "Median wealth has increased on average in the euro area, with countries converging upwards",
+          "subtitle": "Average and standard deviation of median net wealth, 2010 – 2021, euro area",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 2,
+        "series": 3,
+        "categories": 4,
+        "marks": 18,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "€",
+            "low": "€ 0",
+            "high": "€ 180 000",
+            "serves": "Panel A lines"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "2010",
+            "high": "2021",
+            "serves": "Panel A lines"
+          },
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "0.5",
+            "high": "0.66",
+            "serves": "Panel B lines"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "2010",
+            "high": "2021",
+            "serves": "Panel B lines"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "panel",
+            "label_source": "panel_title",
+            "example": "Panel A: Median net wealth"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "14 countries"
+          },
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2010"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Panel A: Median net wealth",
+            "14 countries",
+            "2010"
+          ],
+          "value": "160000",
+          "value_source": "axis_read",
+          "why_hard": "No printed values and sparse grid lines make it hard to read to 5% tolerance."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "per_panel_axis_range",
+        "figure_id": "f1",
+        "evidence": "Panel A and Panel B have different y-axis scales"
+      },
+      {
+        "key": "per_panel_legend",
+        "figure_id": "f1",
+        "evidence": "each panel has its own legend inside"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "only horizontal dashed grid lines are drawn"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "Notes: and Source: lines at the bottom"
+      },
+      {
+        "key": "legend_inside_plot",
+        "figure_id": "f1",
+        "evidence": "legend items sit inside the plot area"
+      },
+      {
+        "key": "panel_title_per_panel",
+        "figure_id": "f1",
+        "evidence": "Panel A and Panel B are titled individually"
+      },
+      {
+        "key": "axis_starts_above_zero",
+        "figure_id": "f1",
+        "evidence": "Panel B left y-axis starts at 0.5"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "uneven_time_spacing_drawn_evenly",
+        "figure_id": "f1",
+        "evidence": "time gaps 4, 3, 4 years are drawn visually equidistant",
+        "affects": []
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "160000",
+        "figure_id": "f1",
+        "mark": "the 2010 point for 14 countries in Panel A",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Panel A: Median net wealth",
+          "14 countries",
+          "2010"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "140000",
+        "figure_id": "f1",
+        "mark": "the 2021 point for 21 countries in Panel A",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Panel A: Median net wealth",
+          "21 countries",
+          "2021"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "120000",
+        "figure_id": "f1",
+        "mark": "the 2014 point for 19 countries in Panel A",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Panel A: Median net wealth",
+          "19 countries",
+          "2014"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "145000",
+        "figure_id": "f1",
+        "mark": "the 2014 point for 14 countries in Panel A",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Panel A: Median net wealth",
+          "14 countries",
+          "2014"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "0.56",
+        "figure_id": "f1",
+        "mark": "the 2010 point for 14 countries in Panel B",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Panel B: Dispersion of median wealth",
+          "14 countries",
+          "2010"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "0.64",
+        "figure_id": "f1",
+        "mark": "the 2014 point for 19 countries in Panel B",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Panel B: Dispersion of median wealth",
+          "19 countries",
+          "2014"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "0.58",
+        "figure_id": "f1",
+        "mark": "the 2021 point for 21 countries in Panel B",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Panel B: Dispersion of median wealth",
+          "21 countries",
+          "2021"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "0.59",
+        "figure_id": "f1",
+        "mark": "the 2017 point for 14 countries in Panel B",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Panel B: Dispersion of median wealth",
+          "14 countries",
+          "2017"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "0.53",
+        "figure_id": "f1",
+        "mark": "the 2021 point for 14 countries in Panel B",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Panel B: Dispersion of median wealth",
+          "14 countries",
+          "2021"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "0.56",
+        "figure_id": "f1",
+        "mark": "the 2021 point for 19 countries in Panel B",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Panel B: Dispersion of median wealth",
+          "19 countries",
+          "2021"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "所有数值需依赖纵轴刻度估算。Panel A网格间距达20,000，要在5%容差内精确读取点（如145000）的难度极大，极易产生读数偏差而阻塞第2步。",
+    "examples": [
+      {
+        "gap": "P2",
+        "figure_id": "f1",
+        "quote": "Panel A: Median net wealth",
+        "why": "两幅面板共享X轴逻辑，但有不同面板标题和独立Y轴，系统必须将面板标题作为寻址的一部分。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "Chart 1\nMedian wealth has increased on average...",
+        "why": "图表具有复杂的头部结构（含编号、主标题、副标题），生成器需能将其分别拆解生成而非合并为单一文本块。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "2010, 2014, 2017, 2021 on the x-axis",
+        "why": "X轴时间跨度不均等（分别为4年、3年、4年），但在图表上却等间距绘制，系统需支持这种非线性的轴向映射。"
+      }
+    ]
+  }
+}

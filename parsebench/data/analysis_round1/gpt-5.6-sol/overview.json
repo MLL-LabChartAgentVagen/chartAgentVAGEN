@@ -1,0 +1,300 @@
+{
+  "model": "gpt-5.6-sol",
+  "effort": "high",
+  "seconds": 372.7,
+  "usage": {
+    "input_tokens": 7346,
+    "output_tokens": 11250,
+    "cache_read_tokens": 7343
+  },
+  "answer": {
+    "headline": "逐标记精度、面板键和可控样式是这批报告页最先暴露的生成缺口。",
+    "ranked_items": [
+      {
+        "what": "per_mark_attainable_precision（逐标记可达到精度）",
+        "why": "第二步卡页远多于第一、三步，且唯一可核的定位命中率仍有限。",
+        "evidence": [
+          "article_thebeatjun2025_p8",
+          "timevalue_p9",
+          "wtr24_ch2_e_p14",
+          "semiconductor_sector_study_p22",
+          "pwc-semiconductor-and-beyond-2026-full-report_p18"
+        ],
+        "affects": [
+          2
+        ],
+        "score_effect": "把整图门槛改为逐值容差判定",
+        "capability_effect": "可按标记精度选择标签、刻度或数据源",
+        "new_ablation_row": "可读性布尔门 vs 逐标记可达到精度",
+        "maps_to": "P1"
+      },
+      {
+        "what": "panel_key（面板维度进入定位键）",
+        "why": "面板标题、小倍图和多独立图反复出现；重复年份与系列必须再加面板键。",
+        "evidence": [
+          "GWR-2024_Layout_E_RGB_Web_p58",
+          "ac8b3538-en_p62",
+          "employment_and_social_developments_in_europe_esde_2024_report_p55",
+          "pdf_d2e0103f64cd_p29",
+          "World_Inequality_Report_2026_p66"
+        ],
+        "affects": [
+          3
+        ],
+        "score_effect": "减少跨面板同名值错配",
+        "capability_effect": "可生成异量程面板并稳定寻址单元格",
+        "new_ablation_row": "无面板键 vs panel_key 进入主键",
+        "maps_to": "P2"
+      },
+      {
+        "what": "unit_in_axis_or_title / unit_in_tick_labels / nonstandard_time_ticks / negative_values / value_label_outside",
+        "why": "这些未支持样式高频出现，且刻度、零线和标签位置直接影响读取与关联。",
+        "evidence": [
+          "ac8b3538-en_p55",
+          "World_Inequality_Report_2026_p66",
+          "article_thebeatjun2025_p8",
+          "TRS241_Web_p88",
+          "pdf_d2e0103f64cd_p29"
+        ],
+        "affects": [
+          2,
+          3,
+          4
+        ],
+        "score_effect": "改善刻度解释、容差读取和标签关联",
+        "capability_effect": "可配置单位、时间刻度、标签位置和零线",
+        "new_ablation_row": "固定轴样式 vs 三组样式维度逐项开关",
+        "maps_to": "P6"
+      },
+      {
+        "what": "density_cap（可控密度上限）",
+        "why": "中高密度档占多数且存在超高密度页；固定上限会排除真实报告形态。",
+        "evidence": [
+          "ac8b3538-en_p62",
+          "World_Inequality_Report_2026_p66",
+          "b263dc5d-en_p120",
+          "semiconductor_sector_study_p22"
+        ],
+        "affects": [
+          2
+        ],
+        "score_effect": "覆盖高密图的可读性判定",
+        "capability_effect": "可按密度预算生成稀疏到超密图",
+        "new_ablation_row": "固定密度上限 vs 分档密度控制",
+        "maps_to": "P5"
+      },
+      {
+        "what": "color_encodes_extra_attribute / tick_marker_as_series",
+        "why": "第三变量着色和叠加短刻度均未支持，并直接改变系列标签与标记的关联。",
+        "evidence": [
+          "2025-EIS_p41",
+          "2025-EIS_p47",
+          "GWR-2024_Layout_E_RGB_Web_p58",
+          "b263dc5d-en_p120"
+        ],
+        "affects": [
+          2,
+          3
+        ],
+        "score_effect": "减少复合编码的值与系列错配",
+        "capability_effect": "可用颜色和同轴图元表达额外属性",
+        "new_ablation_row": "基础系列编码 vs 第三变量颜色＋同轴刻度图元",
+        "maps_to": "new"
+      },
+      {
+        "what": "whole_page_markdown_export / filled_heading_banner",
+        "why": "来源注释遍布样本，面板名、标题与数据表的相对位置也承载页外语境。",
+        "evidence": [
+          "employment_and_social_developments_in_europe_esde_2024_report_p55",
+          "investing-in-education-2025-NC0125093ENN-1_p14",
+          "wtr24_ch2_e_p14",
+          "TRS241_Web_p88"
+        ],
+        "affects": [
+          1,
+          4
+        ],
+        "score_effect": "补齐数据表并保留页外位置证据",
+        "capability_effect": "可导出图、数据表、注释、来源与链接",
+        "new_ablation_row": "仅图表导出 vs 整页Markdown与位置关系",
+        "maps_to": "P3"
+      },
+      {
+        "what": "structured_figure_heading（结构化图题）",
+        "why": "标题位置高度稳定，但图号、主副题、单位仍需拆字段才能跨版式复用。",
+        "evidence": [
+          "pdf_d2e0103f64cd_p29",
+          "investing-in-education-2025-NC0125093ENN-1_p14",
+          "wtr24_ch2_e_p14",
+          "World_Inequality_Report_2026_p66"
+        ],
+        "affects": [
+          3,
+          4
+        ],
+        "score_effect": "提高跨图定位与页外标题识别",
+        "capability_effect": "可独立排版图号、主副题、单位与标题块",
+        "new_ablation_row": "单标题字符串 vs 分字段图题及标题块位置",
+        "maps_to": "P7"
+      },
+      {
+        "what": "horizontal_bars（可配置条形方向）",
+        "why": "横向条在三家判读中完全一致且当前画不出，是明确而非推测的几何缺口。",
+        "evidence": [
+          "2025-EIS_p41",
+          "2025-EIS_p47",
+          "deloitte-2025-global-automotive-consumer-study-january-2025_1_p20"
+        ],
+        "affects": [],
+        "score_effect": "度量看不见它",
+        "capability_effect": "可在方向维度上生成纵条或横条",
+        "new_ablation_row": "固定纵向条 vs 可配置条形方向",
+        "maps_to": "new"
+      },
+      {
+        "what": "chart_family_weight_vector（图族权重向量）",
+        "why": "折线与复合图占主导，但类型判定一致率最低，不宜把单一配比当成图元规格。",
+        "evidence": [
+          "ac8b3538-en_p62",
+          "TRS241_Web_p88",
+          "World_Inequality_Report_2026_p66",
+          "deloitte-2025-global-automotive-consumer-study-january-2025_1_p20"
+        ],
+        "affects": [],
+        "score_effect": "度量看不见它",
+        "capability_effect": "可按目标语料重配图族频率",
+        "new_ablation_row": "固定当前配比 vs 可学习图族权重向量",
+        "maps_to": "P4"
+      }
+    ],
+    "numbers_cited": [
+      {
+        "claim": "抽查点数",
+        "value": "191",
+        "source": "唯一可核的量：预测的定位键 vs 规则真实标签"
+      },
+      {
+        "claim": "本列落位的值数",
+        "value": "189",
+        "source": "唯一可核的量：预测的定位键 vs 规则真实标签"
+      },
+      {
+        "claim": "本列预测正确数",
+        "value": "144",
+        "source": "唯一可核的量：预测的定位键 vs 规则真实标签"
+      },
+      {
+        "claim": "本列定位命中率",
+        "value": "75.4%",
+        "source": "唯一可核的量：预测的定位键 vs 规则真实标签"
+      },
+      {
+        "claim": "本列卡在第二步的页数",
+        "value": "12",
+        "source": "数值印不印 / 稠密度档 / 标题位置 / 卡在哪一步（三家并列）"
+      },
+      {
+        "claim": "本列卡在第一步的页数",
+        "value": "5",
+        "source": "数值印不印 / 稠密度档 / 标题位置 / 卡在哪一步（三家并列）"
+      },
+      {
+        "claim": "本列卡在第三步的页数",
+        "value": "3",
+        "source": "数值印不印 / 稠密度档 / 标题位置 / 卡在哪一步（三家并列）"
+      },
+      {
+        "claim": "本列出现面板标题的页数",
+        "value": "9",
+        "source": "你自己 20 页答案里的组件计数（三家并列，你是其中一列）"
+      },
+      {
+        "claim": "本列出现小倍图的页数",
+        "value": "6",
+        "source": "你自己 20 页答案里的组件计数（三家并列，你是其中一列）"
+      },
+      {
+        "claim": "本列出现多张独立图的页数",
+        "value": "5",
+        "source": "你自己 20 页答案里的组件计数（三家并列，你是其中一列）"
+      },
+      {
+        "claim": "本列单位置于轴题或图题的页数",
+        "value": "18",
+        "source": "你自己 20 页答案里的组件计数（三家并列，你是其中一列）"
+      },
+      {
+        "claim": "本列出现负值的页数",
+        "value": "8",
+        "source": "你自己 20 页答案里的组件计数（三家并列，你是其中一列）"
+      },
+      {
+        "claim": "本列出现外置值标的页数",
+        "value": "5",
+        "source": "你自己 20 页答案里的组件计数（三家并列，你是其中一列）"
+      },
+      {
+        "claim": "本列出现非标准时间刻度的页数",
+        "value": "4",
+        "source": "你自己 20 页答案里的组件计数（三家并列，你是其中一列）"
+      },
+      {
+        "claim": "本列颜色编码额外属性的页数",
+        "value": "5",
+        "source": "你自己 20 页答案里的组件计数（三家并列，你是其中一列）"
+      },
+      {
+        "claim": "本列短刻度作为系列的页数",
+        "value": "3",
+        "source": "你自己 20 页答案里的组件计数（三家并列，你是其中一列）"
+      },
+      {
+        "claim": "本列横向条形的页数",
+        "value": "3",
+        "source": "你自己 20 页答案里的组件计数（三家并列，你是其中一列）"
+      },
+      {
+        "claim": "本列来源或注释行出现页数",
+        "value": "17",
+        "source": "你自己 20 页答案里的组件计数（三家并列，你是其中一列）"
+      },
+      {
+        "claim": "本列标题位于上方的图数",
+        "value": "23",
+        "source": "数值印不印 / 稠密度档 / 标题位置 / 卡在哪一步（三家并列）"
+      },
+      {
+        "claim": "本列中密度档图数",
+        "value": "10",
+        "source": "数值印不印 / 稠密度档 / 标题位置 / 卡在哪一步（三家并列）"
+      },
+      {
+        "claim": "本列较高密度档图数",
+        "value": "6",
+        "source": "数值印不印 / 稠密度档 / 标题位置 / 卡在哪一步（三家并列）"
+      },
+      {
+        "claim": "本列超高密度档图数",
+        "value": "2",
+        "source": "数值印不印 / 稠密度档 / 标题位置 / 卡在哪一步（三家并列）"
+      },
+      {
+        "claim": "本列判为折线图的图数",
+        "value": "10",
+        "source": "类型配比（三家并列）"
+      },
+      {
+        "claim": "本列判为复合图的图数",
+        "value": "8",
+        "source": "类型配比（三家并列）"
+      },
+      {
+        "claim": "图表类型判定一致率",
+        "value": "54.2%",
+        "source": "三家的一致率"
+      }
+    ],
+    "report_md": "## 可核结果\n\n本列在191个抽查点中落位189个，预测正确144个，命中率75.4%。卡点分布为：第二步有12页、第一步有5页、第三步有3页。当前可核分数主要反映精确读值，其次才是表是否存在与标签关联。\n\n## 页面结构与图元\n\n面板标题出现9页，小倍图6页，多张独立图5页，定位键经常不止系列与类目。当前未支持的高频要求包括：单位置于轴题或图题18页、负值8页、外置值标5页、非标准时间刻度4页。第三变量着色5页、同轴短刻度3页、横向条3页也未支持。\n\n## 页面级与分布\n\n来源或注释行出现17页，标题在上方有23图。中密度、较高密度、超高密度档分别有10图、6图、2图。类型上 line 有10图、compound 有8图；但类型判定一致率仅54.2%，该配比是读法统计，不是图元规格。横向条的分数影响为空，并不表示生成器已有该能力。",
+    "limits": "样本仅为二十页；未见原始数据、生成器代码及容差细则。若干月份、面板归属与自拟残差来自视觉判断，不能外推总体频率或证明改动必然提分。"
+  }
+}

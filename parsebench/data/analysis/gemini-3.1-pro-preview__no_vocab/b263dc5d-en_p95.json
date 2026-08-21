@@ -1,0 +1,321 @@
+{
+  "stem": "b263dc5d-en_p95",
+  "document": "b263dc5d-en",
+  "tags": "3d_chart+need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "no_vocab",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 80.4,
+  "usage": {
+    "input_tokens": 3150,
+    "output_tokens": 11494,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n此图表是一个包含三个面板的复合图表。面板按垂直方向依次排列，每个面板上方带有独立的蓝色背景标题框。图表在同一个坐标系内混合使用了柱状图（Unadjusted）和菱形散点（Adjusted），散点直接叠加在相应柱子的中央线上。系统需要支持全局共享的图例，放置在所有面板的最顶部，且支持不同形状的标记示例（正方形和菱形）。x轴的类别标签较长，需要垂直旋转90度显示。此外，系统还需支持特殊的背景高亮标注功能，例如在所有面板中为“OECD average”这一特定类别添加贯穿始终的浅蓝色垂直背景色带。\n\n### 定位一个值难在哪\n以数值“23”（A. Literacy, Spain, Unadjusted）为例。定位该值需要正确组合面板标题、x轴类别和图例系列。其核心难点在于读取精度：y轴的范围是0到80，但主刻度间距高达10，且图表中没有任何数据标签或水平次级网格线。要求将数值读取到5%（对于23即±1.15）的误差范围内极其困难，肉眼几乎无法分辨23和24的细微高度差别，导致在容差判断阶段极易失败。\n\n### 不确定的\n大部分被抽查的数值（如23、24、25、27等）均是通过视觉比例大致估算的，由于图表中未直接印出具体数字，无法找到绝对精确的基准。部分数值（如70）在图表中对应的柱子在视觉上更接近73，属于根据题目提示进行的强制对齐推测。各国家在B和C面板中的排序逻辑未明确标注，需依赖图注说明推断。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 2.20.",
+          "title": "Differences in key information-processing skills, by parental education",
+          "subtitle": "Adjusted and unadjusted differences in average literacy, numeracy and adaptive problem solving scores between adults (highly educated parents minus low-educated parents)",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "compound",
+        "type_other": "",
+        "panels": 3,
+        "series": 2,
+        "categories": 32,
+        "marks": 192,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Score-point difference",
+            "low": "0",
+            "high": "80",
+            "serves": "all bars and points"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "Germany",
+            "high": "Spain",
+            "serves": "all bars and points"
+          },
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Score-point difference",
+            "low": "0",
+            "high": "80",
+            "serves": "all bars and points"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "Germany",
+            "high": "Spain",
+            "serves": "all bars and points"
+          },
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Score-point difference",
+            "low": "0",
+            "high": "80",
+            "serves": "all bars and points"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "Germany",
+            "high": "Spain",
+            "serves": "all bars and points"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "panel",
+            "label_source": "panel_title",
+            "example": "A. Literacy"
+          },
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Germany"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Unadjusted"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "A. Literacy",
+            "Germany",
+            "Unadjusted"
+          ],
+          "value": "75",
+          "value_source": "axis_read",
+          "why_hard": "Y-axis tick intervals are 10, with no minor gridlines, making 5% accuracy hard."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "compound_bar_point",
+        "figure_id": "f1",
+        "evidence": "diamonds plotted exactly on top of the vertical bars",
+        "affects": [
+          2,
+          3
+        ]
+      },
+      {
+        "key": "vertical_multi_panel",
+        "figure_id": "f1",
+        "evidence": "three charts stacked vertically, labeled A, B, C",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "shared_top_legend",
+        "figure_id": "f1",
+        "evidence": "Unadjusted and Adjusted legend sits above the first panel",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "rotated_category_labels",
+        "figure_id": "f1",
+        "evidence": "country names on x-axis are rotated 90 degrees",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "panel_title_colored_box",
+        "figure_id": "f1",
+        "evidence": "A. Literacy inside a blue rectangular box",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "new_components": [
+      {
+        "name": "category_background_highlight",
+        "figure_id": "f1",
+        "evidence": "light blue vertical band behind OECD average",
+        "affects": []
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "75",
+        "figure_id": "f1",
+        "mark": "Panel A Germany Unadjusted bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. Literacy",
+          "Germany",
+          "Unadjusted"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "23",
+        "figure_id": "f1",
+        "mark": "Panel A Spain Unadjusted bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. Literacy",
+          "Spain",
+          "Unadjusted"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "24",
+        "figure_id": "f1",
+        "mark": "Panel A Slovak Republic Unadjusted bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. Literacy",
+          "Slovak Republic",
+          "Unadjusted"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "70",
+        "figure_id": "f1",
+        "mark": "Panel B Germany Unadjusted bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "B. Numeracy",
+          "Germany",
+          "Unadjusted"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "18",
+        "figure_id": "f1",
+        "mark": "Panel C Spain Unadjusted bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "C. Adaptive problem solving",
+          "Spain",
+          "Unadjusted"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "27",
+        "figure_id": "f1",
+        "mark": "Panel A United States Adjusted diamond",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. Literacy",
+          "United States",
+          "Adjusted"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "65",
+        "figure_id": "f1",
+        "mark": "Panel A United States Unadjusted bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. Literacy",
+          "United States",
+          "Unadjusted"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "24",
+        "figure_id": "f1",
+        "mark": "Panel C OECD average Adjusted diamond",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "C. Adaptive problem solving",
+          "OECD average",
+          "Adjusted"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "25",
+        "figure_id": "f1",
+        "mark": "Panel B Austria Adjusted diamond",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "B. Numeracy",
+          "Austria",
+          "Adjusted"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "42",
+        "figure_id": "f1",
+        "mark": "Panel A Japan Unadjusted bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. Literacy",
+          "Japan",
+          "Unadjusted"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "以数值23为例，y轴刻度间隔为10且无次级网格线，要求5%（±1.15）的容差几乎不可能肉眼估算，必定会在步骤2受阻。",
+    "examples": [
+      {
+        "gap": "P9",
+        "figure_id": "f1",
+        "quote": "diamonds overlaid on the bars",
+        "why": "图表同时混合了柱状图和散点，系统需要记录每个提取的值具体是从哪种标记形状中读取的。"
+      },
+      {
+        "gap": "P2",
+        "figure_id": "f1",
+        "quote": "A. Literacy, B. Numeracy, C. Adaptive problem solving",
+        "why": "图表按垂直方向分为三个独立的面板，独立的面板名称必须作为键值的一部分提取。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "light blue vertical band behind OECD average",
+        "why": "当前的生成管线不支持在背景中添加针对特定类别的高亮垂直色带标注。"
+      }
+    ]
+  }
+}

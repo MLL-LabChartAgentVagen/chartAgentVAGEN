@@ -1,0 +1,351 @@
+{
+  "stem": "r_qt1212e_p9",
+  "document": "r_qt1212e",
+  "tags": "need_estimate",
+  "model": "gpt-5.6-sol",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 120000,
+  "seconds": 108.1,
+  "usage": {
+    "input_tokens": 8844,
+    "output_tokens": 6864,
+    "cache_read_tokens": 2365
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "**画出来要什么**\n需重建一个双面板复合图：左侧红色折线及右侧纵轴；右侧蓝柱叠加红点，并有左右双轴。两个面板各有标题、灰色网格背景、下置图例、稀疏年份刻度、脚注及来源行。\n\n**定位一个值难在哪**\n右图“Market share of failed companies²”的0.33需由左轴读取；刻度间隔0.1，而5%容差仅0.0165，且2003未标成年份刻度。\n\n**不确定的**\n右图只标每三年，部分红点和柱的具体年份需按位置推断；两面板时间范围不同，单一categories字段无法同时表达。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Graph 6",
+          "title": "Reinsurance market developments",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "compound",
+        "type_other": "",
+        "panels": 2,
+        "series": 3,
+        "categories": 32,
+        "marks": 42,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "right",
+            "role": "value",
+            "unit_text": "Per cent",
+            "low": "30",
+            "high": "60",
+            "serves": "left-panel red line"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "00",
+            "high": "11",
+            "serves": "left-panel line vertices"
+          },
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Per cent of premiums",
+            "low": "0.0",
+            "high": "0.4",
+            "serves": "right-panel red points"
+          },
+          {
+            "side": "right",
+            "role": "value",
+            "unit_text": "Number of companies",
+            "low": "0",
+            "high": "4",
+            "serves": "right-panel blue bars"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "80",
+            "high": "10",
+            "serves": "right-panel bars and points"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "panel",
+            "label_source": "panel_title",
+            "example": "Failures of reinsurance companies"
+          },
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "92"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Market share of failed companies²"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Failures of reinsurance companies",
+            "2003",
+            "Market share of failed companies²"
+          ],
+          "value": "0.33",
+          "value_source": "axis_read",
+          "why_hard": "Sparse year ticks and 0.1 spacing exceed the value’s 5% tolerance."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "dual_axis",
+        "figure_id": "f1",
+        "evidence": "The right panel has left 0.0–0.4 and right 0–4 value axes."
+      },
+      {
+        "key": "mixed_marks",
+        "figure_id": "f1",
+        "evidence": "Red point markers are overlaid on blue bars in the right panel."
+      },
+      {
+        "key": "right_side_y_axis",
+        "figure_id": "f1",
+        "evidence": "The left panel’s only value ticks, 30–60, are drawn on its right edge."
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "“Sources: IAIS, based on industry data; authors’ calculations.” appears below the notes."
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "Both legends sit beneath their respective plot areas."
+      },
+      {
+        "key": "per_panel_legend",
+        "figure_id": "f1",
+        "evidence": "The left panel has one legend entry; the right panel has two separate entries."
+      },
+      {
+        "key": "heterogeneous_panel_types",
+        "figure_id": "f1",
+        "evidence": "The left panel is a line chart; the right combines bars and points."
+      },
+      {
+        "key": "panel_title_per_panel",
+        "figure_id": "f1",
+        "evidence": "“Reinsurance market concentration” and “Failures of reinsurance companies” appear above their panels."
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "“Per cent”, “Per cent of premiums”, and “Number of companies” appear above value axes."
+      },
+      {
+        "key": "footnote_marker",
+        "figure_id": "f1",
+        "evidence": "Superscript ¹, ² and ³ are attached to the three legend labels."
+      },
+      {
+        "key": "axis_title_above_axis",
+        "figure_id": "f1",
+        "evidence": "All three value-axis titles are printed above their top ticks."
+      },
+      {
+        "key": "nonstandard_time_ticks",
+        "figure_id": "f1",
+        "evidence": "Years are abbreviated as “00”, “01”, “80”, “83” and similar two-digit labels."
+      },
+      {
+        "key": "sparse_time_ticks",
+        "figure_id": "f1",
+        "evidence": "The right panel labels every third year while marks occur in intervening years."
+      },
+      {
+        "key": "panel_background",
+        "figure_id": "f1",
+        "evidence": "Both plot areas have a light grey fill with white grid lines."
+      }
+    ],
+    "new_components": [
+      {
+        "name": "unequal_panel_time_ranges",
+        "figure_id": "f1",
+        "evidence": "The left panel spans “00”–“11”; the right panel’s printed ticks span “80”–“10”.",
+        "affects": [
+          2,
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "51",
+        "figure_id": "f1",
+        "mark": "the 00 Top 10 market share line vertex",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Reinsurance market concentration",
+          "00",
+          "Top 10 market share¹"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "48",
+        "figure_id": "f1",
+        "mark": "the 01 Top 10 market share line vertex",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Reinsurance market concentration",
+          "01",
+          "Top 10 market share¹"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "53",
+        "figure_id": "f1",
+        "mark": "the 03 Top 10 market share line vertex",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Reinsurance market concentration",
+          "03",
+          "Top 10 market share¹"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "42",
+        "figure_id": "f1",
+        "mark": "the 08 Top 10 market share line vertex",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Reinsurance market concentration",
+          "08",
+          "Top 10 market share¹"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "43",
+        "figure_id": "f1",
+        "mark": "the 11 Top 10 market share line vertex",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Reinsurance market concentration",
+          "11",
+          "Top 10 market share¹"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "0.1",
+        "figure_id": "f1",
+        "mark": "the 92 Market share of failed companies point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Failures of reinsurance companies",
+          "92",
+          "Market share of failed companies²"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "3",
+        "figure_id": "f1",
+        "mark": "the 92 Number of failures bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Failures of reinsurance companies",
+          "92",
+          "Number of failures³"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "0",
+        "figure_id": "f1",
+        "mark": "the 2000 Market share of failed companies point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Failures of reinsurance companies",
+          "2000",
+          "Market share of failed companies²"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 3
+      },
+      {
+        "value": "0.33",
+        "figure_id": "f1",
+        "mark": "the 2003 Market share of failed companies point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Failures of reinsurance companies",
+          "2003",
+          "Market share of failed companies²"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "1",
+        "figure_id": "f1",
+        "mark": "the 2011 Number of failures bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Failures of reinsurance companies",
+          "2011",
+          "Number of failures³"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 3
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "0.1容差仅0.005、0.33仅0.0165，但左轴刻度间隔0.1，红点难以稳定读到5%。分。",
+    "examples": [
+      {
+        "gap": "P9",
+        "figure_id": "f1",
+        "quote": "“Per cent of premiums” on the left and “Number of companies” on the right, with red points over blue bars.",
+        "why": "同一面板的点和柱必须同时记录所用轴及标记形状。"
+      },
+      {
+        "gap": "P2",
+        "figure_id": "f1",
+        "quote": "“Reinsurance market concentration” and “Failures of reinsurance companies” title the two panels.",
+        "why": "相同年份和值只有加入面板标题才能唯一定位。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "Years are printed as “80”, “83”, “86”, “89”, “92”, “95”, “98”, “01”, “04”, “07”, “10”.",
+        "why": "需要控制两位年份格式和单位置于轴顶的样式。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "“Reinsurance market developments” appears on the same heading line as “Graph 6”.",
+        "why": "必须分别保存图号、总标题及其位于面板上方的位置。"
+      }
+    ]
+  }
+}

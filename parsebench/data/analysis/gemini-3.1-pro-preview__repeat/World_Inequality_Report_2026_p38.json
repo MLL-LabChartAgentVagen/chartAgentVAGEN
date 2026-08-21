@@ -1,0 +1,326 @@
+{
+  "stem": "World_Inequality_Report_2026_p38",
+  "document": "World_Inequality_Report_2026",
+  "tags": "untagged",
+  "model": "gemini-3.1-pro-preview",
+  "control": "repeat",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 106.9,
+  "usage": {
+    "input_tokens": 5327,
+    "output_tokens": 14199,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n生成器需要能在一个Figure中组合不同类型的图表（左侧面板为分组柱状图，右侧面板为堆叠百分比柱状图）。它必须支持各面板上方拥有独立的标题，并在底部提供一个跨面板的共享图例。尤为关键的是，该共享图例包含5个系列，但它们在两个面板中的映射是互斥且存在层级关系的：左侧面板使用了前3个系列（包含了“Top 10%”），而右侧面板则使用了其中的4个系列（将“Top 10%”拆解为“Next 9%”和“Top 1%”）。此外，生成器还需支持不同面板采用不同的值标签位置策略（左侧悬浮于柱子外部，右侧嵌入在堆叠段内部）。\n\n### 定位一个值难在哪\n以左侧面板的“75%”（Wealth, Top 10%）为例，定位难点在于图表混合了两种完全不同结构的面板，生成Markdown时若强行合并为一个表格，会导致大量数据错位或缺失；且因图例在不同面板映射互斥，模型极易混淆系列归属（如将左侧的Top 10%与右侧的分类关联失败），导致该值无法被正确寻址。\n\n### 不确定的\n文本部分提到了Figure 1.6，但本页并未展示该图，推测这是一个跨页长篇报告。左右两侧面板的Y轴在视觉上是对齐的，不确定生成器在独立绘制两个异构面板时能否精确复用同一比例尺和网格线。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 1.3.",
+          "title": "Income and wealth shares are distributed very unequally",
+          "subtitle": "Global income and wealth inequality, 2025",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "compound",
+        "type_other": "",
+        "panels": 2,
+        "series": 5,
+        "categories": 2,
+        "marks": 14,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Share of global income or wealth",
+            "low": "0%",
+            "high": "100%",
+            "serves": "left panel grouped bars"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "Income",
+            "high": "Wealth",
+            "serves": "left panel grouped bars"
+          },
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Share of global income or wealth",
+            "low": "0%",
+            "high": "100%",
+            "serves": "right panel stacked bars"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "Income",
+            "high": "Wealth",
+            "serves": "right panel stacked bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "panel",
+            "label_source": "panel_title",
+            "example": "By broad groups"
+          },
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Income"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Top 10%"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "By broad groups",
+            "Wealth",
+            "Top 10%"
+          ],
+          "value": "75%",
+          "value_source": "printed",
+          "why_hard": "Heterogeneous panels with disjoint legend subsets make markdown table structure and label association highly failure-prone."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "grouped_bar",
+        "figure_id": "f1",
+        "evidence": "left panel uses grouped bars side by side"
+      },
+      {
+        "key": "stacked_bar",
+        "figure_id": "f1",
+        "evidence": "right panel uses vertically stacked bar segments"
+      },
+      {
+        "key": "pct_stacked",
+        "figure_id": "f1",
+        "evidence": "right panel stacks reach 100% on the y-axis"
+      },
+      {
+        "key": "heterogeneous_panel_types",
+        "figure_id": "f1",
+        "evidence": "left panel is grouped, right panel is stacked"
+      },
+      {
+        "key": "shared_legend",
+        "figure_id": "f1",
+        "evidence": "one single legend below serves both panels"
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "the legend sits below the entire plot area"
+      },
+      {
+        "key": "panel_title_per_panel",
+        "figure_id": "f1",
+        "evidence": "each panel has its own title above its bars"
+      },
+      {
+        "key": "rotated_axis_title",
+        "figure_id": "f1",
+        "evidence": "the y-axis titles are rotated 90 degrees vertically"
+      },
+      {
+        "key": "value_label_inside",
+        "figure_id": "f1",
+        "evidence": "values are inside the segments in the right panel"
+      },
+      {
+        "key": "value_label_outside",
+        "figure_id": "f1",
+        "evidence": "values are printed above the bars in the left panel"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "only horizontal dashed grid lines are drawn"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "Interpretation and Sources lines sit below the figure"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "shared_legend_with_disjoint_subsets",
+        "figure_id": "f1",
+        "evidence": "left panel uses Top 10%, right uses Next 9% and Top 1%",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "8",
+        "figure_id": "f1",
+        "mark": "the left panel Income Bottom 50% bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "By broad groups",
+          "Income",
+          "Bottom 50%"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "38",
+        "figure_id": "f1",
+        "mark": "the left panel Income Middle 40% bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "By broad groups",
+          "Income",
+          "Middle 40%"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "53",
+        "figure_id": "f1",
+        "mark": "the left panel Income Top 10% bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "By broad groups",
+          "Income",
+          "Top 10%"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "2",
+        "figure_id": "f1",
+        "mark": "the left panel Wealth Bottom 50% bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "By broad groups",
+          "Wealth",
+          "Bottom 50%"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "23",
+        "figure_id": "f1",
+        "mark": "the left panel Wealth Middle 40% bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "By broad groups",
+          "Wealth",
+          "Middle 40%"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "75",
+        "figure_id": "f1",
+        "mark": "the left panel Wealth Top 10% bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "By broad groups",
+          "Wealth",
+          "Top 10%"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "33",
+        "figure_id": "f1",
+        "mark": "the right panel Income Next 9% segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "More detail on the top 10%",
+          "Income",
+          "Next 9%"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "20",
+        "figure_id": "f1",
+        "mark": "the right panel Income Top 1% segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "More detail on the top 10%",
+          "Income",
+          "Top 1%"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "38",
+        "figure_id": "f1",
+        "mark": "the right panel Wealth Next 9% segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "More detail on the top 10%",
+          "Wealth",
+          "Next 9%"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "37",
+        "figure_id": "f1",
+        "mark": "the right panel Wealth Top 1% segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "More detail on the top 10%",
+          "Wealth",
+          "Top 1%"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      }
+    ],
+    "hardest_step": 3,
+    "hardest_step_why": "图表面板结构异构（分组与堆叠混合），且各自引用的图例子集存在互斥与拆分映射，极易导致Markdown解析器强行合并表格失败，使得标签无法被准确关联。",
+    "examples": [
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "Left panel is grouped bars, right panel is stacked bars",
+        "why": "管线目前无法在同一个Figure中同时混合绘制分组柱状图和堆叠百分比柱状图等不同类型的面板结构。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "Left panel values are above bars, right are inside segments",
+        "why": "系统无法在同个图表的不同异构面板中分别应用外部和内部两种截然不同的值标签放置策略。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "Top 10% legend item applies only to left panel",
+        "why": "系统不支持共享图例但在不同面板中映射到互斥或细分的子集（如左侧使用Top 10%，右侧拆分为9%和1%）。"
+      }
+    ]
+  }
+}

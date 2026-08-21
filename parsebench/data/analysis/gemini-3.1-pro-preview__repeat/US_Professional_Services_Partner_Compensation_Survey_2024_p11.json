@@ -1,0 +1,202 @@
+{
+  "stem": "US_Professional_Services_Partner_Compensation_Survey_2024_p11",
+  "document": "US_Professional_Services_Partner_Compensation_Survey_2024",
+  "tags": "untagged",
+  "model": "gemini-3.1-pro-preview",
+  "control": "repeat",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 60.7,
+  "usage": {
+    "input_tokens": 5312,
+    "output_tokens": 7731,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n要绘制此页面，生成器需要具备以下能力：\n1. **水平分组条形图**：类别标签位于左侧Y轴，每组内包含不同年份（2024和2022）的两个水平条形。\n2. **无数值轴设计**：不绘制底部的数值轴和垂直网格线，数值全部直接通过条形上的数据标签显示。\n3. **数据标签自适应位置**：大部分数值标签在条形内部右侧对齐（如 `35`，`27`），而当条形极短时，标签需放在条形外部（如值为 `1` 的标签）。\n4. **图表标题与图例布局**：在图表正上方包含主标题、较长的副标题，以及位于副标题下方的图例。\n5. **并排页面排版**：页面级布局需要在左侧容纳文本段落，右侧展示主图表区。\n\n### 定位一个值难在哪\n以 `9`（Significantly lower, 2024）为例：\n最大的挑战在于数值到键的正确映射（步骤3）。由于没有数值辅助线或底部的参考轴，解析器必须通过OCR直接提取条形上的文字，并结合颜色识别（图例中深色代表2024）将该数值与对应的类别（Significantly lower）准确关联，若分组间距识别偏差则容易发生错配。\n\n### 不确定的\n* 值为 `1` 的标签位于条形外部，不确定这是因为条形宽度小于字体宽度触发了自动避让机制，还是硬编码的特定样式设定。\n* 侧边栏文本与图表的宽度比例是否由页面模板固定。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "Partner turnover (%)",
+          "subtitle": "In your most recent fiscal year, how much partner turnover was there at your firm compared to your expectations at the beginning of the fiscal year?",
+          "unit_text": "(%)",
+          "placement": "above"
+        },
+        "type": "grouped_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 6,
+        "marks": 12,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "left",
+            "role": "category",
+            "unit_text": "",
+            "low": "Significantly lower",
+            "high": "Prefer not to answer",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Significantly lower"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "2024"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Significantly lower",
+            "2024"
+          ],
+          "value": "9",
+          "value_source": "printed",
+          "why_hard": "No value axis is drawn, so the reader must identify the value purely from labels on the marks."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "grouped_bar",
+        "figure_id": "f1",
+        "evidence": "two bars (2024 and 2022) are grouped per category"
+      },
+      {
+        "key": "horizontal_bars",
+        "figure_id": "f1",
+        "evidence": "categories sit on the left axis and bars grow to the right"
+      },
+      {
+        "key": "no_value_axis",
+        "figure_id": "f1",
+        "evidence": "no value ticks or axis line are drawn, only printed labels"
+      },
+      {
+        "key": "legend_above_plot",
+        "figure_id": "f1",
+        "evidence": "the legend sits between the subtitle and the bars"
+      },
+      {
+        "key": "value_label_inside",
+        "figure_id": "f1",
+        "evidence": "numbers like 9, 35, 27 are printed inside the bars"
+      },
+      {
+        "key": "value_label_outside",
+        "figure_id": "f1",
+        "evidence": "the number 1 is printed outside its very short bar"
+      },
+      {
+        "key": "side_text_bullets",
+        "figure_id": "page",
+        "evidence": "a column of body text runs alongside the left of the figure"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "Note and Source lines sit below the figure"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "(%) is written in the figure title"
+      }
+    ],
+    "new_components": [],
+    "spot_checks": [
+      {
+        "value": "9",
+        "figure_id": "f1",
+        "mark": "the 2024 Significantly lower bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Significantly lower",
+          "2024"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "14",
+        "figure_id": "f1",
+        "mark": "the 2022 Lower bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Lower",
+          "2022"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "27",
+        "figure_id": "f1",
+        "mark": "the 2024 About the same bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "About the same",
+          "2024"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "35",
+        "figure_id": "f1",
+        "mark": "the 2024 Higher bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Higher",
+          "2024"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "6",
+        "figure_id": "f1",
+        "mark": "the 2022 Significantly higher bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Significantly higher",
+          "2022"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      }
+    ],
+    "hardest_step": 3,
+    "hardest_step_why": "水平分组条形图中未绘制数值轴，完全依赖数据标签，且需准确将图例的年份与紧凑排列的上下条形映射，如果空间识别发生微小偏差，会导致值与键错配。",
+    "examples": [
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "Partner turnover (%) In your most recent fiscal year...",
+        "why": "现有的生成管线需要将图表标题及长副标题作为独立字段解析并渲染，而不仅是整体文本。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "value 9 is inside the bar, value 1 is outside",
+        "why": "需要支持无数值轴的样式，以及根据条形长度自适应将数据标签放在条形内部或外部的位置控制。"
+      },
+      {
+        "gap": "P3",
+        "figure_id": "page",
+        "quote": "In response to a slower 2023... (beside the figure)",
+        "why": "图表与侧边栏正文并排布局，需要在页面级渲染中支持多列或文本环绕排版，而非单纯堆叠。"
+      }
+    ]
+  }
+}

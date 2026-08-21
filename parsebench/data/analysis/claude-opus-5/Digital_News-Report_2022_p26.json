@@ -1,0 +1,376 @@
+{
+  "stem": "Digital_News-Report_2022_p26",
+  "document": "Digital_News-Report_2022",
+  "tags": "untagged",
+  "model": "claude-opus-5",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 110.3,
+  "usage": {
+    "input_tokens": 13931,
+    "output_tokens": 8635,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "## 画出来要什么\n本页要同时画三块：左栏一张四列百分比堆叠柱（Facebook/Twitter/Instagram/TikTok，各段印 21%/55%/3%/20%，图例在下方，类别刻度下还叠了平台图标）；紧贴其右的一张“Top markets saying too much”排行表，按 Twitter、Facebook 分段，每行带国旗图标与百分比；右栏一张分组水平条（6 个主题 × 5 个地区），无数值轴，每根彩条压在一条贯穿全宽的灰色底槽上，图例在图上方。两图都无编号，标题为两到三行全大写，单位只靠标签里的“%”。注记行是问卷题干加各网络样本量。\n\n## 定位一个值难在哪\n“21%”在页面上至少出现三次：f1 中 Facebook 的 Too much 段、侧表 Facebook 组的 Hungary 与 UK 行，正文也写了“(21%)”。只有同时给出图标题、类别与系列三级标签才唯一；侧表那两处还需要“Facebook”这一分组标题来区分行。\n\n## 不确定的\n侧表算 f1 的一部分还是独立图，无法判定；f3 短条的数字是画在条外还是槽内、灰槽是否代表 100% 基准，都只能从像素推测；f1 各段和为 99%（Facebook）还是取整误差，无轴可验。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "PROPORTION WHO THINK THEY SEE TOO MUCH NEWS",
+          "subtitle": "ON EACH NETWORK – UK",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "stacked_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 4,
+        "categories": 4,
+        "marks": 16,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "Facebook",
+            "high": "TikTok",
+            "serves": "all four stacked bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Twitter"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Not enough"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Twitter",
+            "Not enough"
+          ],
+          "value": "3%",
+          "value_source": "printed",
+          "why_hard": "very thin magenta segment; its 3% label is crowded against the 13% Don't know label"
+        }
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "",
+          "title": "Top markets",
+          "subtitle": "saying too much",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "other",
+        "type_other": "ranked country list table",
+        "panels": 1,
+        "series": 1,
+        "categories": 10,
+        "marks": 10,
+        "values_printed": "all",
+        "axes": [],
+        "key_parts": [
+          {
+            "role": "panel",
+            "label_source": "inline_label",
+            "example": "Facebook"
+          },
+          {
+            "role": "category",
+            "label_source": "inline_label",
+            "example": "UK"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Facebook",
+            "UK"
+          ],
+          "value": "21%",
+          "value_source": "printed",
+          "why_hard": "same 21% printed for Hungary one row above and for Facebook Too much in the chart"
+        }
+      },
+      {
+        "id": "f3",
+        "heading": {
+          "figure_number": "",
+          "title": "PROPORTION WHO SAW FALSE OR MISLEADING",
+          "subtitle": "INFORMATION ABOUT EACH TOPIC IN THE LAST WEEK – SELECTED REGIONS",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "grouped_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 5,
+        "categories": 6,
+        "marks": 30,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "left",
+            "role": "category",
+            "unit_text": "",
+            "low": "COVID-19",
+            "high": "Products (e.g. scams)",
+            "serves": "all 30 horizontal bars, six topic groups"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Immigration"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Asia"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Immigration",
+            "Asia"
+          ],
+          "value": "9%",
+          "value_source": "printed",
+          "why_hard": "shortest bar; label sits outside it and series is identified only by magenta fill order"
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "multi_figure_page",
+        "figure_id": "page",
+        "evidence": "two captioned charts, each with its own question note: 'Q12_Social_rightsize ...' and 'Q. FAKE_NEWS 2021a.'"
+      },
+      {
+        "key": "side_text_bullets",
+        "figure_id": "f3",
+        "evidence": "left column prose 'These data suggest the ambivalent relationship...' runs level with the right-column bar chart"
+      },
+      {
+        "key": "stacked_bar",
+        "figure_id": "f1",
+        "evidence": "each platform bar holds four stacked segments, e.g. 21% / 55% / 3% / 20% on Facebook"
+      },
+      {
+        "key": "pct_stacked",
+        "figure_id": "f1",
+        "evidence": "all four bars reach the same top; Twitter reads 11+73+3+13 = 100"
+      },
+      {
+        "key": "no_value_axis",
+        "figure_id": "f1",
+        "evidence": "no ticks or numbers on either vertical edge; only the printed segment labels"
+      },
+      {
+        "key": "value_label_inside",
+        "figure_id": "f1",
+        "evidence": "'55%' printed in white on the orange About right segment of Facebook"
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "'Too much  About right  Not enough  Don't know' row sits under the bars"
+      },
+      {
+        "key": "icon_category_axis",
+        "figure_id": "f1",
+        "evidence": "Facebook, Twitter, Instagram and TikTok logos drawn under the four tick labels"
+      },
+      {
+        "key": "thin_segment_label",
+        "figure_id": "f1",
+        "evidence": "Twitter's 3% magenta sliver is thinner than its own label, which touches the 13% below"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "'Base: All that use each social network: Facebook = 1501, Twitter = 685, Instagram = 859, TikTok = 270.'"
+      },
+      {
+        "key": "data_table_as_figure",
+        "figure_id": "f2",
+        "evidence": "bordered rows 'India 23% / Australia 23% / South Africa 19%' under a 'Twitter' header"
+      },
+      {
+        "key": "icon_category_axis",
+        "figure_id": "f2",
+        "evidence": "national flag icons precede every country name; platform logos precede 'Twitter' and 'Facebook'"
+      },
+      {
+        "key": "grouped_bar",
+        "figure_id": "f3",
+        "evidence": "five coloured bars stacked one under another inside each topic slot, e.g. under 'Politics'"
+      },
+      {
+        "key": "horizontal_bars",
+        "figure_id": "f3",
+        "evidence": "topic names on the left, bars grow rightwards from a common left baseline"
+      },
+      {
+        "key": "no_value_axis",
+        "figure_id": "f3",
+        "evidence": "no ticks or numbers along the bottom; only printed percentages at bar ends"
+      },
+      {
+        "key": "value_label_inside",
+        "figure_id": "f3",
+        "evidence": "'53%' set in white inside the right end of the orange North America COVID-19 bar"
+      },
+      {
+        "key": "value_label_outside",
+        "figure_id": "f3",
+        "evidence": "'9%' printed in magenta just beyond the short Asia Immigration bar"
+      },
+      {
+        "key": "legend_above_plot",
+        "figure_id": "f3",
+        "evidence": "'Europe  North America  Asia  Latin America  Africa' row sits between title and first topic"
+      },
+      {
+        "key": "wrapped_category_labels",
+        "figure_id": "f3",
+        "evidence": "'Climate change' and 'Products (e.g. scams)' each wrap onto two lines"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f3",
+        "evidence": "'Note: Africa average is Kenya, South Africa, and Nigeria only (English speakers in South Africa and Nigeria).'"
+      },
+      {
+        "key": "footnote_marker",
+        "figure_id": "page",
+        "evidence": "superscript 9 and 10 in body text keyed to footnotes at the page foot"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "bar_background_track",
+        "figure_id": "f3",
+        "evidence": "each coloured bar sits on a light grey rectangle running the full plot width",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "name": "reference_table_beside_chart",
+        "figure_id": "f1",
+        "evidence": "'Top markets saying too much' ranked table shares the figure block, level with the stacked bars",
+        "affects": [
+          1,
+          3,
+          4
+        ]
+      },
+      {
+        "name": "survey_question_and_base_note",
+        "figure_id": "f1",
+        "evidence": "'Q12_Social_rightsize ... Do you think that the amount of content ... Base: ... Facebook = 1501'",
+        "affects": [
+          4
+        ]
+      },
+      {
+        "name": "grouped_rows_with_section_header",
+        "figure_id": "f2",
+        "evidence": "country rows split under two bold platform headers, 'Twitter' then 'Facebook'",
+        "affects": [
+          1,
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "21%",
+        "figure_id": "f1",
+        "mark": "the Facebook 'Too much' top segment; 21% is also printed for Hungary and UK in f2 and in body text",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "PROPORTION WHO THINK THEY SEE TOO MUCH NEWS ON EACH NETWORK – UK",
+          "Facebook",
+          "Too much"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "49%",
+        "figure_id": "f3",
+        "mark": "the Politics / Africa bar, the bottom green bar of the second topic group",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "PROPORTION WHO SAW FALSE OR MISLEADING INFORMATION ABOUT EACH TOPIC IN THE LAST WEEK – SELECTED REGIONS",
+          "Politics",
+          "Africa"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "9%",
+        "figure_id": "f1",
+        "mark": "the TikTok 'Too much' top segment; the same 9% is also the Asia bar under Immigration in f3",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "PROPORTION WHO THINK THEY SEE TOO MUCH NEWS ON EACH NETWORK – UK",
+          "TikTok",
+          "Too much"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      }
+    ],
+    "hardest_step": 3,
+    "hardest_step_why": "21% 出现在 f1 Facebook Too much、侧表 Hungary 与 UK；9% 兼是 TikTok Too much 与 Asia Immigration，需标题+类别+系列三标签方能唯一定位。",
+    "examples": [
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "PROPORTION WHO THINK THEY SEE TOO MUCH NEWS ON EACH NETWORK – UK",
+        "why": "无编号、全大写跨两行、单位只在标签的 % 里；标题需拆成多行字段而非单行。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f3",
+        "quote": "'53%' white inside the orange bar; '9%' magenta printed outside the short Asia Immigration bar",
+        "why": "标签位置随条长在内/外切换且随系列上色，现管线只有统一放置策略。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "'Top markets saying too much' table with flag icons sits to the right of the four stacked bars",
+        "why": "图块内并列一张不同度量的排行表；需支持图+表复合布局与其独立行键。"
+      },
+      {
+        "gap": "P3",
+        "figure_id": "page",
+        "quote": "Two untitled charts plus 'Q12_Social_rightsize ...' and 'Q. FAKE_NEWS 2021a.' notes in two columns",
+        "why": "整页导出需保留左右双栏、题干注记与正文的相对位置，而非单图导出。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f3",
+        "quote": "every coloured bar lies on a light grey rectangle spanning the full plot width",
+        "why": "灰色满宽底槽当作隐含 100% 基准；现无“背景轨道”这一绘制元素。"
+      }
+    ]
+  }
+}

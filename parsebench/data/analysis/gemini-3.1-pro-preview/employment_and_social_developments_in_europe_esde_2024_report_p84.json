@@ -1,0 +1,251 @@
+{
+  "stem": "employment_and_social_developments_in_europe_esde_2024_report_p84",
+  "document": "employment_and_social_developments_in_europe_esde_2024_report",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 63.4,
+  "usage": {
+    "input_tokens": 5353,
+    "output_tokens": 9395,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n要重绘此页面，生成器需要支持标准的单面板折线图，包含多条数据线（共5个数据系列）。图表标题块包含图表编号、主标题、副标题，并且放置在图表正上方；其中y轴标题带有旋转文本，图表区域内部仅包含虚线的水平网格线，没有垂直网格线。同时，图表下方需要配置图例（按行排列），并在图表外部底部追加注释（Note）、来源（Source）以及额外的数据下载链接（Click here to download chart.）。\n\n### 定位一个值难在哪\n以 0.138 为例（“Quintile 5”在2027年的峰值），难点完全在于缺乏数据标注。y轴的刻度间距为 0.02（如从 0.12 到 0.14），而 0.138 是一个处于这两条网格线之间、极为靠近 0.14 但又未接触的值。肉眼或视觉模型都极难在没有数据表的情况下精准读取到三位小数并满足5%的误差容忍度。\n\n### 不确定的\n正文提到“reaching a peak of +0.11% in 2027 (Chart 3.11)”，但图表中仅显示了五个收入五等分组（Quintiles）的单独曲线，并未绘制表示总体平均 0.11% 的折线或标记。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Chart 3.11",
+          "title": "Investment in ALMPs is projected to increase employment during and after the investment period",
+          "subtitle": "Expected impact on employment of investment in labour supply increasing intervention fields of the ESF+, 2021-2027 programming period, by income quintile (% deviation from baseline)",
+          "unit_text": "% deviation from baseline",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 1,
+        "series": 5,
+        "categories": 20,
+        "marks": 100,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "% deviation from baseline",
+            "low": "0.00",
+            "high": "0.16",
+            "serves": "all lines"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "2021",
+            "high": "2040",
+            "serves": "all lines"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Quintile 1"
+          },
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2027"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Quintile 5",
+            "2027"
+          ],
+          "value": "0.138",
+          "value_source": "axis_read",
+          "why_hard": "unprinted values must be interpolated on a 0.02 y-axis grid"
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "the subtitle specifies `(% deviation from baseline)`"
+      },
+      {
+        "key": "rotated_axis_title",
+        "figure_id": "f1",
+        "evidence": "the y-axis title is rotated vertically"
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "the quintile legend sits under the x-axis"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "contains Note and Source lines below the chart"
+      },
+      {
+        "key": "data_link_below_figure",
+        "figure_id": "f1",
+        "evidence": "`Click here to download chart.` below the source"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "dotted horizontal grid lines, no vertical ones"
+      },
+      {
+        "key": "dense_marks_100plus",
+        "figure_id": "f1",
+        "evidence": "5 series over 20 years yields exactly 100 marks"
+      }
+    ],
+    "new_components": [],
+    "spot_checks": [
+      {
+        "value": "0.138",
+        "figure_id": "f1",
+        "mark": "the Quintile 5 peak at 2027",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Quintile 5",
+          "2027"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "0.122",
+        "figure_id": "f1",
+        "mark": "the Quintile 4 peak at 2027",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Quintile 4",
+          "2027"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "0.095",
+        "figure_id": "f1",
+        "mark": "the Quintile 3 peak at 2027",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Quintile 3",
+          "2027"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "0.09",
+        "figure_id": "f1",
+        "mark": "the Quintile 2 peak at 2027",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Quintile 2",
+          "2027"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "0.078",
+        "figure_id": "f1",
+        "mark": "the Quintile 1 peak at 2027",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Quintile 1",
+          "2027"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "0.04",
+        "figure_id": "f1",
+        "mark": "the Quintile 1 plateau around 2038",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Quintile 1",
+          "2038"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "0.02",
+        "figure_id": "f1",
+        "mark": "the starting point of Quintile 1 at 2021",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Quintile 1",
+          "2021"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "0.11",
+        "figure_id": "not_found",
+        "mark": "mentioned in body text as overall peak, not plotted",
+        "printed_on_figure": false,
+        "addressing_keys": [],
+        "keys_verbatim": false,
+        "blocked_step": 1
+      },
+      {
+        "value": "0.03",
+        "figure_id": "f1",
+        "mark": "the Quintile 1 trough around 2031",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Quintile 1",
+          "2031"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "0.10",
+        "figure_id": "f1",
+        "mark": "the Quintile 5 line around 2034",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Quintile 5",
+          "2034"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "需要从间距为 0.02 的 y 轴上读出如 0.138 和 0.122 这样精确到三位小数的值，肉眼或模型极难达到 5% 的误差容忍度。",
+    "examples": [
+      {
+        "gap": "P1",
+        "figure_id": "f1",
+        "quote": "the y axis reads 0.00, 0.02 ... 0.16",
+        "why": "在没有数据标签的情况下，要从间距为 0.02 的网格线中插值读出 0.138 这样高精度的数值。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "Chart 3.11 Investment in ALMPs... Expected impact...",
+        "why": "需要支持包含图表编号、主标题和长副标题的复杂标题块结构。"
+      }
+    ]
+  }
+}

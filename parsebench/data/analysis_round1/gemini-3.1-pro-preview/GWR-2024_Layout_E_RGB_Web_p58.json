@@ -1,0 +1,231 @@
+{
+  "stem": "GWR-2024_Layout_E_RGB_Web_p58",
+  "document": "GWR-2024_Layout_E_RGB_Web",
+  "tags": "3d_chart+need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "seconds": 50.8,
+  "usage": {
+    "input_tokens": 4423,
+    "output_tokens": 7283,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "这是一页包含混合图表（柱状图与散点图）的报告。图表由四个面板组成，分别展示不同收入组别国家的按十分位数计算的女性工资雇员比例和性别工资差距。\n难点在于图表使用了双 Y 轴，左轴用于表示女性比例（条形），右轴用于表示平均和中位数工资差距（散点），这使得图表元素非常密集（超过 100 个标记）。此外，由于数值未直接标注在图表中，需要结合左侧和右侧 Y 轴的刻度进行估读，导致读取具体数值时容错率较低，Step 2（数值读取容差）成为主要的解析瓶颈。类别轴使用 \"D1\" 到 \"D10\" 的缩写，右侧刻度包含负值（如 -4）。需要图表生成器具备渲染混合标记、多面板、双 Y 轴以及独立网格背景的能力。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 5.3.",
+          "title": "Share of women among wage employees in each decile of the hourly wage distribution and the decile-specific gender wage gap by country income group, latest available year",
+          "subtitle": "",
+          "unit_text": "(percentage)",
+          "placement": "above"
+        },
+        "type": "other",
+        "type_other": "mixed bar and scatter",
+        "panels": 4,
+        "series": 3,
+        "categories": 10,
+        "marks": 120,
+        "values_printed": "none"
+      }
+    ],
+    "components": [
+      {
+        "key": "small_multiples_4",
+        "figure_id": "f1",
+        "evidence": "four panels by country income group"
+      },
+      {
+        "key": "mixed_marks",
+        "figure_id": "f1",
+        "evidence": "bars for share and point markers for gaps in each panel"
+      },
+      {
+        "key": "dual_axis",
+        "figure_id": "f1",
+        "evidence": "left axis for share (0-60), right for gap (-4-30)"
+      },
+      {
+        "key": "rotated_axis_title",
+        "figure_id": "f1",
+        "evidence": "y-axis titles run vertically beside the axes"
+      },
+      {
+        "key": "shared_legend",
+        "figure_id": "f1",
+        "evidence": "one legend serves all four panels"
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "the legend sits below the four panels"
+      },
+      {
+        "key": "panel_title_per_panel",
+        "figure_id": "f1",
+        "evidence": "Low-income countries, etc., above each panel"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "Notes: ... Source: ... printed at the bottom"
+      },
+      {
+        "key": "dense_marks_100plus",
+        "figure_id": "f1",
+        "evidence": "40 bars and 80 point markers across the figure"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "(percentage) in main title, (%) in axis titles"
+      },
+      {
+        "key": "negative_values",
+        "figure_id": "f1",
+        "evidence": "the right-hand y-axis goes down to -2 and -4"
+      },
+      {
+        "key": "abbrev_category_axis",
+        "figure_id": "f1",
+        "evidence": "x-axis labels are D1, D2, ..., D10"
+      },
+      {
+        "key": "panel_background",
+        "figure_id": "f1",
+        "evidence": "the plot areas have a light blue tint"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "white horizontal rules across the panels, no vertical ones"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "colored_axis_ticks",
+        "figure_id": "f1",
+        "evidence": "right y-axis tick labels are red",
+        "affects": []
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "45",
+        "figure_id": "f1",
+        "mark": "the Low-income D1 Share of women bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Low-income countries",
+          "D1",
+          "Share of women by decile"
+        ]
+      },
+      {
+        "value": "22",
+        "figure_id": "f1",
+        "mark": "the Low-income D4 Mean gap diamond",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Low-income countries",
+          "D4",
+          "Mean gender wage gap by decile"
+        ]
+      },
+      {
+        "value": "44",
+        "figure_id": "f1",
+        "mark": "the Lower-middle-income D1 Share of women bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Lower-middle-income countries",
+          "D1",
+          "Share of women by decile"
+        ]
+      },
+      {
+        "value": "24",
+        "figure_id": "f1",
+        "mark": "the Upper-middle-income D3 Mean gap diamond",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Upper-middle-income countries",
+          "D3",
+          "Mean gender wage gap by decile"
+        ]
+      },
+      {
+        "value": "54",
+        "figure_id": "f1",
+        "mark": "the Upper-middle-income D2 Share of women bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Upper-middle-income countries",
+          "D2",
+          "Share of women by decile"
+        ]
+      },
+      {
+        "value": "19",
+        "figure_id": "f1",
+        "mark": "the High-income D2 Mean gap diamond",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "High-income countries",
+          "D2",
+          "Mean gender wage gap by decile"
+        ]
+      },
+      {
+        "value": "56",
+        "figure_id": "f1",
+        "mark": "the High-income D3 Share of women bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "High-income countries",
+          "D3",
+          "Share of women by decile"
+        ]
+      },
+      {
+        "value": "18",
+        "figure_id": "f1",
+        "mark": "the High-income D1 Mean gap diamond",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "High-income countries",
+          "D1",
+          "Mean gender wage gap by decile"
+        ]
+      },
+      {
+        "value": "11",
+        "figure_id": "f1",
+        "mark": "the Low-income D7 Mean gap diamond",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Low-income countries",
+          "D7",
+          "Mean gender wage gap by decile"
+        ]
+      },
+      {
+        "value": "28",
+        "figure_id": "f1",
+        "mark": "the Lower-middle-income D3 Share of women bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Lower-middle-income countries",
+          "D3",
+          "Share of women by decile"
+        ]
+      }
+    ],
+    "hardest_step": 2
+  }
+}

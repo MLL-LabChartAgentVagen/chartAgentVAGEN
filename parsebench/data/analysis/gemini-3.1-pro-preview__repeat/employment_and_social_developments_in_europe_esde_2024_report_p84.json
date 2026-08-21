@@ -1,0 +1,238 @@
+{
+  "stem": "employment_and_social_developments_in_europe_esde_2024_report_p84",
+  "document": "employment_and_social_developments_in_europe_esde_2024_report",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "repeat",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 60.1,
+  "usage": {
+    "input_tokens": 5353,
+    "output_tokens": 8498,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n生成器需要能绘制标准的多折线图，支持在底部显示图例，并绘制水平网格虚线。标题区分为图表编号、主标题和副标题。纵轴需要支持标题旋转（`% deviation from baseline`）。图表底部需要能添加附注、数据源说明以及下载链接文本。\n\n### 定位一个值难在哪\n图表未标注具体数值。纵轴刻度间距为 0.02，但需要读取的值（如 `0.138`、`0.122`）精确到了千分位。通过肉眼估算折线位置，根本无法满足 5% 的容差要求。\n\n### 不确定的\n正文提到 2027 年达到峰值 `+0.11%`，但这可能是整体的平均值。图表中仅有按五个分位数（Quintile）划分的曲线，没有任何一条线正好对应 0.11。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Chart 3.11",
+          "title": "Investment in ALMPs is projected to increase employment during and after the investment period",
+          "subtitle": "Expected impact on employment of investment in labour supply increasing intervention fields of the ESF+, 2021-2027 programming period, by income quintile (% deviation from baseline)",
+          "unit_text": "% deviation from baseline",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 1,
+        "series": 5,
+        "categories": 20,
+        "marks": 100,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "% deviation from baseline",
+            "low": "0.00",
+            "high": "0.16",
+            "serves": "all lines"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "2021",
+            "high": "2040",
+            "serves": "all lines"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Quintile 1"
+          },
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2021"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Quintile 2",
+            "2027"
+          ],
+          "value": "0.095",
+          "value_source": "axis_read",
+          "why_hard": "The 0.02 tick spacing makes reading exactly 0.095 impossible."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "the legend sits below the x-axis"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "Note: and Source: text appear under the chart"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "(% deviation from baseline) is in the subtitle"
+      },
+      {
+        "key": "rotated_axis_title",
+        "figure_id": "f1",
+        "evidence": "% deviation from baseline is set vertically"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "horizontal dotted lines only, no vertical ones"
+      },
+      {
+        "key": "dense_marks_100plus",
+        "figure_id": "f1",
+        "evidence": "5 series times 20 years equals 100 plotted points"
+      },
+      {
+        "key": "data_link_below_figure",
+        "figure_id": "f1",
+        "evidence": "Click here to download chart."
+      }
+    ],
+    "new_components": [],
+    "spot_checks": [
+      {
+        "value": "0.138",
+        "figure_id": "f1",
+        "mark": "the 2027 peak on the Quintile 1 line",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Quintile 1",
+          "2027"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "0.122",
+        "figure_id": "f1",
+        "mark": "the 2027 peak on the Quintile 4 line",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Quintile 4",
+          "2027"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "0.095",
+        "figure_id": "f1",
+        "mark": "the 2027 peak on the Quintile 2 line",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Quintile 2",
+          "2027"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "0.09",
+        "figure_id": "f1",
+        "mark": "the 2027 peak on the Quintile 3 line",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Quintile 3",
+          "2027"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "0.078",
+        "figure_id": "f1",
+        "mark": "the 2027 peak on the Quintile 5 line",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Quintile 5",
+          "2027"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "0.04",
+        "figure_id": "f1",
+        "mark": "the 2030 point on the Quintile 1 line",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Quintile 1",
+          "2030"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "0.02",
+        "figure_id": "f1",
+        "mark": "the 2021 starting point for all lines",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Quintile 1",
+          "2021"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "0.11",
+        "figure_id": "not_found",
+        "mark": "mentioned only in the body text below the chart",
+        "printed_on_figure": false,
+        "addressing_keys": [],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "0.03",
+        "figure_id": "f1",
+        "mark": "the 2030 point on the Quintile 5 line",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Quintile 5",
+          "2030"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "0.10",
+        "figure_id": "f1",
+        "mark": "the 2026 point on the Quintile 1 line",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Quintile 1",
+          "2026"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "纵轴刻度间距为0.02，但如0.138、0.122等值精确到千分位。这些值无标签，肉眼估算根本无法满足5%的容差。",
+    "examples": []
+  }
+}

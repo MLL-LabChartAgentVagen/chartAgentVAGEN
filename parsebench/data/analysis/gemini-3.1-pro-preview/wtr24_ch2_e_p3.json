@@ -1,0 +1,281 @@
+{
+  "stem": "wtr24_ch2_e_p3",
+  "document": "wtr24_ch2_e",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 74.8,
+  "usage": {
+    "input_tokens": 5340,
+    "output_tokens": 10219,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n需要支持在同一面板中混排柱状图与折线图，并能处理双侧Y轴配置，两侧拥有独立的刻度和量程。左、右Y轴标题需支持垂直旋转显示，X轴的年份标签需支持45度倾斜。图表顶部的标题区带有明显的蓝色背景填充，图例需整体置于X轴下方，而数据源与注释等文本段落需排布在图表最底部。\n\n### 定位一个值难在哪\n定位“Trade participation”折线在2008年的值（约155）极其困难。由于图表没有任何直观的数据标签，读数完全依赖右侧Y轴；但右侧不仅刻度间隔极大（每档跨度为20），而且图表中缺乏对应的水平网格线作为视觉辅助对齐，纯靠目测使得读数误差极易超过5%的容许范围。\n\n### 不确定的\n对于接近0轴的柱子（如1998、2020、2021年），其具体是完全等于0.0还是微小的负值（如-0.2），仅凭视觉判定存在一定的不确定性，无法做到绝对精确。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure B.1:",
+          "title": "Positive correlation between low- and middle-income economies’ convergence speed and trade participation, 1996-2021",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "compound",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 26,
+        "marks": 52,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Speed of income convergence (percentage points)",
+            "low": "-1",
+            "high": "8",
+            "serves": "all bars"
+          },
+          {
+            "side": "right",
+            "role": "value",
+            "unit_text": "Trade participation (100=1996)",
+            "low": "40",
+            "high": "160",
+            "serves": "the Trade participation line"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "1996",
+            "high": "2021",
+            "serves": "all marks"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "1996"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Speed of income convergence"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "1996",
+            "Speed of income convergence"
+          ],
+          "value": "2.7",
+          "value_source": "axis_read",
+          "why_hard": "No horizontal gridlines on the right axis and large tick intervals make precise reading hard."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "mixed_marks",
+        "figure_id": "f1",
+        "evidence": "bars are used for convergence speed, a line for trade participation"
+      },
+      {
+        "key": "dual_axis",
+        "figure_id": "f1",
+        "evidence": "a left axis for percentage points and a right axis for an index"
+      },
+      {
+        "key": "rotated_axis_title",
+        "figure_id": "f1",
+        "evidence": "both left and right axis titles are set vertically"
+      },
+      {
+        "key": "rotated_x_ticks",
+        "figure_id": "f1",
+        "evidence": "the year labels on the bottom axis are rotated diagonally"
+      },
+      {
+        "key": "rebased_index_values",
+        "figure_id": "f1",
+        "evidence": "the right y-axis title indicates 100=1996"
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "the legend sits below the x-axis tick labels"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "Source: and Note: paragraphs are placed under the figure"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "horizontal lines are drawn across the plot, with no vertical lines"
+      },
+      {
+        "key": "negative_values",
+        "figure_id": "f1",
+        "evidence": "the left axis starts at -1, and several bars drop below zero"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "title_in_colored_banner",
+        "figure_id": "f1",
+        "evidence": "the figure title and number are enclosed in a full-width blue rectangular banner",
+        "affects": [
+          4
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "2.7",
+        "figure_id": "f1",
+        "mark": "the 1996 Speed of income convergence bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "1996",
+          "Speed of income convergence"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "100",
+        "figure_id": "f1",
+        "mark": "the 1996 Trade participation line point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "1996",
+          "Trade participation"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "0.0",
+        "figure_id": "f1",
+        "mark": "the 1998 Speed of income convergence bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "1998",
+          "Speed of income convergence"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "4.6",
+        "figure_id": "f1",
+        "mark": "the 2006 Speed of income convergence bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2006",
+          "Speed of income convergence"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "155",
+        "figure_id": "f1",
+        "mark": "the 2008 Trade participation line point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2008",
+          "Trade participation"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "7.7",
+        "figure_id": "f1",
+        "mark": "the 2009 Speed of income convergence bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2009",
+          "Speed of income convergence"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "128",
+        "figure_id": "f1",
+        "mark": "the 2011 Trade participation line point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2011",
+          "Trade participation"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "138",
+        "figure_id": "f1",
+        "mark": "the 2006 Trade participation line point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2006",
+          "Trade participation"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-0.2",
+        "figure_id": "f1",
+        "mark": "the 2020 Speed of income convergence bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2020",
+          "Speed of income convergence"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "125",
+        "figure_id": "f1",
+        "mark": "the 2021 Trade participation line point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2021",
+          "Trade participation"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "折线图通过右侧Y轴读数，但该轴无水平网格线且刻度间距达20，像读出155或138这样的数值，纯靠目测误差极易超过5%的容差范围。",
+    "examples": [
+      {
+        "gap": "P9",
+        "figure_id": "f1",
+        "quote": "left axis serves bars from -1 to 8, right axis serves line from 40 to 160",
+        "why": "图表包含柱状图与折线图的混合，且分别对应独立量程和单位的左右双Y轴，生成器需支持多图表类型混排与多轴绑定解析。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "Figure B.1: Positive correlation between low- and middle-income economies’ convergence...",
+        "why": "图表包含独立的编号与标题，并置于顶部跨越整个图表宽度的蓝色背景框内，需要管道支持独立的标题组件和背景样式渲染。"
+      }
+    ]
+  }
+}

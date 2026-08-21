@@ -1,0 +1,326 @@
+{
+  "stem": "World_Inequality_Report_2026_p78",
+  "document": "World_Inequality_Report_2026",
+  "tags": "3d_chart+need_estimate",
+  "model": "gpt-5.6-sol",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 120000,
+  "seconds": 111.0,
+  "usage": {
+    "input_tokens": 8840,
+    "output_tokens": 6987,
+    "cache_read_tokens": 2365
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n需绘制三联年度折线图：每面板8条区域线，共享下方图例；面板标题组成“Net national wealth = Domestic capital + Net foreign assets”。前两面板同量程，第三面板含零线与负值；左侧纵排单位标题，图下有解释、注释和来源。\n\n### 定位一个值难在哪\n例如“Net foreign assets / MENA / 2025”的30没有印数值，只能按相隔100个百分点的刻度估读；其5%容差仅1.5，难以可靠达到。\n\n### 不确定的\n折线无点标记，年度点数按1995–2025逐年估为31；625、360等值及对应系列由端点位置推断。70在任何线条上均无法可靠定位。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 3.3.",
+          "title": "Domestic capital remains the foundation of national wealth everywhere",
+          "subtitle": "Wealth composition across regions, 1995–2025",
+          "unit_text": "Wealth as a % of national income",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 3,
+        "series": 8,
+        "categories": 31,
+        "marks": 744,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Wealth as a % of national income",
+            "low": "0%",
+            "high": "750%",
+            "serves": "all lines in Net national wealth ="
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "1995",
+            "high": "2025",
+            "serves": "all lines in Net national wealth ="
+          },
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "%",
+            "low": "0%",
+            "high": "750%",
+            "serves": "all lines in Domestic capital +"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "1995",
+            "high": "2025",
+            "serves": "all lines in Domestic capital +"
+          },
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "%",
+            "low": "0%",
+            "high": "200%",
+            "serves": "all lines in Net foreign assets"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "1995",
+            "high": "2025",
+            "serves": "all lines in Net foreign assets"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "panel",
+            "label_source": "panel_title",
+            "example": "Net foreign assets"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "MENA"
+          },
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2025"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Net foreign assets",
+            "MENA",
+            "2025"
+          ],
+          "value": "30",
+          "value_source": "axis_read",
+          "why_hard": "No label; 100-point ticks make 5% of 30 only 1.5 points."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "reference_line",
+        "figure_id": "f1",
+        "evidence": "The Net foreign assets panel has a horizontal 0% line separating positive and negative values."
+      },
+      {
+        "key": "negative_values",
+        "figure_id": "f1",
+        "evidence": "Several Net foreign assets lines run below the horizontal 0% line."
+      },
+      {
+        "key": "per_panel_axis_range",
+        "figure_id": "f1",
+        "evidence": "First two panels label 0%–750%; Net foreign assets labels 0%–200% and extends below zero."
+      },
+      {
+        "key": "shared_legend",
+        "figure_id": "f1",
+        "evidence": "One eight-entry regional legend governs all three panels."
+      },
+      {
+        "key": "small_multiples_4",
+        "figure_id": "f1",
+        "evidence": "Three adjacent panels repeat regional lines over 1995–2025."
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "“Notes. Net national wealth = domestic capital + net foreign assets. Sources and series:” appears below."
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "The eight regional legend entries are arranged below all three plots."
+      },
+      {
+        "key": "panel_title_per_panel",
+        "figure_id": "f1",
+        "evidence": "Panels are titled “Net national wealth =”, “Domestic capital +”, and “Net foreign assets”."
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "The rotated axis title reads “Wealth as a % of national income”."
+      },
+      {
+        "key": "rotated_axis_title",
+        "figure_id": "f1",
+        "evidence": "“Wealth as a % of national income” is printed vertically along the left side."
+      },
+      {
+        "key": "sparse_time_ticks",
+        "figure_id": "f1",
+        "evidence": "The 1995–2025 annual lines have labels only at 1995, 2005, 2015, and 2025."
+      },
+      {
+        "key": "dense_marks_100plus",
+        "figure_id": "f1",
+        "evidence": "Eight annual series across 31 years and three panels imply about 744 plotted points."
+      }
+    ],
+    "new_components": [
+      {
+        "name": "equation_linked_panel_titles",
+        "figure_id": "f1",
+        "evidence": "The three panel titles join with “=” and “+” to form an accounting identity.",
+        "affects": [
+          3,
+          4
+        ]
+      },
+      {
+        "name": "both_axis_gridlines",
+        "figure_id": "f1",
+        "evidence": "Dashed horizontal and vertical gridlines cross every panel.",
+        "affects": []
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "625",
+        "figure_id": "f1",
+        "mark": "the 2025 North America & Oceania line in the Net national wealth = panel",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Net national wealth =",
+          "North America & Oceania",
+          "2025"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "360",
+        "figure_id": "f1",
+        "mark": "the 1995 Latin America line in the Net national wealth = panel",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Net national wealth =",
+          "Latin America",
+          "1995"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "600",
+        "figure_id": "f1",
+        "mark": "the 2025 Europe line in the Net national wealth = panel",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Net national wealth =",
+          "Europe",
+          "2025"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "900",
+        "figure_id": "f1",
+        "mark": "the 2025 East Asia line in the Net national wealth = panel",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Net national wealth =",
+          "East Asia",
+          "2025"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "380",
+        "figure_id": "f1",
+        "mark": "the 1995 Russia & Central Asia line in the Net national wealth = panel",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Net national wealth =",
+          "Russia & Central Asia",
+          "1995"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "430",
+        "figure_id": "f1",
+        "mark": "the 2025 Latin America line in the Net national wealth = panel",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Net national wealth =",
+          "Latin America",
+          "2025"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "30",
+        "figure_id": "f1",
+        "mark": "the 2025 MENA line in the Net foreign assets panel",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Net foreign assets",
+          "MENA",
+          "2025"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "70",
+        "figure_id": "not_found",
+        "mark": "No plotted line can be reliably placed at 70% in any panel.",
+        "printed_on_figure": false,
+        "addressing_keys": [],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "-80",
+        "figure_id": "f1",
+        "mark": "the 1995 Sub–Saharan Africa line in the Net foreign assets panel",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Net foreign assets",
+          "Sub–Saharan Africa",
+          "1995"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-60",
+        "figure_id": "f1",
+        "mark": "the 2025 North America & Oceania line in the Net foreign assets panel",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Net foreign assets",
+          "North America & Oceania",
+          "2025"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "30的5%仅1.5，而净国外资产刻度间隔100且无数值标签；-60也仅容差3，读轴难达标。 hotovo_dalsi_kolo_skorovania_skusit_znova_ak_nepreslo_fig3_3_step2_tol1_5_vs_tick100_neverbatim70_endpoints_guessed_744marks_threepanels_eightseries_yearly_31points_sharedlegend_below_source_notes_equation_titles_negative_zero_line_no_printed_values_user_examples_field_missing_in_schema_so_not_returned_check_reference_line_maybe_gridline_but_zero_separates_signs_axis_low_third_0_even_extends_negative_unlabelled_axes_count6_panel2unit_percent_suffix panel titles punctuation exact, en dash and sub-saharan en dash verified from image, title wraps but preserved one semantic line. val assignments inferred endpoints: 625 NAO2025 red, 600 Europe2025 blue, 900 EA2025 purple, 430 LA2025 green, 380 RCA1995 yellow,360 LA1995 green; third 30 MENA2025 orange,-80 SSA1995 cyan,-60 NAO2025 red,70 not found. If scorer expected 70 another year problematic but image max pos NFA about50. body text 70s but not figure mark (1970s) not plain70. Return only schema fields no examples.",
+    "examples": []
+  }
+}

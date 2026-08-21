@@ -1,0 +1,259 @@
+{
+  "stem": "timevalue_p9",
+  "document": "timevalue",
+  "tags": "need_estimate",
+  "model": "gpt-5.6-sol",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 70.9,
+  "usage": {
+    "input_tokens": 8759,
+    "output_tokens": 4464,
+    "cache_read_tokens": 8756
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "**画出来要什么**\n\n单幅三系列折线图，六个持有期类别；纵轴从0到4500、每500一格，仅有水平网格线。三条线分别使用方块、三角形和叉形点标记，图例置于绘图区右侧。页面还包括大标题、双色横条和通页浅灰横纹。\n\n**定位一个值难在哪**\n\n例如“10”年、“Stocks ($)”的240没有印在图上。其5%容差仅12，而纵轴刻度间隔为500，必须在一格内精确插值到约四十分之一；系列还需由右侧图例关联。\n\n**不确定的**\n\n240、250、280等均由点位反读，无法确认底层精确值；细横纹似为整页模板背景，而非绘图区填充。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "Holding Period and Value",
+          "subtitle": "",
+          "unit_text": "Future value of $100 investment",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 1,
+        "series": 3,
+        "categories": 6,
+        "marks": 18,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Future value of $100 investment",
+            "low": "0",
+            "high": "4500",
+            "serves": "all three lines"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "Holding period (in years)",
+            "low": "1",
+            "high": "40",
+            "serves": "all plotted points"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "10"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Stocks ($)"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "10",
+            "Stocks ($)"
+          ],
+          "value": "240",
+          "value_source": "axis_read",
+          "why_hard": "500-unit ticks make the ±12 tolerance for 240 visually unattainable."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "legend_beside_plot",
+        "figure_id": "f1",
+        "evidence": "A legend column to the right lists the three investment series."
+      },
+      {
+        "key": "unit_in_series_name",
+        "figure_id": "f1",
+        "evidence": "Legend labels read “Stocks ($)”, “Treasury Bonds ($)” and “Treasury Bills ($)”."
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "The y-axis title reads “Future value of $100 investment”."
+      },
+      {
+        "key": "rotated_axis_title",
+        "figure_id": "f1",
+        "evidence": "“Future value of $100 investment” runs vertically along the left axis."
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "Horizontal rules cross the plot at 500-unit intervals; no vertical gridlines appear."
+      }
+    ],
+    "new_components": [
+      {
+        "name": "series_specific_point_markers",
+        "figure_id": "f1",
+        "evidence": "Square, triangle and x markers distinguish the three lines and repeat in the legend.",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "name": "page_wide_ruled_background",
+        "figure_id": "page",
+        "evidence": "Closely spaced pale horizontal rules cover the entire page behind title and chart.",
+        "affects": []
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "3850",
+        "figure_id": "f1",
+        "mark": "the 40-year Stocks ($) point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "40",
+          "Stocks ($)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "1550",
+        "figure_id": "f1",
+        "mark": "the 30-year Stocks ($) point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "30",
+          "Stocks ($)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "620",
+        "figure_id": "f1",
+        "mark": "the 20-year Stocks ($) point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "20",
+          "Stocks ($)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "240",
+        "figure_id": "f1",
+        "mark": "the 10-year Stocks ($) point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "10",
+          "Stocks ($)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "700",
+        "figure_id": "f1",
+        "mark": "the 40-year Treasury Bonds ($) point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "40",
+          "Treasury Bonds ($)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "420",
+        "figure_id": "f1",
+        "mark": "the 30-year Treasury Bonds ($) point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "30",
+          "Treasury Bonds ($)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "250",
+        "figure_id": "f1",
+        "mark": "the 20-year Treasury Bonds ($) point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "20",
+          "Treasury Bonds ($)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "420",
+        "figure_id": "f1",
+        "mark": "the 40-year Treasury Bills ($) point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "40",
+          "Treasury Bills ($)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "280",
+        "figure_id": "f1",
+        "mark": "the 30-year Treasury Bills ($) point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "30",
+          "Treasury Bills ($)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "240的5%仅12，而纵轴每500一格；250、280、420也需精细插值，且均未印数值。广泛。最佳选择是定制扩展。",
+    "examples": [
+      {
+        "gap": "P1",
+        "figure_id": "f1",
+        "quote": "The y axis runs from 0 to 4500 in 500-unit intervals; no point values are printed.",
+        "why": "不同数值的5%容差差异大，240比3850需要远高得多的点位读取精度。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "“Future value of $100 investment” is rotated beside the left axis.",
+        "why": "需复现单位位于纵轴标题、纵向排版及500间隔的刻度格式。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "“Holding Period and Value” appears above the plot and above a two-colour horizontal rule.",
+        "why": "标题无图号和副标题，但有明确的页内位置及与装饰横条的层级关系。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "Squares mark Stocks ($), triangles mark Treasury Bonds ($), and x marks Treasury Bills ($).",
+        "why": "现有变化项未覆盖折线系列的独立点形及其在图例中的对应。"
+      }
+    ]
+  }
+}

@@ -1,0 +1,288 @@
+{
+  "stem": "b263dc5d-en_p144",
+  "document": "b263dc5d-en",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "no_vocab",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 61.9,
+  "usage": {
+    "input_tokens": 3151,
+    "output_tokens": 8490,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n生成此页图表需要支持哑铃图（Dumbbell Plot）或带有垂直连线的散点图。具体来说，在同一个X轴类别（国家）下，生成器需要绘制三个不同形状的散点（代表不同年龄段），并用一条贯穿它们的垂直线将它们连接起来以显示范围。此外，需要支持图例标记的“半实心半空心”绘制样式，并通过散点的实心与空心状态来编码额外的属性（统计显著性），这需要从底部的注释中获取逻辑。X轴需要支持双层结构：上方是具体的国家名称，下方是跨越多个国家的分组标签（如 `1`, `2`, `3`），并带有前缀 `Round, Cycle 1:`。Y轴的单位或图表描述文本 `Score-point difference` 需要放置在Y轴顶端。\n\n### 定位一个值难在哪\n定位并读取值如 `21`（瑞典 16-24岁）或 `-25`（西班牙 45-65岁）最大的难点在于精度。图中完全没有打印数据标签，所有值都必须通过比较散点位置和左侧Y轴来估算。Y轴的刻度间距为 10（从 -30 到 30），在没有任何辅助网格细分的情况下，用肉眼将浮在 10 和 20 之间的点（如 13、17）精确读取到 5% 的误差范围内是完全不可能的。\n\n### 不确定的\n图例中使用了左黑右白的半填充形状，而图表中实际使用的是纯黑（实心）或纯白（空心）形状，这意味着读者必须结合脚注中的文字解释（“Darker colours denote differences that are statistically significant”）自行推断填充颜色的含义，而不能直接从图例中得到完整映射。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 3.24.",
+          "title": "Change in the gap in literacy proficiency between adults with highly educated and medium-/low-educated parents, by age",
+          "subtitle": "Change between cycles in the mean score difference between adults with at least one tertiary-educated parent and adults with parents with at most an upper secondary education (Cycle 2 minus Cycle 1)",
+          "unit_text": "Score-point difference",
+          "placement": "above"
+        },
+        "type": "other",
+        "type_other": "dumbbell plot",
+        "panels": 1,
+        "series": 3,
+        "categories": 28,
+        "marks": 84,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Score-point difference",
+            "low": "-30",
+            "high": "30",
+            "serves": "all markers"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "Sweden",
+            "high": "Hungary",
+            "serves": "all markers"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "Round, Cycle 1:",
+            "low": "1",
+            "high": "3",
+            "serves": "country groups"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Sweden"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "16-24 year-olds"
+          },
+          {
+            "role": "colour_group",
+            "label_source": "colour_only",
+            "example": "Darker colours"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Sweden",
+            "16-24 year-olds",
+            "Darker colours"
+          ],
+          "value": "21",
+          "value_source": "axis_read",
+          "why_hard": "Y-axis ticks are 10 units apart with no printed values, making exact values impossible to read to 5%."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "dumbbell_connecting_lines",
+        "figure_id": "f1",
+        "evidence": "vertical lines pass through and connect the markers for each country on the x-axis",
+        "affects": [
+          1
+        ]
+      },
+      {
+        "key": "hierarchical_x_axis",
+        "figure_id": "f1",
+        "evidence": "countries are grouped under bottom blocks labeled 1, 2, and 3",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "half_filled_legend_markers",
+        "figure_id": "f1",
+        "evidence": "the legend shows markers that are split vertically into black and white halves",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "y_axis_title_above_ticks",
+        "figure_id": "f1",
+        "evidence": "the phrase 'Score-point difference' sits directly above the top of the y-axis line",
+        "affects": [
+          4
+        ]
+      }
+    ],
+    "new_components": [
+      {
+        "name": "dumbbell_plot",
+        "figure_id": "f1",
+        "evidence": "points of different series within a category are connected by a vertical line",
+        "affects": [
+          1
+        ]
+      },
+      {
+        "name": "footnote_as_legend",
+        "figure_id": "f1",
+        "evidence": "marker fill meaning (statistically significant) is explained in the footnote rather than the legend",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "21",
+        "figure_id": "f1",
+        "mark": "Sweden 16-24 year-olds filled triangle",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Sweden",
+          "16-24 year-olds"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "1",
+        "figure_id": "f1",
+        "mark": "United States 25-44 year-olds empty diamond",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "United States",
+          "25-44 year-olds"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "13",
+        "figure_id": "f1",
+        "mark": "Canada 16-24 year-olds filled triangle",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Canada",
+          "16-24 year-olds"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-25",
+        "figure_id": "f1",
+        "mark": "Spain 45-65 year-olds filled circle",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Spain",
+          "45-65 year-olds"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-22",
+        "figure_id": "f1",
+        "mark": "Singapore 45-65 year-olds filled circle",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Singapore",
+          "45-65 year-olds"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "17",
+        "figure_id": "f1",
+        "mark": "New Zealand 16-24 year-olds filled triangle",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "New Zealand",
+          "16-24 year-olds"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-13",
+        "figure_id": "f1",
+        "mark": "Italy 16-24 year-olds empty triangle",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Italy",
+          "16-24 year-olds"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "12",
+        "figure_id": "f1",
+        "mark": "Norway 16-24 year-olds filled triangle",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Norway",
+          "16-24 year-olds"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "13",
+        "figure_id": "f1",
+        "mark": "Hungary 16-24 year-olds filled triangle",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Hungary",
+          "16-24 year-olds"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "8",
+        "figure_id": "f1",
+        "mark": "Israel 16-24 year-olds empty triangle",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Israel",
+          "16-24 year-olds"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "图上未提供数据标签，Y轴每格代表10，如瑞典的21或西班牙的-25，在缺乏细分网格的情况下，依靠肉眼读数误差必然超过5%。",
+    "examples": [
+      {
+        "gap": "P8",
+        "figure_id": "f1",
+        "quote": "Darker colours denote differences that are statistically significant",
+        "why": "散点的实心与空心代表统计显著性，图例并未直接标明，需从底部注释中解析属性并作为维度进入表格。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "Round, Cycle 1: 1, 2, 3 drawn below the country names",
+        "why": "X轴具有双层结构，底部带有额外的分组标识块，目前的图表生成器不直接支持这种层级类别轴的渲染。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "Vertical lines connecting the triangle, diamond and circle for each country",
+        "why": "需要支持哑铃图（Dumbbell Plot），即在同一类别内绘制多个系列的散点，并用线将它们连接起来以显示极值范围。"
+      }
+    ]
+  }
+}

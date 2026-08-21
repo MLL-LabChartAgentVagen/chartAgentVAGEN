@@ -1,0 +1,290 @@
+{
+  "stem": "Quarterly-Sector-and-Investment-Research-Update-Q1-2025_p12",
+  "document": "Quarterly-Sector-and-Investment-Research-Update-Q1-2025",
+  "tags": "need_estimate",
+  "model": "gpt-5.6-sol",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 120000,
+  "seconds": 101.0,
+  "usage": {
+    "input_tokens": 8997,
+    "output_tokens": 6844,
+    "cache_read_tokens": 2365
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "**画出来要什么**：一页双图：左侧约407个月度点的单线图，配竖排稀疏年份刻度、纵轴标题和两段灰色时窗；右侧四根跨零柱，第三类别整列灰底，并在柱外标“4%”。还需页级说明和来源脚注。\n\n**定位一个值难在哪**：右图“-2.3%”只能在每格1个百分点的轴上估读，而5%容差仅0.115点。左图“60”还对应多个没有月份标签的点。\n\n**不确定的**：左图灰带含义未标；月度点数按脚注日期估为407。除“4%”外，右图柱值均需按轴估读；未给日期的左图值无法唯一定位。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "Valuation spreads are wide",
+          "subtitle": "Financials Price-to-Book Valuation Spreads",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 1,
+        "series": 1,
+        "categories": 407,
+        "marks": 407,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "0",
+            "high": "250",
+            "serves": "all line points"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "1990",
+            "high": "2024",
+            "serves": "all line points"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "1990"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "1990"
+          ],
+          "value": "150",
+          "value_source": "axis_read",
+          "why_hard": "Monthly line has no point markers and only sparse year ticks."
+        }
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "",
+          "title": "Financials have benefited from falling rates and credit spreads",
+          "subtitle": "NTM Average Relative Performance when Credit Spreads (HYOAS) or Rates\n(1-Yr Yield) Are Rising or Falling, 1980–Present",
+          "unit_text": "%",
+          "placement": "above"
+        },
+        "type": "bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 1,
+        "categories": 4,
+        "marks": 4,
+        "values_printed": "some",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "%",
+            "low": "-3%",
+            "high": "5%",
+            "serves": "all bars"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "Rates Rising/\nSpreads Rising",
+            "high": "Rates Falling/\nSpreads Rising",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Rates Rising/\nSpreads Rising"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Rates Rising/\nSpreads Rising"
+          ],
+          "value": "-2.3%",
+          "value_source": "axis_read",
+          "why_hard": "One-point ticks exceed the 0.115-point 5% tolerance."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "shaded_band",
+        "figure_id": "f1",
+        "evidence": "Vertical grey bands appear behind the line around 2016–2017 and 2022–2024."
+      },
+      {
+        "key": "negative_values",
+        "figure_id": "f2",
+        "evidence": "First and fourth green bars extend below the horizontal 0% line."
+      },
+      {
+        "key": "reference_line",
+        "figure_id": "f2",
+        "evidence": "A horizontal zero baseline crosses all four bars at 0%."
+      },
+      {
+        "key": "multi_figure_page",
+        "figure_id": "page",
+        "evidence": "Two separately titled plots sit side by side: valuation spreads and relative performance."
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "page",
+        "evidence": "“Sources: Haver Analytics, FactSet, Fidelity Investments, as of 11/30/24.” appears below both plots."
+      },
+      {
+        "key": "rotated_axis_title",
+        "figure_id": "f1",
+        "evidence": "“Price-to-book valuation spreads” runs vertically beside the left axis."
+      },
+      {
+        "key": "value_label_outside",
+        "figure_id": "f2",
+        "evidence": "“4%” sits above the third green bar."
+      },
+      {
+        "key": "rotated_x_ticks",
+        "figure_id": "f1",
+        "evidence": "Year labels from “1990” through “2024” are rotated vertically."
+      },
+      {
+        "key": "sparse_time_ticks",
+        "figure_id": "f1",
+        "evidence": "Monthly data are shown, but only selected years from “1990” to “2024” are labelled."
+      },
+      {
+        "key": "wrapped_category_labels",
+        "figure_id": "f2",
+        "evidence": "Each category wraps across two lines, such as “Rates Rising/” over “Spreads Rising”."
+      },
+      {
+        "key": "dense_marks_100plus",
+        "figure_id": "f1",
+        "evidence": "Monthly December 1990 to October 2024 data imply approximately 407 plotted points."
+      },
+      {
+        "key": "highlighted_category",
+        "figure_id": "f2",
+        "evidence": "The “Rates Falling/Spreads Falling” category slot has a grey background behind its green bar."
+      }
+    ],
+    "new_components": [],
+    "spot_checks": [
+      {
+        "value": "4%",
+        "figure_id": "f2",
+        "mark": "the Rates Falling/Spreads Falling bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Rates Falling/\nSpreads Falling"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "-2.3%",
+        "figure_id": "f2",
+        "mark": "the Rates Rising/Spreads Rising bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Rates Rising/\nSpreads Rising"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "0.5%",
+        "figure_id": "f2",
+        "mark": "the Rates Rising/Spreads Falling bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Rates Rising/\nSpreads Falling"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-1.9%",
+        "figure_id": "f2",
+        "mark": "the Rates Falling/Spreads Rising bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Rates Falling/\nSpreads Rising"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "150",
+        "figure_id": "f1",
+        "mark": "the line's opening point at 1990",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "1990"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "90",
+        "figure_id": "f1",
+        "mark": "an unlabeled monthly line point; the curve reaches 90 more than once",
+        "printed_on_figure": false,
+        "addressing_keys": [],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "30",
+        "figure_id": "f1",
+        "mark": "an unlabeled monthly line point near a trough; no unique date is visible",
+        "printed_on_figure": false,
+        "addressing_keys": [],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "75",
+        "figure_id": "f1",
+        "mark": "an unlabeled monthly line point; the curve reaches 75 more than once",
+        "printed_on_figure": false,
+        "addressing_keys": [],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "60",
+        "figure_id": "f1",
+        "mark": "one of multiple unlabeled monthly line points at 60",
+        "printed_on_figure": false,
+        "addressing_keys": [],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "60",
+        "figure_id": "f1",
+        "mark": "another unlabeled monthly line point at 60; no unique date is visible",
+        "printed_on_figure": false,
+        "addressing_keys": [],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "左图刻度间隔50，而30的5%仅1.5、90仅4.5；右图-2.3%的容差也仅0.115个百分点。可读精度先失败。二中选难。多值重合亦碍定位。更难。最终仍精度。合计需短。",
+    "examples": []
+  }
+}

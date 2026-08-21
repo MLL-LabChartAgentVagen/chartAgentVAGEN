@@ -1,0 +1,254 @@
+{
+  "stem": "World_Inequality_Report_2026_p25",
+  "document": "World_Inequality_Report_2026",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "seconds": 49.2,
+  "usage": {
+    "input_tokens": 5344,
+    "output_tokens": 6094,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n\n本页包含一个标准的折线图。生成该图需要支持带数据点标记的折线绘制。X轴包含10个类别区间标签（如 `P0-P10` 等），这些标签呈约45度倾斜排列；Y轴范围为 `0%` 至 `60%`，间隔为10%，且带有垂直旋转的轴标题。图表内部只有水平虚线网格，无垂直网格线。图表上方有一个多行的标题区（包含图号、主标题、副标题），下方则是居中的图例，以及底部的解释说明（Interpretation）和数据来源（Sources and series）文本。\n\n### 定位一个值难在哪\n\n以值 `52.0` 为例，读者需要在图例中定位到表示 `France` 的蓝色折线，并在X轴上找到 `P90-P100` 类别。最大的难点在于该值没有直接标注，必须通过数据点相对于Y轴的位置进行估读。由于Y轴的刻度间距高达10%，从视觉上精确读出 52.0 并满足5%的误差容限是完全不可能的。\n\n### 不确定的\n\n较低收入组别（如 `P0-P10` 到 `P30-P40`）的两条折线几乎完全重合在近乎0%的位置，单凭视觉无法分辨它们的确切数值差异。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 17.",
+          "title": "Without redistribution, political inequality will increase",
+          "subtitle": "Political donations by income decile, % of total",
+          "unit_text": "% of total",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 10,
+        "marks": 20,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Percentage of total political donations by income decile",
+            "low": "0%",
+            "high": "60%",
+            "serves": "all lines"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "P0-P10",
+            "high": "P90-P100",
+            "serves": "all lines"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "France"
+          },
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "P0-P10"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "South Korea",
+            "P90-P100"
+          ],
+          "value": "57.0",
+          "value_source": "axis_read",
+          "why_hard": "Y-axis tick spacing is 10%, making reading to a 5% tolerance impossible."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "rotated_x_ticks",
+        "figure_id": "f1",
+        "evidence": "category labels like P0-P10 are rotated roughly 45 degrees"
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "the France and South Korea legend sits below the x-axis"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "horizontal dashed grid lines are drawn, no vertical ones"
+      },
+      {
+        "key": "rotated_axis_title",
+        "figure_id": "f1",
+        "evidence": "the y-axis title 'Percentage of total...' is set vertically"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "subtitle has '% of total' and y-axis has 'Percentage'"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "Interpretation and Sources lines appear below the legend"
+      }
+    ],
+    "new_components": [],
+    "spot_checks": [
+      {
+        "value": "52.0",
+        "figure_id": "f1",
+        "mark": "the France point at P90-P100",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "France",
+          "P90-P100"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "57.0",
+        "figure_id": "f1",
+        "mark": "the South Korea point at P90-P100",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "South Korea",
+          "P90-P100"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "17.5",
+        "figure_id": "f1",
+        "mark": "the France point at P80-P90",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "France",
+          "P80-P90"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "16.5",
+        "figure_id": "f1",
+        "mark": "the South Korea point at P80-P90",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "South Korea",
+          "P80-P90"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "10.5",
+        "figure_id": "f1",
+        "mark": "the France point at P70-P80",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "France",
+          "P70-P80"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "8.2",
+        "figure_id": "f1",
+        "mark": "the South Korea point at P70-P80",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "South Korea",
+          "P70-P80"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "8.0",
+        "figure_id": "f1",
+        "mark": "the France point at P60-P70",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "France",
+          "P60-P70"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "5.8",
+        "figure_id": "f1",
+        "mark": "the South Korea point at P60-P70",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "South Korea",
+          "P60-P70"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "5.0",
+        "figure_id": "f1",
+        "mark": "the France point at P50-P60",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "France",
+          "P50-P60"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "2.8",
+        "figure_id": "f1",
+        "mark": "the South Korea point at P50-P60",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "South Korea",
+          "P50-P60"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "图表中没有任何数据标签，且Y轴的刻度间隔高达10%。对于 5.8、8.2 等评分值，依靠肉眼无法准确估算并在5%的相对误差范围内读取。",
+    "examples": [
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "Figure 17. Without redistribution... \n Political donations...",
+        "why": "图表标题被拆分为图号、加粗的主标题以及换行的副标题，生成器需要能支持这种多层级的标题结构。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "P0-P10, P10-P20",
+        "why": "X轴的类别标签倾斜45度显示，渲染器需要控制刻度标签的旋转角度以避免文本重叠。"
+      },
+      {
+        "gap": "P3",
+        "figure_id": "f1",
+        "quote": "Interpretation. Average shares of total... \n Sources and series: Cagé (2024).",
+        "why": "图表底部有较长的图表解读段落及资料来源，生成时需要支持在图表容器底部附加多行富文本说明。"
+      }
+    ]
+  }
+}

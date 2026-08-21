@@ -1,0 +1,287 @@
+{
+  "stem": "TRS241_Web_p88",
+  "document": "TRS241_Web",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "seconds": 87.4,
+  "usage": {
+    "input_tokens": 5361,
+    "output_tokens": 10901,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n要重绘此页面，生成器需要具备处理复合面板（Compound Figure）的强大排版能力：\n1. **异构图表组合**：上半部分为沿时间轴水平排列的四个饼图（分别对应不同年份），下半部分为一个双轴折线图，两者共享底部标题。\n2. **饼图标签与引线**：饼图外部的百分比标签需通过极细的指示线（leader lines）连接到对应扇区，类别使用首字母缩写。\n3. **折线图复杂标注**：包含双Y轴（左侧总体GDP，右侧人均GDP），线段上方有行内系列名称标签，且线段之间的特定区间带有指向性的箭头及括号内的年均增长率标注（如 `(7.97%)`）。\n4. **图内脚注与长说明文字**：折线图底部包含解释说明的内置文本 `(1) Average annual...`，且整个图表的长标题段落兼作了类别缩写的图解字典。\n\n### 定位一个值难在哪\n以 `30.7`（1969年EI部门比例）为例，它的直接标签是缩写 `EI`。由于缺乏独立的标准图例，解析模型必须从底部冗长的主标题段落中跨文本定位 `EI: Extractive industries.` 才能完整赋予该值业务含义，这种“标题充当图解”的做法极大增加了标签关联的难度。\n\n### 不确定的\n图中折线段之间的增长率（如 `(4.85%)`）跨越了不同长度的时间窗口，由于不是标准的点位数据，解析模型可能很难判定这些额外指标到底该依附于哪个具体年份或时间段。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "FIG.2.10.",
+          "title": "Energy and nuclear power planning study for Algeria: past and future trends in overall and per capita GDP and distribution by sector (in Algerian dinars (DA)).",
+          "subtitle": "A: Agriculture. MI: Manufacturing industries. C: Construction. E: Energy. EI: Extractive industries. S: Services (including transport).",
+          "unit_text": "in Algerian dinars (DA)",
+          "placement": "below"
+        },
+        "type": "compound",
+        "type_other": "",
+        "panels": 2,
+        "series": 8,
+        "categories": 9,
+        "marks": 36,
+        "values_printed": "some",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Overall GDP (10^9 DA 1979)",
+            "low": "0",
+            "high": "700",
+            "serves": "Overall GDP line"
+          },
+          {
+            "side": "right",
+            "role": "value",
+            "unit_text": "Per capita GDP (10^3 DA 1979)",
+            "low": "0",
+            "high": "28",
+            "serves": "Per capita GDP line"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "Years",
+            "low": "1969",
+            "high": "2015",
+            "serves": "both lines"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "time",
+            "label_source": "inline_label",
+            "example": "1969"
+          },
+          {
+            "role": "category",
+            "label_source": "inline_label",
+            "example": "EI"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "1969",
+            "EI"
+          ],
+          "value": "30.7%",
+          "value_source": "printed",
+          "why_hard": "Categories are abbreviations that must be mapped from the long caption text."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "dual_axis",
+        "figure_id": "f1",
+        "evidence": "left axis is up to 700, right axis is up to 28"
+      },
+      {
+        "key": "mixed_marks",
+        "figure_id": "f1",
+        "evidence": "line series use diamond and circular point markers on top of lines"
+      },
+      {
+        "key": "annotation_callout",
+        "figure_id": "f1",
+        "evidence": "bracketed percentages with arrows pointing to segments between line points"
+      },
+      {
+        "key": "heterogeneous_panel_types",
+        "figure_id": "f1",
+        "evidence": "top section features four pie charts, bottom section is a line chart"
+      },
+      {
+        "key": "rotated_axis_title",
+        "figure_id": "f1",
+        "evidence": "Overall GDP and Per capita GDP y-axis titles are rotated vertically"
+      },
+      {
+        "key": "value_label_outside",
+        "figure_id": "f1",
+        "evidence": "percentages sit completely outside the pie slices connected by leader lines"
+      },
+      {
+        "key": "inline_series_labels",
+        "figure_id": "f1",
+        "evidence": "Overall GDP (1) and GDP per capita text floats beside the lines"
+      },
+      {
+        "key": "footnote_marker",
+        "figure_id": "f1",
+        "evidence": "superscript (1) on Overall GDP inline label links to note below"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "units (10^9 DA 1979) and (10^3 DA 1979) appear within the axis titles"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "caption_acts_as_legend",
+        "figure_id": "f1",
+        "evidence": "the figure caption maps the pie chart abbreviations to full sector names",
+        "affects": [
+          3,
+          4
+        ]
+      },
+      {
+        "name": "interval_annotations_as_data",
+        "figure_id": "f1",
+        "evidence": "growth rates (e.g. 7.97%) are drawn bridging the intervals between discrete data points",
+        "affects": [
+          1,
+          2
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "30.7",
+        "figure_id": "f1",
+        "mark": "1969 EI pie slice",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "1969",
+          "EI"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "38.8",
+        "figure_id": "f1",
+        "mark": "1969 S pie slice",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "1969",
+          "S"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "6.1",
+        "figure_id": "f1",
+        "mark": "1979 A pie slice",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "1979",
+          "A"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "12.3",
+        "figure_id": "f1",
+        "mark": "1979 C pie slice",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "1979",
+          "C"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "19.6",
+        "figure_id": "f1",
+        "mark": "2000 MI pie slice",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "2000",
+          "MI"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "7.1",
+        "figure_id": "f1",
+        "mark": "2000 E pie slice",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "2000",
+          "E"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "20.5",
+        "figure_id": "f1",
+        "mark": "2015 C pie slice",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "2015",
+          "C"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "41.2",
+        "figure_id": "f1",
+        "mark": "2015 S pie slice",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "2015",
+          "S"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "200",
+        "figure_id": "not_found",
+        "mark": "left y-axis tick label, not a data point mark",
+        "printed_on_figure": true,
+        "addressing_keys": [],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "12.5",
+        "figure_id": "f1",
+        "mark": "1979 MI pie slice",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "1979",
+          "MI"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      }
+    ],
+    "hardest_step": 1,
+    "hardest_step_why": "页面将四个独立的饼图和一个双轴折线图强行组合在一起且布局极不规则，模型很难将这种异构面板统一识别并有效输出为结构化的数据表格。",
+    "examples": [
+      {
+        "gap": "P9",
+        "figure_id": "f1",
+        "quote": "left y-axis for Overall GDP, right y-axis for GDP per capita",
+        "why": "需要流程能够支持在同一面板内存在双Y轴，并精确记录折线上每个点具体是对应哪一条轴读取的值。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "bracketed percentages like (7.97%) and leader lines pointing between line segments",
+        "why": "现有流程无法提取线段之间的衍生标注（如两点之间的年均增长率）并将其结构化为独立的时间段元数据。"
+      }
+    ]
+  }
+}

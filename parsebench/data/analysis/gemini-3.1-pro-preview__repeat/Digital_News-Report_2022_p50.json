@@ -1,0 +1,177 @@
+{
+  "stem": "Digital_News-Report_2022_p50",
+  "document": "Digital_News-Report_2022",
+  "tags": "untagged",
+  "model": "gemini-3.1-pro-preview",
+  "control": "repeat",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 56.7,
+  "usage": {
+    "input_tokens": 5299,
+    "output_tokens": 7401,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n一个典型的百分比堆叠柱状图，带有水平网格线，且所有数值直接标注在堆叠色块内部。图表的图例以 2x2 的网格形式排布在 X 轴下方。Y轴的刻度标签直接包含了“%”符号（如 100%）。图表下方附有较长的脚注说明段落。\n\n### 定位一个值难在哪\n以数值“46”为例，它位于“Brazil”列的橙色色块中。定位该值的主要难点在于图例与颜色的映射。图例采用两行两列的布局，解析器需要按正确的阅读顺序（从左到右，从上到下）获取四个系列名称，并将其与柱状图中从下到上的堆叠颜色依次对应。网格布局的图例比起单行或单列图例，更容易在解析时发生系列名称的错位。\n\n### 不确定的\n图表绘制非常规范，数值全部清晰打印在色块内，没有明显的视觉模糊或逻辑不确定性。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "PROPORTION WHO PAY MOST ATTENTION TO NEWS BRANDS VERSUS JOURNALISTS – SELECTED MARKETS",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "stacked_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 4,
+        "categories": 6,
+        "marks": 24,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "0%",
+            "high": "100%",
+            "serves": "all stacked segments"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "Finland",
+            "high": "France",
+            "serves": "all stacked segments"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Brazil"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Specific journalists or commentators"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Brazil",
+            "Specific journalists or commentators"
+          ],
+          "value": "46",
+          "value_source": "printed",
+          "why_hard": "The 2x2 legend layout requires correct reading order to map colors to the bottom-up stack."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "stacked_bar",
+        "figure_id": "f1",
+        "evidence": "bars are divided into vertically stacked colored segments"
+      },
+      {
+        "key": "pct_stacked",
+        "figure_id": "f1",
+        "evidence": "the y-axis ends at 100% and all bars reach the top line"
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "the color legend is placed under the x-axis"
+      },
+      {
+        "key": "value_label_inside",
+        "figure_id": "f1",
+        "evidence": "numbers like 69, 7, 20 are printed inside the colored segments"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "white horizontal grid lines cross the plot, with no vertical ones"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "small note text starting with 'Q_Journalists_1.' sits at the bottom"
+      }
+    ],
+    "new_components": [],
+    "spot_checks": [
+      {
+        "value": "69",
+        "figure_id": "f1",
+        "mark": "the Finland Specific news brands segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Finland",
+          "Specific news brands"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "21",
+        "figure_id": "f1",
+        "mark": "the USA Specific journalists or commentators segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "USA",
+          "Specific journalists or commentators"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "46",
+        "figure_id": "f1",
+        "mark": "the Brazil Specific journalists or commentators segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Brazil",
+          "Specific journalists or commentators"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "24",
+        "figure_id": "f1",
+        "mark": "the France I don't use online news segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "France",
+          "I don't use online news"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      }
+    ],
+    "hardest_step": 3,
+    "hardest_step_why": "以46为例，需要正确解析图表底部2x2布局的图例，将颜色准确映射到对应的系列，这在网格排列时容易出现系列错位。",
+    "examples": [
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "the y-axis ticks are written as 0%, 25%, 50%, 75%, 100%",
+        "why": "目前生成器可能无法将单位符号（%）直接附加到每一个刻度标签上，而是习惯于将其作为独立的轴标题。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "PROPORTION WHO PAY MOST ATTENTION TO NEWS BRANDS VERSUS JOURNALISTS – SELECTED MARKETS",
+        "why": "图表标题作为独立的文本块存在，不包含图号和单位，生成器需要支持不带序号的灵活标题结构。"
+      }
+    ]
+  }
+}

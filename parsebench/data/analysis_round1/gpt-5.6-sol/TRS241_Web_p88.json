@@ -1,0 +1,233 @@
+{
+  "stem": "TRS241_Web_p88",
+  "document": "TRS241_Web",
+  "tags": "need_estimate",
+  "model": "gpt-5.6-sol",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "seconds": 117.3,
+  "usage": {
+    "input_tokens": 6121,
+    "output_tokens": 8076,
+    "cache_read_tokens": 1555
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "本页需生成一幅五面板复合图：上方四个年份饼图采用不同排线纹理、外置百分比及引线；下方为双纵轴、双线型折线图，并含双向增长率箭头、双向虚线网格和脚注。饼图数值需用“年份＋部门代码”寻址；折线值还需“年份＋系列”。最难的是精度：左轴间隔100、右轴间隔4，200与12.5均未标在数据点上。末项12.5也可能与1979年MI的12.5%混淆，我按顺序判为2015年人均GDP。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "FIG.2.10.",
+          "title": "Energy and nuclear power planning study for Algeria: past and future trends in overall and per capita GDP",
+          "subtitle": "and distribution by sector in Algerian dinars (DA)]. A: Agriculture. MI: Manufacturing industries. C: Construction.\nE: Energy. EI: Extractive industries. S: Services (including transport).",
+          "unit_text": "%\nOverall GDP (10⁹ DA 1979)\nPer capita GDP (10³ DA 1979)",
+          "placement": "below"
+        },
+        "type": "compound",
+        "type_other": "",
+        "panels": 5,
+        "series": 1,
+        "categories": 10,
+        "marks": 44,
+        "values_printed": "some"
+      }
+    ],
+    "components": [
+      {
+        "key": "dual_axis",
+        "figure_id": "f1",
+        "evidence": "The lower panel has left “Overall GDP” and right “Per capita GDP” value axes."
+      },
+      {
+        "key": "annotation_callout",
+        "figure_id": "f1",
+        "evidence": "Arrowed interval annotations show “(7.97 %)”, “(7.3 %)”, “(6.7 %)”, “(6.2 %)” and “(4.85 %)”."
+      },
+      {
+        "key": "small_multiples_4",
+        "figure_id": "f1",
+        "evidence": "Four repeated pie charts appear for 1969, 1979, 2000 and 2015."
+      },
+      {
+        "key": "heterogeneous_panel_types",
+        "figure_id": "f1",
+        "evidence": "Four pie panels sit above a separate dual-axis line panel."
+      },
+      {
+        "key": "panel_title_per_panel",
+        "figure_id": "f1",
+        "evidence": "The pie panels are individually headed “1969”, “1979”, “2000” and “2015”."
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "Axes read “Overall GDP (10⁹ DA 1979)” and “Per capita GDP (10³ DA 1979)”."
+      },
+      {
+        "key": "rotated_axis_title",
+        "figure_id": "f1",
+        "evidence": "Both GDP axis titles run vertically beside the lower plot."
+      },
+      {
+        "key": "footnote_marker",
+        "figure_id": "f1",
+        "evidence": "“Overall GDP (1)” points to “(1) Average annual growth rate of overall GDP compared to 1979”."
+      },
+      {
+        "key": "value_label_outside",
+        "figure_id": "f1",
+        "evidence": "Labels such as “EI 30.7%” and “S 41.2%” sit outside pies on leader lines."
+      },
+      {
+        "key": "inline_series_labels",
+        "figure_id": "f1",
+        "evidence": "The lines are directly named “Overall GDP (1)” and “GDP per capita” inside the plot."
+      },
+      {
+        "key": "dashed_line_series",
+        "figure_id": "f1",
+        "evidence": "“GDP per capita” uses a dash-dot line while “Overall GDP” is solid."
+      }
+    ],
+    "new_components": [
+      {
+        "name": "hatched_slice_fills",
+        "figure_id": "f1",
+        "evidence": "Pie sectors use distinct diagonal, vertical and cross-hatched monochrome patterns.",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "name": "interval_growth_arrows",
+        "figure_id": "f1",
+        "evidence": "Horizontal double-headed arrows span year intervals and carry bracketed annual growth percentages.",
+        "affects": [
+          2,
+          3
+        ]
+      },
+      {
+        "name": "bidirectional_gridlines",
+        "figure_id": "f1",
+        "evidence": "Dotted horizontal and vertical gridlines cross the lower line panel.",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "name": "equal_spacing_for_irregular_years",
+        "figure_id": "f1",
+        "evidence": "“1969”, “1974”, “1979”, “1985” are equally spaced despite unequal year gaps.",
+        "affects": [
+          2
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "30.7",
+        "figure_id": "f1",
+        "mark": "the 1969 EI pie slice",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "1969",
+          "EI"
+        ]
+      },
+      {
+        "value": "38.8",
+        "figure_id": "f1",
+        "mark": "the 1969 S pie slice",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "1969",
+          "S"
+        ]
+      },
+      {
+        "value": "6.1",
+        "figure_id": "f1",
+        "mark": "the 1979 A pie slice",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "1979",
+          "A"
+        ]
+      },
+      {
+        "value": "12.3",
+        "figure_id": "f1",
+        "mark": "the 1979 C pie slice",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "1979",
+          "C"
+        ]
+      },
+      {
+        "value": "19.6",
+        "figure_id": "f1",
+        "mark": "the 2000 MI pie slice",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "2000",
+          "MI"
+        ]
+      },
+      {
+        "value": "7.1",
+        "figure_id": "f1",
+        "mark": "the 2000 E pie slice",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "2000",
+          "E"
+        ]
+      },
+      {
+        "value": "20.5",
+        "figure_id": "f1",
+        "mark": "the 2015 C pie slice",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "2015",
+          "C"
+        ]
+      },
+      {
+        "value": "41.2",
+        "figure_id": "f1",
+        "mark": "the 2015 S pie slice",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "2015",
+          "S"
+        ]
+      },
+      {
+        "value": "200",
+        "figure_id": "f1",
+        "mark": "the 1985 Overall GDP point on the solid line",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "1985",
+          "Overall GDP (1)"
+        ]
+      },
+      {
+        "value": "12.5",
+        "figure_id": "f1",
+        "mark": "the 2015 GDP per capita endpoint on the dash-dot line",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2015",
+          "GDP per capita"
+        ]
+      }
+    ],
+    "hardest_step": 2
+  }
+}

@@ -1,0 +1,191 @@
+{
+  "stem": "2025-EIS_p47",
+  "document": "2025-EIS",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "seconds": 80.3,
+  "usage": {
+    "input_tokens": 4430,
+    "output_tokens": 11529,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "这是一份包含水平条形图的报告页面。图表展示了2025年欧盟各国的创新表现得分，其颜色被用于编码国家所属的整体表现分组（如“Emerging innovators”），而不是用来区分数据系列。同时通过叠加菱形和垂直短线（混合标记）来分别表示2018年和2024年的参考数据。\n\n主要的解析难点在于图表并未直接标注数值，X轴的刻度间隔高达20，依赖视觉估算完全无法达到个位数的精度要求（例如准确读取209或179），导致提取必定失败。此外，将条形图映射到“2025”年份依赖于下方的脚注文本，增加了提取标签的难度。图表中的数值 105 无法在图表中准确找到对应的标记。图形生成器需要支持水平混合图表、自定义图例布局以及将颜色映射到非系列维度的分类属性。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 16",
+          "title": "Innovation performance of the EU27 Member States in the Innovators dimension",
+          "subtitle": "Innovators",
+          "unit_text": "Score for dimension 3.1 in 2025 (indexed to the EU in 2018)",
+          "placement": "above"
+        },
+        "type": "bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 6,
+        "categories": 28,
+        "marks": 75,
+        "values_printed": "none"
+      }
+    ],
+    "components": [
+      {
+        "key": "horizontal_bars",
+        "figure_id": "f1",
+        "evidence": "categories run down the left side, bars grow right"
+      },
+      {
+        "key": "mixed_marks",
+        "figure_id": "f1",
+        "evidence": "diamonds and vertical lines are overlaid on the bars"
+      },
+      {
+        "key": "color_encodes_extra_attribute",
+        "figure_id": "f1",
+        "evidence": "colours denote each country's overall performance group"
+      },
+      {
+        "key": "tick_marker_as_series",
+        "figure_id": "f1",
+        "evidence": "vertical bars indicate their performance in 2024"
+      },
+      {
+        "key": "vgrid_only",
+        "figure_id": "f1",
+        "evidence": "vertical dashed lines run up from the x-axis"
+      },
+      {
+        "key": "axis_title_below_plot",
+        "figure_id": "f1",
+        "evidence": "Score for dimension 3.1 in 2025... sits below the axis"
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "the legend sits below the value axis"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "page",
+        "evidence": "Note: All performance scores are relative..."
+      },
+      {
+        "key": "highlighted_category",
+        "figure_id": "f1",
+        "evidence": "EU category label and its bar are darker blue"
+      },
+      {
+        "key": "rebased_index_values",
+        "figure_id": "f1",
+        "evidence": "(indexed to the EU in 2018) in the axis title"
+      }
+    ],
+    "new_components": [],
+    "spot_checks": [
+      {
+        "value": "209",
+        "figure_id": "f1",
+        "mark": "the Greece 2025 bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Greece",
+          "2025"
+        ]
+      },
+      {
+        "value": "150",
+        "figure_id": "f1",
+        "mark": "the Sweden 2025 bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Sweden",
+          "2025"
+        ]
+      },
+      {
+        "value": "185",
+        "figure_id": "f1",
+        "mark": "the Portugal 2018 diamond",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Portugal",
+          "Score in 2018"
+        ]
+      },
+      {
+        "value": "8",
+        "figure_id": "f1",
+        "mark": "the Romania 2025 bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Romania",
+          "2025"
+        ]
+      },
+      {
+        "value": "105",
+        "figure_id": "not_found",
+        "mark": "cannot be visually placed with confidence",
+        "printed_on_figure": false,
+        "addressing_keys": []
+      },
+      {
+        "value": "179",
+        "figure_id": "f1",
+        "mark": "the Belgium 2025 bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Belgium",
+          "2025"
+        ]
+      },
+      {
+        "value": "195",
+        "figure_id": "f1",
+        "mark": "the Cyprus 2024 vertical bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Cyprus",
+          "Score in 2024"
+        ]
+      },
+      {
+        "value": "166",
+        "figure_id": "f1",
+        "mark": "the Finland 2018 diamond",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Finland",
+          "Score in 2018"
+        ]
+      },
+      {
+        "value": "173",
+        "figure_id": "f1",
+        "mark": "the Italy 2025 bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Italy",
+          "2025"
+        ]
+      },
+      {
+        "value": "37",
+        "figure_id": "f1",
+        "mark": "the Bulgaria 2025 bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Bulgaria",
+          "2025"
+        ]
+      }
+    ],
+    "hardest_step": 2
+  }
+}

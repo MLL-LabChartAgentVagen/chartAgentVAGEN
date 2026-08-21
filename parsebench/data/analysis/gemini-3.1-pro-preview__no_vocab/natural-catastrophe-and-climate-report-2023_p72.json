@@ -1,0 +1,335 @@
+{
+  "stem": "natural-catastrophe-and-climate-report-2023_p72",
+  "document": "natural-catastrophe-and-climate-report-2023",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "no_vocab",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 111.5,
+  "usage": {
+    "input_tokens": 3185,
+    "output_tokens": 15670,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n要重现此页面，图表生成器需要支持：\n1. **页面级全局标题**：页面顶部有统领多图的大标题，而非仅有单图标题。\n2. **图表下方标题布局**：图号、标题、图例和数据来源说明全部位于图表（X轴）的正下方，颠倒了常规的标题在上、图表在下的顺序。\n3. **稀疏的分类/时间轴刻度**：X轴共有34根柱子（每年一根），但刻度标签每两年才显示一个（如1990, 1992等），需要支持独立控制标签的显示频率。\n4. **隐藏原点的Y轴刻度**：Y轴物理上从0开始（柱子底部对应0），但刻度文本只从10或5开始标注，隐去了0。\n5. **堆叠柱状图**：支持两种数据系列的上下堆叠，以及整体高度代表总数。\n\n### 定位一个值难在哪\n以 `66`（Figure 42中2023年的总和）为例，难点有二：\n1. **隐藏的X轴标签**：2023年没有直接打印在X轴刻度上，读者必须根据2022和柱子的相对位置进行推断，导致定位困难。\n2. **需累加或长距离对齐读数**：数字66没有打印在图上，且该柱是堆叠柱，需将63和3相加，或在最大刻度70且没有细分网格线的情况下准确目测出顶部的高度66，极易超出5%（即3.5）的误差容忍度。\n\n### 不确定的\n总和值（如66、34）是否作为隐式“Total”类别存在于底层数据表中并不确定，图例并未明确提供总和项。另外，部分年份无标签，只能推测所有柱子是严格按年份等间距排列的。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 42:",
+          "title": "Total number of billion-dollar economic loss natural catastrophes; losses adjusted to 2023 USD",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "below"
+        },
+        "type": "stacked_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 34,
+        "marks": 68,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "10",
+            "high": "70",
+            "serves": "all bars"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "1990",
+            "high": "2022",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "1990"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Weather / Climate"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "1992",
+            "Weather / Climate"
+          ],
+          "value": "26",
+          "value_source": "axis_read",
+          "why_hard": "Reading exactly 26 on a vertical axis with ticks every 10 units is highly prone to estimation error."
+        }
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "Figure 43:",
+          "title": "Total number of billion-dollar insured loss natural catastrophes; losses adjusted to 2023 USD",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "below"
+        },
+        "type": "stacked_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 34,
+        "marks": 68,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "5",
+            "high": "35",
+            "serves": "all bars"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "1990",
+            "high": "2022",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "1990"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Other Natural Perils"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "1998",
+            "Weather / Climate"
+          ],
+          "value": "7",
+          "value_source": "axis_read",
+          "why_hard": "Interpolating a reading of exactly 7 on an axis with tick intervals of 5 is visually challenging."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "shared_page_heading",
+        "figure_id": "page",
+        "evidence": "the main title at the top applies to both charts on the page",
+        "affects": [
+          4
+        ]
+      },
+      {
+        "key": "caption_below_plot",
+        "figure_id": "f1",
+        "evidence": "the figure number and title are placed below the x-axis",
+        "affects": [
+          4
+        ]
+      },
+      {
+        "key": "sparse_time_ticks",
+        "figure_id": "f1",
+        "evidence": "x-axis draws 34 bars but labels only every two years",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "hidden_zero_tick",
+        "figure_id": "f1",
+        "evidence": "the y-axis skips 0 and starts its labels at 10",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "key": "stacked_bar",
+        "figure_id": "f1",
+        "evidence": "light blue categories sit on top of dark blue ones",
+        "affects": [
+          2
+        ]
+      }
+    ],
+    "new_components": [
+      {
+        "name": "shared_page_heading",
+        "figure_id": "page",
+        "evidence": "the overarching top title 'Total Number of Billion-Dollar...'",
+        "affects": [
+          4
+        ]
+      },
+      {
+        "name": "caption_below_plot",
+        "figure_id": "f1",
+        "evidence": "the heading block explicitly placed underneath the x-axis",
+        "affects": [
+          4
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "26",
+        "figure_id": "f1",
+        "mark": "the 1992 Weather / Climate segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "1992",
+          "Weather / Climate"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "7",
+        "figure_id": "f2",
+        "mark": "the 1998 Weather / Climate segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "1998",
+          "Weather / Climate"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "57",
+        "figure_id": "f1",
+        "mark": "the 2020 Weather / Climate segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2020",
+          "Weather / Climate"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "66",
+        "figure_id": "f1",
+        "mark": "the 2023 total bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2023"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 3
+      },
+      {
+        "value": "9",
+        "figure_id": "f2",
+        "mark": "the 2004 Weather / Climate segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2004",
+          "Weather / Climate"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "2",
+        "figure_id": "f2",
+        "mark": "the 1994 Weather / Climate segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "1994",
+          "Weather / Climate"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "20",
+        "figure_id": "f2",
+        "mark": "the 2011 Weather / Climate segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2011",
+          "Weather / Climate"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 3
+      },
+      {
+        "value": "23",
+        "figure_id": "f2",
+        "mark": "the 2018 total bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2018"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "32",
+        "figure_id": "f2",
+        "mark": "the 2020 Weather / Climate segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2020",
+          "Weather / Climate"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "34",
+        "figure_id": "f2",
+        "mark": "the 2023 total bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2023"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 3
+      }
+    ],
+    "hardest_step": 3,
+    "hardest_step_why": "页面X轴每两年一标（如1990、1992），导致大量目标值（如2023年的66和34，或2011年的20）缺乏年份标签，模型在第3步无法将值与未直接写出的标签关联。",
+    "examples": [
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "Figure 42: Total number of... sits below the x axis and legend",
+        "why": "模型目前假设图表标题及标号在图表上方，无法生成将它们全部放置在图表正下方（即底端）的布局。"
+      },
+      {
+        "gap": "P3",
+        "figure_id": "page",
+        "quote": "Total Number of Billion-Dollar Events: Economic and Insured (1990–2023)",
+        "why": "页面顶部有一个统领两个图表的全局大标题，当前的图表生成管线缺乏这种页面级别的标题和上下文结构。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "y axis labels start at 10 and 5, skipping 0",
+        "why": "Y轴虽然从0起算但隐去了0刻度的显示，当前管线默认总是绘制原点0，缺乏隐藏特定刻度标签的细节控制。"
+      }
+    ]
+  }
+}

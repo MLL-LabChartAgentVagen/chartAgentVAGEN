@@ -1,0 +1,281 @@
+{
+  "stem": "investing-in-education-2025-NC0125093ENN-1_p14",
+  "document": "investing-in-education-2025-NC0125093ENN-1",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "no_vocab",
+  "effort": "high",
+  "dpi": 150,
+  "seconds": 74.3,
+  "usage": {
+    "input_tokens": 3188,
+    "output_tokens": 9200,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "**画出来要什么** 绘制此页面需要生成带有圆形数据点的折线图。Y轴只需显示虚线网格，无需绘制垂直轴线。标题区域需要带有纯色蓝色背景块，并在其中包含白色的图表编号、主标题及括号内的单位。图表下方需显示水平排列的图例。下方的表格还需要支持多级带有颜色背景的表头以及特殊的角标图案。 **定位一个值难在哪** 以“Nominal”在2023年的值159为例，因为图表中没有直接打印数值，只能依靠数据点在Y轴上的高度进行估算。由于该点距离左侧Y轴较远，且Y轴刻度间距为10，视觉上极难精确对齐并读出159，这导致数据提取的误差很容易超过5%。 **不确定的** 图中大部分折线数据点（如2015年Nominal的116）由于缺乏直接穿过的网格线和数据标签，其精确值存在轻微的不确定性，只能根据相对位置进行最优估算。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 6.",
+          "title": "Evolution of nominal and real public expenditure on education in the EU-27",
+          "subtitle": "",
+          "unit_text": "(index 2007=100)",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 17,
+        "marks": 34,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "100",
+            "high": "160",
+            "serves": "all lines"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "2007",
+            "high": "2023",
+            "serves": "all lines"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Nominal"
+          },
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2015"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Nominal",
+            "2023"
+          ],
+          "value": "159",
+          "value_source": "axis_read",
+          "why_hard": "The point is far from the y-axis, making precise horizontal alignment and interpolation difficult."
+        }
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "Figure 7.",
+          "title": "Public expenditure by function (2019-2023)",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "other",
+        "type_other": "table",
+        "panels": 1,
+        "series": 10,
+        "categories": 6,
+        "marks": 60,
+        "values_printed": "all",
+        "axes": [],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Education"
+          },
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2021"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Education",
+            "2021"
+          ],
+          "value": "9.3",
+          "value_source": "printed",
+          "why_hard": ""
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "coloured_heading_box",
+        "figure_id": "page",
+        "evidence": "Both figures have their headings inside solid blue rectangular boxes",
+        "affects": [
+          4
+        ]
+      },
+      {
+        "key": "horizontal_gridlines_dashed",
+        "figure_id": "f1",
+        "evidence": "The y-axis ticks extend into dashed horizontal gridlines across the chart",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "The Nominal and Real legend entries sit below the x-axis",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "data_point_markers",
+        "figure_id": "f1",
+        "evidence": "Each data point on the lines is marked with a solid circle",
+        "affects": []
+      }
+    ],
+    "new_components": [],
+    "spot_checks": [
+      {
+        "value": "100",
+        "figure_id": "f1",
+        "mark": "the 2007 point on the Real line",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Real",
+          "2007"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "100",
+        "figure_id": "f1",
+        "mark": "the 2007 point on the Nominal line",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Nominal",
+          "2007"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "110",
+        "figure_id": "f1",
+        "mark": "the 2010 point on the Nominal line",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Nominal",
+          "2010"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "116",
+        "figure_id": "f1",
+        "mark": "the 2015 point on the Nominal line",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Nominal",
+          "2015"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "105",
+        "figure_id": "f1",
+        "mark": "the 2015 point on the Real line",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Real",
+          "2015"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "130",
+        "figure_id": "f1",
+        "mark": "the 2019 point on the Nominal line",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Nominal",
+          "2019"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "109",
+        "figure_id": "f1",
+        "mark": "the 2019 point on the Real line",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Real",
+          "2019"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "148",
+        "figure_id": "f1",
+        "mark": "the 2022 point on the Nominal line",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Nominal",
+          "2022"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "159",
+        "figure_id": "f1",
+        "mark": "the 2023 point on the Nominal line",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Nominal",
+          "2023"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "115",
+        "figure_id": "f1",
+        "mark": "the 2023 point on the Real line",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Real",
+          "2023"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "折线图未直接标注具体数值，Y轴刻度间距高达10，对于距离Y轴较远的159或不在刻度线上的116，极难通过肉眼或模型精确读取到5%误差以内。",
+    "examples": [
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "Figure 6. Evolution of nominal and real... (index 2007=100) inside a blue background box",
+        "why": "图表标题由图号、标题文本和单位组合而成，并且放置在具有明显蓝色背景的矩形框中，目前的生成器缺乏这种标题区块样式的支持。"
+      }
+    ]
+  }
+}

@@ -1,0 +1,381 @@
+{
+  "stem": "GWR-2024_Layout_E_RGB_Web_p58",
+  "document": "GWR-2024_Layout_E_RGB_Web",
+  "tags": "3d_chart+need_estimate",
+  "model": "gpt-5.6-sol",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 698.0,
+  "usage": {
+    "input_tokens": 8840,
+    "output_tokens": 7064,
+    "cache_read_tokens": 8837
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "**画出来要什么**\n需绘制四宫格复合图：每格10根蓝色柱，并叠加红色菱形、黄色三角形两组点；左右双百分比轴、统一图例、分面标题及浅蓝背景。\n\n**定位一个值难在哪**\n例如“High-income countries—D5—Mean gender wage gap by decile”的11，要先选分面、D5、菱形系列，再按右轴每2个百分点插值；5%容差仅0.55。\n\n**不确定的**\n所有数值均未印在标记上；同一整数可能由多个邻近标记读出，因此部分抽查值的具体归属只能依位置推定。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 5.3.",
+          "title": "Share of women among wage employees in each decile of the hourly wage distribution and the decile-specific gender wage gap by country income group, latest available year",
+          "subtitle": "",
+          "unit_text": "(percentage)",
+          "placement": "above"
+        },
+        "type": "compound",
+        "type_other": "",
+        "panels": 4,
+        "series": 3,
+        "categories": 10,
+        "marks": 120,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Female wage workers (%)",
+            "low": "0",
+            "high": "60",
+            "serves": "Low-income countries bars"
+          },
+          {
+            "side": "right",
+            "role": "value",
+            "unit_text": "Gender wage gap (%)",
+            "low": "-4",
+            "high": "30",
+            "serves": "Low-income countries diamonds and triangles"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "D1",
+            "high": "D10",
+            "serves": "Low-income countries marks"
+          },
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Female wage workers (%)",
+            "low": "0",
+            "high": "60",
+            "serves": "Lower-middle-income countries bars"
+          },
+          {
+            "side": "right",
+            "role": "value",
+            "unit_text": "Gender wage gap (%)",
+            "low": "-4",
+            "high": "30",
+            "serves": "Lower-middle-income countries diamonds and triangles"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "D1",
+            "high": "D10",
+            "serves": "Lower-middle-income countries marks"
+          },
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Female wage workers (%)",
+            "low": "0",
+            "high": "60",
+            "serves": "Upper-middle-income countries bars"
+          },
+          {
+            "side": "right",
+            "role": "value",
+            "unit_text": "Gender wage gap (%)",
+            "low": "-4",
+            "high": "30",
+            "serves": "Upper-middle-income countries diamonds and triangles"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "D1",
+            "high": "D10",
+            "serves": "Upper-middle-income countries marks"
+          },
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Female wage workers (%)",
+            "low": "0",
+            "high": "60",
+            "serves": "High-income countries bars"
+          },
+          {
+            "side": "right",
+            "role": "value",
+            "unit_text": "Gender wage gap (%)",
+            "low": "-4",
+            "high": "30",
+            "serves": "High-income countries diamonds and triangles"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "D1",
+            "high": "D10",
+            "serves": "High-income countries marks"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "panel",
+            "label_source": "panel_title",
+            "example": "Low-income countries"
+          },
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "D1"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Mean gender wage gap by decile"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Lower-middle-income countries",
+            "D10",
+            "Median gender wage gap by decile"
+          ],
+          "value": "-3",
+          "value_source": "axis_read",
+          "why_hard": "Dual axes and a nearby diamond require shape recognition and right-scale interpolation."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "dual_axis",
+        "figure_id": "f1",
+        "evidence": "Every panel has left 0–60 and right -4–30 value axes."
+      },
+      {
+        "key": "mixed_marks",
+        "figure_id": "f1",
+        "evidence": "Blue bars are overlaid with red diamond and yellow triangle point series."
+      },
+      {
+        "key": "negative_values",
+        "figure_id": "f1",
+        "evidence": "The right axes extend to -4; Lower-middle-income D10 markers fall below zero."
+      },
+      {
+        "key": "shared_legend",
+        "figure_id": "f1",
+        "evidence": "One three-item legend governs all four panels."
+      },
+      {
+        "key": "small_multiples_4",
+        "figure_id": "f1",
+        "evidence": "Four repeated decile panels form a two-by-two layout."
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "“Notes:” and “Source:” lines appear beneath the legend."
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "The three-item legend is centered below all four plots."
+      },
+      {
+        "key": "panel_title_per_panel",
+        "figure_id": "f1",
+        "evidence": "Panels are titled “Low-income countries” through “High-income countries” above each plot."
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "“Female wage workers (%)”, “Gender wage gap (%)”, and “(percentage)” state units."
+      },
+      {
+        "key": "rotated_axis_title",
+        "figure_id": "f1",
+        "evidence": "Both value-axis titles run vertically beside every panel."
+      },
+      {
+        "key": "abbrev_category_axis",
+        "figure_id": "f1",
+        "evidence": "Each category axis uses decile codes “D1” through “D10”."
+      },
+      {
+        "key": "panel_background",
+        "figure_id": "f1",
+        "evidence": "All four plot areas sit on a pale blue tint."
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "Faint horizontal rules cross the panels; no vertical grid is drawn."
+      },
+      {
+        "key": "dense_marks_100plus",
+        "figure_id": "f1",
+        "evidence": "Four panels × ten deciles × three marks produces 120 marks."
+      }
+    ],
+    "new_components": [
+      {
+        "name": "marker_shape_encodes_series",
+        "figure_id": "f1",
+        "evidence": "Diamonds identify mean gaps while triangles identify median gaps in the legend and plots.",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "45",
+        "figure_id": "f1",
+        "mark": "the D1 Share of women by decile bar in Low-income countries",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Low-income countries",
+          "D1",
+          "Share of women by decile"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "22",
+        "figure_id": "f1",
+        "mark": "the D4 Mean gender wage gap by decile diamond in Low-income countries",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Low-income countries",
+          "D4",
+          "Mean gender wage gap by decile"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "44",
+        "figure_id": "f1",
+        "mark": "the D1 Share of women by decile bar in Lower-middle-income countries",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Lower-middle-income countries",
+          "D1",
+          "Share of women by decile"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "24",
+        "figure_id": "f1",
+        "mark": "the D1 Mean gender wage gap by decile diamond in Lower-middle-income countries",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Lower-middle-income countries",
+          "D1",
+          "Mean gender wage gap by decile"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "54",
+        "figure_id": "f1",
+        "mark": "the D2 Share of women by decile bar in Upper-middle-income countries",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Upper-middle-income countries",
+          "D2",
+          "Share of women by decile"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "19",
+        "figure_id": "f1",
+        "mark": "the D2 Mean gender wage gap by decile diamond in Upper-middle-income countries",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Upper-middle-income countries",
+          "D2",
+          "Mean gender wage gap by decile"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "56",
+        "figure_id": "f1",
+        "mark": "the D1 Share of women by decile bar in High-income countries",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "High-income countries",
+          "D1",
+          "Share of women by decile"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "18",
+        "figure_id": "f1",
+        "mark": "the D10 Mean gender wage gap by decile diamond in High-income countries",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "High-income countries",
+          "D10",
+          "Mean gender wage gap by decile"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "11",
+        "figure_id": "f1",
+        "mark": "the D5 Mean gender wage gap by decile diamond in High-income countries",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "High-income countries",
+          "D5",
+          "Mean gender wage gap by decile"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "28",
+        "figure_id": "f1",
+        "mark": "the D3 Share of women by decile bar in Lower-middle-income countries",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Lower-middle-income countries",
+          "D3",
+          "Share of women by decile"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "如11，右轴每2个百分点一格，5%容差仅0.55；点无数值标签，精确插值最难。也包括28在十点间隔左轴上的判读。与另一三角点接近。要先选分面和系列。点未标值。标签虽完整。两轴并存。同一整数可能重复。需依形状。定位尚可。读值更难。图例共享。D1至D10。四分面。",
+    "examples": []
+  }
+}

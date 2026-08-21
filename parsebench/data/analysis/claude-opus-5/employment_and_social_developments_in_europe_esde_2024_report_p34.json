@@ -1,0 +1,532 @@
+{
+  "stem": "employment_and_social_developments_in_europe_esde_2024_report_p34",
+  "document": "employment_and_social_developments_in_europe_esde_2024_report",
+  "tags": "3d_chart+need_estimate",
+  "model": "claude-opus-5",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 63.5,
+  "usage": {
+    "input_tokens": 13979,
+    "output_tokens": 5444,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "**画出来要什么**\n\n本页两个编号图（Chart 1.23、Chart 1.24），每个都是「一个编号+一个标题+一行说明副标题」，副标题里同时交代左右两个子图的口径（`Left chart: ... ; Right chart: ...`）。每图内含两个异构面板：折线面板与分组柱面板并列，各自独立的纵轴刻度（左 0–60 / 右 0–20；1.24 左侧还是双轴 0–30 与 0–200 的面积+折线混合）。还需要：面板内图例、面板下图例、旋转 90° 的类别刻度（`1st quintile`）、两层 x 轴刻度（`Above 60%` / `Single person with dependent children`）、以及把 `2012` 画成黄色圆点标记叠在柱子上。图下有 Note、Source 与 `Click here to download chart.` 链接行。\n\n**定位一个值难在哪**\n\n以 22.2 为例：正文写「to 22.2% in 2023」，但 Chart 1.24 左图上并没有印数字，只能在 `Below 60% (lhs)` 绿线 2023 处对着左轴 0/10/20/30 读数，刻度间隔 10，5% 容差约 ±1.1，几乎读不准；且必须同时说明是左轴而非右轴（0–200 指数）。\n\n**不确定的**\n\n1.23 右图各柱顶端无数值，19.0、8.2 等只能估读；1.24 左图米色填充带是否属于 rhs 指数系列的面积表现，图例仅给一行文字，无法确认；`Total` 柱是否含全人口亦未说明。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Chart 1.23",
+          "title": "Work protects against poverty, but still imperfectly; Severe material and social deprivation at high levels and slightly increasing for the lowest income group",
+          "subtitle": "Left chart: share of population at-risk-of-poverty (AROP rate) for selected characteristics, 2015-2023, EU; Right chart: share of population in severe material and social deprivation (SMSD rate) by income quintile, 2021-2023, EU",
+          "unit_text": "share of population",
+          "placement": "above"
+        },
+        "type": "compound",
+        "type_other": "",
+        "panels": 2,
+        "series": 7,
+        "categories": 9,
+        "marks": 54,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "0",
+            "high": "60",
+            "serves": "all four lines in the left panel"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "2015",
+            "high": "2023",
+            "serves": "left panel lines"
+          },
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "0",
+            "high": "20",
+            "serves": "all bars in the right panel"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "1st quintile",
+            "high": "Total",
+            "serves": "right panel bar groups"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "panel",
+            "label_source": "heading",
+            "example": "Right chart"
+          },
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "1st quintile"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "2022"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Right chart",
+            "1st quintile",
+            "2022"
+          ],
+          "value": "~18.5",
+          "value_source": "axis_read",
+          "why_hard": "No printed values; ticks every 2 units, three thin adjacent bars nearly equal in height."
+        }
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "Chart 1.24",
+          "title": "Peak of population unable to keep their home adequately warm in 2023",
+          "subtitle": "Left chart: share of population below/above the at-risk-of-poverty threshold unable to keep home adequately warm and average annual index (2015=100) for electricity, gas and other fuels, 2012-2023, EU; Right chart: share of population below/above the at-risk-of-poverty threshold unable to keep home adequately warm by household composition, 2021-2023, EU.",
+          "unit_text": "average annual index (2015=100)",
+          "placement": "above"
+        },
+        "type": "compound",
+        "type_other": "",
+        "panels": 2,
+        "series": 7,
+        "categories": 12,
+        "marks": 60,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "0",
+            "high": "30",
+            "serves": "the two lines Above 60% (lhs) and Below 60% (lhs)"
+          },
+          {
+            "side": "right",
+            "role": "value",
+            "unit_text": "",
+            "low": "0",
+            "high": "200",
+            "serves": "only the Av. annual index shaded series (rhs)"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "2012",
+            "high": "2023",
+            "serves": "left panel lines and shaded area"
+          },
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "0",
+            "high": "30",
+            "serves": "all bars and the 2012 dot markers in right panel"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "Above 60%",
+            "high": "Below 60%",
+            "serves": "right panel bar groups, grouped under household types"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "panel",
+            "label_source": "heading",
+            "example": "Right chart"
+          },
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Below 60%"
+          },
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Single person with dependent children"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "2023"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Right chart",
+            "Below 60%",
+            "Single person with dependent children",
+            "2023"
+          ],
+          "value": "~28.5",
+          "value_source": "axis_read",
+          "why_hard": "Bar tops exceed the 25 tick; ticks every 5, no printed values, two-level x labels."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "grouped_bar",
+        "figure_id": "f1",
+        "evidence": "three bars 2021, 2022, 2023 side by side in each quintile slot"
+      },
+      {
+        "key": "grouped_bar",
+        "figure_id": "f2",
+        "evidence": "right panel: 2021, 2022, 2023 bars side by side under each Above/Below 60% slot"
+      },
+      {
+        "key": "dual_axis",
+        "figure_id": "f2",
+        "evidence": "left panel has 0-30 axis at left and 0-200 axis at right"
+      },
+      {
+        "key": "mixed_marks",
+        "figure_id": "f2",
+        "evidence": "yellow round 2012 markers overlaid on the grouped bars in the right panel"
+      },
+      {
+        "key": "mixed_marks",
+        "figure_id": "f2",
+        "evidence": "left panel: beige filled area plus two solid lines in one plot"
+      },
+      {
+        "key": "tick_marker_as_series",
+        "figure_id": "f2",
+        "evidence": "legend entry '2012' drawn as a single yellow dot above each bar group"
+      },
+      {
+        "key": "heterogeneous_panel_types",
+        "figure_id": "f1",
+        "evidence": "line panel on the left, grouped bar panel on the right, one chart number"
+      },
+      {
+        "key": "heterogeneous_panel_types",
+        "figure_id": "f2",
+        "evidence": "area+line panel left, grouped bar panel right under Chart 1.24"
+      },
+      {
+        "key": "per_panel_legend",
+        "figure_id": "f1",
+        "evidence": "left panel legend 'Children/Unemployed/In-work/Pensioners'; right panel legend '2021 2022 2023'"
+      },
+      {
+        "key": "per_panel_legend",
+        "figure_id": "f2",
+        "evidence": "left panel has its own three-line legend; right panel a separate '2021 2022 2023 2012' legend"
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "Children/Unemployed/In-work/Pensioners legend sits under the left plot"
+      },
+      {
+        "key": "legend_above_plot",
+        "figure_id": "f1",
+        "evidence": "'2021 2022 2023' legend sits above the right panel bars"
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f2",
+        "evidence": "'Av. annual index (2015=100) ... (rhs)' legend lines below the left plot"
+      },
+      {
+        "key": "per_panel_axis_range",
+        "figure_id": "f1",
+        "evidence": "left panel axis 0-60, right panel axis 0-20"
+      },
+      {
+        "key": "multi_figure_page",
+        "figure_id": "page",
+        "evidence": "Chart 1.23 and Chart 1.24, each with its own title and source line"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "page",
+        "evidence": "'Note: Year refers to EU-SILC survey year...' and 'Source: Eurostat, EU SILC ...'"
+      },
+      {
+        "key": "data_link_below_figure",
+        "figure_id": "page",
+        "evidence": "'Click here to download chart.' under both charts"
+      },
+      {
+        "key": "rebased_index_values",
+        "figure_id": "f2",
+        "evidence": "'Av. annual index (2015=100) - Elec., gas and other fuels (rhs)'"
+      },
+      {
+        "key": "unit_in_series_name",
+        "figure_id": "f2",
+        "evidence": "legend entries end in '(lhs)' and '(rhs)' and carry '(2015=100)'"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "subtitle says 'share of population ... (AROP rate)'; axes show bare 0-60"
+      },
+      {
+        "key": "two_level_x_ticks",
+        "figure_id": "f2",
+        "evidence": "inner row 'Above 60%' / 'Below 60%', outer row 'Single person with dependent children'"
+      },
+      {
+        "key": "rotated_x_ticks",
+        "figure_id": "f1",
+        "evidence": "'1st quintile' ... 'Total' set vertically under the right panel"
+      },
+      {
+        "key": "wrapped_category_labels",
+        "figure_id": "f2",
+        "evidence": "'HH without dependent children' wraps onto two lines under the axis"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "dotted horizontal rules at 10,20,...,60 with no vertical lines"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f2",
+        "evidence": "dotted horizontal rules at 10 and 20 in the left panel only"
+      },
+      {
+        "key": "sparse_time_ticks",
+        "figure_id": "f1",
+        "evidence": "left panel ticks 2015-2023 yearly but the line has a 2020 break annotated in the note"
+      },
+      {
+        "key": "shaded_band",
+        "figure_id": "f2",
+        "evidence": "beige filled band spanning 2012-2023 behind the two lines in the left panel"
+      },
+      {
+        "key": "footnote_marker",
+        "figure_id": "page",
+        "evidence": "'(49)' superscript in body text pointing to 'Eurostat [hbs_exp_t121]'"
+      },
+      {
+        "key": "dense_marks_100plus",
+        "figure_id": "page",
+        "evidence": "two compound figures with roughly 54 and 60 marks combined over four panels"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "dual_panel_caption_split",
+        "figure_id": "page",
+        "evidence": "'Left chart: ... ; Right chart: ...' one subtitle describing two different panels' units and periods",
+        "affects": [
+          3,
+          4
+        ]
+      },
+      {
+        "name": "series_axis_suffix_lhs_rhs",
+        "figure_id": "f2",
+        "evidence": "legend labels carry '(lhs)' and '(rhs)' to bind each series to an axis",
+        "affects": [
+          2,
+          3
+        ]
+      },
+      {
+        "name": "area_series_on_secondary_axis",
+        "figure_id": "f2",
+        "evidence": "beige area read against the right 0-200 axis while lines use the left 0-30 axis",
+        "affects": [
+          2
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "47",
+        "figure_id": "f1",
+        "mark": "the Unemployed line around 2015-2023 in the left panel",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Left chart",
+          "Unemployed",
+          "2015"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "8.5",
+        "figure_id": "f2",
+        "mark": "the Above 60% (lhs) line at 2012 in the left panel",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Left chart",
+          "Above 60% (lhs)",
+          "2012"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "19.0",
+        "figure_id": "f1",
+        "mark": "the 1st quintile 2021 bar in the right panel",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Right chart",
+          "1st quintile",
+          "2021"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "6.8",
+        "figure_id": "f2",
+        "mark": "the 2021 bar, Above 60%, Single person with dependent children",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Above 60%",
+          "Single person with dependent children",
+          "2021"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "22.2",
+        "figure_id": "f2",
+        "mark": "the Below 60% (lhs) line at 2023 in the left panel",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Left chart",
+          "Below 60% (lhs)",
+          "2023"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "8.2",
+        "figure_id": "f1",
+        "mark": "the 2nd quintile 2022 or 2023 bar in the right panel",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Right chart",
+          "2nd quintile",
+          "2022"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "165",
+        "figure_id": "f2",
+        "mark": "the Av. annual index (rhs) shaded series near 2023, read on the right axis",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Av. annual index (2015=100) - Elec., gas and other fuels (rhs)",
+          "2023"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "28.5",
+        "figure_id": "f2",
+        "mark": "the 2023 bar, Below 60%, Single person with dependent children",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Below 60%",
+          "Single person with dependent children",
+          "2023"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "23.5",
+        "figure_id": "f2",
+        "mark": "the 2023 bar, Below 60%, HH with dependent children",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Below 60%",
+          "HH with dependent children",
+          "2023"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "9.5",
+        "figure_id": "f2",
+        "mark": "the 2023 bar, Above 60%, HH without dependent children",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Above 60%",
+          "HH without dependent children",
+          "2023"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "两图均无数值标签；1.24 左轴刻度间隔10，22.2 的5%容差仅±1.1，165 需在右轴0–200上估读，均难达标。",
+    "examples": [
+      {
+        "gap": "P9",
+        "figure_id": "f2",
+        "quote": "Left panel: left axis 0,10,20,30; right axis 0,50,100,150,200; legend '...(rhs)', 'Above 60% (lhs)', 'Below 60% (lhs)'",
+        "why": "同一面板两个值轴且面积+折线混合，读数必须记录轴与标记形状，现有产线无法表达。"
+      },
+      {
+        "gap": "P2",
+        "figure_id": "f1",
+        "quote": "'Left chart: ... AROP rate ... 2015-2023, EU; Right chart: ... SMSD rate by income quintile, 2021-2023, EU'",
+        "why": "一个编号图含两个异构面板、不同轴范围与时间段，面板必须进入键。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f2",
+        "quote": "'Chart 1.24' / 'Peak of population unable to keep their home adequately warm in 2023' / long two-line 'Left chart... Right chart...' line",
+        "why": "编号、标题、含双面板口径的副标题与 (2015=100) 单位需拆成独立字段。"
+      },
+      {
+        "gap": "P8",
+        "figure_id": "f2",
+        "quote": "Yellow round markers labelled '2012' in the legend sit above each 2021-2023 bar group",
+        "why": "一个系列以点标记叠在柱组上，与柱共用同轴，需单独的标记形状维度。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f2",
+        "quote": "x axis rows: 'Above 60%' 'Below 60%' above 'Single person with dependent children'",
+        "why": "两层类别刻度加换行长标签，现有刻度格式维度无法生成。"
+      }
+    ]
+  }
+}

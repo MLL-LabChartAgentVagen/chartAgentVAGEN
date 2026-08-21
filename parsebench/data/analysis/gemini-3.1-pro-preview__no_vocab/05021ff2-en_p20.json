@@ -1,0 +1,260 @@
+{
+  "stem": "05021ff2-en_p20",
+  "document": "05021ff2-en",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "no_vocab",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 56.4,
+  "usage": {
+    "input_tokens": 3147,
+    "output_tokens": 8041,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n绘制此页面需要支持生成带有负值区域的双系列折线图。图表需要支持将 y 轴标题（`Growth rate`）直接放置在 y 轴刻度标签正上方，而不是侧面居中。x 轴包含跨年的长类别标签（如 `2015/2016`），需支持将其倾斜 45 度显示以防止重叠。图例需水平排列在图表底部。\n\n### 定位一个值难在哪\n以 `Merger notifications` 在 `2022/2023` 的 `-18` 为例，由于整张折线图未标注任何具体数据，读者只能依靠刻度间隔高达 `10%` 的 y 轴网格线进行视觉估读。在图上精确区分 `-18%` 与 `-20%` 几乎不可能，因而无法满足 5% 的解析容差要求，导致数据提取失败。\n\n### 不确定的\n部分给定数据（例如 2020/2021 年的 GDP 增速点据称为 `9`，2023/2024 年的 GDP 增速据称为 `8`）在视觉上似乎分别更接近 10% 和 6%。完全依赖肉眼很难判断确切的坐标映射是否发生了微小偏移。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 2.3.",
+          "title": "Annual growth rates of CompStats jurisdictions’ GDP (in PPP) and total merger notifications, 2015-2024",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 9,
+        "marks": 18,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Growth rate",
+            "low": "-30%",
+            "high": "50%",
+            "serves": "both lines"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "2015/2016",
+            "high": "2023/2024",
+            "serves": "all points"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "GDP in PPP"
+          },
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "2015/2016"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Merger notifications",
+            "2022/2023"
+          ],
+          "value": "-18%",
+          "value_source": "axis_read",
+          "why_hard": "No data labels are printed, and reading against a 10% step grid is inaccurate."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "legend_bottom",
+        "figure_id": "f1",
+        "evidence": "the legend sits below the x-axis",
+        "affects": []
+      },
+      {
+        "key": "y_axis_title_top",
+        "figure_id": "f1",
+        "evidence": "`Growth rate` is placed directly above the y-axis ticks",
+        "affects": []
+      },
+      {
+        "key": "rotated_x_axis_labels",
+        "figure_id": "f1",
+        "evidence": "x-axis tick labels like `2015/2016` are slanted diagonally",
+        "affects": []
+      },
+      {
+        "key": "horizontal_grid_lines",
+        "figure_id": "f1",
+        "evidence": "grid lines extend from each 10% increment",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "key": "negative_value_axis",
+        "figure_id": "f1",
+        "evidence": "the y-axis extends down to -30%",
+        "affects": [
+          2
+        ]
+      }
+    ],
+    "new_components": [
+      {
+        "name": "y_axis_title_top",
+        "figure_id": "f1",
+        "evidence": "`Growth rate` is directly above the y-axis ticks",
+        "affects": []
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "5",
+        "figure_id": "f1",
+        "mark": "the 2016/2017 GDP in PPP line point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "GDP in PPP",
+          "2016/2017"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "5",
+        "figure_id": "f1",
+        "mark": "the 2017/2018 GDP in PPP line point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "GDP in PPP",
+          "2017/2018"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "6",
+        "figure_id": "f1",
+        "mark": "the 2017/2018 Merger notifications line point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Merger notifications",
+          "2017/2018"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-10",
+        "figure_id": "f1",
+        "mark": "the 2019/2020 Merger notifications line point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Merger notifications",
+          "2019/2020"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "9",
+        "figure_id": "f1",
+        "mark": "the 2020/2021 GDP in PPP line point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "GDP in PPP",
+          "2020/2021"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "40",
+        "figure_id": "f1",
+        "mark": "the 2020/2021 Merger notifications line point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Merger notifications",
+          "2020/2021"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "11",
+        "figure_id": "f1",
+        "mark": "the 2021/2022 GDP in PPP line point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "GDP in PPP",
+          "2021/2022"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-18",
+        "figure_id": "f1",
+        "mark": "the 2022/2023 Merger notifications line point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Merger notifications",
+          "2022/2023"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "8",
+        "figure_id": "f1",
+        "mark": "the 2023/2024 GDP in PPP line point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "GDP in PPP",
+          "2023/2024"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "11",
+        "figure_id": "f1",
+        "mark": "the 2023/2024 Merger notifications line point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Merger notifications",
+          "2023/2024"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "图上无数据标签，必须依靠10%步长的y轴刻度进行估读。例如2022/2023年的-18%极难与-20%准确区分，无法满足5%的误差容限。",
+    "examples": [
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "The text `Growth rate` is placed directly above the y-axis tick values.",
+        "why": "当前的生成器无法将y轴的名称或单位准确地放置在y轴刻度标签的正上方。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "X-axis category labels like `2015/2016` are slanted diagonally.",
+        "why": "需要支持将过长的x轴刻度标签倾斜显示以避免相互重叠。"
+      }
+    ]
+  }
+}

@@ -1,0 +1,220 @@
+{
+  "stem": "TRS241_Web_p88",
+  "document": "TRS241_Web",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "no_vocab",
+  "effort": "high",
+  "dpi": 150,
+  "seconds": 70.2,
+  "usage": {
+    "input_tokens": 2304,
+    "output_tokens": 9441,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "此页面包含一个复合图表（FIG.2.10.），由上方的四个饼图和下方的双Y轴折线图组成。图表生成器需要能够绘制带有引线标签的饼图，以及在折线图的数据点之间绘制带有箭头的增长率标注（例如“-(7.97 %)->”）。\n\n难点在于解析器很难将这些分离的视觉元素正确结构化为表格。饼图的年份（如1969、1979）作为悬浮标题位于上方，而分类标签（如A, MI）通过引线指向扇区。解析器需要正确地关联年份、缩写标签以及图注文本中定义的完整名称，这在步骤3（标签关联）中极具挑战。此外，折线图上的线段间标注很难被归入标准表格结构。200是左侧Y轴的刻度标签，并非具体的图表数据点。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "FIG.2.10.",
+          "title": "Energy and nuclear power planning study for Algeria: past and future trends in overall and per capita GDP and distribution by sector (in Algerian dinars (DA)).",
+          "subtitle": "A: Agriculture. MI: Manufacturing industries. C: Construction. E: Energy. EI: Extractive industries. S: Services (including transport).",
+          "unit_text": "10⁹ DA 1979",
+          "placement": "below"
+        },
+        "type": "compound",
+        "type_other": "",
+        "panels": 5,
+        "series": 8,
+        "categories": 10,
+        "marks": 38,
+        "values_printed": "some"
+      }
+    ],
+    "components": [
+      {
+        "key": "compound_figure",
+        "figure_id": "f1",
+        "evidence": "combines four pie charts and one line chart",
+        "affects": [
+          1,
+          3
+        ]
+      },
+      {
+        "key": "pie_chart",
+        "figure_id": "f1",
+        "evidence": "four circular charts divided into sectors above the line chart",
+        "affects": [
+          1
+        ]
+      },
+      {
+        "key": "line_chart",
+        "figure_id": "f1",
+        "evidence": "two lines plotted across years in the lower panel",
+        "affects": [
+          1
+        ]
+      },
+      {
+        "key": "dual_y_axis",
+        "figure_id": "f1",
+        "evidence": "Overall GDP on left axis, Per capita GDP on right axis",
+        "affects": [
+          2,
+          3
+        ]
+      },
+      {
+        "key": "callout_lines",
+        "figure_id": "f1",
+        "evidence": "lines connecting category acronyms and percentages to pie slices",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "direct_line_labels",
+        "figure_id": "f1",
+        "evidence": "Overall GDP and GDP per capita are written next to the lines",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "grid_lines",
+        "figure_id": "f1",
+        "evidence": "dotted grid lines spanning horizontally and vertically",
+        "affects": [
+          2
+        ]
+      }
+    ],
+    "new_components": [
+      {
+        "name": "point_to_point_growth_annotation",
+        "figure_id": "f1",
+        "evidence": "arrows with bracketed percentages bridging line segments",
+        "affects": [
+          1,
+          3
+        ]
+      },
+      {
+        "name": "legend_in_caption_text",
+        "figure_id": "f1",
+        "evidence": "abbreviations like A, MI are defined in the caption paragraph",
+        "affects": [
+          3,
+          4
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "30.7",
+        "figure_id": "f1",
+        "mark": "the 1969 EI sector slice",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "1969",
+          "EI"
+        ]
+      },
+      {
+        "value": "38.8",
+        "figure_id": "f1",
+        "mark": "the 1969 S sector slice",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "1969",
+          "S"
+        ]
+      },
+      {
+        "value": "6.1",
+        "figure_id": "f1",
+        "mark": "the 1979 A sector slice",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "1979",
+          "A"
+        ]
+      },
+      {
+        "value": "12.3",
+        "figure_id": "f1",
+        "mark": "the 1979 C sector slice",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "1979",
+          "C"
+        ]
+      },
+      {
+        "value": "19.6",
+        "figure_id": "f1",
+        "mark": "the 2000 MI sector slice",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "2000",
+          "MI"
+        ]
+      },
+      {
+        "value": "7.1",
+        "figure_id": "f1",
+        "mark": "the 2000 E sector slice",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "2000",
+          "E"
+        ]
+      },
+      {
+        "value": "20.5",
+        "figure_id": "f1",
+        "mark": "the 2015 C sector slice",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "2015",
+          "C"
+        ]
+      },
+      {
+        "value": "41.2",
+        "figure_id": "f1",
+        "mark": "the 2015 S sector slice",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "2015",
+          "S"
+        ]
+      },
+      {
+        "value": "200",
+        "figure_id": "f1",
+        "mark": "the left y-axis tick label, not a data mark",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Overall GDP (10⁹ DA 1979)"
+        ]
+      },
+      {
+        "value": "12.5",
+        "figure_id": "f1",
+        "mark": "the 1979 MI sector slice (also the 2000 EI sector slice)",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "1979",
+          "MI"
+        ]
+      }
+    ],
+    "hardest_step": 3
+  }
+}

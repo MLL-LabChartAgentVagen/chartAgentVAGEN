@@ -1,0 +1,343 @@
+{
+  "stem": "m-trends-2025-en_p29",
+  "document": "m-trends-2025-en",
+  "tags": "untagged",
+  "model": "claude-opus-5",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 98.8,
+  "usage": {
+    "input_tokens": 13842,
+    "output_tokens": 7661,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "**画出来要什么**\n\n本页两图皆无图号,只有两行标题:`Observed Malware Families by Category, 2024` + `Ransomware-Related`。上图是一个 8 格的马赛克/树状图,格子里直接排版巨号数字(34、16、12、10、10、7、6、5),`%` 以上标小字紧贴数字右上;类别名 `Ransomware`、`Credential Stealer` 用大字,窄格 `Tunneler`、`Downloader`、`Dropper` 缩成小字;蓝色由深到浅随数值递减。下图是 6 根竖柱,左侧竖排轴题 `% of Intrusions`,刻度 0/5/10/15,只有横向网格,数值标在柱顶内侧,x 轴标签上下交错两行且 `REDBIKE (Akira)` 换行。两图右侧都紧贴一列正文,图文共占一个横带。\n\n**定位一个值难在哪**\n\n下图 `REDBIKE (Akira)` 的 10% 与 `RANSOMHUB` 的 10% 等高,而上图 `Backdoor`、`Utility` 也都是 10%——同一页四个 10。要唯一定位必须同时带图标题、类别名,且类别名要按交错换行的原样写出。\n\n**不确定的**\n\n上图格子面积是否严格与百分比成比例(Tunneler 7 的格子看着比 Downloader 6 窄一线)无法确认;蓝色深浅是否只是装饰、还是编码排名,也只能猜。评分给出的第 4 个 `10` 归 Backdoor 还是 Utility 无从判断。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "Observed Malware Families by Category, 2024",
+          "subtitle": "Ransomware-Related",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "treemap",
+        "type_other": "",
+        "panels": 1,
+        "series": 1,
+        "categories": 8,
+        "marks": 8,
+        "values_printed": "all",
+        "axes": [],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "inline_label",
+            "example": "Credential Stealer"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Tunneler"
+          ],
+          "value": "7%",
+          "value_source": "printed",
+          "why_hard": "Label 'Tunneler' set in tiny type in a narrow cell; the '7' sits in the block below it"
+        }
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "",
+          "title": "Most Frequently Seen Malware, 2024",
+          "subtitle": "Ransomware-Related",
+          "unit_text": "% of Intrusions",
+          "placement": "above"
+        },
+        "type": "bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 1,
+        "categories": 6,
+        "marks": 6,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "% of Intrusions",
+            "low": "0",
+            "high": "15",
+            "serves": "all six bars"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "BEACON",
+            "high": "SYSTEMBC",
+            "serves": "the six malware family bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "REDBIKE (Akira)"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "REDBIKE (Akira)"
+          ],
+          "value": "10%",
+          "value_source": "printed",
+          "why_hard": "Same 10% as RANSOMHUB beside it; its tick label wraps two lines and sits on the upper stagger row"
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "multi_figure_page",
+        "figure_id": "page",
+        "evidence": "Two separately captioned charts: 'Observed Malware Families by Category, 2024' and 'Most Frequently Seen Malware, 2024'"
+      },
+      {
+        "key": "side_text_bullets",
+        "figure_id": "page",
+        "evidence": "Body column 'Compared to the overall metrics...' runs to the right of f1; another column beside f2"
+      },
+      {
+        "key": "no_value_axis",
+        "figure_id": "f1",
+        "evidence": "Mosaic cells carry only printed percentages; no ticks, no baseline drawn anywhere"
+      },
+      {
+        "key": "value_label_inside",
+        "figure_id": "f1",
+        "evidence": "'34', '16', '12', '10' set in large type inside their coloured blocks"
+      },
+      {
+        "key": "thin_segment_label",
+        "figure_id": "f1",
+        "evidence": "'Tunneler', 'Downloader', 'Dropper' shrunk to small caps inside the narrow right-hand cells"
+      },
+      {
+        "key": "value_label_inside",
+        "figure_id": "f2",
+        "evidence": "'15%', '10%', '9%', '7%' printed just inside the top of each bar"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f2",
+        "evidence": "Horizontal rules at 5, 10, 15 across the plot; no vertical rules"
+      },
+      {
+        "key": "rotated_axis_title",
+        "figure_id": "f2",
+        "evidence": "'% of Intrusions' set vertically along the left axis"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f2",
+        "evidence": "Axis ticks read bare 0, 5, 10, 15; scale word only in '% of Intrusions'"
+      },
+      {
+        "key": "wrapped_category_labels",
+        "figure_id": "f2",
+        "evidence": "'REDBIKE' with '(Akira)' on the line below it on the category axis"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "staggered_category_ticks",
+        "figure_id": "f2",
+        "evidence": "BEACON, REDBIKE, LOCKBIT on an upper row; RANSOMHUB, BASTA, SYSTEMBC dropped to a lower row",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "name": "superscript_unit_glyph_on_value_label",
+        "figure_id": "f1",
+        "evidence": "'%' set as a small superscript at the top right of each giant numeral, e.g. '34' then '%'",
+        "affects": [
+          2,
+          3
+        ]
+      },
+      {
+        "name": "sequential_shade_by_magnitude",
+        "figure_id": "f1",
+        "evidence": "Blue darkens with cell size: Ransomware darkest, Dropper 5% palest, with no legend",
+        "affects": []
+      },
+      {
+        "name": "unnumbered_figure_heading",
+        "figure_id": "page",
+        "evidence": "Neither chart carries 'Figure N'; only a bold title line plus 'Ransomware-Related'",
+        "affects": [
+          3,
+          4
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "34",
+        "figure_id": "f1",
+        "mark": "the Ransomware cell, the large dark-blue block on the left",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Observed Malware Families by Category, 2024",
+          "Ransomware"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "16",
+        "figure_id": "f1",
+        "mark": "the Other cell, second block from the left",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Observed Malware Families by Category, 2024",
+          "Other"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "12",
+        "figure_id": "f1",
+        "mark": "the Credential Stealer cell, upper part of the third column",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Observed Malware Families by Category, 2024",
+          "Credential Stealer"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "10",
+        "figure_id": "f1",
+        "mark": "the Backdoor cell, directly under Credential Stealer; Utility also reads 10%, so which mark is meant is ambiguous",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Observed Malware Families by Category, 2024",
+          "Backdoor"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "15",
+        "figure_id": "f2",
+        "mark": "the BEACON bar, the tallest",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Most Frequently Seen Malware, 2024",
+          "BEACON",
+          "% of Intrusions"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "10",
+        "figure_id": "f2",
+        "mark": "the RANSOMHUB bar, second from left",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Most Frequently Seen Malware, 2024",
+          "RANSOMHUB"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "10",
+        "figure_id": "f2",
+        "mark": "the REDBIKE (Akira) bar, third from left, same height as RANSOMHUB",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Most Frequently Seen Malware, 2024",
+          "REDBIKE",
+          "(Akira)"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 3
+      },
+      {
+        "value": "9",
+        "figure_id": "f2",
+        "mark": "the BASTA bar, fourth from left",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Most Frequently Seen Malware, 2024",
+          "BASTA"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "9",
+        "figure_id": "f2",
+        "mark": "the LOCKBIT bar, fifth from left, equal to BASTA",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Most Frequently Seen Malware, 2024",
+          "LOCKBIT"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "7",
+        "figure_id": "f2",
+        "mark": "the SYSTEMBC bar, rightmost; the Tunneler cell on f1 also reads 7%",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Most Frequently Seen Malware, 2024",
+          "SYSTEMBC"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      }
+    ],
+    "hardest_step": 3,
+    "hardest_step_why": "10 在本页出现四次(Backdoor、Utility、RANSOMHUB、REDBIKE),9 出现两次;树状图无坐标轴,标签只在格内,难与单元格绑定。",
+    "examples": [
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "Bold line 'Observed Malware Families by Category, 2024' with 'Ransomware-Related' beneath; no 'Figure' number anywhere",
+        "why": "标题拆成主副两行且无图号,现有流程只有单一 title 字段,副标题与缺号无法表达。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "'34' set in huge type with a small superscript '%' at its top right, inside the coloured block",
+        "why": "数值标签的字号随格子大小变化、单位作上标另置,当前标签渲染只有统一字号与紧跟单位。"
+      },
+      {
+        "gap": "P3",
+        "figure_id": "page",
+        "quote": "'Compared to the overall metrics, ransomware-related intrusions saw a higher percentage of BEACON usage (15%).' runs in a column right of the chart",
+        "why": "图与正文共占一个横带,整页导出时正文列与图表标题的先后顺序需被记录。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f2",
+        "quote": "BEACON, REDBIKE (Akira), LOCKBIT on one tick row; RANSOMHUB, BASTA, SYSTEMBC dropped to a second row below",
+        "why": "需要交错(stagger)刻度标签这一布局选项;现无此项,长标签只能旋转或换行。"
+      }
+    ]
+  }
+}

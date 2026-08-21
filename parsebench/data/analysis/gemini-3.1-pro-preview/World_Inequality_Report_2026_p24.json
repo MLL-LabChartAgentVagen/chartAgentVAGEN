@@ -1,0 +1,332 @@
+{
+  "stem": "World_Inequality_Report_2026_p24",
+  "document": "World_Inequality_Report_2026",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 95.6,
+  "usage": {
+    "input_tokens": 5331,
+    "output_tokens": 13853,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n本页包含两个带有折线和标记点的图表。图15包含一个带有负值域的Y轴（范围-20%至15%），以及一条独立的0%水平点阵虚线作为基准线；其X轴标签采用了“1960-64”这样的非标准时间段。图16的Y轴起始于80%，而其X轴每隔20年才有一个刻度标签，导致大部分数据点都悬浮于刻度之间。这两张图均仅使用了水平虚线作为网格，图例位于底部，并在图表内部叠加了多个自定义的解释性文本框，其中图16甚至带有粗实线箭头指向特定的图表特征。Y轴的标题都被旋转了90度且同时包含了单位说明，而X轴的刻度标签则倾斜了45度。页面底部包含非标准来源格式的详细大段“Interpretation”解读文本。\n\n### 定位一个值难在哪\n以 `-14` 为例（图15中蓝线在1965-69年或1970-74年的数据点），由于图表上的数值并未直接标出，读者只能依托每隔5%的水平网格线（如-10%和-15%）去肉眼估算。在这个极小的视觉间距内读出精确的-14，且要保证误差在5%以内，是极难实现的。图16的问题更为严重，由于X轴时间刻度非常稀疏，不仅数值难以准确读出，连对应的年份也无法精准定位。\n\n### 不确定的\n图表内的带有文字和箭头的批注框是依靠坐标硬编码绘制还是与特定数据点动态绑定无法仅从图片确认；图16中很多特定年份（如1994、2019）的数据点也只能基于先验知识或常理推断，图面未能提供精确对其。 ",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 15.",
+          "title": "We need political action but political coalitions are difficult to form",
+          "subtitle": "Education and income divides in Western democracies, 1960–2025",
+          "unit_text": "Difference (pp): top 10% minus bottom 90% voting left",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 13,
+        "marks": 26,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Difference (pp): top 10% minus bottom 90% voting left",
+            "low": "-20%",
+            "high": "15%",
+            "serves": "all lines"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "1960–64",
+            "high": "2020–25",
+            "serves": "all lines"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "1980–84"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "(% of top 10% earners voting left) minus (% of bottom 90% earners voting left)"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "1970–74",
+            "(% of top 10% earners voting left) minus (% of bottom 90% earners voting left)"
+          ],
+          "value": "-14%",
+          "value_source": "axis_read",
+          "why_hard": "Interpolating between 5% gridlines to get exactly -14% is difficult."
+        }
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "Figure 16.",
+          "title": "Divides between large cities and smaller towns have reached levels unseen in a century",
+          "subtitle": "Ratio of left wing vote beween urban and rural areas, 1848–2022",
+          "unit_text": "Left vote: urban 50% vs. rural 50% (% of national average)",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 30,
+        "marks": 37,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Left vote: urban 50% vs. rural 50% (% of national average)",
+            "low": "80%",
+            "high": "180%",
+            "serves": "all lines"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "1840",
+            "high": "2020",
+            "serves": "all lines"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "1960"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "French legislative elections 1848–2022"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "1920",
+            "French legislative elections 1848–2022"
+          ],
+          "value": "165%",
+          "value_source": "axis_read",
+          "why_hard": "Sparse time ticks and unlabelled points make alignment challenging."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "negative_values",
+        "figure_id": "f1",
+        "evidence": "the y-axis values extend down to -20%"
+      },
+      {
+        "key": "axis_starts_above_zero",
+        "figure_id": "f2",
+        "evidence": "the lowest tick on the y-axis is 80%"
+      },
+      {
+        "key": "rotated_axis_title",
+        "figure_id": "page",
+        "evidence": "y-axis titles on both figures are rotated 90 degrees"
+      },
+      {
+        "key": "rotated_x_ticks",
+        "figure_id": "page",
+        "evidence": "x-axis labels are rotated 45 degrees"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "page",
+        "evidence": "only horizontal dashed grid lines are shown"
+      },
+      {
+        "key": "annotation_callout",
+        "figure_id": "page",
+        "evidence": "text boxes and arrows placed inside the plot areas"
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "page",
+        "evidence": "the legends sit below the x-axis on both figures"
+      },
+      {
+        "key": "sparse_time_ticks",
+        "figure_id": "f2",
+        "evidence": "data points are drawn between 20-year x-axis ticks"
+      },
+      {
+        "key": "multi_figure_page",
+        "figure_id": "page",
+        "evidence": "two numbered figures are presented independently on the page"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "page",
+        "evidence": "interpretation notes and sources at the bottom of both figures"
+      },
+      {
+        "key": "nonstandard_time_ticks",
+        "figure_id": "f1",
+        "evidence": "x-axis labels use time ranges like 1960-64"
+      },
+      {
+        "key": "reference_line",
+        "figure_id": "f1",
+        "evidence": "a dotted horizontal line marks the 0% zero baseline"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "text_paragraph_as_caption",
+        "figure_id": "page",
+        "evidence": "an Interpretation paragraph acts as the figure caption and source note",
+        "affects": [
+          4
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "-14",
+        "figure_id": "f1",
+        "mark": "the 1965-69 earners segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "1965–69",
+          "(% of top 10% earners voting left) minus (% of bottom 90% earners voting left)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "11",
+        "figure_id": "f1",
+        "mark": "the 2020-25 educated segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2020–25",
+          "(% of top 10% educated voting left) minus (% of bottom 90% educated voting left)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-11",
+        "figure_id": "f1",
+        "mark": "the 1960-64 earners segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "1960–64",
+          "(% of top 10% earners voting left) minus (% of bottom 90% earners voting left)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-16",
+        "figure_id": "f1",
+        "mark": "the 1975-79 earners segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "1975–79",
+          "(% of top 10% earners voting left) minus (% of bottom 90% earners voting left)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-6",
+        "figure_id": "f1",
+        "mark": "the 2020-25 earners segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2020–25",
+          "(% of top 10% earners voting left) minus (% of bottom 90% earners voting left)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "138",
+        "figure_id": "f2",
+        "mark": "the ~1994 European elections point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "1994",
+          "European elections 1994–2024"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "140",
+        "figure_id": "f2",
+        "mark": "the ~2019 European elections point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2019",
+          "European elections 1994–2024"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "112",
+        "figure_id": "f2",
+        "mark": "the ~2012 French elections point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2012",
+          "French legislative elections 1848–2022"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "118",
+        "figure_id": "f2",
+        "mark": "the 1960 French elections point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "1960",
+          "French legislative elections 1848–2022"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "因为所有数值均未标注，必须通过5%或10%的粗略网格线去估算，如要精准读出图15中的-14或图16因刻度稀疏而无法定位年份的138是不可能的。",
+    "examples": [
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "y axis ranges from -20% to 15% with a dotted zero line",
+        "why": "图表生成器目前可能无法完善处理包含负数范围的Y坐标轴，以及独立绘制一条不作为底部边缘的0刻度基准虚线。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "page",
+        "quote": "text boxes with arrows explaining trends placed over plots",
+        "why": "需要支持在图表特定位置叠加绘制自定义说明文本框及带指向性的箭头。"
+      }
+    ]
+  }
+}

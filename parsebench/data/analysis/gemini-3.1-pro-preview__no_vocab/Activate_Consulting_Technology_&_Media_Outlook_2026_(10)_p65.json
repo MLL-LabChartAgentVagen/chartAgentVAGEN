@@ -1,0 +1,248 @@
+{
+  "stem": "Activate_Consulting_Technology_&_Media_Outlook_2026_(10)_p65",
+  "document": "Activate_Consulting_Technology_&_Media_Outlook_2026_(10)",
+  "tags": "untagged",
+  "model": "gemini-3.1-pro-preview",
+  "control": "no_vocab",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 20.9,
+  "usage": {
+    "input_tokens": 3145,
+    "output_tokens": 2382,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n这是一个分组柱状图，每组由三个不同颜色的柱子组成，柱子顶部印有百分比数值。难点在于图例和X轴标签的结合设计：X轴下方只有三个大类别（SUPER GAMERS², AVID GAMERS³, CASUAL GAMERS⁴），而图表左侧以侧边栏的形式展示了三个平台类别（MOBILE, CONSOLE, PC），并用线条连接到对应的柱子组。图表中还有代表全部人群中最高比例的绿色圆圈标记（在第一组MOBILE和CONSOLE的上方画了一个大绿圈，第二组和第三组MOBILE上方画了小绿圈）。\n\n### 定位一个值难在哪\n以 `93` 为例。要定位它，不仅需要知道它是属于哪个用户分层（`SUPER GAMERS²`），还要知道它是哪个平台的数据。图表中并没有传统的图例（Legend），平台的标签是画在左侧的，并且通过颜色和线条与柱子对应（深蓝色对应 `MOBILE`，蓝色对应 `CONSOLE`，浅蓝色对应 `PC`）。解析器如果无法理解左侧侧边栏的结构以及连接线的含义，就会丢失这个维度，导致无法唯一确定 `93` 代表什么。\n\n### 不确定的\n绿色的圈（分别圈住了93%、89% 以及 89%、87%）在图表中似乎是用来强调某些特定高值的，但没有图例说明绿圈的具体含义，不确定在提取数据时是否需要作为单独的标记属性（highlight）。同时，标题上写的是 % GAMERS¹，但没有明确说明Y轴范围。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "Super Gamers play video games across all platforms, while Avid and Casual Gamers primarily use mobile",
+          "subtitle": "SHARE OF GAMERS¹ USING EACH PLATFORM FOR GAMING IN THE LAST 12 MONTHS, U.S., 2025, % GAMERS¹ BY SEGMENT",
+          "unit_text": "% GAMERS¹",
+          "placement": "above"
+        },
+        "type": "grouped_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 3,
+        "categories": 3,
+        "marks": 9,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "SUPER GAMERS²",
+            "high": "CASUAL GAMERS⁴",
+            "serves": "all bars"
+          },
+          {
+            "side": "left",
+            "role": "category",
+            "unit_text": "",
+            "low": "MOBILE",
+            "high": "PC",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "SUPER GAMERS²"
+          },
+          {
+            "role": "series",
+            "label_source": "inline_label",
+            "example": "MOBILE"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "SUPER GAMERS²",
+            "MOBILE"
+          ],
+          "value": "93%",
+          "value_source": "printed",
+          "why_hard": "The series labels (MOBILE, CONSOLE, PC) are shown on the left as a side axis/legend hybrid, linked by lines and colors."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "side_legend_with_connecting_lines",
+        "figure_id": "f1",
+        "evidence": "Left side has icons and text (MOBILE, CONSOLE, PC) with lines matching bar colors.",
+        "affects": [
+          1,
+          3
+        ]
+      },
+      {
+        "key": "value_labels_above_bars",
+        "figure_id": "f1",
+        "evidence": "Numbers like 93%, 82% are printed on top of the bars.",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "key": "highlight_circles",
+        "figure_id": "f1",
+        "evidence": "Green ovals and circles are drawn over specific top value labels (93%, 89%, 87%).",
+        "affects": []
+      },
+      {
+        "key": "footnote_markers_in_labels",
+        "figure_id": "f1",
+        "evidence": "Category labels include superscript numbers like SUPER GAMERS², AVID GAMERS³.",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "new_components": [
+      {
+        "name": "hybrid_axis_legend_left",
+        "figure_id": "f1",
+        "evidence": "Categories (MOBILE, CONSOLE, PC) act as legend but are positioned like a left y-axis with extending gridlines.",
+        "affects": [
+          1,
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "93",
+        "figure_id": "f1",
+        "mark": "first bar in the first group",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "SUPER GAMERS²",
+          "MOBILE"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "82",
+        "figure_id": "f1",
+        "mark": "second bar in the first group",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "SUPER GAMERS²",
+          "CONSOLE"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "89",
+        "figure_id": "f1",
+        "mark": "third bar in the first group",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "SUPER GAMERS²",
+          "PC"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "89",
+        "figure_id": "f1",
+        "mark": "first bar in the second group",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "AVID GAMERS³",
+          "MOBILE"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "56",
+        "figure_id": "f1",
+        "mark": "second bar in the second group",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "AVID GAMERS³",
+          "CONSOLE"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "70",
+        "figure_id": "f1",
+        "mark": "third bar in the second group",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "AVID GAMERS³",
+          "PC"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "87",
+        "figure_id": "f1",
+        "mark": "first bar in the third group",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "CASUAL GAMERS⁴",
+          "MOBILE"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "34",
+        "figure_id": "f1",
+        "mark": "second bar in the third group",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "CASUAL GAMERS⁴",
+          "CONSOLE"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "24",
+        "figure_id": "f1",
+        "mark": "third bar in the third group",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "CASUAL GAMERS⁴",
+          "PC"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      }
+    ],
+    "hardest_step": 3,
+    "hardest_step_why": "图表中没有标准图例。代表系列（MOBILE/CONSOLE/PC）的标签画在左侧，这要求解析器识别颜色和连线的关系才能将 `93` 与 `MOBILE` 关联起来，这是极难提取出正确键值的。",
+    "examples": [
+      {
+        "gap": "P3",
+        "figure_id": "f1",
+        "quote": "The labels MOBILE, CONSOLE, PC are placed on the far left, acting as both a legend and an axis with horizontal lines.",
+        "why": "当前的图表生成器通常依赖标准的Legend模块，无法绘制这种侧边栏式的图例/坐标轴混合结构，需要新的布局设计。"
+      },
+      {
+        "gap": "P8",
+        "figure_id": "f1",
+        "quote": "Green hand-drawn style circles surround 93%, 89%, 89%, and 87%.",
+        "why": "生成器目前无法在特定的数据点上添加这种自定义的、跨组或单点的高亮圈，这超出了基础的颜色映射范畴。"
+      }
+    ]
+  }
+}

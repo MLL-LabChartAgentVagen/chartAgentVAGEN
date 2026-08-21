@@ -1,0 +1,318 @@
+{
+  "stem": "sri-sigma-natural-catastrophes-1-2025_p20",
+  "document": "sri-sigma-natural-catastrophes-1-2025",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "no_vocab",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 85.9,
+  "usage": {
+    "input_tokens": 3189,
+    "output_tokens": 11664,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "**画出来要什么**\n\n页面包含两个带浅灰色背景框的图表。需要支持特殊的布局：标题区（包含图表编号和主标题）位于绘图区左侧并与其等高（P7）。图12是包含四条折线的多折线图，底部图例换行显示。图13是面积图，要求在跨越零轴时自动改变填充颜色，并且在图例中用两个不同的标签（Underwriting profit 和 Underwriting loss）来解释这两种颜色（P6）。需要绘制Y轴水平网格线、无Y轴刻度线、有X轴刻度及年份标签，并且带有数据来源注释。\n\n**定位一个值难在哪**\n\n最困难的是精确读取数值（Step 2）。以图13中2019年的“2.5%”为例，图表没有在任何数据点上直接标注数据标签，且Y轴网格线间距高达5%，读者仅靠目测刻度和面积图的顶点，绝对无法将该数值准确读取到5%的容差要求内。图12同样存在此问题，Y轴网格线间距为10。\n\n**不确定的**\n\n图12的折线显然包含了比年份更细粒度（如月度或季度）的数据点，但X轴仅粗略标注了年份，很难确定两个年份刻度之间的转折点具体对应哪个月份。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 12",
+          "title": "US Construction cost indices",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "beside"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 1,
+        "series": 4,
+        "categories": 6,
+        "marks": 240,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "100",
+            "high": "150",
+            "serves": "all lines"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "2020",
+            "high": "2025",
+            "serves": "all lines"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "CPI"
+          },
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2021"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "PPI, Final Demand, Construction",
+            "2023"
+          ],
+          "value": "138",
+          "value_source": "axis_read",
+          "why_hard": "No values are printed and the y-axis gridline spacing of 10 makes reading to 5% tolerance impossible."
+        }
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "Figure 13",
+          "title": "US homeowner insurance underwriting result",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "beside"
+        },
+        "type": "area",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 11,
+        "marks": 11,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "-15%",
+            "high": "10%",
+            "serves": "all areas"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "2014",
+            "high": "2024",
+            "serves": "all areas"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Underwriting profit"
+          },
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2016"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Underwriting profit",
+            "2019"
+          ],
+          "value": "2.5%",
+          "value_source": "axis_read",
+          "why_hard": "Reading a value of 2.5% visually from an axis with 5% tick spacing is highly imprecise."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "heading_beside_plot",
+        "figure_id": "page",
+        "evidence": "both figures have their title blocks in a left column beside the plot area",
+        "affects": [
+          4
+        ]
+      },
+      {
+        "key": "shaded_figure_container",
+        "figure_id": "page",
+        "evidence": "each figure and its heading are enclosed in a light gray rectangular background box",
+        "affects": [
+          4
+        ]
+      },
+      {
+        "key": "conditional_area_color",
+        "figure_id": "f2",
+        "evidence": "the area chart changes from dark green to light green when dropping below the zero line",
+        "affects": []
+      },
+      {
+        "key": "legend_wrapped",
+        "figure_id": "f1",
+        "evidence": "the four legend entries wrap to a second line beneath the x-axis",
+        "affects": []
+      },
+      {
+        "key": "y_axis_gridlines_only",
+        "figure_id": "page",
+        "evidence": "the y-axes have horizontal gridlines across the plot but no tick marks extending outwards",
+        "affects": []
+      }
+    ],
+    "new_components": [
+      {
+        "name": "shaded_figure_container",
+        "figure_id": "page",
+        "evidence": "the entire figure including its title block and source note shares a shaded gray background box",
+        "affects": [
+          4
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "100",
+        "figure_id": "f1",
+        "mark": "the start of the CPI line at 2020",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "CPI",
+          "2020"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "102",
+        "figure_id": "f1",
+        "mark": "the CPI line in early 2021",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "CPI",
+          "2021"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "138",
+        "figure_id": "f1",
+        "mark": "the peak of the PPI Final Demand line around 2022-2023",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "PPI, Final Demand, Construction",
+          "2023"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "138",
+        "figure_id": "f1",
+        "mark": "the plateau of the One-Family Houses line around 2024",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "One-Family Houses under Construction, Census",
+          "2024"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "122",
+        "figure_id": "f1",
+        "mark": "the end of the CPI line at 2025",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "CPI",
+          "2025"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "9%",
+        "figure_id": "f2",
+        "mark": "the dark green area vertex at 2014",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Underwriting profit",
+          "2014"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-7%",
+        "figure_id": "f2",
+        "mark": "the light green area trough at 2017",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Underwriting loss",
+          "2017"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "2.5%",
+        "figure_id": "f2",
+        "mark": "the dark green area peak at 2019",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Underwriting profit",
+          "2019"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-10%",
+        "figure_id": "f2",
+        "mark": "the light green area trough at 2023",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Underwriting loss",
+          "2023"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-6%",
+        "figure_id": "f2",
+        "mark": "the light green area trough at 2020",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Underwriting loss",
+          "2020"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "两个图表均未在数据点上标注具体数值。例如图13中2019年的“2.5%”，Y轴网格线间距为5%，仅凭视觉和刻度根本无法将其精确读取到5%的容差范围内。",
+    "examples": [
+      {
+        "gap": "P7",
+        "figure_id": "page",
+        "quote": "Figure 12 and its title sit in a left column beside the plot area",
+        "why": "系统默认标题位于图表正上方，无法生成这种标题在左侧且与图表共享一个浅灰背景框的侧边栏布局。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f2",
+        "quote": "the area chart changes to light green when below the 0% line",
+        "why": "目前生成器不支持根据数值正负（跨越零轴）自动改变同一面积图或折线的填充颜色并分别标注图例。"
+      }
+    ]
+  }
+}

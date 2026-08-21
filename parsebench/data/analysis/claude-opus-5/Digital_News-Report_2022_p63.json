@@ -1,0 +1,721 @@
+{
+  "stem": "Digital_News-Report_2022_p63",
+  "document": "Digital_News-Report_2022",
+  "tags": "untagged",
+  "model": "claude-opus-5",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 172.6,
+  "usage": {
+    "input_tokens": 13934,
+    "output_tokens": 14504,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "## 画出来要什么\n一页要同时画八块：①左右两个 16 行水平条形面板（TV, RADIO AND PRINT / ONLINE），每条含深浅两色（周触达 vs 每周 3 天以上），无数值轴，大条数字在条内、小条数字在条外，并在图内叠一个方框注释「BBC TV News: 44% / BBC Radio News: 18%」；②两张 10 年折线（4 线带图例、3 线只用笔记本/平板/手机图标区分），端点写值；③带洋红标题条的迷你折线＋巨大「34%」；④15 行 100% 堆叠信任条（0%–100%，中段 Neither 不标数）；⑤多个大数字 KPI（9%、25%、21%、20%）与图标；⑥带品牌图标的排名表。\n\n## 定位一个值难在哪\n「18」在页面出现三次：ONLINE 面板 Guardian online 的条、注释框里的 BBC Radio News: 18%、以及 BRAND TRUST SCORES 中 ITV News 的 Don't trust。要唯一定位必须同时给面板名「ONLINE」＋类目「Guardian online」＋图例「Weekly use / online brands」，缺一即指向别处。\n\n## 不确定的\n每条深浅两色究竟是相加堆叠还是「3天以上」作为子集叠在周触达之上，看不出来；印出的数字只有一个，另一段无法读到 5%。f4 三条线只有图标，无文字名；f7 灰色 Neither 段全无数字。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "WEEKLY REACH OFFLINE AND ONLINE",
+          "subtitle": "TOP BRANDS",
+          "unit_text": "% Weekly usage",
+          "placement": "beside"
+        },
+        "type": "stacked_bar",
+        "type_other": "",
+        "panels": 2,
+        "series": 4,
+        "categories": 16,
+        "marks": 64,
+        "values_printed": "some",
+        "axes": [
+          {
+            "side": "left",
+            "role": "category",
+            "unit_text": "",
+            "low": "BBC News (TV & radio)",
+            "high": "The 'i' newspaper",
+            "serves": "the teal bars of the TV, RADIO AND PRINT panel"
+          },
+          {
+            "side": "left",
+            "role": "category",
+            "unit_text": "",
+            "low": "BBC News online",
+            "high": "BuzzFeed News",
+            "serves": "the orange bars of the ONLINE panel"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "panel",
+            "label_source": "panel_title",
+            "example": "ONLINE"
+          },
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Regional or local newspaper website"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Weekly use"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "ONLINE",
+            "Regional or local newspaper website",
+            "Weekly use"
+          ],
+          "value": "9",
+          "value_source": "printed",
+          "why_hard": "Bar carries two shades but only one printed number; no ticks, so the darker part is unreadable."
+        }
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "",
+          "title": "CHANGING MEDIA",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "beside"
+        },
+        "type": "unreadable",
+        "type_other": "body paragraph plus two big-number KPI callouts with icons (PAY hand, microphone), no plotted marks",
+        "panels": 1,
+        "series": 1,
+        "categories": 2,
+        "marks": 0,
+        "values_printed": "all",
+        "axes": [],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "inline_label",
+            "example": "pay for ONLINE NEWS"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "pay for ONLINE NEWS"
+          ],
+          "value": "9%",
+          "value_source": "printed",
+          "why_hard": "Number is display type, not a mark; nothing ties it to a chart row."
+        }
+      },
+      {
+        "id": "f3",
+        "heading": {
+          "figure_number": "",
+          "title": "SOURCES OF NEWS",
+          "subtitle": "2013–22",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 1,
+        "series": 4,
+        "categories": 10,
+        "marks": 40,
+        "values_printed": "some",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "0%",
+            "high": "100%",
+            "serves": "all four lines"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "2013",
+            "high": "2022",
+            "serves": "all four lines"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Online (incl. social media)"
+          },
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2022"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "TV",
+            "2022"
+          ],
+          "value": "53%",
+          "value_source": "printed",
+          "why_hard": "Endpoint label sits outside the plot right of the 2022 tick; ticks only at 0%, 50%, 100%."
+        }
+      },
+      {
+        "id": "f4",
+        "heading": {
+          "figure_number": "",
+          "title": "DEVICES FOR NEWS",
+          "subtitle": "2013–22",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 1,
+        "series": 3,
+        "categories": 10,
+        "marks": 30,
+        "values_printed": "some",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "0%",
+            "high": "100%",
+            "serves": "all three lines"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "2013",
+            "high": "2022",
+            "serves": "all three lines"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "series",
+            "label_source": "colour_only",
+            "example": "64%"
+          },
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2022"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "dark navy line (smartphone icon)",
+            "2019"
+          ],
+          "value": "~58%",
+          "value_source": "axis_read",
+          "why_hard": "No text names the three lines; only laptop/tablet/phone icons sit above the plot; ticks 50 apart."
+        }
+      },
+      {
+        "id": "f5",
+        "heading": {
+          "figure_number": "",
+          "title": "OVERALL TRUST SCORE",
+          "subtitle": "Change over time 2015-2022",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 1,
+        "series": 1,
+        "categories": 8,
+        "marks": 8,
+        "values_printed": "some",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "0%",
+            "high": "75%",
+            "serves": "the single magenta line"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "2015",
+            "high": "2022",
+            "serves": "the single magenta line"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "panel",
+            "label_source": "panel_title",
+            "example": "Change over time 2015-2022"
+          },
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2015"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Change over time 2015-2022",
+            "2019"
+          ],
+          "value": "~38%",
+          "value_source": "axis_read",
+          "why_hard": "Only 2015 and 2022 ticked for eight points; 25% tick spacing on a 3 cm tall plot."
+        }
+      },
+      {
+        "id": "f6",
+        "heading": {
+          "figure_number": "",
+          "title": "MEDIA IS FREE FROM …",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "unreadable",
+        "type_other": "two tinted KPI boxes with a headline percentage and a prior-year figure, no marks",
+        "panels": 2,
+        "series": 1,
+        "categories": 2,
+        "marks": 0,
+        "values_printed": "all",
+        "axes": [],
+        "key_parts": [
+          {
+            "role": "panel",
+            "label_source": "panel_title",
+            "example": "Undue political influence"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Undue political influence"
+          ],
+          "value": "20%",
+          "value_source": "printed",
+          "why_hard": "Two boxes both read 20%; only the banner text separates them."
+        }
+      },
+      {
+        "id": "f7",
+        "heading": {
+          "figure_number": "",
+          "title": "BRAND TRUST SCORES",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "stacked_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 3,
+        "categories": 15,
+        "marks": 45,
+        "values_printed": "some",
+        "axes": [
+          {
+            "side": "bottom",
+            "role": "value",
+            "unit_text": "",
+            "low": "0%",
+            "high": "100%",
+            "serves": "all stacked bars"
+          },
+          {
+            "side": "left",
+            "role": "category",
+            "unit_text": "",
+            "low": "BBC News",
+            "high": "Sun",
+            "serves": "all stacked bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Daily Mail/MailOnline"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Don't trust"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Daily Telegraph",
+            "Neither"
+          ],
+          "value": "~35",
+          "value_source": "axis_read",
+          "why_hard": "Grey middle segment carries no number; only 0% and 100% ticks exist to measure it against."
+        }
+      },
+      {
+        "id": "f8",
+        "heading": {
+          "figure_number": "",
+          "title": "TOP SOCIAL MEDIA AND MESSAGING",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "other",
+        "type_other": "ranked data table",
+        "panels": 2,
+        "series": 3,
+        "categories": 6,
+        "marks": 0,
+        "values_printed": "all",
+        "axes": [],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "inline_label",
+            "example": "WhatsApp"
+          },
+          {
+            "role": "series",
+            "label_source": "heading",
+            "example": "For News"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "WhatsApp",
+            "For News"
+          ],
+          "value": "10%",
+          "value_source": "printed",
+          "why_hard": "A parenthetical change value (-4) sits between the two columns and can be mis-assigned."
+        }
+      },
+      {
+        "id": "f9",
+        "heading": {
+          "figure_number": "",
+          "title": "SHARE NEWS",
+          "subtitle": "via social, messaging or email",
+          "unit_text": "",
+          "placement": "below"
+        },
+        "type": "unreadable",
+        "type_other": "big-number KPI with a share arrow icon, no plotted marks",
+        "panels": 1,
+        "series": 1,
+        "categories": 1,
+        "marks": 0,
+        "values_printed": "all",
+        "axes": [],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "inline_label",
+            "example": "SHARE NEWS"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "SHARE NEWS"
+          ],
+          "value": "21%",
+          "value_source": "printed",
+          "why_hard": ""
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "multi_figure_page",
+        "figure_id": "page",
+        "evidence": "Separate titled blocks: WEEKLY REACH OFFLINE AND ONLINE, SOURCES OF NEWS, DEVICES FOR NEWS, BRAND TRUST SCORES"
+      },
+      {
+        "key": "side_text_bullets",
+        "figure_id": "page",
+        "evidence": "'Public broadcasters such as the BBC, ITV, and Channel 4 remain...' runs in a column left of the trust charts"
+      },
+      {
+        "key": "stacked_bar",
+        "figure_id": "f1",
+        "evidence": "Each brand bar shows two tones of teal (or orange), a darker portion inside the lighter bar"
+      },
+      {
+        "key": "horizontal_bars",
+        "figure_id": "f1",
+        "evidence": "Brand names on the left, bars grow rightwards from a common start line"
+      },
+      {
+        "key": "no_value_axis",
+        "figure_id": "f1",
+        "evidence": "No ticks or baseline numbers under the bars; only the printed figures 50, 27, 15..."
+      },
+      {
+        "key": "value_label_inside",
+        "figure_id": "f1",
+        "evidence": "'50', '27', '15' set in white inside the bar ends"
+      },
+      {
+        "key": "value_label_outside",
+        "figure_id": "f1",
+        "evidence": "'5', '4', '3', '2' printed in dark type to the right of the short bars"
+      },
+      {
+        "key": "annotation_callout",
+        "figure_id": "f1",
+        "evidence": "Boxed note over the plot: 'BBC TV News: 44%  BBC Radio News: 18%'"
+      },
+      {
+        "key": "panel_title_per_panel",
+        "figure_id": "f1",
+        "evidence": "'TV, RADIO AND PRINT' and 'ONLINE' sit above their own bar columns"
+      },
+      {
+        "key": "legend_beside_plot",
+        "figure_id": "f1",
+        "evidence": "Four-entry colour key stacked in the left column under 'TOP BRANDS'"
+      },
+      {
+        "key": "shared_legend",
+        "figure_id": "f1",
+        "evidence": "One left-column key covers both the TV/radio/print and ONLINE panels"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "'% Weekly usage' printed under TOP BRANDS, no unit anywhere near the bars"
+      },
+      {
+        "key": "wrapped_category_labels",
+        "figure_id": "f1",
+        "evidence": "16 long names per panel, e.g. 'Regional or local newspaper website', 'Daily Mail/Mail on Sunday'"
+      },
+      {
+        "key": "legend_above_plot",
+        "figure_id": "f3",
+        "evidence": "'Online (incl. social media) / TV / Social media / Print' keyed right of the title, above the plot"
+      },
+      {
+        "key": "value_label_outside",
+        "figure_id": "f3",
+        "evidence": "'73%', '53%', '38%', '17%' printed beyond the 2022 endpoints"
+      },
+      {
+        "key": "value_label_outside",
+        "figure_id": "f4",
+        "evidence": "'64%', '40%', '22%' set to the right of the last plotted points"
+      },
+      {
+        "key": "panel_title_per_panel",
+        "figure_id": "f5",
+        "evidence": "Magenta filled banner reads 'Change over time 2015-2022' above the mini line"
+      },
+      {
+        "key": "sparse_time_ticks",
+        "figure_id": "f5",
+        "evidence": "Only '2015' and '2022' ticked under a line with eight yearly points"
+      },
+      {
+        "key": "annotation_callout",
+        "figure_id": "f5",
+        "evidence": "'34%' and '=36/46 markets' drawn inside the panel beside the mini line chart"
+      },
+      {
+        "key": "pct_stacked",
+        "figure_id": "f7",
+        "evidence": "Every bar spans the same width; axis under them reads '0%' to '100%'"
+      },
+      {
+        "key": "stacked_bar",
+        "figure_id": "f7",
+        "evidence": "Magenta, grey and cyan segments inside each brand bar"
+      },
+      {
+        "key": "horizontal_bars",
+        "figure_id": "f7",
+        "evidence": "Brand names down the left, bars run right to the 100% mark"
+      },
+      {
+        "key": "value_label_inside",
+        "figure_id": "f7",
+        "evidence": "'55' in the magenta segment and '26' in the cyan segment of BBC News"
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f7",
+        "evidence": "'Trust  Neither  Don't trust' swatches sit under the 0%/100% axis"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f7",
+        "evidence": "'Trust = % scored 6–10 on 10-point scale, Don't trust = 0–4, Neither = 5...'"
+      },
+      {
+        "key": "wrapped_category_labels",
+        "figure_id": "f7",
+        "evidence": "'Local or regional newspaper', 'Daily Mail/MailOnline' among 15 stacked row labels"
+      },
+      {
+        "key": "data_table_as_figure",
+        "figure_id": "f8",
+        "evidence": "Ruled table headed 'Rank  Brand  For News  For All' repeated in two blocks"
+      },
+      {
+        "key": "icon_category_axis",
+        "figure_id": "f8",
+        "evidence": "Facebook, Twitter, WhatsApp, YouTube, Instagram, Messenger logos in the row-label column"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "nested_subset_bar",
+        "figure_id": "f1",
+        "evidence": "Darker tone inside the lighter bar reads as a subset ('More than 3 days per week'), not an additive segment",
+        "affects": [
+          2,
+          3
+        ]
+      },
+      {
+        "name": "icon_only_legend",
+        "figure_id": "f4",
+        "evidence": "Laptop, tablet and smartphone pictograms above the plot are the only key to the three lines",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "name": "big_number_kpi_callout",
+        "figure_id": "page",
+        "evidence": "'9% pay for ONLINE NEWS', '25% listen to PODCASTS', '21% SHARE NEWS' set as display numbers with icons",
+        "affects": [
+          1,
+          4
+        ]
+      },
+      {
+        "name": "unlabelled_middle_segment",
+        "figure_id": "f7",
+        "evidence": "Grey 'Neither' segment carries no number while the flanking Trust and Don't trust segments do",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "name": "prior_year_comparison_in_box",
+        "figure_id": "f6",
+        "evidence": "'20%' with '34% in 2017' beneath it inside a tinted box titled 'Undue political influence'",
+        "affects": [
+          1,
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "50",
+        "figure_id": "f1",
+        "mark": "the BBC News (TV & radio) bar in the TV, RADIO AND PRINT panel, weekly-use total",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "TV, RADIO AND PRINT",
+          "BBC News (TV & radio)",
+          "Weekly use"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "18",
+        "figure_id": "f1",
+        "mark": "the Guardian online bar in the ONLINE panel (also 'BBC Radio News: 18%' in the callout and ITV News Don't trust = 18 on f7)",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "ONLINE",
+          "Guardian online",
+          "Weekly use"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "53%",
+        "figure_id": "f3",
+        "mark": "the endpoint label of the TV line at 2022",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "SOURCES OF NEWS",
+          "TV",
+          "2022"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "12",
+        "figure_id": "f1",
+        "mark": "the MailOnline bar in the ONLINE panel",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "ONLINE",
+          "MailOnline",
+          "Weekly use"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      }
+    ],
+    "hardest_step": 3,
+    "hardest_step_why": "「50」需面板ONLINE/TV三级键；「18」页面出现三处（Guardian online、BBC Radio News 18%、ITV News Don't trust），仅数字无法唯一定位。",
+    "examples": [
+      {
+        "gap": "P2",
+        "figure_id": "f1",
+        "quote": "Two 16-row bar columns headed 'TV, RADIO AND PRINT' and 'ONLINE', one shared four-entry key at the left",
+        "why": "同页两面板类目名不同但共用图例，面板名必须进入键，否则 50 与 43 无法区分"
+      },
+      {
+        "gap": "P8",
+        "figure_id": "f1",
+        "quote": "Legend: 'Weekly use / TV, radio & print', 'More than 3 days per week / online brands' — teal vs orange",
+        "why": "颜色族同时编码面板归属与指标，图例文字之外还承载一个维度"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "'WEEKLY REACH OFFLINE AND ONLINE' / 'TOP BRANDS' / '% Weekly usage' stacked in a left side column",
+        "why": "标题、子标题、单位分三行且置于图左侧栏，当前只能生成顶置单行标题"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "'50' white inside the bar; '5', '4', '3', '2' in dark type outside the short bars",
+        "why": "同一图内标签位置随条长切换，需要按标记决定内/外放置"
+      },
+      {
+        "gap": "P3",
+        "figure_id": "page",
+        "quote": "'9% pay for ONLINE NEWS', '25% listen to PODCASTS in the last month', '21% SHARE NEWS'",
+        "why": "整页含多块大数字KPI与表格，需整页 markdown 导出并保留其与图表的相对位置"
+      }
+    ]
+  }
+}

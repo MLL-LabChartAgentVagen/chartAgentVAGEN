@@ -1,0 +1,303 @@
+{
+  "stem": "ac8b3538-en_p62",
+  "document": "ac8b3538-en",
+  "tags": "3d_chart+need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "seconds": 87.3,
+  "usage": {
+    "input_tokens": 5301,
+    "output_tokens": 10678,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n生成器需要支持绘制包含最多15个面板的小型多重图（Small Multiples），并将其排列为网格。图表主体由阶梯线（step line series）构成，且必须支持各面板拥有独立的 y 轴值域范围（例如，土耳其的 y 轴范围为 -200 到 800，而日本的范围为 -20 到 60）。每个面板的绘图区需要带有浅灰色的背景填充，并叠加白色的水平和垂直网格线。此外，生成器要能在整个网格的顶部渲染全局共享图例，为每个面板添加独立的标题，并处理 x 轴日期的 45 度旋转及跨面板对齐。\n\n### 定位一个值难在哪\n以荷兰（Netherlands）在 May-24 的 Real minimum wage 值（约17）为例。首先，整个页面上没有标注任何具体的数据点标签，所有数值都必须通过阶梯线的末端水平对齐到左侧 y 轴进行读取。然而，y 轴的刻度间隔大（每格10个单位），且阶梯线缺乏确切的数据标记，肉眼读取这类转折处极其容易产生视觉偏移。这种缺乏标签和低刻度分辨率的设计，使得任何尝试将 17 或 38 这样的值读取到 5% 误差范围内的操作都必然被阻断。\n\n### 不确定的\n页面中完全没有提供图表编号、主标题或任何单位（如金额、百分比或指数基准）。同时，由于阶梯线并没有标记具体日期，只能假设其转折点对应的是 x 轴每半年一次的刻度区间内发生的变化。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "none"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 15,
+        "series": 2,
+        "categories": 11,
+        "marks": 1000,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "-20",
+            "high": "60",
+            "serves": "both lines"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "May-19",
+            "high": "May-24",
+            "serves": "both lines"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "panel",
+            "label_source": "panel_title",
+            "example": "Japan"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Nominal minimum wage"
+          },
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "May-24"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Japan",
+            "Nominal minimum wage",
+            "May-22"
+          ],
+          "value": "10",
+          "value_source": "axis_read",
+          "why_hard": "Step lines without points and coarse y-axis ticks make reading exact values highly uncertain."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "small_multiples_5plus",
+        "figure_id": "f1",
+        "evidence": "15 panels arranged in a 3x5 grid"
+      },
+      {
+        "key": "step_line_series",
+        "figure_id": "f1",
+        "evidence": "the lines move in horizontal and vertical steps"
+      },
+      {
+        "key": "per_panel_axis_range",
+        "figure_id": "f1",
+        "evidence": "Türkiye y axis reads to 800 while Japan is to 60"
+      },
+      {
+        "key": "shared_legend",
+        "figure_id": "f1",
+        "evidence": "one legend at the top serves all 15 panels"
+      },
+      {
+        "key": "panel_title_per_panel",
+        "figure_id": "f1",
+        "evidence": "each panel has a country name like Japan above it"
+      },
+      {
+        "key": "panel_background",
+        "figure_id": "f1",
+        "evidence": "plot areas have a light grey background fill"
+      },
+      {
+        "key": "rotated_x_ticks",
+        "figure_id": "f1",
+        "evidence": "x axis date labels like May-19 are rotated diagonally"
+      },
+      {
+        "key": "reference_line",
+        "figure_id": "f1",
+        "evidence": "a solid black line marks zero on the y axes"
+      },
+      {
+        "key": "negative_values",
+        "figure_id": "f1",
+        "evidence": "y axes start at -20 or -30 with lines dipping below zero"
+      },
+      {
+        "key": "nonstandard_time_ticks",
+        "figure_id": "f1",
+        "evidence": "time is written as May-19, Nov-19"
+      },
+      {
+        "key": "legend_above_plot",
+        "figure_id": "f1",
+        "evidence": "the legend sits above the first row of panels"
+      },
+      {
+        "key": "dense_marks_100plus",
+        "figure_id": "f1",
+        "evidence": "15 panels with 2 series and numerous step changes"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "missing_unit",
+        "figure_id": "page",
+        "evidence": "no unit or scale is stated anywhere on the page",
+        "affects": [
+          4
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "10",
+        "figure_id": "f1",
+        "mark": "the Japan Nominal minimum wage step from approx May-22 to May-23",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Japan",
+          "Nominal minimum wage",
+          "May-22"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "17",
+        "figure_id": "f1",
+        "mark": "the Netherlands Real minimum wage step at May-24",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Netherlands",
+          "Real minimum wage",
+          "May-24"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "16",
+        "figure_id": "f1",
+        "mark": "the New Zealand Nominal minimum wage step at May-21",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "New Zealand",
+          "Nominal minimum wage",
+          "May-21"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "90",
+        "figure_id": "f1",
+        "mark": "the Poland Nominal minimum wage step at May-24",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Poland",
+          "Nominal minimum wage",
+          "May-24"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "42",
+        "figure_id": "f1",
+        "mark": "the Netherlands Nominal minimum wage step at May-24",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Netherlands",
+          "Nominal minimum wage",
+          "May-24"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "35",
+        "figure_id": "f1",
+        "mark": "the Portugal Nominal minimum wage step at May-24",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Portugal",
+          "Nominal minimum wage",
+          "May-24"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "38",
+        "figure_id": "f1",
+        "mark": "the United Kingdom Nominal minimum wage step at May-24",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "United Kingdom",
+          "Nominal minimum wage",
+          "May-24"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "9",
+        "figure_id": "f1",
+        "mark": "the New Zealand Real minimum wage step at May-24",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "New Zealand",
+          "Real minimum wage",
+          "May-24"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "700",
+        "figure_id": "f1",
+        "mark": "the Türkiye Nominal minimum wage step at May-24",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Türkiye",
+          "Nominal minimum wage",
+          "May-24"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "12",
+        "figure_id": "f1",
+        "mark": "the United Kingdom Real minimum wage step at May-24",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "United Kingdom",
+          "Real minimum wage",
+          "May-24"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "所有的数值都没有在图上标出。因为使用的是阶梯线（step line），且 y 轴的刻度间隔过大（如日本面板每格间距为 10），在没有数据标记点的情况下，根本无法将 17 或 38 读取到 5% 的误差内。",
+    "examples": [
+      {
+        "gap": "P2",
+        "figure_id": "f1",
+        "quote": "panel titles like Japan and Korea above each subplot",
+        "why": "需要支持将面板标题（如国家名称）作为数据键的一部分，以便区分15个不同子图中同名的系列。"
+      },
+      {
+        "gap": "P1",
+        "figure_id": "f1",
+        "quote": "y axis ticks like 0, 10, 20 against unlabelled step lines",
+        "why": "阶梯线未提供具体的转折数据点，且y轴刻度跨度过大，生成器需要能基于误差范围来表达可读性，而非二元判断。"
+      }
+    ]
+  }
+}

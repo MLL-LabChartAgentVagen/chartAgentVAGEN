@@ -1,0 +1,329 @@
+{
+  "stem": "US_Professional_Services_Partner_Compensation_Survey_2024_p20",
+  "document": "US_Professional_Services_Partner_Compensation_Survey_2024",
+  "tags": "untagged",
+  "model": "claude-opus-5",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 85.2,
+  "usage": {
+    "input_tokens": 13758,
+    "output_tokens": 6727,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "## 画出来要什么\n两幅无编号的水平百分比堆叠条形图，各 4 行 × 3 段（共 12 段）。要能画：两级标题（上层 `Key external factors influencing outlook (%)` 只出现在第一幅之上，单位 `(%)` 只在这一行；每幅自带粗体副标题 `…by firm type` / `…by firm revenue`）；图例置于绘图区上方一行；完全没有数值轴、没有刻度、没有网格，条端一律右对齐到同一位置；数字全部印在段内右侧；类别标签可折行（`Management/` `advisory consulting`）；每幅下方各有 `Note:` 与 `Source: … n=142` 两行；左侧还有一栏与图并排的正文。\n\n## 定位一个值难在哪\n`34` 是第一幅 `Management/advisory consulting` 行的 Pessimistic 段。数字本身印着，读数不难；难在寻址：该类别名在页面上被拆成两行，两幅图的图例词完全相同（Pessimistic/Neutral/Optimistic），且都没有图号，要靠副标题里的 `by firm type` 才能与 `by firm revenue` 那幅区分。\n\n## 不确定的\n上层 `(%)` 标题是否也管辖第二幅，无法从版面确定；无数值轴，段长与数值的对应只能相信印出的标签；`$1.00bn–$5.00bn` 中的连接符是 en dash 还是 hyphen，从渲染图难以断定。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "Key external factors influencing outlook (%)",
+          "subtitle": "Key external factors influencing outlook for current fiscal year, by firm type",
+          "unit_text": "(%)",
+          "placement": "above"
+        },
+        "type": "stacked_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 3,
+        "categories": 4,
+        "marks": 12,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "left",
+            "role": "category",
+            "unit_text": "",
+            "low": "Strategy consulting",
+            "high": "Other",
+            "serves": "all four stacked bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Technology/IT consulting"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Pessimistic"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Other",
+            "Neutral"
+          ],
+          "value": "13",
+          "value_source": "printed",
+          "why_hard": "Narrow grey segment; label sits inside it, and no axis exists to check the length"
+        }
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "",
+          "title": "Key external factors influencing outlook for current fiscal year, by firm revenue",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "stacked_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 3,
+        "categories": 4,
+        "marks": 12,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "left",
+            "role": "category",
+            "unit_text": "",
+            "low": "Less than $1.00bn",
+            "high": "More than $20.00bn",
+            "serves": "all four stacked bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "$5.01bn–$20.00bn"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Optimistic"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "$1.00bn–$5.00bn",
+            "Neutral"
+          ],
+          "value": "9",
+          "value_source": "printed",
+          "why_hard": "Two adjacent 9-wide segments; both labels squeezed into thin bands with no axis to verify"
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "stacked_bar",
+        "figure_id": "f1",
+        "evidence": "Each firm-type row is one bar split into orange, grey and cyan segments"
+      },
+      {
+        "key": "stacked_bar",
+        "figure_id": "f2",
+        "evidence": "Each revenue band row is one bar of three coloured segments"
+      },
+      {
+        "key": "pct_stacked",
+        "figure_id": "f1",
+        "evidence": "All four bars end at the same right edge; 'Numbers may not sum to 100%, because of rounding'"
+      },
+      {
+        "key": "pct_stacked",
+        "figure_id": "f2",
+        "evidence": "All four bars terminate at one common right edge; 18+21+61=100"
+      },
+      {
+        "key": "horizontal_bars",
+        "figure_id": "f1",
+        "evidence": "Category names on the left, bars grow rightwards from a common left start"
+      },
+      {
+        "key": "horizontal_bars",
+        "figure_id": "f2",
+        "evidence": "'Less than $1.00bn' etc. on the left, bars run to the right"
+      },
+      {
+        "key": "no_value_axis",
+        "figure_id": "f1",
+        "evidence": "No ticks, no baseline numbers below the bars; only printed segment labels"
+      },
+      {
+        "key": "no_value_axis",
+        "figure_id": "f2",
+        "evidence": "Nothing below the bars but the Note and Source lines; no ticks"
+      },
+      {
+        "key": "value_label_inside",
+        "figure_id": "f1",
+        "evidence": "'23', '36', '41' printed inside their segments, right-aligned"
+      },
+      {
+        "key": "value_label_inside",
+        "figure_id": "f2",
+        "evidence": "'36', '38', '26' sit within the coloured segments of the last bar"
+      },
+      {
+        "key": "thin_segment_label",
+        "figure_id": "f2",
+        "evidence": "'9' and '9' crammed into two very narrow segments at the left of the $1.00bn–$5.00bn bar"
+      },
+      {
+        "key": "legend_above_plot",
+        "figure_id": "f1",
+        "evidence": "'Pessimistic  Neutral  Optimistic' row sits between the subtitle and the first bar"
+      },
+      {
+        "key": "legend_above_plot",
+        "figure_id": "f2",
+        "evidence": "Legend row of three swatches drawn above 'Less than $1.00bn'"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "'Note: Numbers may not sum to 100%...' and 'Source: Heidrick & Struggles ... n=142'"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f2",
+        "evidence": "Same two small-print lines repeated under the second chart"
+      },
+      {
+        "key": "wrapped_category_labels",
+        "figure_id": "f1",
+        "evidence": "'Management/' and 'advisory consulting' set on two lines as one category"
+      },
+      {
+        "key": "multi_figure_page",
+        "figure_id": "page",
+        "evidence": "Two charts, each with its own bold caption and its own Note/Source pair"
+      },
+      {
+        "key": "side_text_bullets",
+        "figure_id": "page",
+        "evidence": "Left column paragraphs 'By firm type, technology and IT firms...' run level with both charts"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "'Key external factors influencing outlook (%)' is the only place the percent unit appears"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "super_title_over_multiple_figures",
+        "figure_id": "page",
+        "evidence": "'Key external factors influencing outlook (%)' heads both charts; only the second-level lines say 'by firm type' / 'by firm revenue'",
+        "affects": [
+          3,
+          4
+        ]
+      },
+      {
+        "name": "pct_stacked_without_any_axis",
+        "figure_id": "f2",
+        "evidence": "Bars all reach one common right edge but no 0-100 scale or tick is drawn anywhere",
+        "affects": [
+          2
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "34",
+        "figure_id": "f1",
+        "mark": "the Management/advisory consulting Pessimistic (orange) segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Key external factors influencing outlook for current fiscal year, by firm type",
+          "Management/advisory consulting",
+          "Pessimistic"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 3
+      },
+      {
+        "value": "28",
+        "figure_id": "f1",
+        "mark": "the Technology/IT consulting Optimistic (cyan) segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Key external factors influencing outlook for current fiscal year, by firm type",
+          "Technology/IT consulting",
+          "Optimistic"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "83",
+        "figure_id": "f2",
+        "mark": "the $1.00bn–$5.00bn Optimistic (cyan) segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Key external factors influencing outlook for current fiscal year, by firm revenue",
+          "$1.00bn–$5.00bn",
+          "Optimistic"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "38",
+        "figure_id": "f2",
+        "mark": "the More than $20.00bn Neutral (grey) segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Key external factors influencing outlook for current fiscal year, by firm revenue",
+          "More than $20.00bn",
+          "Neutral"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "31",
+        "figure_id": "f2",
+        "mark": "the $5.01bn–$20.00bn Pessimistic (orange) segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Key external factors influencing outlook for current fiscal year, by firm revenue",
+          "$5.01bn–$20.00bn",
+          "Pessimistic"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      }
+    ],
+    "hardest_step": 3,
+    "hardest_step_why": "数值全印出，读数无碍；难在 34 需副标题“by firm type”＋折行类别“Management/advisory consulting”＋图例词，两图图例完全同名且无图号。",
+    "examples": [
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "Key external factors influencing outlook (%) above Key external factors influencing outlook for current fiscal year, by firm type",
+        "why": "两级粗体标题、无图号，单位只在上层标题里，现有流水线只有单一标题字段。"
+      },
+      {
+        "gap": "P3",
+        "figure_id": "page",
+        "quote": "Two unnumbered stacked-bar charts stacked down the page, each followed by its own 'Note:' and 'Source: ... n=142' lines",
+        "why": "整页导出须把两组几乎同名的标题与注释分别绑定到各自表格。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f2",
+        "quote": "'9' and '9' printed inside two narrow segments at the left end of the $1.00bn–$5.00bn bar",
+        "why": "无数值轴，标签一律段内右对齐；窄段不外移，需要标签位置作为可控维度。"
+      },
+      {
+        "gap": "P1",
+        "figure_id": "f1",
+        "quote": "No ticks or baseline under the bars; the only numbers are 23, 36, 41 printed in the segments",
+        "why": "完全无轴时可达精度取决于是否印标签，不能用统一的可读性布尔门。"
+      }
+    ]
+  }
+}

@@ -1,0 +1,273 @@
+{
+  "stem": "deloitte-2025-global-automotive-consumer-study-january-2025_1_p20",
+  "document": "deloitte-2025-global-automotive-consumer-study-january-2025_1",
+  "tags": "untagged",
+  "model": "gemini-3.1-pro-preview",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "seconds": 91.1,
+  "usage": {
+    "input_tokens": 5319,
+    "output_tokens": 11872,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n本页包含两组基于正文段落作为标题的水平条形图。\n图1包含左右两个并排的面板，各面板有独立的类别轴（受访国家排序不同），且无数值轴，数据标签直接印在条形内部；面板上方有各自较长的描述性标题作为面板名。\n图2是一个100%堆叠水平条形图（`pct_stacked`），同样无数值坐标轴（`no_value_axis`），三个系列的图例位于图表下方。生成器需要支持水平条形（`horizontal_bars`）、内嵌数值标签（`value_label_inside`）以及无坐标轴的纯标签渲染模式。\n\n### 定位一个值难在哪\n以图2中印度的“Beneficial”数值 `82` 为例。最大的困难在于图表没有任何数值刻度和坐标轴线。多数视觉解析器强依赖于检测坐标轴来确立图表区域与数据映射关系。对于只有条形色块和内部文字标签的图表，解析器往往无法识别其为有效图表，从而导致完全无法提取出任何数据表（Step 1容易失败）。\n\n### 不确定的\n全页没有类似于“Figure X”的显式编号。两组图表的首段实际上是以较粗字体排版的总结性正文段落，是否应将其直接视为图表标题存在一定歧义，本报告将其全部作为标题处理。此外，图2的图例中存在拼写错误“Not benefical”（缺少第二个i）。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "Consumers surveyed in both India and the United Kingdom are more concerned with the idea of an autonomous vehicle fleet when compared to surveyed consumers in Germany, Japan, or China.",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "bar",
+        "type_other": "",
+        "panels": 2,
+        "series": 1,
+        "categories": 8,
+        "marks": 16,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "left",
+            "role": "category",
+            "unit_text": "",
+            "low": "India",
+            "high": "Germany",
+            "serves": "left panel bars"
+          },
+          {
+            "side": "left",
+            "role": "category",
+            "unit_text": "",
+            "low": "India",
+            "high": "China",
+            "serves": "right panel bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "panel",
+            "label_source": "panel_title",
+            "example": "Percentage of consumers concerned about fully autonomous robotaxi services operating where they live"
+          },
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "India"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Percentage of consumers concerned about fully autonomous robotaxi services operating where they live",
+            "India"
+          ],
+          "value": "63%",
+          "value_source": "printed",
+          "why_hard": "The complete absence of a value axis makes this prone to being skipped by parsers."
+        }
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "",
+          "title": "More than three quarters of surveyed consumers in India and China believe the addition of artificial intelligence in vehicle systems is beneficial. On the other hand, a quarter of surveyed consumers in Germany, the United States, and the United Kingdom remain skeptical about the technology.",
+          "subtitle": "Addition of artificial intelligence in vehicle systems",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "stacked_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 3,
+        "categories": 8,
+        "marks": 24,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "left",
+            "role": "category",
+            "unit_text": "",
+            "low": "India",
+            "high": "Germany",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "India"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Beneficial"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "India",
+            "Beneficial"
+          ],
+          "value": "82%",
+          "value_source": "printed",
+          "why_hard": "No value axis is provided, meaning numeric extraction relies purely on OCR of numbers inside colored segments."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "horizontal_bars",
+        "figure_id": "page",
+        "evidence": "categories run down the left, bars extend to the right"
+      },
+      {
+        "key": "value_label_inside",
+        "figure_id": "page",
+        "evidence": "percentage values are printed inside the colored segments"
+      },
+      {
+        "key": "no_value_axis",
+        "figure_id": "page",
+        "evidence": "no numerical axis line or ticks exist at the bottom"
+      },
+      {
+        "key": "panel_title_per_panel",
+        "figure_id": "f1",
+        "evidence": "column headers act as separate panel titles"
+      },
+      {
+        "key": "multi_figure_page",
+        "figure_id": "page",
+        "evidence": "two distinct chart blocks with their own note lines below"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "page",
+        "evidence": "Q56, Q62 and note text sit below each figure"
+      },
+      {
+        "key": "pct_stacked",
+        "figure_id": "f2",
+        "evidence": "stacked segments all add up to 100% of uniform length"
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f2",
+        "evidence": "the three-item legend is situated below the chart"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "paragraph_as_title",
+        "figure_id": "page",
+        "evidence": "Titles are 2-sentence long paragraphs above charts",
+        "affects": [
+          4
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "82",
+        "figure_id": "f2",
+        "mark": "the India Beneficial segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "India",
+          "Beneficial"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "13",
+        "figure_id": "f2",
+        "mark": "the India Neutral segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "India",
+          "Neutral"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "77",
+        "figure_id": "f2",
+        "mark": "the China Beneficial segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "China",
+          "Beneficial"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "45",
+        "figure_id": "f2",
+        "mark": "the US Beneficial segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "US",
+          "Beneficial"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "41",
+        "figure_id": "f2",
+        "mark": "the Germany Beneficial segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Germany",
+          "Beneficial"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "31",
+        "figure_id": "f2",
+        "mark": "the UK Neutral segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "UK",
+          "Neutral"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      }
+    ],
+    "hardest_step": 1,
+    "hardest_step_why": "图表无数值轴，数值82等仅作文本嵌于条形内，解析器常因无坐标轴而跳过提取，导致Step 1直接失败。",
+    "examples": [
+      {
+        "gap": "P6",
+        "figure_id": "f2",
+        "quote": "82%, 13%, and 5% are printed directly inside the segments with no x-axis",
+        "why": "生成器必须依赖数值坐标轴绘制图形，暂不支持完全去除坐标轴且仅含内部标签的极简排版风格。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "page",
+        "quote": "More than three quarters of surveyed consumers... remain skeptical about the technology.",
+        "why": "图表主标题是一段带有结论性质的多行长文本，当前的标题生成机制无法很好地处理这种段落级文本。"
+      },
+      {
+        "gap": "P2",
+        "figure_id": "f1",
+        "quote": "Percentage of consumers concerned about fully autonomous robotaxi services operating where they live",
+        "why": "将具有不同标题的长文本标签作为并排面板的名称，并纳入数据结构的索引键中，目前缺乏这种排版能力。"
+      }
+    ]
+  }
+}

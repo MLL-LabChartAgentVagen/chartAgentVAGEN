@@ -1,0 +1,269 @@
+{
+  "stem": "US_Professional_Services_Partner_Compensation_Survey_2024_p7",
+  "document": "US_Professional_Services_Partner_Compensation_Survey_2024",
+  "tags": "untagged",
+  "model": "gemini-3.1-pro-preview",
+  "control": "repeat",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 77.5,
+  "usage": {
+    "input_tokens": 5314,
+    "output_tokens": 10614,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "## 画出来要什么\n本页包含两个在结构上完全相同的水平条形图（以小倍数形式呈现）。每个图表有4个面板（列），共享左侧的类别分类标签。所有的条形图均没有绘制数值轴，取而代之的是直接在每个条形的内部（长条）或外部（短条）标注具体的数值。页面排版较为特殊，第一图和第二图的左侧均各自有独立的说明性正文段落与图表并排显示，共享同一水平页面空间。每个面板拥有自己的标题列名，且图表底部带有出处和注释文本。\n\n## 定位一个值难在哪\n以值 `46` 为例。它位于第一个图表中，需要结合左侧的共享类别（`$1.00m–$3.00m`）和对应列面板的顶部标题（`Less than $1.00bn`）才能唯一定位。由于图表缺乏标准的数值轴系统，且直接在条形上标注数字，其排版高度类似于一个内嵌条形图的表格。\n\n## 不确定的\n各个面板中的条形使用了不同的颜色（深蓝、青绿、灰绿色、浅灰等），由于图表中并未提供图例来说明这些颜色代表的具体含义，推测这些颜色仅仅是用于在视觉上区分不同的面板列，并不承载额外的数据分析维度。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "Personal revenue targets (%)",
+          "subtitle": "Personal revenue targets, by firm size",
+          "unit_text": "(%)",
+          "placement": "above"
+        },
+        "type": "bar",
+        "type_other": "",
+        "panels": 4,
+        "series": 1,
+        "categories": 10,
+        "marks": 40,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "left",
+            "role": "category",
+            "unit_text": "",
+            "low": "Less than $1.00m",
+            "high": "Prefer not to answer",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "$1.00m-$3.00m"
+          },
+          {
+            "role": "panel",
+            "label_source": "panel_title",
+            "example": "Less than $1.00bn"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "$1.00m-$3.00m",
+            "Less than $1.00bn"
+          ],
+          "value": "46",
+          "value_source": "printed",
+          "why_hard": "No value axis; parsers must link printed values inside bars to the shared category and panel header."
+        }
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "",
+          "title": "Personal revenue targets, by tenure at firm",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "bar",
+        "type_other": "",
+        "panels": 4,
+        "series": 1,
+        "categories": 10,
+        "marks": 40,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "left",
+            "role": "category",
+            "unit_text": "",
+            "low": "Less than $1.00m",
+            "high": "Prefer not to answer",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "$1.00m-$3.00m"
+          },
+          {
+            "role": "panel",
+            "label_source": "panel_title",
+            "example": "Less than 3 years"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "$1.00m-$3.00m",
+            "Less than 3 years"
+          ],
+          "value": "27",
+          "value_source": "printed",
+          "why_hard": "No value axis; parsers must link printed values inside bars to the shared category and panel header."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "horizontal_bars",
+        "figure_id": "f1",
+        "evidence": "the categories are on the left and bars extend right"
+      },
+      {
+        "key": "no_value_axis",
+        "figure_id": "f1",
+        "evidence": "there is no value axis drawn with ticks"
+      },
+      {
+        "key": "value_label_inside",
+        "figure_id": "f1",
+        "evidence": "the number 46 is printed inside the dark blue bar"
+      },
+      {
+        "key": "value_label_outside",
+        "figure_id": "f1",
+        "evidence": "the number 5 is printed outside the short bar"
+      },
+      {
+        "key": "small_multiples_4",
+        "figure_id": "f1",
+        "evidence": "the figure has 4 panel columns for different firm sizes"
+      },
+      {
+        "key": "shared_axis",
+        "figure_id": "f1",
+        "evidence": "the left category labels are shared across the 4 panels"
+      },
+      {
+        "key": "panel_title_per_panel",
+        "figure_id": "f1",
+        "evidence": "each of the 4 columns has its own title at top"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "Note: Numbers may not sum to 100% under the chart"
+      },
+      {
+        "key": "multi_figure_page",
+        "figure_id": "page",
+        "evidence": "there are two independent charts with their own titles"
+      },
+      {
+        "key": "side_text_bullets",
+        "figure_id": "page",
+        "evidence": "a column of body text runs left of the charts"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "the title includes (%)"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "inline_bars_in_table",
+        "figure_id": "f1",
+        "evidence": "the chart layout resembles a table where data cells contain horizontal bars",
+        "affects": [
+          1
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "46",
+        "figure_id": "f1",
+        "mark": "the $1.00m-$3.00m bar in the Less than $1.00bn panel",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "$1.00m-$3.00m",
+          "Less than $1.00bn"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "13",
+        "figure_id": "f1",
+        "mark": "the $1.00m-$3.00m bar in the $1.01bn-$5.00bn panel",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "$1.00m-$3.00m",
+          "$1.01bn-$5.00bn"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "27",
+        "figure_id": "f2",
+        "mark": "the $1.00m-$3.00m bar in the Less than 3 years panel",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "$1.00m-$3.00m",
+          "Less than 3 years"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "21",
+        "figure_id": "f2",
+        "mark": "the $6.01m-$10.00m bar in the 3-5 years panel",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "$6.01m-$10.00m",
+          "3-5 years"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "29",
+        "figure_id": "f2",
+        "mark": "the More than $30.00m bar in the More than 10 years panel",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "More than $30.00m",
+          "More than 10 years"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      }
+    ],
+    "hardest_step": 1,
+    "hardest_step_why": "图表为无数值轴的小倍数图，直接在条形上标注了数字（如46），且共享左侧类别轴，解析器极易遗漏而导致完全无法输出表格结构。",
+    "examples": [
+      {
+        "gap": "P2",
+        "figure_id": "f1",
+        "quote": "panel titles Less than $1.00bn and $1.01bn-$5.00bn",
+        "why": "图表为小倍数图，各面板的标题必须作为维度的键值来唯一定位数据（如46）。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "the value 46 is printed inside the bar and 5 outside, with no value axis",
+        "why": "生成器需要支持隐藏数值轴，并将数据标签直接渲染在条形的内部或外部。"
+      },
+      {
+        "gap": "P3",
+        "figure_id": "page",
+        "quote": "a narrow column of body text starting 'By firm size, we saw...' runs beside the top figure",
+        "why": "页面正文以侧边栏形式与图表并排显示，生成器需要支持复杂的页级网格布局排版。"
+      }
+    ]
+  }
+}

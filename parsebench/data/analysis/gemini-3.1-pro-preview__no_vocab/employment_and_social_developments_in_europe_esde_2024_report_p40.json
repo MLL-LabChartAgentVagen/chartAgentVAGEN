@@ -1,0 +1,304 @@
+{
+  "stem": "employment_and_social_developments_in_europe_esde_2024_report_p40",
+  "document": "employment_and_social_developments_in_europe_esde_2024_report",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "no_vocab",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 99.1,
+  "usage": {
+    "input_tokens": 3206,
+    "output_tokens": 13619,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n图表分为左右两个并排的面板。每个面板顶部有自己的标题（Panel A, Panel B），各自拥有独立且刻度不同的Y轴：左侧面板Y轴带有“€”符号前缀，右侧面板Y轴无单位。两个面板的X轴均为年份（2010, 2014, 2017, 2021）。两个面板底部各自配备了一个完全相同的图例，通过线条颜色和节点形状来区分不同国家组别（14, 19, 21 countries）。\n\n### 定位一个值难在哪\n以“0.59”为例。该值位于右侧面板（Panel B），对应“14 countries”在“2017”年的数据点。由于整个图表没有标注具体的数据标签，读者必须依靠该点在Y轴上的水平投影来读取数值。该点位于刻度线0.58和0.60之间，需要目测插值。虽然在5%的容差范围内可能过关，但这种视觉对齐不可避免地增加了提取难度。\n\n### 不确定的\n图表中的绿线（19 countries）和黄线（21 countries）均不是从2010年开始，图中图例或直接标注并没有解释数据缺失的原因（仅在页脚注释中提到波次不同）。此外，给定的测试值0.58并非数据点，而是Y轴上的一个刻度标签，无法与任何特定的时间或类别点对应。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Chart 1",
+          "title": "Median wealth has increased on average in the euro area, with countries converging upwards",
+          "subtitle": "Average and standard deviation of median net wealth, 2010 - 2021, euro area",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 2,
+        "series": 3,
+        "categories": 4,
+        "marks": 18,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "€ 0",
+            "high": "€ 180 000",
+            "serves": "all lines in Panel A"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "2010",
+            "high": "2021",
+            "serves": "all lines in Panel A"
+          },
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "0.5",
+            "high": "0.66",
+            "serves": "all lines in Panel B"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "2010",
+            "high": "2021",
+            "serves": "all lines in Panel B"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "panel",
+            "label_source": "panel_title",
+            "example": "Panel A: Median net wealth"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "14 countries"
+          },
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2010"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Panel A: Median net wealth",
+            "14 countries",
+            "2010"
+          ],
+          "value": "160000",
+          "value_source": "axis_read",
+          "why_hard": "No data labels are printed; the value must be visually aligned with the y-axis."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "panel_titles",
+        "figure_id": "f1",
+        "evidence": "titles like 'Panel A: Median net wealth' sit directly above each plot area",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "legend_below_x_axis",
+        "figure_id": "f1",
+        "evidence": "legend items are positioned directly underneath the year labels of the x-axis",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "y_axis_prefix",
+        "figure_id": "f1",
+        "evidence": "the '€' symbol is placed before each number on the left y-axis",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "key": "horizontal_grid_lines",
+        "figure_id": "f1",
+        "evidence": "dashed lines extend horizontally from the y-axis ticks across the panels",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "key": "marker_symbols",
+        "figure_id": "f1",
+        "evidence": "data points use different shapes (diamond, square, cross) along with colors",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "new_components": [
+      {
+        "name": "identical_repeated_legends",
+        "figure_id": "f1",
+        "evidence": "the exact same legend is drawn separately under both panels",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "name": "independent_panel_y_axes",
+        "figure_id": "f1",
+        "evidence": "Panel A uses currency scale, Panel B uses ratio scale with no unit",
+        "affects": [
+          2
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "160000",
+        "figure_id": "f1",
+        "mark": "Panel A, 2010, 14 countries",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Panel A: Median net wealth",
+          "14 countries",
+          "2010"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "140000",
+        "figure_id": "f1",
+        "mark": "Panel A, 2014, 14 countries",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Panel A: Median net wealth",
+          "14 countries",
+          "2014"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "120000",
+        "figure_id": "f1",
+        "mark": "Panel A, 2014, 19 countries",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Panel A: Median net wealth",
+          "19 countries",
+          "2014"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "145000",
+        "figure_id": "f1",
+        "mark": "Panel A, 2017, 14 countries",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Panel A: Median net wealth",
+          "14 countries",
+          "2017"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "0.56",
+        "figure_id": "f1",
+        "mark": "Panel B, 2010, 14 countries",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Panel B: Dispersion of median wealth",
+          "14 countries",
+          "2010"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "0.64",
+        "figure_id": "f1",
+        "mark": "Panel B, 2014, 19 countries",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Panel B: Dispersion of median wealth",
+          "19 countries",
+          "2014"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "0.58",
+        "figure_id": "f1",
+        "mark": "Panel B y-axis tick label, not a data point",
+        "printed_on_figure": true,
+        "addressing_keys": [],
+        "keys_verbatim": false,
+        "blocked_step": 1
+      },
+      {
+        "value": "0.59",
+        "figure_id": "f1",
+        "mark": "Panel B, 2017, 14 countries",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Panel B: Dispersion of median wealth",
+          "14 countries",
+          "2017"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "0.53",
+        "figure_id": "f1",
+        "mark": "Panel B, 2021, 14 countries",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Panel B: Dispersion of median wealth",
+          "14 countries",
+          "2021"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "0.56",
+        "figure_id": "f1",
+        "mark": "Panel B, 2021, 19 countries",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Panel B: Dispersion of median wealth",
+          "19 countries",
+          "2021"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "全靠Y轴读取且无数据标签。如145000位于刻度间，5%容差为7250，约占刻度间距三分之一，目测极易偏离；此外0.58非数据点，会导致Step1查无此表行。",
+    "examples": [
+      {
+        "gap": "P2",
+        "figure_id": "f1",
+        "quote": "Panel A: Median net wealth",
+        "why": "左右面板分别表示净财富中位数和离散度，面板标题必须作为检索相应数值数据的关键维度纳入key中。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "Chart 1 Median wealth has increased on average in the euro area...",
+        "why": "标题区域包含了图表编号、主标题和副标题文本，需要被结构化解析并分别存储，而不能仅视为普通正文。"
+      }
+    ]
+  }
+}

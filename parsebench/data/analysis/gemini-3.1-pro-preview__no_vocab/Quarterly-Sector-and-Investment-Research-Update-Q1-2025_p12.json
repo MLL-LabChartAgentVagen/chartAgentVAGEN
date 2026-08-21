@@ -1,0 +1,339 @@
+{
+  "stem": "Quarterly-Sector-and-Investment-Research-Update-Q1-2025_p12",
+  "document": "Quarterly-Sector-and-Investment-Research-Update-Q1-2025",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "no_vocab",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 24.3,
+  "usage": {
+    "input_tokens": 3195,
+    "output_tokens": 3233,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "**画出来要什么**\n\n左图是一张有阴影区域高亮的折线图，X轴标签是倾斜的年份，而且有些年份是跨度不等距的（如1990, 1992, 1994, 然后突然跳到 2005 之前的正常间隔，仔细看其实是等距刻度但只标了部分年份，间隔并不完全规律，2008 2009 挨着，2011 2013 差两岁，等等——实际上X轴刻度非常紧凑且标签有倾斜，部分被省略）。右图是带有四种不同文字分类标签的柱状图，包含正负值，Y轴百分比显示。整个页面共享一个大标题和副标题。图表顶部有各自的粗体标题。\n\n**定位一个值难在哪**\n\n以左图 150 为例，折线图的纵轴可以直接读出，但它对应的时间点在横轴上非常难以精确定位。150 对应的那个高点在 1990 到 1992 之间，没有确切的年份标签，仅靠肉眼读图很难准确分配到某个具体的月份或年份。右侧的柱状图数值印在柱子上（如 4%），定位相对容易，只要与底部的长标签匹配即可。\n\n**不确定的**\n\n左图部分年份标签间隔不一致（1998, 2000, 2002...然后突然2008, 2009连续标出），很难确定数据点到底是按什么时间步长绘制的。右图未标注具体数值的柱子只能通过Y轴估读。底部的“LEFT: Valuation spread...”这段注释说明了数据的定义，在提取时可能需要作为表格的元数据处理。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "Valuation spreads are wide",
+          "subtitle": "Financials Price-to-Book Valuation Spreads",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 1,
+        "series": 1,
+        "categories": 408,
+        "marks": 408,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Price-to-book valuation spreads",
+            "low": "0",
+            "high": "250",
+            "serves": "the line"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "1990",
+            "high": "2024",
+            "serves": "the line"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2008"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "2008"
+          ],
+          "value": "230",
+          "value_source": "axis_read",
+          "why_hard": "The sharp peak occurs near 2008, but identifying the exact month or interpolated value without markers is difficult."
+        }
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "",
+          "title": "Financials have benefited from falling rates and credit spreads",
+          "subtitle": "NTM Average Relative Performance when Credit Spreads (HYOAS) or Rates\n(1-Yr Yield) Are Rising or Falling, 1980–Present",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 1,
+        "categories": 4,
+        "marks": 4,
+        "values_printed": "some",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "-3%",
+            "high": "5%",
+            "serves": "all bars"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "Rates Rising/\nSpreads Rising",
+            "high": "Rates Falling/\nSpreads Rising",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Rates Falling/\nSpreads Falling"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Rates Falling/\nSpreads Falling"
+          ],
+          "value": "4%",
+          "value_source": "printed",
+          "why_hard": ""
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "page_level_title_and_subtitle",
+        "figure_id": "page",
+        "evidence": "Large text at the top, outside of any specific figure bounding box.",
+        "affects": [
+          4
+        ]
+      },
+      {
+        "key": "vertical_axis_label",
+        "figure_id": "f1",
+        "evidence": "Rotated text 'Price-to-book valuation spreads' on the left axis.",
+        "affects": [
+          4
+        ]
+      },
+      {
+        "key": "rotated_tick_labels",
+        "figure_id": "f1",
+        "evidence": "Years on the x-axis are rotated 90 degrees.",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "background_highlight_regions",
+        "figure_id": "f1",
+        "evidence": "Grey shaded vertical bands spanning specific date ranges.",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "background_highlight_regions",
+        "figure_id": "f2",
+        "evidence": "Grey shaded vertical band behind 'Rates Falling/Spreads Falling'.",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "negative_values_and_zero_line",
+        "figure_id": "f2",
+        "evidence": "Bars go below a visible zero line; y-axis has -1%, -2%, -3%.",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "key": "direct_value_label",
+        "figure_id": "f2",
+        "evidence": "The text '4%' sits on top of one bar.",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "key": "multiline_tick_labels",
+        "figure_id": "f2",
+        "evidence": "x-axis labels split across two lines, e.g. 'Rates Rising/ Spreads Rising'.",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "source_and_notes_footer",
+        "figure_id": "page",
+        "evidence": "Paragraph starting with 'Past performance is no guarantee...' at the bottom.",
+        "affects": [
+          4
+        ]
+      }
+    ],
+    "new_components": [
+      {
+        "name": "irregular_time_axis_ticks",
+        "figure_id": "f1",
+        "evidence": "Years printed skip irregularly: 2006, 2008, 2009, 2011, 2013.",
+        "affects": [
+          2,
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "4%",
+        "figure_id": "f2",
+        "mark": "third bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Rates Falling/ Spreads Falling"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 0
+      },
+      {
+        "value": "-2.3%",
+        "figure_id": "f2",
+        "mark": "first bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Rates Rising/ Spreads Rising"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "0.5%",
+        "figure_id": "f2",
+        "mark": "second bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Rates Rising/ Spreads Falling"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "-1.9%",
+        "figure_id": "f2",
+        "mark": "fourth bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Rates Falling/ Spreads Rising"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "150",
+        "figure_id": "f1",
+        "mark": "initial peak on the line near 1990",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "1990"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "90",
+        "figure_id": "f1",
+        "mark": "not_found",
+        "printed_on_figure": false,
+        "addressing_keys": [],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "30",
+        "figure_id": "f1",
+        "mark": "trough near 1998",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "1998"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "75",
+        "figure_id": "f1",
+        "mark": "not_found",
+        "printed_on_figure": false,
+        "addressing_keys": [],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "60",
+        "figure_id": "f1",
+        "mark": "not_found",
+        "printed_on_figure": false,
+        "addressing_keys": [],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "60",
+        "figure_id": "f1",
+        "mark": "not_found",
+        "printed_on_figure": false,
+        "addressing_keys": [],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "左图折线图缺乏数据点标记，且X轴年份刻度极度不规则且拥挤；右图大部分柱子没有印制数值，只能通过极少刻度的Y轴（每格1%）估读，很难精确到小数点后一位（如 -2.3%, 0.5%）。",
+    "examples": [
+      {
+        "gap": "P6",
+        "figure_id": "f2",
+        "quote": "The first bar goes down to roughly -2.3%, the y-axis reads -1%, -2%, -3%.",
+        "why": "当前的图表生成需要支持绘制带有负值的柱状图，并在基准线上下正确排布柱子和刻度。"
+      },
+      {
+        "gap": "P3",
+        "figure_id": "page",
+        "quote": "Financials’ performance may be durable this time",
+        "why": "这是一个带有描述性段落的页面级大标题，超出了单一图表标题的范畴，需要全页级渲染。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "Valuation spreads are wide\nFinancials Price-to-Book Valuation Spreads",
+        "why": "图表有明确的主标题和副标题结构，且放置在绘图区上方。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "X-axis ticks: ...2006, 2008, 2009, 2011, 2013...",
+        "why": "时间轴的刻度标签渲染间隔不规律，目前的生成器缺乏配置离散/不均匀显示指定刻度的能力。"
+      }
+    ]
+  }
+}

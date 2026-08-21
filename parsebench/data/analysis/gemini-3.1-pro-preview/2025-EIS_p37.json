@@ -1,0 +1,276 @@
+{
+  "stem": "2025-EIS_p37",
+  "document": "2025-EIS",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 101.7,
+  "usage": {
+    "input_tokens": 5332,
+    "output_tokens": 13766,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n生成器需要支持水平条形图与散点（菱形）及刻度线标记（竖线）的混合绘制 (`mixed_marks`)。需支持通过条形颜色编码额外的分类属性（四种创新表现组别，`color_encodes_extra_attribute`），同时支持将特定基准类别（EU）使用图例中不存在的专属深蓝色进行高亮处理 (`highlighted_category`)。需要能够将某一数据系列绘制为覆盖在条形上的垂直刻度线 (`tick_marker_as_series`)。视觉样式上需要支持仅显示底部的垂直网格线 (`vgrid_only`)，并在图表下方依次排布坐标轴标题、图例和长段说明注释 (`source_note_lines`)。\n\n### 定位一个值难在哪\n以数值 37（Bulgaria 2025年的条形）为例。横轴的刻度间距高达 20，要依靠像素映射精确读出 37 且误差不超过其自身的 5%（即容差为 1.85）在视觉上是极度困难的，这会导致在解析容差判定时直接失败。此外，图例中并没有条形所代表的“2025年得分”的系列名称，该核心信息仅隐藏在底部的脚注文本中，模型可能无法将其提取为准确的列名，从而导致关联判定卡在步骤 3。\n\n### 不确定的\nEU 这一类别的颜色（深蓝色）既不在图例分类中，也没有在文字中单独说明其特殊颜色的具体含义，仅能推测是作为全欧盟平均基准进行的特殊视觉高亮设计。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 11",
+          "title": "Innovation performance of the EU27 Member States in the Attractive research systems dimension",
+          "subtitle": "Attractive research systems",
+          "unit_text": "(indexed to the EU in 2018)",
+          "placement": "above"
+        },
+        "type": "bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 3,
+        "categories": 28,
+        "marks": 84,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "category",
+            "unit_text": "",
+            "low": "Luxembourg",
+            "high": "Bulgaria",
+            "serves": "all marks"
+          },
+          {
+            "side": "bottom",
+            "role": "value",
+            "unit_text": "Score for dimension 1.2 in 2025 (indexed to the EU in 2018)",
+            "low": "0",
+            "high": "260",
+            "serves": "all marks"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Luxembourg"
+          },
+          {
+            "role": "colour_group",
+            "label_source": "legend",
+            "example": "Strong innovators"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Score in 2018"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "EU",
+            "Score in 2018"
+          ],
+          "value": "100",
+          "value_source": "axis_read",
+          "why_hard": "EU is a reference category with a distinct bar colour, requiring precise visual alignment."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "horizontal_bars",
+        "figure_id": "f1",
+        "evidence": "categories sit on the left y-axis and bars grow to the right"
+      },
+      {
+        "key": "mixed_marks",
+        "figure_id": "f1",
+        "evidence": "bars, diamonds, and vertical tick marks are overlaid in one panel"
+      },
+      {
+        "key": "tick_marker_as_series",
+        "figure_id": "f1",
+        "evidence": "Score in 2024 is drawn as a vertical tick marker on the bars"
+      },
+      {
+        "key": "color_encodes_extra_attribute",
+        "figure_id": "f1",
+        "evidence": "bar colors denote each country's performance group, distinct from series names"
+      },
+      {
+        "key": "highlighted_category",
+        "figure_id": "f1",
+        "evidence": "EU category bar is colored dark blue, completely distinct from the legend"
+      },
+      {
+        "key": "vgrid_only",
+        "figure_id": "f1",
+        "evidence": "vertical grid lines extend from the x-axis, no horizontal ones"
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "the legend sits horizontally below the plot area"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "Note: All performance scores are relative... printed below the legend"
+      },
+      {
+        "key": "axis_title_below_plot",
+        "figure_id": "f1",
+        "evidence": "the x-axis title sits below the bottom axis ticks"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "the unit phrase (indexed to the EU in 2018) is inside the axis title"
+      },
+      {
+        "key": "rebased_index_values",
+        "figure_id": "f1",
+        "evidence": "the axis title explicitly states values are indexed to the EU in 2018"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "implicit_series_defined_in_note",
+        "figure_id": "f1",
+        "evidence": "the bars represent 2025 performance, which is only stated in the footnote",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "245",
+        "figure_id": "f1",
+        "mark": "the Luxembourg 2025 bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Luxembourg",
+          "Strong innovators"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "215",
+        "figure_id": "f1",
+        "mark": "the Luxembourg 2018 diamond",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Luxembourg",
+          "Score in 2018"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "214",
+        "figure_id": "f1",
+        "mark": "the Denmark 2025 bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Denmark",
+          "Innovation leaders"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "186",
+        "figure_id": "f1",
+        "mark": "the Sweden 2025 bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Sweden",
+          "Innovation leaders"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "100",
+        "figure_id": "f1",
+        "mark": "the EU 2018 diamond",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "EU",
+          "Score in 2018"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "182",
+        "figure_id": "f1",
+        "mark": "the Belgium 2018 diamond",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Belgium",
+          "Score in 2018"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "167",
+        "figure_id": "f1",
+        "mark": "the Ireland 2025 bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Ireland",
+          "Strong innovators"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "37",
+        "figure_id": "f1",
+        "mark": "the Bulgaria 2025 bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Bulgaria",
+          "Emerging innovators"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "215",
+        "figure_id": "f1",
+        "mark": "the Denmark 2024 tick",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Denmark",
+          "Score in 2024"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "数值37（保加利亚）的5%容差仅为1.85，而横轴刻度间距高达20。在像素映射上无法保证视觉读取精度能落在不到十分之一个刻度间距的误差内，必定在步骤2卡住。",
+    "examples": [
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "Horizontal coloured bars represent countries' performance in 2025",
+        "why": "条形图没有图例项，其代表的数据系列仅在脚注中隐式定义，管线目前无法生成这种缺失直接图例映射的主系列。"
+      },
+      {
+        "gap": "P8",
+        "figure_id": "f1",
+        "quote": "EU bar is dark blue, completely outside the legend colours",
+        "why": "图表允许为特定基准类别（EU）分配图例中不存在的专属颜色高亮，当前生成器不支持针对特定类别的颜色覆盖机制。"
+      }
+    ]
+  }
+}

@@ -1,0 +1,198 @@
+{
+  "stem": "US_Professional_Services_Partner_Compensation_Survey_2024_p19",
+  "document": "US_Professional_Services_Partner_Compensation_Survey_2024",
+  "tags": "untagged",
+  "model": "gpt-5.6-sol",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 120000,
+  "seconds": 59.8,
+  "usage": {
+    "input_tokens": 8674,
+    "output_tokens": 4097,
+    "cache_read_tokens": 2365
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n需要绘制单面板横向分组条形图：9个因素、4类咨询公司、共36个数据槽；图例置于图上方，百分比单位写在标题中。数值全部直接标注，长条内标、短条外标，并保留左侧并排的正文栏及图下来源行。\n\n### 定位一个值难在哪\n首行“Interest rates and their impact on the economy”有两个81；必须再用图例区分“Strategy consulting”和“Management/advisory consulting”，单靠类别和值无法唯一定位。\n\n### 不确定的\n图中没有数值刻度或轴线，左侧类别文字按隐式类别轴处理。三个零值只有“0”而无可见条形；marks按9×4个数据槽计为36。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "Key external factors influencing outlook (%)",
+          "subtitle": "Key external factors influencing outlook for current fiscal year, by firm type (Select all that apply)",
+          "unit_text": "(%)",
+          "placement": "above"
+        },
+        "type": "grouped_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 4,
+        "categories": 9,
+        "marks": 36,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "left",
+            "role": "category",
+            "unit_text": "",
+            "low": "Interest rates and their impact on the economy",
+            "high": "Other",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Interest rates and their impact on the economy"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Strategy consulting"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Interest rates and their impact on the economy",
+            "Management/advisory consulting"
+          ],
+          "value": "81",
+          "value_source": "printed",
+          "why_hard": "The same category prints 81 twice, so the legend series is required."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "grouped_bar",
+        "figure_id": "f1",
+        "evidence": "Each category row contains four adjacent horizontal bars keyed by the four-item legend."
+      },
+      {
+        "key": "horizontal_bars",
+        "figure_id": "f1",
+        "evidence": "All bars extend horizontally to the right from a common origin."
+      },
+      {
+        "key": "no_value_axis",
+        "figure_id": "f1",
+        "evidence": "No numeric value-axis ticks are drawn; every bar carries a printed number."
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "“Source: Heidrick & Struggles US professional services partner compensation survey, 2024, n=142” appears below."
+      },
+      {
+        "key": "legend_above_plot",
+        "figure_id": "f1",
+        "evidence": "The four-item legend sits between the subtitle and the first category row."
+      },
+      {
+        "key": "side_text_bullets",
+        "figure_id": "f1",
+        "evidence": "“When compared to respondents at other types of firms” begins a prose column beside the chart."
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "The title reads “Key external factors influencing outlook (%)”."
+      },
+      {
+        "key": "value_label_inside",
+        "figure_id": "f1",
+        "evidence": "“81” is printed inside the right end of the top dark bar."
+      },
+      {
+        "key": "value_label_outside",
+        "figure_id": "f1",
+        "evidence": "“2” for “Commercial real estate market” sits beyond the short dark bar."
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "Horizontal rules separate category rows; no vertical grid lines are drawn."
+      }
+    ],
+    "new_components": [
+      {
+        "name": "zero_value_label_without_bar",
+        "figure_id": "f1",
+        "evidence": "Three “0” labels appear at the bar origin with no visible bar length.",
+        "affects": [
+          2,
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "81",
+        "figure_id": "f1",
+        "mark": "the Strategy consulting bar for Interest rates and their impact on the economy",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Interest rates and their impact on the economy",
+          "Strategy consulting"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "60",
+        "figure_id": "f1",
+        "mark": "the Technology/IT consulting bar for US presidential elections/geopolitical uncertainty",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "US presidential elections/geopolitical uncertainty",
+          "Technology/IT consulting"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "19",
+        "figure_id": "f1",
+        "mark": "the Management/advisory consulting bar for Effects of hybrid work models on our organization",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Effects of hybrid work models on our organization",
+          "Management/advisory consulting"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "5",
+        "figure_id": "f1",
+        "mark": "the Strategy consulting bar for Increasing threat of cyberattacks",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Increasing threat of cyberattacks",
+          "Strategy consulting"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "12",
+        "figure_id": "f1",
+        "mark": "the Management/advisory consulting bar for Increasing threat of cyberattacks",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Increasing threat of cyberattacks",
+          "Management/advisory consulting"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      }
+    ],
+    "hardest_step": 3,
+    "hardest_step_why": "81在首行出现两次，必须同时关联类别和图例系列；数值本身均已印出。潜在错误主要是标签关联。高密度但清晰。此页没有表格轴刻度问题。所有检查值都直接标注，需两级键。最难步骤为标签关联。标题上下文清晰。数值精度充分。图例明确。类别完整。页内一图。图外正文不影响。故步骤3最难。单位在标题。零值特殊但不在抽查。来源清楚。布局整洁。无需猜轴。标签均原文。通过预期高。最终仍需系列。重复值增加风险。中文说明完成。结束。",
+    "examples": []
+  }
+}

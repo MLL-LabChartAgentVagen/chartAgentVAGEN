@@ -1,0 +1,360 @@
+{
+  "stem": "World_Inequality_Report_2026_p66",
+  "document": "World_Inequality_Report_2026",
+  "tags": "untagged",
+  "model": "gemini-3.1-pro-preview",
+  "control": "no_vocab",
+  "effort": "high",
+  "dpi": 150,
+  "seconds": 64.5,
+  "usage": {
+    "input_tokens": 3178,
+    "output_tokens": 7923,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n\n生成器需要支持两种图表：带有直接数值标签的分组柱状图（图2.13），以及双面板共享底部的多系列折线图（图2.14）。\n\n对于图2.13，X轴需要支持分类标签的自动换行居中对齐（如“North America & Oceania”分三行），Y轴标题需支持长文本的90度旋转。顶部具有结构化的标题块（包括图表编号、主标题和副标题），图例放置在X轴下方。\n\n对于图2.14，需要支持水平排布的子图面板（Panels），每个面板上方需绘制独立的子标题。两条Y轴都必须支持负值域（最低至-20），并在“0”刻度处绘制横向虚线辅助线。底部的图例需全局居中，且对两个面板均生效。此外，还需要在图表底部支持解释性文本块（Interpretation）和来源说明（Sources and series）的排版。\n\n### 定位一个值难在哪\n\n以图2.13中的值 `18` 为例，数值本身直接印在柱形图上方，读取毫无困难。真正的难点在于构建完整的寻址键：X轴标签“North America & Oceania”在图上被排版断成了三行，如果解析器单纯依赖坐标或简单的OCR，很容易将其识别为破碎的短语，导致无法与图例“After redistribution”正确组合来锁定这个值。\n\n### 不确定的\n\n图2.14中的折线图线条极为密集且存在大量交叉（尤其在右侧面板的0-20区间），如果没有底层数据表，试图通过Y轴刻度去估算某一年（如2005年）的具体数值，误差极大，很难保证满足5%的读取容差标准。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 2.13.",
+          "title": "Redistribution decreases inequality within countries but with large variations",
+          "subtitle": "Top 10/bottom 50 income gaps across regions, 2025",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "grouped_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 7,
+        "marks": 14,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Top 10% average to bottom 50% average income",
+            "low": "0",
+            "high": "80",
+            "serves": "all bars"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "Europe",
+            "high": "Latin America",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Europe"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Before redistribution"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "North America & Oceania",
+            "After redistribution"
+          ],
+          "value": "18",
+          "value_source": "printed",
+          "why_hard": "The category label is broken across three lines, making extraction of the full string error-prone."
+        }
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "Figure 2.14.",
+          "title": "Transfers account for a larger share of redistribution than taxes",
+          "subtitle": "Reduction in top 10/bottom 50 income gaps, 1980–2025",
+          "unit_text": "Reduction in top 10% to bottom 50% income ratio (%)",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 2,
+        "series": 7,
+        "categories": 46,
+        "marks": 644,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Reduction in top 10% to bottom 50% income ratio (%)",
+            "low": "-20",
+            "high": "50",
+            "serves": "lines in left panel"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "1980",
+            "high": "2020",
+            "serves": "lines in left panel"
+          },
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "-20",
+            "high": "50",
+            "serves": "lines in right panel"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "1980",
+            "high": "2020",
+            "serves": "lines in right panel"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "panel",
+            "label_source": "panel_title",
+            "example": "Tax progressivity"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "East Asia"
+          },
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "1980"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Tax progressivity",
+            "Europe",
+            "1980"
+          ],
+          "value": "2",
+          "value_source": "axis_read",
+          "why_hard": "Multiple lines cross tightly near the zero line, making the reading of exact points highly uncertain."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "multi_line_x_axis_labels",
+        "figure_id": "f1",
+        "evidence": "North America & Oceania is split across three lines on the axis",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "rotated_y_axis_title",
+        "figure_id": "f1",
+        "evidence": "Top 10% average to bottom 50% average income is rotated 90 degrees",
+        "affects": [
+          3,
+          4
+        ]
+      },
+      {
+        "key": "shared_bottom_legend",
+        "figure_id": "f2",
+        "evidence": "one row of legend entries below the two panels serves both",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "dashed_zero_line",
+        "figure_id": "f2",
+        "evidence": "a horizontal dashed line is drawn at the 0 mark on both y-axes",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "key": "negative_y_axis",
+        "figure_id": "f2",
+        "evidence": "y-axes extend below zero to -20 with printed ticks",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "key": "panel_titles",
+        "figure_id": "f2",
+        "evidence": "Tax progressivity is printed centered above the left panel",
+        "affects": [
+          3,
+          4
+        ]
+      },
+      {
+        "key": "figure_notes",
+        "figure_id": "page",
+        "evidence": "Interpretation and Sources and series paragraphs below each figure",
+        "affects": [
+          4
+        ]
+      }
+    ],
+    "new_components": [],
+    "spot_checks": [
+      {
+        "value": "19",
+        "figure_id": "f1",
+        "mark": "the Europe Before redistribution green bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Europe",
+          "Before redistribution"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "10",
+        "figure_id": "f1",
+        "mark": "the Europe After redistribution red bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Europe",
+          "After redistribution"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "28",
+        "figure_id": "f1",
+        "mark": "the East Asia After redistribution red bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "East Asia",
+          "After redistribution"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "18",
+        "figure_id": "f1",
+        "mark": "the North America & Oceania After redistribution red bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "North America & Oceania",
+          "After redistribution"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "36",
+        "figure_id": "f1",
+        "mark": "the Russia & Central Asia Before redistribution green bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Russia & Central Asia",
+          "Before redistribution"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "33",
+        "figure_id": "f1",
+        "mark": "the Russia & Central Asia After redistribution red bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Russia & Central Asia",
+          "After redistribution"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "52",
+        "figure_id": "f1",
+        "mark": "the Sub-Saharan Africa Before redistribution green bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Sub-Saharan Africa",
+          "Before redistribution"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "53",
+        "figure_id": "f1",
+        "mark": "the Middle East & North Africa Before redistribution green bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Middle East & North Africa",
+          "Before redistribution"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "72",
+        "figure_id": "f1",
+        "mark": "the Latin America Before redistribution green bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Latin America",
+          "Before redistribution"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "50",
+        "figure_id": "f1",
+        "mark": "the Latin America After redistribution red bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Latin America",
+          "After redistribution"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      }
+    ],
+    "hardest_step": 3,
+    "hardest_step_why": "测试数值均直接印在柱子上不存在读取困难，但如值18对应的X轴标签“North America & Oceania”被折断成三行显示，若解析器未能正确组合完整文本，将导致寻址标签无法匹配。",
+    "examples": [
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "Figure 2.13. Redistribution decreases inequality within countries but with large variations",
+        "why": "需要将图表的编号、主标题、副标题及其空间排布作为独立的结构化字段输出，而不仅仅是简单的标题文本。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f2",
+        "quote": "y-axis values extending to -10 and -20 with a dashed zero line",
+        "why": "生成器需要扩展轴格式能力，原生支持负数坐标轴以及绘制特定的零基准线（如虚线）。"
+      },
+      {
+        "gap": "P2",
+        "figure_id": "f2",
+        "quote": "Tax progressivity and Redistribution considering taxes and transfers",
+        "why": "多面板布局中，子图名称需要作为数据结构中的一个寻址键（panel_key），以便精准区分不同面板下的折线数据。"
+      }
+    ]
+  }
+}

@@ -1,0 +1,277 @@
+{
+  "stem": "ac8b3538-en_p130",
+  "document": "ac8b3538-en",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "no_vocab",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 74.5,
+  "usage": {
+    "input_tokens": 3167,
+    "output_tokens": 10431,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n生成器需要支持分面并排柱状图（或双面板柱状图），每个面板拥有独立的Y轴，且Y轴正上方直接标有单位“p.p.”。X轴的类别标签（国家缩写）需要支持45度倾斜排列以防止重叠。此外，需要支持对特定类别（如代表“OECD”的柱子）应用不同的颜色（红色）进行高亮显示，且在不生成任何图例的情况下通过颜色直接传达额外分组信息。图表顶部包含标准的编号、主标题、副标题结构，底部有大段的注释与来源说明。\n\n### 定位一个值难在哪\n以 Panel A 中的 `-5.5`（希腊，GRC）为例。虽然可以通过子图标题“A. Green-driven occupations”和X轴标签“GRC”定位到该柱形，但Y轴的刻度间隔高达2（0, -2, -4, -6）。要在这样稀疏的刻度上将高度肉眼读取到精确至 -5.5 并满足 5%（即 0.275）的容差范围是完全不可能的，解析时必须依赖底部文本中的说明（“In Greece... 5.5 percentage points lower”）。\n\n### 不确定的\n大部分未在底部文本中单独指出的柱形数值只能通过视觉近似估算（例如 -2.8, 2.3 等），无法确认底层数据的精确值。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Annex Figure 2.C.12.",
+          "title": "Gap in the share of green-driven or GHG-intensive occupations in non-strained jobs compared with strained jobs",
+          "subtitle": "Percentage points, 2021 for EU-OECD countries and 2015 for the United States",
+          "unit_text": "Percentage points",
+          "placement": "above"
+        },
+        "type": "bar",
+        "type_other": "",
+        "panels": 2,
+        "series": 1,
+        "categories": 27,
+        "marks": 53,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "p.p.",
+            "low": "-6",
+            "high": "6",
+            "serves": "all bars in panel A"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "GRC",
+            "high": "ITA",
+            "serves": "all bars in panel A"
+          },
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "p.p.",
+            "low": "-8",
+            "high": "1",
+            "serves": "all bars in panel B"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "LTU",
+            "high": "SVN",
+            "serves": "all bars in panel B"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "panel",
+            "label_source": "panel_title",
+            "example": "A. Green-driven occupations"
+          },
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "GRC"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "A. Green-driven occupations",
+            "GRC"
+          ],
+          "value": "-5.5",
+          "value_source": "axis_read",
+          "why_hard": "Y-axis tick spacing is 2; visually reading -5.5 to 5% tolerance is impossible."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "panel_title_above",
+        "figure_id": "f1",
+        "evidence": "\"A. Green-driven occupations\" above the left panel",
+        "affects": [
+          1,
+          3
+        ]
+      },
+      {
+        "key": "angled_tick_labels",
+        "figure_id": "f1",
+        "evidence": "country abbreviations like GRC are rotated 45 degrees",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "bar_highlight_color",
+        "figure_id": "f1",
+        "evidence": "the OECD bar is colored red while others are green",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "y_axis_unit_position",
+        "figure_id": "f1",
+        "evidence": "\"p.p.\" sits directly above the y-axis line on both panels",
+        "affects": [
+          2
+        ]
+      }
+    ],
+    "new_components": [
+      {
+        "name": "color_highlight_without_legend",
+        "figure_id": "f1",
+        "evidence": "OECD is colored red without any legend entry explaining it",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "-5.5",
+        "figure_id": "f1",
+        "mark": "the GRC bar in panel A",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. Green-driven occupations",
+          "GRC"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "4.4",
+        "figure_id": "f1",
+        "mark": "the ITA bar in panel A",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. Green-driven occupations",
+          "ITA"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-0.5",
+        "figure_id": "f1",
+        "mark": "cannot be placed precisely, possibly the DNK or LTU bar in panel A",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. Green-driven occupations",
+          "DNK"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-2.8",
+        "figure_id": "f1",
+        "mark": "cannot be placed precisely, possibly the PRT or USA bar in panel A",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. Green-driven occupations",
+          "PRT"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "2.3",
+        "figure_id": "f1",
+        "mark": "cannot be placed precisely, possibly the NOR bar in panel A",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. Green-driven occupations",
+          "NOR"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-7.5",
+        "figure_id": "f1",
+        "mark": "the LTU bar in panel B",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "B. GHG-intensive occupations",
+          "LTU"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "0.2",
+        "figure_id": "f1",
+        "mark": "the SVN bar in panel B",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "B. GHG-intensive occupations",
+          "SVN"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-3.2",
+        "figure_id": "f1",
+        "mark": "the red OECD bar in panel B",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "B. GHG-intensive occupations",
+          "OECD"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-1.4",
+        "figure_id": "f1",
+        "mark": "cannot be placed precisely, possibly the BEL bar in panel B",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "B. GHG-intensive occupations",
+          "BEL"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-3.2",
+        "figure_id": "f1",
+        "mark": "cannot be placed precisely, possibly the LUX bar in panel B",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "B. GHG-intensive occupations",
+          "LUX"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "以 -5.5 为例，子图 A 的 Y 轴刻度间隔高达 2，要在如此稀疏的刻度上将柱子高度肉眼读取至 5%（即 0.275）的容差范围内完全不可能。",
+    "examples": [
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "The unit \"p.p.\" sits exactly on top of the y-axis line, and x-axis labels are rotated",
+        "why": "管线目前缺乏对单位标签放置在y轴线正上方的精细控制，也较难完美处理X轴标签的45度倾斜排列。"
+      },
+      {
+        "gap": "P8",
+        "figure_id": "f1",
+        "quote": "The bar for OECD is colored red in both panels without a legend",
+        "why": "特定类别（OECD）通过红色高亮进行编码，但缺失对应的图例说明，导致管线无法自动将其提取到地址键中。"
+      }
+    ]
+  }
+}

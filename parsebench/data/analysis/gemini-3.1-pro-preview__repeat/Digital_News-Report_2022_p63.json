@@ -1,0 +1,498 @@
+{
+  "stem": "Digital_News-Report_2022_p63",
+  "document": "Digital_News-Report_2022",
+  "tags": "untagged",
+  "model": "gemini-3.1-pro-preview",
+  "control": "repeat",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 123.5,
+  "usage": {
+    "input_tokens": 5300,
+    "output_tokens": 16476,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n这页报告包含多个具有不同布局和注释特性的图表。需要生成带有多面板共享图例的水平堆叠条形图（图1），且该图表没有数值轴，数值直接内嵌在部分分段中，同时绘图区内带有一个虚线框注释。折线图（图2、图3）需要在首尾数据点旁边直接内联显示数值标签，并且图3的图例完全由图标（设备符号）构成而无文字。此外，还需要支持堆叠百分比条形图（图5），其数据标签居中对齐于图段，以及一个直接作为图表展示的纯数据表格（图6），带有自定义的图标和行列结构。\n\n### 定位一个值难在哪\n以图2中2022年TV系列的“53%”为例，该值虽在图表末端明确打印，但折线图中部的年份没有数值标签。由于Y轴刻度间距高达50%且无水平网格线辅助，若要提取或校验未标注的中间年份数值（如2017年），目测读取的误差极易超过5%的容差限制，导致解析过程在精度校验步骤失败。\n\n### 不确定的\n图1中深色条形（“每周使用超过3天”）叠加在浅色条形内，但既未标注具体数值也没有对应的坐标轴，无法确定其确切大小。图5中“Neither”分类的中间灰色图段没有打印数值标签，仅能通过两侧数值推算得出。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "WEEKLY REACH OFFLINE AND ONLINE",
+          "subtitle": "TOP BRANDS\n% Weekly usage",
+          "unit_text": "% Weekly usage",
+          "placement": "above"
+        },
+        "type": "stacked_bar",
+        "type_other": "",
+        "panels": 2,
+        "series": 4,
+        "categories": 15,
+        "marks": 60,
+        "values_printed": "some",
+        "axes": [
+          {
+            "side": "left",
+            "role": "category",
+            "unit_text": "",
+            "low": "BBC News (TV & radio)",
+            "high": "The 'i' newspaper",
+            "serves": "left panel bars"
+          },
+          {
+            "side": "left",
+            "role": "category",
+            "unit_text": "",
+            "low": "BBC News online",
+            "high": "BuzzFeed News",
+            "serves": "right panel bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "panel",
+            "label_source": "panel_title",
+            "example": "TV, RADIO AND PRINT"
+          },
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "BBC News (TV & radio)"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Weekly use TV, radio & print"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "TV, RADIO AND PRINT",
+            "BBC News (TV & radio)",
+            "Weekly use TV, radio & print"
+          ],
+          "value": "50",
+          "value_source": "printed",
+          "why_hard": "The dark blue series segment has no label and no axis, so its value is unreadable."
+        }
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "",
+          "title": "SOURCES OF NEWS 2013-22",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 1,
+        "series": 4,
+        "categories": 10,
+        "marks": 40,
+        "values_printed": "some",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "0%",
+            "high": "100%",
+            "serves": "all lines"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "2013",
+            "high": "2022",
+            "serves": "all lines"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "TV"
+          },
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2022"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "TV",
+            "2022"
+          ],
+          "value": "53%",
+          "value_source": "printed",
+          "why_hard": "Values for the middle years are not printed and hard to read accurately off the wide 50% axis ticks."
+        }
+      },
+      {
+        "id": "f3",
+        "heading": {
+          "figure_number": "",
+          "title": "DEVICES FOR NEWS 2013-22",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 1,
+        "series": 3,
+        "categories": 10,
+        "marks": 30,
+        "values_printed": "some",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "0%",
+            "high": "100%",
+            "serves": "all lines"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "2013",
+            "high": "2022",
+            "serves": "all lines"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "series",
+            "label_source": "colour_only",
+            "example": "dark blue"
+          },
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2022"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "dark blue",
+            "2022"
+          ],
+          "value": "64%",
+          "value_source": "printed",
+          "why_hard": "The legend uses device icons only, providing no text labels for the series."
+        }
+      },
+      {
+        "id": "f4",
+        "heading": {
+          "figure_number": "",
+          "title": "OVERALL TRUST SCORE",
+          "subtitle": "Change over time 2015-2022",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 1,
+        "series": 1,
+        "categories": 8,
+        "marks": 8,
+        "values_printed": "some",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "0%",
+            "high": "75%",
+            "serves": "the line"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "2015",
+            "high": "2022",
+            "serves": "the line"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2022"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "2022"
+          ],
+          "value": "34%",
+          "value_source": "printed",
+          "why_hard": "The middle years on the axis have tick marks but no labels printed."
+        }
+      },
+      {
+        "id": "f5",
+        "heading": {
+          "figure_number": "",
+          "title": "BRAND TRUST SCORES",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "stacked_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 3,
+        "categories": 15,
+        "marks": 45,
+        "values_printed": "some",
+        "axes": [
+          {
+            "side": "left",
+            "role": "category",
+            "unit_text": "",
+            "low": "BBC News",
+            "high": "Sun",
+            "serves": "all bars"
+          },
+          {
+            "side": "bottom",
+            "role": "value",
+            "unit_text": "",
+            "low": "0%",
+            "high": "100%",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "BBC News"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Trust"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "BBC News",
+            "Neither"
+          ],
+          "value": "19",
+          "value_source": "axis_read",
+          "why_hard": "The Neither segment has no printed value and must be derived by subtracting the other two segments."
+        }
+      },
+      {
+        "id": "f6",
+        "heading": {
+          "figure_number": "",
+          "title": "TOP SOCIAL MEDIA AND MESSAGING",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "other",
+        "type_other": "data table",
+        "panels": 1,
+        "series": 2,
+        "categories": 6,
+        "marks": 12,
+        "values_printed": "all",
+        "axes": [],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "inline_label",
+            "example": "Facebook"
+          },
+          {
+            "role": "series",
+            "label_source": "heading",
+            "example": "For News"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Facebook",
+            "For News"
+          ],
+          "value": "19%",
+          "value_source": "printed",
+          "why_hard": ""
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "stacked_bar",
+        "figure_id": "f1",
+        "evidence": "dark blue and light blue segments stack to form the total weekly use bar"
+      },
+      {
+        "key": "horizontal_bars",
+        "figure_id": "f1",
+        "evidence": "bars grow horizontally from left category axes"
+      },
+      {
+        "key": "horizontal_bars",
+        "figure_id": "f5",
+        "evidence": "bars grow horizontally for brand trust scores"
+      },
+      {
+        "key": "no_value_axis",
+        "figure_id": "f1",
+        "evidence": "no value axis ticks or labels for the bar lengths"
+      },
+      {
+        "key": "value_label_inside",
+        "figure_id": "f1",
+        "evidence": "numbers like 50 and 18 are printed inside the light blue bars"
+      },
+      {
+        "key": "value_label_inside",
+        "figure_id": "f5",
+        "evidence": "numbers are printed inside the red and teal segments"
+      },
+      {
+        "key": "pct_stacked",
+        "figure_id": "f5",
+        "evidence": "bars span fully from 0% to 100% on the bottom axis"
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f5",
+        "evidence": "Trust Neither Don't trust legend is under the plot"
+      },
+      {
+        "key": "legend_above_plot",
+        "figure_id": "f1",
+        "evidence": "TOP BRANDS legend sits between the heading and the panels"
+      },
+      {
+        "key": "data_table_as_figure",
+        "figure_id": "f6",
+        "evidence": "a table of brands with percentages presented as a figure"
+      },
+      {
+        "key": "annotation_callout",
+        "figure_id": "f1",
+        "evidence": "boxed note with BBC TV News 44% inside the plot"
+      },
+      {
+        "key": "multi_figure_page",
+        "figure_id": "page",
+        "evidence": "multiple different charts and tables placed on one page"
+      },
+      {
+        "key": "sparse_time_ticks",
+        "figure_id": "f4",
+        "evidence": "ticks mark each year but only 2015 and 2022 are labeled"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "icon_legend",
+        "figure_id": "f3",
+        "evidence": "legend uses laptop, tablet, and smartphone icons instead of text",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "50",
+        "figure_id": "f1",
+        "mark": "BBC News (TV & radio) light blue bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "TV, RADIO AND PRINT",
+          "BBC News (TV & radio)",
+          "Weekly use TV, radio & print"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "18",
+        "figure_id": "f5",
+        "mark": "ITV News teal segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "ITV News",
+          "Don't trust"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "53%",
+        "figure_id": "f2",
+        "mark": "TV line at 2022",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "TV",
+          "2022"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "12",
+        "figure_id": "f1",
+        "mark": "MailOnline orange bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "ONLINE",
+          "MailOnline",
+          "Weekly use online brands"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "图2折线图仅首尾标有数值（如53%）。中间年份无标签，且Y轴刻度间距高达50%无网格线，目测读取中间年份数值的误差极易超过5%容差限制，导致步骤2失败。",
+    "examples": [
+      {
+        "gap": "new",
+        "figure_id": "f3",
+        "quote": "legend uses device icons instead of text",
+        "why": "图例完全由纯图标（如电脑、手机）组成而无文本说明，目前系统无法将图标解析并映射为正确的文本系列标签。"
+      },
+      {
+        "gap": "P1",
+        "figure_id": "f1",
+        "quote": "dark blue bars for 'More than 3 days' have no printed numbers",
+        "why": "同一图表中，部分分类标记（浅色）带有打印数值，而叠加其上的另一部分标记（深色）既无标签也没有坐标轴可读，读取精度在标记级发生断裂。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f2",
+        "quote": "73% and 53% printed directly at the line ends",
+        "why": "折线图需要在特定的少数数据点（首和尾）直接附加内联的数值标签，目前的标签放置系统缺乏针对特定数据点的选择性渲染能力。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "BBC TV News: 44% in a dashed box inside the plot",
+        "why": "图表内部包含一个带虚线边框的独立文本注释框用于补充数据信息，生成器目前不支持在绘图区域内自由放置带样式的注释面板。"
+      }
+    ]
+  }
+}

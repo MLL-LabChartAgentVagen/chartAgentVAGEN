@@ -1,0 +1,438 @@
+{
+  "stem": "employment_and_social_developments_in_europe_esde_2024_report_p34",
+  "document": "employment_and_social_developments_in_europe_esde_2024_report",
+  "tags": "3d_chart+need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "repeat",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 112.1,
+  "usage": {
+    "input_tokens": 5342,
+    "output_tokens": 15853,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "**画出来要什么** 需要支持多子图异构布局，如同一组内左侧面积折线混合图、右侧散点柱状混合图。需要支持双Y轴以及将长文本副标题按标点符号智能切分为各子图的独立面板标题。需要支持双层嵌套X轴分类标签的渲染与对齐。 **定位一个值难在哪** 要定位28.5这一数值，需先从总副标题中截取出右侧子图的文本作为面板级主键，并同时关联外层X轴标签Single person with dependent children与内层Below 60%，路径冗长且易错。 **不确定的** 文本中引用了如10.6%和22.2%等具体增长数值，但图表中并无明确的数据标签，仅凭视觉读数难以验证生成器能否精确反推这些隐式数值。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Chart 1.23",
+          "title": "Work protects against poverty, but still imperfectly; Severe material and social deprivation at high levels and slightly increasing for the lowest income group",
+          "subtitle": "Left chart: share of population at-risk-of-poverty (AROP rate) for selected characteristics, 2015-2023, EU; Right chart: share of population in severe material and social deprivation (SMSD rate) by income quintile, 2021-2023, EU",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "other",
+        "type_other": "heterogeneous panels",
+        "panels": 2,
+        "series": 7,
+        "categories": 9,
+        "marks": 54,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "0",
+            "high": "60",
+            "serves": "all lines in left panel"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "2015",
+            "high": "2023",
+            "serves": "all lines in left panel"
+          },
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "0",
+            "high": "20",
+            "serves": "all bars in right panel"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "1st quintile",
+            "high": "Total",
+            "serves": "all bars in right panel"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "panel",
+            "label_source": "heading",
+            "example": "Left chart: share of population at-risk-of-poverty (AROP rate) for selected characteristics, 2015-2023, EU"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Unemployed"
+          },
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2015"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Left chart: share of population at-risk-of-poverty (AROP rate) for selected characteristics, 2015-2023, EU",
+            "Unemployed",
+            "2015"
+          ],
+          "value": "47",
+          "value_source": "axis_read",
+          "why_hard": "No minor gridlines and Y-axis intervals of 10 make exact readings difficult."
+        }
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "Chart 1.24",
+          "title": "Peak of population unable to keep their home adequately warm in 2023",
+          "subtitle": "Left chart: share of population below/above the at-risk-of-poverty threshold unable to keep home adequately warm and average annual index (2015=100) for electricity, gas and other fuels, 2012-2023, EU; Right chart: share of population below/above the at-risk-of-poverty threshold unable to keep home adequately warm by household composition, 2021-2023, EU.",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "other",
+        "type_other": "mixed marks and grouped bar",
+        "panels": 2,
+        "series": 7,
+        "categories": 12,
+        "marks": 60,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "0",
+            "high": "30",
+            "serves": "Above 60% and Below 60% areas in left panel"
+          },
+          {
+            "side": "right",
+            "role": "value",
+            "unit_text": "",
+            "low": "0",
+            "high": "200",
+            "serves": "Av. annual index line in left panel"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "2012",
+            "high": "2023",
+            "serves": "all series in left panel"
+          },
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "0",
+            "high": "30",
+            "serves": "all bars and points in right panel"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "Above 60%",
+            "high": "Below 60%",
+            "serves": "all marks in right panel"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "panel",
+            "label_source": "heading",
+            "example": "Right chart: share of population below/above the at-risk-of-poverty threshold unable to keep home adequately warm by household composition, 2021-2023, EU."
+          },
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Single person with dependent children"
+          },
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Below 60%"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "2023"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Right chart: share of population below/above the at-risk-of-poverty threshold unable to keep home adequately warm by household composition, 2021-2023, EU.",
+            "Single person with dependent children",
+            "Below 60%",
+            "2023"
+          ],
+          "value": "28.5",
+          "value_source": "axis_read",
+          "why_hard": "Requires splitting the subtitle text and handling two-level x-axis nesting."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "heterogeneous_panel_types",
+        "figure_id": "page",
+        "evidence": "both figures contain a line or area chart beside a bar chart"
+      },
+      {
+        "key": "dual_axis",
+        "figure_id": "f2",
+        "evidence": "left panel has a left axis 0-30 and right axis 0-200"
+      },
+      {
+        "key": "mixed_marks",
+        "figure_id": "f2",
+        "evidence": "right panel contains both bars and point markers (yellow dots)"
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "legend for left panel sits below its x-axis"
+      },
+      {
+        "key": "legend_above_plot",
+        "figure_id": "f1",
+        "evidence": "legend for right panel sits above its plot area"
+      },
+      {
+        "key": "per_panel_legend",
+        "figure_id": "page",
+        "evidence": "each panel has its own independent legend"
+      },
+      {
+        "key": "two_level_x_ticks",
+        "figure_id": "f2",
+        "evidence": "Above 60% and Below 60% are grouped under composition labels"
+      },
+      {
+        "key": "rebased_index_values",
+        "figure_id": "f2",
+        "evidence": "left panel legend states Av. annual index (2015=100)"
+      },
+      {
+        "key": "unit_in_series_name",
+        "figure_id": "f2",
+        "evidence": "Av. annual index (2015=100) ... (rhs)"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f2",
+        "evidence": "(2015=100) is written into the left panel subtitle"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "page",
+        "evidence": "all panels display only horizontal dashed grid lines"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "page",
+        "evidence": "Source: Eurostat... is printed below the figures"
+      },
+      {
+        "key": "multi_figure_page",
+        "figure_id": "page",
+        "evidence": "Chart 1.23 and Chart 1.24 are distinct numbered figures"
+      },
+      {
+        "key": "per_panel_axis_range",
+        "figure_id": "page",
+        "evidence": "f1 panels use different y-axis scales of 0-60 and 0-20"
+      },
+      {
+        "key": "data_link_below_figure",
+        "figure_id": "page",
+        "evidence": "Click here to download chart. text appears below both figures"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "panel_titles_merged_in_subtitle",
+        "figure_id": "page",
+        "evidence": "subtitles contain semicolon-separated phrases like Left chart: ...; Right chart: ...",
+        "affects": [
+          3,
+          4
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "47",
+        "figure_id": "f1",
+        "mark": "Unemployed line at 2015 in left panel",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Left chart: share of population at-risk-of-poverty (AROP rate) for selected characteristics, 2015-2023, EU",
+          "Unemployed",
+          "2015"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "8.5",
+        "figure_id": "f1",
+        "mark": "In-work line at 2015 in left panel",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Left chart: share of population at-risk-of-poverty (AROP rate) for selected characteristics, 2015-2023, EU",
+          "In-work",
+          "2015"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "19.0",
+        "figure_id": "f1",
+        "mark": "2023 bar for 1st quintile in right panel",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Right chart: share of population in severe material and social deprivation (SMSD rate) by income quintile, 2021-2023, EU",
+          "2023",
+          "1st quintile"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "6.8",
+        "figure_id": "f1",
+        "mark": "2021 bar for Total in right panel",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Right chart: share of population in severe material and social deprivation (SMSD rate) by income quintile, 2021-2023, EU",
+          "2021",
+          "Total"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "22.2",
+        "figure_id": "f2",
+        "mark": "Below 60% area at 2023 in left panel",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Left chart: share of population below/above the at-risk-of-poverty threshold unable to keep home adequately warm and average annual index (2015=100) for electricity, gas and other fuels, 2012-2023, EU",
+          "Below 60% (lhs)",
+          "2023"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "8.2",
+        "figure_id": "f2",
+        "mark": "2021 bar for HH with dependent children, Above 60% in right panel",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Right chart: share of population below/above the at-risk-of-poverty threshold unable to keep home adequately warm by household composition, 2021-2023, EU.",
+          "HH with dependent children",
+          "Above 60%",
+          "2021"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "165",
+        "figure_id": "f2",
+        "mark": "Av. annual index line at 2023 in left panel",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Left chart: share of population below/above the at-risk-of-poverty threshold unable to keep home adequately warm and average annual index (2015=100) for electricity, gas and other fuels, 2012-2023, EU",
+          "Av. annual index (2015=100) - Elec., gas and other fuels (rhs)",
+          "2023"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "28.5",
+        "figure_id": "f2",
+        "mark": "2023 bar for Single person with dependent children, Below 60% in right panel",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Right chart: share of population below/above the at-risk-of-poverty threshold unable to keep home adequately warm by household composition, 2021-2023, EU.",
+          "Single person with dependent children",
+          "Below 60%",
+          "2023"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "23.5",
+        "figure_id": "f2",
+        "mark": "2012 dot for Single person with dependent children, Below 60% in right panel",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Right chart: share of population below/above the at-risk-of-poverty threshold unable to keep home adequately warm by household composition, 2021-2023, EU.",
+          "Single person with dependent children",
+          "Below 60%",
+          "2012"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "9.5",
+        "figure_id": "f2",
+        "mark": "2012 dot for HH without dependent children, Below 60% in right panel",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Right chart: share of population below/above the at-risk-of-poverty threshold unable to keep home adequately warm by household composition, 2021-2023, EU.",
+          "HH without dependent children",
+          "Below 60%",
+          "2012"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "所有测试值均需依赖视觉估算。例如Chart 1.23左图的8.5落在0至10之间，Y轴间距大导致极难精准读到5%的误差容忍度内。",
+    "examples": [
+      {
+        "gap": "P3",
+        "figure_id": "page",
+        "quote": "Left chart: share of...; Right chart: share of...",
+        "why": "副标题将左右两个子图的标题合并在同一段落内，导致生成表格时难以正确拆分和挂载面板名称。"
+      },
+      {
+        "gap": "P9",
+        "figure_id": "f2",
+        "quote": "Av. annual index... (rhs), Above 60% (lhs)",
+        "why": "图表在同一面板内混用了面积图和折线图，并且同时拥有左右双Y轴，生成器需要精确记录每个数据点归属哪一侧轴与哪种图元。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f2",
+        "quote": "Legend: 2012 with a yellow dot, 2021-2023 with colored squares",
+        "why": "在标准的分组柱状图中直接加入代表单一数据点的散点标记，目前流水线缺乏处理这种分类轴上离散混合图元的策略。"
+      }
+    ]
+  }
+}

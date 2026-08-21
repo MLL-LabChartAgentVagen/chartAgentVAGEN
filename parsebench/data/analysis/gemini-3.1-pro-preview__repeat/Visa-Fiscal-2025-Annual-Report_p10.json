@@ -1,0 +1,308 @@
+{
+  "stem": "Visa-Fiscal-2025-Annual-Report_p10",
+  "document": "Visa-Fiscal-2025-Annual-Report",
+  "tags": "untagged",
+  "model": "gemini-3.1-pro-preview",
+  "control": "repeat",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 68.2,
+  "usage": {
+    "input_tokens": 5319,
+    "output_tokens": 9767,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "## 画出来要什么\n要生成此页面，图表生成器需要支持百分比堆叠柱状图，且能够完全隐藏数值轴（无Y轴、无刻度线和基线），仅通过柱段内部居中的数据标签展示数值。特别地，它需要支持一种非标准的图例形式：不使用独立的图例外框，而是通过细引线将文本标签（如系列名称）直接连接到第一个分类（2019年）的相应柱段上，以此暗示颜色的含义并作为全图的图例。此外，图表绘图区带有浅灰色的背景填充，且正文排版呈现为与图表水平并列的多列布局。\n\n## 定位一个值难在哪\n以图1中的“56%”为例。该数值直接印在2019年顶部的浅蓝色柱段内。定位它的最大难点在于，图表没有采用标准的离散图例，其系列名称（`Card-on-file & \"button\" checkout`）作为悬浮文本通过引线指向该柱段。解析系统必须具备识别引线和颜色映射的能力，才能将该文本作为系列键值正确应用到图表中所有年份的顶部柱段，否则会完全丢失图表的行维度信息。\n\n## 不确定的\n页面中图表上方没有明确的图表编号（如Figure 1），仅有加粗的标题。不确定原文档的排版结构是将这些图表作为悬浮在文本流中的独立对象，还是与左侧/右侧的文字列共同构成了一个两栏网格系统。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "Share of Visa ecommerce transactions by checkout type",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "stacked_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 7,
+        "marks": 14,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "2019",
+            "high": "2025",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2019"
+          },
+          {
+            "role": "series",
+            "label_source": "inline_label",
+            "example": "Card-on-file & \"button\" checkout"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "2019",
+            "Card-on-file & \"button\" checkout"
+          ],
+          "value": "56%",
+          "value_source": "printed",
+          "why_hard": "Series labels are drawn as inline text with leader lines pointing to the first bar's segments."
+        }
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "",
+          "title": "Tokenized share of Visa ecommerce transactions",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "stacked_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 7,
+        "marks": 14,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "2019",
+            "high": "2025",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2019"
+          },
+          {
+            "role": "series",
+            "label_source": "inline_label",
+            "example": "Tokenized transactions"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "2019",
+            "Tokenized transactions"
+          ],
+          "value": "4%",
+          "value_source": "printed",
+          "why_hard": "Series labels are drawn as inline text with leader lines pointing to the first bar's segments."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "pct_stacked",
+        "figure_id": "page",
+        "evidence": "values in each bar sum to 100%, stacks are equal height"
+      },
+      {
+        "key": "no_value_axis",
+        "figure_id": "page",
+        "evidence": "no y-axis is drawn on either figure"
+      },
+      {
+        "key": "value_label_inside",
+        "figure_id": "page",
+        "evidence": "percentage values are printed inside the bar segments"
+      },
+      {
+        "key": "inline_series_labels",
+        "figure_id": "page",
+        "evidence": "series names are text boxes pointing to the first bar"
+      },
+      {
+        "key": "multi_figure_page",
+        "figure_id": "page",
+        "evidence": "two independent charts appear on the page"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "page",
+        "evidence": "Note: Reflects Visa processed transactions... printed below both plots"
+      },
+      {
+        "key": "panel_background",
+        "figure_id": "page",
+        "evidence": "the plot areas have a light grey rectangular background tint"
+      },
+      {
+        "key": "side_text_bullets",
+        "figure_id": "page",
+        "evidence": "body text columns sit beside the figures on the same horizontal bands"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "leader_line_legend",
+        "figure_id": "f1",
+        "evidence": "series names connect to the 2019 bar segments via thin lines",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "56%",
+        "figure_id": "f1",
+        "mark": "top segment of the 2019 bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "2019",
+          "Card-on-file & \"button\" checkout"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 0
+      },
+      {
+        "value": "16%",
+        "figure_id": "f1",
+        "mark": "bottom segment of the 2025 bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "2025",
+          "Manual entry guest checkout"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 0
+      },
+      {
+        "value": "74%",
+        "figure_id": "f1",
+        "mark": "top segment of the 2022 bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "2022",
+          "Card-on-file & \"button\" checkout"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 0
+      },
+      {
+        "value": "24%",
+        "figure_id": "f1",
+        "mark": "bottom segment of the 2023 bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "2023",
+          "Manual entry guest checkout"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 0
+      },
+      {
+        "value": "81%",
+        "figure_id": "f1",
+        "mark": "top segment of the 2024 bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "2024",
+          "Card-on-file & \"button\" checkout"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 0
+      },
+      {
+        "value": "4%",
+        "figure_id": "f2",
+        "mark": "bottom segment of the 2019 bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "2019",
+          "Tokenized transactions"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 0
+      },
+      {
+        "value": "54%",
+        "figure_id": "f2",
+        "mark": "bottom segment of the 2025 bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "2025",
+          "Tokenized transactions"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 0
+      },
+      {
+        "value": "74%",
+        "figure_id": "f2",
+        "mark": "top segment of the 2022 bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "2022",
+          "Non-tokenized transactions"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 0
+      },
+      {
+        "value": "93%",
+        "figure_id": "f2",
+        "mark": "top segment of the 2020 bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "2020",
+          "Non-tokenized transactions"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 0
+      },
+      {
+        "value": "36%",
+        "figure_id": "f2",
+        "mark": "bottom segment of the 2023 bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "2023",
+          "Tokenized transactions"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 0
+      }
+    ],
+    "hardest_step": 3,
+    "hardest_step_why": "两个图表均无标准图例，系列名通过引线指向2019年的柱段。解析器需准确识别引线端点并提取对应颜色，否则无法将'Card-on-file'与后续年份的数值（如56%）正确关联。",
+    "examples": [
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "series names point to the 2019 segments with leader lines",
+        "why": "图例表现为指向特定柱段的引线文本，而非传统的离散图块，这需要特殊的布局和连线支持，无法通过现有图例框架生成。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "no y-axis is drawn, completely relying on labels inside bars",
+        "why": "需要支持完全移除数值轴及其基线，纯靠柱段内部的居中数据标签来呈现绝对数值的样式配置。"
+      }
+    ]
+  }
+}

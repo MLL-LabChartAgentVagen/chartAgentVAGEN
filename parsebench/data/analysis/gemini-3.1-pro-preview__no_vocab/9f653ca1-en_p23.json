@@ -1,0 +1,262 @@
+{
+  "stem": "9f653ca1-en_p23",
+  "document": "9f653ca1-en",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "no_vocab",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 115.5,
+  "usage": {
+    "input_tokens": 3146,
+    "output_tokens": 15786,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "**画出来要什么** 此页面包含一个复杂的组合图表。生成器需要支持：带有图号的独立标题块；数值轴带有负值和零基准线，单位“%”在轴顶部；类别轴包含大量垂直排列的文本标签；图例同时包含方形色块和三角形符号；在堆叠柱状图（部分柱子向负向延伸）之上准确叠加散点（三角形标记）；以及脚注和数据来源说明。 **定位一个值难在哪** 以BRA的“Change due to new tariff rates”值为例，该值（25）是通过堆叠柱状图中的红色段表示。由于没有直接标注数值，读者需要根据Y轴（刻度间距为10）估算红色段的上边界（约34）和下边界（约9），然后做减法得出。这种视觉推算的误差极大，很容易超出5%的容差范围。 **不确定的** 无法确定底层数据的精确值（特别是小数点后的精度），例如MEX的有效税率在文本中提及为5.4%，但在图表上只能粗略读出约为5。图例中的基础柱是否从0开始也受部分负值影响显得不直观。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 1.8.",
+          "title": "Estimated US effective tariff rates",
+          "subtitle": "",
+          "unit_text": "%",
+          "placement": "above"
+        },
+        "type": "compound",
+        "type_other": "",
+        "panels": 1,
+        "series": 4,
+        "categories": 53,
+        "marks": 212,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "%",
+            "low": "-20",
+            "high": "40",
+            "serves": "all bars and points"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "IND",
+            "high": "SVN",
+            "serves": "all bars and points"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "BRA"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Change due to new tariff rates"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "BRA",
+            "Change due to new tariff rates"
+          ],
+          "value": "25",
+          "value_source": "axis_read",
+          "why_hard": "Stacked bar segment requires subtracting the lower bound from the upper bound visually."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "y_axis_unit_above",
+        "figure_id": "f1",
+        "evidence": "the symbol % is placed above the left y-axis ticks",
+        "affects": [
+          4
+        ]
+      },
+      {
+        "key": "vertical_x_axis_labels",
+        "figure_id": "f1",
+        "evidence": "the country abbreviations on the x-axis are rotated 90 degrees vertically",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "mixed_shape_legend",
+        "figure_id": "f1",
+        "evidence": "legend combines colored squares for bar series and a black triangle for the point series",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "zero_reference_line",
+        "figure_id": "f1",
+        "evidence": "a solid horizontal black line marks the 0 value on the y-axis",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "key": "negative_bar_segments",
+        "figure_id": "f1",
+        "evidence": "green bars representing compliance estimates extend downwards below the zero line",
+        "affects": [
+          2
+        ]
+      }
+    ],
+    "new_components": [
+      {
+        "name": "mixed_mark_overlay",
+        "figure_id": "f1",
+        "evidence": "triangle points overlay directly on the stacked bars sharing the same value axis",
+        "affects": [
+          2
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "25",
+        "figure_id": "f1",
+        "mark": "the BRA red stacked segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "BRA",
+          "Change due to new tariff rates"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "34",
+        "figure_id": "f1",
+        "mark": "the BRA triangle point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "BRA",
+          "Effective rate"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "21",
+        "figure_id": "f1",
+        "mark": "the LUX triangle point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "LUX",
+          "Effective rate"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "23",
+        "figure_id": "f1",
+        "mark": "the IND red stacked segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "IND",
+          "Change due to new tariff rates"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "0",
+        "figure_id": "f1",
+        "mark": "the IND green stacked segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "IND",
+          "Change due to compliance estimates"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-10",
+        "figure_id": "f1",
+        "mark": "the CHN green stacked segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "CHN",
+          "Change due to compliance estimates"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-11",
+        "figure_id": "f1",
+        "mark": "the MEX green stacked segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "MEX",
+          "Change due to compliance estimates"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "5",
+        "figure_id": "f1",
+        "mark": "the MEX triangle point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "MEX",
+          "Effective rate"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-10",
+        "figure_id": "f1",
+        "mark": "the CAN green stacked segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "CAN",
+          "Change due to compliance estimates"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "由于所有数值未直接标注，对于堆叠段（如25）和散点，读者需在刻度间距高达10的Y轴上进行视觉对齐并做减法，极易超出5%的误差容限。",
+    "examples": [
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "green bars dropping below the zero line to -20",
+        "why": "生成器需原生支持带有跨零点负值段的堆叠柱状图，并在零点处绘制加粗的基准线以辅助阅读。"
+      },
+      {
+        "gap": "P9",
+        "figure_id": "f1",
+        "quote": "black triangle overlay on stacked bars",
+        "why": "管线目前缺乏在同一坐标系下混合渲染堆叠柱状图和散点标记并分别绑定数据系列的能力。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "Figure 1.8. Estimated US effective tariff rates",
+        "why": "图表标题包含图号和主标题，独立于绘图区外，目前的生成器无法配置并生成这种独立标题块。"
+      }
+    ]
+  }
+}

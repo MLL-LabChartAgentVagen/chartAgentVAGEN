@@ -1,0 +1,206 @@
+{
+  "stem": "deloitte-2025-global-automotive-consumer-study-january-2025_1_p20",
+  "document": "deloitte-2025-global-automotive-consumer-study-january-2025_1",
+  "tags": "untagged",
+  "model": "gemini-3.1-pro-preview",
+  "control": "no_vocab",
+  "effort": "high",
+  "dpi": 150,
+  "seconds": 49.2,
+  "usage": {
+    "input_tokens": 2262,
+    "output_tokens": 6731,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "本页包含三个水平柱状图。上方两个为简单的单组柱状图（f1, f2），下方为一个堆叠柱状图（f3）。所有图表均没有X轴和Y轴的轴线及刻度线，分类标签（国家/地区）直接左对齐排列，数值和百分号直接标注在条形图内部。f3的图例位于图表下方，且存在拼写错误（Not benefical）。图表上方有较长的描述性段落作为标题或上下文。\n\n解析的难点主要在于（Step 1）由于缺乏明显的轴线和外边框，图表区域完全依赖元素的空间对齐，这可能导致解析器在构建表格结构时出现遗漏或错位；以及（Step 4）部分“标题”以完整的两句话段落形式出现，在Markdown提取中可能难以与普通正文区分，从而脱离其作为图表上下文的属性。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "Percentage of consumers concerned about fully autonomous robotaxi services operating where they live",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 1,
+        "categories": 8,
+        "marks": 8,
+        "values_printed": "all"
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "",
+          "title": "Percentage of consumers concerned about commercial vehicles operating in a fully autonomous mode on the highway",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 1,
+        "categories": 8,
+        "marks": 8,
+        "values_printed": "all"
+      },
+      {
+        "id": "f3",
+        "heading": {
+          "figure_number": "",
+          "title": "More than three quarters of surveyed consumers in India and China believe the addition of artificial intelligence in vehicle systems is beneficial. On the other hand, a quarter of surveyed consumers in Germany, the United States, and the United Kingdom remain skeptical about the technology.",
+          "subtitle": "Addition of artificial intelligence in vehicle systems",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "stacked_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 3,
+        "categories": 8,
+        "marks": 24,
+        "values_printed": "all"
+      }
+    ],
+    "components": [
+      {
+        "key": "horizontal_bar_chart",
+        "figure_id": "page",
+        "evidence": "all bars extend horizontally from left to right",
+        "affects": [
+          1
+        ]
+      },
+      {
+        "key": "stacked_bar_chart",
+        "figure_id": "f3",
+        "evidence": "bars in f3 consist of multiple colored segments",
+        "affects": [
+          1,
+          2
+        ]
+      },
+      {
+        "key": "data_labels",
+        "figure_id": "page",
+        "evidence": "numbers are printed directly inside the bars",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "key": "categorical_y_axis",
+        "figure_id": "page",
+        "evidence": "country and region names are listed on the left",
+        "affects": [
+          1,
+          3
+        ]
+      },
+      {
+        "key": "legend_below",
+        "figure_id": "f3",
+        "evidence": "the legend sits below the stacked bars",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "new_components": [
+      {
+        "name": "missing_axis_lines",
+        "figure_id": "page",
+        "evidence": "no x or y axis lines or ticks are drawn anywhere",
+        "affects": [
+          1,
+          2
+        ]
+      },
+      {
+        "name": "paragraph_as_title",
+        "figure_id": "page",
+        "evidence": "bold multi-sentence paragraphs act as chart context",
+        "affects": [
+          4
+        ]
+      },
+      {
+        "name": "misspelled_legend_label",
+        "figure_id": "f3",
+        "evidence": "'Not benefical' is misspelled in the legend",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "82",
+        "figure_id": "f3",
+        "mark": "the India Beneficial segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "India",
+          "Beneficial"
+        ]
+      },
+      {
+        "value": "13",
+        "figure_id": "f3",
+        "mark": "the India Neutral segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "India",
+          "Neutral"
+        ]
+      },
+      {
+        "value": "77",
+        "figure_id": "f3",
+        "mark": "the China Beneficial segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "China",
+          "Beneficial"
+        ]
+      },
+      {
+        "value": "45",
+        "figure_id": "f3",
+        "mark": "the US Beneficial segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "US",
+          "Beneficial"
+        ]
+      },
+      {
+        "value": "41",
+        "figure_id": "f3",
+        "mark": "the Germany Beneficial segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Germany",
+          "Beneficial"
+        ]
+      },
+      {
+        "value": "31",
+        "figure_id": "f3",
+        "mark": "the UK Neutral segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "UK",
+          "Neutral"
+        ]
+      }
+    ],
+    "hardest_step": 1
+  }
+}

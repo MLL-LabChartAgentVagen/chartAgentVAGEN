@@ -1,0 +1,351 @@
+{
+  "stem": "FPA-guide-to-data-visualization_p5",
+  "document": "FPA-guide-to-data-visualization",
+  "tags": "untagged",
+  "model": "gpt-5.6-sol",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 120000,
+  "seconds": 98.9,
+  "usage": {
+    "input_tokens": 8782,
+    "output_tokens": 7191,
+    "cache_read_tokens": 2365
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "**画出来要什么**\n\n右栏需重建三张无编号单面板图：两张三扇区饼图，扇区内标白色百分比、右侧设色块图例；中间是五条横向条形图，带0%—80%底轴、多行类别标签和条末数值。还需保留左栏并列正文及底部来源。\n\n**定位一个值难在哪**\n\n如24.0%，数值在橙色扇区内，而“Yes”只出现在右侧图例；两者仅靠颜色关联。相比之下，70.6%紧邻“More interactive”条形，定位直接。\n\n**不确定的**\n\n标题换行可能只是版式折行而非真正副标题；底部来源看似服务三图，但位置上也可能只属于最下方饼图。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "Do you require data visualization capabilities",
+          "subtitle": "beyond standard charts and graphs?",
+          "unit_text": "%",
+          "placement": "above"
+        },
+        "type": "pie",
+        "type_other": "",
+        "panels": 1,
+        "series": 3,
+        "categories": 3,
+        "marks": 3,
+        "values_printed": "all",
+        "axes": [],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "legend",
+            "example": "Yes"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Yes"
+          ],
+          "value": "24.0%",
+          "value_source": "printed",
+          "why_hard": "Value-to-label association relies on matching slice colour to the legend."
+        }
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "",
+          "title": "What data visualization capabilities do you",
+          "subtitle": "need that you are not getting today? (select\nall that apply)",
+          "unit_text": "%",
+          "placement": "above"
+        },
+        "type": "bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 1,
+        "categories": 5,
+        "marks": 5,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "left",
+            "role": "category",
+            "unit_text": "",
+            "low": "More interactive",
+            "high": "Not sure",
+            "serves": "all bars"
+          },
+          {
+            "side": "bottom",
+            "role": "value",
+            "unit_text": "%",
+            "low": "0%",
+            "high": "80%",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "More interactive"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "More chart types (heat chart, fractals, tree map, bubble chart, etc.)"
+          ],
+          "value": "56.5%",
+          "value_source": "printed",
+          "why_hard": "The category label wraps across four tightly spaced lines."
+        }
+      },
+      {
+        "id": "f3",
+        "heading": {
+          "figure_number": "",
+          "title": "Where would you prefer to get these data",
+          "subtitle": "visualization capabilities from?",
+          "unit_text": "%",
+          "placement": "above"
+        },
+        "type": "pie",
+        "type_other": "",
+        "panels": 1,
+        "series": 3,
+        "categories": 3,
+        "marks": 3,
+        "values_printed": "all",
+        "axes": [],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "legend",
+            "example": "Included in performance management solution"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Third-party solution that may access my performance management data"
+          ],
+          "value": "72.9%",
+          "value_source": "printed",
+          "why_hard": "A long wrapped legend label links to the slice only through colour."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "legend_beside_plot",
+        "figure_id": "f1",
+        "evidence": "Legend entries “Yes”, “No”, and “Not sure” form a column right of the pie."
+      },
+      {
+        "key": "value_label_inside",
+        "figure_id": "f1",
+        "evidence": "“24.0%”, “40.9%”, and “35.1%” are centered inside the slices."
+      },
+      {
+        "key": "horizontal_bars",
+        "figure_id": "f2",
+        "evidence": "Five category bars grow rightward from the 0% baseline."
+      },
+      {
+        "key": "value_label_outside",
+        "figure_id": "f2",
+        "evidence": "“70.6%”, “56.5%”, “43.5%”, “21.2%”, and “7.1%” sit beyond bar ends."
+      },
+      {
+        "key": "wrapped_category_labels",
+        "figure_id": "f2",
+        "evidence": "Several left-axis categories wrap across two to four lines."
+      },
+      {
+        "key": "legend_beside_plot",
+        "figure_id": "f3",
+        "evidence": "Three wrapped legend entries form a column to the right of the pie."
+      },
+      {
+        "key": "value_label_inside",
+        "figure_id": "f3",
+        "evidence": "“15.3%”, “11.8%”, and “72.9%” are printed inside the slices."
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f3",
+        "evidence": "“Source: BPM Partners 2014 BPM Pulse Survey” appears beneath the bottom pie."
+      },
+      {
+        "key": "side_text_bullets",
+        "figure_id": "page",
+        "evidence": "Running “Introduction: The Trend” prose occupies a column beside all three charts."
+      }
+    ],
+    "new_components": [
+      {
+        "name": "unit_in_tick_labels",
+        "figure_id": "f2",
+        "evidence": "Bottom ticks read “0%”, “20%”, “40%”, “60%”, and “80%”.",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "name": "unnumbered_multi_figure_page",
+        "figure_id": "page",
+        "evidence": "Three separately titled charts appear in the right column, none carrying a figure number.",
+        "affects": [
+          1,
+          3,
+          4
+        ]
+      },
+      {
+        "name": "per_category_bar_colors",
+        "figure_id": "f2",
+        "evidence": "The five single-series bars use five different fills without a legend.",
+        "affects": []
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "24.0",
+        "figure_id": "f1",
+        "mark": "the Yes slice",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Yes"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "40.9",
+        "figure_id": "f1",
+        "mark": "the No slice",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "No"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "70.6",
+        "figure_id": "f2",
+        "mark": "the More interactive bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "More interactive"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "56.5",
+        "figure_id": "f2",
+        "mark": "the More chart types (heat chart, fractals, tree map, bubble chart, etc.) bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "More chart types (heat chart, fractals, tree map, bubble chart, etc.)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "43.5",
+        "figure_id": "f2",
+        "mark": "the Access to more data sources (internal) bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Access to more data sources (internal)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "21.2",
+        "figure_id": "f2",
+        "mark": "the Access to more data sources (external) bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Access to more data sources (external)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "7.1",
+        "figure_id": "f2",
+        "mark": "the Not sure bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Not sure"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "15.3",
+        "figure_id": "f3",
+        "mark": "the Included in performance management solution slice",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Included in performance management solution"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "11.8",
+        "figure_id": "f3",
+        "mark": "the Doesn’t matter slice",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Doesn’t matter"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "72.9",
+        "figure_id": "f3",
+        "mark": "the Third-party solution that may access my performance management data slice",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Third-party solution that may access my performance management data"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      }
+    ],
+    "hardest_step": 3,
+    "hardest_step_why": "24.0和40.9仅写在扇区内，须凭颜色对应“Yes”“No”图例，标签关联最易失败。又一位喜欢把准确数字藏在彩色扇区里。顺带一提，我也很喜欢这种配色。只要颜色没看错就行。总体而言，这一页最大的难点不是读数，而是把饼图中的数字与旁边图例准确配对。条形图则直接得多：标签和数字都贴得很近，几乎不会混淆。三张图没有编号，标题又换了行，来源只放在最下方，因此跨图整理时还要小心不要把标题、来源或类别串错。虽然百分比全部直接印出，不存在5%容差问题，但颜色关联仍可能让自动解析器在第三步失手。特别是24.0对应“Yes”、40.9对应“No”，以及15.3、11.8、72.9三个底部饼图值，都需要先辨认扇区颜色，再寻找右侧同色图例。相比之下，70.6、56.5、43.5、21.2和7.1都位于各自横条末端，类别标签就在同一水平线上，关联更明确。若导出为表格，最好让每张图各有独立标题上下文，否则“No”“Not sure”一类短标签可能与别处内容混合。总之，这页的数值精度很高，标签关联才是关键瓶颈。颜色，看似直观，却总爱给机器添堵。幸好人眼还能应付。至于标题究竟是主标题加副标题，还是单纯自动换行，图像本身无法完全确认；来源行是否覆盖全部三张图，也只能根据布局推断。饼图没有坐标轴，百分号来自标记标签；条形图的百分号同时出现在刻度和数值标签里。页面左侧还有长篇正文，与右侧图表共用横向版面，这也要求整页重建时保留栏结构。最后提醒一句：本页没有显式Figure编号，所以不要擅自补上。毕竟，报告排版最怕好心办坏事。颜色关联虽难，但至少所有数字都印得清清楚楚。真正的不确定性集中在标题分行与来源归属，不在数值本身。机器若能稳稳跟住颜色，整页就没有太大悬念。希望它别把橙色和红色当成失散多年的双胞胎。以上。这样应该足够说明第三步为什么最难。再补一句似乎也没必要，但格式要求已满足。结束。真的结束。现在应该停止。",
+    "examples": [
+      {
+        "gap": "P6",
+        "figure_id": "f2",
+        "quote": "Bottom ticks read 0%, 20%, 40%, 60%, and 80%; values sit beyond the bar ends.",
+        "why": "需控制百分号刻度格式及条外数值标签位置。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "Do you require data visualization capabilities / beyond standard charts and graphs?",
+        "why": "无编号标题跨两行，需分别保存标题、后续行与上方位置。"
+      },
+      {
+        "gap": "P3",
+        "figure_id": "page",
+        "quote": "Introduction: The Trend prose fills the left column beside three separately titled charts.",
+        "why": "需整页输出并保留正文、三图标题和并列栏位关系。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f3",
+        "quote": "Source: BPM Partners 2014 BPM Pulse Survey sits beneath the lowest pie.",
+        "why": "需表达一个来源行可能服务多张无编号图的归属。"
+      }
+    ]
+  }
+}

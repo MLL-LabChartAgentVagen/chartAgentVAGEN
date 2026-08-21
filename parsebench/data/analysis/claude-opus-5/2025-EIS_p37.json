@@ -1,0 +1,325 @@
+{
+  "stem": "2025-EIS_p37",
+  "document": "2025-EIS",
+  "tags": "need_estimate",
+  "model": "claude-opus-5",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 97.0,
+  "usage": {
+    "input_tokens": 13137,
+    "output_tokens": 7655,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "## 画出来要什么\n一张 28 行的水平条形图：27 个成员国加一行 **EU**，条长为 2025 得分；同一行上再叠两个不同形状的系列——2018 得分的菱形 ◆ 和 2024 得分的竖短线 |，全部读同一条底轴（0…260，每 20 一格）。填色不是系列身份，而是四个绩效组（Emerging / Moderate / Strong / Innovation leaders），EU 行另用深蓝突出。标题分四层：`Figure 11:` 编号行（其中 *Attractive research systems* 为斜体）、图内蓝色标题 “Attractive research systems”、轴下的单位句 “Score for dimension 1.2 in 2025 (indexed to the EU in 2018)”、图下 Note 三行。图例在图下方，把颜色组与两个标记系列混排在同一块。\n\n## 定位一个值难在哪\n37（Bulgaria）：图上无任何数字，刻度间距 20 个单位，5% 容差只有 ±1.85 个单位，约 5 像素；而且要说清读的是条（2025）还是 ◆（2018）——2025 这个主系列在图例里根本没有名字，只能从 Note 里“bars represent countries' performance in 2025”推出。\n\n## 不确定的\n第二个 215 无法判定属于 Denmark 的条、Denmark 的 2024 竖线还是 Netherlands 的条，三者像素上几乎重合；条端精确值也只能目测。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 11",
+          "title": "Innovation performance of the EU27 Member States in the Attractive research systems dimension",
+          "subtitle": "Attractive research systems",
+          "unit_text": "Score for dimension 1.2 in 2025 (indexed to the EU in 2018)",
+          "placement": "above"
+        },
+        "type": "bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 3,
+        "categories": 28,
+        "marks": 84,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "bottom",
+            "role": "value",
+            "unit_text": "Score for dimension 1.2 in 2025 (indexed to the EU in 2018)",
+            "low": "0",
+            "high": "260",
+            "serves": "all bars, diamonds and 2024 tick markers"
+          },
+          {
+            "side": "left",
+            "role": "category",
+            "unit_text": "",
+            "low": "Luxembourg",
+            "high": "Bulgaria",
+            "serves": "one country row per bar, ranked descending"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Bulgaria"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Score in 2018"
+          },
+          {
+            "role": "colour_group",
+            "label_source": "legend",
+            "example": "Emerging innovators"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Bulgaria",
+            "Score in 2018",
+            "Emerging innovators"
+          ],
+          "value": "~22",
+          "value_source": "axis_read",
+          "why_hard": "No printed value; diamond sits one-fifth of a 20-unit tick gap; 5% tolerance is ~1 unit."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "horizontal_bars",
+        "figure_id": "f1",
+        "evidence": "country names on the left axis, bars grow rightwards to the 0-260 bottom axis"
+      },
+      {
+        "key": "mixed_marks",
+        "figure_id": "f1",
+        "evidence": "each bar carries a diamond and a short vertical tick drawn over it"
+      },
+      {
+        "key": "tick_marker_as_series",
+        "figure_id": "f1",
+        "evidence": "legend '| Score in 2024' drawn as a short vertical dash on each bar row"
+      },
+      {
+        "key": "color_encodes_extra_attribute",
+        "figure_id": "f1",
+        "evidence": "'The colours denote each country's overall performance group based on the 2025 SII.'"
+      },
+      {
+        "key": "highlighted_category",
+        "figure_id": "f1",
+        "evidence": "the 'EU' row is drawn in dark blue, unlike the four group colours"
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "six legend entries in two rows under the axis title"
+      },
+      {
+        "key": "axis_title_below_plot",
+        "figure_id": "f1",
+        "evidence": "'Score for dimension 1.2 in 2025 (indexed to the EU in 2018)' centred under the ticks"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "bottom ticks are bare 0,20...260; scale word only in the axis title line"
+      },
+      {
+        "key": "rebased_index_values",
+        "figure_id": "f1",
+        "evidence": "'indexed to the EU in 2018'; 'All performance scores are relative to that of the EU in 2018'"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "italic 'Note: All performance scores are relative to that of the EU in 2018...' below the legend"
+      },
+      {
+        "key": "wrapped_category_labels",
+        "figure_id": "f1",
+        "evidence": "28 country names stacked down the left axis, Luxembourg to Bulgaria"
+      },
+      {
+        "key": "panel_title_per_panel",
+        "figure_id": "f1",
+        "evidence": "blue bold 'Attractive research systems' sits above the plot, separate from the caption"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "legend_mixes_colour_groups_and_marker_series",
+        "figure_id": "f1",
+        "evidence": "one legend block holds four colour swatches (performance groups) plus '◆ Score in 2018' and '| Score in 2024'",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "name": "primary_series_unnamed_in_legend",
+        "figure_id": "f1",
+        "evidence": "the 2025 bar itself has no legend entry; named only in the note and axis title",
+        "affects": [
+          3,
+          4
+        ]
+      },
+      {
+        "name": "italic_span_inside_title",
+        "figure_id": "f1",
+        "evidence": "'in the Attractive research systems dimension' set with the dimension name in italics",
+        "affects": [
+          4
+        ]
+      },
+      {
+        "name": "rank_ordered_category_axis",
+        "figure_id": "f1",
+        "evidence": "rows run Luxembourg to Bulgaria, sorted by bar length with EU inserted at its rank",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "245",
+        "figure_id": "f1",
+        "mark": "the Luxembourg 2025 bar (longest bar, top row)",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Luxembourg",
+          "Attractive research systems"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "215",
+        "figure_id": "f1",
+        "mark": "the Denmark 2025 bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Denmark",
+          "Attractive research systems"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "214",
+        "figure_id": "f1",
+        "mark": "the Netherlands 2025 bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Netherlands",
+          "Attractive research systems"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "186",
+        "figure_id": "f1",
+        "mark": "the Cyprus 2025 bar (moderate-innovator tan colour)",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Cyprus",
+          "Attractive research systems"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "100",
+        "figure_id": "f1",
+        "mark": "the EU diamond, i.e. the EU 'Score in 2018' index base",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "EU",
+          "Score in 2018"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "182",
+        "figure_id": "f1",
+        "mark": "the Ireland 2025 bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Ireland",
+          "Attractive research systems"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "167",
+        "figure_id": "f1",
+        "mark": "the Austria 2025 bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Austria",
+          "Attractive research systems"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "37",
+        "figure_id": "f1",
+        "mark": "the Bulgaria 2025 bar (shortest bar, bottom row)",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Bulgaria",
+          "Attractive research systems"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "215",
+        "figure_id": "f1",
+        "mark": "a second 215: either the Denmark 'Score in 2024' tick or the Netherlands 2024 tick; the two sit within pixels",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Denmark",
+          "Score in 2024"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "无任何数字标注，刻度每20单位；Bulgaria 的37要求±1.85单位（约5像素），且215在Denmark条与2024竖线间无法区分。",
+    "examples": [
+      {
+        "gap": "P9",
+        "figure_id": "f1",
+        "quote": "◆ Score in 2018    | Score in 2024, drawn on top of each country's coloured 2025 bar",
+        "why": "同一面板三种标记形状共用一轴，取值必须记录读的是条、菱形还是竖线。"
+      },
+      {
+        "gap": "P8",
+        "figure_id": "f1",
+        "quote": "The colours denote each country's overall performance group based on the 2025 SII.",
+        "why": "填色承载绩效组属性，EU行另用深蓝且无图例，该属性须进入键。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "Figure 11: ... in the Attractive research systems dimension / blue heading 'Attractive research systems' above plot",
+        "why": "编号、斜体标题、图内彩色小标题与轴下单位句四层分离，现有管线只出单行标题。"
+      },
+      {
+        "gap": "P1",
+        "figure_id": "f1",
+        "quote": "x ticks 0, 20, 40 ... 260; Bulgaria's bar ends between 20 and 40",
+        "why": "短条的可达精度远低于长条，可读性应按标记给精度而非整图布尔判定。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "legend row: Emerging innovators / Strong innovators / ◆ Score in 2018 / | Score in 2024",
+        "why": "图例同时混排颜色组与标记系列，且主系列(2025条)无图例名；需要图例语义分层。"
+      }
+    ]
+  }
+}

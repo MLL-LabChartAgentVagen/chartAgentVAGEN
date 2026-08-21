@@ -1,0 +1,149 @@
+{
+  "stem": "semiconductor_sector_study_p22",
+  "document": "semiconductor_sector_study",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "seconds": 71.0,
+  "usage": {
+    "input_tokens": 4408,
+    "output_tokens": 10075,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "本页包含一个展示各年度融资金额的堆叠柱状图。构建该图表的难点主要在于：1. x轴虽然代表年份（如2007, 2010, 2016-2023），但时间间隔不均，物理间距却保持等距，实质上是将其处理为离散的分类轴；2. 柱状图没有通过颜色区分不同的数据系列，而是采用纯色并通过白色的水平分割线将整个柱子切分为多个片段，以代表单次融资事件，这在常规制图中较为罕见。此外，y轴标题被旋转并带有“(GBP)”单位标识。\n\n在数据提取方面（最难步骤为2），面临的主要问题是精度不足。由于y轴的刻度间隔高达20M，像189或218这样极为精确的目标值，根本无法通过视觉直接从图表高度中准确读取。同时，每个柱子内部被细分的各个小片段的数值均未标注，使得获取非总计数值成为不可能。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 4.1",
+          "title": "Latest Fundraisings",
+          "subtitle": "",
+          "unit_text": "(GBP)",
+          "placement": "above"
+        },
+        "type": "stacked_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 1,
+        "categories": 11,
+        "marks": 28,
+        "values_printed": "none"
+      }
+    ],
+    "components": [
+      {
+        "key": "stacked_bar",
+        "figure_id": "f1",
+        "evidence": "bars are divided into stacked segments by white horizontal lines"
+      },
+      {
+        "key": "rotated_axis_title",
+        "figure_id": "f1",
+        "evidence": "the y-axis title runs vertically along the left side"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "the unit (GBP) is in the y-axis title"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "Source: Beauhurst (all latest fundraisings, 2007 - 2023)"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "horizontal grid lines cross the panel, with no vertical ones"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "non_linear_time_axis",
+        "figure_id": "f1",
+        "evidence": "x-axis years have equal physical spacing despite uneven time gaps",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "name": "segmented_bar_single_series",
+        "figure_id": "f1",
+        "evidence": "stacked segments share one color, separated only by thin lines",
+        "affects": [
+          1
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "2",
+        "figure_id": "f1",
+        "mark": "the 2019 total bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2019"
+        ]
+      },
+      {
+        "value": "0",
+        "figure_id": "f1",
+        "mark": "the 2018 position",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2018"
+        ]
+      },
+      {
+        "value": "23",
+        "figure_id": "f1",
+        "mark": "the 2017 total bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2017"
+        ]
+      },
+      {
+        "value": "189",
+        "figure_id": "f1",
+        "mark": "the 2020 total bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2020"
+        ]
+      },
+      {
+        "value": "22",
+        "figure_id": "f1",
+        "mark": "the 2021 total bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2021"
+        ]
+      },
+      {
+        "value": "84",
+        "figure_id": "f1",
+        "mark": "the 2022 total bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2022"
+        ]
+      },
+      {
+        "value": "218",
+        "figure_id": "f1",
+        "mark": "the 2023 total bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2023"
+        ]
+      }
+    ],
+    "hardest_step": 2
+  }
+}

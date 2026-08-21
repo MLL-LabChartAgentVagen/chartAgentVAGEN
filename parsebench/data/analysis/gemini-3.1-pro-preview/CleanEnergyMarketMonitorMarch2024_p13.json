@@ -1,0 +1,354 @@
+{
+  "stem": "CleanEnergyMarketMonitorMarch2024_p13",
+  "document": "CleanEnergyMarketMonitorMarch2024",
+  "tags": "untagged",
+  "model": "gemini-3.1-pro-preview",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 58.3,
+  "usage": {
+    "input_tokens": 5335,
+    "output_tokens": 8165,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n此页面需要绘制一个包含6个面板的组合图。前5个面板是垂直柱状图，共享x轴类别（年份）但y轴量程各自独立；第6个面板是水平柱状图，类别和单位与前五个完全不同。需要支持每个面板独立的标题（如“World”），y轴单位（“GW”）放置于最上方刻度的正上方，以及数值标签居于柱形内部。\n\n### 定位一个值难在哪\n以“619”为例，它属于“Avoided emissions”面板下的“China”类别。由于6个面板类型和坐标轴不同，提取器必须将面板标题作为关键维度加入表格。如果没有面板名，系统无法将“China”作为国家的排放值与第二面板中“China”作为国家的光伏装机量区分开，导致键值碰撞。\n\n### 不确定的\n前5个面板中，“World”面板的柱子使用了橙色，而其余国家/地区面板使用了黄色。图中并未提供图例说明这种颜色的差异是否代表了“总体”与“局部”的区别，生成时只能作为硬编码的特殊高亮处理。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "Solar PV capacity additions and avoided emissions",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "bar",
+        "type_other": "",
+        "panels": 6,
+        "series": 1,
+        "categories": 5,
+        "marks": 30,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "GW",
+            "low": "100",
+            "high": "400",
+            "serves": "bars in World panel"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "2019",
+            "high": "2023",
+            "serves": "bars in World panel"
+          },
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "GW",
+            "low": "100",
+            "high": "300",
+            "serves": "bars in China panel"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "2019",
+            "high": "2023",
+            "serves": "bars in China panel"
+          },
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "GW",
+            "low": "20",
+            "high": "60",
+            "serves": "bars in European Union panel"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "2019",
+            "high": "2023",
+            "serves": "bars in European Union panel"
+          },
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "GW",
+            "low": "10",
+            "high": "40",
+            "serves": "bars in United States panel"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "2019",
+            "high": "2023",
+            "serves": "bars in United States panel"
+          },
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "GW",
+            "low": "5",
+            "high": "20",
+            "serves": "bars in India panel"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "2019",
+            "high": "2023",
+            "serves": "bars in India panel"
+          },
+          {
+            "side": "left",
+            "role": "category",
+            "unit_text": "",
+            "low": "China",
+            "high": "Rest of world",
+            "serves": "bars in Avoided emissions panel"
+          },
+          {
+            "side": "bottom",
+            "role": "value",
+            "unit_text": "Mt CO2",
+            "low": "200",
+            "high": "600",
+            "serves": "bars in Avoided emissions panel"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "panel",
+            "label_source": "panel_title",
+            "example": "World"
+          },
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "2023"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "World",
+            "2023"
+          ],
+          "value": "420",
+          "value_source": "printed",
+          "why_hard": "Panel dimension is necessary to avoid key collisions with the other five panels."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "small_multiples_5plus",
+        "figure_id": "f1",
+        "evidence": "6 panels sharing a main title, arranged in a grid"
+      },
+      {
+        "key": "heterogeneous_panel_types",
+        "figure_id": "f1",
+        "evidence": "first 5 panels are vertical bars, the 6th is horizontal bars"
+      },
+      {
+        "key": "panel_title_per_panel",
+        "figure_id": "f1",
+        "evidence": "titles like 'World', 'China' centered above each panel"
+      },
+      {
+        "key": "per_panel_axis_range",
+        "figure_id": "f1",
+        "evidence": "World y-axis goes to 400, China goes to 300, India to 20"
+      },
+      {
+        "key": "axis_title_above_axis",
+        "figure_id": "f1",
+        "evidence": "'GW' is placed directly above the top tick of the left axes"
+      },
+      {
+        "key": "value_label_inside",
+        "figure_id": "f1",
+        "evidence": "numbers like '420' and '261' are printed inside the bar tops"
+      },
+      {
+        "key": "horizontal_bars",
+        "figure_id": "f1",
+        "evidence": "the 'Avoided emissions' panel draws bars horizontally"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "panels 1 to 5 only have horizontal dotted grid lines"
+      },
+      {
+        "key": "vgrid_only",
+        "figure_id": "f1",
+        "evidence": "panel 6 only has vertical dotted grid lines"
+      },
+      {
+        "key": "highlighted_category",
+        "figure_id": "f1",
+        "evidence": "World panel bars are orange, all other regions are yellow"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "page",
+        "evidence": "a 'Notes:' line sits at the bottom left of the page"
+      }
+    ],
+    "new_components": [],
+    "spot_checks": [
+      {
+        "value": "420",
+        "figure_id": "f1",
+        "mark": "the 2023 bar in the World panel",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "World",
+          "2023"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "228",
+        "figure_id": "f1",
+        "mark": "the 2022 bar in the World panel",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "World",
+          "2022"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "261",
+        "figure_id": "f1",
+        "mark": "the 2023 bar in the China panel",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "China",
+          "2023"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "53",
+        "figure_id": "f1",
+        "mark": "the 2023 bar in the European Union panel",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "European Union",
+          "2023"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "32",
+        "figure_id": "f1",
+        "mark": "the 2023 bar in the United States panel",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "United States",
+          "2023"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "18",
+        "figure_id": "f1",
+        "mark": "the 2022 bar in the India panel",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "India",
+          "2022"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "12",
+        "figure_id": "f1",
+        "mark": "the 2019 bar in the India panel",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "India",
+          "2019"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "619",
+        "figure_id": "f1",
+        "mark": "the China bar in the Avoided emissions panel",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Avoided emissions",
+          "China"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "221",
+        "figure_id": "f1",
+        "mark": "the Rest of world bar in the Avoided emissions panel",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Avoided emissions",
+          "Rest of world"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "101",
+        "figure_id": "f1",
+        "mark": "the European Union bar in the Avoided emissions panel",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Avoided emissions",
+          "European Union"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      }
+    ],
+    "hardest_step": 3,
+    "hardest_step_why": "包含6个不同图表类型和独立量程的面板，提取器可能无法将面板标题（如“Avoided emissions”）作为维度与数据单元格绑定，导致“619”定位失败或键值冲突。",
+    "examples": [
+      {
+        "gap": "P2",
+        "figure_id": "f1",
+        "quote": "panels 'World', 'China', and 'Avoided emissions' grouped under one figure",
+        "why": "图表包含异构的面板，生成器需将面板名引入作为独立键，以处理子图类型和坐标轴类别不同的情况。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "the unit 'GW' placed exactly above the top tick of the left axes",
+        "why": "当前的样式配置项难以将单位标签精确悬挂在y轴最顶部刻度的正上方。"
+      }
+    ]
+  }
+}

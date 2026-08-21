@@ -1,0 +1,159 @@
+{
+  "stem": "semiconductor_sector_study_p22",
+  "document": "semiconductor_sector_study",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "no_vocab",
+  "effort": "high",
+  "dpi": 150,
+  "seconds": 11.8,
+  "usage": {
+    "input_tokens": 2257,
+    "output_tokens": 1513,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "这张页面包含一个堆叠柱状图（Figure 4.1），展示了不同年份的融资金额。图表的 y 轴标题 `Fundraisings - Amount received by the company in its latest fundraising (GBP)` 包含了单位，但 y 轴的刻度标签如 `20M`, `40M` 带有单位缩写 `M`，这需要图表生成器支持在刻度标签上附加单位。x 轴包含部分年份，但并不是连续的（跳过了 2008、2009、2011 等）。堆叠柱状图内部有非常多的细分段（marks），代表不同公司的融资金额，但没有图例说明各个细分段的具体含义，也没有打印数值，这使得提取每个特定分段的数值变得不可能。由于没有细分维度的标签，且 y 轴范围高达 220M，而要求提取的数值（如 2，0，23，189 等）很可能是整个柱子的总和（尽管也极难精确读取）。因此，此页面主要的难点在于图表未标注具体分段或总和数值，且缺乏能够定位单个数据的额外维度标签。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 4.1",
+          "title": "Latest Fundraisings",
+          "subtitle": "",
+          "unit_text": "GBP",
+          "placement": "above"
+        },
+        "type": "stacked_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 1,
+        "categories": 11,
+        "marks": 50,
+        "values_printed": "none"
+      }
+    ],
+    "components": [
+      {
+        "key": "y_axis_title",
+        "figure_id": "f1",
+        "evidence": "the vertical text 'Fundraisings - Amount received by the company in its latest fundraising (GBP)'",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "y_axis_unit_in_tick_labels",
+        "figure_id": "f1",
+        "evidence": "the y axis reads '0M', '20M', ..., '220M' with 'M' suffix",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "key": "x_axis_non_continuous_years",
+        "figure_id": "f1",
+        "evidence": "the x axis ticks are 2007, 2010, 2013, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "stacked_bars_without_legend",
+        "figure_id": "f1",
+        "evidence": "bars for 2020, 2022, 2023 are divided into many thin horizontal segments, with no legend to identify them",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "source_note",
+        "figure_id": "f1",
+        "evidence": "'Source: Beauhurst (all latest fundraisings, 2007 - 2023)' below the chart",
+        "affects": []
+      },
+      {
+        "key": "header_text",
+        "figure_id": "page",
+        "evidence": "'PERSPECTIVE ECONOMICS' and '21' at the top",
+        "affects": []
+      },
+      {
+        "key": "section_heading",
+        "figure_id": "page",
+        "evidence": "'4. Investment', '4.1. Investment to Date', '4.1.1. Investment by Stage of Evolution'",
+        "affects": [
+          4
+        ]
+      }
+    ],
+    "new_components": [],
+    "spot_checks": [
+      {
+        "value": "2",
+        "figure_id": "f1",
+        "mark": "the total bar for 2013",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2013"
+        ]
+      },
+      {
+        "value": "0",
+        "figure_id": "f1",
+        "mark": "the total bar for 2018",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2018"
+        ]
+      },
+      {
+        "value": "23",
+        "figure_id": "f1",
+        "mark": "the total bar for 2017",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2017"
+        ]
+      },
+      {
+        "value": "189",
+        "figure_id": "f1",
+        "mark": "the total bar for 2020",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2020"
+        ]
+      },
+      {
+        "value": "22",
+        "figure_id": "f1",
+        "mark": "the total bar for 2021",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2021"
+        ]
+      },
+      {
+        "value": "84",
+        "figure_id": "f1",
+        "mark": "the total bar for 2022",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2022"
+        ]
+      },
+      {
+        "value": "218",
+        "figure_id": "f1",
+        "mark": "the total bar for 2023",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2023"
+        ]
+      }
+    ],
+    "hardest_step": 2
+  }
+}

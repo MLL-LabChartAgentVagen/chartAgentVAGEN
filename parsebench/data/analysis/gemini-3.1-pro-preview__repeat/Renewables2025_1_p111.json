@@ -1,0 +1,302 @@
+{
+  "stem": "Renewables2025_1_p111",
+  "document": "Renewables2025_1",
+  "tags": "3d_chart+need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "repeat",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 21.0,
+  "usage": {
+    "input_tokens": 5328,
+    "output_tokens": 2866,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "**画出来要什么**\n生成器需要能绘制双面板的柱状图，两个面板并排并带有各自的面板标题（China, Outside of China）。需要能处理负值，并绘制跨越零线的柱状图。X轴为嵌套的两层时间刻度（内层为季度 Q1 Q2...，外层为年份 2023, 2024, 2025），刻度线需要能正确分组和对齐。图例放置在图表下方。图表上方有一个主标题，且单位隐含在标题中。纵轴需要能格式化为百分比并显示网格线，负数刻度需带减号。\n\n**定位一个值难在哪**\n定位如 `-17` 的值（2023年 Q4 中国区的 Polysilicon），需要读取图例（Polysilicon）、外层X轴（2023）、内层X轴（Q4）以及面板标题（China）。不仅需要跨面板关联标题，还要处理两级X轴时间戳的层级关系。此外，图上未标注具体数值，需要从 Y 轴读数，在 0 到 -10% 刻度之间估算具体数值，精度要求高，容易因为视觉误差导致读取的值超出 5% 的容差（例如读成 -16 或 -18）。\n\n**不确定的**\n图中各柱子的具体数值只能依靠视觉估算，如右侧面板最后几个季度的数值接近 0 或在极小的负值范围，难以精确确定。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "Weighted average net margins of renewable energy companies and large utilities",
+          "subtitle": "(Q1 2023-Q2 2025)",
+          "unit_text": "net margin",
+          "placement": "above"
+        },
+        "type": "grouped_bar",
+        "type_other": "",
+        "panels": 2,
+        "series": 4,
+        "categories": 10,
+        "marks": 60,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Weighted average net margin",
+            "low": "-30%",
+            "high": "30%",
+            "serves": "all bars"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "Q1",
+            "high": "Q2",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "panel",
+            "label_source": "panel_title",
+            "example": "China"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Polysilicon"
+          },
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2023"
+          },
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "Q1"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "China",
+            "Polysilicon",
+            "2023",
+            "Q4"
+          ],
+          "value": "-17%",
+          "value_source": "axis_read",
+          "why_hard": "Must interpolate visually between -10% and -20% ticks on a small chart."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "grouped_bar",
+        "figure_id": "f1",
+        "evidence": "multiple bars side by side per quarter"
+      },
+      {
+        "key": "negative_values",
+        "figure_id": "f1",
+        "evidence": "y-axis goes down to -30% and bars extend downward"
+      },
+      {
+        "key": "two_level_x_ticks",
+        "figure_id": "f1",
+        "evidence": "quarters (Q1, Q2) grouped under years (2023, 2024)"
+      },
+      {
+        "key": "small_multiples_4",
+        "figure_id": "f1",
+        "evidence": "two side-by-side panels: China and Outside of China"
+      },
+      {
+        "key": "shared_legend",
+        "figure_id": "f1",
+        "evidence": "one legend row below both panels"
+      },
+      {
+        "key": "panel_title_per_panel",
+        "figure_id": "f1",
+        "evidence": "'China' and 'Outside of China' printed above the plots"
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "legend items sit below the x-axes"
+      },
+      {
+        "key": "rotated_axis_title",
+        "figure_id": "f1",
+        "evidence": "'Weighted average net margin' is vertical on the far left"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "horizontal grid lines at 10% intervals, no vertical grids"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "Note: and Source: text below the figure"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "y-axis ticks have % signs"
+      }
+    ],
+    "new_components": [],
+    "spot_checks": [
+      {
+        "value": "28",
+        "figure_id": "not_found",
+        "mark": "no mark reaches +28% or similar value on the chart",
+        "printed_on_figure": false,
+        "addressing_keys": [],
+        "keys_verbatim": false,
+        "blocked_step": 1
+      },
+      {
+        "value": "-17",
+        "figure_id": "f1",
+        "mark": "China, Polysilicon, 2023 Q4 bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "China",
+          "Polysilicon",
+          "2023",
+          "Q4"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "0",
+        "figure_id": "f1",
+        "mark": "China, Solar PV integrated mfg, 2024 Q3 bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "China",
+          "Solar PV integrated mfg",
+          "2024",
+          "Q3"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-7",
+        "figure_id": "f1",
+        "mark": "China, Solar PV integrated mfg, 2024 Q2 bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "China",
+          "Solar PV integrated mfg",
+          "2024",
+          "Q2"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "2",
+        "figure_id": "f1",
+        "mark": "Outside of China, Utilities, 2024 Q1 bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Outside of China",
+          "Utilities",
+          "2024",
+          "Q1"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-7",
+        "figure_id": "f1",
+        "mark": "Outside of China, Wind integrated mfg, 2023 Q4 bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Outside of China",
+          "Wind integrated mfg",
+          "2023",
+          "Q4"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "7",
+        "figure_id": "f1",
+        "mark": "Outside of China, Wind integrated mfg, 2024 Q1 bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Outside of China",
+          "Wind integrated mfg",
+          "2024",
+          "Q1"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "1.3",
+        "figure_id": "not_found",
+        "mark": "no bar visually maps to exactly 1.3%",
+        "printed_on_figure": false,
+        "addressing_keys": [],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "10",
+        "figure_id": "f1",
+        "mark": "Outside of China, Utilities, 2023 Q1 bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Outside of China",
+          "Utilities",
+          "2023",
+          "Q1"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-5",
+        "figure_id": "f1",
+        "mark": "China, Solar PV integrated mfg, 2024 Q1 bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "China",
+          "Solar PV integrated mfg",
+          "2024",
+          "Q1"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "图表中柱状图未标注具体数值，Y轴刻度间距为10%。需要靠视觉估算具体数字（如-17或-7），极易超出5%的绝对容差要求。",
+    "examples": [
+      {
+        "gap": "P2",
+        "figure_id": "f1",
+        "quote": "panel titles 'China' and 'Outside of China' above the plots",
+        "why": "需要将面板标题作为寻址的一个维度，当前可能无法将独立的子图标题关联到其内部的数据点。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "two level x tick labels with quarters grouped by year",
+        "why": "目前的配置可能无法生成或正确解析带有嵌套层级（季度和年份合并）的 X 轴刻度。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "y-axis with negative values and bars extending downwards from zero",
+        "why": "需要明确支持跨越零线的柱状图，并在 Y 轴上正确渲染负值及其网格线。"
+      }
+    ]
+  }
+}

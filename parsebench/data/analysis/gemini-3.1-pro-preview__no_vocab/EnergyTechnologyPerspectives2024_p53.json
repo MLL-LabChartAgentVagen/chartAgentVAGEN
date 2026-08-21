@@ -1,0 +1,261 @@
+{
+  "stem": "EnergyTechnologyPerspectives2024_p53",
+  "document": "EnergyTechnologyPerspectives2024",
+  "tags": "3d_chart+need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "no_vocab",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 85.7,
+  "usage": {
+    "input_tokens": 3178,
+    "output_tokens": 11757,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n这是一个100%堆叠柱状图。X轴带有层次化分组：底部的细线将类别分别归入“Technology manufacturing”和“Fossil fuel supply”。Y轴的值域从0%到100%，以20%为步长，刻度标签自带“%”符号，没有单独的单位说明。图表的图例用彩色方块标识，放置在X轴标签下方。标题区包含图表编号和主标题，位于图表正上方；底部则有两行左对齐的蓝色注释（Note和Source）。此外，图表外部的下方是一段独立加粗的总结性文本。\n\n### 定位一个值难在哪\n以定位Wind类别中European Union的值（19%）为例，读者需要先在横轴找到“Wind”，在图例确认欧盟的蓝色，然后在图中找到该悬空的蓝色段。由于没有任何数据标签，读者只能将蓝色段的上边缘（约74%）和下边缘（约55%）分别投影到间距宽达20%的纵轴上进行估算，再将两值相减得到19。在这种极其粗糙的视觉参照下，想要将读取误差控制在5%以内是完全不可能的。\n\n### 不确定的\n部分数值极小的数据段（例如Coal中的European Union和North America）在视觉上只是一条极细的线，其上下边界几乎重合，无法仅凭肉眼准确判断它是1%、2%还是更低的值。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 1.14",
+          "title": "Energy employment in selected energy technologies by region, 2022",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "stacked_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 6,
+        "categories": 11,
+        "marks": 56,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "0%",
+            "high": "100%",
+            "serves": "all bars"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "EV and battery",
+            "high": "Oil",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Wind"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "European Union"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Wind",
+            "European Union"
+          ],
+          "value": "19",
+          "value_source": "axis_read",
+          "why_hard": "Floating stacked segments require visually estimating two bounds on a coarse axis and subtracting them."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "hundred_percent_stacked_bar",
+        "figure_id": "f1",
+        "evidence": "all bars stretch to exactly the 100% line on the left axis",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "key": "y_axis_percent_labels",
+        "figure_id": "f1",
+        "evidence": "the y-axis tick labels include a % sign, e.g., 100%",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "key": "bottom_legend",
+        "figure_id": "f1",
+        "evidence": "the colour legend is placed below the chart and x-axis",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "note_and_source_lines",
+        "figure_id": "f1",
+        "evidence": "Note: and Source: lines printed in blue below the legend",
+        "affects": [
+          4
+        ]
+      }
+    ],
+    "new_components": [
+      {
+        "name": "hierarchical_category_grouping_lines",
+        "figure_id": "f1",
+        "evidence": "span lines grouping categories under Technology manufacturing and Fossil fuel supply",
+        "affects": [
+          3,
+          4
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "73",
+        "figure_id": "f1",
+        "mark": "the red segment in EV and battery",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "EV and battery",
+          "China"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "91",
+        "figure_id": "f1",
+        "mark": "the red segment in Battery storage",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Battery storage",
+          "China"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "82",
+        "figure_id": "f1",
+        "mark": "the red segment in Solar PV",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Solar PV",
+          "China"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "19",
+        "figure_id": "f1",
+        "mark": "the blue segment in Wind",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Wind",
+          "European Union"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "38",
+        "figure_id": "f1",
+        "mark": "the light grey segment in Coal",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Coal",
+          "Other Asia Pacific"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "37",
+        "figure_id": "f1",
+        "mark": "the dark grey segment in Oil",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Oil",
+          "Rest of World"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "20",
+        "figure_id": "f1",
+        "mark": "the red segment in Hydro",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Hydro",
+          "China"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "40",
+        "figure_id": "f1",
+        "mark": "the light grey segment in Hydro",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Hydro",
+          "Other Asia Pacific"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "54",
+        "figure_id": "f1",
+        "mark": "the red segment in Coal",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Coal",
+          "China"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "25",
+        "figure_id": "f1",
+        "mark": "the yellow segment in Natural gas",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Natural gas",
+          "Middle East"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "图表没有数据标签，必须在20%间距的刻度上估算悬空堆叠段的上下边界并相减（如Wind欧盟段19%），目测误差极大，根本无法满足5%的精度要求。",
+    "examples": [
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "the span lines and text grouping categories under Technology manufacturing and Fossil fuel supply",
+        "why": "管道不支持通过连线将类别轴的项在视觉上进行二次分组的分层结构，这会导致高级别分类信息的丢失。"
+      },
+      {
+        "gap": "P1",
+        "figure_id": "f1",
+        "quote": "the blue segment in Wind, visually spanning roughly from 55% to 74%",
+        "why": "无标签悬空堆叠段的值必须通过肉眼估测上下界并相减，目前的二元可读性验证无法衡量和追踪这种粗糙的累积误差。"
+      }
+    ]
+  }
+}

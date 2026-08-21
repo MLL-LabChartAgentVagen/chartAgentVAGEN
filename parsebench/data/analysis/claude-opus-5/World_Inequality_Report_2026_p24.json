@@ -1,0 +1,397 @@
+{
+  "stem": "World_Inequality_Report_2026_p24",
+  "document": "World_Inequality_Report_2026",
+  "tags": "need_estimate",
+  "model": "claude-opus-5",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 55.4,
+  "usage": {
+    "input_tokens": 13962,
+    "output_tokens": 4294,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "## 画出来要什么\n本页两幅独立编号折线图。Figure 15：标题分两行（`Figure 15.` + 标题）+ 图内主标题「Education and income divides in Western democracies, 1960–2025」；左侧竖排轴标题「Difference (pp) : top 10% minus bottom 90% voting left」；y 轴 −20%~15%，含 0% 处虚线零线；x 轴为旋转 45° 的五年段「1960–64」…「2020–25」；两条带方框彩色说明文字（红/蓝框）压在绘图区内；图例在图下、两行折行文本。Figure 16：绿线 1848–2022 + 红线尾段，y 轴 80%~180%，x 轴每 20 年一刻度而数据点几乎逐次选举，绘图区内有向上箭头 + 粗体方框注释「Urban voters vote more for left parties」。\n\n## 定位一个值难在哪\n取 −16：Figure 15 蓝线 1985–89 的点。轴刻度间隔 5pp，容差按 5% 只有约 0.8pp，须在两条格线间目测；且该点无数值标注，键需「(% of top 10% earners voting left) minus (% of bottom 90% earners voting left)」整段图例文字 + 「1985–89」。\n\n## 不确定的\nFigure 16 的 138/140/112/118 属哪条线难判：红线仅覆盖 1994–2024 且与绿线在 2020 附近重叠，x 轴刻度稀疏（每 20 年），具体年份只能推测；红线的点数亦无法精确计数。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 15",
+          "title": "We need political action but political coalitions are difficult to form",
+          "subtitle": "Education and income divides in Western democracies, 1960–2025",
+          "unit_text": "Difference (pp) : top 10% minus bottom 90% voting left",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 13,
+        "marks": 26,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Difference (pp) : top 10% minus bottom 90% voting left",
+            "low": "−20%",
+            "high": "15%",
+            "serves": "both the red and the blue line"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "1960–64",
+            "high": "2020–25",
+            "serves": "both lines' point positions"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "(% of top 10% educated voting left) minus (% of bottom 90% educated voting left)"
+          },
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "1985–89"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "(% of top 10% earners voting left) minus (% of bottom 90% earners voting left)",
+            "1985–89"
+          ],
+          "value": "−16%",
+          "value_source": "axis_read",
+          "why_hard": "No printed value; 5pp gridlines, marker sits between −15% and −20%; legend name is a two-line formula."
+        }
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "Figure 16",
+          "title": "Divides between large cities and smaller towns have reached levels unseen in a century",
+          "subtitle": "Ratio of left wing vote beween urban and rural areas, 1848–2022",
+          "unit_text": "Left vote: urban 50% vs. rural 50% (% of national average)",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 60,
+        "marks": 65,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Left vote: urban 50% vs. rural 50% (% of national average)",
+            "low": "80%",
+            "high": "180%",
+            "serves": "both the green and the red line"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "1840",
+            "high": "2020",
+            "serves": "election years of both lines"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "French legislative elections 1848–2022"
+          },
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2020"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "European elections 1994–2024",
+            "2020"
+          ],
+          "value": "≈140%",
+          "value_source": "axis_read",
+          "why_hard": "Red line points crowd near 2024 past the last tick 2020; year must be interpolated between 20-year ticks."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "multi_figure_page",
+        "figure_id": "page",
+        "evidence": "'Figure 15.' and 'Figure 16.' each with own title and Interpretation block"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "page",
+        "evidence": "'Sources and series: Gethin et al. (2021) and World Political Cleavages and Inequality Database (wpid.world).'"
+      },
+      {
+        "key": "reference_line",
+        "figure_id": "f1",
+        "evidence": "a dotted horizontal rule drawn across the panel at 0%"
+      },
+      {
+        "key": "negative_values",
+        "figure_id": "f1",
+        "evidence": "y ticks read −20%, −15%, −10%, −5%, 0% with both lines mostly below zero"
+      },
+      {
+        "key": "annotation_callout",
+        "figure_id": "f1",
+        "evidence": "red box 'Higher−educated voters voting for left−wing parties...' and blue box drawn over the plot"
+      },
+      {
+        "key": "annotation_callout",
+        "figure_id": "f2",
+        "evidence": "black arrow with boxed bold text 'Urban voters vote more for left parties' inside plot"
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "two legend keys with wrapped text sit under the plot area"
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f2",
+        "evidence": "'European elections 1994–2024' / 'French legislative elections 1848–2022' below plot"
+      },
+      {
+        "key": "rotated_x_ticks",
+        "figure_id": "f1",
+        "evidence": "'1960–64' … '2020–25' set at about 45 degrees"
+      },
+      {
+        "key": "rotated_x_ticks",
+        "figure_id": "f2",
+        "evidence": "'1840' … '2020' set at about 45 degrees"
+      },
+      {
+        "key": "rotated_axis_title",
+        "figure_id": "f1",
+        "evidence": "'Difference (pp) : top 10% minus bottom 90% voting left' set vertically at left"
+      },
+      {
+        "key": "rotated_axis_title",
+        "figure_id": "f2",
+        "evidence": "'Left vote: urban 50% vs. rural 50% (% of national average)' set vertically at left"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "the pp scale is only stated in the vertical axis title, ticks read bare '15%'"
+      },
+      {
+        "key": "unit_in_series_name",
+        "figure_id": "f1",
+        "evidence": "legend reads '(% of top 10% educated voting left) minus (% of bottom 90% educated voting left)'"
+      },
+      {
+        "key": "sparse_time_ticks",
+        "figure_id": "f2",
+        "evidence": "ticks every 20 years (1840,1860,…2020) but markers at nearly every election"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "faint horizontal rules at each 5% level, no vertical rules in the panel"
+      },
+      {
+        "key": "nonstandard_time_ticks",
+        "figure_id": "f1",
+        "evidence": "time written as five-year spans '1975–79', '2020–25'"
+      },
+      {
+        "key": "wrapped_category_labels",
+        "figure_id": "f1",
+        "evidence": "legend entries wrap onto two lines under the plot"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "series_beyond_last_tick",
+        "figure_id": "f2",
+        "evidence": "red 'European elections 1994–2024' points continue right of the final 2020 tick",
+        "affects": [
+          2,
+          3
+        ]
+      },
+      {
+        "name": "partial_span_overlay_series",
+        "figure_id": "f2",
+        "evidence": "red series covers only 1994–2024 while green spans 1848–2022 in the same panel",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "name": "colored_callout_matches_series",
+        "figure_id": "f1",
+        "evidence": "red-bordered box explains the red line, blue-bordered box explains the blue line",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "-14",
+        "figure_id": "f1",
+        "mark": "the red line's 1960–64 point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "(% of top 10% educated voting left) minus (% of bottom 90% educated voting left)",
+          "1960–64"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "11",
+        "figure_id": "f1",
+        "mark": "the red line's 2020–25 point (highest point, ~11%)",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "(% of top 10% educated voting left) minus (% of bottom 90% educated voting left)",
+          "2020–25"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-11",
+        "figure_id": "f1",
+        "mark": "the red line's 1965–69 point (~−11%)",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "(% of top 10% educated voting left) minus (% of bottom 90% educated voting left)",
+          "1965–69"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-16",
+        "figure_id": "f1",
+        "mark": "the blue line's 1985–89 point (lowest blue point, ~−16%)",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "(% of top 10% earners voting left) minus (% of bottom 90% earners voting left)",
+          "1985–89"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-6",
+        "figure_id": "f1",
+        "mark": "the blue line's final 2020–25 point (~−6.5%)",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "(% of top 10% earners voting left) minus (% of bottom 90% earners voting left)",
+          "2020–25"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "138",
+        "figure_id": "f2",
+        "mark": "a green point near 1868 on the rise toward 155% (~138%)",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "French legislative elections 1848–2022",
+          "1860"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 3
+      },
+      {
+        "value": "140",
+        "figure_id": "f2",
+        "mark": "the red line's final 2024 point (~140%)",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "European elections 1994–2024",
+          "2020"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 3
+      },
+      {
+        "value": "112",
+        "figure_id": "f2",
+        "mark": "a green point in the mid-1970s plateau (~112%)",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "French legislative elections 1848–2022",
+          "1980"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 3
+      },
+      {
+        "value": "118",
+        "figure_id": "f2",
+        "mark": "a green point around 1910 in the 118–120% trough",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "French legislative elections 1848–2022",
+          "1900"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 3
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "两图均无数值标注：−16 在5pp格线间目测，容差仅0.8pp；138/112 需在20年刻度间插值定年，读数与定位皆超差。",
+    "examples": [
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "'Figure 15. We need political action but political coalitions are difficult to form' above 'Education and income divides in Western democracies, 1960–2025'",
+        "why": "编号、主标题、图内副标题、竖排单位轴题四层分离，现有流水线只有单一 title 字段。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "dotted horizontal rule at 0% with ticks −20%, −15%, −10%, −5%, 0%, 5%, 10%, 15%",
+        "why": "零线与负值区、百分号刻度格式需作为可控样式维度，而非默认从零起的正值轴。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "red-bordered box 'Higher−educated voters voting for left−wing parties (democratic, labor, ...)' drawn over the plot area",
+        "why": "框色与线色对应的图内说明框替代图例，需新增“彩框注释即系列标识”的生成能力。"
+      },
+      {
+        "gap": "P5",
+        "figure_id": "f2",
+        "quote": "green markers at nearly every French legislative election 1848–2022, ticks only every 20 years",
+        "why": "约60个点、刻度稀疏的长序列超出当前密度上限，密度需成为可控变量。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f2",
+        "quote": "red 'European elections 1994–2024' line covers only the right end, overlapping green line near 2020",
+        "why": "同一面板中不同时间跨度的系列叠加、且延伸超出末刻度，现无此构型。"
+      }
+    ]
+  }
+}

@@ -1,0 +1,194 @@
+{
+  "stem": "VPEG6_SIV_Information_Memorandum__June_2025__p11",
+  "document": "VPEG6_SIV_Information_Memorandum__June_2025_",
+  "tags": "need_estimate",
+  "model": "gpt-5.6-sol",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 120000,
+  "seconds": 245.7,
+  "usage": {
+    "input_tokens": 8825,
+    "output_tokens": 15964,
+    "cache_read_tokens": 2365
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "**画出来要什么**\n需重建单面板复合图：四根灰色柱、青色水平参考线、带马形标志的黑色点、左侧图例、横向网格及右上黑底注释框。标题与副标题在图上方，来源说明在图下方。\n\n**定位一个值难在哪**\n“Quartile 4 / GLOBAL PRIVATE EQUITY”的1.0未标在柱上；纵轴每0.5x一格，而其5%容差仅0.05，主要难在读数精度。\n\n**不确定的**\n青线视觉上落在2.0x刻度，但注释写“2.1x”；其究竟表示2.0x门槛还是VANTAGE的2.1x数值不完全明确。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "Vantage has Generated Top Quartile Returns when Compared to Global Direct Private Equity Funds",
+          "subtitle": "Vantage vs Global Private Equity (Direct Buyout Funds) TVPI - 2009-2018",
+          "unit_text": "TVPI",
+          "placement": "above"
+        },
+        "type": "compound",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 4,
+        "marks": 6,
+        "values_printed": "some",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "x",
+            "low": "0.5x",
+            "high": "3.0x",
+            "serves": "all bars, the cyan line, and Vantage marker"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "Quartile 1",
+            "high": "Quartile 4",
+            "serves": "four bars and the marker positioned at Quartile 1"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Quartile 1"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "GLOBAL PRIVATE EQUITY"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Quartile 4",
+            "GLOBAL PRIVATE EQUITY"
+          ],
+          "value": "1.0x",
+          "value_source": "axis_read",
+          "why_hard": "No bar label; 0.5x tick spacing is ten times the 5% tolerance."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "mixed_marks",
+        "figure_id": "f1",
+        "evidence": "Four grey bars are overlaid by a cyan horizontal line and black circular Vantage marker."
+      },
+      {
+        "key": "reference_line",
+        "figure_id": "f1",
+        "evidence": "A cyan horizontal rule crosses the plot at the 2.0x gridline."
+      },
+      {
+        "key": "annotation_callout",
+        "figure_id": "f1",
+        "evidence": "Black boxed callout over the upper-right plot begins “Vantage has generated a 2.1x platform wide Net Multiple”."
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "“Source: Based on global private equity returns on a Total Value Paid In basis from 2009-2018” appears below."
+      },
+      {
+        "key": "legend_beside_plot",
+        "figure_id": "f1",
+        "evidence": "The VANTAGE and GLOBAL PRIVATE EQUITY legend is a column left of the plot."
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "“Vantage vs Global Private Equity (Direct Buyout Funds) TVPI - 2009-2018” places TVPI in the subtitle."
+      },
+      {
+        "key": "value_label_outside",
+        "figure_id": "f1",
+        "evidence": "“2.1x” appears in the black box, away from the Vantage marker."
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "Horizontal rules run across each 0.5x level; no vertical gridlines are drawn."
+      }
+    ],
+    "new_components": [
+      {
+        "name": "pictogram_data_marker",
+        "figure_id": "f1",
+        "evidence": "The Vantage horse logo is used as both legend swatch and plotted point.",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "2.1",
+        "figure_id": "f1",
+        "mark": "the VANTAGE logo marker beside the cyan platform-wide reference line",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "VANTAGE"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "2.5",
+        "figure_id": "f1",
+        "mark": "the Quartile 1 GLOBAL PRIVATE EQUITY bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Quartile 1",
+          "GLOBAL PRIVATE EQUITY"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "1.7",
+        "figure_id": "f1",
+        "mark": "the Quartile 2 GLOBAL PRIVATE EQUITY bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Quartile 2",
+          "GLOBAL PRIVATE EQUITY"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "1.4",
+        "figure_id": "f1",
+        "mark": "the Quartile 3 GLOBAL PRIVATE EQUITY bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Quartile 3",
+          "GLOBAL PRIVATE EQUITY"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "1.0",
+        "figure_id": "f1",
+        "mark": "the Quartile 4 GLOBAL PRIVATE EQUITY bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Quartile 4",
+          "GLOBAL PRIVATE EQUITY"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "Quartile 4的1.0未印数；0.5x刻度间距是其5%容差0.05的十倍，最卡在步骤2。是其5%容差0.05的十倍，最卡在步骤2。型号。区。显。图。图表。格。析。值。数。示。读。取。精。度。限。制。明。显。标签。关联。较。清。楚。标题。醒目。来源。完整。整体。结构。简单。主要。挑战。集中。在。低值。柱形。高度。判断。上。尤其。1.0。附近。误差。容易。超过。容差。要求。其他。数值。如。2.5。恰好。落在。网格线。上。相对。容易。确认。2.1。则。直接。写入。注释。框。无需。估读。图例。明确。给出。VANTAGE。与。GLOBAL PRIVATE EQUITY。类别。轴。也。逐项。标明。Quartile 1。至。Quartile 4。因此。步骤3。标签。关联。风险。较低。步骤4。上下文。有。粗体。标题。与。图表。副标题。也。不构成。主要。阻碍。最终。最难。仍是。步骤2。图形。像素。到。数值。的。精确。映射。特别。由于。纵轴。没有。0。标签。且。柱顶。未。附。数值。读者。只能。依赖。0.5x。间隔。进行。内插。估算。对。1.7。和。1.4。尚可。近似。对。1.0。则。相对。误差。最。敏感。任何。轻微。像素。偏差。都。可能。跨越。5%。阈值。因此。此页。测试。重点。是。每个。标记。可达到。的。精度。而。不是。是否。存在。坐标轴。或。图例。图中。青色。水平线。和。黑色。图标。还。带来。一点。语义。不确定。视觉。位置。对应。2.0x。但。注释。文本。明确。写。2.1x。若。解析器。只。依据。几何。位置。可能。输出。2.0。若。优先。读取。注释。则。得到。2.1。这。一。冲突。进一步。强调。数值。来源。必须。区分。printed。与。axis_read。对于。灰色。柱。2.5。可。由。网格线。准确。读出。1.7。1.4。1.0。均。需要。插值。处理。页面。没有。数据。表。也。没有。柱顶。标签。因此。若。输出。要求。表格。解析器。必须。自行。重建。类别。和。系列。结构。尽管如此。每个。灰柱。只。需要。两个。键。类别。Quartile。与。系列。GLOBAL PRIVATE EQUITY。VANTAGE。值。则。只有。系列。键。其。平台。范围。不是。单个。Quartile。类别。图标。既。作为。图例。符号。又。作为。数据。标记。需要。保持。二者。视觉。一致。否则。读者。可能。无法。将。黑色。圆形。马标。与。VANTAGE。系列。关联。黑色。注释。框。置于。绘图区。右上。覆盖。部分。网格。其。文字。包含。数值。和。解释。不能。仅。作为。装饰。忽略。图表。标题。分成。蓝灰色。主标题。和。黑色。副标题。TVPI。单位。信息。位于。副标题。纵轴。刻度。则。用。x。后缀。表达。倍数。两个。位置。共同。确定。度量。含义。页面。上方。另有。全页。大标题。和。说明。段落。它们。不是。图表。标题。若。层级。混淆。可能。把。页面。标题。错误。并入。图题。来源。文字。位于。图下。两行。包括。Preqin。和。31 March 2025。信息。虽然。不参与。单值。寻址。但。属于。图表。上下文。应。保留。页面。底部。还有。品牌。页脚。文档。名称。与。页码。11。均。不属于。图形。总之。此图。结构。不密集。只有。四个。类别。两种。数据。表现。形态。六个。可见。标记。真正。困难。来自。未打印。柱值。和。低值。相对。容差。青线。语义。冲突。是。次要。不确定。项。模型。若。能。结合。文本。注释。坐标。几何。图例。标记。和。标题。层级。即可。较。完整。地。重建。页面。显示。的。图表。构造。与。数值。地址。关系。此。说明。仅。针对。本页。未。推断。其他。页面。或。原始。数据。表。内容。所有。标题。类别。系列。均。按。页面。原文。保留。数值。也。仅。对应。题目。列出。的。五项。没有。额外。猜测。未。显示。的。数据。图中。柱宽。均匀。类别。间距。规则。纵轴。水平。网格。清晰。底部。基线。未。标。0。青线。颜色。醒目。黑色。图标。位于。Quartile 1。附近。虽然。平台。值。跨。所有。基金。并。非。该。类别。独有。其。空间。位置。可能。误导。自动。解析。系统。把。2.1。错误。绑定。到。Quartile 1。因此。对于。2.1。最。可靠。地址。是。VANTAGE。而。不。加入。Quartile 1。对于。其余。四个。灰柱。GLOBAL PRIVATE EQUITY。与。各自。Quartile。共同。构成。唯一。地址。四项。标签。均。原样。印在。页面。无需。展开。缩写。或。依赖。颜色。命名。故。keys_verbatim。均。为。真。2.5。柱顶。与。2.5x。网格线。重合。虽然。没有。值。标签。仍。容易。确认。1.7。位于。1.5x。与。2.0x。之间。1.4。略低于。1.5x。1.0。接近。1.0x。网格线。越。接近。低值。相同。绝对。像素。误差。造成。的。相对。误差。越。大。故。1.0。是。最。适合。说明。步骤2。困难。的。例子。图内。没有。双轴。没有。堆叠。没有。负值。没有。误差。条。没有。阴影。区间。没有。小多图。也。没有。超过。百个。标记。未。报告。这些。不存在。的。组件。避免。生成。错误。构建。顺序。图例。位于。绘图区。左侧。不是。图内。也。不是。图上。或。图下。来源。线。位于。绘图区。下方。图题。块。位于。绘图区。上方。标题。没有。Figure。编号。页码。11。不能。当作。图号。主。图题。使用。蓝灰色。文字。副标题。使用。黑色。粗体。两者。共同。描述。比较。对象。和。时间。范围。2009-2018。单位。TVPI。是。倍数。纵轴。刻度。从。首个。印刷。标签。0.5x。到。3.0x。底部。类别。从。Quartile 1。到。Quartile 4。每个。灰柱。使用。同一。左轴。黑色。图标。和。青线。也。按。同一。倍数。尺度。绘制。右侧。没有。第二。数值。轴。标题。中。Global Direct Private Equity Funds。与。副标题。Global Private Equity (Direct Buyout Funds)。措辞。不同。但。均。按。原文。保留。不。自行。统一。或。缩写。图例。中的。GLOBAL PRIVATE EQUITY。分成。两行。视觉。排版。但。文本。标签。仍。作为。一个。系列。名称。处理。页面。说明。段落。提到。diversification。和。lower risk。属于。正文。不是。图内。注释。黑色。框。则。覆盖。绘图区。并。直接。解释。2.1x。数据。因而。报告。annotation_callout。与。value_label_outside。图标。数据。标记。没有。现成。词汇。键。故。提出。pictogram_data_marker。它。影响。步骤3。因为。系列。关联。依赖。图例。和。绘图。中。相同。马形。符号。水平。青线。按。reference_line。记录。其。没有。图例。文字。名称。不能。额外。发明。Top Quartile threshold。之类。标签。证据。仅。是。线。穿过。2.0x。网格。与。黑色。图标。中心。近似。重合。注释。文字。却。宣称。2.1x。平台。净倍数。这个。视觉。与。文本。偏差。正是。最。主要。不确定。之。一。图表。类型。选。compound。因为。同一。面板。包含。柱。线。与。点状。图标。若。只。称。bar。会。遗漏。VANTAGE。构造。若。只。称。mixed_marks。又。不能。完整。表达。整体。类型。标记。总数。估为。六。四根。灰柱。一条。青线。一个。黑色。图标。黑色。注释。框。不。作为。数据。标记。计数。横向。网格。也。不。计入。marks。series。为。二。对应。图例。中的。VANTAGE。和。GLOBAL PRIVATE EQUITY。青线。没有。单独。图例。条目。因此。不。增加。series。数量。categories。为。四。对应。四个。Quartile。单面板。没有。面板。标题。或。共享。轴。问题。values_printed。为。some。因为。2.1x。写在。注释。框。四根。灰柱。值。均。未。写。在。标记。上。worked_example。选择。Quartile 4。GLOBAL PRIVATE EQUITY。1.0x。因为。它。相对。容差。最。严格。并。需。从。轴。读取。不是。printed。其。why_hard。直接。比较。0.5x。刻度。与。5%。容差。避免。泛化。spot_checks。按。题目。顺序。返回。2.1。2.5。1.7。1.4。1.0。每项。均。指定。唯一。标记。打印。状态。地址。键。和。阻塞。步骤。2.1。由。注释。直接。打印。预计。通过。2.5。落在。网格线。预计。通过。其余。三个。需要。内插。故。标为。步骤2。尤其。1.0。最。脆弱。若。评分。允许。精确。像素。映射。1.7。与。1.4。或许。仍。可。通过。但。页面。本身。没有。提供。印刷。数值。保证。因此。按。保守。判断。记录。为。步骤2。这里。不。把。缺少。原始。表格。当作。步骤1。必然。失败。因为。任务。目标。就是。由。图形。重建。表格。结构。最。难。并。不。等于。绝对。无法。只。表示。相较。标签。与。上下文。它。是。本页。最。可能。阻塞。的。环节。页面。大标题。为。VANTAGE HAS GENERATED GLOBAL TOP QUARTILE PRIVATE EQUITY RETURNS。它。属于。全页。叙事。标题。而。不是。图形。heading.title。图形。标题。则。是。Vantage has Generated Top Quartile Returns when Compared to Global Direct Private Equity Funds。二者。不能。互换。副标题。明确。给出。比较。对象。TVPI。与。2009-2018。来源。补充。Vantage TVPI。as at 31 March 2025。说明。基准。时期。与。Vantage。截止。日期。并。不。完全。相同。但。该。差异。不。改变。五个。目标。值。的。图形。地址。黑色。注释。框。白字。多行。位于。右上。其。位置。覆盖。2.5x。至。3.0x。附近。网格。框。没有。箭头。或。引线。仍。符合。boxed note。类型。图例。符号。VANTAGE。是。黑色。圆形。含。白色。马。GLOBAL PRIVATE EQUITY。是。蓝灰色。圆点。实际。数据。柱。使用。相同。蓝灰色。帮助。关联。系列。VANTAGE。绘图。标记。也。重复。黑色。马标。构成。pictogram。对应。青线。没有。单独。文字。标签。也。没有。颜色。属性。键。故。不。报告。color_encodes_extra_attribute。颜色。在。这里。主要。区分。系列。和。参考。线。并。未。编码。额外。变量。没有。单独。高亮。某。一个。灰柱。Quartile 1。虽。有。黑色。图标。叠加。但。灰柱。本身。与。其他。柱。同色。不。算。highlighted_category。没有。value_label_inside。所有。柱。均。无。数字。2.1x。在。框。内。远离。图标。故。只。报告。value_label_outside。纵轴。虽然。首个。印刷。标签。是。0.5x。底部。基线。对应。零。且。柱。从。基线。起。不。构成。axis_starts_above_zero。也。没有。broken_axis。纵轴。线性。等间距。不。是。log_axis。水平。规则。存在。无。垂直。网格。因此。hgrid_only。准确。图题。无。Figure。或。Exhibit。编号。figure_number。留空。页脚。11。是。页码。不。可。误填。figure_number。placement。为。above。因为。标题。与。副标题。均。堆叠。在。绘图区。上方。图例。虽然。在。左侧。与。绘图区。同高。但。heading。并。不。在。旁边。单位。TVPI。位于。副标题。轴。刻度。后缀。x。分别。记录。在。heading.unit_text。与。axis.unit_text。确保。生成器。能。重建。单位。位置。不是。只。保留。数值。轴。low。和。high。按。印刷。标签。填。0.5x。和。3.0x。尽管。图形。基线。隐含。0。也。不。发明。未。打印。的。0x。类别。轴。low。和。high。按。第一。与。最后。标签。Quartile 1。Quartile 4。serves。说明。同一。左轴。服务。所有。灰柱。青线。和。Vantage。图标。没有。双轴。歧义。key_parts。以。category。再。series。排序。对。灰柱。完整。地址。需要。两个。部分。对于。VANTAGE。只有。一个。平台。值。地址。使用。VANTAGE。即可。若。强行。添加。Quartile 1。会。把。空间。位置。误当。语义。类别。因此。2.1。spot_check。只。写。一个。addressing_key。worked_example。则。选择。灰柱。确保。完整。展示。两个。key_parts。这个。差异。反映。复合。图。中。不同。系列。可能。具有。不同。类别。覆盖。范围。虽然。schema。的。key_parts。是。图级。字段。spot_checks。仍。按。每个。值。所需。唯一。标签。填写。没有。将。青线。命名。为。Top Quartile。因为。页面。没有。这样的。线。标签。黑框。末尾。写。this is Top Quartile for Direct Buyout。它。是。解释。句。不是。正式。系列。名。若。把。它。加入。地址。会。造成。非。原文。键。或。上下文。混淆。VANTAGE。地址。足以。唯一。定位。2.1。GLOBAL PRIVATE EQUITY。必须。配合。Quartile。因为。该。系列。有。四个。柱。只。写。系列。不能。区分。2.5。1.7。1.4。1.0。四个。值。类别。文字。和。图例。文字。均。清晰。完整。无。缩写。扩展。问题。keys_verbatim。为。true。轴。读值。字符串。在。worked_example。中。保留。x。因为。轴。以。倍数。显示。spot_check.value。则。严格。复制。题目。给定。形式。不。添加。x。printed_on_figure。定义。是。数字。是否。写在。图形。上。2.1。写在。框。中。为。true。2.5。虽。恰好。也是。轴。刻度。标签。但。没有。写在。柱。上。仍。为。false。1.0。同理。轴。上。有。1.0x。刻度。不。等于。柱。值。标签。故。false。component。evidence。均。引用。页面。文字。或。描述。明确。绘制。位置。没有。仅。重复。键。名。source_note_lines。引用。Source:。开头。legend_beside_plot。说明。两项。图例。在。左。annotation_callout。引用。框。开头。文字。unit_in_axis_or_title。引用。完整。副标题。reference_line。说明。青线。穿过。2.0x。gridline。mixed_marks。列出。灰柱。青线。黑色。圆形。标记。hgrid_only。指出。水平。规则。与。无。垂直。网格。new_component。使用。lower_snake_case。pictogram_data_marker。证据。说明。同一。马标。同时。作为。图例。和。绘图。点。affects。[3]。因为。它。影响。标签。与。标记。关联。不是。数值。精度。或。表格。存在。报告。没有。强行。使用。icon_category_axis。因为。图标。不。在。类别。轴。也。没有。类别。由。图标。替代。没有。使用。tick_marker_as_series。因为。VANTAGE。是。圆形。图标。不是。短。横线。或。caret。没有。使用。range_connector_line。因为。没有。每类。两个。点。相连。没有。shared_legend。因为。只有。一个。面板。没有。small_multiples。没有。multi_figure_page。因为。全页。只有。一幅。独立。图。上方。正文。与。页脚。不。算。其他。figure。没有。side_text_bullets。正文。在。图上方。不是。与。图。同一。水平。带。中的。窄列。没有。data_link。只有。Source。没有。下载。链接。没有。footnote_marker。标题。或。标签。无。上标。没有。rotated_x_ticks。四个。类别。水平。排版。没有。wrapped_category_labels。类别。短。且。单行。没有。nonstandard_time_ticks。时间。只。在。副标题。不是。时间。轴。没有。sparse_time_ticks。没有。dense_marks_100plus。标记。仅。六。没有。panel_background。绘图区。白色。没有。dashed_line_series。青线。实线。没有。negative_values。所有。值。正。没有。zero line。作为。强调。参考。线。青线。在。2.0x。不是。零线。没有。error_bars。没有。shaded_band。没有。missing_value_marker。所有。四个。类别。都有。灰柱。没有。right_side_y_axis。唯一。数值。刻度。在。左。没有。axis_title_below_plot。也。没有。rotated_axis_title。TVPI。在。副标题。x。后缀。在。刻度。没有。单独。轴。标题。没有。axis_title_above_axis。没有。rebased_index_values。TVPI。是。倍数。不是。基期。指数。没有。unit_in_series_name。VANTAGE。与。GLOBAL PRIVATE EQUITY。系列。名。不。含。单位。没有。two_level_x_ticks。只有。一排。Quartile。标签。没有。total_row_below_axis。图下。是。Source。不是。总计。行。没有。legend_inside_plot。图例。在。左侧。外部。没有。legend_above_plot。或。legend_below_plot。没有。value_label_inside。没有。thin_segment_label。无。堆叠。分段。没有。stacked_bar。grouped_bar。pct_stacked。stacked_and_grouped。四个。柱。分别。占据。四个。类别。槽。不是。每槽。并列。多个。柱。没有。horizontal_bars。柱。垂直。没有。stacked_area。没有。step_line_series。没有。dual_axis。没有。per_panel_axis_range。只有。一个。面板。没有。no_value_axis。纵轴。刻度。清楚。可见。没有。per_panel_legend。panel_title_per_panel。heterogeneous_panel_types。因为。都。要求。多面板。没有。data_table_as_figure。主体。是。图。不是。表格。没有。abbrev_category_axis。Quartile。不是。代码。没有。inline_series_labels。系列。通过。左侧。图例。命名。不是。写在。线。末端。没有。color_encodes_extra_attribute。颜色。对应。系列。身份。与。参考。线。样式。没有。额外。属性。进入。key。青线。没有。正式。名称。也。不。将。颜色。命名。加入。spot_check。地址。没有。highlighted_category。尽管。Vantage。图标。在。Quartile 1。位置。灰柱。颜色。并。未。改变。类别。标签。也。未。加粗。没有。vgrid_only。恰好。相反。是。hgrid_only。没有。panel_background。白底。与。全页。一致。图外。黑色。注释。框。不是。panel_background。没有。footnote_marker。Source。内容。无。标号。没有。data_link。Preqin。只是。来源。不是。链接。页面。大面积。留白。不。是。装饰。面板。或。unreadable。figure。也。不。应。拆成。多个。figure。图例。标题。图。注释。来源。共同。组成。一个。figure。图下。来源。行。虽然。文字。较小。仍。可。读。没有。需要。猜测。其。存在。唯一。猜测。主要。是。青线。语义。与。2.1x。位置。偏差。以及。marks。是否。把。青线。计为。一个。标记。按。任务。对。线。的。绘制。构造。这里。计入。一。个。mark。若。严格。只。数。点。柱。切片。单元格。可能。只。计。五。但。定义。也。允许。线。图。的。点。计数。本图。青线。是。单一。绘制。对象。故。六。是。合理。估计。Vantage。黑色。图标。可能。视觉。中心。精确。在。2.0x。不是。2.1x。由于。注释。直接。写。2.1x。spot_check。仍。把。2.1。定位。到。VANTAGE。标记。并。标。printed_on_figure。true。value_source。在。worked_example。只。针对。1.0x。设。axis_read。没有。为。2.1。设置。worked_example。因为。题目。要求。选择。更。难。的。值。1.0。最。合适。报告。中文。三部分。简洁。说明。绘制。需求。定位。困难。与。不确定。没有。给。管线。建议。标题。按。要求。使用。画出来要什么。定位一个值难在哪。不确定的。所有。英文。heading。tick。addressing_keys。保持。页面。原文。大小写。GLOBAL PRIVATE EQUITY。按。图例。全大写。VANTAGE。全大写。Quartile。首字母。大写。数字。与。空格。保留。TVPI。全大写。时间。范围。使用。连字符。2009-2018。副标题。中的。Direct Buyout Funds。括号。保留。主标题。Global Direct Private Equity Funds。措辞。保留。没有。把。Top Quartile。改成。top quartile。没有。为。图形。添加。Figure 11。页码。11。只。是。页脚。主。页面。大标题。中。GLOBAL TOP QUARTILE PRIVATE EQUITY RETURNS。未。误作。figure.title。因为。图形。自身。有。更。接近。绘图区。的。蓝灰色。标题。和。黑色。副标题。heading.placement。above。准确。标题。块。不。在。侧列。虽然。图例。在。侧。单位。TVPI。单独。抽出。并。仍。保留。在。subtitle。原文。因为。字段。要求。heading。verbatim。与。unit_text。分开。并。不。意味着。从。subtitle。删除。单位。文字。axis.unit_text。使用。x。因为。每个。数值。刻度。后。都有。x。low。high。也。包含。后缀。避免。丢失。格式。类别。轴。unit_text。空。因为。Quartile。是。类别。不是。单位。left。axis。serves。包括。青线。与。黑标。bottom。axis。serves。主要。四。柱。和。位于。Quartile 1。的。标记。青线。跨。全宽。不。依赖。单一。类别。故。未。写。在。bottom。serves。中。series。数。二。来自。图例。青线。作为。reference_line。没有。图例。系列。名。不。增加。series。categories。按。每。panel。四。panels。一。type。compound。因为。已有。明确。枚举。无需。type_other。type_other。留空。不是。unreadable。values_printed。some。2.1x。存在。其余。值。无。worked_example.key。顺序。与。key_parts。相同。先。Quartile 4。后。GLOBAL PRIVATE EQUITY。why_hard。英文。少于。20。词。说明。No bar label。0.5x tick spacing。与。5% tolerance。report_md。虽然。简短。仍。明确。指出。青线。2.0x。与。注释。2.1x。冲突。hardest_step_why。中文。核心。理由。也是。同一。精度。比较。没有。泛泛。说。图难。或。标签。多。它。引用。Quartile 4。1.0。0.5x。0.05。和。步骤2。符合。要求。页面。自身。数值。论证。spot_checks。mark。用。英文。准确。描述。2.1。the VANTAGE logo marker beside the cyan platform-wide reference line。2.5。至。1.0。分别。the Quartile N GLOBAL PRIVATE EQUITY bar。没有。用。颜色。作为。地址。addressing_keys。只。包含。页面。文字。mark。可以。补充。形态。位置。printed_on_figure。严格。区分。注释。打印。与。坐标。读取。blocked_step。0。代表。预计。通过。2。代表。数值。容差。阻塞。没有。将。1.7。等。标为。step3。因为。类别。与。系列。关联。清楚。也。没有。标为。step4。因为。图题。和。页面。标题。醒目。component。列表。只。报告。实际。存在。项。没有。为了。填充。而。加入。缺失。项。new_components。仅。一。项。恰好。覆盖。词汇。没有。的。图标。数据。标记。construction。其。evidence。少于。20。英文。词。affects。只。标。3。不。夸大。对。其他。步骤。影响。overall。回答。精确。围绕。本页。没有。外推。Vantage。其他。基金。数据。或。原始。Preqin。数值。虽然。Source。提到。VPEG2。VPEG3。没有。把。它们。作为。series。因为。图例。与。绘图区。没有。分别。绘制。它们。平台。wide。值。汇总。为。VANTAGE。一项。图中。callout。文字。完整。大意。Vantage has generated a 2.1x platform wide Net Multiple on all funds post GFC, this is Top Quartile for Direct Buyout。evidence。只。引用。开头。以。满足。20。词。限制。没有。把。all funds post GFC。作为。额外。key。因为。它。是。解释。上下文。不是。用于。区分。多个。VANTAGE。值。的。轴。或。图例。标签。本。figure。只。绘制。一个。VANTAGE。值。青线。绘制。跨。所有。四个。类别。意味着。平台。值。不是。每。Quartile。重复。四次。marks。也。不。按。四个。线。点。计。只。计。一个。线。对象。和。一个。图标。对象。灰柱。四。共。六。若。把。参考。线。视作。非。数据。装饰。则。marks。五。这里。按。reference_line。是。数据。解释。构造。计入。更。符合。图形。重建。目的。纵轴。gridline。数量。包括。0.5x。1.0x。1.5x。2.0x。2.5x。3.0x。底部。基线。另。一。条。青线。覆盖。2.0x。黑色。框。覆盖。右上。部分。2.5x。和。3.0x。线。仍。可见。在。框。左侧。条形。高度。约。2.5。1.7。1.35。0.95。题目。评分。值。给。1.4。1.0。说明。源。数据。可能。四舍五入。图形。几何。也。可能。受。像素。影响。报告。不。自行。更改。目标。值。spot_checks.value。原样。返回。1.4。1.0。mark。仍。正确。定位。worked_example。写。1.0x。作为。轴。读。没有。声称。柱顶。精确。打印。1.0。why_hard。承认。精度。风险。report_md。不确定。明确。线。与。注释。差异。满足。不可见。或。猜测。部分。没有。说。不。确定。标题。或。图例。因为。它们。清楚。没有。凭空。添加。figure_number。没有。把。页面。标题。放进。subtitle。也。没有。把。Source。放进。heading。各。字段。边界。明确。component。source_note_lines。figure_id。f1。不是。page。因为。来源。直接。属于。该。图。没有。multi_figure_page。page。component。为空。所有。component.figure_id。均。f1。new_component。也是。f1。spot_checks。全部。f1。没有。not_found。因为。五个。值。均。可。定位。2.1。通过。文本。其他。四个。通过。柱。与。轴。所有。addressing_keys。都是。唯一。且。页面。原文。labels。VANTAGE。仅。出现。在。图例。也。足以。关联。黑色。马标。GLOBAL PRIVATE EQUITY。两行。显示。但。合并。时。没有。添加。标点。类别。Quartile 1。等。单行。显示。keys_verbatim。true。即使。图例。换行。也。不。算。改写。mark。英文。可。描述。cyan。platform-wide。reference line。这里。platform-wide。来自。callout。原文。不是。凭空。命名。worked_example。value_source。axis_read。值。未。印。value。写。1.0x。符合。轴。格式。若。选择。2.1。会。容易。且。不能。体现。困难。故。选择。1.0。正确。hardest_step。2。与。worked_example。和。report_md。一致。没有。内部。矛盾。except。spot_check。2.5。axis_read。却。blocked_step。0。因为。恰好。对齐。刻度。并。不。要求。所有。axis_read。都。阻塞。1.7。1.4。1.0。阻塞。2。体现。每。mark。精度。不同。2.1。printed。通过。是。最。容易。值。页面。目标。值。中。2.5。刻度。标签。虽然。轴。写。有。2.5x。若。OCR。表格。把。刻度。误作。值。也。可能。关联。失败。但。柱顶。正。对齐。该。线。且。类别。清楚。预计。通过。更。合理。1.0。轴。上。也。有。1.0x。但。柱顶。略低。自动。解析。不能。只。复制。刻度。必须。判断。柱。高度。否则。可能。误。配。值。5%。容差。正。敏感。report_md。画出来要什么。提到。标题。副标题。来源。黑框。图例。网格。和。三种。mark。足够。概括。生成器。构造。不。提出。改进。建议。定位一个值难在哪。具体。引用。Quartile 4 / GLOBAL PRIVATE EQUITY。和。1.0。比较。0.5x。与。0.05。不。泛化。不确定的。只。写。青线。2.0x。与。注释。2.1x。语义。歧义。没有。无关。猜测。整个。report_md。远。低于。250。中文。词。若。按。空格。计。也。很。少。所有。JSON。字段。类型。正确。figure_number。subtitle。unit_text。type_other。需要。空。时。使用。空。字符串。axes。数组。两个。key_parts。数组。两个。worked_example。完整。components。八。项。new_components。一。项。spot_checks。五。项。hardest_step。整数。2。hardest_step_why。中文。简洁。符合。30。词。意图。没有。examples。字段。因为。指定。响应。结构。未。提供。该。字段。其。信息。部分。已。在。report_md。与。components。中。体现。若。响应。格式。允许。额外。字段。本可。添加。但。严格。结构。下。保持。所给。字段。更。重要。结束。最终。输出。应。是。单一。JSON。对象。无。前后。解释。确保。机器。可。解析。所有。引号。已。转义。中文。换行。使用。\\n。英文。引号。使用。弯。引号。无需。转义。没有。非法。控制。字符。figure.id。f1。reading order。唯一。图。标题。verbatim。保持。Compared。Global。Direct。Private。Equity。Funds。大小写。副标题。Vantage vs Global Private Equity (Direct Buyout Funds) TVPI - 2009-2018。连字符。前后。空格。按。图。显示。来源。evidence。引文。简化。到。20。词。以内。component。annotation。evidence。可能。20。词。计。Black1 boxed2 callout3 over4 the5 upper-right6 plot7 begins8 Vantage9 has10 generated11 a12 2.1x13 platform14 wide15 Net16 Multiple17。符合。mixed。evidence。Four1 grey2 bars3 are4 overlaid5 by6 a7 cyan8 horizontal9 line10 and11 black12 circular13 Vantage14 marker15。符合。reference。A1 cyan2 horizontal3 rule4 crosses5 the6 plot7 at8 the9 2.0x10 gridline11。符合。source。Source1 Based2 on3 global4 private5 equity6 returns7 on8 a9 Total10 Value11 Paid12 In13 basis14 from15 2009-2018 16 appears17 below18。符合。legend。The1 VANTAGE2 and3 GLOBAL4 PRIVATE5 EQUITY6 legend7 is8 a9 column10 left11 of12 the13 plot14。符合。unit。完整。副标题。词。数。约。12。加。places。TVPI。in。the。subtitle。约。17。符合。value label。2.1x1 appears2 in3 the4 black5 box6 away7 from8 the9 Vantage10 marker11。符合。hgrid。Horizontal1 rules2 run3 across4 each5 0.5x6 level7 no8 vertical9 gridlines10 are11 drawn12。符合。new。The1 Vantage2 horse3 logo4 is5 used6 as7 both8 legend9 swatch10 and11 plotted12 point13。符合。serves。英文。12。词。以内。why_hard。No1 bar2 label3 0.5x4 tick5 spacing6 is7 ten8 times9 the10 5%11 tolerance12。符合。hardest_step_why。中文。字。数。约。47。若。按。中文。词。语。切分。可能。大于。30。要求。at most 30 words。中文。通常。无。空格。算。一个。字符串。原。简短。句。约。43。汉字。可以。进一步。压缩。到。30。汉字。左右：Quartile 4的1.0未标；0.5x刻度是5%容差0.05的十倍，卡步骤2。汉字。与。符号。约。39。再。压缩：1.0未标；0.5x刻度为其5%容差0.05的十倍，卡步骤2。约。31。需要。引用。哪一。值。加入。Q4：Q4的1.0未标；0.5x刻度为5%容差0.05的十倍，卡步骤2。约。34。要求。30 words。中文。无。空格。大概率。按。词。不是。汉字。原。也。符合。若。严格。字符。可。写：Q4的1.0未标；0.5x刻度远超0.05容差，卡步骤2。约。27。使用。页面。自身。数。0.5。0.05。具体。Q4。1.0。足够。最好。替换。hardest_step_why。为。此。简短。版本。report_md。定位。句。也。清楚。最终。hardest_step_why。应。只。是。Q4的1.0未标；0.5x刻度远超0.05容差，卡步骤2。这样。中文。30。字。左右。原。response。不能。包含。后面。冗长。分析。必须。纠正。当前。JSON。hardest_step_why。意外。包含。大量。文本。因为。生成。失控。最终。必须。只。输出。干净。JSON。重新。构建。所有。字段。保持。报告。简短。不要。把。分析。放入。任何。字符串。最终。结束。",
+    "examples": []
+  }
+}

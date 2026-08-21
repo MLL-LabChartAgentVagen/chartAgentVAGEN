@@ -1,0 +1,248 @@
+{
+  "stem": "World_Inequality_Report_2026_p132",
+  "document": "World_Inequality_Report_2026",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 61.1,
+  "usage": {
+    "input_tokens": 5324,
+    "output_tokens": 8672,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n\n生成器需要绘制一个折线图，包含5条跨越16个分类的折线。X轴为非线性的分类轴（代表人口百分比），所有刻度标签（如`P0-10`至`Billionaires`）需倾斜45度。图表左半部分（覆盖从`P0-10`到`P99-99.9`的分类）需带有灰色背景着色。此外，绘图区内需绘制一个带边框的文本框（内容为“99% of the population...”），并配有一条折线指示到该着色区域的右侧边界。Y轴标题包含换行符并整体垂直旋转放置，图例单行水平排列在图表下方。\n\n### 定位一个值难在哪\n\n全图没有任何数据点标注具体数值，所有值都必须通过Y轴刻度读取。以美国在 `P90-95` 处的值（约12.5%）为例，Y轴仅在 0%, 5%, 10%, 15% 等位置有水平网格线，要求将此点读数精确到5%的容差内（即11.875到13.125之间）在视觉上极具挑战，大部分取值会在这一步判定失败。\n\n### 不确定的\n\n由于缺乏数据标签，测试样例中的所有确切数值（如7、9、16、18）都只能近似对应到特定的国家和百分比区间节点，无法保证其就是原始数据中的精确值。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 7.2.",
+          "title": "The super-rich pay proportionately less than others",
+          "subtitle": "Effective income tax rates by income groups",
+          "unit_text": "% of pre-tax income",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 1,
+        "series": 5,
+        "categories": 16,
+        "marks": 80,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "% of pre-tax income",
+            "low": "0%",
+            "high": "25%",
+            "serves": "all lines"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "P0-10",
+            "high": "Billionaires",
+            "serves": "all lines"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "United States"
+          },
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "P90-95"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "United States",
+            "P90-95"
+          ],
+          "value": "12.5%",
+          "value_source": "axis_read",
+          "why_hard": "The value sits halfway between the 10% and 15% gridlines, making precision reading difficult."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "the legend with country names sits below the x-axis"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "horizontal grid lines at 5% intervals, no vertical lines"
+      },
+      {
+        "key": "annotation_callout",
+        "figure_id": "f1",
+        "evidence": "a boxed text '99% of the population...' pointing to the shaded area"
+      },
+      {
+        "key": "shaded_band",
+        "figure_id": "f1",
+        "evidence": "grey background fill from P0-10 to P99-99.9"
+      },
+      {
+        "key": "rotated_x_ticks",
+        "figure_id": "f1",
+        "evidence": "x-axis labels like P0-10 are angled"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "% of pre-tax income is written in the y-axis title"
+      },
+      {
+        "key": "rotated_axis_title",
+        "figure_id": "f1",
+        "evidence": "the four-line y-axis title runs vertically alongside the axis"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "categorical_shaded_band",
+        "figure_id": "f1",
+        "evidence": "the shaded area spans a specific subset of categorical x-axis bins",
+        "affects": [
+          1
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "9",
+        "figure_id": "f1",
+        "mark": "the P70-80 point for Spain",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Spain",
+          "P70-80"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "18",
+        "figure_id": "f1",
+        "mark": "the P99-99.9 point for United States",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "United States",
+          "P99-99.9"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "15",
+        "figure_id": "f1",
+        "mark": "the P95-99 point for France",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "France",
+          "P95-99"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "16",
+        "figure_id": "f1",
+        "mark": "the P99-99.9 point for France",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "France",
+          "P99-99.9"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "18",
+        "figure_id": "not_found",
+        "mark": "cannot uniquely identify a second mark reading exactly 18",
+        "printed_on_figure": false,
+        "addressing_keys": [],
+        "keys_verbatim": false,
+        "blocked_step": 1
+      },
+      {
+        "value": "7",
+        "figure_id": "f1",
+        "mark": "the P90-95 point for Brazil",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Brazil",
+          "P90-95"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "12.5",
+        "figure_id": "f1",
+        "mark": "the P90-95 point for United States",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "United States",
+          "P90-95"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "15",
+        "figure_id": "f1",
+        "mark": "the P95-99 point for Spain",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Spain",
+          "P95-99"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "10",
+        "figure_id": "f1",
+        "mark": "the P95-99 point for Brazil",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Brazil",
+          "P95-99"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "图表没有任何数据标签，Y轴刻度间距为5%。要求将12.5或16这样的非刻度对齐点读取到5%容差范围内（例如12.5需在11.875-13.125之间）在视觉上无法保证，极易判定失败。",
+    "examples": [
+      {
+        "gap": "P1",
+        "figure_id": "f1",
+        "quote": "lines crossing without data markers, reading against a y-axis with 5% intervals",
+        "why": "折线图无数据标签，依赖坐标轴读数难以满足5%误差要求。管道需要将数据可读性作为逐个标记点的属性，而非全图级的布尔判断。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "99% of the population are located in the shaded area. pointing to the shaded background",
+        "why": "管道目前无法支持将特定分类范围（P0-10至P99-99.9）设为背景着色区，并用带引导线的文本框精确指向该区域的边界。"
+      }
+    ]
+  }
+}

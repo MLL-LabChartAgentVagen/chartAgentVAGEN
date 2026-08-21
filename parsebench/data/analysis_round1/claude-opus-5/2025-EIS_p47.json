@@ -1,0 +1,236 @@
+{
+  "stem": "2025-EIS_p47",
+  "document": "2025-EIS",
+  "tags": "need_estimate",
+  "model": "claude-opus-5",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "seconds": 120.8,
+  "usage": {
+    "input_tokens": 9818,
+    "output_tokens": 9780,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "# 图16 解析\n生成器需能画:横向条形(28 行,按 2025 分数降序),叠加两个点状系列——菱形 \"Score in 2018\" 与竖短线 \"Score in 2024\",即 bar+marker 混合;条形填色不表示系列,而表示国家所属绩效组(四种颜色),EU 行单独用深蓝突出;图例两行四列置于图下,x 轴标题置于图下方 \"Score for dimension 3.1 in 2025 (indexed to the EU in 2018)\",顶部左侧另有维度名 \"Innovators\"。\n\n定位难点:图上无任何数值标签,刻度每 20 单位(约 61 px),菱形本身宽约 2.6 单位,166 与 167、150 与 151 无法区分;更麻烦的是 2025 条形没有图例名称,只能靠轴标题+国名寻址,而同一行还有另外两个同轴系列。\n\n不确定:105 找不到明确对应的标记(最近为 Sweden 2018 菱形约 110);166/173 可能同属 Finland,也可能分属 Germany 与 Finland;细淡竖向网格线是否真实存在存疑。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 16",
+          "title": "Innovation performance of the EU27 Member States in the Innovators dimension",
+          "subtitle": "Innovators",
+          "unit_text": "Score for dimension 3.1 in 2025 (indexed to the EU in 2018)",
+          "placement": "above"
+        },
+        "type": "compound",
+        "type_other": "",
+        "panels": 1,
+        "series": 6,
+        "categories": 28,
+        "marks": 84,
+        "values_printed": "none"
+      }
+    ],
+    "components": [
+      {
+        "key": "horizontal_bars",
+        "figure_id": "f1",
+        "evidence": "country names on the y axis, bars grow right to a 0-220 axis"
+      },
+      {
+        "key": "mixed_marks",
+        "figure_id": "f1",
+        "evidence": "diamond glyphs and short vertical tick glyphs overlaid on each horizontal bar"
+      },
+      {
+        "key": "tick_marker_as_series",
+        "figure_id": "f1",
+        "evidence": "legend entry `Score in 2024` is a short vertical bar placed on each country row"
+      },
+      {
+        "key": "color_encodes_extra_attribute",
+        "figure_id": "f1",
+        "evidence": "`The colours denote each country's overall performance group based on the 2025 SII.`"
+      },
+      {
+        "key": "highlighted_category",
+        "figure_id": "f1",
+        "evidence": "the `EU` row bar is dark navy, unlike the four group colours around it"
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "six legend items in two rows sit under the axis title, outside the plot"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "`Note: All performance scores are relative to that of the EU in 2018 for each dimension.`"
+      },
+      {
+        "key": "axis_title_below_plot",
+        "figure_id": "f1",
+        "evidence": "`Score for dimension 3.1 in 2025 (indexed to the EU in 2018)` centred under the 0-220 ticks"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "axis ticks read bare `0, 20 ... 220`; scale only stated in the axis title line"
+      },
+      {
+        "key": "rebased_index_values",
+        "figure_id": "f1",
+        "evidence": "`indexed to the EU in 2018`; note repeats `relative to that of the EU in 2018`"
+      },
+      {
+        "key": "wrapped_category_labels",
+        "figure_id": "f1",
+        "evidence": "28 country names (`Greece` ... `Romania`) stacked down the left axis"
+      },
+      {
+        "key": "vgrid_only",
+        "figure_id": "f1",
+        "evidence": "faint vertical rules at the 20-unit tick positions behind bars; no horizontal rules"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "unnamed_bar_series",
+        "figure_id": "f1",
+        "evidence": "legend names only colour groups and the 2018/2024 markers; the 2025 bars have no series name",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "name": "dimension_label_above_plot",
+        "figure_id": "f1",
+        "evidence": "`Innovators` in bold blue at top-left of the plot, separate from the figure title",
+        "affects": [
+          3,
+          4
+        ]
+      },
+      {
+        "name": "sorted_category_axis",
+        "figure_id": "f1",
+        "evidence": "rows ordered by 2025 score, Greece longest at top down to Romania shortest",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "name": "legend_grid_multirow",
+        "figure_id": "f1",
+        "evidence": "legend laid out as two rows by four columns mixing colour swatches with marker glyphs",
+        "affects": []
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "209",
+        "figure_id": "f1",
+        "mark": "the Greece 2025 bar, longest bar, ending just past 200",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Greece",
+          "Score for dimension 3.1 in 2025 (indexed to the EU in 2018)"
+        ]
+      },
+      {
+        "value": "150",
+        "figure_id": "f1",
+        "mark": "the Sweden 2025 bar, ending just past 150 (Croatia's 2024 tick sits at the same x)",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Sweden",
+          "Score for dimension 3.1 in 2025 (indexed to the EU in 2018)"
+        ]
+      },
+      {
+        "value": "185",
+        "figure_id": "f1",
+        "mark": "the Belgium 2025 bar, second longest",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Belgium",
+          "Score for dimension 3.1 in 2025 (indexed to the EU in 2018)"
+        ]
+      },
+      {
+        "value": "8",
+        "figure_id": "f1",
+        "mark": "the Romania 2025 bar, the stub bar at the bottom near zero",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Romania",
+          "Score for dimension 3.1 in 2025 (indexed to the EU in 2018)"
+        ]
+      },
+      {
+        "value": "105",
+        "figure_id": "f1",
+        "mark": "no mark sits exactly here; nearest is the Sweden `Score in 2018` diamond at roughly 110",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Sweden",
+          "Score in 2018"
+        ]
+      },
+      {
+        "value": "179",
+        "figure_id": "f1",
+        "mark": "the Portugal `Score in 2018` diamond, isolated far right of its short bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Portugal",
+          "Score in 2018"
+        ]
+      },
+      {
+        "value": "195",
+        "figure_id": "f1",
+        "mark": "the Cyprus `Score in 2024` vertical tick, far right of the Cyprus bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Cyprus",
+          "Score in 2024"
+        ]
+      },
+      {
+        "value": "166",
+        "figure_id": "f1",
+        "mark": "the Germany `Score in 2024` vertical tick, well right of the Germany bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Germany",
+          "Score in 2024"
+        ]
+      },
+      {
+        "value": "173",
+        "figure_id": "f1",
+        "mark": "the Finland `Score in 2024` vertical tick, right of the Finland 2018 diamond",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Finland",
+          "Score in 2024"
+        ]
+      },
+      {
+        "value": "37",
+        "figure_id": "f1",
+        "mark": "the Bulgaria 2025 bar, short brown bar near the bottom",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Bulgaria",
+          "Score for dimension 3.1 in 2025 (indexed to the EU in 2018)"
+        ]
+      }
+    ],
+    "hardest_step": 2
+  }
+}

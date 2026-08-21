@@ -1,0 +1,319 @@
+{
+  "stem": "article_thebeatjun2025_p34",
+  "document": "article_thebeatjun2025",
+  "tags": "untagged",
+  "model": "gemini-3.1-pro-preview",
+  "control": "no_vocab",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 101.6,
+  "usage": {
+    "input_tokens": 3170,
+    "output_tokens": 14062,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n1. **范围柱形图 (Range Column Chart)**：表示10年High到Low的极值范围，用竖直的宽柱子绘制。\n2. **多重自定义标记**：柱形图上方和下方需分别标注High和Low的数值；柱子内部需要绘制表示Average的白色标线及配套文字，同时在特定位置叠加表示Current的圆形标记及文字。\n3. **动态标签防重叠避让**：Current和Average的数值标签没有固定在一侧，而是根据空间交替放置在标记的左侧或右侧（例如S&P 500的21.3在左，而Russell 1000 Growth的27.5在右）。\n4. **混合数据表**：X轴下方直接对齐拼接了High Date和Low Date的表格数据，表格列与X轴的Category完美对齐。\n5. **全局参考线**：一条贯穿全图的蓝色虚线，并带有左侧的独立标签。\n\n### 定位一个值难在哪\n以 `23.3` (Russell 2000的Current值) 为例。该数值位于灰色圆点左侧，而代表Average的 `23.9` 位于白线右侧。大量浮动文本密集分布在柱体周围且缺乏连接线，基于边界框或邻近度的传统解析器极易将标签与错误的标记混淆（如将Current的值关联给Average），导致关联失败。\n\n### 不确定的\n图中贯穿全图的蓝色虚线标注为“MSCI World Current P/E”，但其纵坐标物理位置精确对齐在 `17.6`，这与旁边表示MSCI World Current的散点数值 `19.1` 存在逻辑冲突，不确定是排版失误还是指代另一套统计口径。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "Regions/Styles: Current NTM P/E vs. 10-Year High, Low, Average",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "other",
+        "type_other": "range column chart",
+        "panels": 1,
+        "series": 4,
+        "categories": 10,
+        "marks": 30,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "0.0",
+            "high": "70.0",
+            "serves": "all marks"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "S&P 500",
+            "high": "MSCI AC Asia Pac",
+            "serves": "all marks"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "S&P 500"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Current"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Russell 2000",
+            "Current"
+          ],
+          "value": "23.3",
+          "value_source": "printed",
+          "why_hard": "Labels for Current and Average alternate left and right without connecting lines."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "legend",
+        "figure_id": "f1",
+        "evidence": "legend on top left showing High, Current, Average, Low",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "y_axis",
+        "figure_id": "f1",
+        "evidence": "0.0 to 70.0 on left",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "key": "x_axis",
+        "figure_id": "f1",
+        "evidence": "categories S&P 500 etc at bottom",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "range_column_chart",
+        "figure_id": "f1",
+        "evidence": "bars show range from Low to High",
+        "affects": [
+          1,
+          3
+        ]
+      },
+      {
+        "key": "scattered_data_labels",
+        "figure_id": "f1",
+        "evidence": "labels placed irregularly left, right, top, and bottom",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "horizontal_reference_line",
+        "figure_id": "f1",
+        "evidence": "blue dashed line across the chart",
+        "affects": [
+          2,
+          3
+        ]
+      },
+      {
+        "key": "aligned_data_table",
+        "figure_id": "f1",
+        "evidence": "High Date and Low Date table below x-axis",
+        "affects": [
+          1,
+          3
+        ]
+      },
+      {
+        "key": "in_bar_marker",
+        "figure_id": "f1",
+        "evidence": "white notches inside the bars for Average",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "new_components": [
+      {
+        "name": "range_column_chart",
+        "figure_id": "f1",
+        "evidence": "bars indicating High/Low range rather than base zero",
+        "affects": [
+          1,
+          3
+        ]
+      },
+      {
+        "name": "aligned_data_table",
+        "figure_id": "f1",
+        "evidence": "table rows integrated under x-axis labels",
+        "affects": [
+          1,
+          3
+        ]
+      },
+      {
+        "name": "in_bar_marker",
+        "figure_id": "f1",
+        "evidence": "white lines drawn inside the filled bars",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "22.9",
+        "figure_id": "f1",
+        "mark": "S&P 500 high end of bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "S&P 500",
+          "High"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "23.3",
+        "figure_id": "f1",
+        "mark": "Russell 2000 current circle",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Russell 2000",
+          "Current"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "16.8",
+        "figure_id": "f1",
+        "mark": "Russell 1000 Growth low end of bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Russell 1000 Growth",
+          "Low"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "15.2",
+        "figure_id": "f1",
+        "mark": "Russell 2000 low end of bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Russell 2000",
+          "Low"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "19.1",
+        "figure_id": "f1",
+        "mark": "MSCI World current circle",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "MSCI World",
+          "Current"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "19.7",
+        "figure_id": "f1",
+        "mark": "MSCI World ex USA Small Cap high end of bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "MSCI World ex USA Small Cap",
+          "High"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "11.0",
+        "figure_id": "f1",
+        "mark": "MSCI EAFE low end of bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "MSCI EAFE",
+          "Low"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "12.1",
+        "figure_id": "f1",
+        "mark": "Russell 1000 Value low end of bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Russell 1000 Value",
+          "Low"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "14.4",
+        "figure_id": "f1",
+        "mark": "S&P 500 low end of bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "S&P 500",
+          "Low"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "17.4",
+        "figure_id": "f1",
+        "mark": "MSCI Europe high end of bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "MSCI Europe",
+          "High"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      }
+    ],
+    "hardest_step": 3,
+    "hardest_step_why": "散点数值（如23.3和23.9）为了防重叠，交替放置在标记的左右侧，缺乏对齐和连线，极易导致解析器在提取时将标签与对应的分类或系列发生错误关联。",
+    "examples": [
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "23.3 is left of the circle, 23.9 is right of the notch",
+        "why": "图表生成器无法实现根据空间拥挤度自动将数据标签交替避让放置在标记的左侧或右侧。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "High Date and Low Date table rows below the x-axis",
+        "why": "将附加数据表直接作为X轴的延伸拼接在图表下方，属于高度定制的图表表格混合排版，目前不支持。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "white line notches inside the bars for Average",
+        "why": "在柱形图内部绘制带有背景色的镂空标线来表示另一数据系列，超出了现有图表库的配置范畴。"
+      }
+    ]
+  }
+}

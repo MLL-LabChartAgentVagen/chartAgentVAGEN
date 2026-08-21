@@ -1,0 +1,220 @@
+{
+  "stem": "Digital_News-Report_2022_p50",
+  "document": "Digital_News-Report_2022",
+  "tags": "untagged",
+  "model": "claude-opus-5",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 73.4,
+  "usage": {
+    "input_tokens": 13933,
+    "output_tokens": 5062,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "## 画出来要什么\n单张百分比堆叠柱图：6 个国家 × 4 个分段 = 24 段，左轴刻度 `0%`、`25%`、`50%`、`75%`、`100%`，无网格线。每段内部印白色（灰段为深色）粗体数值，包括 Finland 顶部仅 5 个百分点的窄段。图例在图下方两行四项，与柱段仅靠颜色对应。全大写两行标题 `PROPORTION WHO PAY MOST ATTENTION TO NEWS BRANDS VERSUS JOURNALISTS – SELECTED MARKETS`，无图号；下方注释含题号与逐国样本量 `Base: Finland = 2064, Germany = 2002...`。整图还需与左栏正文并排，共享同一横向版面带。\n\n## 定位一个值难在哪\n`21` 在同一图上出现两次：USA 的橙色 `Specific journalists or commentators` 段，以及 France 的青色 `Specific news brands` 段。数值虽已印出、无需读轴，但要唯一定位必须同时拿到国家刻度名与图例名，而图例名只能通过颜色回溯——解析器若只抓到孤立的 “21”，行标签就落不到正确单元格上。\n\n## 不确定的\n标题第二行是否算副标题（我按整体换行处理，subtitle 留空）；图内是否有极浅的水平网格线，150 dpi 下看不出；Finland 的 `5` 与 Brazil 的 `7` 标签是否真的溢出窄段，边界难判。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "PROPORTION WHO PAY MOST ATTENTION TO NEWS BRANDS VERSUS JOURNALISTS – SELECTED MARKETS",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "stacked_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 4,
+        "categories": 6,
+        "marks": 24,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "0%",
+            "high": "100%",
+            "serves": "all stacked segments in all six bars"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "Finland",
+            "high": "France",
+            "serves": "the six country bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Brazil"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Specific journalists or commentators"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "USA",
+            "Specific journalists or commentators"
+          ],
+          "value": "21",
+          "value_source": "printed",
+          "why_hard": "`21` also appears as France's news-brands segment; only country plus legend colour disambiguates it"
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "stacked_bar",
+        "figure_id": "f1",
+        "evidence": "each country bar is built of four coloured segments, e.g. Germany 45/12/28/15"
+      },
+      {
+        "key": "pct_stacked",
+        "figure_id": "f1",
+        "evidence": "every bar reaches the `100%` tick; segments per country sum to 100"
+      },
+      {
+        "key": "value_label_inside",
+        "figure_id": "f1",
+        "evidence": "`69`, `7`, `20`, `5` printed inside the Finland segments"
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "four legend keys in two rows under the category axis, starting `Specific news brands`"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "`Q_Journalists_1. When looking for news online... Base: Finland = 2064, Germany = 2002...`"
+      },
+      {
+        "key": "side_text_bullets",
+        "figure_id": "page",
+        "evidence": "left column body text runs level with the figure in the right column"
+      },
+      {
+        "key": "thin_segment_label",
+        "figure_id": "f1",
+        "evidence": "Finland's top magenta band is 5 points tall and the `5` label nearly fills it"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "per_category_base_note",
+        "figure_id": "f1",
+        "evidence": "note lists a sample size per country: `Base: Finland = 2064, Germany = 2002, UK = 2410, USA = 2036...`",
+        "affects": [
+          4
+        ]
+      },
+      {
+        "name": "question_id_in_note",
+        "figure_id": "f1",
+        "evidence": "note opens with survey item code in bold: `Q_Journalists_1.` before the question wording",
+        "affects": [
+          4
+        ]
+      },
+      {
+        "name": "figure_without_number",
+        "figure_id": "f1",
+        "evidence": "all-caps heading with no `Figure n`; chapter number `2.5` belongs to the section title",
+        "affects": [
+          3,
+          4
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "69",
+        "figure_id": "f1",
+        "mark": "the Finland cyan bottom segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Finland",
+          "Specific news brands"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "21",
+        "figure_id": "f1",
+        "mark": "the USA orange segment (also the France cyan segment reads 21)",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "USA",
+          "Specific journalists or commentators"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "46",
+        "figure_id": "f1",
+        "mark": "the Brazil orange segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Brazil",
+          "Specific journalists or commentators"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "24",
+        "figure_id": "f1",
+        "mark": "the France magenta top segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "France",
+          "I don't use online news"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      }
+    ],
+    "hardest_step": 3,
+    "hardest_step_why": "数值都已印出，读数无误差；但 21 在 USA 橙段与 France 青段各出现一次，须靠颜色回溯图例名才能唯一定位。",
+    "examples": [
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "PROPORTION WHO PAY MOST ATTENTION TO NEWS BRANDS VERSUS JOURNALISTS – SELECTED MARKETS",
+        "why": "无图号、全大写两行标题，末尾 “– SELECTED MARKETS” 是范围限定而非单位，标题需拆成多字段。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "`5` printed in white inside Finland's top magenta band; y ticks read 0%, 25%, 50%, 75%, 100%",
+        "why": "标签一律置于段内并在极窄段中挤压，刻度带百分号，当前样式维度无法控制。"
+      },
+      {
+        "gap": "P3",
+        "figure_id": "f1",
+        "quote": "figure occupies the right column while body text `But to what extent do people identify...` runs level in the left column",
+        "why": "图与正文共享同一横向版面带，整页导出需记录图相对两栏文本的位置。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "Q_Journalists_1. ... Base: Finland = 2064, Germany = 2002, UK = 2410, USA = 2036, Brazil = 2022, France = 2059.",
+        "why": "注释含题号与逐类别样本量；需要能生成按类别拆分的 base 行，而非单一 source 行。"
+      }
+    ]
+  }
+}

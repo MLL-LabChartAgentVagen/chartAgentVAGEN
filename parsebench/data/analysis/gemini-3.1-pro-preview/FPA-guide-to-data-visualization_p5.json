@@ -1,0 +1,327 @@
+{
+  "stem": "FPA-guide-to-data-visualization_p5",
+  "document": "FPA-guide-to-data-visualization",
+  "tags": "untagged",
+  "model": "gemini-3.1-pro-preview",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 72.9,
+  "usage": {
+    "input_tokens": 5358,
+    "output_tokens": 10655,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n页面采用分栏布局，左侧是大段正文，右侧并排展示了三个图表（两个饼图，一个水平条形图）。饼图需要支持图例放置在图形右侧，并能将数值直接渲染在对应的扇区内部。水平条形图需要支持将分类名称设置在y轴，由于分类文本较长，必须支持多行文本的自动换行，且需要绘制垂直网格线，数值标签需放置在条形的外部右侧。图表采用长问句作为主标题，置于上方，没有使用传统的编号前缀。页面底部需要支持单独的数据源注释行。\n\n### 定位一个值难在哪\n以56.5为例，该数值对应的y轴类别标签“More chart types...”因文本过长而被分成了四行。大多数表格解析工具或OCR在识别此类排版时，极易将其错误切分为多行不相关的独立文本，甚至发生截断，使得最终提取出的键值对残缺，无法用完整的原标签名准确寻址到该数值。\n\n### 不确定的\n图2中的五个条形使用了与图1和图3相似的多种颜色（橙色、红色、深蓝色等），但该图表并没有单独的图例说明。不确定这些颜色是否暗含了与前面图表分类（如“Yes”、“No”）的某种映射关系，还是仅为了视觉上的美观和区分。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "Do you require data visualization capabilities beyond standard charts and graphs?",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "pie",
+        "type_other": "",
+        "panels": 1,
+        "series": 3,
+        "categories": 1,
+        "marks": 3,
+        "values_printed": "all",
+        "axes": [],
+        "key_parts": [
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Yes"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Yes"
+          ],
+          "value": "24.0%",
+          "value_source": "printed",
+          "why_hard": ""
+        }
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "",
+          "title": "What data visualization capabilities do you need that you are not getting today? (select all that apply)",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 1,
+        "categories": 5,
+        "marks": 5,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "bottom",
+            "role": "value",
+            "unit_text": "",
+            "low": "0%",
+            "high": "80%",
+            "serves": "all bars"
+          },
+          {
+            "side": "left",
+            "role": "category",
+            "unit_text": "",
+            "low": "More interactive",
+            "high": "Not sure",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "More interactive"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "More chart types (heat chart, fractals, tree map, bubble chart, etc.)"
+          ],
+          "value": "56.5%",
+          "value_source": "printed",
+          "why_hard": "The category label is wrapped onto four lines, which complicates text extraction and matching."
+        }
+      },
+      {
+        "id": "f3",
+        "heading": {
+          "figure_number": "",
+          "title": "Where would you prefer to get these data visualization capabilities from?",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "pie",
+        "type_other": "",
+        "panels": 1,
+        "series": 3,
+        "categories": 1,
+        "marks": 3,
+        "values_printed": "all",
+        "axes": [],
+        "key_parts": [
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Included in performance management solution"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Included in performance management solution"
+          ],
+          "value": "15.3%",
+          "value_source": "printed",
+          "why_hard": "The legend entry wraps across four lines, making it prone to misreading."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "horizontal_bars",
+        "figure_id": "f2",
+        "evidence": "categories sit on the y axis and the bars grow to the right"
+      },
+      {
+        "key": "multi_figure_page",
+        "figure_id": "page",
+        "evidence": "three distinct figures on the right side of the page"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "page",
+        "evidence": "Source: BPM Partners 2014 BPM Pulse Survey at bottom"
+      },
+      {
+        "key": "legend_beside_plot",
+        "figure_id": "f1",
+        "evidence": "legend is a column to the right of the pie chart"
+      },
+      {
+        "key": "value_label_inside",
+        "figure_id": "f1",
+        "evidence": "24.0% and other percentages are printed inside the pie slices"
+      },
+      {
+        "key": "value_label_outside",
+        "figure_id": "f2",
+        "evidence": "70.6% and other values are printed to the right of the bars"
+      },
+      {
+        "key": "wrapped_category_labels",
+        "figure_id": "f2",
+        "evidence": "category names on the y axis wrap onto up to four lines"
+      },
+      {
+        "key": "vgrid_only",
+        "figure_id": "f2",
+        "evidence": "vertical grid rules at 20%, 40%, 60%, 80%, with no horizontal lines"
+      },
+      {
+        "key": "side_text_bullets",
+        "figure_id": "page",
+        "evidence": "a narrow column of body text runs down the left alongside the figures"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "arbitrary_bar_colors",
+        "figure_id": "f2",
+        "evidence": "each bar has a different color but no legend explains them",
+        "affects": []
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "24.0",
+        "figure_id": "f1",
+        "mark": "the Yes slice",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Yes"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "40.9",
+        "figure_id": "f1",
+        "mark": "the No slice",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "No"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "70.6",
+        "figure_id": "f2",
+        "mark": "the More interactive bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "More interactive"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "56.5",
+        "figure_id": "f2",
+        "mark": "the More chart types bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "More chart types (heat chart, fractals, tree map, bubble chart, etc.)"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 3
+      },
+      {
+        "value": "43.5",
+        "figure_id": "f2",
+        "mark": "the Access to more data sources (internal) bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Access to more data sources (internal)"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 3
+      },
+      {
+        "value": "21.2",
+        "figure_id": "f2",
+        "mark": "the Access to more data sources (external) bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Access to more data sources (external)"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 3
+      },
+      {
+        "value": "7.1",
+        "figure_id": "f2",
+        "mark": "the Not sure bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Not sure"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "15.3",
+        "figure_id": "f3",
+        "mark": "the Included in performance management solution slice",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Included in performance management solution"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 3
+      },
+      {
+        "value": "11.8",
+        "figure_id": "f3",
+        "mark": "the Doesn't matter slice",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Doesn't matter"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "72.9",
+        "figure_id": "f3",
+        "mark": "the Third-party solution slice",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Third-party solution that may access my performance management data"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 3
+      }
+    ],
+    "hardest_step": 3,
+    "hardest_step_why": "图2和图3中，如56.5和15.3对应的标签包含多行换行，解析器容易将其截断或分行错误，导致无法把完整的文本标签与数值准确关联。",
+    "examples": [
+      {
+        "gap": "P6",
+        "figure_id": "f2",
+        "quote": "70.6% sits outside the bar",
+        "why": "管线需要支持水平条形图的数值标签放置在条形外部的右侧，以增强对标签位置的控制能力。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "24.0% is printed inside the orange slice",
+        "why": "管线需要能够计算饼图的扇区内部空间，将数值标签自适应且居中地渲染在对应扇区的区域内部。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "Do you require data visualization capabilities beyond standard charts and graphs?",
+        "why": "图表仅有一长串问句作为主标题且无编号，管线需支持这种无前缀编号的独立长文本标题直接进行排版。"
+      }
+    ]
+  }
+}

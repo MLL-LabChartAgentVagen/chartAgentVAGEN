@@ -1,0 +1,302 @@
+{
+  "stem": "9f653ca1-en_p33",
+  "document": "9f653ca1-en",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "repeat",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 141.0,
+  "usage": {
+    "input_tokens": 5294,
+    "output_tokens": 19999,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "## 画出来要什么\n\n- 这是一个包含两个面板的复合图表（堆叠柱状图 + 点标记）。\n- 顶部有主标题。每个面板有独立的子标题（如 `A. Contributions...`）和Y轴单位。\n- 两个独立面板共享一个位于主标题与绘图区之间的8项图例。\n- X轴是分类时间段，柱子宽度相同，但代表的时间跨度（9年、4年、5年等）不同。\n- 左面板全为正值堆叠，右面板Y轴跨越零线，包含正负双向堆叠。两个面板都混合了三角形标记点表示总量或差异。\n- 底部包含Note和Source说明文本，以及一个右对齐的StatLink。\n\n## 定位一个值难在哪\n\n以 `0.9` (Panel A, 2022-25 的 China 色块) 为例。首先需要将面板标题、年份和图例正确关联。最大的难点在于该图表堆叠了7个系列且没有数据标签。模型需要在量程为5的Y轴上，通过肉眼分辨出白色色块的下边缘在0.7，上边缘在1.6，然后执行减法得出0.9。在5%容差（0.25）的严格限制下，精确读取这种位于中段的内部细小堆叠色块对视觉模型极具挑战。\n\n## 不确定的\n\n- 图例中 `Rest of the World` 的颜色是深蓝色，但在印刷和渲染时，Panel A 柱子最底部的对应色块偏紫色。这种色差可能导致模型在进行颜色匹配（Label Association）时产生混淆或识别失败。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 1.18.",
+          "title": "Trade patterns are evolving with emerging markets becoming a key driver of growth",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "stacked_bar",
+        "type_other": "",
+        "panels": 2,
+        "series": 8,
+        "categories": 5,
+        "marks": 80,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "% pts",
+            "low": "0",
+            "high": "5",
+            "serves": "all bars and triangles in Panel A"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "2001-09",
+            "high": "2026-27",
+            "serves": "all bars and triangles in Panel A"
+          },
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "% of nominal World GDP",
+            "low": "-1.5",
+            "high": "1.5",
+            "serves": "all bars and triangles in Panel B"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "2001-09",
+            "high": "2026-27",
+            "serves": "all bars and triangles in Panel B"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "panel",
+            "label_source": "panel_title",
+            "example": "A. Contributions to global trade growth"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "North America"
+          },
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "2001-09"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "A. Contributions to global trade growth",
+            "China",
+            "2022-25"
+          ],
+          "value": "0.9",
+          "value_source": "axis_read",
+          "why_hard": "It is an inner stacked segment; the reader must read both the top and bottom edges and subtract."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "stacked_bar",
+        "figure_id": "f1",
+        "evidence": "the main marks are bars divided into stacked coloured segments"
+      },
+      {
+        "key": "mixed_marks",
+        "figure_id": "f1",
+        "evidence": "black triangle markers are overlaid on the stacked bars"
+      },
+      {
+        "key": "negative_values",
+        "figure_id": "f1",
+        "evidence": "Panel B's y-axis drops to -1.5 with bars hanging below zero"
+      },
+      {
+        "key": "reference_line",
+        "figure_id": "f1",
+        "evidence": "Panel B has a solid black zero line drawn across it"
+      },
+      {
+        "key": "per_panel_axis_range",
+        "figure_id": "f1",
+        "evidence": "Panel A is 0 to 5, Panel B is -1.5 to 1.5"
+      },
+      {
+        "key": "shared_legend",
+        "figure_id": "f1",
+        "evidence": "a single legend block sits above both panels"
+      },
+      {
+        "key": "legend_above_plot",
+        "figure_id": "f1",
+        "evidence": "the legend sits between the titles and the plot area"
+      },
+      {
+        "key": "panel_title_per_panel",
+        "figure_id": "f1",
+        "evidence": "A. Contributions... and B. Contributions... are placed above their respective panels"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "% pts and % of nominal World GDP specify the units for the bare axis numbers"
+      },
+      {
+        "key": "axis_title_above_axis",
+        "figure_id": "f1",
+        "evidence": "% pts and % of nominal World GDP sit directly above the top ticks"
+      },
+      {
+        "key": "unit_in_series_name",
+        "figure_id": "f1",
+        "evidence": "the series 'World, %' includes the percentage unit"
+      },
+      {
+        "key": "nonstandard_time_ticks",
+        "figure_id": "f1",
+        "evidence": "x-axis ticks are time ranges like 2001-09 and 2011-14"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "horizontal grid lines cross both panels with no vertical ones"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "page",
+        "evidence": "Note: North America includes... and Source: OECD... under the plot"
+      },
+      {
+        "key": "data_link_below_figure",
+        "figure_id": "page",
+        "evidence": "StatLink https://stat.link/mhq1ks appears on the right below the notes"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "unequal_time_bins",
+        "figure_id": "f1",
+        "evidence": "categorical x-axis bins represent 9, 4, 5, 4, and 2 years but are drawn equally wide",
+        "affects": [
+          2
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "4.5",
+        "figure_id": "f1",
+        "mark": "the Panel A 2001-09 World, % triangle",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. Contributions to global trade growth",
+          "World, %",
+          "2001-09"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "0.6",
+        "figure_id": "f1",
+        "mark": "the Panel A 2001-09 North America segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. Contributions to global trade growth",
+          "North America",
+          "2001-09"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "0.4",
+        "figure_id": "f1",
+        "mark": "the Panel B 2011-14 World, % triangle",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "B. Contributions to global current account balance",
+          "World, %",
+          "2011-14"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "0.9",
+        "figure_id": "f1",
+        "mark": "the Panel A 2022-25 China segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. Contributions to global trade growth",
+          "China",
+          "2022-25"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "0.4",
+        "figure_id": "f1",
+        "mark": "the Panel A 2022-25 North America segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. Contributions to global trade growth",
+          "North America",
+          "2022-25"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "0.7",
+        "figure_id": "f1",
+        "mark": "the Panel A 2022-25 Rest of the World segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. Contributions to global trade growth",
+          "Rest of the World",
+          "2022-25"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-0.1",
+        "figure_id": "f1",
+        "mark": "the Panel B 2026-27 Rest of the World segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "B. Contributions to global current account balance",
+          "Rest of the World",
+          "2026-27"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "以0.9（Panel A中China在2022-25的堆叠段）为例，模型需在量程为5的Y轴上读出上下边界（1.6和0.7）并相减。5%的容差仅为0.25，对无标签细小色块极难。",
+    "examples": [
+      {
+        "gap": "P2",
+        "figure_id": "f1",
+        "quote": "A. Contributions to global trade growth and B. Contributions to global current account balance",
+        "why": "两个面板具有完全不同的业务含义和Y轴单位，提取数据时必须将面板标题作为独立维度加入键值，以防数据混淆。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "2001-09, 2011-14, 2015-19, 2022-25",
+        "why": "X轴是表示不等长时期（9年、4年）的分类标签，但柱子间距均等。生成器需要支持这种非线性的不等宽时间段作为分类轴。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "Figure 1.18. Trade patterns are evolving with emerging markets becoming a key driver of growth",
+        "why": "主标题包含了重要的图号和结论性长文本描述，将其提取并作为单独结构化字段保存有助于分离图表元数据与内部数据标签。"
+      }
+    ]
+  }
+}

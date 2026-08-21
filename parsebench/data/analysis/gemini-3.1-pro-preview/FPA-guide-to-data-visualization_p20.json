@@ -1,0 +1,335 @@
+{
+  "stem": "FPA-guide-to-data-visualization_p20",
+  "document": "FPA-guide-to-data-visualization",
+  "tags": "untagged",
+  "model": "gemini-3.1-pro-preview",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 77.8,
+  "usage": {
+    "input_tokens": 5337,
+    "output_tokens": 10693,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n\n页面右侧包含三个图表：两个带有引线和外部标签的饼图（明确标注了百分比），以及一个水平分组柱状图。页面左侧是一长列带浅蓝色背景的正文，属于典型的图文多列并排布局。图表生成器需要支持使用引线（leader lines）将标签及对应数值干净地放置在饼图切片外部，并支持绘制带有顶部数值轴及垂直网格线的分组柱状图。\n\n### 定位一个值难在哪\n\n提取如“61”这类明确印在图上的数值并不困难，但在处理小切片时挑战较大。关键在于准确追踪饼图极细的引线。对于较小且密集的切片（如“Computer Services 2%”），引线的起点和终点极其靠近。视觉模型在关联文本标签与具体切片时，很容易发生错位，导致步骤3受阻。\n\n### 不确定的\n\n底部的新分组柱状图没有任何直接印出的数据标签，所有数值必须依靠顶部的刻度线（0%至70%）来估读。虽然本页被抽查的数值都来自清晰标注的饼图，但如果要求读取柱状图的具体数值（例如实际与预测的对比差值），凭借视觉估算的精度很可能达不到5%的误差要求。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "FY 14 Q2 Forecast Total: $750,000",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "pie",
+        "type_other": "",
+        "panels": 1,
+        "series": 1,
+        "categories": 8,
+        "marks": 8,
+        "values_printed": "all",
+        "axes": [],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "inline_label",
+            "example": "Salaries and Benefits"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Salaries and Benefits"
+          ],
+          "value": "61%",
+          "value_source": "printed",
+          "why_hard": ""
+        }
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "",
+          "title": "FY 14 Jan Actual Total: $387,000k",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "pie",
+        "type_other": "",
+        "panels": 1,
+        "series": 1,
+        "categories": 8,
+        "marks": 8,
+        "values_printed": "all",
+        "axes": [],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "inline_label",
+            "example": "Computer Services"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Computer Services"
+          ],
+          "value": "2.7%",
+          "value_source": "printed",
+          "why_hard": ""
+        }
+      },
+      {
+        "id": "f3",
+        "heading": {
+          "figure_number": "",
+          "title": "Data graphed after applying data visualization rules:",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "grouped_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 8,
+        "marks": 16,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "top",
+            "role": "value",
+            "unit_text": "",
+            "low": "0%",
+            "high": "70%",
+            "serves": "all bars"
+          },
+          {
+            "side": "left",
+            "role": "category",
+            "unit_text": "",
+            "low": "Salaries and Benefits",
+            "high": "Editing/Publishing",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Salaries and Benefits"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "FY14 Jan Actual"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Salaries and Benefits",
+            "FY14 Jan Actual"
+          ],
+          "value": "60",
+          "value_source": "axis_read",
+          "why_hard": "No printed values; reading a bar length against the top axis is imprecise."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "multi_figure_page",
+        "figure_id": "page",
+        "evidence": "three distinct figures on the right half of the page"
+      },
+      {
+        "key": "side_text_bullets",
+        "figure_id": "page",
+        "evidence": "a narrow column of body text runs alongside the figures"
+      },
+      {
+        "key": "grouped_bar",
+        "figure_id": "f3",
+        "evidence": "bars for actual and forecast are grouped side by side"
+      },
+      {
+        "key": "horizontal_bars",
+        "figure_id": "f3",
+        "evidence": "categories sit on the y axis and bars grow to the right"
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f3",
+        "evidence": "the legend with two coloured squares sits below the bar chart"
+      },
+      {
+        "key": "vgrid_only",
+        "figure_id": "f3",
+        "evidence": "vertical grid lines drawn downwards from the 10% interval ticks"
+      },
+      {
+        "key": "value_label_outside",
+        "figure_id": "f1",
+        "evidence": "percentages are printed completely outside the pie slices"
+      },
+      {
+        "key": "footnote_marker",
+        "figure_id": "f1",
+        "evidence": "asterisk on the Office Expenses and Other Costs label"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f3",
+        "evidence": "note line explaining the asterisk category sits below the plot"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "leader_lines",
+        "figure_id": "f1",
+        "evidence": "thin lines connecting outside text labels to their respective pie slices",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "61",
+        "figure_id": "f1",
+        "mark": "the Salaries and Benefits slice",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Salaries and Benefits"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "60.3",
+        "figure_id": "f2",
+        "mark": "the Salaries and Benefits slice",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Salaries and Benefits"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "9",
+        "figure_id": "f1",
+        "mark": "the Contracts and Professional Fees slice",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Contracts and Professional Fees"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "10.1",
+        "figure_id": "f2",
+        "mark": "the Contracts and Professional Fees slice",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Contracts and Professional Fees"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "10",
+        "figure_id": "f1",
+        "mark": "the Depreciation, Interest and Maintenance slice",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Depreciation, Interest and Maintenance"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "9",
+        "figure_id": "f2",
+        "mark": "the Depreciation, Interest and Maintenance slice",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Depreciation, Interest and Maintenance"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "7",
+        "figure_id": "f1",
+        "mark": "the Office Expenses and Other Costs* slice",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Office Expenses and Other Costs*"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "8",
+        "figure_id": "f2",
+        "mark": "the Office Expenses and Other Costs* slice",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Office Expenses and Other Costs*"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "7",
+        "figure_id": "f1",
+        "mark": "the Conference, Meetings and Exhibits slice",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Conference, Meetings and Exhibits"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "5",
+        "figure_id": "f2",
+        "mark": "the Conference, Meetings and Exhibits slice",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Conference, Meetings and Exhibits"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      }
+    ],
+    "hardest_step": 3,
+    "hardest_step_why": "饼图中密集的小切片（如“Computer Services 2%”）引线较多，视觉模型在关联文本标签与对应切片数值时可能错位或无法识别，导致关联步骤受阻。",
+    "examples": [
+      {
+        "gap": "P3",
+        "figure_id": "page",
+        "quote": "a narrow column of body text alongside the figures",
+        "why": "左侧为大段正文背景区，右侧并排展示三个图表。目前的整页导出机制难以重构和对齐这种复杂的图文多列版式结构。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "labels placed outside pie slices with leader lines",
+        "why": "当前流程缺乏对饼图外部标签和引线（leader lines）的专门样式控制，这对于避免小切片标签发生重叠至关重要。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "FY 14 Q2 Forecast Total: $750,000",
+        "why": "标题行同时包含了描述文字与总计数值，但视觉上没有明显断句，当前标题字段的结构很难将其拆解或提取出干净的度量。"
+      }
+    ]
+  }
+}

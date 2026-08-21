@@ -1,0 +1,292 @@
+{
+  "stem": "employment_and_social_developments_in_europe_esde_2024_report_p100",
+  "document": "employment_and_social_developments_in_europe_esde_2024_report",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "no_vocab",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 50.2,
+  "usage": {
+    "input_tokens": 3207,
+    "output_tokens": 6845,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n要生成此图表，需要绘制带有多级标题的折线图（图表编号、主标题和副标题均位于图表左上方对齐排布）。Y轴标题需要垂直显示在坐标轴左侧，纵向的网格线需隐藏，横向的网格线为虚线，而纵坐标为0的基准线需绘制为深色实线以明确区分正负值区域。X轴为时间轴，需要有每年的刻度点（Tick marks），但文本标签（如2021, 2023）仅每隔一年显示一次。图表中的两条折线均采用平滑且无标记点（Markers）的样式，图例放置于X轴下方中央居中。\n\n### 定位一个值难在哪\n以“Net contributors”在2023年的值“4300”为例。首先，Y轴的网格线间距高达10000，且折线上没有数据点标记，肉眼读取4300的误差极大，远无法达到5%（即215）的精度容差，必然会在评估时被判定为无法读取。其次，诸多提供的值（如2026年的35500或2038年的11000）对应的是X轴上只有刻度线而未标出年份文本的年份，这意味着无法在提取的表格中使用页面上确切存在的原文标签去定位该单元格。\n\n### 不确定的\nX轴最右侧的最后一个可见刻度点没有标签，根据间隔推测是2040年，但无法确证；对于如-13000、35500等数值，均是在无网格线细分的区域通过视觉比例强行估算，其是否精确对应列表中给出的值带有很大不确定性。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Chart A3.1",
+          "title": "Employment increases for regions not receiving ESF+ investment due to spillover effects",
+          "subtitle": "Absolute change in employment following ESF+ investment in skills",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 20,
+        "marks": 40,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Absolute change in employment",
+            "low": "-20000",
+            "high": "40000",
+            "serves": "all lines"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "2021",
+            "high": "2039",
+            "serves": "all lines"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Net contributors"
+          },
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2023"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Net contributors",
+            "2023"
+          ],
+          "value": "4300",
+          "value_source": "axis_read",
+          "why_hard": "Y-axis tick interval is 10000, making a value of 4300 impossible to read to a 5% tolerance visually."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "y_axis_title_vertical",
+        "figure_id": "f1",
+        "evidence": "The text 'Absolute change in employment' is printed vertically along the left y-axis.",
+        "affects": [
+          4
+        ]
+      },
+      {
+        "key": "legend_below_chart",
+        "figure_id": "f1",
+        "evidence": "The legend with two series sits horizontally below the x-axis tick labels.",
+        "affects": [
+          3,
+          4
+        ]
+      },
+      {
+        "key": "horizontal_grid_lines_dashed",
+        "figure_id": "f1",
+        "evidence": "Horizontal lines at 10000 intervals are drawn dashed.",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "key": "zero_line_solid",
+        "figure_id": "f1",
+        "evidence": "The y=0 line is drawn as a solid dark line, differentiating it from other grids.",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "key": "x_axis_unlabelled_minor_ticks",
+        "figure_id": "f1",
+        "evidence": "Ticks are drawn every year on the x-axis, but only every second year has a text label.",
+        "affects": [
+          2,
+          3
+        ]
+      },
+      {
+        "key": "line_chart_no_markers",
+        "figure_id": "f1",
+        "evidence": "The drawn lines are smooth without points or markers to show exactly where the data lies.",
+        "affects": [
+          2
+        ]
+      }
+    ],
+    "new_components": [
+      {
+        "name": "solid_zero_line",
+        "figure_id": "f1",
+        "evidence": "The 0 horizontal line is solid while other grid lines are dashed.",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "name": "x_axis_unlabelled_ticks",
+        "figure_id": "f1",
+        "evidence": "Every other tick on the x-axis lacks a text label.",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "3800",
+        "figure_id": "f1",
+        "mark": "the Net contributors line in 2021",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Net contributors",
+          "2021"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "15000",
+        "figure_id": "f1",
+        "mark": "the Net receivers line in 2021",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Net receivers",
+          "2021"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "4300",
+        "figure_id": "f1",
+        "mark": "the Net contributors line in 2023",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Net contributors",
+          "2023"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "31000",
+        "figure_id": "f1",
+        "mark": "the Net receivers line in 2023",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Net receivers",
+          "2023"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "35500",
+        "figure_id": "f1",
+        "mark": "the Net receivers line in 2026",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Net receivers",
+          "2026"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "-2000",
+        "figure_id": "f1",
+        "mark": "the Net contributors line in 2029",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Net contributors",
+          "2029"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-13000",
+        "figure_id": "f1",
+        "mark": "the Net receivers line in 2030",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Net receivers",
+          "2030"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "11000",
+        "figure_id": "f1",
+        "mark": "the Net contributors line in 2038",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Net contributors",
+          "2038"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "11000",
+        "figure_id": "f1",
+        "mark": "the Net receivers line in 2038",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Net receivers",
+          "2038"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "13800",
+        "figure_id": "f1",
+        "mark": "the Net receivers line at the last unlabelled tick (2040)",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Net receivers",
+          "2040"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "纵坐标网格间距高达10000且无数据点标记，读取4300或-2000时，要达到5%的相对精度容差（如4300的容差仅为215）在视觉上绝无可能，会被判定为无法读取。",
+    "examples": [
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "the y=0 line is solid black while other grid lines are dashed",
+        "why": "图表生成器可能默认所有网格线样式统一，未提供单独加粗或改变0值基准线（Zero Line）样式以突显正负交界的配置项。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "tick marks are drawn every year but labeled only every two years",
+        "why": "生成器可能需要增加针对时间轴的刻度渲染控制，支持绘制密集刻度线的同时仅显示稀疏的标签文本，以防文字重叠。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "Chart A3.1 Employment increases for regions not receiving ESF+...",
+        "why": "图表标题由编号、主标题和较小的副标题三部分构成，生成器需要结构化的标题模型而非单一的字符串输入。"
+      }
+    ]
+  }
+}

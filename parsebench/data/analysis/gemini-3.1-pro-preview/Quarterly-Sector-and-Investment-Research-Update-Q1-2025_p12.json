@@ -1,0 +1,328 @@
+{
+  "stem": "Quarterly-Sector-and-Investment-Research-Update-Q1-2025_p12",
+  "document": "Quarterly-Sector-and-Investment-Research-Update-Q1-2025",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 72.0,
+  "usage": {
+    "input_tokens": 5346,
+    "output_tokens": 10294,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "## 画出来要什么\n要生成此页面，系统需要支持左右并排的多图表布局。左图是高密度的折线图，包含不规则间隔的垂直X轴时间标签，并带有表示特定时期的灰色背景阴影带；Y轴标题旋转90度。右图是包含负值的柱状图，0轴位于图表中间，部分柱子向下延伸；需要支持在特定分类背景加灰色高亮带，同时X轴类别标签需要自动换行，且只有个别柱子上方悬浮显示外部数据标签。此外，页面顶部有全局的主标题和描述，各图表带有各自独立的标题和副标题模块。\n\n## 定位一个值难在哪\n以右图的 `-2.3%` 为例，该数值没有直接打印在图表上。Y轴的刻度间隔为 `1%`，依靠肉眼读取该向下的柱子高度时，很难精确判断它是 `-2.2%` 还是 `-2.3%`，这远超出了 5%（即约 `0.1%`）的容错范围，必然导致 Step 2 失败。左图的高密度连续折线图由于没有散点标记，同样不可能肉眼精确定位并读取特定时间点的值。\n\n## 不确定的\n左图的X轴年份标签间隔极不规律（如 1990, 1992, 1994, 1995, 1997），无法确定这是生成器基于空间不足自动隐藏防重叠的逻辑结果，还是人为故意挑选展示特定年份的配置。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "Valuation spreads are wide",
+          "subtitle": "Financials Price-to-Book Valuation Spreads",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 1,
+        "series": 1,
+        "categories": 400,
+        "marks": 400,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Price-to-book valuation spreads",
+            "low": "0",
+            "high": "250",
+            "serves": "the blue line"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "1990",
+            "high": "2024",
+            "serves": "the blue line"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "1990"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "1990"
+          ],
+          "value": "150",
+          "value_source": "axis_read",
+          "why_hard": "No specific points are marked, and reading exactly 150 on the sparse axis is impossible to 5% tolerance"
+        }
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "",
+          "title": "Financials have benefited from falling rates and credit spreads",
+          "subtitle": "NTM Average Relative Performance when Credit Spreads (HYOAS) or Rates (1-Yr Yield) Are Rising or Falling, 1980–Present",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 1,
+        "categories": 4,
+        "marks": 4,
+        "values_printed": "some",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "-3%",
+            "high": "5%",
+            "serves": "all bars"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "Rates Rising/ Spreads Rising",
+            "high": "Rates Falling/ Spreads Rising",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Rates Rising/ Spreads Rising"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Rates Rising/ Spreads Rising"
+          ],
+          "value": "-2.3%",
+          "value_source": "axis_read",
+          "why_hard": "The 1% tick spacing makes it too difficult to accurately discern -2.3% from -2.2%"
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "negative_values",
+        "figure_id": "f2",
+        "evidence": "the y axis extends down to -3% with downward growing bars"
+      },
+      {
+        "key": "sparse_time_ticks",
+        "figure_id": "f1",
+        "evidence": "axis labels irregularly skip years like 1994, 1995, 1997"
+      },
+      {
+        "key": "rotated_x_ticks",
+        "figure_id": "f1",
+        "evidence": "the year labels on the bottom axis are rotated 90 degrees"
+      },
+      {
+        "key": "rotated_axis_title",
+        "figure_id": "f1",
+        "evidence": "Price-to-book valuation spreads is rotated along the y axis"
+      },
+      {
+        "key": "shaded_band",
+        "figure_id": "f1",
+        "evidence": "grey vertical bands highlight recession periods"
+      },
+      {
+        "key": "dense_marks_100plus",
+        "figure_id": "f1",
+        "evidence": "the blue line plots ~400 monthly points continuously"
+      },
+      {
+        "key": "wrapped_category_labels",
+        "figure_id": "f2",
+        "evidence": "x-axis labels wrap to two lines, e.g., Rates Rising/ Spreads Rising"
+      },
+      {
+        "key": "value_label_outside",
+        "figure_id": "f2",
+        "evidence": "the 4% label is printed above the top of the green bar"
+      },
+      {
+        "key": "multi_figure_page",
+        "figure_id": "page",
+        "evidence": "two distinct independently titled figures sitting side by side"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "page",
+        "evidence": "small print at the bottom reading Past performance is no guarantee..."
+      }
+    ],
+    "new_components": [
+      {
+        "name": "inward_facing_ticks",
+        "figure_id": "f2",
+        "evidence": "y-axis tick marks are drawn inwards into the plot area",
+        "affects": []
+      },
+      {
+        "name": "category_background_highlight",
+        "figure_id": "f2",
+        "evidence": "a grey background rectangle spans the full height of one specific column",
+        "affects": []
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "4%",
+        "figure_id": "f2",
+        "mark": "the Rates Falling/ Spreads Falling bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Rates Falling/ Spreads Falling"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 0
+      },
+      {
+        "value": "-2.3%",
+        "figure_id": "f2",
+        "mark": "the Rates Rising/ Spreads Rising bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Rates Rising/ Spreads Rising"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "0.5%",
+        "figure_id": "f2",
+        "mark": "the Rates Rising/ Spreads Falling bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Rates Rising/ Spreads Falling"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "-1.9%",
+        "figure_id": "f2",
+        "mark": "the Rates Falling/ Spreads Rising bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Rates Falling/ Spreads Rising"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "150",
+        "figure_id": "f1",
+        "mark": "the start of the blue line around 1990",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "1990"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "90",
+        "figure_id": "f1",
+        "mark": "the peak of the blue line near 2021",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2021"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "30",
+        "figure_id": "f1",
+        "mark": "the trough of the blue line near 1997",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "1997"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "75",
+        "figure_id": "f1",
+        "mark": "the end of the blue line near 2024",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2024"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "60",
+        "figure_id": "f1",
+        "mark": "the peak of the blue line near 1998",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "1998"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "60",
+        "figure_id": "f1",
+        "mark": "the peak of the blue line near 2000",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2000"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "在无标签情况下，从 f2 图中读取 -2.3% 这样的细微数值，针对 1% 的轴刻度是不可能满足 5% 误差要求的；f1 的密集折线同样无法准确定位个别点。",
+    "examples": [
+      {
+        "gap": "P6",
+        "figure_id": "f2",
+        "quote": "the y axis reads -3% to 5% with bars growing downwards from the zero line",
+        "why": "生成器需要完善对负值的处理，并支持不在底部的0轴位置及其相关的柱状图绘制。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "title 'Valuation spreads are wide' with a distinct subtitle 'Financials Price-to-Book Valuation Spreads'",
+        "why": "目前生成器的标题模块过于简陋，需单独抽象化为主标题、副标题及其排版逻辑。"
+      },
+      {
+        "gap": "P5",
+        "figure_id": "f1",
+        "quote": "a single blue line plotting ~400 monthly points",
+        "why": "为支持此类高频长跨度时间序列的折线图，生成器必须大幅提升数据密度的上限。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f2",
+        "quote": "a grey background rectangle spans the full height of the Rates Falling/ Spreads Falling column",
+        "why": "生成器需要新增特定的区域背景高亮功能，以用于强调某一个完整的分类维度而不是具体图形标记。"
+      }
+    ]
+  }
+}

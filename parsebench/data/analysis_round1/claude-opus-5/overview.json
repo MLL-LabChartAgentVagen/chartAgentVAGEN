@@ -1,0 +1,363 @@
+{
+  "model": "claude-opus-5",
+  "effort": "high",
+  "seconds": 177.9,
+  "usage": {
+    "input_tokens": 14115,
+    "output_tokens": 13603,
+    "cache_read_tokens": 0
+  },
+  "answer": {
+    "headline": "这二十页的瓶颈不是缺图种，而是读数容差：我判 13 页卡在第 2 步、26 张图中 16 张一个数字都不印。",
+    "ranked_items": [
+      {
+        "what": "P1：readable 由布尔门改成每个图元的可达精度（无值标签 + 刻度稀）",
+        "why": "我这一列 13 页卡在第 2 步，是最大一档；26 张图 16 张不印数值，容差判定现在是一刀切。",
+        "evidence": [
+          "timevalue_p9",
+          "semiconductor_sector_study_p22",
+          "wtr24_ch2_e_p14",
+          "2025-EIS_p41",
+          "article_thebeatjun2025_p8"
+        ],
+        "affects": [
+          2
+        ],
+        "score_effect": "13 页卡点正落在这一步，是唯一能大幅回收分数的位置",
+        "capability_effect": "生成时按刻度间距与图元尺寸声明每点可达精度，容差随图变",
+        "new_ablation_row": "按「刻度间距÷待读值差」分档（<1/5 格 / 1/5–1 格 / >1 格）统计值命中率",
+        "maps_to": "P1"
+      },
+      {
+        "what": "P2：panel_key 进入行键（small_multiples_4 / panel_title_per_panel / shared_legend / per_panel_axis_range）",
+        "why": "我 7 页卡在第 3 步，另两家只 3 和 2；定位键命中率 74.3%，面板类组件三家分歧最大。",
+        "evidence": [
+          "ac8b3538-en_p62",
+          "GWR-2024_Layout_E_RGB_Web_p58",
+          "b263dc5d-en_p167",
+          "employment_and_social_developments_in_europe_esde_2024_report_p55",
+          "World_Inequality_Report_2026_p66"
+        ],
+        "affects": [
+          1,
+          3
+        ],
+        "score_effect": "直接对着我最吃亏的第 3 步 7 页，且不依赖读数改善",
+        "capability_effect": "切面板时行键自动带 panel 列，跨面板重复值可唯一寻址",
+        "new_ablation_row": "有/无 panel_key 两种导表方式下，跨面板重复数值行的定位命中率",
+        "maps_to": "P2"
+      },
+      {
+        "what": "P6：单位位置、刻度写法、负值与零线三个样式维度（unit_in_axis_or_title / negative_values / nonstandard_time_ticks / value_label_outside）",
+        "why": "unit_in_axis_or_title 命中 18 页居全表之首且标为画不出；negative_values 8 页、另两项各 5 页同为画不出。",
+        "evidence": [
+          "ac8b3538-en_p55",
+          "pwc-semiconductor-and-beyond-2026-full-report_p18",
+          "article_thebeatjun2025_p35",
+          "pdf_d2e0103f64cd_p29",
+          "ac8b3538-en_p62"
+        ],
+        "affects": [
+          2,
+          3
+        ],
+        "score_effect": "值轴只剩裸数字时，单位列与容差同时受影响",
+        "capability_effect": "单位放轴题/轴顶/刻度内/系列名、零线居中三档均可配，默认现状",
+        "new_ablation_row": "单位四种放置位置 × 有无负值零线，各自的值列与单位列命中率",
+        "maps_to": "P6"
+      },
+      {
+        "what": "P4：compound（bar+marker、柱线双轴）在生成配比里的权重",
+        "why": "图表类型一致率仅 54.2%、10 页冲突，分歧几乎全在 bar 与 compound 之间；mixed_marks 我报 9 页且已画得出，缺的是频次。",
+        "evidence": [
+          "b263dc5d-en_p120",
+          "2025-EIS_p47",
+          "GWR-2024_Layout_E_RGB_Web_p58",
+          "wtr24_ch2_e_p14",
+          "pwc-semiconductor-and-beyond-2026-full-report_p18"
+        ],
+        "affects": [],
+        "score_effect": "度量看不见它",
+        "capability_effect": "按实测族配比生成，覆盖三家判型冲突最集中的柱+标记叠加区",
+        "new_ablation_row": "实测配比 vs 均匀配比训练时，被判为 compound 的页整体命中率",
+        "maps_to": "P4"
+      },
+      {
+        "what": "P3：整页 markdown 导出，多图页各自成表（multi_figure_page）",
+        "why": "multi_figure_page 我报 5 页；我 0 页判「无表」而另两家判了 5 页和 3 页，多图页正是第 1 步的风险区。",
+        "evidence": [
+          "deloitte-2025-global-automotive-consumer-study-january-2025_1_p20",
+          "pdf_d2e0103f64cd_p29",
+          "investing-in-education-2025-NC0125093ENN-1_p14",
+          "employment_and_social_developments_in_europe_esde_2024_report_p55",
+          "ac8b3538-en_p62"
+        ],
+        "affects": [
+          1,
+          3
+        ],
+        "score_effect": "5 页多图页若只导一张表，第 1、3 步同时失守",
+        "capability_effect": "一页导出多张带图号图题的表，题块相对表的位置可配",
+        "new_ablation_row": "整页导出 vs 单图导出，在多图页上的表数与同名系列撞车率",
+        "maps_to": "P3"
+      },
+      {
+        "what": "P7：图题拆成字段（图号/题/副题/单位/基期/footnote_marker/横幅题块）",
+        "why": "标题位置一致率 95.8%、above 24，位置已稳；未解决的是题内成分——footnote_marker 7 页、rebased_index_values 3 页且均画不出。",
+        "evidence": [
+          "2025-EIS_p41",
+          "investing-in-education-2025-NC0125093ENN-1_p14",
+          "b263dc5d-en_p167",
+          "pdf_d2e0103f64cd_p29",
+          "wtr24_ch2_e_p14"
+        ],
+        "affects": [
+          4
+        ],
+        "score_effect": "三家卡点表里没有第 4 步，改分空间最小",
+        "capability_effect": "基期、单位、脚注标记可独立填入题块，横幅式题条可选",
+        "new_ablation_row": "题内单位与基期拆字段 vs 混在标题串里，单位列与指数页命中率",
+        "maps_to": "P7"
+      },
+      {
+        "what": "new：颜色/高亮编码第三变量与长类目标签（color_encodes_extra_attribute / highlighted_category / wrapped_category_labels）",
+        "why": "三项分别命中 4、6、7 页且都标为画不出；它们决定标签能否与单元格对上，属第 3 步。",
+        "evidence": [
+          "2025-EIS_p41",
+          "b263dc5d-en_p120",
+          "b263dc5d-en_p167",
+          "World_Inequality_Report_2026_p66",
+          "deloitte-2025-global-automotive-consumer-study-january-2025_1_p20"
+        ],
+        "affects": [
+          3
+        ],
+        "score_effect": "显著性/分组色若丢失，同一条上的两个值无法分列",
+        "capability_effect": "颜色可绑系列以外的第三列，汇总行可单独换色，类目名可折行",
+        "new_ablation_row": "颜色绑第三变量 vs 只绑系列时，含显著性/分组页的第 3 步命中率",
+        "maps_to": "new"
+      },
+      {
+        "what": "P5：密度上限抬高，密度成受控变量（dense_marks_100plus）",
+        "why": "我这一列 61–150 有 6 张、>400 有 2 张，而 151–400 为 0，档位有洞；dense_marks_100plus 3 页画不出。",
+        "evidence": [
+          "World_Inequality_Report_2026_p66",
+          "semiconductor_sector_study_p22",
+          "b263dc5d-en_p167",
+          "2025-EIS_p41"
+        ],
+        "affects": [
+          2
+        ],
+        "score_effect": "高密度页占比小，改分有限，但容差最紧的就是它们",
+        "capability_effect": "可按目标档位生成 151–400 图元这一现在为空的密度区",
+        "new_ablation_row": "密度四档（≤20 / 21–60 / 61–150 / >150）各自的读数命中率",
+        "maps_to": "P5"
+      }
+    ],
+    "numbers_cited": [
+      {
+        "claim": "我这一列判定卡在第 2 步的页数",
+        "value": "13",
+        "source": "卡在哪一步（opus-5 列）"
+      },
+      {
+        "claim": "我这一列判定卡在第 3 步的页数",
+        "value": "7",
+        "source": "卡在哪一步（opus-5 列）"
+      },
+      {
+        "claim": "我这一列判定卡在第 1 步的页数",
+        "value": "0",
+        "source": "卡在哪一步（opus-5 列）"
+      },
+      {
+        "claim": "另两家判定卡在第 1 步的页数",
+        "value": "5 和 3",
+        "source": "卡在哪一步（gpt-5.6-sol / gemini-3.1-pro 列）"
+      },
+      {
+        "claim": "另两家判定卡在第 3 步的页数",
+        "value": "3 和 2",
+        "source": "卡在哪一步（gpt-5.6-sol / gemini-3.1-pro 列）"
+      },
+      {
+        "claim": "卡在哪一步的三家一致率",
+        "value": "60.0%",
+        "source": "三家一致率表"
+      },
+      {
+        "claim": "不印任何数值的图数",
+        "value": "16",
+        "source": "数值印不印（opus-5 列）"
+      },
+      {
+        "claim": "全部印数值的图数",
+        "value": "8",
+        "source": "数值印不印（opus-5 列）"
+      },
+      {
+        "claim": "部分印数值的图数",
+        "value": "2",
+        "source": "数值印不印（opus-5 列）"
+      },
+      {
+        "claim": "我这一列的图总数",
+        "value": "26",
+        "source": "自己数的"
+      },
+      {
+        "claim": "定位键命中率",
+        "value": "74.3%",
+        "source": "预测定位键 vs 规则真实标签"
+      },
+      {
+        "claim": "定位键抽查中预测对的数/抽查点数",
+        "value": "142/191",
+        "source": "预测定位键 vs 规则真实标签"
+      },
+      {
+        "claim": "small_multiples_4 我报的页数与 gemini 报的页数",
+        "value": "5 和 2",
+        "source": "组件计数表"
+      },
+      {
+        "claim": "panel_title_per_panel 我报的页数",
+        "value": "6",
+        "source": "组件计数表"
+      },
+      {
+        "claim": "shared_legend 我报的页数",
+        "value": "3",
+        "source": "组件计数表"
+      },
+      {
+        "claim": "per_panel_axis_range 我报的页数",
+        "value": "3",
+        "source": "组件计数表"
+      },
+      {
+        "claim": "unit_in_axis_or_title 我报的页数",
+        "value": "18",
+        "source": "组件计数表"
+      },
+      {
+        "claim": "negative_values 我报的页数",
+        "value": "8",
+        "source": "组件计数表"
+      },
+      {
+        "claim": "value_label_outside 我报的页数",
+        "value": "5",
+        "source": "组件计数表"
+      },
+      {
+        "claim": "nonstandard_time_ticks 我报的页数",
+        "value": "5",
+        "source": "组件计数表"
+      },
+      {
+        "claim": "词表外残差 unit_in_tick_labels 出现页数",
+        "value": "2",
+        "source": "词表外残差表"
+      },
+      {
+        "claim": "图表类型判定三家一致率",
+        "value": "54.2%",
+        "source": "三家一致率表"
+      },
+      {
+        "claim": "图表类型判定的冲突页数",
+        "value": "10",
+        "source": "三家一致率表"
+      },
+      {
+        "claim": "我判为 compound 的图数",
+        "value": "6",
+        "source": "类型配比表"
+      },
+      {
+        "claim": "我判为 bar 的图数",
+        "value": "5",
+        "source": "类型配比表"
+      },
+      {
+        "claim": "gemini 判为 compound 与 bar 的图数",
+        "value": "1 和 7",
+        "source": "类型配比表"
+      },
+      {
+        "claim": "mixed_marks 我报的页数",
+        "value": "9",
+        "source": "组件计数表"
+      },
+      {
+        "claim": "multi_figure_page 我报的页数",
+        "value": "5",
+        "source": "组件计数表"
+      },
+      {
+        "claim": "标题判定三家一致率",
+        "value": "95.8%",
+        "source": "三家一致率表"
+      },
+      {
+        "claim": "标题在上方的图数",
+        "value": "24",
+        "source": "标题位置（opus-5 列）"
+      },
+      {
+        "claim": "footnote_marker 我报的页数",
+        "value": "7",
+        "source": "组件计数表"
+      },
+      {
+        "claim": "rebased_index_values 我报的页数",
+        "value": "3",
+        "source": "组件计数表"
+      },
+      {
+        "claim": "61–150 图元档的图数",
+        "value": "6",
+        "source": "稠密度档（opus-5 列）"
+      },
+      {
+        "claim": ">400 图元档的图数",
+        "value": "2",
+        "source": "稠密度档（opus-5 列）"
+      },
+      {
+        "claim": "151–400 图元档的图数",
+        "value": "0",
+        "source": "稠密度档（opus-5 列）"
+      },
+      {
+        "claim": "wrapped_category_labels 我报的页数与另两家页数",
+        "value": "7 与各 2",
+        "source": "组件计数表"
+      },
+      {
+        "claim": "wrapped_category_labels 只有一家报的页数",
+        "value": "5",
+        "source": "组件计数表（一致/两家/一家列）"
+      },
+      {
+        "claim": "color_encodes_extra_attribute 我报的页数",
+        "value": "4",
+        "source": "组件计数表"
+      },
+      {
+        "claim": "highlighted_category 我报的页数",
+        "value": "6",
+        "source": "组件计数表"
+      },
+      {
+        "claim": "dense_marks_100plus 我报的页数",
+        "value": "3",
+        "source": "组件计数表"
+      }
+    ],
+    "report_md": "# 二十页的结论\n\n**卡点分布**：我这一列 13 页卡在第 2 步（读不到容差）、7 页卡在第 3 步（标签对不上格）、0 页卡在第 1 步；三家在这一项只有 60.0% 一致，说明「卡在哪」很大程度是读法差异，而不是页面性质。26 张图里 16 张一个数字都不印，8 张全印，2 张部分印。\n\n**1. 读数精度先于图种（P1）**。16 张无标签图意味着多数页只能对轴插值：timevalue_p9 待测的四个值全挤在 500 一格内，semiconductor_sector_study_p22 刻度 20M 而待读约 2M。readable 若仍是布尔门，这 13 页无法区分「能读到 ±5%」与「根本读不到」。\n\n**2. 面板进键（P2）**。我 7 页卡在第 3 步，另两家只有 3 和 2；定位键命中率 74.3%（142/191）。small_multiples_4 我报 5 页、gemini 只报 2 页，panel_title_per_panel 6 页、shared_legend 3 页、per_panel_axis_range 3 页。ac8b3538-en_p62 十五个国家面板同值反复出现，无 panel 列不可能唯一定位。\n\n**3. 单位与零线（P6）**。unit_in_axis_or_title 命中 18 页，是全表最高的一项，而「我们画得出」为否；negative_values 8 页、value_label_outside 5 页、nonstandard_time_ticks 5 页同样为否。词表外残差 unit_in_tick_labels 也出现 2 页（刻度自带 %）。这是命中面积最大的画不出项。\n\n**4. compound 的配比（P4）**。类型一致率仅 54.2%，10 页冲突；我判 compound 6 张、bar 5 张，gemini 判 compound 1 张、bar 7 张。分歧集中在柱+标记叠加上——mixed_marks 我报 9 页且已标「画得出」，缺的只是生成频次，度量本身看不见它。\n\n**5. 多图页（P3）**。multi_figure_page 5 页。deloitte p20 一页三图共用国家名做行标签，同一个数字在两图重复；我 0 页判「无表」而另两家判了 5 页和 3 页，风险正在这里。\n\n**6. 题块字段化（P7）**。标题位置一致率 95.8%、above 24，位置已经稳；未解决的是题内成分：footnote_marker 7 页、rebased_index_values 3 页，均为画不出。三家卡点表里没有第 4 步，故改分空间最小，价值在能力面。\n\n**7. 密度（P5）**。61–150 有 6 张、>400 有 2 张，而 151–400 为 0，档位有洞；dense_marks_100plus 3 页画不出。\n\n**自查**：wrapped_category_labels 我报 7 页，另两家各 2 页，其中 5 页只有我一家报——这更像我的读法偏严，不宜当作基准性质来立项。",
+    "limits": "20 页以欧盟/OECD 报告与折线图为主，类型配比不代表总体；网格线、底色多处我自标不确定；「卡在哪一步」是我的判断而非核对结果，全表只有定位键命中率可核。"
+  }
+}

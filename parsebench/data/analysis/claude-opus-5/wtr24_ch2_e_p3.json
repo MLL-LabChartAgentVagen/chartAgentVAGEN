@@ -1,0 +1,339 @@
+{
+  "stem": "wtr24_ch2_e_p3",
+  "document": "wtr24_ch2_e",
+  "tags": "need_estimate",
+  "model": "claude-opus-5",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 104.9,
+  "usage": {
+    "input_tokens": 13974,
+    "output_tokens": 8304,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "**画出来要什么**\n\n一张跨栏宽的组合图 Figure B.1:26 个年份槽(1996–2021),深蓝柱为「Speed of income convergence」读左轴 -1…8「percentage points」;绿线为「Trade participation」读右轴 40…160「(100=1996)」,即双值轴+柱线混合。柱内还有第二种浅蓝填色(2008、2009、2020),Note 说明它表示「a contribution of negative growth in high-income economies」,图例里没有这一项。2021 柱在零线以下,1998 槽根本没有柱。标题写在整幅宽的实心蓝色横幅里,轴标题竖排,年份刻度斜排,图例在图下,下面是 Source/Note 小字。\n\n**定位一个值难在哪**\n\n7.7:它是 2009 年柱子的顶端,但顶端那截是浅蓝的。要唯一定位需要三个标签——年份 2009、系列名 Speed of income convergence、以及只在图下 Note 里出现的「light blue fill」;图例给不出这个名字。而且没有任何数字印在图上,只能靠 1 个单位间隔的横线内插。\n\n**不确定的**\n\n线上的点全靠像素换算:128、138、125 分别归到 2003、2004、2009 属于推断,相邻年份差常不足 5%。2020 柱是否整根为浅蓝、1998 是零还是缺失,都看不确切。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure B.1",
+          "title": "Positive correlation between low- and middle-income economies' convergence speed and trade participation, 1996-2021",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "compound",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 26,
+        "marks": 54,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Speed of income convergence (percentage points)",
+            "low": "-1",
+            "high": "8",
+            "serves": "all blue and light-blue bars"
+          },
+          {
+            "side": "right",
+            "role": "value",
+            "unit_text": "Trade participation (100=1996)",
+            "low": "40",
+            "high": "160",
+            "serves": "only the green Trade participation line"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "1996",
+            "high": "2021",
+            "serves": "bars and line share the year slots"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Speed of income convergence"
+          },
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2009"
+          },
+          {
+            "role": "colour_group",
+            "label_source": "not_shown",
+            "example": "light blue fill"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Speed of income convergence",
+            "2009",
+            "light blue fill"
+          ],
+          "value": "7.7 (top of the light blue segment)",
+          "value_source": "axis_read",
+          "why_hard": "Light-blue top segment unnamed in legend; only Note defines it; left-axis gridlines are 1 point apart."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "dual_axis",
+        "figure_id": "f1",
+        "evidence": "left axis '-1..8 Speed of income convergence (percentage points)', right axis '40..160 Trade participation (100=1996)'"
+      },
+      {
+        "key": "mixed_marks",
+        "figure_id": "f1",
+        "evidence": "blue bars per year with a continuous green line drawn over them in the same panel"
+      },
+      {
+        "key": "stacked_bar",
+        "figure_id": "f1",
+        "evidence": "2008 and 2009 bars carry a light blue segment sitting on top of the dark blue part"
+      },
+      {
+        "key": "color_encodes_extra_attribute",
+        "figure_id": "f1",
+        "evidence": "Note: 'The light blue fill indicates a contribution of negative growth in high-income economies.'"
+      },
+      {
+        "key": "negative_values",
+        "figure_id": "f1",
+        "evidence": "the 2021 bar hangs below the zero line; lowest left tick reads '-1'"
+      },
+      {
+        "key": "axis_starts_above_zero",
+        "figure_id": "f1",
+        "evidence": "right axis lowest tick is '40', not zero, and is not cut"
+      },
+      {
+        "key": "rebased_index_values",
+        "figure_id": "f1",
+        "evidence": "right axis title reads 'Trade participation (100=1996)'"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "'(percentage points)' sits in the left axis title; bars carry no printed numbers"
+      },
+      {
+        "key": "rotated_axis_title",
+        "figure_id": "f1",
+        "evidence": "both 'Speed of income convergence (percentage points)' and 'Trade participation (100=1996)' set vertically"
+      },
+      {
+        "key": "rotated_x_ticks",
+        "figure_id": "f1",
+        "evidence": "year labels 1996 ... 2021 are turned about 45 degrees under the axis"
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "'Speed of income convergence' swatch and 'Trade participation' line sit in a row under the plot"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "'Source: Authors' calculations, based on World Bank data...' and 'Note: The figure displays...' below the plot"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "faint horizontal rules at each left tick; no vertical rules in the plot area"
+      },
+      {
+        "key": "missing_value_marker",
+        "figure_id": "f1",
+        "evidence": "the 1998 slot between the 1997 and 1999 bars is empty, no bar drawn"
+      },
+      {
+        "key": "footnote_marker",
+        "figure_id": "page",
+        "evidence": "superscript markers in body text: 'global poverty rate1' and 'Cerdeiro and Komaromi, 2021).2'"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "title_in_filled_banner",
+        "figure_id": "f1",
+        "evidence": "'Figure B.1: Positive correlation between...' printed white on a solid blue band spanning the figure width",
+        "affects": [
+          3,
+          4
+        ]
+      },
+      {
+        "name": "segment_meaning_only_in_note",
+        "figure_id": "f1",
+        "evidence": "legend lists only two series; the light blue bar segment is defined solely in the Note text",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "2.7",
+        "figure_id": "f1",
+        "mark": "the 1996 Speed of income convergence bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Speed of income convergence",
+          "1996"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "100",
+        "figure_id": "f1",
+        "mark": "the 1996 point of the Trade participation line (index base year)",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Trade participation",
+          "1996"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "0.0",
+        "figure_id": "f1",
+        "mark": "the 1998 slot, where no Speed of income convergence bar is drawn",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Speed of income convergence",
+          "1998"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "4.6",
+        "figure_id": "f1",
+        "mark": "the 2008 bar total, dark blue part plus the light blue top segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Speed of income convergence",
+          "2008"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "155",
+        "figure_id": "f1",
+        "mark": "the peak of the Trade participation line, 2008",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Trade participation",
+          "2008"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "7.7",
+        "figure_id": "f1",
+        "mark": "the top of the 2009 bar, i.e. the light blue segment's upper edge",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Speed of income convergence",
+          "2009",
+          "light blue fill"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 3
+      },
+      {
+        "value": "128",
+        "figure_id": "f1",
+        "mark": "a Trade participation line point around 2003; year assignment uncertain (2003 vs 2014)",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Trade participation",
+          "2003"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "138",
+        "figure_id": "f1",
+        "mark": "a Trade participation line point around 2004; could equally be 2010",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Trade participation",
+          "2004"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-0.2",
+        "figure_id": "f1",
+        "mark": "the 2021 bar, drawn below the zero line",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Speed of income convergence",
+          "2021"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "125",
+        "figure_id": "f1",
+        "mark": "the 2009 trough of the Trade participation line",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Trade participation",
+          "2009"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "全图无数字标注;右轴刻度间隔20,125与128之差仅2.4%,远小于刻度;左轴间隔1,-0.2与2.7也须内插。",
+    "examples": [
+      {
+        "gap": "P9",
+        "figure_id": "f1",
+        "quote": "Left axis 'Speed of income convergence (percentage points)' -1 to 8; right axis 'Trade participation (100=1996)' 40 to 160; bars plus one line",
+        "why": "一个面板两套值轴、柱与线共存,取值必须记录读的是哪根轴、哪种标记,现有流程不区分。"
+      },
+      {
+        "gap": "P8",
+        "figure_id": "f1",
+        "quote": "Note: 'The light blue fill indicates a contribution of negative growth in high-income economies.'",
+        "why": "浅蓝段的含义只在注释里,图例不含该项;颜色携带的属性须进入键。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "'Figure B.1: Positive correlation between low- and middle-income economies' convergence speed and trade participation, 1996-2021' in a solid blue banner",
+        "why": "编号、标题、年份区间同处一条满宽色带内,标题块位置与样式需成为独立字段。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "the 2021 bar hangs below the zero line; left ticks read -1, 0, 1 ... 8 while the right axis begins at 40",
+        "why": "负值柱、零线以及右轴非零起点的组合,当前样式维度无法生成。"
+      }
+    ]
+  }
+}

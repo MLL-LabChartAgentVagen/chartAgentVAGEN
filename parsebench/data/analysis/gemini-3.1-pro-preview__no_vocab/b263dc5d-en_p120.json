@@ -1,0 +1,354 @@
+{
+  "stem": "b263dc5d-en_p120",
+  "document": "b263dc5d-en",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "no_vocab",
+  "effort": "high",
+  "dpi": 150,
+  "seconds": 31.0,
+  "usage": {
+    "input_tokens": 3151,
+    "output_tokens": 3291,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n这是一个包含阴影条、标记（菱形）与多分类的复合图表。生成器需要支持在同一个横坐标项上绘制粗条（bar）并在其内部或中心叠加带边框的标记（diamond point），以及表示第二个系列的并排条形。横轴使用了嵌套分组，每个分组有垂直参考线分隔，并且底部有一条带背景色的粗带来显示更高层级的分类（Round, Cycle 1 / 2 / 3），其中1, 2, 3是阴影块上的白色文字。图例包含了渐变或双色说明：“Unadjusted”是一个一半深色一半浅色的方块，“Adjusted”是一半黑一半白的菱形。图表标题有粗体主标题和多行副标题。此外，柱子和菱形的颜色深浅表示统计显著性（需要在图例说明外的附加注释中解读）。\n\n### 定位一个值难在哪\n定位如“34”这个值，读者需要识别它是“Japan”的“Unadjusted”值。因为没有数值标签，必须沿长距离对齐左侧Y轴（刻度间隔为5，34靠近35）。更难的是，“Adjusted”系列是用菱形表示，比如“35”，在“Japan”柱子上方的菱形。要精确读取这些未标出的数值，并且还要理解颜色深浅代表的统计显著性（在key中可能需要额外维度记录），非常困难。另外横轴带有Cycle 1/2/3的大分类，这也增加了层级。\n\n### 不确定的\n深色和浅色的具体定义在图表主体中没有显式图例，仅在下方长长的Note中提到“Darker colours denote differences that are statistically significant...”，这是否应该作为数据提取的一维（例如：Significant: True/False）取决于提取规范。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 3.8.",
+          "title": "Change in the gap in literacy proficiency between highly and low-educated adults",
+          "subtitle": "Adjusted and unadjusted change between cycles in the average score difference between adults with tertiary education and adults with below upper secondary education (Cycle 2 minus Cycle 1); 25-65 year-olds",
+          "unit_text": "Score-point difference",
+          "placement": "above"
+        },
+        "type": "compound",
+        "type_other": "bar and scatter",
+        "panels": 1,
+        "series": 2,
+        "categories": 24,
+        "marks": 48,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Score-point difference",
+            "low": "-20",
+            "high": "40",
+            "serves": "all bars and diamonds"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "Japan",
+            "high": "Hungary",
+            "serves": "all bars and diamonds"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "Round, Cycle 1: 1",
+            "high": "3",
+            "serves": "country groups"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Unadjusted"
+          },
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Japan"
+          },
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "1"
+          },
+          {
+            "role": "colour_group",
+            "label_source": "not_shown",
+            "example": "statistically significant"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Unadjusted",
+            "Japan",
+            "1",
+            "statistically significant"
+          ],
+          "value": "34",
+          "value_source": "axis_read",
+          "why_hard": "Value is not printed; must be read from an axis with 5-point intervals over a long distance."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "title_block_above",
+        "figure_id": "f1",
+        "evidence": "Figure 3.8. and subtitles sit above the chart area",
+        "affects": [
+          4
+        ]
+      },
+      {
+        "key": "unit_above_y_axis",
+        "figure_id": "f1",
+        "evidence": "Score-point difference sits above the y-axis numbers",
+        "affects": [
+          4
+        ]
+      },
+      {
+        "key": "top_legend",
+        "figure_id": "f1",
+        "evidence": "Unadjusted and Adjusted legend is placed top center above chart",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "split_colour_legend_icon",
+        "figure_id": "f1",
+        "evidence": "Unadjusted square is half dark blue, half light blue",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "zero_line_emphasized",
+        "figure_id": "f1",
+        "evidence": "The 0 line on the y-axis is a thick black line extending across",
+        "affects": []
+      },
+      {
+        "key": "nested_x_axis_labels",
+        "figure_id": "f1",
+        "evidence": "Bottom axis has country names vertically, and a grey bar below them with 1, 2, 3",
+        "affects": [
+          1,
+          3
+        ]
+      },
+      {
+        "key": "vertical_x_axis_labels",
+        "figure_id": "f1",
+        "evidence": "Country names like 'Japan', 'Austria' are written vertically",
+        "affects": []
+      },
+      {
+        "key": "bar_with_overlay_point",
+        "figure_id": "f1",
+        "evidence": "A diamond (Adjusted) is drawn on top of or within the vertical bar (Unadjusted)",
+        "affects": [
+          2,
+          3
+        ]
+      },
+      {
+        "key": "significance_coloured_marks",
+        "figure_id": "f1",
+        "evidence": "Note says 'Darker colours denote differences that are statistically significant', marks vary in shade",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "alternating_background_shading",
+        "figure_id": "f1",
+        "evidence": "Chart background has light tan shaded vertical bands behind Cycle 2 and 3 groups",
+        "affects": []
+      }
+    ],
+    "new_components": [
+      {
+        "name": "split_colour_legend_icon",
+        "figure_id": "f1",
+        "evidence": "Legend icons are half dark/half light to denote significance variations without naming them in legend",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "name": "bar_with_overlay_point",
+        "figure_id": "f1",
+        "evidence": "A diamond marker for one series is superimposed exactly on the x-position of a bar for another series",
+        "affects": [
+          2,
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "34",
+        "figure_id": "f1",
+        "mark": "Japan Unadjusted bar (dark blue)",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Unadjusted",
+          "Japan",
+          "1"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "35",
+        "figure_id": "f1",
+        "mark": "Japan Adjusted diamond (black)",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Adjusted",
+          "Japan",
+          "1"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "29",
+        "figure_id": "f1",
+        "mark": "Austria Unadjusted bar (dark blue)",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Unadjusted",
+          "Austria",
+          "1"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "19",
+        "figure_id": "f1",
+        "mark": "Austria Adjusted diamond (black)",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Adjusted",
+          "Austria",
+          "1"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-4",
+        "figure_id": "f1",
+        "mark": "Korea Adjusted diamond (white)",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Adjusted",
+          "Korea",
+          "1"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-17",
+        "figure_id": "f1",
+        "mark": "Poland* Unadjusted bar (dark blue, descending below 0)",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Unadjusted",
+          "Poland*",
+          "1"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "25",
+        "figure_id": "f1",
+        "mark": "New Zealand Unadjusted bar (dark blue)",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Unadjusted",
+          "New Zealand",
+          "2"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "15",
+        "figure_id": "f1",
+        "mark": "New Zealand Adjusted diamond (black)",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Adjusted",
+          "New Zealand",
+          "2"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-8",
+        "figure_id": "f1",
+        "mark": "Israel Adjusted diamond (black)",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Adjusted",
+          "Israel",
+          "2"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "13",
+        "figure_id": "f1",
+        "mark": "Hungary Unadjusted bar (dark blue)",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Unadjusted",
+          "Hungary",
+          "3"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "图表没有任何直接标出的数值，所有值均需从Y轴读取。Y轴每隔5一个刻度，像34、29、19、-4、-17这样非5的整数值很难精确读到5%的容差内，读数偏差极易超限。",
+    "examples": [
+      {
+        "gap": "P9",
+        "figure_id": "f1",
+        "quote": "A diamond marker (Adjusted) sits superimposed on the vertical bar (Unadjusted)",
+        "why": "当前的图表生成器不直接支持在同一类目中叠加条形图与散点/菱形标记作为两个不同的序列展示。"
+      },
+      {
+        "gap": "P8",
+        "figure_id": "f1",
+        "quote": "Darker colours denote differences that are statistically significant at the 5% level.",
+        "why": "颜色的深浅代表了统计显著性，这是一个图例未明确作为series，却需要录入key中的附加数据维度。"
+      },
+      {
+        "gap": "P2",
+        "figure_id": "f1",
+        "quote": "Round, Cycle 1: 1 / 2 / 3 bar below x-axis labels",
+        "why": "底部的分组标签条将X轴分为了三个逻辑面板（1, 2, 3），需要将这个嵌套分组维度作为panel_key记录。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "Score-point difference sits right above the 40 on the y-axis",
+        "why": "单位文本紧贴着纵轴最上方刻度的排版方式，需要对单位位置进行精细控制。"
+      }
+    ]
+  }
+}

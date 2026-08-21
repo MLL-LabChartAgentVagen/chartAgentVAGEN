@@ -1,0 +1,244 @@
+{
+  "stem": "m-trends-2025-en_p32",
+  "document": "m-trends-2025-en",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "repeat",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 95.5,
+  "usage": {
+    "input_tokens": 5341,
+    "output_tokens": 13428,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n页面含有一个分组柱状图，包含以下绘制要求：\n1. **图例位置**：支持将图例（黑色代表LockBit，蓝色代表RANSOMHUB）放置于绘图区域内部的右上角。\n2. **Y轴样式**：Y轴的标题“Count of DLS Listings”需要逆时针旋转垂直排布。Y轴只包含50为间隔的主水平网格线，无次级网格线。\n3. **页面布局**：正文区左侧包含一个带有蓝色边线提示的窄栏文本区块，涉及多栏文本排版。\n\n### 定位一个值难在哪\n以读取1月RANSOMHUB的数据（10）为例，最大的困难在于读取精度。图表的所有柱子均未标注具体的数值标签，必须完全依赖Y轴估算。Y轴刻度范围为0到200，且刻度间隔高达50。对于10这种较小的值，在缺乏次级网格线辅助的情况下，肉眼读数的误差极易超出5%（即±0.5）的绝对精度容差，导致无法精确读取。\n\n### 不确定的\n图表中的绝大多数非整十数据（如60、35、68、82、98等）无法确定其精确到个位的数值，只能通过柱子顶端与背景大间隔网格线的比例来进行视觉估算。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "LockBit vs. RANSOMHUB DLS Listings, 2024",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "grouped_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 12,
+        "marks": 24,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Count of DLS Listings",
+            "low": "0",
+            "high": "200",
+            "serves": "all bars"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "Jan",
+            "high": "Dec",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Jan"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "LockBit"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Jan",
+            "LockBit"
+          ],
+          "value": "60",
+          "value_source": "axis_read",
+          "why_hard": "Lack of minor gridlines between 50 and 100 makes reading 60 to a 5% tolerance very difficult."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "grouped_bar",
+        "figure_id": "f1",
+        "evidence": "two bars are drawn side by side for each month"
+      },
+      {
+        "key": "legend_inside_plot",
+        "figure_id": "f1",
+        "evidence": "the legend sits inside the top right corner of the plot area"
+      },
+      {
+        "key": "rotated_axis_title",
+        "figure_id": "f1",
+        "evidence": "the y-axis title 'Count of DLS Listings' is turned vertically"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "only horizontal rules are drawn at 50-unit intervals"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "the scale word 'Count' lives in the y-axis title"
+      }
+    ],
+    "new_components": [],
+    "spot_checks": [
+      {
+        "value": "60",
+        "figure_id": "f1",
+        "mark": "the Jan LockBit bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Jan",
+          "LockBit"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "10",
+        "figure_id": "f1",
+        "mark": "the Jan RANSOMHUB bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Jan",
+          "RANSOMHUB"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "100",
+        "figure_id": "f1",
+        "mark": "the Feb LockBit bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Feb",
+          "LockBit"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "55",
+        "figure_id": "f1",
+        "mark": "the March LockBit bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "March",
+          "LockBit"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "175",
+        "figure_id": "f1",
+        "mark": "the May LockBit bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "May",
+          "LockBit"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "35",
+        "figure_id": "f1",
+        "mark": "the June RANSOMHUB bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "June",
+          "RANSOMHUB"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "68",
+        "figure_id": "f1",
+        "mark": "the Aug RANSOMHUB bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Aug",
+          "RANSOMHUB"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "82",
+        "figure_id": "f1",
+        "mark": "the Oct RANSOMHUB bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Oct",
+          "RANSOMHUB"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "98",
+        "figure_id": "f1",
+        "mark": "the Nov RANSOMHUB bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Nov",
+          "RANSOMHUB"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "55",
+        "figure_id": "f1",
+        "mark": "the Dec RANSOMHUB bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Dec",
+          "RANSOMHUB"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "刻度间隔达50且无次级网格线，而5%容差极小（如值10的5%仅为0.5），在0-200量程内肉眼完全无法精确读出非整十数值。",
+    "examples": [
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "the y-axis title 'Count of DLS Listings' is rotated vertically",
+        "why": "生成器需要支持Y轴标题的垂直旋转显示，目前的导出配置难以控制轴标题的方向。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "legend with LockBit and RANSOMHUB sits inside the top right of the plot area",
+        "why": "需要支持将图例自由放置在绘图区内部，目前的管线通常只支持将图例放在外部边距中。"
+      }
+    ]
+  }
+}

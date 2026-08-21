@@ -1,0 +1,263 @@
+{
+  "stem": "World_Inequality_Report_2026_p119",
+  "document": "World_Inequality_Report_2026",
+  "tags": "untagged",
+  "model": "claude-opus-5",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 64.8,
+  "usage": {
+    "input_tokens": 13953,
+    "output_tokens": 5066,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "## 画出来要什么\n一个分组柱状图：4 个类别槽（`Bottom 50%`、`Middle 40%`、`Top 10%`、`Top 1%`），每槽 2 根柱（绿=`Consumption`，红=`Private ownership`），共 8 根。左轴竖排标题 `Share in total emissions`，刻度 `0%`–`90%` 每 10% 一档，虚线横向网格，无竖网格。图内绘图区上方另有一行图内标题 `Emissions shares by groups`，与编号标题 `Figure 6.2.` 两行大标题分属两层。图例位于绘图区下方居中。每根柱顶端外侧印带百分号的数值（`77%`、`3%`）。图下是十余行 `Interpretation.` 说明块，末尾接 `Sources and series:`，再下是双栏正文。\n\n## 定位一个值难在哪\n以 `20%` 为例：它必须同时由类别刻度 `Middle 40%` 与图例项 `Private ownership` 两个标签共同定位；而类别名本身含百分数（`Top 10%`、`Top 1%`），检索值 `10` 或 `41`/`1%` 时会与轴标签文本相撞，表格即使含对的格子也可能被判错。\n\n## 不确定的\n图内标题 `Emissions shares by groups` 是副标题还是面板标题，无法从图面判定；左轴标题是否被视为单位短语（刻度已带 `%`）也只能推断；`Interpretation.` 段落是否属于图的一部分（其宽度与图不同）无法确认。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 6.2.",
+          "title": "Emissions are highly concentrated among the rich,",
+          "subtitle": "especially when looking at ownership | Emissions shares by groups",
+          "unit_text": "Share in total emissions",
+          "placement": "above"
+        },
+        "type": "grouped_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 4,
+        "marks": 8,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Share in total emissions",
+            "low": "0%",
+            "high": "90%",
+            "serves": "all eight bars, green and red alike"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "Bottom 50%",
+            "high": "Top 1%",
+            "serves": "the four category slots holding the bar pairs"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Middle 40%"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Private ownership"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Middle 40%",
+            "Private ownership"
+          ],
+          "value": "20%",
+          "value_source": "printed",
+          "why_hard": "Needs both a category tick and a legend colour name; category text itself contains a percentage."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "grouped_bar",
+        "figure_id": "f1",
+        "evidence": "two bars, green then red, sit side by side inside each of the four category slots"
+      },
+      {
+        "key": "value_label_outside",
+        "figure_id": "f1",
+        "evidence": "`77%`, `47%`, `3%` printed just above the top of each bar, outside the mark"
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "green and red swatches with `Consumption` and `Private ownership` centred under the category axis"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "dashed horizontal rules at every 10% tick; no vertical rules cross the panel"
+      },
+      {
+        "key": "rotated_axis_title",
+        "figure_id": "f1",
+        "evidence": "`Share in total emissions` set vertically along the left axis"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "`Interpretation.` paragraph then `Sources and series:` Bruckner et al. (2022) and Chancel and Rehm (2025b)."
+      }
+    ],
+    "new_components": [
+      {
+        "name": "inner_plot_title_under_figure_caption",
+        "figure_id": "f1",
+        "evidence": "`Emissions shares by groups` sits above the plot, separate from the two-line `Figure 6.2.` caption",
+        "affects": [
+          3,
+          4
+        ]
+      },
+      {
+        "name": "percent_in_category_labels",
+        "figure_id": "f1",
+        "evidence": "axis ticks read `Bottom 50%`, `Top 10%`, `Top 1%` while plotted values are also percentages",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "name": "interpretation_note_block",
+        "figure_id": "f1",
+        "evidence": "ten-line block opening with bold `Interpretation.` explaining scope-1 and ownership definitions before the source line",
+        "affects": [
+          4
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "10",
+        "figure_id": "f1",
+        "mark": "the Bottom 50% green Consumption bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Bottom 50%",
+          "Consumption"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "3",
+        "figure_id": "f1",
+        "mark": "the Bottom 50% red Private ownership bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Bottom 50%",
+          "Private ownership"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "43",
+        "figure_id": "f1",
+        "mark": "the Middle 40% green Consumption bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Middle 40%",
+          "Consumption"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "20",
+        "figure_id": "f1",
+        "mark": "the Middle 40% red Private ownership bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Middle 40%",
+          "Private ownership"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "47",
+        "figure_id": "f1",
+        "mark": "the Top 10% green Consumption bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Top 10%",
+          "Consumption"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "77",
+        "figure_id": "f1",
+        "mark": "the Top 10% red Private ownership bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Top 10%",
+          "Private ownership"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "15",
+        "figure_id": "f1",
+        "mark": "the Top 1% green Consumption bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Top 1%",
+          "Consumption"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "41",
+        "figure_id": "f1",
+        "mark": "the Top 1% red Private ownership bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Top 1%",
+          "Private ownership"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      }
+    ],
+    "hardest_step": 3,
+    "hardest_step_why": "值全部印出，读数无碍；难在标签：10 与类别名 `Top 10%`、41 与 `Top 1%` 文本相撞，且每值需类别加图例两标签。",
+    "examples": [
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "`Figure 6.2. Emissions are highly concentrated among the rich, especially when looking at ownership` above, then `Emissions shares by groups` above the plot",
+        "why": "编号、两行标题与图内标题分三层；当前流水线只有单一标题字段，无法复现层级与位置。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "Every bar carries its number above it as `10%`, `3%`, `77%`; left ticks read `0%` to `90%`",
+        "why": "数值标签外置且带百分号、刻度同样带 `%`，标签位置与刻度格式需成为可控风格维度。"
+      },
+      {
+        "gap": "P3",
+        "figure_id": "f1",
+        "quote": "`Interpretation.` ... `Sources and series:` Bruckner et al. (2022) and Chancel and Rehm (2025b).",
+        "why": "整页导出需保留粗体引导词的长说明块与来源行，及其相对表格的位置。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "x ticks read `Bottom 50%`, `Middle 40%`, `Top 10%`, `Top 1%` while plotted values are also percentages",
+        "why": "类别名内含百分数会与数值检索相撞；需生成并标注这类易混标签以测评定位鲁棒性。"
+      }
+    ]
+  }
+}

@@ -1,0 +1,293 @@
+{
+  "stem": "World_Inequality_Report_2026_p66",
+  "document": "World_Inequality_Report_2026",
+  "tags": "untagged",
+  "model": "claude-opus-5",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "seconds": 53.3,
+  "usage": {
+    "input_tokens": 10639,
+    "output_tokens": 4747,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "本页两图并列。图2.13为分组柱状图：8个区域×2系列（Before/After redistribution），16个柱全部在柱顶印数字，图例置于绘图区下方，纵轴标题竖排\"Top 10% average to bottom 50% average income\"，类别标签换行成2–3行，仅有横向虚线网格。图2.14为双面板折线图：8条彩色线、约46个年份点、共约700个标记，零点为加粗虚线参考线，出现负值（−10、−20），两面板各有自己的小标题与刻度，共用下方两行图例，纵轴标题仅在左面板并含单位\"(%)\"，时间刻度每5年一格。生成器需支持：分组柱+外置数值标签、竖排轴标题、多行图例、双面板共享图例与零线。定位难点：数值50在\"Middle East & North Africa\"与\"Latin America\"的After柱上重复出现，必须同时给出区域与系列名才能唯一定址；图2.14无任何印刷数值。不确定图2.13副标题是否应视为单位行。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 2.13.",
+          "title": "Redistribution decreases inequality within countries but with large variations",
+          "subtitle": "Top 10/bottom 50 income gaps across regions, 2025",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "grouped_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 8,
+        "marks": 16,
+        "values_printed": "all"
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "Figure 2.14.",
+          "title": "Transfers account for a larger share of redistribution than taxes",
+          "subtitle": "Reduction in top 10/bottom 50 income gaps, 1980–2025",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 2,
+        "series": 8,
+        "categories": 46,
+        "marks": 736,
+        "values_printed": "none"
+      }
+    ],
+    "components": [
+      {
+        "key": "grouped_bar",
+        "figure_id": "f1",
+        "evidence": "a green and a red bar side by side in each region slot, e.g. Europe 19 and 10"
+      },
+      {
+        "key": "value_label_outside",
+        "figure_id": "f1",
+        "evidence": "numbers 19, 10, 35, 28 ... 72, 50 printed just above each bar top"
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "\"Before redistribution\" \"After redistribution\" swatches in a row under the category labels"
+      },
+      {
+        "key": "wrapped_category_labels",
+        "figure_id": "f1",
+        "evidence": "\"North America & Oceania\" and \"Middle East & North Africa\" wrap onto three tick lines"
+      },
+      {
+        "key": "rotated_axis_title",
+        "figure_id": "f1",
+        "evidence": "\"Top 10% average to bottom 50% average income\" set vertically along the left axis"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "dashed horizontal rules at 10, 20 ... 80; no vertical rules"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "y ticks are bare 0-80; the scale phrase sits only in the rotated axis title"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "\"Interpretation. ... Sources and series: wir2026.wid.world/methodology and Chancel and Piketty (2021).\""
+      },
+      {
+        "key": "multi_figure_page",
+        "figure_id": "page",
+        "evidence": "Figure 2.13 and Figure 2.14, each with its own title and interpretation block"
+      },
+      {
+        "key": "panel_title_per_panel",
+        "figure_id": "f2",
+        "evidence": "\"Tax progressivity\" above the left panel, \"Redistribution considering taxes and transfers\" above the right"
+      },
+      {
+        "key": "small_multiples_4",
+        "figure_id": "f2",
+        "evidence": "two line panels of the same design side by side under one figure number"
+      },
+      {
+        "key": "shared_legend",
+        "figure_id": "f2",
+        "evidence": "one eight-entry legend below both panels: \"East Asia ... Sub–Saharan Africa\""
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f2",
+        "evidence": "legend in two rows of four beneath the two panels' x axes"
+      },
+      {
+        "key": "negative_values",
+        "figure_id": "f2",
+        "evidence": "y ticks read −10 and −20; Latin America line runs near −20 in the left panel"
+      },
+      {
+        "key": "reference_line",
+        "figure_id": "f2",
+        "evidence": "a bold dotted horizontal rule drawn at 0 across both panels"
+      },
+      {
+        "key": "sparse_time_ticks",
+        "figure_id": "f2",
+        "evidence": "ticks 1980 1985 1990 ... 2020 while the lines are plotted yearly to 2025"
+      },
+      {
+        "key": "dense_marks_100plus",
+        "figure_id": "f2",
+        "evidence": "8 regional lines over ~45 years in each of two panels"
+      },
+      {
+        "key": "rotated_axis_title",
+        "figure_id": "f2",
+        "evidence": "\"Reduction in top 10% to bottom 50% income ratio (%)\" set vertically left of the left panel"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f2",
+        "evidence": "\"(%)\" appears only in the rotated y-axis title; ticks are bare 50, 40 ... −20"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f2",
+        "evidence": "faint dashed horizontal lines at each y tick in both panels, no vertical rules"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f2",
+        "evidence": "\"Intepretation. ... Sources and series: wir2026.wid.world/methodology and Fisher–Post and Gethin (2025).\""
+      }
+    ],
+    "new_components": [
+      {
+        "name": "duplicate_value_label_across_categories",
+        "figure_id": "f1",
+        "evidence": "\"50\" printed twice: on Middle East & North Africa red bar and on Latin America red bar",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "name": "axis_title_serves_multiple_panels",
+        "figure_id": "f2",
+        "evidence": "single rotated y title left of the left panel while the right panel repeats the same 50 ... −20 ticks unlabelled",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "name": "interpretation_note_block",
+        "figure_id": "page",
+        "evidence": "bolded \"Interpretation.\" paragraph explaining how to read the ratios precedes the sources line under each figure",
+        "affects": [
+          4
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "19",
+        "figure_id": "f1",
+        "mark": "the Europe green bar (Before redistribution)",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Europe",
+          "Before redistribution",
+          "Top 10/bottom 50 income gaps across regions, 2025"
+        ]
+      },
+      {
+        "value": "10",
+        "figure_id": "f1",
+        "mark": "the Europe red bar (After redistribution)",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Europe",
+          "After redistribution"
+        ]
+      },
+      {
+        "value": "28",
+        "figure_id": "f1",
+        "mark": "the East Asia red bar (After redistribution)",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "East Asia",
+          "After redistribution"
+        ]
+      },
+      {
+        "value": "18",
+        "figure_id": "f1",
+        "mark": "the North America & Oceania red bar (After redistribution)",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "North America & Oceania",
+          "After redistribution"
+        ]
+      },
+      {
+        "value": "36",
+        "figure_id": "f1",
+        "mark": "the Russia & Central Asia green bar (Before redistribution)",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Russia & Central Asia",
+          "Before redistribution"
+        ]
+      },
+      {
+        "value": "33",
+        "figure_id": "f1",
+        "mark": "the Russia & Central Asia red bar (After redistribution)",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Russia & Central Asia",
+          "After redistribution"
+        ]
+      },
+      {
+        "value": "52",
+        "figure_id": "f1",
+        "mark": "the Sub–Saharan Africa green bar (Before redistribution)",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Sub–Saharan Africa",
+          "Before redistribution"
+        ]
+      },
+      {
+        "value": "53",
+        "figure_id": "f1",
+        "mark": "the Middle East & North Africa green bar (Before redistribution)",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Middle East & North Africa",
+          "Before redistribution"
+        ]
+      },
+      {
+        "value": "72",
+        "figure_id": "f1",
+        "mark": "the Latin America green bar (Before redistribution), the tallest bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Latin America",
+          "Before redistribution"
+        ]
+      },
+      {
+        "value": "50",
+        "figure_id": "f1",
+        "mark": "ambiguous: printed on both the Middle East & North Africa red bar and the Latin America red bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Middle East & North Africa",
+          "Latin America",
+          "After redistribution"
+        ]
+      }
+    ],
+    "hardest_step": 3
+  }
+}

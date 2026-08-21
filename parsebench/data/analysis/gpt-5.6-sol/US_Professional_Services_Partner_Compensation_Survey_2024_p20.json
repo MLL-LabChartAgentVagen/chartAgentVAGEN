@@ -1,0 +1,223 @@
+{
+  "stem": "US_Professional_Services_Partner_Compensation_Survey_2024_p20",
+  "document": "US_Professional_Services_Partner_Compensation_Survey_2024",
+  "tags": "untagged",
+  "model": "gpt-5.6-sol",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "via": "openrouter",
+  "max_tokens": 120000,
+  "seconds": 1114.3,
+  "usage": {
+    "input_tokens": 15307,
+    "output_tokens": 99340,
+    "cache_read_tokens": 8671
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "**画出来要什么**\n一幅两面板横向百分比堆叠条形图：每面板4类、每条3段，共24段。需重现共同标题、逐面板标题与图例、段内数值、重复的Note/Source，以及左侧并排正文。\n\n**定位一个值难在哪**\n“83”要由“by firm revenue”面板、“$1.00bn–$5.00bn”和“Optimistic”共同定位。数值清晰印在段内，但页面没有表格结构。\n\n**不确定的**\n把共同标题下的两块图视为一幅两面板图。图上没有数值轴或刻度；百分比堆叠依据等宽条形、标题“(%)”及段值总和判断。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "Key external factors influencing outlook (%)",
+          "subtitle": "",
+          "unit_text": "(%)",
+          "placement": "above"
+        },
+        "type": "stacked_bar",
+        "type_other": "",
+        "panels": 2,
+        "series": 3,
+        "categories": 4,
+        "marks": 24,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "left",
+            "role": "category",
+            "unit_text": "",
+            "low": "Strategy consulting",
+            "high": "Other",
+            "serves": "upper panel stacked bars"
+          },
+          {
+            "side": "left",
+            "role": "category",
+            "unit_text": "",
+            "low": "Less than $1.00bn",
+            "high": "More than $20.00bn",
+            "serves": "lower panel stacked bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "panel",
+            "label_source": "panel_title",
+            "example": "Key external factors influencing outlook for current fiscal year, by firm type"
+          },
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Management/advisory consulting"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Pessimistic"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Key external factors influencing outlook for current fiscal year, by firm revenue",
+            "$1.00bn–$5.00bn",
+            "Optimistic"
+          ],
+          "value": "83",
+          "value_source": "printed",
+          "why_hard": "Panel, revenue band, and legend series are required; the value itself is printed."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "stacked_bar",
+        "figure_id": "f1",
+        "evidence": "Each horizontal bar is split into Pessimistic, Neutral, and Optimistic segments."
+      },
+      {
+        "key": "pct_stacked",
+        "figure_id": "f1",
+        "evidence": "Stacks have equal width; segment labels total 100 or 101 under the rounding note."
+      },
+      {
+        "key": "horizontal_bars",
+        "figure_id": "f1",
+        "evidence": "Categories appear left of segmented bars extending horizontally to the right."
+      },
+      {
+        "key": "no_value_axis",
+        "figure_id": "f1",
+        "evidence": "No numeric value ticks or value-axis line appears; segment values are printed."
+      },
+      {
+        "key": "small_multiples_4",
+        "figure_id": "f1",
+        "evidence": "The same stacked-bar construction repeats in two panels, by firm type and firm revenue."
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "Each panel has “Note: Numbers may not sum to 100%, because of rounding.” and a Source line."
+      },
+      {
+        "key": "legend_above_plot",
+        "figure_id": "f1",
+        "evidence": "Each Pessimistic, Neutral, Optimistic legend sits between its panel title and bars."
+      },
+      {
+        "key": "per_panel_legend",
+        "figure_id": "f1",
+        "evidence": "The full three-item legend is repeated separately above both panels."
+      },
+      {
+        "key": "panel_title_per_panel",
+        "figure_id": "f1",
+        "evidence": "Panels are titled “by firm type” and “by firm revenue” above their respective plots."
+      },
+      {
+        "key": "side_text_bullets",
+        "figure_id": "f1",
+        "evidence": "Running explanatory text occupies a left column beside both chart panels."
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "The common heading reads “Key external factors influencing outlook (%)”."
+      },
+      {
+        "key": "value_label_inside",
+        "figure_id": "f1",
+        "evidence": "Every number is printed inside its coloured stacked-bar segment."
+      },
+      {
+        "key": "wrapped_category_labels",
+        "figure_id": "f1",
+        "evidence": "“Management/advisory consulting” wraps onto two lines beside the upper plot."
+      }
+    ],
+    "new_components": [],
+    "spot_checks": [
+      {
+        "value": "34",
+        "figure_id": "f1",
+        "mark": "the Management/advisory consulting Pessimistic segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Key external factors influencing outlook for current fiscal year, by firm type",
+          "Management/advisory consulting",
+          "Pessimistic"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "28",
+        "figure_id": "f1",
+        "mark": "the Technology/IT consulting Optimistic segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Key external factors influencing outlook for current fiscal year, by firm type",
+          "Technology/IT consulting",
+          "Optimistic"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "83",
+        "figure_id": "f1",
+        "mark": "the $1.00bn–$5.00bn Optimistic segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Key external factors influencing outlook for current fiscal year, by firm revenue",
+          "$1.00bn–$5.00bn",
+          "Optimistic"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "38",
+        "figure_id": "f1",
+        "mark": "the More than $20.00bn Neutral segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Key external factors influencing outlook for current fiscal year, by firm revenue",
+          "More than $20.00bn",
+          "Neutral"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "31",
+        "figure_id": "f1",
+        "mark": "the $5.01bn–$20.00bn Pessimistic segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Key external factors influencing outlook for current fiscal year, by firm revenue",
+          "$5.01bn–$20.00bn",
+          "Pessimistic"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      }
+    ],
+    "hardest_step": 1,
+    "hardest_step_why": "34、28、83、38、31均在24个图形段内，页面没有表格结构，首先阻于步骤1。接近。唯一可以考虑的小点是“step 1 no table”是否真的应作为hardest_step，因为任务似乎是评估从图表中生成表格后的查找，不一定要求原页有表格。不过根据给定定义，页面确实无表格，因此选择1是合理的。所有必填字段完整、JSON结构合法、证据简洁。可以直接提交。等等，system要求response format严格，hardest_step_why最多30中文词，这句应该没问题。report_md三部分且<250词。很好。需移除我刚才意外添加的中文尾随文本！必须纯JSON。重新输出。",
+    "examples": []
+  }
+}

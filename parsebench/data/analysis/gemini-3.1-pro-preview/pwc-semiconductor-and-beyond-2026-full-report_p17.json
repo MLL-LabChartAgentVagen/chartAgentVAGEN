@@ -1,0 +1,266 @@
+{
+  "stem": "pwc-semiconductor-and-beyond-2026-full-report_p17",
+  "document": "pwc-semiconductor-and-beyond-2026-full-report",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 83.8,
+  "usage": {
+    "input_tokens": 5336,
+    "output_tokens": 11482,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "## 画出来要什么\n本页主体为一个带有背景填充带的堆叠柱状图。生成器需要能够绘制堆叠的柱子，并在柱子后方生成两层填充阴影带，分别平滑连接各年份柱子不同分类段的顶部。x轴的时间刻度需要支持非标准缩写格式（如 `'19`、`'30F`）。标题区需要在同一行展示主标题与单位后缀 `(Unit: GW)`，并在该行最右侧并排对齐展示图例。图表绘图区中心需要能够悬浮绘制多行解释性文本框（Callout）。此外，页面左侧需要留出专门的布局空间，以放置多段正文文本（旁侧文本排版）。\n\n## 定位一个值难在哪\n以 `'22` 年的 `AI-driven demand` 值（11）为例。本页图表没有任何直接的数据标签，必须依靠左侧 y 轴进行估读。由于该分类处于堆叠柱的上层，读者需用顶部总值减去底部分类值才能得出结果。y 轴跨度为 180，每格刻度代表 20，要在这样的绝对尺度上肉眼读取出 11 并满足 5%（±0.55）以内的精确度要求，在视觉上是完全无法实现的。\n\n## 不确定的\n图表中央浮动文本框的绝对坐标位置，以及背景阴影带连接方式的底层逻辑（贝塞尔曲线还是折线相连）无法完全确定。对大部分未落于主网格线上的数据，只能依靠比例进行粗略估算。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "Global data center power consumption",
+          "subtitle": "",
+          "unit_text": "(Unit: GW)",
+          "placement": "above"
+        },
+        "type": "stacked_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 12,
+        "marks": 24,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "0",
+            "high": "180",
+            "serves": "all bars"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "'19",
+            "high": "'30F",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "'22"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "AI-driven demand"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "'22",
+            "AI-driven demand"
+          ],
+          "value": "11",
+          "value_source": "axis_read",
+          "why_hard": "Value belongs to the upper stacked segment and requires subtraction to determine."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "stacked_bar",
+        "figure_id": "f1",
+        "evidence": "bars are divided into orange and grey segments"
+      },
+      {
+        "key": "side_text_bullets",
+        "figure_id": "page",
+        "evidence": "a column of body text runs alongside the figure"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "(Unit: GW) is written in the heading line beside the title"
+      },
+      {
+        "key": "legend_above_plot",
+        "figure_id": "f1",
+        "evidence": "legend sits in the top right above the plot grid"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "only horizontal lines span the plot area"
+      },
+      {
+        "key": "nonstandard_time_ticks",
+        "figure_id": "f1",
+        "evidence": "years are abbreviated with apostrophes and letters like '19 and '30F"
+      },
+      {
+        "key": "annotation_callout",
+        "figure_id": "f1",
+        "evidence": "text starting with 'Rising AI...' is placed inside the plot"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "Source: IEA, PwC analysis is below the x axis"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "connecting_band_behind_marks",
+        "figure_id": "f1",
+        "evidence": "shaded area links the tops of corresponding segments across bars",
+        "affects": []
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "22",
+        "figure_id": "f1",
+        "mark": "the '19 Conventional demand segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "'19",
+          "Conventional demand"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "1",
+        "figure_id": "f1",
+        "mark": "the '19 AI-driven demand segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "'19",
+          "AI-driven demand"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "46",
+        "figure_id": "f1",
+        "mark": "the '22 Conventional demand segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "'22",
+          "Conventional demand"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "11",
+        "figure_id": "f1",
+        "mark": "the '22 AI-driven demand segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "'22",
+          "AI-driven demand"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "62",
+        "figure_id": "f1",
+        "mark": "the '25 Conventional demand segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "'25",
+          "Conventional demand"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "33",
+        "figure_id": "f1",
+        "mark": "the '25 AI-driven demand segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "'25",
+          "AI-driven demand"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "80",
+        "figure_id": "f1",
+        "mark": "the '28 Conventional demand segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "'28",
+          "Conventional demand"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "62",
+        "figure_id": "f1",
+        "mark": "the '28 AI-driven demand segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "'28",
+          "AI-driven demand"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "96",
+        "figure_id": "f1",
+        "mark": "the '30F Conventional demand segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "'30F",
+          "Conventional demand"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "68",
+        "figure_id": "f1",
+        "mark": "the '30F AI-driven demand segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "'30F",
+          "AI-driven demand"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "本页图表无数据标签，要在0到180跨度、间距为20的y轴上，读出堆叠上层的'22年AI-driven demand（值为11）并满足5%误差，视觉上无法实现。",
+    "examples": [
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "Global data center power consumption (Unit: GW)",
+        "why": "图表标题和单位内联在同一行中，现有的生成管线难以将此后缀解析为独立的单位字段并进行还原布局。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "the orange and grey shaded areas connecting the bars",
+        "why": "目前的生成能力不支持在堆叠柱状图的背后渲染平滑连接各个柱子层级顶部的阴影带，这需要加入混合图表的渲染支持。"
+      }
+    ]
+  }
+}

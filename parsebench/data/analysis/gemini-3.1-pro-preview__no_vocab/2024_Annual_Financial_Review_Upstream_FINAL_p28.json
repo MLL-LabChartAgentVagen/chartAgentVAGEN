@@ -1,0 +1,258 @@
+{
+  "stem": "2024_Annual_Financial_Review_Upstream_FINAL_p28",
+  "document": "2024_Annual_Financial_Review_Upstream_FINAL",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "no_vocab",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 46.7,
+  "usage": {
+    "input_tokens": 3186,
+    "output_tokens": 6525,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n一个折线图。标题区分为三个独立层级：蓝色大号的结论性主标题，黑色粗体的副标题，以及普通的“percentage”单位说明。Y轴刻度标签自带百分号（如80%），图表区域仅包含水平网格线，无垂直网格线。不使用独立的图例区块，而是将系列名称以“内联标签”（inline label）的形式直接绘制在对应的折线旁边，字体颜色与折线一致。图表底部包含数据来源和详细注释文本。\n\n### 定位一个值难在哪\n以2015年的 `63`（all U.S. manufacturing）为例，通过年份和内联系列名定位该点并不难。真正的难点在于读取数值（Step 2）。Y轴的网格线间距跨度为 10%，该数据点悬浮在 60% 和 70% 的参考线之间。由于折线上没有直接印刷数据标签，且缺乏更细密的次级网格线，肉眼极难精确读出 63，极易超出 5% 的容差范围。\n\n### 不确定的\n2024年（即X轴最后一个节点）的数据状态不确定。对于通常在年中发布的报告，当前年份的数据往往是基于部分季度的年化估算或预测值，但在图表中该年份的数据点及连线并没有使用虚线、空心圆或星号等视觉符号予以特殊标注。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "The long-term debt-to-equity ratio was relatively flat for the energy companies and U.S. manufacturing companies, at 42% and 56%",
+          "subtitle": "Long-term debt-to-equity ratio for select energy companies and U.S. manufacturing companies",
+          "unit_text": "percentage",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 10,
+        "marks": 20,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "0%",
+            "high": "80%",
+            "serves": "all lines"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "2015",
+            "high": "2024",
+            "serves": "all lines"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "series",
+            "label_source": "inline_label",
+            "example": "all U.S. manufacturing"
+          },
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2015"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "all U.S. manufacturing",
+            "2015"
+          ],
+          "value": "63",
+          "value_source": "axis_read",
+          "why_hard": "Gridline spacing is 10 percentage points with no printed labels, making it hard to read exactly 63."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "inline_series_labels",
+        "figure_id": "f1",
+        "evidence": "labels 'all U.S. manufacturing' and 'energy companies' sit near the lines",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "percentage_format_ticks",
+        "figure_id": "f1",
+        "evidence": "y-axis ticks include the % sign, e.g. '80%'",
+        "affects": []
+      },
+      {
+        "key": "horizontal_gridlines_only",
+        "figure_id": "f1",
+        "evidence": "only horizontal lines span the plot area, none for the years",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "key": "source_note_footer",
+        "figure_id": "f1",
+        "evidence": "Data source and Note text sit below the x-axis",
+        "affects": [
+          4
+        ]
+      }
+    ],
+    "new_components": [
+      {
+        "name": "multi_level_header",
+        "figure_id": "f1",
+        "evidence": "large blue title, bold subtitle, and standard text unit on separate lines",
+        "affects": [
+          4
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "63",
+        "figure_id": "f1",
+        "mark": "all U.S. manufacturing line in 2015",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "all U.S. manufacturing",
+          "2015"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "56",
+        "figure_id": "f1",
+        "mark": "energy companies line in 2015",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "energy companies",
+          "2015"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "72",
+        "figure_id": "f1",
+        "mark": "all U.S. manufacturing line in 2020",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "all U.S. manufacturing",
+          "2020"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "69",
+        "figure_id": "f1",
+        "mark": "energy companies line in 2020",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "energy companies",
+          "2020"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "56",
+        "figure_id": "f1",
+        "mark": "all U.S. manufacturing line in 2024",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "all U.S. manufacturing",
+          "2024"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "42",
+        "figure_id": "f1",
+        "mark": "energy companies line in 2024",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "energy companies",
+          "2024"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "65",
+        "figure_id": "f1",
+        "mark": "all U.S. manufacturing line in 2018",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "all U.S. manufacturing",
+          "2018"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "46",
+        "figure_id": "f1",
+        "mark": "energy companies line in 2018",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "energy companies",
+          "2018"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "55",
+        "figure_id": "f1",
+        "mark": "all U.S. manufacturing line in 2022",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "all U.S. manufacturing",
+          "2022"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "43",
+        "figure_id": "f1",
+        "mark": "energy companies line in 2022",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "energy companies",
+          "2022"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "图表没有任何数据点标签，且Y轴网格线间距为 10%。例如读取2015年的 `63`，数据点位于 60% 和 70% 之间，肉眼极难在 5% 的容差内准确读数，极易导致验证失败。",
+    "examples": [
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "Three heading lines: blue main title, bold subtitle, and a plain 'percentage' unit line below them.",
+        "why": "当前的标题结构配置可能无法支持生成三层具有不同样式（大号带色标题、粗体副标题、单行单位）的复杂图表头部，需要独立拆分这些字段。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "The labels 'all U.S. manufacturing' and 'energy companies' are written inline next to the series.",
+        "why": "目前的生成管线多依赖外部图例区块，可能不支持直接将图例转换为分布在图表区域内部、紧贴数据线的内联标签（inline labels）。"
+      }
+    ]
+  }
+}

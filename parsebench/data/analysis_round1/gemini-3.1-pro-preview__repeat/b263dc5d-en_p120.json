@@ -1,0 +1,223 @@
+{
+  "stem": "b263dc5d-en_p120",
+  "document": "b263dc5d-en",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "repeat",
+  "effort": "high",
+  "dpi": 150,
+  "seconds": 70.7,
+  "usage": {
+    "input_tokens": 4396,
+    "output_tokens": 9775,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "本页图表（Figure 3.8）复合了柱状图与散点标记（`mixed_marks`）。提取数据的最大难点在于数值读取（最难步骤：Step 2）。图表Y轴量程达60，但网格线间隔为5，且图中未标注任何数值，在高达60的量程上要从图形分辨出如34（Japan）、19（France）、-17（Poland）这样精确到1的数值极易超出像素提取公差。\n\n其他显著特征包括：X轴包含双层标签（`two_level_x_ticks`），底层带有行标题“Round, Cycle 1:”进行1、2、3的分组；图例说明颜色深浅代表统计显著性（`color_encodes_extra_attribute`）；存在负数值（`negative_values`）及0刻度参考线（`reference_line`）。图表标题与图例置于上方，Y轴顶端带有“Score-point difference”（`axis_title_above_axis`）。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 3.8.",
+          "title": "Change in the gap in literacy proficiency between highly and low-educated adults",
+          "subtitle": "Adjusted and unadjusted change between cycles in the average score difference between adults with tertiary education and adults with below upper secondary education (Cycle 2 minus Cycle 1); 25-65 year-olds",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "other",
+        "type_other": "bar and point overlaid",
+        "panels": 1,
+        "series": 2,
+        "categories": 25,
+        "marks": 50,
+        "values_printed": "none"
+      }
+    ],
+    "components": [
+      {
+        "key": "mixed_marks",
+        "figure_id": "f1",
+        "evidence": "bars and diamond points overlaid in the same plot"
+      },
+      {
+        "key": "negative_values",
+        "figure_id": "f1",
+        "evidence": "y-axis and bars extend below 0 to -20"
+      },
+      {
+        "key": "reference_line",
+        "figure_id": "f1",
+        "evidence": "thick black line drawn at 0"
+      },
+      {
+        "key": "color_encodes_extra_attribute",
+        "figure_id": "f1",
+        "evidence": "legend shows dark and light for 5% significance"
+      },
+      {
+        "key": "legend_above_plot",
+        "figure_id": "f1",
+        "evidence": "legend sits between subtitle and chart grid"
+      },
+      {
+        "key": "axis_title_above_axis",
+        "figure_id": "f1",
+        "evidence": "Score-point difference is above the top tick"
+      },
+      {
+        "key": "two_level_x_ticks",
+        "figure_id": "f1",
+        "evidence": "countries row and Round Cycle bands 1, 2, 3"
+      },
+      {
+        "key": "rotated_x_ticks",
+        "figure_id": "f1",
+        "evidence": "country names are rotated 90 degrees"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "only horizontal grid lines are drawn"
+      },
+      {
+        "key": "footnote_marker",
+        "figure_id": "f1",
+        "evidence": "asterisk on Poland*"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "Note: and Source: paragraphs below the chart"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "Score-point difference in axis title"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "x_axis_row_header",
+        "figure_id": "f1",
+        "evidence": "'Round, Cycle 1:' placed as header for x-axis groupings",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "34",
+        "figure_id": "f1",
+        "mark": "the Japan Unadjusted bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Japan",
+          "1",
+          "Unadjusted"
+        ]
+      },
+      {
+        "value": "35",
+        "figure_id": "f1",
+        "mark": "the Japan Adjusted diamond",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Japan",
+          "1",
+          "Adjusted"
+        ]
+      },
+      {
+        "value": "29",
+        "figure_id": "f1",
+        "mark": "the Austria Unadjusted bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Austria",
+          "1",
+          "Unadjusted"
+        ]
+      },
+      {
+        "value": "19",
+        "figure_id": "f1",
+        "mark": "the France Unadjusted bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "France",
+          "1",
+          "Unadjusted"
+        ]
+      },
+      {
+        "value": "-4",
+        "figure_id": "f1",
+        "mark": "the Korea Adjusted diamond",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Korea",
+          "1",
+          "Adjusted"
+        ]
+      },
+      {
+        "value": "-17",
+        "figure_id": "f1",
+        "mark": "the Poland* Unadjusted bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Poland*",
+          "1",
+          "Unadjusted"
+        ]
+      },
+      {
+        "value": "25",
+        "figure_id": "f1",
+        "mark": "the New Zealand Unadjusted bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "New Zealand",
+          "2",
+          "Unadjusted"
+        ]
+      },
+      {
+        "value": "15",
+        "figure_id": "f1",
+        "mark": "the New Zealand Adjusted diamond",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "New Zealand",
+          "2",
+          "Adjusted"
+        ]
+      },
+      {
+        "value": "-8",
+        "figure_id": "f1",
+        "mark": "the Israel Adjusted diamond",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Israel",
+          "2",
+          "Adjusted"
+        ]
+      },
+      {
+        "value": "13",
+        "figure_id": "f1",
+        "mark": "the Hungary Unadjusted bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Hungary",
+          "3",
+          "Unadjusted"
+        ]
+      }
+    ],
+    "hardest_step": 2
+  }
+}

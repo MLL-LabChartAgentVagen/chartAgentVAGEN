@@ -1,0 +1,306 @@
+{
+  "stem": "TSLA-Q4-2024-Update_p9",
+  "document": "TSLA-Q4-2024-Update",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "no_vocab",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 46.2,
+  "usage": {
+    "input_tokens": 3196,
+    "output_tokens": 6468,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n本页包含一个表格和一个折线图。表格作为图表呈现，拥有独立的标题栏、深色表头以及隐式合并的行（例如“California”适用于前两行）。折线图是一张标准的多序列图表，具有三条线条和顶部图例，x轴标签倾斜45度。特别是折线图的标题“Market share of Tesla vehicles by region (TTM)”位于图表底部（x轴和脚注之间），而非通常的顶部，这需要生成器支持灵活的标题定位。\n\n### 定位一个值难在哪\n定位折线图上的值（如US/Canada在Q2 2020的“1.1”）非常困难。由于图表没有任何数据标签，且y轴的刻度间隔为1%（0%, 1%, 2%, 3%, 4%），在没有辅助网格线的情况下，要用肉眼或机器精确读取出1.1%（满足5%误差范围，即1.045到1.155之间）几乎是不可能的，极易超出公差限制。\n\n### 不确定的\n表格中空白的“Region”单元格是否在底层数据结构中明确与上一行的区域（如California或Texas）绑定，这在纯视觉提取时存在一定的推断空间。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "Current Installed Annual Vehicle Capacity",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "other",
+        "type_other": "table",
+        "panels": 1,
+        "series": 1,
+        "categories": 7,
+        "marks": 28,
+        "values_printed": "all",
+        "axes": [],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "inline_label",
+            "example": "Texas"
+          },
+          {
+            "role": "category",
+            "label_source": "inline_label",
+            "example": "Model Y"
+          },
+          {
+            "role": "category",
+            "label_source": "heading",
+            "example": "Capacity"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Texas",
+            "Model Y",
+            "Capacity"
+          ],
+          "value": ">250,000",
+          "value_source": "printed",
+          "why_hard": "Region label 'Texas' is implicitly shared with the Cybercab row below it."
+        }
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "",
+          "title": "Market share of Tesla vehicles by region (TTM)",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "below"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 1,
+        "series": 3,
+        "categories": 24,
+        "marks": 72,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "0%",
+            "high": "4%",
+            "serves": "all lines"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "Q1 2019",
+            "high": "Q4 2024",
+            "serves": "all lines"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "Q4 2023"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "US/Canada"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Q4 2023",
+            "US/Canada"
+          ],
+          "value": "4.0",
+          "value_source": "axis_read",
+          "why_hard": "Interpolating exact decimal values is hard due to the coarse 1% grid interval."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "table_as_figure",
+        "figure_id": "f1",
+        "evidence": "the entire graphic is a formatted text table",
+        "affects": [
+          1
+        ]
+      },
+      {
+        "key": "implicit_row_spanning",
+        "figure_id": "f1",
+        "evidence": "the region column is left blank for the second row of California",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "legend_top_center",
+        "figure_id": "f2",
+        "evidence": "legend sits centered above the plot area",
+        "affects": []
+      },
+      {
+        "key": "angled_x_axis_labels",
+        "figure_id": "f2",
+        "evidence": "Q1 2019 to Q4 2024 are rotated 45 degrees",
+        "affects": []
+      },
+      {
+        "key": "title_below_plot",
+        "figure_id": "f2",
+        "evidence": "the title 'Market share...' is printed below the x-axis",
+        "affects": [
+          4
+        ]
+      },
+      {
+        "key": "percentage_y_axis",
+        "figure_id": "f2",
+        "evidence": "y axis reads 0%, 1%, 2% ...",
+        "affects": []
+      }
+    ],
+    "new_components": [],
+    "spot_checks": [
+      {
+        "value": "1.1",
+        "figure_id": "f2",
+        "mark": "US/Canada line at Q2 2020",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Q2 2020",
+          "US/Canada"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "4.0",
+        "figure_id": "f2",
+        "mark": "US/Canada line at Q4 2023",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Q4 2023",
+          "US/Canada"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "3.7",
+        "figure_id": "f2",
+        "mark": "US/Canada line at Q4 2024",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Q4 2024",
+          "US/Canada"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "0.4",
+        "figure_id": "f2",
+        "mark": "China line at Q1 2020",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Q1 2020",
+          "China"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "2.6",
+        "figure_id": "f2",
+        "mark": "Europe line at Q3 2024",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Q3 2024",
+          "Europe"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "2.5",
+        "figure_id": "f2",
+        "mark": "Europe line at Q4 2024",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Q4 2024",
+          "Europe"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "0.1",
+        "figure_id": "f2",
+        "mark": "China line at Q1 2019",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Q1 2019",
+          "China"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "1.5",
+        "figure_id": "f2",
+        "mark": "Europe line at Q1 2022",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Q1 2022",
+          "Europe"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "2.4",
+        "figure_id": "f2",
+        "mark": "China line at Q4 2024",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Q4 2024",
+          "China"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "1.5",
+        "figure_id": "f2",
+        "mark": "China line at Q1 2022",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Q1 2022",
+          "China"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "折线图上没有任何直接标注的具体数值，并且y轴的刻度跨度较大（1%）。在缺乏辅助网格线的情况下，要将类似1.1%或2.6%的值肉眼估算到5%的公差内几乎不可能。",
+    "examples": [
+      {
+        "gap": "P7",
+        "figure_id": "f2",
+        "quote": "Market share of Tesla vehicles by region (TTM) is printed below the plot",
+        "why": "当前的流水线默认将标题置于图表顶部。为了重现此图，需要允许标题组件（如Title）放置在绘图区下方、脚注之上。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "Current Installed Annual Vehicle Capacity table",
+        "why": "渲染纯文本或单元格合并的表格而非图形。生成器当前专注于生成图表，对原生数据表格的结构化绘制支持不足。"
+      }
+    ]
+  }
+}

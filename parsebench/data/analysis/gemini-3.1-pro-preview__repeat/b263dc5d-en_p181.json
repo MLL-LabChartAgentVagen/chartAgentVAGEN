@@ -1,0 +1,305 @@
+{
+  "stem": "b263dc5d-en_p181",
+  "document": "b263dc5d-en",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "repeat",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 80.8,
+  "usage": {
+    "input_tokens": 5312,
+    "output_tokens": 11075,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n\n要绘制此页面，生成器需要支持包含三个垂直堆叠分面的条形图（小多图）。每个分面拥有独立的Y轴值域（例如-8至4，0至20）和不同的X轴国家排序。需要能够将多行图表标题置于图表上方，并在每个分面的左上角Y轴顶部放置独立的单位标签“Percentage points”。此外，生成器必须支持特殊的高亮样式：在特定分类（OECD average）背后绘制跨越整个Y轴的垂直背景色带，以及为特定的X轴标签（如Flemish Region (BE)）单独设置字体颜色。条形图的填充颜色存在深浅区分，需支持通过数据属性直接控制单个条形的颜色。\n\n### 定位一个值难在哪\n\n以分面C中的 Israel 的值 `-7.6` 为例。虽然可以通过分面标题和X轴标签 `[\"C. Older workers (Ref: Younger workers)\", \"Israel\"]` 定位，但最大的困难在于图表完全没有数值标签，且Y轴的网格线间距高达4个单位。在这样的坐标系下，肉眼根本无法将 -7.6 准确读取到5%的容错率范围内。\n\n### 不确定的\n\n图表中条形的颜色（深蓝与浅蓝）显然编码了某种额外的信息（可能是统计显著性），但页面上没有任何图例对此进行说明，因此无法确定颜色具体代表的维度名称。部分国家X轴标签被标为蓝色，其具体含义也未加解释。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 4.17.",
+          "title": "Likelihood of over-qualification, by socio-demographic characteristics [1/2]",
+          "subtitle": "Change in likelihood of over-qualification (relative to reference category)",
+          "unit_text": "Percentage points",
+          "placement": "above"
+        },
+        "type": "bar",
+        "type_other": "",
+        "panels": 3,
+        "series": 1,
+        "categories": 29,
+        "marks": 84,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Percentage points",
+            "low": "-8",
+            "high": "4",
+            "serves": "all bars"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "Finland",
+            "high": "England (UK)",
+            "serves": "all bars"
+          },
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Percentage points",
+            "low": "0",
+            "high": "20",
+            "serves": "all bars"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "Italy",
+            "high": "Israel",
+            "serves": "all bars"
+          },
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Percentage points",
+            "low": "-8",
+            "high": "8",
+            "serves": "all bars"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "Lithuania",
+            "high": "Israel",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "panel",
+            "label_source": "panel_title",
+            "example": "A. Numeracy"
+          },
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Finland"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "C. Older workers (Ref: Younger workers)",
+            "Austria"
+          ],
+          "value": "-4.9",
+          "value_source": "axis_read",
+          "why_hard": "No printed values; reading against gridlines spaced by 4 to a 5% tolerance is impossible."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "small_multiples_4",
+        "figure_id": "f1",
+        "evidence": "three distinct bar chart panels stacked vertically"
+      },
+      {
+        "key": "negative_values",
+        "figure_id": "f1",
+        "evidence": "bars in top and bottom panels extend below the zero line"
+      },
+      {
+        "key": "per_panel_axis_range",
+        "figure_id": "f1",
+        "evidence": "the three y-axes have ranges ending at 4, 20, and 8"
+      },
+      {
+        "key": "panel_title_per_panel",
+        "figure_id": "f1",
+        "evidence": "banners like 'A. Numeracy' title each panel"
+      },
+      {
+        "key": "axis_title_above_axis",
+        "figure_id": "f1",
+        "evidence": "'Percentage points' is placed right above the top y-axis tick"
+      },
+      {
+        "key": "rotated_x_ticks",
+        "figure_id": "f1",
+        "evidence": "country names on the x-axes are rotated vertically"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "horizontal rules cross the panels, no vertical ones"
+      },
+      {
+        "key": "highlighted_category",
+        "figure_id": "f1",
+        "evidence": "some category labels are blue instead of black"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "category_background_band",
+        "figure_id": "f1",
+        "evidence": "a vertical shaded band sits behind the OECD average column",
+        "affects": [
+          4
+        ]
+      },
+      {
+        "name": "unlegended_color_encoding",
+        "figure_id": "f1",
+        "evidence": "bars are dark or light blue without an explanatory legend",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "2.5",
+        "figure_id": "f1",
+        "mark": "the Panel A Finland bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. Numeracy",
+          "Finland"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-1.3",
+        "figure_id": "f1",
+        "mark": "the Panel A OECD average bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. Numeracy",
+          "OECD average"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-4.9",
+        "figure_id": "f1",
+        "mark": "the Panel C Austria bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "C. Older workers (Ref: Younger workers)",
+          "Austria"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "16.5",
+        "figure_id": "f1",
+        "mark": "the Panel B Italy bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "B. Years of education",
+          "Italy"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "10",
+        "figure_id": "f1",
+        "mark": "the Panel B OECD average bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "B. Years of education",
+          "OECD average"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "10",
+        "figure_id": "not_found",
+        "mark": "multiple bars in Panel B are near 10, cannot disambiguate visually",
+        "printed_on_figure": false,
+        "addressing_keys": [],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "2.5",
+        "figure_id": "f1",
+        "mark": "the Panel B Israel bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "B. Years of education",
+          "Israel"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "6.9",
+        "figure_id": "f1",
+        "mark": "the Panel C Lithuania bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "C. Older workers (Ref: Younger workers)",
+          "Lithuania"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-2",
+        "figure_id": "f1",
+        "mark": "the Panel C Norway bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "C. Older workers (Ref: Younger workers)",
+          "Norway"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-7.6",
+        "figure_id": "f1",
+        "mark": "the Panel C Israel bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "C. Older workers (Ref: Younger workers)",
+          "Israel"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "图表全无数值标注，Y轴网格线间距为4，肉眼无法将 -1.3 等值读取到5%容差内。",
+    "examples": [
+      {
+        "gap": "P8",
+        "figure_id": "f1",
+        "quote": "Bars for 'Canada' and 'England (UK)' in Panel A are dark blue, others light, no legend",
+        "why": "条形填充色编码了图例未说明的额外属性，需捕捉并加入键值。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "A vertical light blue shaded band sits behind the OECD average column",
+        "why": "生成器需支持在特定分类位置绘制贯穿整个绘图区的垂直背景高亮色带。"
+      }
+    ]
+  }
+}

@@ -1,0 +1,315 @@
+{
+  "stem": "b263dc5d-en_p120",
+  "document": "b263dc5d-en",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "repeat",
+  "effort": "high",
+  "dpi": 150,
+  "seconds": 106.5,
+  "usage": {
+    "input_tokens": 5302,
+    "output_tokens": 12544,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n要绘制此页图表，生成器需要支持在同一坐标系内混合绘制条形图与散点（菱形标记），并支持带有负值的Y轴。X轴需要支持双层标签：内层国家名旋转90度，外层使用带背景色的条带进行分组（如“Round, Cycle 1: 1, 2, 3”）。此外，图例图标内部需要支持双色分割显示，且颜色深浅用于独立编码“统计显著性”这一额外维度。个别X轴标签（如England）采用了不同的字体颜色进行高亮，这也需要图表引擎支持对单个Tick标签应用样式。\n\n### 定位一个值难在哪\n以 `34` 为例，如果该值对应日本的 Unadjusted 条形图，其柱子顶端在视觉上完全对齐于 30 的网格线。此时通过坐标轴读取的值约为 30，与给定的 34 之间存在超过 10% 的误差，直接导致第二步（精度读取）失败。同时，要定位任何数据，解析器必须将图例的系列名与注释中“深色代表显著”的长文本规则结合起来，自行推导并组合成完整的四维数据键。\n\n### 不确定的\n第一，对于日本的 Unadjusted 数据，视觉读取值（30）与验证值（34）之间的巨大差异，无法确定是原图比例尺绘制失真，还是该值实际对应其他隐藏数据；第二，部分蓝色字体的国家名称并未在注释或图例中说明其特殊含义，只能推测其代表特定区域或数据来源的划分。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 3.8.",
+          "title": "Change in the gap in literacy proficiency between highly and low-educated adults",
+          "subtitle": "Adjusted and unadjusted change between cycles in the average score difference between adults with tertiary education and adults with below upper secondary education (Cycle 2 minus Cycle 1); 25-65 year-olds",
+          "unit_text": "Score-point difference",
+          "placement": "above"
+        },
+        "type": "other",
+        "type_other": "bar and point marker",
+        "panels": 1,
+        "series": 2,
+        "categories": 25,
+        "marks": 50,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Score-point difference",
+            "low": "-20",
+            "high": "40",
+            "serves": "all marks"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "Japan",
+            "high": "Hungary",
+            "serves": "all marks"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Japan"
+          },
+          {
+            "role": "panel",
+            "label_source": "axis_tick",
+            "example": "1"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Unadjusted"
+          },
+          {
+            "role": "colour_group",
+            "label_source": "colour_only",
+            "example": "statistically significant"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Japan",
+            "1",
+            "Unadjusted",
+            "statistically significant"
+          ],
+          "value": "30",
+          "value_source": "axis_read",
+          "why_hard": "The visual height is exactly 30, but the expected source data might be 34."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "mixed_marks",
+        "figure_id": "f1",
+        "evidence": "bars and diamond markers share the same panel"
+      },
+      {
+        "key": "negative_values",
+        "figure_id": "f1",
+        "evidence": "bars extend below the zero line, Y axis goes to -20"
+      },
+      {
+        "key": "color_encodes_extra_attribute",
+        "figure_id": "f1",
+        "evidence": "Darker colours denote differences that are statistically significant"
+      },
+      {
+        "key": "two_level_x_ticks",
+        "figure_id": "f1",
+        "evidence": "country names are grouped by outer bands labelled 1, 2, 3"
+      },
+      {
+        "key": "rotated_x_ticks",
+        "figure_id": "f1",
+        "evidence": "country names on x axis are rotated 90 degrees"
+      },
+      {
+        "key": "legend_above_plot",
+        "figure_id": "f1",
+        "evidence": "legend sits between the chart title and the plot area"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "page",
+        "evidence": "Note: Does not include... Source: OECD"
+      },
+      {
+        "key": "axis_title_above_axis",
+        "figure_id": "f1",
+        "evidence": "Score-point difference sits above the top left tick"
+      },
+      {
+        "key": "footnote_marker",
+        "figure_id": "f1",
+        "evidence": "Poland* has an asterisk"
+      },
+      {
+        "key": "highlighted_category",
+        "figure_id": "f1",
+        "evidence": "England (UK) and Flemish Region (BE) are printed in blue font"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "colored_tick_labels",
+        "figure_id": "f1",
+        "evidence": "two category names on the axis are drawn in blue font rather than black",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "34",
+        "figure_id": "f1",
+        "mark": "Japan Unadjusted bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Japan",
+          "1",
+          "Unadjusted",
+          "statistically significant"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "35",
+        "figure_id": "f1",
+        "mark": "Japan Adjusted diamond",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Japan",
+          "1",
+          "Adjusted",
+          "statistically significant"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 0
+      },
+      {
+        "value": "29",
+        "figure_id": "f1",
+        "mark": "Austria Unadjusted bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Austria",
+          "1",
+          "Unadjusted",
+          "statistically significant"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 0
+      },
+      {
+        "value": "19",
+        "figure_id": "f1",
+        "mark": "Austria Adjusted diamond",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Austria",
+          "1",
+          "Adjusted",
+          "statistically significant"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 0
+      },
+      {
+        "value": "-4",
+        "figure_id": "f1",
+        "mark": "Korea Adjusted diamond",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Korea",
+          "1",
+          "Adjusted",
+          "not significant"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 0
+      },
+      {
+        "value": "-17",
+        "figure_id": "f1",
+        "mark": "Poland* Unadjusted bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Poland*",
+          "1",
+          "Unadjusted",
+          "statistically significant"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 0
+      },
+      {
+        "value": "25",
+        "figure_id": "f1",
+        "mark": "New Zealand Unadjusted bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "New Zealand",
+          "2",
+          "Unadjusted",
+          "statistically significant"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 0
+      },
+      {
+        "value": "15",
+        "figure_id": "f1",
+        "mark": "New Zealand Adjusted diamond",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "New Zealand",
+          "2",
+          "Adjusted",
+          "statistically significant"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 0
+      },
+      {
+        "value": "-8",
+        "figure_id": "f1",
+        "mark": "Israel Adjusted diamond",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Israel",
+          "2",
+          "Adjusted",
+          "statistically significant"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 0
+      },
+      {
+        "value": "13",
+        "figure_id": "f1",
+        "mark": "Hungary Unadjusted bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Hungary",
+          "3",
+          "Unadjusted",
+          "statistically significant"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 0
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "日本 Unadjusted 柱形视觉高度精确对齐 30 网格线，但需验证的值为 34，误差超 10%，必然导致步骤2的数值校准失败；且颜色代表的显著性需要文本解析。",
+    "examples": [
+      {
+        "gap": "P8",
+        "figure_id": "f1",
+        "quote": "Darker colours denote differences that are statistically significant",
+        "why": "图表引擎必须支持在图例的基础系列之外，单独将填色深浅提取为控制统计显著性的第三个分类变量，并入最终的Key中。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "Poland* and Israel extend below the zero line",
+        "why": "必须支持带有负向数据的条形图渲染，确保Y轴和柱体能正确向0基准线下方生长。"
+      },
+      {
+        "gap": "P9",
+        "figure_id": "f1",
+        "quote": "Unadjusted is a bar and Adjusted is a diamond",
+        "why": "生成器必须支持同一面板中不同系列使用不同形状的标记（柱形和散点混合）绘制，以重现这种视觉对比。"
+      }
+    ]
+  }
+}

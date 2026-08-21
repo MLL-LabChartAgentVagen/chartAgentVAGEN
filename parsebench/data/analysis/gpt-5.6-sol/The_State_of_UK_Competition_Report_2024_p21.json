@@ -1,0 +1,292 @@
+{
+  "stem": "The_State_of_UK_Competition_Report_2024_p21",
+  "document": "The_State_of_UK_Competition_Report_2024",
+  "tags": "need_estimate",
+  "model": "gpt-5.6-sol",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 120000,
+  "seconds": 93.4,
+  "usage": {
+    "input_tokens": 8840,
+    "output_tokens": 6355,
+    "cache_read_tokens": 2365
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n单幅年度折线图：上方分离显示图号、标题、长副标题；纵轴标题置于轴上方并声明“(indexed to 1997 = 100)”。约九条年度线中，Baseline以深蓝粗线突出，其余同为浅蓝细线；两段灰色事件带带有区内文字。还需稀疏年份刻度、水平网格及图下说明来源。\n\n### 定位一个值难在哪\nBaseline的111可由“Baseline”与“2021”唯一定位；但2021年的141只属于统称“Alternative approaches”的八条同色线之一，单条方法没有标签，因此关联最难。\n\n### 不确定的\n浅蓝线重叠较多，估计为八条、全图约225个点。143与最后一个100的具体年份及所属替代方法只能按折点位置推断。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 5",
+          "title": "Average markups in GB have risen since 1997",
+          "subtitle": "Economy-wide average markup estimates. Baseline measure: Ordinary Least Square (OLS) estimation of a translog production function with materials as flexible input. Firm-level estimates are aggregated and weighted by turnover. Data from Annual Respondents Database X (ARDx) 1997-2020 and Annual Business Survey (ABS) 2021. GB only",
+          "unit_text": "(indexed to 1997 = 100)",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 1,
+        "series": 9,
+        "categories": 25,
+        "marks": 225,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Material markup (indexed to 1997 = 100)",
+            "low": "80",
+            "high": "160",
+            "serves": "all lines"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "Year",
+            "low": "1997",
+            "high": "2021",
+            "serves": "all lines"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "series",
+            "label_source": "inline_label",
+            "example": "Alternative approaches"
+          },
+          {
+            "role": "series",
+            "label_source": "not_shown",
+            "example": ""
+          },
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2021"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Alternative approaches",
+            "",
+            "2021"
+          ],
+          "value": "141",
+          "value_source": "axis_read",
+          "why_hard": "Eight light-blue alternatives share one label, so the individual line is unnamed."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "shaded_band",
+        "figure_id": "f1",
+        "evidence": "Two grey vertical bands are labelled “Great Financial Crisis” and “Covid-19 Pandemic”."
+      },
+      {
+        "key": "axis_starts_above_zero",
+        "figure_id": "f1",
+        "evidence": "The left value axis begins at 80 without a break glyph."
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "“Markups are calculated following our baseline approach described in the report.” appears below the plot."
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "The value-axis title reads “Material markup (indexed to 1997 = 100)”."
+      },
+      {
+        "key": "axis_title_below_plot",
+        "figure_id": "f1",
+        "evidence": "“Year” is centred below the bottom axis."
+      },
+      {
+        "key": "axis_title_above_axis",
+        "figure_id": "f1",
+        "evidence": "“Material markup (indexed to 1997 = 100)” sits above the left axis."
+      },
+      {
+        "key": "rebased_index_values",
+        "figure_id": "f1",
+        "evidence": "The axis title explicitly states “indexed to 1997 = 100”."
+      },
+      {
+        "key": "sparse_time_ticks",
+        "figure_id": "f1",
+        "evidence": "Annual vertices span 1997–2021, but only seven four-year ticks are labelled."
+      },
+      {
+        "key": "inline_series_labels",
+        "figure_id": "f1",
+        "evidence": "“Alternative approaches” and “Baseline” are written directly beside their lines."
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "Horizontal grid lines cross the plot at 80, 100, 120, 140 and 160; no vertical grid appears."
+      },
+      {
+        "key": "dense_marks_100plus",
+        "figure_id": "f1",
+        "evidence": "Approximately nine lines each contain 25 annual points, about 225 marks."
+      },
+      {
+        "key": "highlighted_category",
+        "figure_id": "f1",
+        "evidence": "Baseline is a thick dark-blue line while the alternatives are thin light-blue lines."
+      }
+    ],
+    "new_components": [
+      {
+        "name": "multiple_unnamed_series",
+        "figure_id": "f1",
+        "evidence": "Eight light-blue lines share “Alternative approaches” without individual method labels.",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "name": "inline_event_band_labels",
+        "figure_id": "f1",
+        "evidence": "Plain text names each event inside its grey time band, without boxes, arrows or leaders.",
+        "affects": [
+          4
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "100",
+        "figure_id": "f1",
+        "mark": "the Baseline point at 1997",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Baseline",
+          "1997"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "98",
+        "figure_id": "f1",
+        "mark": "the Baseline point at 2001",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Baseline",
+          "2001"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "103",
+        "figure_id": "f1",
+        "mark": "the Baseline point at 2005",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Baseline",
+          "2005"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "103",
+        "figure_id": "f1",
+        "mark": "the Baseline point at 2009",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Baseline",
+          "2009"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "111",
+        "figure_id": "f1",
+        "mark": "the Baseline point at 2013",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Baseline",
+          "2013"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "104",
+        "figure_id": "f1",
+        "mark": "the Baseline point at 2017",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Baseline",
+          "2017"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "111",
+        "figure_id": "f1",
+        "mark": "the Baseline point at 2021",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Baseline",
+          "2021"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "141",
+        "figure_id": "f1",
+        "mark": "the highest Alternative approaches point at 2021",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Alternative approaches",
+          "highest",
+          "2021"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 3
+      },
+      {
+        "value": "143",
+        "figure_id": "f1",
+        "mark": "the highest Alternative approaches point at 2013",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Alternative approaches",
+          "highest",
+          "2013"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 3
+      },
+      {
+        "value": "100",
+        "figure_id": "f1",
+        "mark": "the lowest Alternative approaches point at 2019",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Alternative approaches",
+          "lowest",
+          "2019"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 3
+      }
+    ],
+    "hardest_step": 3,
+    "hardest_step_why": "141虽可在2021读出，但“Alternative approaches”涵盖八条同色线，缺少单线标签，无法唯一关联。43在一个块中。5%容差下要读到23.7约需1.2刻度，易混淆。？等等",
+    "examples": []
+  }
+}

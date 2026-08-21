@@ -1,0 +1,287 @@
+{
+  "stem": "TSLA-Q4-2024-Update_p9",
+  "document": "TSLA-Q4-2024-Update",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "repeat",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 64.8,
+  "usage": {
+    "input_tokens": 5347,
+    "output_tokens": 9605,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n页面包含两部分图表内容：右上角是一个标准的数据表格，而右下角是一张折线图。折线图需要支持：底部的图表标题 (Title below plot)、旋转的X轴时间标签、水平网格线，以及将图例放置在绘图区正上方。表格由于未被识别为常规图表类型，需要单独的原生表格渲染能力。\n\n### 定位一个值难在哪\n以折线图中的 `0.4` 为例，该值需要从只有 `1%` 间隔的 Y 轴网格线中估读。5% 的误差容忍度意味着要在视觉上区分 `0.38` 和 `0.42`，这在没有任何数据标签和次级网格线的情况下是完全不可能的，因此这会直接阻断提取评估的第二步 (读取精度)。\n\n### 不确定的\n表格是否应该作为单独的图表实例（目前将其记作 unreadable），以及折线图中部分序列的缺失数据点（如 China 序列在 2019 年无数据，且无特殊标记）在底层数据结构中应如何严谨地表示和传达。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "Current Installed Annual Vehicle Capacity",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "unreadable",
+        "type_other": "data table",
+        "panels": 1,
+        "series": 1,
+        "categories": 1,
+        "marks": 1,
+        "values_printed": "all",
+        "axes": [],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "inline_label",
+            "example": "California"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "California"
+          ],
+          "value": "100,000",
+          "value_source": "printed",
+          "why_hard": ""
+        }
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "",
+          "title": "Market share of Tesla vehicles by region (TTM)",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "below"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 1,
+        "series": 3,
+        "categories": 24,
+        "marks": 72,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "0%",
+            "high": "4%",
+            "serves": "all lines"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "Q1 2019",
+            "high": "Q4 2024",
+            "serves": "all lines"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "US/Canada"
+          },
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "Q1 2019"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "US/Canada",
+            "Q1 2019"
+          ],
+          "value": "1.1",
+          "value_source": "axis_read",
+          "why_hard": "Values must be visually estimated from sparse 1% grid lines"
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "data_table_as_figure",
+        "figure_id": "f1",
+        "evidence": "the top right panel is a formatted data table"
+      },
+      {
+        "key": "legend_above_plot",
+        "figure_id": "f2",
+        "evidence": "the legend sits right above the plot area"
+      },
+      {
+        "key": "rotated_x_ticks",
+        "figure_id": "f2",
+        "evidence": "the quarter labels on the x axis are rotated"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f2",
+        "evidence": "only horizontal grid lines are drawn at each 1%"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f2",
+        "evidence": "Source: Tesla estimates... is printed below the title"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "title_below_plot",
+        "figure_id": "f2",
+        "evidence": "the main figure title sits below the x-axis",
+        "affects": [
+          3,
+          4
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "1.1",
+        "figure_id": "f2",
+        "mark": "the US/Canada line at Q1 2019",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "US/Canada",
+          "Q1 2019"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "4.0",
+        "figure_id": "f2",
+        "mark": "the US/Canada line at Q4 2023",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "US/Canada",
+          "Q4 2023"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "3.7",
+        "figure_id": "f2",
+        "mark": "the US/Canada line at Q4 2024",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "US/Canada",
+          "Q4 2024"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "0.4",
+        "figure_id": "f2",
+        "mark": "the Europe line at Q4 2019",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Europe",
+          "Q4 2019"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "2.6",
+        "figure_id": "f2",
+        "mark": "the Europe line at Q1 2024",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Europe",
+          "Q1 2024"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "2.5",
+        "figure_id": "f2",
+        "mark": "the Europe line at Q4 2024",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Europe",
+          "Q4 2024"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "0.1",
+        "figure_id": "f2",
+        "mark": "the China line at Q1 2020",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "China",
+          "Q1 2020"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "1.5",
+        "figure_id": "f2",
+        "mark": "the Europe line at Q1 2022",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Europe",
+          "Q1 2022"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "2.4",
+        "figure_id": "f2",
+        "mark": "the China line at Q4 2024",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "China",
+          "Q4 2024"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "1.5",
+        "figure_id": "f2",
+        "mark": "the China line at Q1 2022",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "China",
+          "Q1 2022"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "折线图完全没有数据标签，Y轴网格线间隔高达 1%。以 0.4 为例，5%的容差范围仅为±0.02，依靠人眼在 1% 间隔的网格中根本无法达到如此精确的估读，必定阻断第二步。",
+    "examples": [
+      {
+        "gap": "P3",
+        "figure_id": "f2",
+        "quote": "Market share of Tesla vehicles by region (TTM)",
+        "why": "图表的主标题和副标题（或源信息）被放置在了 X 轴及其时间标签的下方，目前管线可能默认标题始终在顶部。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "Current Installed Annual Vehicle Capacity",
+        "why": "目前的绘图管线不支持将纯数据表格（带表头背景、列对齐）作为一种原生图表直接渲染输出。"
+      }
+    ]
+  }
+}

@@ -1,0 +1,345 @@
+{
+  "stem": "b263dc5d-en_p120",
+  "document": "b263dc5d-en",
+  "tags": "need_estimate",
+  "model": "gpt-5.6-sol",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 160.1,
+  "usage": {
+    "input_tokens": 8699,
+    "output_tokens": 11345,
+    "cache_read_tokens": 8696
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n单面板柱形—菱形叠加图，含负值、粗零线、双层分类轴、竖排国家名、轮次分组条、显著性深浅编码及上置图例；标题需拆分编号、主标题、副标题和轴上单位。\n\n### 定位一个值难在哪\n以 Israel 的 Adjusted 值 -8 为例，须同时找到国家、轮次“2”、菱形系列和显著性深色；纵轴每5分一格，5%容差仅±0.4。\n\n### 不确定的\n34无法对应到可辨识标记；19和15附近均有多个候选标记。显著性类别仅由深浅及注释说明，未逐项命名。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 3.8.",
+          "title": "Change in the gap in literacy proficiency between highly and low-educated adults",
+          "subtitle": "Adjusted and unadjusted change between cycles in the average score difference between adults with tertiary education and adults with below upper secondary education (Cycle 2 minus Cycle 1); 25-65 year-olds",
+          "unit_text": "Score-point difference",
+          "placement": "above"
+        },
+        "type": "compound",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 25,
+        "marks": 50,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Score-point difference",
+            "low": "-20",
+            "high": "40",
+            "serves": "all bars and diamond markers"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "Japan",
+            "high": "Hungary",
+            "serves": "all bars and diamond markers"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "Round, Cycle 1:",
+            "low": "1",
+            "high": "3",
+            "serves": "country groups"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Japan"
+          },
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "1"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Adjusted"
+          },
+          {
+            "role": "colour_group",
+            "label_source": "inline_label",
+            "example": "statistically significant at the 5% level"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Israel",
+            "2",
+            "Adjusted",
+            "statistically significant at the 5% level"
+          ],
+          "value": "-8",
+          "value_source": "axis_read",
+          "why_hard": "Five-point ticks must support a 0.4-point tolerance; the value is not printed."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "mixed_marks",
+        "figure_id": "f1",
+        "evidence": "Blue bars and diamond markers are overlaid for every country."
+      },
+      {
+        "key": "reference_line",
+        "figure_id": "f1",
+        "evidence": "A thick black horizontal rule crosses the plot at 0."
+      },
+      {
+        "key": "negative_values",
+        "figure_id": "f1",
+        "evidence": "Bars and diamonds extend below the 0 line to values near -17."
+      },
+      {
+        "key": "color_encodes_extra_attribute",
+        "figure_id": "f1",
+        "evidence": "“Darker colours denote differences that are statistically significant at the 5% level.”"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "“Note:” and “Source:” lines appear directly below the chart."
+      },
+      {
+        "key": "legend_above_plot",
+        "figure_id": "f1",
+        "evidence": "The “Unadjusted” and “Adjusted” legend is centred above the plot border."
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "“Score-point difference” appears with the left value scale."
+      },
+      {
+        "key": "axis_title_above_axis",
+        "figure_id": "f1",
+        "evidence": "“Score-point difference” is printed above the top-left of the value axis."
+      },
+      {
+        "key": "footnote_marker",
+        "figure_id": "f1",
+        "evidence": "“Poland*” carries an asterisk linked to the note below."
+      },
+      {
+        "key": "two_level_x_ticks",
+        "figure_id": "f1",
+        "evidence": "Country labels sit above a second “Round, Cycle 1:” row labelled 1, 2, 3."
+      },
+      {
+        "key": "rotated_x_ticks",
+        "figure_id": "f1",
+        "evidence": "All country names are rotated vertically beneath their marks."
+      }
+    ],
+    "new_components": [
+      {
+        "name": "grouped_category_band",
+        "figure_id": "f1",
+        "evidence": "Pale vertical bands and a segmented grey strip divide Cycle 1 groups 1, 2, and 3.",
+        "affects": [
+          3,
+          4
+        ]
+      },
+      {
+        "name": "paired_legend_variants",
+        "figure_id": "f1",
+        "evidence": "Each legend label is preceded by paired light and dark versions of its mark.",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "name": "multiple_highlighted_axis_labels",
+        "figure_id": "f1",
+        "evidence": "“England (UK)” and “Flemish Region (BE)” are blue while other country labels are black.",
+        "affects": []
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "34",
+        "figure_id": "not_found",
+        "mark": "No plotted mark can be distinguished at 34; the highest diamond is near 35.",
+        "printed_on_figure": false,
+        "addressing_keys": [],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "35",
+        "figure_id": "f1",
+        "mark": "the Japan Adjusted diamond",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Japan",
+          "1",
+          "Adjusted",
+          "statistically significant at the 5% level"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "29",
+        "figure_id": "f1",
+        "mark": "the Austria Unadjusted bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Austria",
+          "1",
+          "Unadjusted",
+          "statistically significant at the 5% level"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "19",
+        "figure_id": "f1",
+        "mark": "the Austria Adjusted diamond",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Austria",
+          "1",
+          "Adjusted",
+          "statistically significant at the 5% level"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "-4",
+        "figure_id": "f1",
+        "mark": "the Korea Adjusted hollow diamond",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Korea",
+          "1",
+          "Adjusted",
+          "not statistically significant at the 5% level"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "-17",
+        "figure_id": "f1",
+        "mark": "the Poland* Unadjusted bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Poland*",
+          "1",
+          "Unadjusted",
+          "statistically significant at the 5% level"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "25",
+        "figure_id": "f1",
+        "mark": "the New Zealand Unadjusted bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "New Zealand",
+          "2",
+          "Unadjusted",
+          "statistically significant at the 5% level"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "15",
+        "figure_id": "f1",
+        "mark": "the New Zealand Adjusted diamond",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "New Zealand",
+          "2",
+          "Adjusted",
+          "statistically significant at the 5% level"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "-8",
+        "figure_id": "f1",
+        "mark": "the Israel Adjusted diamond",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Israel",
+          "2",
+          "Adjusted",
+          "statistically significant at the 5% level"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "13",
+        "figure_id": "f1",
+        "mark": "the Hungary Unadjusted bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Hungary",
+          "3",
+          "Unadjusted",
+          "statistically significant at the 5% level"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "以-4为例，5%仅±0.2；纵轴每5分一格且无点值标签，精度先卡在步骤2。整页正文虽多，但图表上下文清晰。Step 2 is the hardest because the chart’s values are not printed and must be inferred from a 5-point y-axis grid. Small values such as −4 and −8 have very narrow 5% tolerances (±0.2 and ±0.4), making reliable reading difficult. The additional significance encoding by marker shade and the two-level category axis increase addressing complexity, but the labels and figure context are present and generally associable.",
+    "examples": [
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "The value axis runs from -20 to 40, with a thick zero line and no value labels on marks.",
+        "why": "需重建负值柱、零线及按标记可达精度，而非只判断整图可读。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "Figure 3.8. Change in the gap in literacy proficiency between highly and low-educated adults",
+        "why": "编号、主标题、副标题和“Score-point difference”分处不同层级与位置。"
+      },
+      {
+        "gap": "P8",
+        "figure_id": "f1",
+        "quote": "Darker colours denote differences that are statistically significant at the 5% level.",
+        "why": "颜色深浅编码显著性，独立于“Adjusted/Unadjusted”系列，须进入值的地址。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "Country labels are vertical above a “Round, Cycle 1:” strip labelled 1, 2, and 3.",
+        "why": "需重建竖排刻度、双层分类轴和分组背景条。"
+      }
+    ]
+  }
+}

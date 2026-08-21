@@ -1,0 +1,304 @@
+{
+  "stem": "2025-EIS_p37",
+  "document": "2025-EIS",
+  "tags": "need_estimate",
+  "model": "gpt-5.6-sol",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 120000,
+  "seconds": 141.8,
+  "usage": {
+    "input_tokens": 8122,
+    "output_tokens": 9272,
+    "cache_read_tokens": 2365
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "**画出来要什么**\n\n单幅横向条形图，27个国家行；2025条形按四类创新组着色，并叠加2018菱形、2024竖刻线。还需绘制EU深蓝高亮、纵向网格、下置图例、指数轴标题及图下注释。\n\n**定位一个值难在哪**\n\nBulgaria的2025值37没有印在条上，只能由0—260、每20一格的横轴估读；其±5%容差仅1.85，明显小于刻度间距。\n\n**不确定的**\n\n所有给定数值均未直接印出。37也接近Lithuania的2018菱形位置；此处按Bulgaria的2025条形归位。顶部215与214只能结合国家顺序和标记形状判断。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 11",
+          "title": "Innovation performance of the EU27 Member States in the Attractive research systems dimension",
+          "subtitle": "Attractive research systems",
+          "unit_text": "(indexed to the EU in 2018)",
+          "placement": "above"
+        },
+        "type": "bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 6,
+        "categories": 27,
+        "marks": 81,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "category",
+            "unit_text": "",
+            "low": "Luxembourg",
+            "high": "Bulgaria",
+            "serves": "all country rows"
+          },
+          {
+            "side": "bottom",
+            "role": "value",
+            "unit_text": "Score for dimension 1.2 in 2025 (indexed to the EU in 2018)",
+            "low": "0",
+            "high": "260",
+            "serves": "bars, diamonds and vertical tick markers"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Luxembourg"
+          },
+          {
+            "role": "colour_group",
+            "label_source": "legend",
+            "example": "Strong innovators"
+          },
+          {
+            "role": "time",
+            "label_source": "heading",
+            "example": "2025"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Bulgaria",
+            "Emerging innovators",
+            "2025"
+          ],
+          "value": "37",
+          "value_source": "axis_read",
+          "why_hard": "Twenty-point ticks exceed the ±1.85 tolerance; no value is printed."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "mixed_marks",
+        "figure_id": "f1",
+        "evidence": "Horizontal bars are overlaid by diamonds and vertical tick markers in every country row."
+      },
+      {
+        "key": "horizontal_bars",
+        "figure_id": "f1",
+        "evidence": "Country names run down the left while bars extend rightward."
+      },
+      {
+        "key": "color_encodes_extra_attribute",
+        "figure_id": "f1",
+        "evidence": "“The colours denote each country’s overall performance group based on the 2025 SII.”"
+      },
+      {
+        "key": "tick_marker_as_series",
+        "figure_id": "f1",
+        "evidence": "“Score in 2024” is represented by short vertical markers."
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "An italic line beginning “Note:” appears below the legend."
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "The six-entry legend is arranged beneath the value-axis title."
+      },
+      {
+        "key": "panel_title_per_panel",
+        "figure_id": "f1",
+        "evidence": "“Attractive research systems” is printed above the single panel."
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "The axis title reads “Score for dimension 1.2 in 2025 (indexed to the EU in 2018)”."
+      },
+      {
+        "key": "axis_title_below_plot",
+        "figure_id": "f1",
+        "evidence": "The score-axis title is centred below the bottom ticks."
+      },
+      {
+        "key": "rebased_index_values",
+        "figure_id": "f1",
+        "evidence": "The scale states “indexed to the EU in 2018” and the EU 2018 diamond is at 100."
+      },
+      {
+        "key": "abbrev_category_axis",
+        "figure_id": "f1",
+        "evidence": "“EU” appears as a coded category among full country names."
+      },
+      {
+        "key": "highlighted_category",
+        "figure_id": "f1",
+        "evidence": "The EU bar is dark blue, distinct from the four performance-group fills."
+      },
+      {
+        "key": "vgrid_only",
+        "figure_id": "f1",
+        "evidence": "Only vertical grid lines cross the plotting area."
+      }
+    ],
+    "new_components": [],
+    "spot_checks": [
+      {
+        "value": "245",
+        "figure_id": "f1",
+        "mark": "the Luxembourg 2025 horizontal bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Luxembourg",
+          "Strong innovators",
+          "2025"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "215",
+        "figure_id": "f1",
+        "mark": "the Denmark 2025 horizontal bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Denmark",
+          "Innovation leaders",
+          "2025"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "214",
+        "figure_id": "f1",
+        "mark": "the Netherlands 2025 horizontal bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Netherlands",
+          "Innovation leaders",
+          "2025"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "186",
+        "figure_id": "f1",
+        "mark": "the Cyprus 2025 horizontal bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Cyprus",
+          "Moderate innovators",
+          "2025"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "100",
+        "figure_id": "f1",
+        "mark": "the EU Score in 2018 diamond",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "EU",
+          "Score in 2018"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "182",
+        "figure_id": "f1",
+        "mark": "the Belgium Score in 2018 diamond",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Belgium",
+          "Strong innovators",
+          "Score in 2018"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "167",
+        "figure_id": "f1",
+        "mark": "the Malta Score in 2024 vertical tick marker",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Malta",
+          "Moderate innovators",
+          "Score in 2024"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "37",
+        "figure_id": "f1",
+        "mark": "the Bulgaria 2025 horizontal bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Bulgaria",
+          "Emerging innovators",
+          "2025"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "215",
+        "figure_id": "f1",
+        "mark": "the Luxembourg Score in 2018 diamond",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Luxembourg",
+          "Strong innovators",
+          "Score in 2018"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "37的容差仅±1.85，横轴却每20一格且未印数，最易卡在读值精度。 Stages P1 / P3 / P6 / P7 / P8 / new are best exemplified by this page.",
+    "examples": [
+      {
+        "gap": "P1",
+        "figure_id": "f1",
+        "quote": "the bottom value axis runs 0, 20, 40 … 260, while no values are printed on marks",
+        "why": "可读性须按单个标记评估；37的容差远严于245。"
+      },
+      {
+        "gap": "P3",
+        "figure_id": "f1",
+        "quote": "“Note: All performance scores are relative to that of the EU in 2018 for each dimension.”",
+        "why": "整页导出必须保留图题、图表、图例与注释的上下关系。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "“Figure 11: Innovation performance of the EU27 Member States in the Attractive research systems dimension”",
+        "why": "需分别保存编号、主标题、面板标题、指数尺度及其位置。"
+      },
+      {
+        "gap": "P8",
+        "figure_id": "f1",
+        "quote": "“The colours denote each country’s overall performance group based on the 2025 SII.”",
+        "why": "颜色表达创新组，必须作为条形之外的独立属性进入键。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "diamonds denote “Score in 2018” and vertical bars denote “Score in 2024” over coloured horizontal bars",
+        "why": "需要同一类别行叠加条形、菱形与竖刻线三种时间标记。"
+      }
+    ]
+  }
+}

@@ -1,0 +1,268 @@
+{
+  "stem": "COM_2025_26_F1_COMMUNICATION_FROM_COMMISSION_TO_INST_EN_V10_P1_3877708_p19",
+  "document": "COM_2025_26_F1_COMMUNICATION_FROM_COMMISSION_TO_INST_EN_V10_P1_3877708",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "repeat",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 80.2,
+  "usage": {
+    "input_tokens": 5329,
+    "output_tokens": 11513,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "## 画出来要什么\n\n要生成这个页面的图表，生成器需要能够将图例直接放置在绘图区域内部（`legend_inside_plot`）。在x轴上，需要支持将年份标签进行一定角度的旋转（`rotated_x_ticks`），并且能够处理稀疏的刻度间隔（`sparse_time_ticks`，即数据是每年一个点，但x轴只标出奇数年份）。y轴上没有独立的单位标题，而是将单位“%”直接依附在最高刻度“100 %”上。此外，在页面布局上，图表与正文并非简单的上下堆叠，右侧有一大段正文文本环绕并排显示，生成器需要支持这种分栏排版的混排布局。\n\n## 定位一个值难在哪\n\n以2012年美国的值（71）为例，虽然曲线上确实绘制了该年的数据点，但由于x轴刻度跳过了偶数年份，页面上根本没有打印“2012”这个文本。这会导致在解析时，无法用完全匹配的可见标签来定位这个数据格，会在标签关联（第3步）卡住。\n\n## 不确定的\n\n图表中画了一条在55%左右波动的绿线，但图例中完全没有给出绿线代表什么系列。只能通过阅读右侧正文中的“The corresponding level in the UK is 55%”来推断这是英国（UK）。另外，由于y轴刻度间隔为10且无次级网格线，读取如43、44这样的具体数值只能大致估算，存在极小的误差空间。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 4:",
+          "title": "Household savings invested in bonds, shares, investment funds and similar.",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 13,
+        "marks": 39,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "%",
+            "low": "0",
+            "high": "100 %",
+            "serves": "all lines"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "2011",
+            "high": "2023",
+            "serves": "all lines"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "EU"
+          },
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2011"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "EU",
+            "2023"
+          ],
+          "value": "43",
+          "value_source": "axis_read",
+          "why_hard": "Reading 43 between the 40 and 50 ticks is difficult without minor grids."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "legend_inside_plot",
+        "figure_id": "f1",
+        "evidence": "the EU and US legend entries sit inside the plot space"
+      },
+      {
+        "key": "rotated_x_ticks",
+        "figure_id": "f1",
+        "evidence": "the years 2011, 2013, etc. are angled"
+      },
+      {
+        "key": "sparse_time_ticks",
+        "figure_id": "f1",
+        "evidence": "ticks are every 2 years but the data is annual"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "horizontal grid lines cross the panel, no vertical ones"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "Note: ... Source: ... are printed beneath the plot"
+      },
+      {
+        "key": "side_text_bullets",
+        "figure_id": "page",
+        "evidence": "a column of body text wraps alongside the right of Figure 4"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "missing_legend_entry",
+        "figure_id": "f1",
+        "evidence": "a third green line is drawn but not named in the legend",
+        "affects": [
+          1,
+          3
+        ]
+      },
+      {
+        "name": "unit_on_top_tick",
+        "figure_id": "f1",
+        "evidence": "the unit % is only appended to the 100 tick label",
+        "affects": [
+          1,
+          2
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "45",
+        "figure_id": "f1",
+        "mark": "the 2011 EU point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "EU",
+          "2011"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "70",
+        "figure_id": "f1",
+        "mark": "the 2011 US point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "US",
+          "2011"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "45",
+        "figure_id": "f1",
+        "mark": "the 2012 EU point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "EU",
+          "2012"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 3
+      },
+      {
+        "value": "71",
+        "figure_id": "f1",
+        "mark": "the 2012 US point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "US",
+          "2012"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 3
+      },
+      {
+        "value": "45",
+        "figure_id": "f1",
+        "mark": "the 2013 EU point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "EU",
+          "2013"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "72",
+        "figure_id": "f1",
+        "mark": "the 2013 US point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "US",
+          "2013"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "44",
+        "figure_id": "f1",
+        "mark": "the 2021 EU point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "EU",
+          "2021"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "70",
+        "figure_id": "f1",
+        "mark": "the 2021 US point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "US",
+          "2021"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "43",
+        "figure_id": "f1",
+        "mark": "the 2023 EU point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "EU",
+          "2023"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "72",
+        "figure_id": "f1",
+        "mark": "the 2023 US point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "US",
+          "2023"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      }
+    ],
+    "hardest_step": 3,
+    "hardest_step_why": "2012等偶数年份在x轴上没有打印对应的刻度标签，导致这些数据点无法通过页面上可见且一致的文字来定位，会在第3步卡住。",
+    "examples": [
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "the top tick reads 100 %",
+        "why": "系统缺少将单位直接依附于特定刻度标签（如最高刻度）上的配置，会导致抽取或生成单位时出现错位。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "a green line is plotted but the legend only lists EU and US",
+        "why": "图表绘制了无图例说明的系列（绿线），生成器需具备处理或容忍缺失系列标签的能力。"
+      }
+    ]
+  }
+}

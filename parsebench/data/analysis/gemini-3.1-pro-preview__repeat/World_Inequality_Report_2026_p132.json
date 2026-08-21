@@ -1,0 +1,247 @@
+{
+  "stem": "World_Inequality_Report_2026_p132",
+  "document": "World_Inequality_Report_2026",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "repeat",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 68.0,
+  "usage": {
+    "input_tokens": 5324,
+    "output_tokens": 9421,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n这个页面需要生成一个单面板折线图。图表包含带有 `%` 符号的左侧数值Y轴，其标题是垂直旋转的。底部的X轴为分类轴，且所有类别标签（如 `P0-10` 到 `Billionaires`）倾斜约45度显示。图表中包含五条带有数据点标记（方形、菱形、三角形、圆形）的折线。图例位于整个图表区域的正下方。\n\n在样式上，图表只有水平的虚线网格线。值得注意的是，图表的绘图区背景并非全白，而是从 `P0-10` 到 `P99-99.9` 的区域绘制了一块淡色阴影带，并在该区域上方叠加了一个带边框和指示线的注释说明框（Callout）。\n\n### 定位一个值难在哪\n以美国（United States）在 Billionaires 分组的值为例（约为 9%），难点在于图表完全没有直接打印数据标签。所有数值都必须依靠肉眼将数据点与左侧间隔为 5% 的网格线对齐进行估读，对于 7、9、12.5 这种不落在网格线上的值，机器解析或人工读取都极难达到 5% 的容差精度标准。\n\n### 不确定的\n提示中提供的一系列提取数值（如 12.5、18 等）只能通过视觉比对图表中的转折点来强行分配归属。由于多条线存在交错且多数数据点悬空，无法 100% 确认这些值对应的准确系列与类别。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 7.2.",
+          "title": "The super-rich pay proportionately less than others",
+          "subtitle": "Effective income tax rates by income groups",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 1,
+        "series": 5,
+        "categories": 15,
+        "marks": 75,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Effective income tax rates by income groups and for billionaires (% of pre-tax income)",
+            "low": "0%",
+            "high": "25%",
+            "serves": "all series"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "P0-10",
+            "high": "Billionaires",
+            "serves": "all series"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "United States"
+          },
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Billionaires"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "United States",
+            "Billionaires"
+          ],
+          "value": "9",
+          "value_source": "axis_read",
+          "why_hard": "The value is not printed and must be interpolated between 5% grid lines."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "the legend containing country names sits below the x-axis"
+      },
+      {
+        "key": "rotated_axis_title",
+        "figure_id": "f1",
+        "evidence": "the long y-axis title is written vertically"
+      },
+      {
+        "key": "rotated_x_ticks",
+        "figure_id": "f1",
+        "evidence": "category labels like P0-10 are tilted 45 degrees"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "only horizontal dashed lines at 5% intervals are drawn"
+      },
+      {
+        "key": "shaded_band",
+        "figure_id": "f1",
+        "evidence": "a shaded background covers the categories P0-10 to P99-99.9"
+      },
+      {
+        "key": "annotation_callout",
+        "figure_id": "f1",
+        "evidence": "a boxed text '99% of the population...' points to the shaded area"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "the y-axis title contains (% of pre-tax income)"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "page",
+        "evidence": "Interpretation block and Sources underneath the figure"
+      }
+    ],
+    "new_components": [],
+    "spot_checks": [
+      {
+        "value": "9",
+        "figure_id": "f1",
+        "mark": "the United States point at Billionaires",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "United States",
+          "Billionaires"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "18",
+        "figure_id": "f1",
+        "mark": "the United States point at P99-99.9",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "United States",
+          "P99-99.9"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "15",
+        "figure_id": "f1",
+        "mark": "the France point at P95-99",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "France",
+          "P95-99"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "16",
+        "figure_id": "f1",
+        "mark": "the France point at P99-99.9",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "France",
+          "P99-99.9"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "18",
+        "figure_id": "f1",
+        "mark": "the Netherlands point at P80-90",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Netherlands",
+          "P80-90"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "7",
+        "figure_id": "f1",
+        "mark": "the Brazil point at P90-95",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Brazil",
+          "P90-95"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "12.5",
+        "figure_id": "f1",
+        "mark": "the Spain point at P99.9-99.99",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Spain",
+          "P99.9-99.99"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "15",
+        "figure_id": "f1",
+        "mark": "the Spain point at P95-99",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Spain",
+          "P95-99"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "10",
+        "figure_id": "f1",
+        "mark": "the Spain point at P99.99-P99.999",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Spain",
+          "P99.99-P99.999"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "图表没有任何直接数据标签，且Y轴仅有5%的刻度间距。诸如7或12.5的值未落在网格线上，完全依赖视觉估算，系统无法将其读取至5%容差以内。",
+    "examples": [
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "Figure 7.2. The super-rich pay proportionately less than others\nEffective income tax rates by income groups",
+        "why": "当前的图表生成器无法原生拆分出带编号、主标题和副标题的多层级格式化标题块结构。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "99% of the population are located in the shaded area.",
+        "why": "需要支持在特定分类轴范围上绘制背景阴影带，并能生成带有指示线的浮动文本框来对该阴影带进行标注。"
+      }
+    ]
+  }
+}

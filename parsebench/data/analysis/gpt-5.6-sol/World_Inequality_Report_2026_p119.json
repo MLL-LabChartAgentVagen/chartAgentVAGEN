@@ -1,0 +1,248 @@
+{
+  "stem": "World_Inequality_Report_2026_p119",
+  "document": "World_Inequality_Report_2026",
+  "tags": "untagged",
+  "model": "gpt-5.6-sol",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 120000,
+  "seconds": 57.3,
+  "usage": {
+    "input_tokens": 8830,
+    "output_tokens": 4273,
+    "cache_read_tokens": 2365
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n需绘制单面板分组柱图：4个群体、2个系列、8根柱；0%—90%左轴、横向虚线网格、柱外百分比标签、图下图例。还要复现两行Figure标题、居中的“Emissions shares by groups”，以及图下解释与来源文字。\n\n### 定位一个值难在哪\n例如77%需同时用“Top 10%”和“Private ownership”定位。数值及两个标签均清楚印出；真正障碍是原页没有数据表，需先把柱图转成表。\n\n### 不确定的\nFigure标题按可见换行拆为title与subtitle；“Emissions shares by groups”视为独立绘图区标题。百分号见于刻度和数值标签，没有独立单位行。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 6.2.",
+          "title": "Emissions are highly concentrated among the rich,",
+          "subtitle": "especially when looking at ownership",
+          "unit_text": "%",
+          "placement": "above"
+        },
+        "type": "grouped_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 4,
+        "marks": 8,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "%",
+            "low": "0%",
+            "high": "90%",
+            "serves": "all bars"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "Bottom 50%",
+            "high": "Top 1%",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Bottom 50%"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Consumption"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Top 10%",
+            "Private ownership"
+          ],
+          "value": "77%",
+          "value_source": "printed",
+          "why_hard": ""
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "grouped_bar",
+        "figure_id": "f1",
+        "evidence": "Two bars, Consumption and Private ownership, stand side by side within each group."
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "“Sources and series:” appears in the interpretation paragraph below the plot."
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "The Consumption and Private ownership legend is centered below the category axis."
+      },
+      {
+        "key": "rotated_axis_title",
+        "figure_id": "f1",
+        "evidence": "“Share in total emissions” is rotated vertically along the left axis."
+      },
+      {
+        "key": "value_label_outside",
+        "figure_id": "f1",
+        "evidence": "All eight percentage labels are printed just above their bars."
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "Dashed horizontal grid lines cross the plot; no vertical grid lines are drawn."
+      }
+    ],
+    "new_components": [
+      {
+        "name": "secondary_plot_title",
+        "figure_id": "f1",
+        "evidence": "“Emissions shares by groups” is centered between the figure heading and plot.",
+        "affects": [
+          4
+        ]
+      },
+      {
+        "name": "interpretation_paragraph_below_plot",
+        "figure_id": "f1",
+        "evidence": "“Interpretation.” starts a full-width explanatory paragraph directly below the legend.",
+        "affects": [
+          4
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "10",
+        "figure_id": "f1",
+        "mark": "the Bottom 50% Consumption bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Bottom 50%",
+          "Consumption"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "3",
+        "figure_id": "f1",
+        "mark": "the Bottom 50% Private ownership bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Bottom 50%",
+          "Private ownership"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "43",
+        "figure_id": "f1",
+        "mark": "the Middle 40% Consumption bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Middle 40%",
+          "Consumption"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "20",
+        "figure_id": "f1",
+        "mark": "the Middle 40% Private ownership bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Middle 40%",
+          "Private ownership"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "47",
+        "figure_id": "f1",
+        "mark": "the Top 10% Consumption bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Top 10%",
+          "Consumption"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "77",
+        "figure_id": "f1",
+        "mark": "the Top 10% Private ownership bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Top 10%",
+          "Private ownership"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "15",
+        "figure_id": "f1",
+        "mark": "the Top 1% Consumption bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Top 1%",
+          "Consumption"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "41",
+        "figure_id": "f1",
+        "mark": "the Top 1% Private ownership bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Top 1%",
+          "Private ownership"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      }
+    ],
+    "hardest_step": 1,
+    "hardest_step_why": "八个值虽均逐柱印出，但页面只有4组×2系列柱图而无数据表，故首先卡在步骤1。出不来要什么Figure 6.2.是一张单面板分组柱图：4个群体、2个系列、8根柱；0%—90%左轴、横向虚线网格、柱外百分比标签、图下图例。还需复现两行Figure标题、居中的“Emissions shares by groups”，以及图下解释与来源文字。\n\n### 定位一个值难在哪\n例如77%需同时用“Top 10%”和“Private ownership”定位。数值及两个标签均清楚印出；真正障碍是原页没有数据表，需先把柱图转成表。\n\n### 不确定的\nFigure标题按可见换行拆为title与subtitle；“Emissions shares by groups”视为独立绘图区标题。百分号见于刻度和数值标签，没有独立单位行。",
+    "examples": [
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "Figure 6.2. Emissions are highly concentrated among the rich, especially when looking at ownership",
+        "why": "需分别生成图号、主标题、副标题及其位于绘图区上方的层级。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "All eight percentage labels are drawn just above their bars; ticks run from 0% to 90%.",
+        "why": "需控制柱外数值标签、百分比刻度格式及单位随刻度呈现。"
+      },
+      {
+        "gap": "P3",
+        "figure_id": "f1",
+        "quote": "“Interpretation.” and “Sources and series:” appear below the legend.",
+        "why": "整页导出需保留图、解释段和来源文字的上下关系。"
+      }
+    ]
+  }
+}

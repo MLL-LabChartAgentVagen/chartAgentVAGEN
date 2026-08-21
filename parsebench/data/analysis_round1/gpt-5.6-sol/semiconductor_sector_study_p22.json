@@ -1,0 +1,158 @@
+{
+  "stem": "semiconductor_sector_study_p22",
+  "document": "semiconductor_sector_study",
+  "tags": "need_estimate",
+  "model": "gpt-5.6-sol",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "seconds": 83.6,
+  "usage": {
+    "input_tokens": 7131,
+    "output_tokens": 5474,
+    "cache_read_tokens": 1555
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "本页只有图4.1：单面板同色分段堆叠柱，11个间隔不等的年份按等距槽位排列；纵轴题竖排，GBP见轴题，百万量级由刻度“M”表达，仅有横网格，标题在上、来源在下。约44个分段没有图例、公司标签或数值标签。给定值对应年度柱总高，唯一寻址键是年份；但2010与2016均无可见柱，0只能依给定顺序判断为2010。最大障碍是没有数据表，且20M刻度难以精确读出2、23、189等整数。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 4.1",
+          "title": "Latest Fundraisings",
+          "subtitle": "",
+          "unit_text": "GBP",
+          "placement": "above"
+        },
+        "type": "stacked_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 1,
+        "categories": 11,
+        "marks": 44,
+        "values_printed": "none"
+      }
+    ],
+    "components": [
+      {
+        "key": "stacked_bar",
+        "figure_id": "f1",
+        "evidence": "Each yearly column is divided by thin horizontal separators into company-level segments."
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "“Source: Beauhurst (all latest fundraisings, 2007 - 2023)” appears below the plot."
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "The y-axis title ends “(GBP)”; tick labels run from “0M” to “220M”."
+      },
+      {
+        "key": "rotated_axis_title",
+        "figure_id": "f1",
+        "evidence": "“Fundraisings - Amount received by the company in its latest fundraising (GBP)” is rotated along the left axis."
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "Only horizontal grid rules cross the plot; no vertical grid rules are drawn."
+      }
+    ],
+    "new_components": [
+      {
+        "name": "unlabeled_monochrome_stack_segments",
+        "figure_id": "f1",
+        "evidence": "All segments use teal fill and thin separators; no company labels or legend identify them.",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "name": "categorical_spacing_for_irregular_years",
+        "figure_id": "f1",
+        "evidence": "Years “2007, 2010, 2013, 2016, 2017” occupy equal-width slots despite unequal intervals.",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "name": "unit_split_between_axis_title_and_ticks",
+        "figure_id": "f1",
+        "evidence": "The axis title supplies “(GBP)” while tick labels supply “M”, including “20M” and “220M”.",
+        "affects": [
+          2,
+          4
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "2",
+        "figure_id": "f1",
+        "mark": "the 2007 yearly stacked-bar total",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2007"
+        ]
+      },
+      {
+        "value": "0",
+        "figure_id": "f1",
+        "mark": "the 2010 total, represented by no visible bar above the baseline",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2010"
+        ]
+      },
+      {
+        "value": "23",
+        "figure_id": "f1",
+        "mark": "the 2017 yearly stacked-bar total",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2017"
+        ]
+      },
+      {
+        "value": "189",
+        "figure_id": "f1",
+        "mark": "the 2020 yearly stacked-bar total",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2020"
+        ]
+      },
+      {
+        "value": "22",
+        "figure_id": "f1",
+        "mark": "the 2021 yearly stacked-bar total",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2021"
+        ]
+      },
+      {
+        "value": "84",
+        "figure_id": "f1",
+        "mark": "the 2022 yearly stacked-bar total",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2022"
+        ]
+      },
+      {
+        "value": "218",
+        "figure_id": "f1",
+        "mark": "the 2023 yearly stacked-bar total",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2023"
+        ]
+      }
+    ],
+    "hardest_step": 1
+  }
+}

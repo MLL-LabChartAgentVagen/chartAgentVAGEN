@@ -1,0 +1,354 @@
+{
+  "stem": "World_Inequality_Report_2026_p78",
+  "document": "World_Inequality_Report_2026",
+  "tags": "3d_chart+need_estimate",
+  "model": "claude-opus-5",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 80.5,
+  "usage": {
+    "input_tokens": 13965,
+    "output_tokens": 6167,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "## 画出来要什么\n一个编号图 Figure 3.3，三联面板折线图：面板标题连成一句公式「Net national wealth =」「Domestic capital +」「Net foreign assets」；8 条区域折线×约31年×3 面板，接近 750 个点。左两面板刻度 0%–750%，第三面板 0%–100%–200% 且线跌到 0% 以下（点线零参考线），即每面板各自量程与负值区。旋转的共享轴标题「Wealth as a % of national income」只画一次，服务三个面板；图例 8 项两行置于三面板下方；下方是 Interpretation./Notes./Sources and series: 的粗体引导注释块。\n\n## 定位一个值难在哪\n以 -80 为例：它在「Net foreign assets」面板里 North America & Oceania 曲线约 2022 年的位置，但该面板 0% 以下完全没有刻度标签，最近标签间距 100%，5% 容差只有 ±4；且需要「面板名 + 图例名 + 年份」三层键，而 x 轴只印 1995/2005/2015/2025，年份并非逐点标注。\n\n## 不确定的\n负值区实际下限（是否 -100%）看不到；线条在 400–500% 区间八色重叠，具体归属只能靠颜色猜；625、430 等值我只能给近似归属，无法确认属于哪条线哪一年。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 3.3.",
+          "title": "Domestic capital remains the foundation of national wealth everywhere",
+          "subtitle": "Wealth composition across regions, 1995–2025",
+          "unit_text": "Wealth as a % of national income",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 3,
+        "series": 8,
+        "categories": 31,
+        "marks": 744,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Wealth as a % of national income",
+            "low": "0%",
+            "high": "750%",
+            "serves": "all lines in the two left panels"
+          },
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "0%",
+            "high": "200%",
+            "serves": "only the Net foreign assets panel lines"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "1995",
+            "high": "2025",
+            "serves": "all lines, ticks repeated under each panel"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "panel",
+            "label_source": "panel_title",
+            "example": "Net foreign assets"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "North America & Oceania"
+          },
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2015"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Net foreign assets",
+            "North America & Oceania",
+            "2025"
+          ],
+          "value": "about -80%",
+          "value_source": "axis_read",
+          "why_hard": "No tick labels below 0%; nearest labels 100% apart; year not ticked; eight lines overlap"
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "reference_line",
+        "figure_id": "f1",
+        "evidence": "a black dotted horizontal rule at 0% across the Net foreign assets panel"
+      },
+      {
+        "key": "negative_values",
+        "figure_id": "f1",
+        "evidence": "several lines in the third panel run below the 0% dotted line"
+      },
+      {
+        "key": "shared_legend",
+        "figure_id": "f1",
+        "evidence": "one 8-entry legend below all three panels: 'East Asia ... Sub–Saharan Africa'"
+      },
+      {
+        "key": "small_multiples_4",
+        "figure_id": "f1",
+        "evidence": "three line panels of the same form side by side under one figure number"
+      },
+      {
+        "key": "panel_title_per_panel",
+        "figure_id": "f1",
+        "evidence": "'Net national wealth =', 'Domestic capital +', 'Net foreign assets' above each panel"
+      },
+      {
+        "key": "per_panel_axis_range",
+        "figure_id": "f1",
+        "evidence": "left panels tick 0%,250%,500%,750%; right panel ticks 0%,100%,200%"
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "two legend rows sit under the panels, above the Interpretation block"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "'Sources and series: Bauluz et al. (2025) and wir2026.wid.world/methodology.'"
+      },
+      {
+        "key": "rotated_axis_title",
+        "figure_id": "f1",
+        "evidence": "'Wealth as a % of national income' set vertically at the far left"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "scale word only in rotated axis title; ticks read bare '250%','500%'"
+      },
+      {
+        "key": "sparse_time_ticks",
+        "figure_id": "f1",
+        "evidence": "yearly lines but ticks only at 1995, 2005, 2015, 2025"
+      },
+      {
+        "key": "dense_marks_100plus",
+        "figure_id": "f1",
+        "evidence": "8 region lines over ~31 years in each of 3 panels"
+      },
+      {
+        "key": "multi_figure_page",
+        "figure_id": "page",
+        "evidence": "only Figure 3.3 is drawn; body text names Figure 3.2 and Figure 3.5 elsewhere"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "equation_across_panel_titles",
+        "figure_id": "f1",
+        "evidence": "panel titles read as one identity: 'Net national wealth =' 'Domestic capital +' 'Net foreign assets'",
+        "affects": [
+          3,
+          4
+        ]
+      },
+      {
+        "name": "shared_axis_title_across_panels",
+        "figure_id": "f1",
+        "evidence": "one rotated 'Wealth as a % of national income' at far left governs all three panels",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "name": "unlabelled_negative_axis_region",
+        "figure_id": "f1",
+        "evidence": "third panel lines fall well below 0% but no tick label appears under 0%",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "name": "bold_runin_note_labels",
+        "figure_id": "f1",
+        "evidence": "'Interpretation.' ... 'Notes.' ... 'Sources and series:' bold run-in labels inside one note paragraph",
+        "affects": [
+          4
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "625",
+        "figure_id": "f1",
+        "mark": "Europe line near 2023 in the 'Net national wealth =' panel",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Net national wealth =",
+          "Europe",
+          "2025"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "360",
+        "figure_id": "f1",
+        "mark": "Latin America line around 1995 in the 'Net national wealth =' panel",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Net national wealth =",
+          "Latin America",
+          "1995"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "600",
+        "figure_id": "f1",
+        "mark": "East Asia line near 1997 in the 'Domestic capital +' panel",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Domestic capital +",
+          "East Asia",
+          "1995"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "900",
+        "figure_id": "f1",
+        "mark": "East Asia line at the 2025 end of the 'Net national wealth =' panel, above the top tick",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Net national wealth =",
+          "East Asia",
+          "2025"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "380",
+        "figure_id": "f1",
+        "mark": "Sub–Saharan Africa line in the mid-2000s, 'Net national wealth =' panel",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Net national wealth =",
+          "Sub–Saharan Africa",
+          "2005"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "430",
+        "figure_id": "f1",
+        "mark": "a mid-cluster line (Latin America / MENA band) around 2015, 'Domestic capital +' panel",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Domestic capital +",
+          "Latin America",
+          "2015"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "30",
+        "figure_id": "f1",
+        "mark": "a positive net foreign asset line (Europe or MENA) above 0% in the third panel",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Net foreign assets",
+          "Europe",
+          "2025"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "70",
+        "figure_id": "f1",
+        "mark": "East Asia line near its 2025 high in the 'Net foreign assets' panel",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Net foreign assets",
+          "East Asia",
+          "2025"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-80",
+        "figure_id": "f1",
+        "mark": "North America & Oceania line at its lowest, near 2023, 'Net foreign assets' panel",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Net foreign assets",
+          "North America & Oceania",
+          "2025"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-60",
+        "figure_id": "f1",
+        "mark": "Sub–Saharan Africa line below 0% around 2020 in the 'Net foreign assets' panel",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Net foreign assets",
+          "Sub–Saharan Africa",
+          "2015"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "八线重叠、刻度间距250%（第三面板100%且负区无标签），读 -80 或 625 远超±5%容差。",
+    "examples": [
+      {
+        "gap": "P2",
+        "figure_id": "f1",
+        "quote": "Panel titles 'Net national wealth =', 'Domestic capital +', 'Net foreign assets' over three line panels sharing one legend",
+        "why": "同一区域同一年在三面板有三个不同值，键必须含面板名，否则无法唯一定位。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "'Figure 3.3.' + title, then 'Wealth composition across regions, 1995–2025', with rotated 'Wealth as a % of national income'",
+        "why": "编号、标题、副标题与单位分处三层且单位在旋转轴标题上，现有流水线无法分字段生成。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "Third panel: dotted zero rule at 0%, lines running below it, ticks only 0%, 100%, 200%",
+        "why": "负值区无刻度标签且零线为点线，需要负值/零线样式与刻度格式的独立控制。"
+      },
+      {
+        "gap": "P1",
+        "figure_id": "f1",
+        "quote": "Eight coloured lines cross repeatedly between 400% and 550% in both left panels",
+        "why": "密集重叠使可读精度按点变化，布尔式可读判定无法表达此类图。"
+      }
+    ]
+  }
+}

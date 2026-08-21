@@ -1,0 +1,278 @@
+{
+  "stem": "The_State_of_UK_Competition_Report_2024_p28",
+  "document": "The_State_of_UK_Competition_Report_2024",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "repeat",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 78.8,
+  "usage": {
+    "input_tokens": 5349,
+    "output_tokens": 10837,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "**画出来要什么**\n这页有一个单面板折线图。生成器需要支持绘制多条折线（实线和粗细不同的虚线混用），且无独立图例，系列名称（如“Top 5%”、“Mean”）作为行内标签直接放置在折线末端。Y轴顶端带有一个位于上方的轴标题“Markup”，X轴刻度稀疏（每4年一个）且整体标题“Year”居中在刻度下方。图表中最特殊的是包含两个跨越多年的垂直灰色阴影带，且内部直接叠加了多行居中文本（“Great Financial Crisis”和“Covid-19 Pandemic”）。\n\n**定位一个值难在哪**\n以值 `2.10` 为例（约在2016年Top 5%线上）。图表中没有任何直接标出的数值，所有数据必须通过目测读取。Y轴刻度间距达到0.5，X轴刻度每4年才显示一次且无垂直网格线辅助，导致在非刻度年份读取数值的误差极大，绝对无法满足5%的容差限制。同时，需要定位该值的年份（“2016”）并未在轴上印出，导致数据表的键值无法与图表文本逐字匹配。\n\n**不确定的**\n非刻度年份的具体数值只能粗略估算。此外，由于大部分虚线的颜色和线型完全相同（浅蓝色虚线），如果不是折线末端有直接的文字标签，读者将很难追踪除了Mean和Top 5%以外的其他具体分位数。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 10",
+          "title": "Markups have risen more at the top of the distribution than elsewhere",
+          "subtitle": "Evolution of average markups in different quantiles of the markup distribution. Data from Annual Respondents Database X (ARDx) 1997-2020 and Annual Business Survey (ABS) 2021. GB only",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 1,
+        "series": 7,
+        "categories": 25,
+        "marks": 175,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Markup",
+            "low": ".5",
+            "high": "2.5",
+            "serves": "all lines"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "Year",
+            "low": "1997",
+            "high": "2021",
+            "serves": "all lines"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "series",
+            "label_source": "inline_label",
+            "example": "Top 5%"
+          },
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "1997"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Top 5%",
+            "1997"
+          ],
+          "value": "1.9",
+          "value_source": "axis_read",
+          "why_hard": "Reading an exact value is difficult due to sparse time ticks and wide 0.5 intervals on the Y-axis."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "sparse_time_ticks",
+        "figure_id": "f1",
+        "evidence": "X-axis ticks are drawn only every four years: 1997, 2001, 2005, etc."
+      },
+      {
+        "key": "inline_series_labels",
+        "figure_id": "f1",
+        "evidence": "Series names like 'Top 5%' and 'Mean' are placed directly at the right end of the lines."
+      },
+      {
+        "key": "shaded_band",
+        "figure_id": "f1",
+        "evidence": "Grey vertical bands represent 'Great Financial Crisis' and 'Covid-19 Pandemic'."
+      },
+      {
+        "key": "dashed_line_series",
+        "figure_id": "f1",
+        "evidence": "Most series, such as Top 5% and Bottom 5%, are drawn as dashed lines while Mean is solid."
+      },
+      {
+        "key": "axis_title_above_axis",
+        "figure_id": "f1",
+        "evidence": "The label 'Markup' is positioned above the top tick of the y-axis."
+      },
+      {
+        "key": "axis_title_below_plot",
+        "figure_id": "f1",
+        "evidence": "The label 'Year' is centered below the x-axis tick labels."
+      },
+      {
+        "key": "axis_starts_above_zero",
+        "figure_id": "f1",
+        "evidence": "The y-axis begins at .5 instead of 0."
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "Small print below the chart starting with 'Markups are calculated following our baseline approach...'."
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "The plot uses horizontal grid lines at .5 intervals with no vertical grid lines."
+      },
+      {
+        "key": "dense_marks_100plus",
+        "figure_id": "f1",
+        "evidence": "7 series over 25 years of data points result in around 175 marks."
+      }
+    ],
+    "new_components": [
+      {
+        "name": "in_plot_text_label",
+        "figure_id": "f1",
+        "evidence": "Text like 'Great Financial Crisis' is placed directly over shaded background bands without a box or leader line.",
+        "affects": [
+          4
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "1.85",
+        "figure_id": "f1",
+        "mark": "the Top 5% line in approximately 1999",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Top 5%",
+          "1999"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "0.58",
+        "figure_id": "f1",
+        "mark": "the Bottom 5% line in 1997",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Bottom 5%",
+          "1997"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "1.12",
+        "figure_id": "f1",
+        "mark": "the Mean line in 1997",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Mean",
+          "1997"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "1.52",
+        "figure_id": "f1",
+        "mark": "the Top 10% line in approximately 2006",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Top 10%",
+          "2006"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "1.50",
+        "figure_id": "f1",
+        "mark": "the Top 10% line in approximately 2010",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Top 10%",
+          "2010"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "1.08",
+        "figure_id": "f1",
+        "mark": "the Median line in 2005",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Median",
+          "2005"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "1.30",
+        "figure_id": "f1",
+        "mark": "the Top 25% line in approximately 2008",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Top 25%",
+          "2008"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "0.82",
+        "figure_id": "f1",
+        "mark": "the Bottom 25% line in approximately 2009",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Bottom 25%",
+          "2009"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "2.10",
+        "figure_id": "f1",
+        "mark": "the Top 5% line in approximately 2016",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Top 5%",
+          "2016"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "0.60",
+        "figure_id": "f1",
+        "mark": "the Bottom 5% line in 2013",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Bottom 5%",
+          "2013"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "所有数值均未标出且必须通过目测读取。Y轴刻度间距大（0.5），X轴刻度稀疏（每4年），如2.10这样的值根本无法精确到5%的容差范围。",
+    "examples": [
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "Figure 10: Markups have... and the long subtitle Evolution of average markups...",
+        "why": "当前系统无法将标题正确拆分为编号、主标题和副标题，也无法自动处理长文本副标题的多行排版布局。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "Markup positioned above the Y-axis top tick, Year centered below the X-axis",
+        "why": "系统需增加对轴标题和单位放置位置的更细粒度控制，以支持将其置于Y轴正上方和X轴正下方。"
+      }
+    ]
+  }
+}

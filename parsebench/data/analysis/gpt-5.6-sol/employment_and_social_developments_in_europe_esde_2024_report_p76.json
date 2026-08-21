@@ -1,0 +1,349 @@
+{
+  "stem": "employment_and_social_developments_in_europe_esde_2024_report_p76",
+  "document": "employment_and_social_developments_in_europe_esde_2024_report",
+  "tags": "need_estimate",
+  "model": "gpt-5.6-sol",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 120000,
+  "seconds": 117.1,
+  "usage": {
+    "input_tokens": 8852,
+    "output_tokens": 7270,
+    "cache_read_tokens": 2365
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "**画出来要什么**\n\n页面含两个独立图。Chart 3.4 是11年、3系列的非满额百分比堆叠柱，百分号直接写在刻度中。Chart 3.5 将柱和无点标记折线叠加，并配置470–500左轴与0–9右轴。两图均需标题分层、水平虚线网格、图下图例、注释、来源和下载链接。\n\n**定位一个值难在哪**\n\nChart 3.4 的2012年“Tertiary”值17.5未印出；其5%容差仅0.875个百分点，而纵轴每格20个百分点，还须读取堆叠段上下边界。\n\n**不确定的**\n\nChart 3.5 的折线没有点标记，7只能按2012位置和右轴估读。给定值1未见对应数据标记；页面仅在注释中出现“1 000”。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Chart 3.4",
+          "title": "School education receives the largest share of public expenditure on education",
+          "subtitle": "Weighted average EU share of government expenditure on education, by education level, 2012-2022",
+          "unit_text": "%",
+          "placement": "above"
+        },
+        "type": "stacked_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 3,
+        "categories": 11,
+        "marks": 33,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "%",
+            "low": "0%",
+            "high": "100%",
+            "serves": "all stacked segments"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "2012",
+            "high": "2022",
+            "serves": "all yearly stacks"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2012"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Pre–primary and primary"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "2012",
+            "Tertiary"
+          ],
+          "value": "17.5",
+          "value_source": "axis_read",
+          "why_hard": "Twenty-point ticks and two stack boundaries make 5% precision difficult."
+        }
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "Chart 3.5",
+          "title": "Basic skills and efficiency of cumulative expenditure on education per student decreased post–COVID-19 pandemic",
+          "subtitle": "Average EU PISA score across reading, mathematics and science, and PISA EU efficiency score, 2012-2022",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "compound",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 4,
+        "marks": 8,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "470",
+            "high": "500",
+            "serves": "only the blue bars"
+          },
+          {
+            "side": "right",
+            "role": "value",
+            "unit_text": "",
+            "low": "0",
+            "high": "9",
+            "serves": "only the green line"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "2012",
+            "high": "2022",
+            "serves": "bars and line"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2012"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "PISA efficiency score (right axis)"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "2012",
+            "PISA efficiency score (right axis)"
+          ],
+          "value": "7",
+          "value_source": "axis_read",
+          "why_hard": "The unmarked line uses a second axis with three-unit tick spacing."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "multi_figure_page",
+        "figure_id": "page",
+        "evidence": "“Chart 3.4” and “Chart 3.5” head separate charts."
+      },
+      {
+        "key": "stacked_bar",
+        "figure_id": "f1",
+        "evidence": "Each yearly bar contains blue, green, and yellow vertical segments."
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "The three education-level legend entries sit under the plot."
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "Dashed horizontal rules cross the panel; no vertical grid is drawn."
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "“Note:” and “Source: Eurostat [gov_10a_exp].” appear below Chart 3.4."
+      },
+      {
+        "key": "data_link_below_figure",
+        "figure_id": "f1",
+        "evidence": "“Click here to download chart.” is printed beneath the source."
+      },
+      {
+        "key": "dual_axis",
+        "figure_id": "f2",
+        "evidence": "Left ticks run 470–500 while right ticks run 0–9."
+      },
+      {
+        "key": "mixed_marks",
+        "figure_id": "f2",
+        "evidence": "Four blue bars and one green line occupy the same panel."
+      },
+      {
+        "key": "axis_starts_above_zero",
+        "figure_id": "f2",
+        "evidence": "The left bar axis begins at 470 without a break glyph."
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f2",
+        "evidence": "Both series labels are centred beneath the plot."
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f2",
+        "evidence": "Dashed horizontal grid lines are drawn at left-axis ticks only."
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f2",
+        "evidence": "“Note:” and “Source: OECD PISA data for 2012, 2015, 2018, 2022” appear below."
+      },
+      {
+        "key": "data_link_below_figure",
+        "figure_id": "f2",
+        "evidence": "“Click here to download chart.” appears under the source."
+      }
+    ],
+    "new_components": [
+      {
+        "name": "percent_formatted_value_ticks",
+        "figure_id": "f1",
+        "evidence": "The value ticks read “0%, 20%, 40%, 60%, 80%, 100%” without an axis title.",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "name": "line_without_point_markers",
+        "figure_id": "f2",
+        "evidence": "The green line connects four years without visible point symbols.",
+        "affects": [
+          2
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "31.5",
+        "figure_id": "f1",
+        "mark": "the 2012 Pre–primary and primary segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2012",
+          "Pre–primary and primary"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "39.0",
+        "figure_id": "f1",
+        "mark": "the 2012 Secondary segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2012",
+          "Secondary"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "17.5",
+        "figure_id": "f1",
+        "mark": "the 2012 Tertiary segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2012",
+          "Tertiary"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "34.0",
+        "figure_id": "f1",
+        "mark": "the 2022 Pre–primary and primary segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2022",
+          "Pre–primary and primary"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "37.0",
+        "figure_id": "f1",
+        "mark": "the 2022 Secondary segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2022",
+          "Secondary"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "17.0",
+        "figure_id": "f1",
+        "mark": "the 2022 Tertiary segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2022",
+          "Tertiary"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "492",
+        "figure_id": "f2",
+        "mark": "the 2012 PISA average score bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2012",
+          "PISA average score (left axis)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "474",
+        "figure_id": "f2",
+        "mark": "the 2022 PISA average score bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2022",
+          "PISA average score (left axis)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "7",
+        "figure_id": "f2",
+        "mark": "the 2012 PISA efficiency score line position",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2012",
+          "PISA efficiency score (right axis)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "1",
+        "figure_id": "not_found",
+        "mark": "No plotted mark has value 1; only “1 000” occurs in the note.",
+        "printed_on_figure": false,
+        "addressing_keys": [],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "17.5的5%仅0.875，而纵轴每格20个百分点；堆叠边界又无数值标签，难以读准。 absolute bare minimum sustainable. By adopting a higher # Model Set Context the user has shown a preference for non-redundant answers. However, when dealing with complex technical requests, provide a complete answer even if longer. They also appreciate clear conceptual explanations. ",
+    "examples": []
+  }
+}

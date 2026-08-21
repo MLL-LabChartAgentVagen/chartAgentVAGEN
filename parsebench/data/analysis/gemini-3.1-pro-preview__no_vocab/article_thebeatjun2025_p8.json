@@ -1,0 +1,293 @@
+{
+  "stem": "article_thebeatjun2025_p8",
+  "document": "article_thebeatjun2025",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "no_vocab",
+  "effort": "high",
+  "dpi": 150,
+  "seconds": 67.9,
+  "usage": {
+    "input_tokens": 3169,
+    "output_tokens": 8182,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n\n生成器需要构建一个包含顶部机构logo、主题标签（TOP THEMES）及正文页标题的完整页面结构。图表本身是一个双折线图，没有背景网格线。X轴放置在底部，标签为“Dec 2022”等时间节点；Y轴放置在左侧，刻度从0%到8%，直接带有百分号。图例在底部水平居中排列，通过深蓝和浅蓝色块区分两个长系列的名称。最关键的是，图表内部必须能够绘制倾斜跟随折线走势的同色箭头，并附带相关的文本注释（如“... crowding out the private sector”）。\n\n### 定位一个值难在哪\n\n以查找Sep 2024的Private Sector数值（0.85%）为例。定位它的维度非常清晰：通过图例匹配颜色，通过X轴找到时间点即可。但读取这个值极度困难。由于没有任何数据标签打印在折线上，读者只能通过数据点相对于左侧Y轴的位置进行目测估算。Y轴每格代表1%，在没有横向参考网格线的情况下，用肉眼判断出0.85%并保证误差在5%（容错区间极小）内是完全不可能的，这将导致提取在精确度验证步骤失败。\n\n### 不确定的\n\n图表中带有箭头的悬浮注释文本的确切锚定方式。不确定它们是绑定在特定的时间戳数据点上（随数据变化），还是仅依靠绝对坐标硬编码在绘图区中的固定位置。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "Public Sector Employment Has Exploded Since 2022, Resulting in a Crowding Out of the Private Sector",
+          "subtitle": "Cumulative growth in total payrolls since 12/31/2022",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 10,
+        "marks": 20,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "0%",
+            "high": "8%",
+            "serves": "all lines"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "Dec 2022",
+            "high": "Mar 2025",
+            "serves": "all lines"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Private Sector Total Payrolls (ex Govt, Education, Health Svcs)"
+          },
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "Jun 2023"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Private Sector Total Payrolls (ex Govt, Education, Health Svcs)",
+            "Sep 2024"
+          ],
+          "value": "0.85%",
+          "value_source": "axis_read",
+          "why_hard": "No markers or printed values, requiring extreme precision interpolation against the distant 1% ticks."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "page_header",
+        "figure_id": "page",
+        "evidence": "Morgan Stanley logo and TOP THEMES text at the top",
+        "affects": []
+      },
+      {
+        "key": "page_title_block",
+        "figure_id": "page",
+        "evidence": "large bold heading and descriptive paragraph above the chart",
+        "affects": [
+          4
+        ]
+      },
+      {
+        "key": "chart_title",
+        "figure_id": "f1",
+        "evidence": "Public Sector Employment Has Exploded Since 2022...",
+        "affects": [
+          4
+        ]
+      },
+      {
+        "key": "chart_subtitle",
+        "figure_id": "f1",
+        "evidence": "Cumulative growth in total payrolls since 12/31/2022",
+        "affects": [
+          4
+        ]
+      },
+      {
+        "key": "line_series",
+        "figure_id": "f1",
+        "evidence": "two solid lines plotted across the time axis",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "key": "y_axis",
+        "figure_id": "f1",
+        "evidence": "left axis reading 0% to 8%",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "key": "x_axis_time",
+        "figure_id": "f1",
+        "evidence": "bottom axis reading Dec 2022 to Mar 2025",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "legend_bottom",
+        "figure_id": "f1",
+        "evidence": "two series names with colored lines below the x-axis",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "source_note",
+        "figure_id": "page",
+        "evidence": "Source: Bloomberg, MSIM. As of April 30, 2025...",
+        "affects": []
+      }
+    ],
+    "new_components": [
+      {
+        "name": "trend_annotation_arrow",
+        "figure_id": "f1",
+        "evidence": "colored arrows and text placed along the lines",
+        "affects": []
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "0.3%",
+        "figure_id": "f1",
+        "mark": "the Jun 2023 point on the dark blue line",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Private Sector Total Payrolls (ex Govt, Education, Health Svcs)",
+          "Jun 2023"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "1.5%",
+        "figure_id": "f1",
+        "mark": "the Jun 2023 point on the light blue line",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Public Sector Total Payrolls (Gov't, Education, Health Svcs)",
+          "Jun 2023"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "0.6%",
+        "figure_id": "f1",
+        "mark": "the Sep 2023 point on the dark blue line",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Private Sector Total Payrolls (ex Govt, Education, Health Svcs)",
+          "Sep 2023"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "3%",
+        "figure_id": "f1",
+        "mark": "the Sep 2023 point on the light blue line",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Public Sector Total Payrolls (Gov't, Education, Health Svcs)",
+          "Sep 2023"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "0.8%",
+        "figure_id": "f1",
+        "mark": "the Jun 2024 point on the dark blue line",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Private Sector Total Payrolls (ex Govt, Education, Health Svcs)",
+          "Jun 2024"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "6.2%",
+        "figure_id": "f1",
+        "mark": "the Jun 2024 point on the light blue line",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Public Sector Total Payrolls (Gov't, Education, Health Svcs)",
+          "Jun 2024"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "0.85%",
+        "figure_id": "f1",
+        "mark": "the Sep 2024 point on the dark blue line",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Private Sector Total Payrolls (ex Govt, Education, Health Svcs)",
+          "Sep 2024"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "6.8%",
+        "figure_id": "f1",
+        "mark": "the Sep 2024 point on the light blue line",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Public Sector Total Payrolls (Gov't, Education, Health Svcs)",
+          "Sep 2024"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "1.5%",
+        "figure_id": "f1",
+        "mark": "the Mar 2025 point on the dark blue line",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Private Sector Total Payrolls (ex Govt, Education, Health Svcs)",
+          "Mar 2025"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "7.8%",
+        "figure_id": "f1",
+        "mark": "the Mar 2025 point on the light blue line",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Public Sector Total Payrolls (Gov't, Education, Health Svcs)",
+          "Mar 2025"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "图表没有任何数据标签，必须依靠1%间距的Y轴目测。要将Sep 2024的值精确读为0.85%并保持5%以内误差完全超出了视觉或模型估算的极限。",
+    "examples": [
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "Public Sector Employment Has Exploded Since 2022, Resulting in a Crowding...",
+        "why": "图表拥有专属的标题与副标题，需要作为独立的字段结构化，而不是与页面级的主标题混合提取。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "large arrows matching the line colors tracking their slopes with text",
+        "why": "生成器目前缺乏在图表绘图区内绘制跟随数据点趋势倾斜的带箭头自定义文本注释的能力。"
+      }
+    ]
+  }
+}

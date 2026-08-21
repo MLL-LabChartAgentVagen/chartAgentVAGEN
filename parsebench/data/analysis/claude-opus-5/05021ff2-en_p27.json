@@ -1,0 +1,284 @@
+{
+  "stem": "05021ff2-en_p27",
+  "document": "05021ff2-en",
+  "tags": "need_estimate",
+  "model": "claude-opus-5",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 69.2,
+  "usage": {
+    "input_tokens": 13828,
+    "output_tokens": 5277,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "**画出来要什么**\n\n一张单面板折线图：三条序列(All / OECD / Non-OECD)画在同一左侧数值轴上，轴刻度为 0、20…200，纯数字、无单位词；数量含义只能从蓝色标题行「Figure 3.1. Total number of market studies conducted, 2015-2024」回推。两条序列用密集圆点线、一条用粗实线，线型本身承担序列身份。X 轴是 8 个滚动三年窗口 2015/2017…2022/2024，标签旋转约 45°。图例位于绘图区下方一行；只有横向网格线；图下两行小字 Note/Source。图上不印任何数值。\n\n**定位一个值难在哪**\n\n以 175 为例：All 线在 2016/2018 到 2021/2023 之间长期在 172–180 的平台上摆动，网格线间距为 20，容差 5% 只有 ±8.75，几乎无法判定 175 属于哪一个刻度槽；而且点线由许多小圆点组成，落在刻度之间的圆点并不对应某个类目。相比之下 120（OECD 在 2020/2022 的尖峰）反而好读。定位一个值需要「序列名 + 三年窗口」两个标签，且窗口写法非常规。\n\n**不确定的**\n\n175 到底属于 2016/2018 还是更靠后的年份；OECD 的 112 我判为 2019/2021，但也可能是 2021/2023 的下行段。点线的真实数据点数无法数清，我按每序列 8 点计。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 3.1.",
+          "title": "Total number of market studies conducted, 2015-2024",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 1,
+        "series": 3,
+        "categories": 8,
+        "marks": 24,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "0",
+            "high": "200",
+            "serves": "all three lines: All, OECD, Non-OECD"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "2015/2017",
+            "high": "2022/2024",
+            "serves": "all three lines"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Non-OECD"
+          },
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2020/2022"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "All",
+            "2016/2018"
+          ],
+          "value": "≈175",
+          "value_source": "axis_read",
+          "why_hard": "Dotted line sits on a flat 172-180 plateau; gridlines every 20; no printed values"
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "\"Note: A three-year average is used to smooth out volatility...\" and \"Source: OECD CompStats database.\""
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "a row \"All   OECD   Non-OECD\" with line swatches sits under the x tick labels"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "faint horizontal rules at 20, 40 ... 200; no vertical rules in the plot"
+      },
+      {
+        "key": "rotated_x_ticks",
+        "figure_id": "f1",
+        "evidence": "tick text \"2015/2017\" ... \"2022/2024\" is turned about 45 degrees"
+      },
+      {
+        "key": "nonstandard_time_ticks",
+        "figure_id": "f1",
+        "evidence": "time written as \"2015/2017\", \"2016/2018\", three-year windows rather than single years"
+      },
+      {
+        "key": "dashed_line_series",
+        "figure_id": "f1",
+        "evidence": "All and Non-OECD drawn as dotted lines, OECD as a thick solid line; legend swatches match"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "left axis shows bare 0-200; the word \"number of market studies\" appears only in the title"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "rolling_window_time_bins",
+        "figure_id": "f1",
+        "evidence": "x ticks are overlapping three-year averages 2015/2017 ... 2022/2024, explained in the note",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "name": "dotted_marker_line",
+        "figure_id": "f1",
+        "evidence": "All and Non-OECD rendered as sequences of round dots, so individual data points are not locatable",
+        "affects": [
+          2,
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "165",
+        "figure_id": "f1",
+        "mark": "the All series at the first x slot",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "All",
+          "2015/2017"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "175",
+        "figure_id": "f1",
+        "mark": "the All series on its plateau, most likely 2016/2018",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "All",
+          "2016/2018"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "158",
+        "figure_id": "f1",
+        "mark": "the All series at the last x slot",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "All",
+          "2022/2024"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "90",
+        "figure_id": "f1",
+        "mark": "the OECD solid line at the first x slot",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "OECD",
+          "2015/2017"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "112",
+        "figure_id": "f1",
+        "mark": "the OECD solid line rising toward its peak, read at 2019/2021",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "OECD",
+          "2019/2021"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "120",
+        "figure_id": "f1",
+        "mark": "the OECD solid line at its peak",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "OECD",
+          "2020/2022"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "95",
+        "figure_id": "f1",
+        "mark": "the OECD solid line at the last x slot",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "OECD",
+          "2022/2024"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "78",
+        "figure_id": "f1",
+        "mark": "the Non-OECD dotted line at the first x slot",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Non-OECD",
+          "2015/2017"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "58",
+        "figure_id": "f1",
+        "mark": "the Non-OECD dotted line at its trough",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Non-OECD",
+          "2020/2022"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "65",
+        "figure_id": "f1",
+        "mark": "the Non-OECD dotted line at the last x slot",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Non-OECD",
+          "2022/2024"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "图上无数值，网格每20；58 的5%容差仅±2.9，175 位于172-180平台，点线难以对准刻度槽。",
+    "examples": [
+      {
+        "gap": "P1",
+        "figure_id": "f1",
+        "quote": "the left axis reads 0, 20, 40 ... 200 and no number is printed on any of the three lines",
+        "why": "点线在20间距网格上读数，58、175 的±5%容差远小于可达精度，需按标记给出精度而非布尔可读。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "x tick labels read 2015/2017, 2016/2018 ... 2022/2024, rotated about 45 degrees",
+        "why": "当前流水线不生成滚动三年窗口式旋转刻度文本，时间轴格式需成为可控风格维度。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "Figure 3.1. Total number of market studies conducted, 2015-2024",
+        "why": "编号、标题与年份区间同在一行蓝字，单位词隐含其中，标题需拆成独立字段。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "All and Non-OECD are drawn as sequences of round dots; OECD is a thick solid navy line",
+        "why": "线型(点线/实线)承担序列身份，需要把线型作为可生成的编码维度并进入键。"
+      }
+    ]
+  }
+}

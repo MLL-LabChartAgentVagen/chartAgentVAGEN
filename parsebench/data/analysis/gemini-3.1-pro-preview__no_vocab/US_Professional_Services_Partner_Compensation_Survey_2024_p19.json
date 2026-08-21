@@ -1,0 +1,226 @@
+{
+  "stem": "US_Professional_Services_Partner_Compensation_Survey_2024_p19",
+  "document": "US_Professional_Services_Partner_Compensation_Survey_2024",
+  "tags": "untagged",
+  "model": "gemini-3.1-pro-preview",
+  "control": "no_vocab",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 54.9,
+  "usage": {
+    "input_tokens": 3162,
+    "output_tokens": 7765,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n\n此页面包含左侧的一段正文和右侧的一个分组条形图。图表为水平走向，分为9个类别，每个类别下有四个系列的紧密分组（无间距）。图表没有绘制数值坐标轴和网格线，全部依靠数据标签传达数值。分类标签位于图表左侧，各个类别组之间用水平细实线进行视觉分隔。\n\n所有数值直接打印在条形图的末端：对于较长的条形，数字在条形内部且根据背景色反转颜色（例如深蓝色条形上的白色字体）；对于极短的条形或灰色条形，数字为黑色。特殊的处理是，当数值为0时，不绘制任何条形，而是直接在空白处打印黑色的“0”。图例由四个带颜色的方块和对应文字组成，位于标题和绘图区之间。\n\n### 定位一个值难在哪\n\n以数值 `5` 为例（对应 `Increasing threat of cyberattacks` 的 `Strategy consulting`）。图表省去了数值坐标轴，完全依赖行内标签。由于各系列的条形较短且交错分布，大模型在提取信息时必须将悬空或挤在狭小空间里的数字与顶部的图例颜色一一对应。一旦因为位置接近导致读取顺序发生错乱，极易将其错误归属给相邻的其他咨询类别。\n\n### 不确定的\n\n值为0的文本标签对其位置对齐方式不明显（可能统一紧贴y轴基线，但也缺乏基线刻度作参考）。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "Key external factors influencing outlook (%)",
+          "subtitle": "Key external factors influencing outlook for current fiscal year, by firm type (Select all that apply)",
+          "unit_text": "(%)",
+          "placement": "above"
+        },
+        "type": "grouped_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 4,
+        "categories": 9,
+        "marks": 33,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "left",
+            "role": "category",
+            "unit_text": "",
+            "low": "Interest rates and their impact on the economy",
+            "high": "Other",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Rise of AI"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Strategy consulting"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Rise of AI",
+            "Strategy consulting"
+          ],
+          "value": "53",
+          "value_source": "printed",
+          "why_hard": "No value axis is present; requires correctly associating dense inline numbers with the top legend."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "grouped_horizontal_bar",
+        "figure_id": "f1",
+        "evidence": "bars are horizontal, grouped by category, with zero gap between series",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "value_labels_on_marks",
+        "figure_id": "f1",
+        "evidence": "numbers like 81, 60 are printed directly on or beside the bars",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "dynamic_label_color",
+        "figure_id": "f1",
+        "evidence": "label 81 is white on dark blue, label 80 is black on grey",
+        "affects": []
+      },
+      {
+        "key": "zero_value_text_only",
+        "figure_id": "f1",
+        "evidence": "0 is printed as a bare number without any bar for Commercial real estate market",
+        "affects": [
+          2,
+          3
+        ]
+      },
+      {
+        "key": "category_dividers",
+        "figure_id": "f1",
+        "evidence": "thin horizontal lines separate the 9 category groups",
+        "affects": []
+      },
+      {
+        "key": "legend_above_plot",
+        "figure_id": "f1",
+        "evidence": "legend items sit between the subtitle and the first category",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "two_column_layout",
+        "figure_id": "page",
+        "evidence": "body text forms a left column beside the right-aligned figure",
+        "affects": [
+          4
+        ]
+      }
+    ],
+    "new_components": [
+      {
+        "name": "zero_value_text_only",
+        "figure_id": "f1",
+        "evidence": "0 is printed without a bar for Commercial real estate market",
+        "affects": [
+          2,
+          3
+        ]
+      },
+      {
+        "name": "dynamic_label_color",
+        "figure_id": "f1",
+        "evidence": "label 81 is white on dark blue, while 80 is black on grey",
+        "affects": []
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "81",
+        "figure_id": "f1",
+        "mark": "the Strategy consulting bar for Interest rates and their impact on the economy",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Interest rates and their impact on the economy",
+          "Strategy consulting"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "60",
+        "figure_id": "f1",
+        "mark": "the Technology/IT consulting bar for US presidential elections/geopolitical uncertainty",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "US presidential elections/geopolitical uncertainty",
+          "Technology/IT consulting"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "19",
+        "figure_id": "f1",
+        "mark": "the Management/advisory consulting bar for Effects of hybrid work models on our organization",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Effects of hybrid work models on our organization",
+          "Management/advisory consulting"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "5",
+        "figure_id": "f1",
+        "mark": "the Strategy consulting bar for Increasing threat of cyberattacks",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Increasing threat of cyberattacks",
+          "Strategy consulting"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "12",
+        "figure_id": "f1",
+        "mark": "the Management/advisory consulting bar for Increasing threat of cyberattacks",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Increasing threat of cyberattacks",
+          "Management/advisory consulting"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      }
+    ],
+    "hardest_step": 3,
+    "hardest_step_why": "图表没有任何坐标轴，数字以行内标签形式紧密排列。视觉语言模型在转录为Markdown表格时，容易将四个垂直堆叠的数字错位匹配到顶部的图例系列上。",
+    "examples": [
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "0 is printed where the Technology/IT consulting bar would be for Commercial real estate market",
+        "why": "生成器需要支持在数据为0时不绘制条形图，直接在原点基线位置渲染数值文本0的功能。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "label 81 is white inside the dark blue bar, while label 80 is black inside the grey bar",
+        "why": "图表引擎需要根据条形填充颜色的深浅自动反转数据标签的字体颜色（白/黑切换），以保证行内标签的可读性。"
+      },
+      {
+        "gap": "P3",
+        "figure_id": "page",
+        "quote": "The body text paragraph sits on the left side of the page, directly beside the figure.",
+        "why": "全页排版要求引擎能够将图表和段落文本置于同一行的双列布局中，超出了纯图表生成的范围。"
+      }
+    ]
+  }
+}

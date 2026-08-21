@@ -1,0 +1,329 @@
+{
+  "stem": "deloitte-2025-global-automotive-consumer-study-january-2025_p17",
+  "document": "deloitte-2025-global-automotive-consumer-study-january-2025",
+  "tags": "untagged",
+  "model": "gemini-3.1-pro-preview",
+  "control": "no_vocab",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 45.1,
+  "usage": {
+    "input_tokens": 3178,
+    "output_tokens": 5980,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n生成器需要支持绘制水平堆叠条形图（图1）和水平标准条形图（图2和图3）。对于堆叠条形图，需要在没有数值坐标轴的情况下，按各分类数值的比例分配各段长度，并将数值文本（如`10%`）直接居中或靠右渲染在对应的色块内部。图表还需要支持图例放置在底部、左侧长分类轴标签的对齐。整个页面级别需要支持多列排版，以便将图2和图3并排摆放。\n\n### 定位一个值难在哪\n以图1中的“41%”为例，这个值属于“India”且类别为“Very important”。难点在于这些数值完全依赖于颜色和几何图形内部的相对位置来传递信息。由于没有刻度线和网格线，文档解析工具通常无法将其识别为表格结构，只会将这些数值和类别标签识别为离散的文本碎片，导致完全无法关联提取（卡在第一步）。\n\n### 不确定的\n图1的各个条形长度代表了接近100%的总和，但不确定生成器是否需要在没有显式指定100%上限的情况下，自动根据数据总和填满行宽，还是它本身就带有隐形的0-100 X轴刻度。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "Importance of next vehicle to be manufactured locally",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "stacked_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 4,
+        "categories": 8,
+        "marks": 32,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "left",
+            "role": "category",
+            "unit_text": "",
+            "low": "India",
+            "high": "UK",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "India"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Very important"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "India",
+            "Very important"
+          ],
+          "value": "41%",
+          "value_source": "printed",
+          "why_hard": "No tabular structure, parsed as disconnected floating text."
+        }
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "",
+          "title": "Percentage of surveyed consumers who would be interested in acquiring vehicle directly from the manufacturer",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 1,
+        "categories": 8,
+        "marks": 8,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "left",
+            "role": "category",
+            "unit_text": "",
+            "low": "India",
+            "high": "Japan",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "India"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "India"
+          ],
+          "value": "76%",
+          "value_source": "printed",
+          "why_hard": ""
+        }
+      },
+      {
+        "id": "f3",
+        "heading": {
+          "figure_number": "",
+          "title": "Percentage of surveyed consumers who would be interested in purchasing insurance directly from the manufacturer",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 1,
+        "categories": 8,
+        "marks": 8,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "left",
+            "role": "category",
+            "unit_text": "",
+            "low": "India",
+            "high": "Germany",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "India"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "India"
+          ],
+          "value": "82%",
+          "value_source": "printed",
+          "why_hard": ""
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "stacked_bar_chart",
+        "figure_id": "f1",
+        "evidence": "bars are divided into distinct colored segments",
+        "affects": [
+          1
+        ]
+      },
+      {
+        "key": "horizontal_bar_chart",
+        "figure_id": "f2",
+        "evidence": "categories on the left y-axis, bars extend to the right",
+        "affects": [
+          1
+        ]
+      },
+      {
+        "key": "inside_bar_labels",
+        "figure_id": "f1",
+        "evidence": "percentages like 10% are printed inside the colored segments",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "side_by_side_layout",
+        "figure_id": "page",
+        "evidence": "two distinct charts are placed horizontally adjacent",
+        "affects": [
+          1,
+          4
+        ]
+      },
+      {
+        "key": "legend_below",
+        "figure_id": "f1",
+        "evidence": "the legend sits below the chart plot area",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "no_value_axis",
+        "figure_id": "f1",
+        "evidence": "the chart lacks an axis with numerical ticks for scaling",
+        "affects": [
+          1
+        ]
+      }
+    ],
+    "new_components": [
+      {
+        "name": "right_aligned_inside_labels",
+        "figure_id": "f2",
+        "evidence": "labels like 76% sit strictly at the right end inside the bar",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "41",
+        "figure_id": "f1",
+        "mark": "the India Very important segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "India",
+          "Very important"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "39",
+        "figure_id": "f1",
+        "mark": "the China Important segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "China",
+          "Important"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "27",
+        "figure_id": "f1",
+        "mark": "the Southeast Asia Somewhat important segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Southeast Asia",
+          "Somewhat important"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "28",
+        "figure_id": "f1",
+        "mark": "the US Not important segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "US",
+          "Not important"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "39",
+        "figure_id": "f1",
+        "mark": "the Rep. of Korea Important segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Rep. of Korea",
+          "Important"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "45",
+        "figure_id": "f1",
+        "mark": "the Japan Somewhat important segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Japan",
+          "Somewhat important"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "36",
+        "figure_id": "f1",
+        "mark": "the Germany Not important segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Germany",
+          "Not important"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "49",
+        "figure_id": "f1",
+        "mark": "the UK Not important segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "UK",
+          "Not important"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      }
+    ],
+    "hardest_step": 1,
+    "hardest_step_why": "图1只有纯图形和悬浮文本（如“41%”），没有绘制X轴刻度线或网格线，解析工具缺乏表格结构的线索，极可能直接返回零散的段落文本，导致找不到表格。",
+    "examples": [
+      {
+        "gap": "P3",
+        "figure_id": "page",
+        "quote": "two distinct bar charts are placed horizontally adjacent in two columns",
+        "why": "图2和图3是并排放置的两个独立图表，当前的流程主要支持垂直堆叠渲染，很难处理多列甚至页面流级别的布局控制。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f2",
+        "quote": "76% is printed at the very right end inside the cyan bar",
+        "why": "数值标签放置在图形内部但严格靠右对齐，这属于新的样式维度，需要生成器支持精准控制数值在几何标记内部的位置。"
+      }
+    ]
+  }
+}

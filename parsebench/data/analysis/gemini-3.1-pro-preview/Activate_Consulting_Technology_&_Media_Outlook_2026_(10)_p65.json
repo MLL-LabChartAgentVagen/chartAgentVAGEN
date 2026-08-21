@@ -1,0 +1,259 @@
+{
+  "stem": "Activate_Consulting_Technology_&_Media_Outlook_2026_(10)_p65",
+  "document": "Activate_Consulting_Technology_&_Media_Outlook_2026_(10)",
+  "tags": "untagged",
+  "model": "gemini-3.1-pro-preview",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 53.5,
+  "usage": {
+    "input_tokens": 5296,
+    "output_tokens": 6977,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n页面是一个带标注的分组柱状图。主标题和副标题横幅位于顶部。图表没有数值Y轴，只有底部类别X轴。图例（MOBILE、CONSOLE、PC）放置在图表最左侧外部，并使用对应颜色的粗实线作为引导线延伸入图表区域以指示映射。所有的数值（百分比）都直接印在各自的柱子上方。此外，图表还使用手绘风格的绿色椭圆圈对部分关键数值（如93%、82%、89%作为一个整体）进行了视觉强调标记。底部包含长段落的脚注和数据来源说明。\n\n### 定位一个值难在哪\n以第一组的“93%”为例，虽然它的类别键“SUPER GAMERS²”就位于柱子正下方，但它的系列键“MOBILE”位于图表左侧较远的位置。由于缺乏网格线且图例与图表主体结构分离，解析器必须通过颜色（深蓝色）和图例旁的引导线来正确建立映射关系，非常容易在步骤3中丢失系列标签。\n\n### 不确定的\n背景中淡淡的十字准星图案和渐变色块尚不确定是报告统一的页面装饰还是专属于该图表的背景设计；绿色的标记圈仅仅提供视觉强调，并没有承载额外的分类属性，因此不作为独立的数据键提取。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "Super Gamers play video games across all platforms, while Avid and Casual Gamers primarily use mobile",
+          "subtitle": "SHARE OF GAMERS¹ USING EACH PLATFORM FOR GAMING IN THE LAST 12 MONTHS, U.S., 2025, % GAMERS¹ BY SEGMENT",
+          "unit_text": "% GAMERS¹",
+          "placement": "above"
+        },
+        "type": "grouped_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 3,
+        "categories": 3,
+        "marks": 9,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "SUPER GAMERS²",
+            "high": "CASUAL GAMERS⁴",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "SUPER GAMERS²"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "MOBILE"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "SUPER GAMERS²",
+            "MOBILE"
+          ],
+          "value": "93%",
+          "value_source": "printed",
+          "why_hard": "The legend is positioned far outside the main plot on the left, making series association visually disjointed."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "grouped_bar",
+        "figure_id": "f1",
+        "evidence": "three bars are grouped together per category"
+      },
+      {
+        "key": "legend_beside_plot",
+        "figure_id": "f1",
+        "evidence": "MOBILE, CONSOLE, PC are listed on the left"
+      },
+      {
+        "key": "no_value_axis",
+        "figure_id": "f1",
+        "evidence": "no vertical axis line or tick marks drawn"
+      },
+      {
+        "key": "value_label_outside",
+        "figure_id": "f1",
+        "evidence": "percentage values sit above each bar"
+      },
+      {
+        "key": "footnote_marker",
+        "figure_id": "f1",
+        "evidence": "superscript 1, 2, 3, 4 on headings and categories"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "detailed text block at the bottom starting with 1."
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "% GAMERS¹ is written in the blue subtitle banner"
+      },
+      {
+        "key": "annotation_callout",
+        "figure_id": "f1",
+        "evidence": "green circles drawn around specific sets of value labels"
+      },
+      {
+        "key": "panel_background",
+        "figure_id": "page",
+        "evidence": "faint cross marks and blue gradient behind the chart"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "legend_with_horizontal_lines",
+        "figure_id": "f1",
+        "evidence": "thick horizontal colored lines extend from legend into plot",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "name": "hand_drawn_annotation",
+        "figure_id": "f1",
+        "evidence": "green circles appear to be hand-drawn style highlights",
+        "affects": []
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "93",
+        "figure_id": "f1",
+        "mark": "the dark blue bar in the SUPER GAMERS² group",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "SUPER GAMERS²",
+          "MOBILE"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "82",
+        "figure_id": "f1",
+        "mark": "the medium blue bar in the SUPER GAMERS² group",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "SUPER GAMERS²",
+          "CONSOLE"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "89",
+        "figure_id": "f1",
+        "mark": "the light blue bar in the SUPER GAMERS² group",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "SUPER GAMERS²",
+          "PC"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "89",
+        "figure_id": "f1",
+        "mark": "the dark blue bar in the AVID GAMERS³ group",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "AVID GAMERS³",
+          "MOBILE"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "56",
+        "figure_id": "f1",
+        "mark": "the medium blue bar in the AVID GAMERS³ group",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "AVID GAMERS³",
+          "CONSOLE"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "70",
+        "figure_id": "f1",
+        "mark": "the light blue bar in the AVID GAMERS³ group",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "AVID GAMERS³",
+          "PC"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "87",
+        "figure_id": "f1",
+        "mark": "the dark blue bar in the CASUAL GAMERS⁴ group",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "CASUAL GAMERS⁴",
+          "MOBILE"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "34",
+        "figure_id": "f1",
+        "mark": "the medium blue bar in the CASUAL GAMERS⁴ group",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "CASUAL GAMERS⁴",
+          "CONSOLE"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "24",
+        "figure_id": "f1",
+        "mark": "the light blue bar in the CASUAL GAMERS⁴ group",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "CASUAL GAMERS⁴",
+          "PC"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      }
+    ],
+    "hardest_step": 3,
+    "hardest_step_why": "图例（如MOBILE）远在图表左外侧，仅通过颜色线与主图表关联，极易导致解析工具匹配错乱或遗漏系列键，造成如93%这样的值无法被赋予对应的平台维度。",
+    "examples": [
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "green circles drawn around 93%, 82%, 89% and 89%, 87%",
+        "why": "目前的生成器不支持在数据上方绘制不规则的手绘风格分组标注线圈。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "legend text on the left with colored lines extending rightwards",
+        "why": "图表没有使用常见的颜色方块作为图例，而是使用延长至图表内的彩色线条，目前的布局无法生成这种设计。"
+      }
+    ]
+  }
+}

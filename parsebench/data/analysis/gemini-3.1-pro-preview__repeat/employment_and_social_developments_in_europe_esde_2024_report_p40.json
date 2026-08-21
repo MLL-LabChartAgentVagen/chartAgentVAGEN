@@ -1,0 +1,281 @@
+{
+  "stem": "employment_and_social_developments_in_europe_esde_2024_report_p40",
+  "document": "employment_and_social_developments_in_europe_esde_2024_report",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "repeat",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 87.4,
+  "usage": {
+    "input_tokens": 5357,
+    "output_tokens": 12659,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n页面包含一段正文和一个带双面板的折线图 (Chart 1)。该图表包含 Panel A 和 Panel B，每个面板有独立的子标题、独立的纵轴刻度（Panel A 为带有欧元符号的金额，Panel B 为不带单位的小数）、横轴年份刻度以及置于各面板绘图区下方各自独立的图例。图表样式上仅使用水平网格线。图表下方有统一的 Notes 和 Source 注释块。页面下方还包含针对正文内容的脚注。\n\n### 定位一个值难在哪\n以 0.53 为例，该点位于 Panel B 中 14 countries 系列的 2021 年节点。主要的难点在于跨面板的维度关联：提取器必须将 Panel B 这一面板标题作为独立维度加入数据的寻址键值，否则该值会与 Panel A 中同一年份、同一系列的值混淆导致无法准确定位。此外，0.53 这个数值没有直接落在水平网格线上，需在 0.52 与 0.54 之间进行精准的视觉插值计算。\n\n### 不确定的\n各个系列数据点在不同年份的起始时间不同（如 19 countries 系列始于 2014 年），且在 2021 年部分线段的终点重合度较高，在没有数值标签的情况下，机器提取可能会在映射数据点与对应图例类别时产生歧义或混淆。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Chart 1",
+          "title": "Median wealth has increased on average in the euro area, with countries converging upwards",
+          "subtitle": "Average and standard deviation of median net wealth, 2010 – 2021, euro area",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 2,
+        "series": 3,
+        "categories": 4,
+        "marks": 18,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "€ 0",
+            "high": "€ 180 000",
+            "serves": "all lines in Panel A"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "2010",
+            "high": "2021",
+            "serves": "all lines in Panel A"
+          },
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "0.5",
+            "high": "0.66",
+            "serves": "all lines in Panel B"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "2010",
+            "high": "2021",
+            "serves": "all lines in Panel B"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "panel",
+            "label_source": "panel_title",
+            "example": "Panel A: Median net wealth"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "14 countries"
+          },
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2010"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Panel B: Dispersion of median wealth",
+            "14 countries",
+            "2021"
+          ],
+          "value": "0.53",
+          "value_source": "axis_read",
+          "why_hard": "The point falls visibly between the 0.52 and 0.54 grid lines without a label, requiring manual interpolation."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "per_panel_axis_range",
+        "figure_id": "f1",
+        "evidence": "Panel A ranges up to 180,000, while Panel B ranges from 0.5 to 0.66"
+      },
+      {
+        "key": "per_panel_legend",
+        "figure_id": "f1",
+        "evidence": "Each panel has its own legend drawn independently below its respective x-axis"
+      },
+      {
+        "key": "panel_title_per_panel",
+        "figure_id": "f1",
+        "evidence": "Titles like Panel A: Median net wealth sit right above each plot area"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "Notes: and Source: lines appear beneath the entire figure block"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "Only horizontal dashed grid lines are drawn in both panels"
+      },
+      {
+        "key": "axis_starts_above_zero",
+        "figure_id": "f1",
+        "evidence": "The lowest tick on Panel B's y-axis is 0.5, not 0"
+      }
+    ],
+    "new_components": [],
+    "spot_checks": [
+      {
+        "value": "160000",
+        "figure_id": "f1",
+        "mark": "dark blue line in Panel A at 2010",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Panel A: Median net wealth",
+          "14 countries",
+          "2010"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "140000",
+        "figure_id": "f1",
+        "mark": "dark blue line in Panel A at 2014",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Panel A: Median net wealth",
+          "14 countries",
+          "2014"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "120000",
+        "figure_id": "f1",
+        "mark": "green line in Panel A at 2014",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Panel A: Median net wealth",
+          "19 countries",
+          "2014"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "145000",
+        "figure_id": "f1",
+        "mark": "dark blue line in Panel A at 2017",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Panel A: Median net wealth",
+          "14 countries",
+          "2017"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "0.56",
+        "figure_id": "f1",
+        "mark": "dark blue line in Panel B at 2010",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Panel B: Dispersion of median wealth",
+          "14 countries",
+          "2010"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "0.64",
+        "figure_id": "f1",
+        "mark": "green line in Panel B at 2014",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Panel B: Dispersion of median wealth",
+          "19 countries",
+          "2014"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "0.58",
+        "figure_id": "f1",
+        "mark": "dark blue line in Panel B at 2017",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Panel B: Dispersion of median wealth",
+          "14 countries",
+          "2017"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "0.59",
+        "figure_id": "f1",
+        "mark": "yellow line in Panel B at 2017",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Panel B: Dispersion of median wealth",
+          "21 countries",
+          "2017"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "0.53",
+        "figure_id": "f1",
+        "mark": "dark blue line in Panel B at 2021",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Panel B: Dispersion of median wealth",
+          "14 countries",
+          "2021"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "0.56",
+        "figure_id": "f1",
+        "mark": "green line in Panel B at 2021",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Panel B: Dispersion of median wealth",
+          "19 countries",
+          "2021"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      }
+    ],
+    "hardest_step": 3,
+    "hardest_step_why": "数值需结合面板名称、图例和年份定位。若解析器未能分离面板并提取标题为键值，两面板数据会混合，导致步骤3关联失败。",
+    "examples": [
+      {
+        "gap": "P2",
+        "figure_id": "f1",
+        "quote": "Panel A: Median net wealth",
+        "why": "图表包含两个独立面板，拥有各自的标题和y轴，解析数据需要将面板标题作为独立的区分维度加入键值。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "Average and standard deviation of median net wealth, 2010 – 2021, euro area",
+        "why": "图表表头除了编号和主标题外，还附带了明确的副标题行，需要解析器能够处理多层标题的结构化输出。"
+      }
+    ]
+  }
+}

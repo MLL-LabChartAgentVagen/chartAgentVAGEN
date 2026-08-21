@@ -1,0 +1,347 @@
+{
+  "stem": "2024-ltra_corrected_july_2025_p27",
+  "document": "2024-ltra_corrected_july_2025",
+  "tags": "need_estimate",
+  "model": "gpt-5.6-sol",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 120000,
+  "seconds": 87.4,
+  "usage": {
+    "input_tokens": 9444,
+    "output_tokens": 5873,
+    "cache_read_tokens": 2365
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "**画出来要什么**\n\n两幅单面板堆叠柱图并排排版，图题均置于图下，图例位于绘图区下方。Figure 13 还需旋转类别标签；Figure 14 需绘制灰色框注释、蓝色基准线，以及“2029”至“2034”间的省略号。\n\n**定位一个值难在哪**\n\nFigure 14 的“2024—Confirmed—7000”没有数值标签，只能依靠间隔为20,000 MW的纵轴读取；5%容差仅350 MW，因此最难保证精度。\n\n**不确定的**\n\n所有指定数值均未印在柱段上，具体对应关系依据柱高判断。Figure 13 两个浅色零值段是否作为实际绘制标记无法确认；Figure 14 的省略号应表示省略年份。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 13",
+          "title": "Solar PV DER Capacity Existing and Planned through 2034",
+          "subtitle": "",
+          "unit_text": "MW (dc)",
+          "placement": "below"
+        },
+        "type": "stacked_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 10,
+        "marks": 18,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "MW (dc)",
+            "low": "0",
+            "high": "40,000",
+            "serves": "all stacked bar segments"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "NPCC-New England",
+            "high": "WECC-SW",
+            "serves": "all stacked bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "NPCC-New England"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Existing"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "NPCC-New York",
+            "Existing"
+          ],
+          "value": "5600",
+          "value_source": "axis_read",
+          "why_hard": "5,000-MW ticks make a 5,600-MW bar difficult to read within 5%."
+        }
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "Figure 14",
+          "title": "Projected Generation Retirement Capacity through 2034",
+          "subtitle": "",
+          "unit_text": "MW",
+          "placement": "below"
+        },
+        "type": "stacked_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 7,
+        "marks": 14,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "MW",
+            "low": "0",
+            "high": "140,000",
+            "serves": "all stacked bar segments"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "2024",
+            "high": "2034",
+            "serves": "all stacked bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2024"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Confirmed"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "2024",
+            "Confirmed"
+          ],
+          "value": "7000",
+          "value_source": "axis_read",
+          "why_hard": "20,000-MW ticks make the short 7,000-MW segment difficult to read within 5%."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "stacked_bar",
+        "figure_id": "f1",
+        "evidence": "Dark 'Existing' and light 'Planned' segments are stacked within category bars."
+      },
+      {
+        "key": "stacked_bar",
+        "figure_id": "f2",
+        "evidence": "Dark 'Confirmed' and light 'Unconfirmed' segments are stacked within each year bar."
+      },
+      {
+        "key": "multi_figure_page",
+        "figure_id": "page",
+        "evidence": "Separate captions 'Figure 13' and 'Figure 14' identify two independent figures."
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "The 'Existing' and 'Planned' legend is centered below the category axis."
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f2",
+        "evidence": "The 'Confirmed' and 'Unconfirmed' legend is centered below the time axis."
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "The left value-axis title reads 'MW (dc)'."
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f2",
+        "evidence": "The left value-axis title reads 'MW'."
+      },
+      {
+        "key": "rotated_axis_title",
+        "figure_id": "f1",
+        "evidence": "The 'MW (dc)' title is vertical along the left axis."
+      },
+      {
+        "key": "rotated_axis_title",
+        "figure_id": "f2",
+        "evidence": "The 'MW' title is vertical along the left axis."
+      },
+      {
+        "key": "rotated_x_ticks",
+        "figure_id": "f1",
+        "evidence": "All ten category labels are angled upward from left to right."
+      },
+      {
+        "key": "abbrev_category_axis",
+        "figure_id": "f1",
+        "evidence": "Category ticks include 'PJM', 'SERC-E', 'WECC-CAMX', and 'WECC-SW'."
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "Horizontal gridlines cross the plot; no vertical gridlines are drawn."
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f2",
+        "evidence": "Horizontal gridlines cross the plot; no vertical gridlines are drawn."
+      },
+      {
+        "key": "reference_line",
+        "figure_id": "f2",
+        "evidence": "A blue horizontal benchmark line leads to '2023 LTRA Total Retirements'."
+      },
+      {
+        "key": "annotation_callout",
+        "figure_id": "f2",
+        "evidence": "A gray boxed '2023 LTRA Total Retirements' note is drawn inside the plot."
+      }
+    ],
+    "new_components": [
+      {
+        "name": "time_axis_ellipsis",
+        "figure_id": "f2",
+        "evidence": "An ellipsis between '2029' and '2034' indicates omitted intervening years.",
+        "affects": [
+          2,
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "23000",
+        "figure_id": "f1",
+        "mark": "the WECC-CAMX Existing segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "WECC-CAMX",
+          "Existing"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "16000",
+        "figure_id": "f1",
+        "mark": "the WECC-CAMX Planned segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "WECC-CAMX",
+          "Planned"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "20000",
+        "figure_id": "f1",
+        "mark": "the Texas RE ERCOT Planned segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Texas RE ERCOT",
+          "Planned"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "8200",
+        "figure_id": "f1",
+        "mark": "the PJM Existing segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "PJM",
+          "Existing"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "5600",
+        "figure_id": "f1",
+        "mark": "the NPCC-New York Existing segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "NPCC-New York",
+          "Existing"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "7000",
+        "figure_id": "f2",
+        "mark": "the 2024 Confirmed segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2024",
+          "Confirmed"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "48000",
+        "figure_id": "f2",
+        "mark": "the 2028 Confirmed segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2028",
+          "Confirmed"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "35000",
+        "figure_id": "f2",
+        "mark": "the 2029 Unconfirmed segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2029",
+          "Unconfirmed"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "78000",
+        "figure_id": "f2",
+        "mark": "the 2034 Confirmed segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2034",
+          "Confirmed"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "37000",
+        "figure_id": "f2",
+        "mark": "the 2034 Unconfirmed segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2034",
+          "Unconfirmed"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "7000的5%容差仅350，而Figure 14刻度间隔20,000且无数值标签，难以读准。暑语具误阅风险。请核图确认。 values可从图中估计，详细见报告。 依赖轴线肉眼估值。 结论保守。 需关注图形精度。 可核查原始数据。 本页无表。 但标签关联清晰。 标题为粗体。 因此精度最难。 取值均未直接印出。 关键例为7000。 纵轴为0到140,000。 最小柱段不足半个刻度。 以上。 结束。  ",
+    "examples": []
+  }
+}

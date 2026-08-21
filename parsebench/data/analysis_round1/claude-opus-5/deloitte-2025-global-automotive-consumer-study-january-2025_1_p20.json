@@ -1,0 +1,274 @@
+{
+  "stem": "deloitte-2025-global-automotive-consumer-study-january-2025_1_p20",
+  "document": "deloitte-2025-global-automotive-consumer-study-january-2025_1",
+  "tags": "untagged",
+  "model": "claude-opus-5",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "seconds": 60.2,
+  "usage": {
+    "input_tokens": 10498,
+    "output_tokens": 5098,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "## 页面结构\n本页无图号，含三个独立图：两个并排的水平条形图（青色/绿色，各8国，无刻度轴，数值印在条内右端），以及一个百分比堆积水平条形图（Not beneficial / Neutral / Beneficial，8行24段，图例在下方）。\n\n生成器需支持：无值轴的横条、条内右对齐白色数值标签、100%堆积横条、下方图例、共用一条来源行的双图布局，以及标题中局部加粗（`fully autonomous robotaxi services` 加粗）。\n\n## 定位难点\n三图都只用国家名做行标签，标题无编号。`41` 同时出现在左图 Japan（41%）与堆积图 Germany 的 Beneficial 段，必须靠 `Percentage of consumers concerned about…` 或 `Addition of artificial intelligence in vehicle systems` 这类长标题句才能区分。\n\n## 不确定\n左右两图是否应视为一个双面板图；粗体结论句是否算图题的一部分。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "Percentage of consumers concerned about fully autonomous robotaxi services operating where they live",
+          "subtitle": "",
+          "unit_text": "Percentage of consumers",
+          "placement": "above"
+        },
+        "type": "bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 1,
+        "categories": 8,
+        "marks": 8,
+        "values_printed": "all"
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "",
+          "title": "Percentage of consumers concerned about commercial vehicles operating in a fully autonomous mode on the highway",
+          "subtitle": "",
+          "unit_text": "Percentage of consumers",
+          "placement": "above"
+        },
+        "type": "bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 1,
+        "categories": 8,
+        "marks": 8,
+        "values_printed": "all"
+      },
+      {
+        "id": "f3",
+        "heading": {
+          "figure_number": "",
+          "title": "Addition of artificial intelligence in vehicle systems",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "stacked_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 3,
+        "categories": 8,
+        "marks": 24,
+        "values_printed": "all"
+      }
+    ],
+    "components": [
+      {
+        "key": "horizontal_bars",
+        "figure_id": "f1",
+        "evidence": "countries India, UK, US ... Germany on the left, bars grow rightward from a vertical baseline"
+      },
+      {
+        "key": "horizontal_bars",
+        "figure_id": "f2",
+        "evidence": "India, UK, Rep. of Korea ... China listed down the left, bars extend right"
+      },
+      {
+        "key": "horizontal_bars",
+        "figure_id": "f3",
+        "evidence": "India, China ... Germany down the left, stacked bars run to the right"
+      },
+      {
+        "key": "stacked_bar",
+        "figure_id": "f3",
+        "evidence": "each country row split into Not beneficial / Neutral / Beneficial segments"
+      },
+      {
+        "key": "pct_stacked",
+        "figure_id": "f3",
+        "evidence": "every row reaches the same full width, e.g. 5%+13%+82% = 100%"
+      },
+      {
+        "key": "no_value_axis",
+        "figure_id": "f1",
+        "evidence": "only a vertical baseline at 0; no ticks or numbers along the value direction"
+      },
+      {
+        "key": "no_value_axis",
+        "figure_id": "f2",
+        "evidence": "bars start at a bare baseline; no tick labels anywhere on the value axis"
+      },
+      {
+        "key": "no_value_axis",
+        "figure_id": "f3",
+        "evidence": "no ticks or 0%/100% labels; only the in-segment percentages"
+      },
+      {
+        "key": "value_label_inside",
+        "figure_id": "f1",
+        "evidence": "'63%', '52%' printed in white inside the right end of each bar"
+      },
+      {
+        "key": "value_label_inside",
+        "figure_id": "f2",
+        "evidence": "'74%', '47%' set in white inside each green bar"
+      },
+      {
+        "key": "value_label_inside",
+        "figure_id": "f3",
+        "evidence": "'5%', '13%', '82%' printed inside each stacked segment"
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f3",
+        "evidence": "'Not beneficial  Neutral  Beneficial' row sits under the last bar"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "'Q56. To what extent are you concerned with each of the following scenarios?' plus 'Sample size: n = 939 [China]...'"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f3",
+        "evidence": "'Note: Percentages may not add up to 100 due to rounding.' and 'Q62. ... Sample size: n = 939 [China]...'"
+      },
+      {
+        "key": "multi_figure_page",
+        "figure_id": "page",
+        "evidence": "two side-by-side concern charts with their own headings plus a separate AI stacked-bar chart below"
+      },
+      {
+        "key": "abbrev_category_axis",
+        "figure_id": "f1",
+        "evidence": "category labels read 'UK', 'US', 'Rep. of Korea' rather than full names"
+      },
+      {
+        "key": "abbrev_category_axis",
+        "figure_id": "f3",
+        "evidence": "row labels 'US', 'UK', 'Rep. of Korea' on the left of the stacks"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "'Percentage of consumers concerned about ... operating where they live' is the only scale statement"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f2",
+        "evidence": "'Percentage of consumers concerned about commercial vehicles ... on the highway' heading carries the scale"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "bold_finding_statement_above_figure",
+        "figure_id": "page",
+        "evidence": "'Consumers surveyed in both India and the United Kingdom are more concerned...' set bold above each chart block",
+        "affects": [
+          4
+        ]
+      },
+      {
+        "name": "partial_bold_in_heading",
+        "figure_id": "f1",
+        "evidence": "'fully autonomous robotaxi services' bold inside an otherwise regular-weight heading line",
+        "affects": [
+          3,
+          4
+        ]
+      },
+      {
+        "name": "shared_source_line_two_figures",
+        "figure_id": "page",
+        "evidence": "one 'Q56.' and sample-size line sits under both the teal and green bar charts",
+        "affects": [
+          3,
+          4
+        ]
+      },
+      {
+        "name": "colored_section_title",
+        "figure_id": "f3",
+        "evidence": "'Addition of artificial intelligence in vehicle systems' set in green bold as the chart title",
+        "affects": [
+          4
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "82",
+        "figure_id": "f3",
+        "mark": "the India Beneficial segment (rightmost, light blue)",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Addition of artificial intelligence in vehicle systems",
+          "India",
+          "Beneficial"
+        ]
+      },
+      {
+        "value": "13",
+        "figure_id": "f3",
+        "mark": "the India Neutral segment (middle, light green)",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Addition of artificial intelligence in vehicle systems",
+          "India",
+          "Neutral"
+        ]
+      },
+      {
+        "value": "77",
+        "figure_id": "f3",
+        "mark": "the China Beneficial segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Addition of artificial intelligence in vehicle systems",
+          "China",
+          "Beneficial"
+        ]
+      },
+      {
+        "value": "45",
+        "figure_id": "f3",
+        "mark": "the US Beneficial segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Addition of artificial intelligence in vehicle systems",
+          "US",
+          "Beneficial"
+        ]
+      },
+      {
+        "value": "41",
+        "figure_id": "f3",
+        "mark": "the Germany Beneficial segment; note 41% also appears as the Japan bar in f1",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Addition of artificial intelligence in vehicle systems",
+          "Germany",
+          "Beneficial"
+        ]
+      },
+      {
+        "value": "31",
+        "figure_id": "f3",
+        "mark": "the UK Neutral segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Addition of artificial intelligence in vehicle systems",
+          "UK",
+          "Neutral"
+        ]
+      }
+    ],
+    "hardest_step": 3
+  }
+}

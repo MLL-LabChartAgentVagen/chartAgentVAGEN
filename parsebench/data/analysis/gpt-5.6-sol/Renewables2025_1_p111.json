@@ -1,0 +1,362 @@
+{
+  "stem": "Renewables2025_1_p111",
+  "document": "Renewables2025_1",
+  "tags": "3d_chart+need_estimate",
+  "model": "gpt-5.6-sol",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 120000,
+  "seconds": 1323.7,
+  "usage": {
+    "input_tokens": 8842,
+    "output_tokens": 8302,
+    "cache_read_tokens": 8839
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n双面板分组柱图，每面板含季度与年份两层时间轴、重复的百分比纵轴、负值和加粗零线；共享四系列图例置于下方，并保留竖排轴题、面板标题、注释和来源行。\n\n### 定位一个值难在哪\n“1.3”需以“China / 2023 / Q4 / Solar PV integrated mfg”四键定位；数值未印出，而纵轴每格10个百分点，远大于其5%容差0.065。\n\n### 不确定的\n零高度柱可能与缺值无法区分；若干精确值只能按柱端位置和给定数值反推。图中未见图号，标题第二行按副标题处理。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "Weighted average net margins of renewable energy companies and large utilities",
+          "subtitle": "(Q1 2023-Q2 2025)",
+          "unit_text": "%",
+          "placement": "above"
+        },
+        "type": "grouped_bar",
+        "type_other": "",
+        "panels": 2,
+        "series": 4,
+        "categories": 10,
+        "marks": 70,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "%",
+            "low": "-30%",
+            "high": "30%",
+            "serves": "all bars in China"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "Q1",
+            "high": "Q2",
+            "serves": "all quarterly groups in China"
+          },
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "%",
+            "low": "-30%",
+            "high": "30%",
+            "serves": "all bars in Outside of China"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "Q1",
+            "high": "Q2",
+            "serves": "all quarterly groups in Outside of China"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "panel",
+            "label_source": "panel_title",
+            "example": "China"
+          },
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2023"
+          },
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "Q1"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Polysilicon"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "China",
+            "2023",
+            "Q4",
+            "Solar PV integrated mfg"
+          ],
+          "value": "1.3",
+          "value_source": "axis_read",
+          "why_hard": "Ten-point tick spacing cannot support the 0.065 tolerance around 1.3."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "grouped_bar",
+        "figure_id": "f1",
+        "evidence": "Multiple coloured bars stand side by side within each quarterly slot."
+      },
+      {
+        "key": "reference_line",
+        "figure_id": "f1",
+        "evidence": "A dark horizontal zero line crosses both panels at 0%."
+      },
+      {
+        "key": "negative_values",
+        "figure_id": "f1",
+        "evidence": "Bars extend below the 0% line toward ticks down to -30%."
+      },
+      {
+        "key": "shared_legend",
+        "figure_id": "f1",
+        "evidence": "One four-item legend spans beneath both “China” and “Outside of China” panels."
+      },
+      {
+        "key": "small_multiples_4",
+        "figure_id": "f1",
+        "evidence": "The same quarterly grouped-bar construction repeats in two panels."
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "“Note: mfg = equipment manufacturing companies.” and “Source: IEA analysis based on Bloomberg LP…” appear below."
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "The four legend entries form one row beneath the two plots."
+      },
+      {
+        "key": "panel_title_per_panel",
+        "figure_id": "f1",
+        "evidence": "“China” and “Outside of China” are centred above their respective panels."
+      },
+      {
+        "key": "rotated_axis_title",
+        "figure_id": "f1",
+        "evidence": "“Weighted average net margin” runs vertically beside the left panel."
+      },
+      {
+        "key": "two_level_x_ticks",
+        "figure_id": "f1",
+        "evidence": "Quarter labels Q1–Q4 sit above grouped year labels 2023–2025."
+      },
+      {
+        "key": "nonstandard_time_ticks",
+        "figure_id": "f1",
+        "evidence": "“Q1”, “Q2”, “Q3” and “Q4” are used as time ticks."
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "Only horizontal grey grid lines cross each plot area."
+      }
+    ],
+    "new_components": [
+      {
+        "name": "unit_in_tick_labels",
+        "figure_id": "f1",
+        "evidence": "Every value tick includes “%”, from -30% through 30%; the axis title omits it.",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "name": "panel_specific_series_presence",
+        "figure_id": "f1",
+        "evidence": "Purple Utilities bars appear only in Outside of China although the shared legend lists Utilities.",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "28",
+        "figure_id": "f1",
+        "mark": "the China 2023 Q1 Polysilicon bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "China",
+          "2023",
+          "Q1",
+          "Polysilicon"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "-17",
+        "figure_id": "f1",
+        "mark": "the China 2024 Q4 Polysilicon bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "China",
+          "2024",
+          "Q4",
+          "Polysilicon"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "0",
+        "figure_id": "f1",
+        "mark": "the China 2024 Q4 Wind integrated mfg zero-height bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "China",
+          "2024",
+          "Q4",
+          "Wind integrated mfg"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-7",
+        "figure_id": "f1",
+        "mark": "the China 2025 Q2 Solar PV integrated mfg bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "China",
+          "2025",
+          "Q2",
+          "Solar PV integrated mfg"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "2",
+        "figure_id": "f1",
+        "mark": "the China 2023 Q3 Wind integrated mfg bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "China",
+          "2023",
+          "Q3",
+          "Wind integrated mfg"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-7",
+        "figure_id": "f1",
+        "mark": "the China 2023 Q4 Polysilicon bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "China",
+          "2023",
+          "Q4",
+          "Polysilicon"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "7",
+        "figure_id": "f1",
+        "mark": "the China 2023 Q3 Polysilicon bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "China",
+          "2023",
+          "Q3",
+          "Polysilicon"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "1.3",
+        "figure_id": "f1",
+        "mark": "the China 2023 Q4 Solar PV integrated mfg bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "China",
+          "2023",
+          "Q4",
+          "Solar PV integrated mfg"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "10",
+        "figure_id": "f1",
+        "mark": "the Outside of China 2023 Q1 Polysilicon bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Outside of China",
+          "2023",
+          "Q1",
+          "Polysilicon"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "-5",
+        "figure_id": "f1",
+        "mark": "the Outside of China 2024 Q3 Wind integrated mfg bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Outside of China",
+          "2024",
+          "Q3",
+          "Wind integrated mfg"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "1.3的容差仅0.065，而纵轴每格10个百分点，无法可靠读准，故最卡第2步。争论点主要不在标题层级，而在数值是否打印、零线及负值结构、双层时间轴，以及单位究竟由标题、轴题还是刻度携带。图中最难的例子是 China–2023–Q4–Solar PV integrated mfg 的 1.3：它需要面板、年份、季度、系列四个键，而且数值并未标注，只能在 0% 与 10% 网格间估读。另一个重要发现是共享图例中的 Utilities 只在 “Outside of China” 面板出现，使图例系列数与各面板实际柱数不一致。零高度柱与缺失值也难从图面区分。图号确实未显示；标题第一行和括号时间范围适合拆为 title/subtitle。技术实现上应保留双面板相同量程但各自重复纵轴，而不是误报 shared_axis。来源与注释位于图下，许可证文字位于右侧，不应混入图例或来源字段。",
+    "examples": [
+      {
+        "gap": "P2",
+        "figure_id": "f1",
+        "quote": "“China” and “Outside of China” title the two repeated grouped-bar panels.",
+        "why": "同一季度与系列会在两面板重复，面板名必须进入值键。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "Bars extend below the bold 0% line; ticks run from -30% to 30%.",
+        "why": "需要控制负值柱、零线粗细、百分比刻度格式和单位位置。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "“Weighted average net margins of renewable energy companies and large utilities” followed by “(Q1 2023-Q2 2025)”.",
+        "why": "必须分别生成标题、副标题、单位及其位于绘图区上方的位置。"
+      },
+      {
+        "gap": "P1",
+        "figure_id": "f1",
+        "quote": "The 1.3 bar has no value label and lies between 0% and 10% grid lines.",
+        "why": "小数值的5%容差远小于网格间距，可读精度应按标记单独判断。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "Utilities appears in the shared legend but has bars only under “Outside of China”.",
+        "why": "需支持共享图例系列在不同面板选择性缺席，而非自动补零柱。"
+      }
+    ]
+  }
+}

@@ -1,0 +1,201 @@
+{
+  "stem": "pwc-semiconductor-and-beyond-2026-full-report_p18",
+  "document": "pwc-semiconductor-and-beyond-2026-full-report",
+  "tags": "untagged",
+  "model": "gemini-3.1-pro-preview",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "seconds": 67.9,
+  "usage": {
+    "input_tokens": 4430,
+    "output_tokens": 9678,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "本页包含一个混合图表（柱状图加折线图）及双Y轴。图表生成器需具备以下能力：在同一面板中同时绘制条形与折线、配置左侧数值轴与右侧百分比轴（且顶部带单位`(%)`）、处理非常规时间刻度（如`'25F`）、仅在折线首尾处添加数据外置标签（35%和52%）、将图例置于图表上方，以及绘制纯水平网格线。\n\n提取数值的最大难点在于步骤2（读取精度）。除折线首尾的百分比外，绝大多数目标数值（如98、180、41）均未直接标注，需依赖坐标轴估算。由于左轴刻度间距达50，右轴间距为10，肉眼极难将数值精确读取到个位，极易超出容错范围。\n\n不确定之处：图表所在的右半页面整体带有浅灰色背景，但因该背景超出绘图区且属于版式设计，不确定是否应归类为`panel_background`。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "AI accelerators in the data center",
+          "subtitle": "",
+          "unit_text": "(Unit: $ Billion)",
+          "placement": "above"
+        },
+        "type": "bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 7,
+        "marks": 14,
+        "values_printed": "some"
+      }
+    ],
+    "components": [
+      {
+        "key": "mixed_marks",
+        "figure_id": "f1",
+        "evidence": "gray bars and an orange line are drawn in the same plot area"
+      },
+      {
+        "key": "dual_axis",
+        "figure_id": "f1",
+        "evidence": "the left y-axis has values 0 to 300, the right has 0 to 100"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "(Unit: $ Billion) is in the title, and (%) is above the right axis"
+      },
+      {
+        "key": "axis_title_above_axis",
+        "figure_id": "f1",
+        "evidence": "(%) sits directly above the 100 tick on the right y-axis"
+      },
+      {
+        "key": "value_label_outside",
+        "figure_id": "f1",
+        "evidence": "35% and 52% sit just above the endpoints of the line"
+      },
+      {
+        "key": "nonstandard_time_ticks",
+        "figure_id": "f1",
+        "evidence": "the x-axis ticks read '24, '25F, '26F, etc."
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "horizontal grid lines connect the y-axis ticks, with no vertical ones"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "Source: PwC analysis is printed under the bottom-left of the chart"
+      },
+      {
+        "key": "side_text_bullets",
+        "figure_id": "page",
+        "evidence": "two columns of body text run alongside the left of the figure"
+      },
+      {
+        "key": "legend_above_plot",
+        "figure_id": "f1",
+        "evidence": "the legend with two items sits between the heading and the plot"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "first_and_last_labels_only",
+        "figure_id": "f1",
+        "evidence": "35% and 52% are printed only on the first and last points of the line",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "name": "synchronized_dual_axes",
+        "figure_id": "f1",
+        "evidence": "the left ($) and right (%) axes align perfectly so 150 is opposite 50",
+        "affects": [
+          2
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "98",
+        "figure_id": "f1",
+        "mark": "the '24 Data center semiconductors bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Data center semiconductors",
+          "'24"
+        ]
+      },
+      {
+        "value": "148",
+        "figure_id": "f1",
+        "mark": "the '26F Data center semiconductors bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Data center semiconductors",
+          "'26F"
+        ]
+      },
+      {
+        "value": "270",
+        "figure_id": "f1",
+        "mark": "the '30F Data center semiconductors bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Data center semiconductors",
+          "'30F"
+        ]
+      },
+      {
+        "value": "180",
+        "figure_id": "f1",
+        "mark": "the '27F Data center semiconductors bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Data center semiconductors",
+          "'27F"
+        ]
+      },
+      {
+        "value": "35",
+        "figure_id": "f1",
+        "mark": "the '24 Portion of AI accelerator point",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Portion of AI accelerator",
+          "'24"
+        ]
+      },
+      {
+        "value": "52",
+        "figure_id": "f1",
+        "mark": "the '30F Portion of AI accelerator point",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Portion of AI accelerator",
+          "'30F"
+        ]
+      },
+      {
+        "value": "41",
+        "figure_id": "f1",
+        "mark": "the '27F Portion of AI accelerator point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Portion of AI accelerator",
+          "'27F"
+        ]
+      },
+      {
+        "value": "47",
+        "figure_id": "f1",
+        "mark": "the '29F Portion of AI accelerator point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Portion of AI accelerator",
+          "'29F"
+        ]
+      },
+      {
+        "value": "245",
+        "figure_id": "f1",
+        "mark": "the '29F Data center semiconductors bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Data center semiconductors",
+          "'29F"
+        ]
+      }
+    ],
+    "hardest_step": 2
+  }
+}

@@ -1,0 +1,271 @@
+{
+  "stem": "investing-in-education-2025-NC0125093ENN-1_p14",
+  "document": "investing-in-education-2025-NC0125093ENN-1",
+  "tags": "need_estimate",
+  "model": "claude-opus-5",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "seconds": 59.2,
+  "usage": {
+    "input_tokens": 10639,
+    "output_tokens": 4673,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "本页两图并列：图6为折线图，紫色横幅标题「Figure 6. Evolution of nominal and real public expenditure on education in the EU-27 (index 2007=100)」，单位（指数基期）藏在标题括号内；y轴自100起、每10一格、仅虚线横向网格；x轴2007–2023逐年；两条带圆点标记的线（Nominal、Real），图例置于绘图区下方，数值全部不印。图7实为带表头的数据表，双层列头（年份行＋「% of total」行）、末列「2019-2023 / percentage point change」用另一种橙色突出，行底交替浅紫填充，含负值。\n\n难点：图6十个考查值均需按轴读数，网格间距10，2015年名义约116、实际约105均落在格线之间；定位一个值需同时给出系列名与年份两把钥匙。图7则天然成表，标签齐全。不确定：105究竟属Real 2016还是Nominal 2008，110属2010还是2012，肉眼难以区分。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 6.",
+          "title": "Evolution of nominal and real public expenditure on education in the EU-27 (index 2007=100)",
+          "subtitle": "",
+          "unit_text": "index 2007=100",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 17,
+        "marks": 34,
+        "values_printed": "none"
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "Figure 7.",
+          "title": "Public expenditure by function (2019-2023)",
+          "subtitle": "",
+          "unit_text": "% of total",
+          "placement": "above"
+        },
+        "type": "other",
+        "type_other": "data table grid",
+        "panels": 1,
+        "series": 6,
+        "categories": 10,
+        "marks": 60,
+        "values_printed": "all"
+      }
+    ],
+    "components": [
+      {
+        "key": "multi_figure_page",
+        "figure_id": "page",
+        "evidence": "\"Figure 6. Evolution of nominal and real...\" and \"Figure 7. Public expenditure by function (2019-2023)\" separately captioned"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "\"Notes: Real values are expressed at 2015 constant prices...\" and \"Source: European Commission services' calculations...\""
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f2",
+        "evidence": "\"Source: Eurostat COFOG data. Online data code: [gov_10a_exp].\" under the table"
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "\"Nominal\" and \"Real\" swatches in a row beneath the 2007-2023 axis"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "dashed horizontal rules at 100,110...160; no vertical rules in the panel"
+      },
+      {
+        "key": "axis_starts_above_zero",
+        "figure_id": "f1",
+        "evidence": "lowest y tick reads \"100\", no break glyph drawn on the axis"
+      },
+      {
+        "key": "rebased_index_values",
+        "figure_id": "f1",
+        "evidence": "title ends \"(index 2007=100)\"; both lines start at 100 in 2007"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "y ticks are bare 100-160; scale word only in \"(index 2007=100)\""
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f2",
+        "evidence": "second header row reads \"% of total\" under each year; cells are bare numbers"
+      },
+      {
+        "key": "data_table_as_figure",
+        "figure_id": "f2",
+        "evidence": "bordered grid with header row, numbered \"Figure 7.\" in a purple caption banner"
+      },
+      {
+        "key": "negative_values",
+        "figure_id": "f2",
+        "evidence": "change column shows \"-0.1\", \"-0.3\", \"-0.4\", \"-1.9\""
+      },
+      {
+        "key": "highlighted_category",
+        "figure_id": "f2",
+        "evidence": "\"2019-2023 percentage point change\" header cell is amber while year headers are red"
+      },
+      {
+        "key": "data_link_below_figure",
+        "figure_id": "f2",
+        "evidence": "\"Online data code: [gov_10a_exp]\" hyperlink under the table"
+      },
+      {
+        "key": "wrapped_category_labels",
+        "figure_id": "f2",
+        "evidence": "row labels \"Housing and community amenities\", \"Recreation, culture and religion\" stacked down the left column"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "banner_figure_title",
+        "figure_id": "page",
+        "evidence": "both captions sit in a filled purple bar spanning the figure width, white bold text",
+        "affects": [
+          3,
+          4
+        ]
+      },
+      {
+        "name": "two_level_column_header",
+        "figure_id": "f2",
+        "evidence": "outer header row \"2019 ... 2023\", inner row \"% of total\" repeated beneath each",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "name": "alternating_row_shading",
+        "figure_id": "f2",
+        "evidence": "table rows alternate pale lilac and white fill down all ten function rows",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "name": "hyperlinked_source_terms",
+        "figure_id": "f1",
+        "evidence": "\"based on Eurostat COFOG data and AMECO data\" with COFOG and AMECO underlined as links",
+        "affects": []
+      },
+      {
+        "name": "marker_points_on_line",
+        "figure_id": "f1",
+        "evidence": "each yearly value carries a round dot on both the Nominal and Real lines",
+        "affects": [
+          2
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "100",
+        "figure_id": "f1",
+        "mark": "the 2007 Nominal point, at the axis origin level",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Nominal",
+          "2007"
+        ]
+      },
+      {
+        "value": "100",
+        "figure_id": "f1",
+        "mark": "the 2007 Real point, coincident with Nominal at 100",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Real",
+          "2007"
+        ]
+      },
+      {
+        "value": "110",
+        "figure_id": "f1",
+        "mark": "the 2010 Nominal point on the 110 gridline",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Nominal",
+          "2010"
+        ]
+      },
+      {
+        "value": "116",
+        "figure_id": "f1",
+        "mark": "the 2015 Nominal point, between the 110 and 120 gridlines",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Nominal",
+          "2015"
+        ]
+      },
+      {
+        "value": "105",
+        "figure_id": "f1",
+        "mark": "the 2016 Real point, just above the 100 gridline",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Real",
+          "2016"
+        ]
+      },
+      {
+        "value": "130",
+        "figure_id": "f1",
+        "mark": "the 2019 Nominal point, on the 130 gridline",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Nominal",
+          "2019"
+        ]
+      },
+      {
+        "value": "109",
+        "figure_id": "f1",
+        "mark": "the 2019 Real point, just below the 110 gridline",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Real",
+          "2019"
+        ]
+      },
+      {
+        "value": "148",
+        "figure_id": "f1",
+        "mark": "the 2022 Nominal point, between 140 and 150",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Nominal",
+          "2022"
+        ]
+      },
+      {
+        "value": "159",
+        "figure_id": "f1",
+        "mark": "the 2023 Nominal point, the top end of the line at 160",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Nominal",
+          "2023"
+        ]
+      },
+      {
+        "value": "115",
+        "figure_id": "f1",
+        "mark": "the 2023 Real point, the endpoint just above 110",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Real",
+          "2023"
+        ]
+      }
+    ],
+    "hardest_step": 2
+  }
+}

@@ -1,0 +1,238 @@
+{
+  "stem": "pwc-semiconductor-and-beyond-2026-full-report_p18",
+  "document": "pwc-semiconductor-and-beyond-2026-full-report",
+  "tags": "untagged",
+  "model": "claude-opus-5",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "seconds": 54.1,
+  "usage": {
+    "input_tokens": 10751,
+    "output_tokens": 4176,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "页面右侧为浅灰底的组合图：灰柱（左轴，0–300，\"(Unit: $ Billion)\" 紧跟标题）＋橙线（右轴 \"(%)\"，0–100），图例置于标题下、绘图区上方，X 轴为 '24、'25F…'30F。生成器需支持：双轴、柱线混合、图例上置、右轴单位符号置于顶端刻度之上、仅首末两点标注（35%、52%）、以及整幅图坐落于灰色面板并与左侧两栏正文并排。取值困难在于：七根柱全部无数值标签，左轴刻度间隔 50，98/148/245/270 需插值读取；橙线中间点 41、47 亦无标签，右轴每 10 一格。定位一个值至少需要\"年份 + 系列名 + 图题\"三项，而图无编号，只能以标题寻址。不确定：41 与 47 分别对应 '26F 与 '28F 的判断，以及 300 刻度处细横线是网格还是边框。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "AI accelerators in the data center",
+          "subtitle": "",
+          "unit_text": "(Unit: $ Billion)",
+          "placement": "above"
+        },
+        "type": "compound",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 7,
+        "marks": 14,
+        "values_printed": "some"
+      }
+    ],
+    "components": [
+      {
+        "key": "mixed_marks",
+        "figure_id": "f1",
+        "evidence": "grey bars for 'Data center semiconductors' with an orange line 'Portion of AI accelerator' over them"
+      },
+      {
+        "key": "dual_axis",
+        "figure_id": "f1",
+        "evidence": "left axis 0,50,...,300; right axis 0,10,...,100 headed '(%)'"
+      },
+      {
+        "key": "legend_above_plot",
+        "figure_id": "f1",
+        "evidence": "legend row sits between the title and the plot area"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "'Source: PwC analysis' in small print under the plot"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "'(Unit: $ Billion)' set beside the title; the left axis shows bare 0-300"
+      },
+      {
+        "key": "axis_title_above_axis",
+        "figure_id": "f1",
+        "evidence": "'(%)' printed above the right axis top tick '100'"
+      },
+      {
+        "key": "value_label_outside",
+        "figure_id": "f1",
+        "evidence": "'35%' and '52%' printed above/beside the orange line's first and last points"
+      },
+      {
+        "key": "nonstandard_time_ticks",
+        "figure_id": "f1",
+        "evidence": "x ticks read \"'24\", \"'25F\", \"'26F\", \"'27F\", \"'28F\", \"'29F\", \"'30F\""
+      },
+      {
+        "key": "side_text_bullets",
+        "figure_id": "page",
+        "evidence": "two columns of body text run left of the figure in the same horizontal band"
+      },
+      {
+        "key": "panel_background",
+        "figure_id": "f1",
+        "evidence": "the whole figure sits on a light grey rectangle spanning the right of the page"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "endpoint_value_labels_only",
+        "figure_id": "f1",
+        "evidence": "only the first ('35%') and last ('52%') points of the orange line carry labels; five points unlabelled",
+        "affects": [
+          2,
+          3
+        ]
+      },
+      {
+        "name": "inline_unit_after_title",
+        "figure_id": "f1",
+        "evidence": "'(Unit: $ Billion)' set in smaller type on the same line, right of 'AI accelerators in the data center'",
+        "affects": [
+          3,
+          4
+        ]
+      },
+      {
+        "name": "unnumbered_figure",
+        "figure_id": "f1",
+        "evidence": "no 'Figure n' anywhere; only the bold title line identifies the chart",
+        "affects": [
+          3,
+          4
+        ]
+      },
+      {
+        "name": "forecast_suffix_in_tick",
+        "figure_id": "f1",
+        "evidence": "'F' appended to ticks '25F'-'30F' marks forecast years, no shaded band used",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "98",
+        "figure_id": "f1",
+        "mark": "the '24 grey bar, read just below the 100 level on the left axis",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "'24",
+          "Data center semiconductors",
+          "AI accelerators in the data center",
+          "(Unit: $ Billion)"
+        ]
+      },
+      {
+        "value": "148",
+        "figure_id": "f1",
+        "mark": "the '26F grey bar, just below 150 on the left axis",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "'26F",
+          "Data center semiconductors",
+          "AI accelerators in the data center",
+          "(Unit: $ Billion)"
+        ]
+      },
+      {
+        "value": "270",
+        "figure_id": "f1",
+        "mark": "the '30F grey bar, the tallest, between 250 and 300",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "'30F",
+          "Data center semiconductors",
+          "AI accelerators in the data center",
+          "(Unit: $ Billion)"
+        ]
+      },
+      {
+        "value": "180",
+        "figure_id": "f1",
+        "mark": "the '27F grey bar, between 150 and 200 on the left axis",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "'27F",
+          "Data center semiconductors",
+          "AI accelerators in the data center",
+          "(Unit: $ Billion)"
+        ]
+      },
+      {
+        "value": "35",
+        "figure_id": "f1",
+        "mark": "the '24 point of the orange line, labelled '35%'",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "'24",
+          "Portion of AI accelerator",
+          "(%)",
+          "AI accelerators in the data center"
+        ]
+      },
+      {
+        "value": "52",
+        "figure_id": "f1",
+        "mark": "the '30F end point of the orange line, labelled '52%'",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "'30F",
+          "Portion of AI accelerator",
+          "(%)",
+          "AI accelerators in the data center"
+        ]
+      },
+      {
+        "value": "41",
+        "figure_id": "f1",
+        "mark": "the '26F point of the orange line, read against the right axis just above 40",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "'26F",
+          "Portion of AI accelerator",
+          "(%)",
+          "AI accelerators in the data center"
+        ]
+      },
+      {
+        "value": "47",
+        "figure_id": "f1",
+        "mark": "the '28F point of the orange line, read against the right axis between 40 and 50",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "'28F",
+          "Portion of AI accelerator",
+          "(%)",
+          "AI accelerators in the data center"
+        ]
+      },
+      {
+        "value": "245",
+        "figure_id": "f1",
+        "mark": "the '29F grey bar, just below 250 on the left axis",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "'29F",
+          "Data center semiconductors",
+          "AI accelerators in the data center",
+          "(Unit: $ Billion)"
+        ]
+      }
+    ],
+    "hardest_step": 2
+  }
+}

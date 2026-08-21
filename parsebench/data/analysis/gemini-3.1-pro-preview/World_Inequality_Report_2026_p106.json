@@ -1,0 +1,267 @@
+{
+  "stem": "World_Inequality_Report_2026_p106",
+  "document": "World_Inequality_Report_2026",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 72.2,
+  "usage": {
+    "input_tokens": 5323,
+    "output_tokens": 10110,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n要绘制此页面，生成器需要支持：\n1. **多面板折线图**：并排的两个独立面板，每个面板有自己的面板标题（`By income group`和`By world region`）、时间轴（相同的刻度）以及独立的Y轴刻度。\n2. **分组的图例布局**：图例统一置于图表下方，但在视觉和逻辑上分为左右两个区块，分别对应上方不同的面板数据列。\n3. **坐标轴与参考线**：左侧面板旁设置了旋转的纵轴标题（包含单位说明），两个面板的Y轴范围涵盖负值（-6%到3%），并在0%处绘制了水平的虚线参考线；X轴则是每10年一标的稀疏时间刻度。\n4. **高密度多重线系**：支持十余条无数据标签且颜色相近、互相交织的细折线绘制。\n\n### 定位一个值难在哪\n以定位“NAOC线在2025年的值（2.1）”为例，该点位于右侧面板红色折线的最末端。由于Y轴的总跨度高达9%（从-6%至3%），图表高度相对较小，且完全缺乏数据标签，试图通过肉眼将线条高度水平对齐到左侧Y轴并读出2.1的具体数值，是根本无法达到5%容差精度的。这会在数值读取步骤（Step 2）造成严重阻碍。\n\n### 不确定的\n具体的折线数据采样频率。虽然X轴的标签为10年一跨度，且子标题标明1970-2025，但中间每年的微小波动并未绘制数据点标记（marker），因此只能推断其为年度数据而无法从图元特征上直接确证。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 5.2.",
+          "title": "Rich countries receive 1% of their GDP from the rest of the world due to financial privilege",
+          "subtitle": "Excess yield (assets–liabilities) as % of group GDP, 1970–2025",
+          "unit_text": "as % of group GDP",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 2,
+        "series": 14,
+        "categories": 55,
+        "marks": 770,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Excess yield (% of group GDP), MER",
+            "low": "-6%",
+            "high": "3%",
+            "serves": "all lines in left panel"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "1980",
+            "high": "2020",
+            "serves": "all lines in left panel"
+          },
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "-6%",
+            "high": "3%",
+            "serves": "all lines in right panel"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "1980",
+            "high": "2020",
+            "serves": "all lines in right panel"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "panel",
+            "label_source": "panel_title",
+            "example": "By income group"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Top 20%"
+          },
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2020"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "By world region",
+            "NAOC",
+            "2020"
+          ],
+          "value": "~1%",
+          "value_source": "axis_read",
+          "why_hard": "No value labels, and reading a fine value off a 9% scale blocks 5% accuracy."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "panel_title_per_panel",
+        "figure_id": "f1",
+        "evidence": "titles 'By income group' and 'By world region' above panels"
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "the legend row sits below the two panels"
+      },
+      {
+        "key": "rotated_axis_title",
+        "figure_id": "f1",
+        "evidence": "the title 'Excess yield...' is vertical beside the left axis"
+      },
+      {
+        "key": "negative_values",
+        "figure_id": "f1",
+        "evidence": "the y-axis starts at -6%"
+      },
+      {
+        "key": "reference_line",
+        "figure_id": "f1",
+        "evidence": "a horizontal dotted zero line across both panels"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "horizontal dotted grid lines, no vertical ones"
+      },
+      {
+        "key": "sparse_time_ticks",
+        "figure_id": "f1",
+        "evidence": "ticks every 10 years for annual data lines"
+      },
+      {
+        "key": "dense_marks_100plus",
+        "figure_id": "f1",
+        "evidence": "14 series lines spanning over 50 years"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "panel_specific_legends_below_plot",
+        "figure_id": "f1",
+        "evidence": "the legend has two separate blocks aligned under their respective panels",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "0.8",
+        "figure_id": "f1",
+        "mark": "Top 20% line in left panel around 2010",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "By income group",
+          "Top 20%",
+          "2010"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-1.5",
+        "figure_id": "f1",
+        "mark": "Bottom 20% line in left panel around 2020",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "By income group",
+          "Bottom 20%",
+          "2020"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-2",
+        "figure_id": "f1",
+        "mark": "40%-60% line in left panel around 2020",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "By income group",
+          "40%-60%",
+          "2020"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "2.1",
+        "figure_id": "f1",
+        "mark": "NAOC line in right panel around 2025",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "By world region",
+          "NAOC",
+          "2025"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "-3.2",
+        "figure_id": "f1",
+        "mark": "60%-80% line in left panel around 2000",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "By income group",
+          "60%-80%",
+          "2000"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "1.3",
+        "figure_id": "f1",
+        "mark": "NAOC line in right panel around 2015",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "By world region",
+          "NAOC",
+          "2015"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "-3.5",
+        "figure_id": "f1",
+        "mark": "SSAF line in right panel around 2020",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "By world region",
+          "SSAF",
+          "2020"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "折线图Y轴跨度达9%（-6%到3%），且完全没有数据标签。像试图读取NAOC在2025年的值2.1，仅凭肉眼将平滑折线对齐远处的坐标轴，绝对无法达到5%的精度要求。",
+    "examples": [
+      {
+        "gap": "P2",
+        "figure_id": "f1",
+        "quote": "\"By income group\" and \"By world region\" titles above the two panels",
+        "why": "图例由于面板内容不同而拆分，需要将面板名称作为定位数据列的必需键（panel_key），以准确建立映射。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "\"Figure 5.2. Rich countries receive 1%...\" and the subtitle below it",
+        "why": "标题区块包含主标题、副标题，并且整体位于图表上方，生成器需将标题作为一个结构化字段独立输出。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "the legend split into two blocks aligned under their respective panels",
+        "why": "图例虽然统一放在图表下方，但在视觉上分成了对应左右面板的两部分，生成器需要能建立这种特定的从属关系。"
+      }
+    ]
+  }
+}

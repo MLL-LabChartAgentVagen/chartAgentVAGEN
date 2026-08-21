@@ -1,0 +1,327 @@
+{
+  "stem": "World_Inequality_Report_2026_p78",
+  "document": "World_Inequality_Report_2026",
+  "tags": "3d_chart+need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "no_vocab",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 70.1,
+  "usage": {
+    "input_tokens": 3186,
+    "output_tokens": 9963,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n绘制此页图表需要支持水平排列的小体量多图（Small Multiples）布局，并能在最左侧全局放置一个旋转90度的Y轴共享标签。每个子面板需要独立的X轴和Y轴，其中前两面板刻度一致，第三个面板具有不同的Y轴刻度范围，并包含0轴以下的负半轴。图表内需绘制多条折线（Series），每条线对应图例中的一种颜色，且背景需有水平和垂直的虚线网格辅助。图例统一放置在所有面板的底部。此外，生成器必须能处理带有数学逻辑符号（如=和+）的面板标题排版。\n\n### 定位一个值难在哪\n以试图定位“Europe在1995年的Net national wealth = 360”为例，读者必须通过面板标题“Net national wealth =”、底部图例匹配Europe对应的深蓝色线，并对齐X轴的“1995”刻度。然而最困难的是数值读取：图上没有任何直接打印的数值，只能依靠左侧Y轴进行估算，而该轴的刻度间距极大（每档250%），在这种间距下读取360这样的非刻度对齐值，肉眼估算存在巨大误差，完全无法满足5%的容差精度要求。\n\n### 不确定的\n图中存在大量的线条交织，特别是在2000-2015年区间以及中间面板（Domestic capital +），部分线条重叠紧密，颜色相近时很难精确追踪某一区域的具体波动路径。同时，部分线条（如East Asia在中间面板）的最高值超出了750%的刻度上限，其具体数值只能靠推测延伸。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 3.3.",
+          "title": "Domestic capital remains the foundation of national wealth everywhere",
+          "subtitle": "Wealth composition across regions, 1995–2025",
+          "unit_text": "Wealth as a % of national income",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 3,
+        "series": 8,
+        "categories": 31,
+        "marks": 744,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Wealth as a % of national income",
+            "low": "0%",
+            "high": "750%",
+            "serves": "all lines in panel 1"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "1995",
+            "high": "2025",
+            "serves": "all lines in panel 1"
+          },
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "0%",
+            "high": "750%",
+            "serves": "all lines in panel 2"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "1995",
+            "high": "2025",
+            "serves": "all lines in panel 2"
+          },
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "0%",
+            "high": "200%",
+            "serves": "all lines in panel 3"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "1995",
+            "high": "2025",
+            "serves": "all lines in panel 3"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "panel",
+            "label_source": "panel_title",
+            "example": "Net national wealth ="
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "East Asia"
+          },
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2025"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Net national wealth =",
+            "East Asia",
+            "2025"
+          ],
+          "value": "625",
+          "value_source": "axis_read",
+          "why_hard": "Y-axis tick spacing is 250%, making visual estimation to a 5% tolerance impossible."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "horizontal_small_multiples",
+        "figure_id": "f1",
+        "evidence": "three panels are arranged side by side",
+        "affects": [
+          1,
+          3
+        ]
+      },
+      {
+        "key": "shared_rotated_y_axis_label",
+        "figure_id": "f1",
+        "evidence": "the label 'Wealth as a % of national income' sits on the far left rotated 90 degrees",
+        "affects": [
+          4
+        ]
+      },
+      {
+        "key": "percentage_y_axis_ticks",
+        "figure_id": "f1",
+        "evidence": "y-axis ticks are formatted with a % sign, e.g., '750%'",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "key": "shared_bottom_legend",
+        "figure_id": "f1",
+        "evidence": "legend with 8 items is placed below all panels",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "dotted_gridlines",
+        "figure_id": "f1",
+        "evidence": "horizontal and vertical dotted lines behind the curves",
+        "affects": []
+      }
+    ],
+    "new_components": [
+      {
+        "name": "equation_panel_titles",
+        "figure_id": "f1",
+        "evidence": "panel titles contain '=' and '+' to form an equation across panels",
+        "affects": [
+          4
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "625",
+        "figure_id": "f1",
+        "mark": "East Asia line in Net national wealth = panel at 2025",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Net national wealth =",
+          "East Asia",
+          "2025"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "360",
+        "figure_id": "f1",
+        "mark": "Europe line in Net national wealth = panel at 1995",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Net national wealth =",
+          "Europe",
+          "1995"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "600",
+        "figure_id": "f1",
+        "mark": "North America & Oceania line in Net national wealth = panel at 2025",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Net national wealth =",
+          "North America & Oceania",
+          "2025"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "900",
+        "figure_id": "f1",
+        "mark": "East Asia line in Domestic capital + panel at 2025",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Domestic capital +",
+          "East Asia",
+          "2025"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "380",
+        "figure_id": "f1",
+        "mark": "Europe line in Domestic capital + panel at 1995",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Domestic capital +",
+          "Europe",
+          "1995"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "430",
+        "figure_id": "f1",
+        "mark": "South & Southeast Asia line in Net national wealth = panel at 2025",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Net national wealth =",
+          "South & Southeast Asia",
+          "2025"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "30",
+        "figure_id": "f1",
+        "mark": "East Asia line in Net foreign assets panel at 1995",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Net foreign assets",
+          "East Asia",
+          "1995"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "70",
+        "figure_id": "f1",
+        "mark": "East Asia line in Net foreign assets panel at 2025",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Net foreign assets",
+          "East Asia",
+          "2025"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-80",
+        "figure_id": "f1",
+        "mark": "North America & Oceania line in Net foreign assets panel at 2025",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Net foreign assets",
+          "North America & Oceania",
+          "2025"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-60",
+        "figure_id": "f1",
+        "mark": "Latin America line in Net foreign assets panel at 2025",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Net foreign assets",
+          "Latin America",
+          "2025"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "整个图表无任何直接打印的数据标签，完全依赖坐标轴读取。前两个面板Y轴刻度间距高达250%，在此间距下读取如360的值，肉眼估算根本无法满足5%的容差范围限制。",
+    "examples": [
+      {
+        "gap": "P2",
+        "figure_id": "f1",
+        "quote": "panel titles 'Net national wealth =', 'Domestic capital +', 'Net foreign assets'",
+        "why": "需要将多面板的子图标题作为数据寻址的关键维度（panel key）提取出来。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "y-axis ticks '750%', '500%', '250%', '0%'",
+        "why": "需要支持直接在Y轴刻度标签上格式化附加百分号单位。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "Figure 3.3. Domestic capital remains the foundation of national wealth everywhere",
+        "why": "需结构化提取图表编号及主副标题的文本及排版位置。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "panel titles 'Net national wealth =', 'Domestic capital +'",
+        "why": "需要支持解析和保存子图标题之间存在的等式逻辑关系。"
+      }
+    ]
+  }
+}

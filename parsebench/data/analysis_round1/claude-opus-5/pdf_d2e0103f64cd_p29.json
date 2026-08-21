@@ -1,0 +1,270 @@
+{
+  "stem": "pdf_d2e0103f64cd_p29",
+  "document": "pdf_d2e0103f64cd",
+  "tags": "3d_chart",
+  "model": "claude-opus-5",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "seconds": 46.7,
+  "usage": {
+    "input_tokens": 10659,
+    "output_tokens": 4118,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "本页两张折线图,均无编号,标题居中置于绘图区上方,单位写在标题括号内:「Average Occupancy Rates in the Singapore CBD (%)」与「Average Rental Rates in the Singapore CBD (S$ per sq ft per month)」;第二图另在纵轴顶端单列「S$」。生成器需能:纵轴从 65% 起(非零起点,刻度 65%–100%);x 轴混排年份与季度「2010…Q1 2013, Q2 2013, Q3 2013」;三条彩色折线,每点旁标注数值(有的在线上、有的在线下以避让);图例横排于绘图区下方;上标脚注「84.1%⁽¹⁾」加 Note 与 Source 行。取值困难在于:同一页两图共用相同系列名与相同时间轴,9.4 / 11.0 之类数字若无图标题限定即会与另一图混淆;第二图 Marina Bay 缺 2010 年点位,却无任何缺失标记。不确定:第一图是否有极浅的横向网格线。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "Average Occupancy Rates in the Singapore CBD (%)",
+          "subtitle": "",
+          "unit_text": "(%)",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 1,
+        "series": 3,
+        "categories": 6,
+        "marks": 18,
+        "values_printed": "all"
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "",
+          "title": "Average Rental Rates in the Singapore CBD (S$ per sq ft per month)",
+          "subtitle": "",
+          "unit_text": "S$",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 1,
+        "series": 3,
+        "categories": 6,
+        "marks": 17,
+        "values_printed": "all"
+      }
+    ],
+    "components": [
+      {
+        "key": "multi_figure_page",
+        "figure_id": "page",
+        "evidence": "two separately captioned line charts, occupancy rates and rental rates, each with its own Source line"
+      },
+      {
+        "key": "axis_starts_above_zero",
+        "figure_id": "f1",
+        "evidence": "y ticks read 65%, 70%, 75% ... 100%; lowest tick is 65% with no break glyph"
+      },
+      {
+        "key": "value_label_outside",
+        "figure_id": "f1",
+        "evidence": "96.8%, 70.3%, 84.1% printed above or below each plotted point, off the line"
+      },
+      {
+        "key": "value_label_outside",
+        "figure_id": "f2",
+        "evidence": "12.0, 9.0, 6.5, 11.0 printed above or below the points, not on the line"
+      },
+      {
+        "key": "footnote_marker",
+        "figure_id": "f1",
+        "evidence": "\"84.1%(1)\" with superscript (1), matched by \"(1) Due to the completion of Asia Square Tower 2...\""
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "\"Note:\" then \"(1) Due to the completion...\" and \"Source: Independent Market Research Report.\""
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f2",
+        "evidence": "\"Source: Independent Market Research Report.\" italic under the legend"
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "\"Marina Bay | Raffles Place | Shenton Way/Robinson Rd/Cecil Street\" in a row under the x axis"
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f2",
+        "evidence": "\"Marina Bay | Raffles Place | Shenton Way/ Robinson Rd/ Cecil Street\" row below the axis"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "title ends \"(%)\"; axis ticks themselves read 65%...100%"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f2",
+        "evidence": "title ends \"(S$ per sq ft per month)\"; axis ticks are bare 0, 2, 4 ... 14"
+      },
+      {
+        "key": "axis_title_above_axis",
+        "figure_id": "f2",
+        "evidence": "\"S$\" set above the top tick 14 at the head of the y axis"
+      },
+      {
+        "key": "nonstandard_time_ticks",
+        "figure_id": "f1",
+        "evidence": "x ticks read \"2010  2011  2012  Q1 2013  Q2 2013  Q3 2013\""
+      },
+      {
+        "key": "nonstandard_time_ticks",
+        "figure_id": "f2",
+        "evidence": "x ticks read \"2010  2011  2012  Q1 2013  Q2 2013  Q3 2013\""
+      },
+      {
+        "key": "side_text_bullets",
+        "figure_id": "page",
+        "evidence": "body paragraphs \"The following graph illustrates...\" run above and between the two charts"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "mixed_annual_and_quarterly_ticks",
+        "figure_id": "f1",
+        "evidence": "same axis holds annual slots 2010-2012 then quarterly slots Q1 2013, Q2 2013, Q3 2013",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "name": "series_starts_mid_axis",
+        "figure_id": "f2",
+        "evidence": "Marina Bay line begins at 2011 (12.0); no point or label at the 2010 slot",
+        "affects": [
+          1,
+          3
+        ]
+      },
+      {
+        "name": "figure_rule_above_plot",
+        "figure_id": "f1",
+        "evidence": "a full-width horizontal rule separates the title from the plot area on both charts",
+        "affects": []
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "70.3",
+        "figure_id": "f1",
+        "mark": "the 2010 Marina Bay point, labelled \"70.3%\" below the line",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Average Occupancy Rates in the Singapore CBD (%)",
+          "Marina Bay",
+          "2010"
+        ]
+      },
+      {
+        "value": "96.8",
+        "figure_id": "f1",
+        "mark": "the 2010 Raffles Place point, labelled \"96.8%\" above the line",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Average Occupancy Rates in the Singapore CBD (%)",
+          "Raffles Place",
+          "2010"
+        ]
+      },
+      {
+        "value": "91.2",
+        "figure_id": "f1",
+        "mark": "the 2012 Shenton Way/Robinson Rd/Cecil Street point, labelled \"91.2%\"",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Average Occupancy Rates in the Singapore CBD (%)",
+          "Shenton Way/Robinson Rd/Cecil Street",
+          "2012"
+        ]
+      },
+      {
+        "value": "84.1",
+        "figure_id": "f1",
+        "mark": "the Q3 2013 Marina Bay point, labelled \"84.1%(1)\" with footnote marker",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Average Occupancy Rates in the Singapore CBD (%)",
+          "Marina Bay",
+          "Q3 2013"
+        ]
+      },
+      {
+        "value": "97.7",
+        "figure_id": "f1",
+        "mark": "the Q3 2013 Shenton Way/Robinson Rd/Cecil Street point, top-right label \"97.7%\"",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Average Occupancy Rates in the Singapore CBD (%)",
+          "Shenton Way/Robinson Rd/Cecil Street",
+          "Q3 2013"
+        ]
+      },
+      {
+        "value": "12.0",
+        "figure_id": "f2",
+        "mark": "the 2011 Marina Bay point, first point of that line, labelled \"12.0\"",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Average Rental Rates in the Singapore CBD (S$ per sq ft per month)",
+          "Marina Bay",
+          "2011"
+        ]
+      },
+      {
+        "value": "9.0",
+        "figure_id": "f2",
+        "mark": "the 2010 Raffles Place point, labelled \"9.0\" to the left of the line",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Average Rental Rates in the Singapore CBD (S$ per sq ft per month)",
+          "Raffles Place",
+          "2010"
+        ]
+      },
+      {
+        "value": "7.8",
+        "figure_id": "f2",
+        "mark": "the 2011 Shenton Way/ Robinson Rd/ Cecil Street point, labelled \"7.8\" below the line",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Average Rental Rates in the Singapore CBD (S$ per sq ft per month)",
+          "Shenton Way/ Robinson Rd/ Cecil Street",
+          "2011"
+        ]
+      },
+      {
+        "value": "11.0",
+        "figure_id": "f2",
+        "mark": "the Q3 2013 Marina Bay point, labelled \"11.0\" above the line end",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Average Rental Rates in the Singapore CBD (S$ per sq ft per month)",
+          "Marina Bay",
+          "Q3 2013"
+        ]
+      },
+      {
+        "value": "9.4",
+        "figure_id": "f2",
+        "mark": "the Q3 2013 Raffles Place point, labelled \"9.4\" below the line end",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Average Rental Rates in the Singapore CBD (S$ per sq ft per month)",
+          "Raffles Place",
+          "Q3 2013"
+        ]
+      }
+    ],
+    "hardest_step": 3
+  }
+}

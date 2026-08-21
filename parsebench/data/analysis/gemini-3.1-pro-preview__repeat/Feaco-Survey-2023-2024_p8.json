@@ -1,0 +1,187 @@
+{
+  "stem": "Feaco-Survey-2023-2024_p8",
+  "document": "Feaco-Survey-2023-2024",
+  "tags": "untagged",
+  "model": "gemini-3.1-pro-preview",
+  "control": "repeat",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 50.1,
+  "usage": {
+    "input_tokens": 5312,
+    "output_tokens": 6504,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n页面包含一个数据表格和一张同一数据的图表。绘制图表需要支持水平方向的分组条形图（`grouped horizontal bars`），并在面板内包含中心零线，允许条形向左延伸以表示负值（如`-11.5%`）。需要支持将数值标签放置在条形的外部（末端之后），提供仅有的垂直网格线（`vgrid_only`），并将图例置于绘图区下方。数据表格需要带有底色的表头和边框，并在下方附加带有背景色的注释框。\n\n### 定位一个值难在哪\n以“10.6%”为例，它位于“Technology”组的第二根深绿色条形末端。解析器需要通过底部的颜色图例确认深绿色代表“2022”，并将其与左侧的类目文本“Technology”正确交叉组合。难点在于跨越零线绘制和数值标签完全悬挂在外部时，空间上的归属可能给一些简单的坐标检测带来干扰。\n\n### 不确定的\n表格与图表展示了完全相同的数值，不确定在全页Markdown导出时，解析器是否会去重或如何决定保留哪一部分的内容；此外表格头的星号标注在常规图表转录中容易被丢弃。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "MC turnover trend by Service Lines (European panel 2021-23)",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "grouped_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 3,
+        "categories": 6,
+        "marks": 18,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "left",
+            "role": "category",
+            "unit_text": "",
+            "low": "Sales & Marketing",
+            "high": "People & Change",
+            "serves": "all bars"
+          },
+          {
+            "side": "bottom",
+            "role": "value",
+            "unit_text": "",
+            "low": "-10.0%",
+            "high": "35.0%",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Technology"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "2022"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Technology",
+            "2022"
+          ],
+          "value": "10.6%",
+          "value_source": "printed",
+          "why_hard": "Must map color to legend and match with the horizontal y-axis category."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "grouped_bar",
+        "figure_id": "f1",
+        "evidence": "three bars (2023, 2022, 2021) sit side by side per service line"
+      },
+      {
+        "key": "horizontal_bars",
+        "figure_id": "f1",
+        "evidence": "categories run down the left, bars extend to the right and left"
+      },
+      {
+        "key": "negative_values",
+        "figure_id": "f1",
+        "evidence": "the -11.5% bar extends leftwards from the 0.0% axis line"
+      },
+      {
+        "key": "value_label_outside",
+        "figure_id": "f1",
+        "evidence": "labels like 20.7% are printed beyond the end of the bars"
+      },
+      {
+        "key": "vgrid_only",
+        "figure_id": "f1",
+        "evidence": "vertical grid lines mark the percentiles, no horizontal rules"
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "the legend with 2023, 2022, 2021 squares is under the x-axis"
+      },
+      {
+        "key": "data_table_as_figure",
+        "figure_id": "page",
+        "evidence": "a bordered table with column headers sits directly above the chart"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "page",
+        "evidence": "a framed box contains 'Source: Our elaborations...' below the table"
+      }
+    ],
+    "new_components": [],
+    "spot_checks": [
+      {
+        "value": "20.7%",
+        "figure_id": "f1",
+        "mark": "the light blue 2023 bar in the Sales & Marketing group",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Sales & Marketing",
+          "2023"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "10.6%",
+        "figure_id": "f1",
+        "mark": "the dark green 2022 bar in the Technology group",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Technology",
+          "2022"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "22.0%",
+        "figure_id": "f1",
+        "mark": "the dark green 2022 bar in the Strategy group",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Strategy",
+          "2022"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "-11.5%",
+        "figure_id": "f1",
+        "mark": "the light blue 2023 bar extending left in the People & Change group",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "People & Change",
+          "2023"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      }
+    ],
+    "hardest_step": 3,
+    "hardest_step_why": "在寻找“-11.5%”时，图表不仅要求将外部标签准确关联至向左延伸的负值条形，还需要匹配其底部图例（2023）和左侧纵向文本。",
+    "examples": [
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "the -11.5% bar is drawn leftwards past the 0.0% line",
+        "why": "目前的流水线需要能够支持0轴居中、条形可向反方向（左侧或下方）延伸的双向绘制逻辑。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "20.7% sits just outside the end of the top bar",
+        "why": "需要能够控制将数值标签完全渲染在条形的外部边缘，而不是被限制在条形内部。"
+      }
+    ]
+  }
+}

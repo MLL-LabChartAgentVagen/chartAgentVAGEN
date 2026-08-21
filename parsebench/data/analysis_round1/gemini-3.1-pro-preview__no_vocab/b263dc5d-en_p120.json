@@ -1,0 +1,223 @@
+{
+  "stem": "b263dc5d-en_p120",
+  "document": "b263dc5d-en",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "no_vocab",
+  "effort": "high",
+  "dpi": 150,
+  "seconds": 62.4,
+  "usage": {
+    "input_tokens": 2245,
+    "output_tokens": 8638,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "这个页面包含一个复合图表（柱状图和散点图结合），展示了不同国家在不同周期之间识字能力差距的变化。\n\n图表生成器需要能够绘制带有垂直X轴标签的分组柱状图，并在对应的柱子上叠加菱形散点（表示调整后的数值）。此外，需要支持底部的分组标签带（如“Round, Cycle 1: 1, 2, 3”）以及交替的背景阴影，以区分不同的国家分组。图例部分较为特殊，每个文本标签（如“Unadjusted”）旁边有两个不同的图标（实心和空心），这代表了统计显著性（在下方注释中有解释），这对图例的构建提出了额外要求。\n\n解析的最大难点在于步骤2（数值读取）。纵轴的刻度间隔为5，所有的具体数值都没有直接标注在图表上。许多数据点（如29, 34, -17）需要肉眼进行高精度插值读取，极易超出容差范围。我不确定的是部分空心/实心标记的显著性特征是否应在提取时作为独立的维度键处理。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 3.8.",
+          "title": "Change in the gap in literacy proficiency between highly and low-educated adults",
+          "subtitle": "Adjusted and unadjusted change between cycles in the average score difference between adults with tertiary education and adults with below upper secondary education (Cycle 2 minus Cycle 1); 25-65 year-olds",
+          "unit_text": "Score-point difference",
+          "placement": "above"
+        },
+        "type": "compound",
+        "type_other": "bar and scatter",
+        "panels": 1,
+        "series": 4,
+        "categories": 23,
+        "marks": 46,
+        "values_printed": "none"
+      }
+    ],
+    "components": [
+      {
+        "key": "y_axis_title_top_left",
+        "figure_id": "f1",
+        "evidence": "\"Score-point difference\" is placed above the y-axis",
+        "affects": [
+          4
+        ]
+      },
+      {
+        "key": "y_axis_ticks",
+        "figure_id": "f1",
+        "evidence": "y-axis has labels from -20 to 40 with increments of 5",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "key": "x_axis_labels_vertical",
+        "figure_id": "f1",
+        "evidence": "Country names like \"Japan\" and \"Austria\" are rotated vertically",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "horizontal_grid_lines",
+        "figure_id": "f1",
+        "evidence": "grid lines are drawn at every 5 units across the plot",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "key": "zero_line_highlighted",
+        "figure_id": "f1",
+        "evidence": "the horizontal line at 0 is drawn thicker and black",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "key": "legend_top",
+        "figure_id": "f1",
+        "evidence": "a legend sits above the chart plot area",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "background_shading",
+        "figure_id": "f1",
+        "evidence": "alternating grey shaded background areas indicate the Round/Cycle grouping",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "new_components": [
+      {
+        "name": "dual_symbol_legend_item",
+        "figure_id": "f1",
+        "evidence": "Legend entries like \"Unadjusted\" have two different icons next to them",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "name": "bottom_grouping_band",
+        "figure_id": "f1",
+        "evidence": "A shaded row below primary x-axis labels groups them into \"1\", \"2\", \"3\"",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "34",
+        "figure_id": "f1",
+        "mark": "the Japan Adjusted point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Japan",
+          "1",
+          "Adjusted"
+        ]
+      },
+      {
+        "value": "35",
+        "figure_id": "not_found",
+        "mark": "cannot be placed; it is a y-axis tick label, not a data mark",
+        "printed_on_figure": false,
+        "addressing_keys": []
+      },
+      {
+        "value": "29",
+        "figure_id": "f1",
+        "mark": "the Japan Unadjusted bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Japan",
+          "1",
+          "Unadjusted"
+        ]
+      },
+      {
+        "value": "19",
+        "figure_id": "f1",
+        "mark": "the Austria Adjusted point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Austria",
+          "1",
+          "Adjusted"
+        ]
+      },
+      {
+        "value": "-4",
+        "figure_id": "f1",
+        "mark": "the Korea Adjusted point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Korea",
+          "1",
+          "Adjusted"
+        ]
+      },
+      {
+        "value": "-17",
+        "figure_id": "f1",
+        "mark": "the Poland* Unadjusted bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Poland*",
+          "1",
+          "Unadjusted"
+        ]
+      },
+      {
+        "value": "25",
+        "figure_id": "f1",
+        "mark": "the New Zealand Unadjusted bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "New Zealand",
+          "2",
+          "Unadjusted"
+        ]
+      },
+      {
+        "value": "15",
+        "figure_id": "f1",
+        "mark": "the New Zealand Adjusted point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "New Zealand",
+          "2",
+          "Adjusted"
+        ]
+      },
+      {
+        "value": "-8",
+        "figure_id": "f1",
+        "mark": "the Israel Adjusted point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Israel",
+          "2",
+          "Adjusted"
+        ]
+      },
+      {
+        "value": "13",
+        "figure_id": "f1",
+        "mark": "the Hungary Unadjusted bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Hungary",
+          "3",
+          "Unadjusted"
+        ]
+      }
+    ],
+    "hardest_step": 2
+  }
+}

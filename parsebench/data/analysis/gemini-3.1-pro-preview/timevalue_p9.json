@@ -1,0 +1,234 @@
+{
+  "stem": "timevalue_p9",
+  "document": "timevalue",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "seconds": 55.8,
+  "usage": {
+    "input_tokens": 5345,
+    "output_tokens": 6718,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n生成器需要支持绘制带数据标记的折线图（Line chart），能自定义较粗的线条样式以及不同的标记符号（方块、三角、叉号）。图例需放置在图表区域右侧，Y轴标题支持90度旋转显示。X轴需要支持将不均匀的时间或数值跨度（1、5、10、20、30、40）强制映射为视觉上完全等距的分类刻度（Ordinal axis）。图表绘图区仅需要水平网格线（hgrid），无需垂直网格线。\n\n### 定位一个值难在哪\n以定位 `240`（Stocks ($) 在第 10 年的值）为例，图表中并未直接印出具体数值，完全依赖坐标轴进行估读。Y轴的主刻度间距高达 500，而 240 的 5% 容差仅为 12。在 500 的物理间距中分辨 12 的差异远超肉眼和一般视觉模型的解析极限，导致极易出现读取误差超过容差范围。\n\n### 不确定的\n由于缺乏源数据表，不确定线条标记之间的过渡是简单的线性插值还是有更复杂的拟合逻辑；也不确定X轴的等距间距是有意为之，还是由于制图工具默认将离散数值当成分类标签来处理。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "Holding Period and Value",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 1,
+        "series": 3,
+        "categories": 6,
+        "marks": 18,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Future value of $100 investment",
+            "low": "0",
+            "high": "4500",
+            "serves": "all series"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "Holding period (in years)",
+            "low": "1",
+            "high": "40",
+            "serves": "all series"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Stocks ($)"
+          },
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "40"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Stocks ($)",
+            "40"
+          ],
+          "value": "3850",
+          "value_source": "axis_read",
+          "why_hard": "Y-axis tick interval is 500, reading 3850 to within a 5% tolerance (192) is visually unreliable."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "rotated_axis_title",
+        "figure_id": "f1",
+        "evidence": "the y-axis title is rotated 90 degrees along the left edge"
+      },
+      {
+        "key": "unit_in_series_name",
+        "figure_id": "f1",
+        "evidence": "the legend entries include the unit, e.g., 'Stocks ($)'"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "the y-axis title mentions '$100 investment'"
+      },
+      {
+        "key": "legend_beside_plot",
+        "figure_id": "f1",
+        "evidence": "the legend is positioned to the right of the plotting area"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "horizontal grid lines are drawn, but no vertical grid lines exist"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "equidistant_non_uniform_axis",
+        "figure_id": "f1",
+        "evidence": "x-axis ticks 1, 5, 10, 20 are drawn with equal visual spacing despite unequal numeric gaps",
+        "affects": [
+          2
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "3850",
+        "figure_id": "f1",
+        "mark": "the point for Stocks ($) at 40 years",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Stocks ($)",
+          "40"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "1550",
+        "figure_id": "f1",
+        "mark": "the point for Stocks ($) at 30 years",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Stocks ($)",
+          "30"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "620",
+        "figure_id": "f1",
+        "mark": "the point for Stocks ($) at 20 years",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Stocks ($)",
+          "20"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "240",
+        "figure_id": "f1",
+        "mark": "the point for Stocks ($) at 10 years",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Stocks ($)",
+          "10"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "700",
+        "figure_id": "f1",
+        "mark": "the point for Treasury Bonds ($) at 40 years",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Treasury Bonds ($)",
+          "40"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "420",
+        "figure_id": "f1",
+        "mark": "the point for Treasury Bonds ($) at 30 years",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Treasury Bonds ($)",
+          "30"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "250",
+        "figure_id": "f1",
+        "mark": "the point for Treasury Bonds ($) at 20 years",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Treasury Bonds ($)",
+          "20"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "420",
+        "figure_id": "f1",
+        "mark": "the point for Treasury Bills ($) at 40 years",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Treasury Bills ($)",
+          "40"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "280",
+        "figure_id": "f1",
+        "mark": "the point for Treasury Bills ($) at 30 years",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Treasury Bills ($)",
+          "30"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "Y轴主刻度间距达500且无数值标签，读取如240（5%容差仅12）等偏小数值时，视觉定位精度根本无法满足极小的容差要求。",
+    "examples": [
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "x-axis ticks 1, 5, 10, 20 are drawn completely equidistant",
+        "why": "当前的生成器无法将不均匀的数值时间节点强制按等距分类坐标轴(Ordinal mapping)进行渲染。"
+      }
+    ]
+  }
+}

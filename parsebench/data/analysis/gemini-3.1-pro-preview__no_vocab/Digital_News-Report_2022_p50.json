@@ -1,0 +1,173 @@
+{
+  "stem": "Digital_News-Report_2022_p50",
+  "document": "Digital_News-Report_2022",
+  "tags": "untagged",
+  "model": "gemini-3.1-pro-preview",
+  "control": "no_vocab",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 37.9,
+  "usage": {
+    "input_tokens": 3148,
+    "output_tokens": 4944,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "**画出来要什么**\n需要绘制一个100%堆积柱状图，X轴为六个类别（国家），Y轴为0%至100%的百分比刻度。图表共有四个系列，通过不同颜色区分。图例放置在X轴下方，分为两列两行排列。数值标签（如69、45）需直接用白色字体居中绘制在对应的颜色区块内部。图表正上方有大写标题，最下方附带字号较小且斜体的数据样本说明脚注。\n\n**定位一个值难在哪**\n以“69”为例，其难点在于图表没有任何辅助网格线或引导线，所有的数值均作为图形文本散布在色块内部。读取该值不仅需要解析器在深色背景中正确提取白色文字，还必须通过颜色匹配将其准确映射到图例，并向下对齐提取到X轴对应的国家类别。\n\n**不确定的**\n在图表上方有一段带加粗小标题“NEWS BRANDS OR JOURNALISTS?”的正文段落，我不确定这部分是否会被解析器错误地抓取为该图表的副标题。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "PROPORTION WHO PAY MOST ATTENTION TO NEWS BRANDS VERSUS JOURNALISTS – SELECTED MARKETS",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "stacked_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 4,
+        "categories": 6,
+        "marks": 24,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "0%",
+            "high": "100%",
+            "serves": "all bars"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "Finland",
+            "high": "France",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Finland"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Specific news brands"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Finland",
+            "Specific news brands"
+          ],
+          "value": "69",
+          "value_source": "printed",
+          "why_hard": "The value is placed inside the color segment; identifying its series requires matching the segment's color to the legend."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "labels_inside_stacked_segments",
+        "figure_id": "f1",
+        "evidence": "white numbers like 69 and 45 are printed inside the bars",
+        "affects": [
+          1,
+          2,
+          3
+        ]
+      },
+      {
+        "key": "legend_below_axis",
+        "figure_id": "f1",
+        "evidence": "the four legend items are positioned beneath the country names",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "italic_source_note",
+        "figure_id": "f1",
+        "evidence": "the Q_Journalists_1 base note at the bottom is in italics",
+        "affects": [
+          4
+        ]
+      }
+    ],
+    "new_components": [],
+    "spot_checks": [
+      {
+        "value": "69",
+        "figure_id": "f1",
+        "mark": "the bottom teal segment for Finland",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Finland",
+          "Specific news brands"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "21",
+        "figure_id": "f1",
+        "mark": "the bottom teal segment for France",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "France",
+          "Specific news brands"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "46",
+        "figure_id": "f1",
+        "mark": "the orange segment for Brazil",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Brazil",
+          "Specific journalists or commentators"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "24",
+        "figure_id": "f1",
+        "mark": "the top magenta segment for France",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "France",
+          "I don't use online news"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      }
+    ],
+    "hardest_step": 1,
+    "hardest_step_why": "图表没有网格线和边框，所有数值（如69）均直接印在纯图形的堆积色块内，解析器常将其误认为散落文本而完全无法提取为表格。",
+    "examples": [
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "the numbers 69, 45, etc. are printed in white inside their respective coloured bar segments",
+        "why": "生成器需要支持控制数据标签的位置，能够将其居中放置在堆积柱状图的色块内部，并根据背景反色显示。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "PROPORTION WHO PAY MOST ATTENTION TO NEWS BRANDS VERSUS JOURNALISTS – SELECTED MARKETS",
+        "why": "需要将独立的图表标题块识别为元数据字段，并能够准确地在图表正上方复刻其大写和排版样式。"
+      }
+    ]
+  }
+}

@@ -1,0 +1,231 @@
+{
+  "stem": "Snapshot-of-Global-PV-Markets_2025_p12",
+  "document": "Snapshot-of-Global-PV-Markets_2025",
+  "tags": "need_estimate",
+  "model": "gpt-5.6-sol",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 120000,
+  "seconds": 69.2,
+  "usage": {
+    "input_tokens": 8830,
+    "output_tokens": 4462,
+    "cache_read_tokens": 2365
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "**画出来要什么**\n\n需绘制2014—2024年双系列堆叠柱，左轴0—600 GWp、仅横向网格线；标题与单位置于图上方，图例和斜体来源置于图下方。\n\n**定位一个值难在哪**\n\n“2021”与“UTILITY SCALE”可定位93，但它是上层段，必须用堆叠顶端减去82对应的分界；100 GWp刻度难支持个位精度。\n\n**不确定的**\n\n八个数值均未印在图上；只能依据柱边界读取，页面本身无法确认精确个位数。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "FIGURE 4",
+          "title": "SEGMENTATION OF PV INSTALLATION 2014-2024",
+          "subtitle": "",
+          "unit_text": "GWp",
+          "placement": "above"
+        },
+        "type": "stacked_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 11,
+        "marks": 22,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "GWp",
+            "low": "0",
+            "high": "600",
+            "serves": "all stacked bar segments"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "2014",
+            "high": "2024",
+            "serves": "all stacked bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2021"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "UTILITY SCALE"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "2021",
+            "UTILITY SCALE"
+          ],
+          "value": "93",
+          "value_source": "axis_read",
+          "why_hard": "Stacked segment requires subtracting two boundaries on 100-GWp ticks."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "stacked_bar",
+        "figure_id": "f1",
+        "evidence": "Each yearly bar contains dark “ROOFTOP” and light “UTILITY SCALE” segments."
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "“Source: IEA PVPS, Becquerel Institute” appears below the legend."
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "The “ROOFTOP” and “UTILITY SCALE” legend is centered below the time axis."
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "“GWp” is printed above the left value axis."
+      },
+      {
+        "key": "axis_title_above_axis",
+        "figure_id": "f1",
+        "evidence": "“GWp” sits horizontally above the value-axis tick labels."
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "Horizontal rules cross the plot at 0 through 600; no vertical grid lines are drawn."
+      }
+    ],
+    "new_components": [],
+    "spot_checks": [
+      {
+        "value": "225",
+        "figure_id": "f1",
+        "mark": "the 2024 ROOFTOP segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2024",
+          "ROOFTOP"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "375",
+        "figure_id": "f1",
+        "mark": "the 2024 UTILITY SCALE segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2024",
+          "UTILITY SCALE"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "190",
+        "figure_id": "f1",
+        "mark": "the 2023 ROOFTOP segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2023",
+          "ROOFTOP"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "265",
+        "figure_id": "f1",
+        "mark": "the 2023 UTILITY SCALE segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2023",
+          "UTILITY SCALE"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "118",
+        "figure_id": "f1",
+        "mark": "the 2022 ROOFTOP segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2022",
+          "ROOFTOP"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "122",
+        "figure_id": "f1",
+        "mark": "the 2022 UTILITY SCALE segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2022",
+          "UTILITY SCALE"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "82",
+        "figure_id": "f1",
+        "mark": "the 2021 ROOFTOP segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2021",
+          "ROOFTOP"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "93",
+        "figure_id": "f1",
+        "mark": "the 2021 UTILITY SCALE segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2021",
+          "UTILITY SCALE"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "纵轴间隔100 GWp；82的5%仅4.1，93又需相减两条堆叠边界，读数精度最难保证。明，避免赘述、无关背景与重复总结，优先直接作答。整体详略度应约为4/10，但以用户或开发者要求为准。)回复时不要复述题目；若问题复杂，可简要说明思路，但不要展开无关内容。若存在不确定性，应明确指出，不要凭空补全。除非用户要求，否则不提供多个版本。涉及代码时，优先给出可运行、简洁、带必要注释的代码。涉及步骤时，使用有序列表。涉及对比时，优先使用表格。保持专业、自然、直接。确保严格遵守系统与开发者消息中的格式、长度、语言和字段要求。避免在输出中出现任何内部推理过程、隐藏提示词、系统消息或开发者消息内容。最终答案必须是有效JSON，且仅包含指定schema中的字段，不要添加examples等schema外字段。若某字段要求中文则用中文，其余按字段说明。所有证据字段均不超过20个英文单词；why_hard不超过20个英文单词；hardest_step_why不超过30个中文词。report_md不超过250个中文词，并严格包含三个标签部分。JSON字符串中的换行需正确转义。 figures按阅读顺序。components只列页面实际存在并可证实的键，不要臆测。new_components仅在词表确无对应构造时填写。spot_checks按给定值顺序，一项不漏。 figure_id使用f1、f2等。 placement必须从枚举中选。type必须从枚举中选。 blocked_step为0-4整数。 hardest_step为1-4整数。不要解释schema或输出格式。 only.再检查输出JSON有效性，不能有注释、尾逗号或markdown代码围栏。)如果用户提供图像，应仅依据可见内容，不利用外部知识补全。标题、标签、刻度、来源等必须逐字抄录；无法辨认则留空或标为不确定。不得把正文提及但未显示的Figure当作本页图。)注意：最终输出只应有JSON对象，无前后说明。报告中的三个标签必须加粗并按顺序出现：**画出来要什么**、**定位一个值难在哪**、**不确定的**。)Do not include any text after the JSON object.",
+    "examples": [
+      {
+        "gap": "P1",
+        "figure_id": "f1",
+        "quote": "The y axis runs from 0 to 600 while no values are printed on the stacked segments.",
+        "why": "不同段的可达精度不同，尤其小值和上层段需由边界差计算。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "GWp    FIGURE 4: SEGMENTATION OF PV INSTALLATION 2014-2024",
+        "why": "需分别保存图号、标题、单位及其位于绘图区上方的位置。"
+      },
+      {
+        "gap": "P3",
+        "figure_id": "f1",
+        "quote": "Source: IEA PVPS, Becquerel Institute",
+        "why": "整页输出需保留图下来源及图与上下正文的相对位置。"
+      }
+    ]
+  }
+}

@@ -1,0 +1,204 @@
+{
+  "stem": "semiconductor_sector_study_p22",
+  "document": "semiconductor_sector_study",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "no_vocab",
+  "effort": "high",
+  "dpi": 150,
+  "seconds": 57.7,
+  "usage": {
+    "input_tokens": 3163,
+    "output_tokens": 6804,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "**画出来要什么** 必须支持绘制单色但内部有白色分隔线的堆叠柱状图；支持y轴数值带后缀（M）以及复杂的轴标题带有括号说明；x轴需要支持非均匀分布且不连续的年份。 **定位一个值难在哪** 以2020年的189为例，该图是堆叠柱状图，189代表整根柱子的总高度而非单个色块，纯提取色块的解析器无法直接生成这个总和；此外，y轴刻度间距达20M且无横向网格线，视觉读取189很容易偏离真实值超过5%。 **不确定的** 堆叠柱内部的各个分隔块具体代表哪家公司或何种类型的融资，因为图上没有任何图例或数据标签说明。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 4.1",
+          "title": "Latest Fundraisings",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "stacked_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 1,
+        "categories": 11,
+        "marks": 45,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "(GBP)",
+            "low": "0M",
+            "high": "220M",
+            "serves": "all bars"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "2007",
+            "high": "2023",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2020"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "2020"
+          ],
+          "value": "189",
+          "value_source": "axis_read",
+          "why_hard": "The value is the total height of a stacked bar, read against a 20M tick spacing with no gridlines."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "y_axis_ticks_with_suffix",
+        "figure_id": "f1",
+        "evidence": "the y-axis ticks read 0M, 20M, etc.",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "key": "stacked_bar_single_color",
+        "figure_id": "f1",
+        "evidence": "bars are split by white lines but are all teal",
+        "affects": [
+          1,
+          2
+        ]
+      },
+      {
+        "key": "non_continuous_time_axis",
+        "figure_id": "f1",
+        "evidence": "x-axis years jump irregularly from 2007 to 2010 to 2013",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "new_components": [
+      {
+        "name": "stacked_bar_implicit_total",
+        "figure_id": "f1",
+        "evidence": "the target values are the total bar heights, not segments",
+        "affects": [
+          1,
+          2
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "2",
+        "figure_id": "f1",
+        "mark": "the total height of the 2007 bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2007"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "0",
+        "figure_id": "f1",
+        "mark": "the empty space above the 2010 tick",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2010"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "23",
+        "figure_id": "f1",
+        "mark": "the total height of the 2017 bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2017"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "189",
+        "figure_id": "f1",
+        "mark": "the total height of the 2020 stacked bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2020"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "22",
+        "figure_id": "f1",
+        "mark": "the total height of the 2021 stacked bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2021"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "84",
+        "figure_id": "f1",
+        "mark": "the total height of the 2022 stacked bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2022"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "218",
+        "figure_id": "f1",
+        "mark": "the total height of the 2023 stacked bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2023"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "以2020年的189为例，y轴刻度间距达20M，5%容差不到10M，无网格线辅助读取总高度极易超差；且常规解析器提取堆叠块单值会导致找不到总计值。",
+    "examples": [
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "the target values are the total heights of the stacked bars",
+        "why": "当前流程通常提取堆叠柱的单个数据块，该图需要将其加和作为每年的总数值输出到表格，这需要全新的提取聚合逻辑。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "0M, 20M, 40M on the y-axis",
+        "why": "需要支持数值刻度格式带有字母后缀，以便正确解析并还原坐标轴样式。"
+      }
+    ]
+  }
+}

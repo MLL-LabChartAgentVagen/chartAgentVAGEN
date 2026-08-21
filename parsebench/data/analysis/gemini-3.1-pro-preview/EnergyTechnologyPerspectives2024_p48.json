@@ -1,0 +1,293 @@
+{
+  "stem": "EnergyTechnologyPerspectives2024_p48",
+  "document": "EnergyTechnologyPerspectives2024",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 111.3,
+  "usage": {
+    "input_tokens": 5328,
+    "output_tokens": 14919,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n生成器需要能够绘制带有两级分类轴的水平堆叠柱状图，且外层分类标签（如 \"Batteries\", \"Solar PV\"）需要逆时针旋转 90 度垂直居中显示。所有的柱子均需要撑满到 100%（最右侧的 \"RoW\" 分段颜色极浅，带有黑色描边）。\n此外，图表使用了混合标记（mixed marks），生成器必须支持在特定的堆叠柱子上方（如代表 China 的红色分段），或者对应的绝对坐标处，叠加绘制散点标记（带有黑色描边的浅蓝色圆点，代表 \"China in 2021\"），并且该系列需要在图例中单独列出。图表顶部需要绘制从 0% 到 100% 的数值轴，且没有垂直网格线。\n\n### 定位一个值难在哪\n以 `Wind -> Nacelles -> India` 的值 `8` 为例。这是一个位于堆叠中间的短分段，其起始位置约为 74%，结束位置约为 82%。要精确定位这个值，需要结合垂直旋转的外层分类名 \"Wind\"、内层分类名 \"Nacelles\" 以及通过图例颜色识别出的 \"India\"。\n最难的地方在于读数（步骤2）：根据测试标准，读取容差为真实值的 5%，对于值 8 而言，容差仅为 ±0.4。在一个主刻度间距高达 20% 且没有任何垂直参考网格线的坐标系中，依靠肉眼判断中间悬空分段的起止点，绝对无法达到如此严苛的精度。\n\n### 不确定的\n个别极短分段（如某些仅占 1-2% 的色块）极难通过肉眼辨认确切属于图例中的哪种颜色。此外，\"RoW\" 的浅灰色极度接近背景白，若不依靠边框，很容易在解析时被当作留白处理。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 1.11",
+          "title": "Installed manufacturing capacity by country/region, 2023",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "stacked_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 8,
+        "categories": 18,
+        "marks": 144,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "top",
+            "role": "value",
+            "unit_text": "",
+            "low": "0%",
+            "high": "100%",
+            "serves": "all bars and points"
+          },
+          {
+            "side": "left",
+            "role": "category",
+            "unit_text": "",
+            "low": "Anodes",
+            "high": "Steel",
+            "serves": "all series"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Batteries"
+          },
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Anodes"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "China"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Wind",
+            "Nacelles",
+            "India"
+          ],
+          "value": "8",
+          "value_source": "axis_read",
+          "why_hard": "Reading a small middle segment to ±0.4 against an ungridded axis with 20% spacing is visually impossible."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "stacked_bar",
+        "figure_id": "f1",
+        "evidence": "segments for different regions are stacked inside one horizontal bar"
+      },
+      {
+        "key": "pct_stacked",
+        "figure_id": "f1",
+        "evidence": "every stacked bar reaches the full width of the 100% axis"
+      },
+      {
+        "key": "mixed_marks",
+        "figure_id": "f1",
+        "evidence": "circular markers for China in 2021 are drawn over the stacked bars"
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "the color legend is placed at the bottom, outside the plot area"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "Note: ... Source: ... text is printed below the figure"
+      },
+      {
+        "key": "horizontal_bars",
+        "figure_id": "f1",
+        "evidence": "categories sit on the left axis and the bars extend horizontally"
+      },
+      {
+        "key": "dense_marks_100plus",
+        "figure_id": "f1",
+        "evidence": "18 categories with up to 8 series marks each totals over 100 marks"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "two_level_y_ticks",
+        "figure_id": "f1",
+        "evidence": "the left axis has inner category names and outer group names",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "name": "rotated_category_group_labels",
+        "figure_id": "f1",
+        "evidence": "the outer group labels on the left axis are rotated 90 degrees",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "92",
+        "figure_id": "f1",
+        "mark": "the China bar segment for Anodes",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Batteries",
+          "Anodes",
+          "China"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "70",
+        "figure_id": "f1",
+        "mark": "the China in 2021 point marker for Modules",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Solar PV",
+          "Modules",
+          "China in 2021"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "16",
+        "figure_id": "f1",
+        "mark": "the European Union bar segment for Blades",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Wind",
+          "Blades",
+          "European Union"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "10",
+        "figure_id": "f1",
+        "mark": "the European Union bar segment for Ammonia",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Materials",
+          "Ammonia",
+          "European Union"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "91",
+        "figure_id": "f1",
+        "mark": "the China bar segment for Polysilicon",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Solar PV",
+          "Polysilicon",
+          "China"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "8",
+        "figure_id": "f1",
+        "mark": "the India bar segment for Nacelles",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Wind",
+          "Nacelles",
+          "India"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "18",
+        "figure_id": "f1",
+        "mark": "the European Union bar segment for Heat pumps",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Other",
+          "Heat pumps",
+          "European Union"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "41",
+        "figure_id": "f1",
+        "mark": "the China in 2021 point marker for Electrolysers",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Other",
+          "Electrolysers",
+          "China in 2021"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "30",
+        "figure_id": "f1",
+        "mark": "the China bar segment for Ammonia",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Materials",
+          "Ammonia",
+          "China"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "53",
+        "figure_id": "f1",
+        "mark": "the China bar segment for Towers",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Wind",
+          "Towers",
+          "China"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "误差容忍度为值本身的5%。对于像Nacelles的India分段（真实值为8），容差仅为±0.4。在没有垂直网格线且刻度间隔为20%的堆叠图中，肉眼根本无法分辨其起止点以达到此精度，这必然导致提取失败。",
+    "examples": [
+      {
+        "gap": "P9",
+        "figure_id": "f1",
+        "quote": "the circular markers for 'China in 2021' overlaid on the bars",
+        "why": "需要在一个面板内混合渲染堆叠柱状图和散点，并且要在数据结构中区分值是通过柱子长度还是通过圆心位置读取的。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "the vertical labels Batteries, EV, Solar PV, Wind, Other, Materials",
+        "why": "目前的生成器不支持 Y 轴带有两级分类标签，更不支持外层分组标签进行 90 度旋转显示，会导致这部分层级信息丢失。"
+      },
+      {
+        "gap": "P1",
+        "figure_id": "f1",
+        "quote": "the India bar segment for Nacelles",
+        "why": "对于值为8的中间堆叠段，5%的容差为±0.4，在一个没有垂直网格线且主刻度间距为20%的轴上，绝对无法通过视觉读取达标，精度应细化到具体标记。"
+      }
+    ]
+  }
+}

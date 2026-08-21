@@ -1,0 +1,271 @@
+{
+  "stem": "pwc-semiconductor-and-beyond-2026-full-report_p18",
+  "document": "pwc-semiconductor-and-beyond-2026-full-report",
+  "tags": "untagged",
+  "model": "gemini-3.1-pro-preview",
+  "control": "no_vocab",
+  "effort": "high",
+  "dpi": 150,
+  "seconds": 108.0,
+  "usage": {
+    "input_tokens": 3185,
+    "output_tokens": 13405,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n需要支持在同一面板中绘制双Y轴混合图表（柱状图与折线图）。左侧主轴为数值，右侧次轴为百分比且标签悬空（无对应的网格线和次级刻度标）。需支持将图例水平放置在标题区下方。折线图需支持隐藏数据点标记的样式，并且能够实现局部数据标签显示（仅在折线的起点和终点上方显示如 `35%` 和 `52%`）。X轴分类标签需居中于对应柱子的下方，且在分类标签之间绘制垂直刻度线加以分隔。\n\n### 定位一个值难在哪\n以折线图上的值 `41` 为例，定位和读取非常困难。该折线完全没有实心圆等数据点标记，读者只能根据X轴上 `'26F` 所在的柱子中心向上对齐找到折线上的隐形交点；此外，右侧的百分比Y轴没有辅助网格线，且数字标签（如 `40`）是悬空的，视线长距离向右平移估读极难保证读取误差在 5% 以内。\n\n### 不确定的\n'24 的柱子高度目测略低于 100，假定其对应给定的 `98`。由于右侧 Y轴的标签与左侧网格线并不完全对齐（除了 0, 50%, 100% 处），这种悬空刻度的具体对齐逻辑不确定是否为设计刻意为之还是绘图误差。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "AI accelerators in the data center",
+          "subtitle": "",
+          "unit_text": "(Unit: $ Billion)",
+          "placement": "above"
+        },
+        "type": "compound",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 7,
+        "marks": 14,
+        "values_printed": "some",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "0",
+            "high": "300",
+            "serves": "Data center semiconductors bars"
+          },
+          {
+            "side": "right",
+            "role": "value",
+            "unit_text": "(%)",
+            "low": "0",
+            "high": "100",
+            "serves": "Portion of AI accelerator line"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "'24",
+            "high": "'30F",
+            "serves": "all marks"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "'24"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Portion of AI accelerator"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "'26F",
+            "Portion of AI accelerator"
+          ],
+          "value": "41",
+          "value_source": "axis_read",
+          "why_hard": "The line has no point markers, and the right axis lacks aligned gridlines or ticks to guide the eye."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "dual_y_axis",
+        "figure_id": "f1",
+        "evidence": "left axis is 0-300, right axis is 0-100 (%)",
+        "affects": [
+          2,
+          4
+        ]
+      },
+      {
+        "key": "mixed_marks",
+        "figure_id": "f1",
+        "evidence": "bars for one series, a line for the other",
+        "affects": [
+          4
+        ]
+      },
+      {
+        "key": "partial_data_labels",
+        "figure_id": "f1",
+        "evidence": "only 35% and 52% are printed on the line ends",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "key": "line_without_markers",
+        "figure_id": "f1",
+        "evidence": "the orange line has no dots at the data points",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "key": "floating_axis_labels",
+        "figure_id": "f1",
+        "evidence": "right axis labels like 40 have no tick marks or gridlines",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "key": "ticks_between_categories",
+        "figure_id": "f1",
+        "evidence": "x-axis tick marks are drawn between the year labels",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "legend_above_plot",
+        "figure_id": "f1",
+        "evidence": "legend items are positioned directly below the chart title",
+        "affects": [
+          4
+        ]
+      }
+    ],
+    "new_components": [],
+    "spot_checks": [
+      {
+        "value": "98",
+        "figure_id": "f1",
+        "mark": "the '24 Data center semiconductors bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "'24",
+          "Data center semiconductors"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "148",
+        "figure_id": "f1",
+        "mark": "the '25F Data center semiconductors bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "'25F",
+          "Data center semiconductors"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "270",
+        "figure_id": "f1",
+        "mark": "the '29F Data center semiconductors bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "'29F",
+          "Data center semiconductors"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "180",
+        "figure_id": "f1",
+        "mark": "the '26F Data center semiconductors bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "'26F",
+          "Data center semiconductors"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "35",
+        "figure_id": "f1",
+        "mark": "the '24 Portion of AI accelerator point",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "'24",
+          "Portion of AI accelerator"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "52",
+        "figure_id": "f1",
+        "mark": "the '30F Portion of AI accelerator point",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "'30F",
+          "Portion of AI accelerator"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "41",
+        "figure_id": "f1",
+        "mark": "the '26F Portion of AI accelerator point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "'26F",
+          "Portion of AI accelerator"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "47",
+        "figure_id": "f1",
+        "mark": "the '28F Portion of AI accelerator point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "'28F",
+          "Portion of AI accelerator"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "245",
+        "figure_id": "f1",
+        "mark": "the '28F Data center semiconductors bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "'28F",
+          "Data center semiconductors"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "读取如 41 的值时，折线缺乏数据点标记，且右侧轴无对应网格线辅助视线平移，估读很难达到 5% 容差精度要求。",
+    "examples": [
+      {
+        "gap": "P9",
+        "figure_id": "f1",
+        "quote": "left axis 0-300, right axis (%) 0-100, combined bar and line chart",
+        "why": "图表在单一面板混合柱状与折线，并使用双Y轴，生成器需支持多轴与多图形映射关联。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "only 35% and 52% are printed on the orange line ends",
+        "why": "折线仅在首尾两个数据点显示标签，要求生成器具备针对特定数据点配置标签显示的高级功能。"
+      }
+    ]
+  }
+}

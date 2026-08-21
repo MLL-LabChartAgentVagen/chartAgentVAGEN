@@ -1,0 +1,312 @@
+{
+  "stem": "employment_and_social_developments_in_europe_esde_2024_report_p100",
+  "document": "employment_and_social_developments_in_europe_esde_2024_report",
+  "tags": "need_estimate",
+  "model": "gpt-5.6-sol",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "via": "openrouter",
+  "max_tokens": 120000,
+  "seconds": 103.3,
+  "usage": {
+    "input_tokens": 8850,
+    "output_tokens": 7124,
+    "cache_read_tokens": 2365
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n绘制两条含20个年度点的实线、跨越零线的负值、仅水平虚线网格、左侧旋转轴题、隔年年份标签、图下图例及来源和下载链接；另需还原编号文字框。\n\n### 定位一个值难在哪\n“Net contributors—2021”的3800未印在图上；纵轴刻度间隔10000，而5%容差仅190，靠线段位置无法可靠读准。\n\n### 不确定的\n年度点没有标记；2038和2040未标年份，只能按相邻刻度推定。Box A3.3是说明文字框而非数据图。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Chart A3.1",
+          "title": "Employment increases for regions not receiving ESF+ investment due to spillover effects",
+          "subtitle": "Absolute change in employment following ESF+ investment in skills",
+          "unit_text": "Absolute change in employment",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 20,
+        "marks": 40,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Absolute change in employment",
+            "low": "-20000",
+            "high": "40000",
+            "serves": "both line series"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "2021",
+            "high": "2039",
+            "serves": "both line series"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Net contributors"
+          },
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2021"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Net receivers",
+            "2040"
+          ],
+          "value": "13800",
+          "value_source": "axis_read",
+          "why_hard": "2040 is unlabeled; 10,000-unit grid makes ±690 precision difficult."
+        }
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "Box A3.3",
+          "title": "Calculating Income Stabilisation Coefficients",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "inside"
+        },
+        "type": "unreadable",
+        "type_other": "boxed body-text panel, not a data figure",
+        "panels": 1,
+        "series": 0,
+        "categories": 0,
+        "marks": 0,
+        "values_printed": "none",
+        "axes": [],
+        "key_parts": [],
+        "worked_example": {
+          "key": [],
+          "value": "",
+          "value_source": "not_readable",
+          "why_hard": "No data marks or axes."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "reference_line",
+        "figure_id": "f1",
+        "evidence": "A solid horizontal rule crosses the plot at the 0 tick."
+      },
+      {
+        "key": "negative_values",
+        "figure_id": "f1",
+        "evidence": "Both lines descend below 0; the green line reaches approximately -14000."
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "“Source: JRC calculations based on RHOMOLO model.” appears below the chart."
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "“Net contributors” and “Net receivers” form a legend row beneath the x axis."
+      },
+      {
+        "key": "data_link_below_figure",
+        "figure_id": "f1",
+        "evidence": "“Click here to download chart.” appears below the source line."
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "The subtitle says “Absolute change in employment following ESF+ investment in skills”."
+      },
+      {
+        "key": "rotated_axis_title",
+        "figure_id": "f1",
+        "evidence": "“Absolute change in employment” is rotated vertically beside the left axis."
+      },
+      {
+        "key": "sparse_time_ticks",
+        "figure_id": "f1",
+        "evidence": "Annual points span 2021–2040, but labels show 2021, 2023, …, 2039."
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "Dotted horizontal grid lines cross the plot; no vertical grid lines are drawn."
+      }
+    ],
+    "new_components": [
+      {
+        "name": "numbered_text_box",
+        "figure_id": "f2",
+        "evidence": "“Box A3.3: Calculating Income Stabilisation Coefficients” heads a bordered explanatory text panel.",
+        "affects": [
+          1,
+          4
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "3800",
+        "figure_id": "f1",
+        "mark": "the 2021 Net contributors point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Net contributors",
+          "2021"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "15000",
+        "figure_id": "f1",
+        "mark": "the 2021 Net receivers point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Net receivers",
+          "2021"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "4300",
+        "figure_id": "f1",
+        "mark": "the 2023 Net contributors point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Net contributors",
+          "2023"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "31000",
+        "figure_id": "f1",
+        "mark": "the 2023 Net receivers point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Net receivers",
+          "2023"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "35500",
+        "figure_id": "f1",
+        "mark": "the 2025 Net receivers point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Net receivers",
+          "2025"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-2000",
+        "figure_id": "f1",
+        "mark": "the 2029 Net receivers point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Net receivers",
+          "2029"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-13000",
+        "figure_id": "f1",
+        "mark": "the 2031 Net receivers point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Net receivers",
+          "2031"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "11000",
+        "figure_id": "f1",
+        "mark": "the 2038 Net receivers point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Net receivers",
+          "2038"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "11000",
+        "figure_id": "f1",
+        "mark": "the 2039 Net contributors point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Net contributors",
+          "2039"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "13800",
+        "figure_id": "f1",
+        "mark": "the 2040 Net receivers point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Net receivers",
+          "2040"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "3800容差仅±190，纵轴间隔10000且无数值标签，无法可靠读准。会可靠读准。无法可靠读准。",
+    "examples": [
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "Both lines cross the solid 0 rule and extend into negative values.",
+        "why": "需控制负值区间、零线样式及无点标记折线的读数精度。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "Chart A3.1; Employment increases for regions not receiving ESF+ investment due to spillover effects",
+        "why": "编号、主标题、副标题和单位短语需拆分并保持图上方层级。"
+      },
+      {
+        "gap": "P1",
+        "figure_id": "f1",
+        "quote": "The y axis runs from -20000 to 40000 in 10000-unit intervals.",
+        "why": "不同数值的5%容差差异很大，不能以统一可读布尔值判断。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f2",
+        "quote": "Box A3.3: Calculating Income Stabilisation Coefficients",
+        "why": "需支持带边框、编号标题、正文、公式和脚注的非数据说明框。"
+      }
+    ]
+  }
+}

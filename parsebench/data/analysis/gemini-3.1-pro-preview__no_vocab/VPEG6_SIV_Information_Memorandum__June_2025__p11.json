@@ -1,0 +1,212 @@
+{
+  "stem": "VPEG6_SIV_Information_Memorandum__June_2025__p11",
+  "document": "VPEG6_SIV_Information_Memorandum__June_2025_",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "no_vocab",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 60.1,
+  "usage": {
+    "input_tokens": 3158,
+    "output_tokens": 7689,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n需要能够绘制复合图表，即在基础的柱状图之上叠加特定的图标作为散点标记。需要支持自定义图例布局，将其完全放置在绘图区和y轴标签的左侧，形成类似侧边栏的结构。y轴刻度需要支持自定义后缀（每个数字后加“x”）。需要能够对单根特定的网格线或参考线应用独立样式（例如将2.0x的线设为加粗亮蓝色，区别于其他黑色细网格线）。此外，还需要支持复杂的图内标注功能，包括一个带背景色的文本框以及一条精确指向特定数据图标的引导线。\n\n### 定位一个值难在哪\n以提取 `GLOBAL PRIVATE EQUITY` 在 `Quartile 2` 的值为例（1.7x）。该数值没有直接标注，需要通过柱子高度对应的y轴来读取。然而，y轴的网格线间距为0.5x（1.0x, 1.5x, 2.0x），柱子顶部悬空在1.5x和2.0x之间。要在这个大跨度内仅凭肉眼将数值估算到5%的容忍度（即±0.085x）内是非常困难的，极易导致第2步（数值精度）判定失败。\n\n### 不确定的\n`VANTAGE` 的 2.1x 数据点（黑色恐龙图标）在图表上直接与x轴的 `Quartile 1` 对齐。虽然从业务逻辑上看，它描述的是平台整体表现（“platform wide Net Multiple”），但从图表结构解析的角度，只能将其作为 `Quartile 1` 类别下的一个特定系列值来处理，不确定这种强制的x轴关联是否完全符合原始数据的维度设计。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "Vantage has Generated Top Quartile Returns when Compared to Global Direct Private Equity Funds",
+          "subtitle": "Vantage vs Global Private Equity (Direct Buyout Funds) TVPI - 2009-2018",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "compound",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 4,
+        "marks": 5,
+        "values_printed": "some",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "x",
+            "low": "0.5x",
+            "high": "3.0x",
+            "serves": "all marks"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "Quartile 1",
+            "high": "Quartile 4",
+            "serves": "all marks"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "GLOBAL PRIVATE EQUITY"
+          },
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Quartile 1"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "GLOBAL PRIVATE EQUITY",
+            "Quartile 2"
+          ],
+          "value": "1.7x",
+          "value_source": "axis_read",
+          "why_hard": "The bar top sits between 1.5x and 2.0x gridlines; interpolating 1.7x to a 5% tolerance visually is very difficult."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "legend_left_of_axes",
+        "figure_id": "f1",
+        "evidence": "the legend block is positioned to the left of the y-axis labels",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "tick_label_suffix",
+        "figure_id": "f1",
+        "evidence": "every tick on the y-axis has 'x' appended, like 1.5x",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "key": "annotation_callout_box",
+        "figure_id": "f1",
+        "evidence": "black text box with a line pointing to the Vantage marker",
+        "affects": [
+          2
+        ]
+      }
+    ],
+    "new_components": [
+      {
+        "name": "highlighted_gridline",
+        "figure_id": "f1",
+        "evidence": "the 2.0x gridline is a thick light blue line, unlike the thin black others",
+        "affects": []
+      },
+      {
+        "name": "icon_marker",
+        "figure_id": "f1",
+        "evidence": "the VANTAGE data point uses a custom dinosaur icon rather than a standard shape",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "name": "mismatched_legend_shape",
+        "figure_id": "f1",
+        "evidence": "GLOBAL PRIVATE EQUITY uses a grey circle in legend but draws as bars",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "2.1",
+        "figure_id": "f1",
+        "mark": "the black icon marker on the Quartile 1 vertical line",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "VANTAGE",
+          "Quartile 1"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "2.5",
+        "figure_id": "f1",
+        "mark": "the Quartile 1 grey bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "GLOBAL PRIVATE EQUITY",
+          "Quartile 1"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "1.7",
+        "figure_id": "f1",
+        "mark": "the Quartile 2 grey bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "GLOBAL PRIVATE EQUITY",
+          "Quartile 2"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "1.4",
+        "figure_id": "f1",
+        "mark": "the Quartile 3 grey bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "GLOBAL PRIVATE EQUITY",
+          "Quartile 3"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "1.0",
+        "figure_id": "f1",
+        "mark": "the Quartile 4 grey bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "GLOBAL PRIVATE EQUITY",
+          "Quartile 4"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "图表中未标注数值的柱子（如1.7x和1.4x）需要靠y轴读取，但y轴网格间距高达0.5x，在没有更细分刻度的情况下，肉眼极难将悬空柱顶的数值读到5%（±0.085x）的容差内。",
+    "examples": [
+      {
+        "gap": "P9",
+        "figure_id": "f1",
+        "quote": "a single VANTAGE marker overlaid on a bar chart",
+        "why": "当前的图表生成器很难原生支持这种复合图表：在一组柱状图的基础上，特定类别上叠加单个独立的散点/图标标记，且拥有独立的图例和数据结构。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "legend block placed to the far left of the y-axis labels",
+        "why": "图例布局完全脱离了常规的绘图区边界，作为类似侧边栏的独立模块存在于y轴的最左侧，这需要更高级的页面级网格布局支持。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "the 2.0x gridline is styled thick and light blue",
+        "why": "缺乏对单根特定网格线进行独立样式（颜色、粗细）高亮设置的机制，目前只能统一设置所有网格线的样式。"
+      }
+    ]
+  }
+}

@@ -1,0 +1,332 @@
+{
+  "stem": "pdf_d2e0103f64cd_p29",
+  "document": "pdf_d2e0103f64cd",
+  "tags": "3d_chart",
+  "model": "gpt-5.6-sol",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 120000,
+  "seconds": 71.7,
+  "usage": {
+    "input_tokens": 8860,
+    "output_tokens": 5094,
+    "cache_read_tokens": 8857
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "**画出来要什么**\n两幅单面板、三系列折线图，标题置于图上方，单位分别嵌入标题；下方横排图例。各时点数值全部标在折线附近。上图纵轴从65%起，并有脚注、说明及来源；下图另在纵轴顶端标“S$”。\n\n**定位一个值难在哪**\n上图的91.2须同时用“2012”和“Shenton Way/Robinson Rd/Cecil Street”定位。三线在90%附近交汇、标签密集，但数值已直接印出，因此关联比读取精度更难。\n\n**不确定的**\n折线上看不到独立点标记；marks按各系列实际覆盖的时点数计数。下图Marina Bay在2010没有点，也没有缺失值符号。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "Average Occupancy Rates in the Singapore CBD (%)",
+          "subtitle": "",
+          "unit_text": "(%)",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 1,
+        "series": 3,
+        "categories": 6,
+        "marks": 18,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "%",
+            "low": "65%",
+            "high": "100%",
+            "serves": "all three lines"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "2010",
+            "high": "Q3 2013",
+            "serves": "all three lines"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2010"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Marina Bay"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Q1 2013",
+            "Marina Bay"
+          ],
+          "value": "93.6%",
+          "value_source": "printed",
+          "why_hard": "Three series converge and labels cluster around 93%."
+        }
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "",
+          "title": "Average Rental Rates in the Singapore CBD (S$ per sq ft per month)",
+          "subtitle": "",
+          "unit_text": "(S$ per sq ft per month)",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 1,
+        "series": 3,
+        "categories": 6,
+        "marks": 17,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "S$",
+            "low": "0",
+            "high": "14",
+            "serves": "all three lines"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "2010",
+            "high": "Q3 2013",
+            "serves": "all three lines"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2010"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Marina Bay"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Q1 2013",
+            "Raffles Place"
+          ],
+          "value": "9.3",
+          "value_source": "printed",
+          "why_hard": "The same 9.3 is repeated across three times."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "multi_figure_page",
+        "figure_id": "page",
+        "evidence": "Two separately titled occupancy and rental charts appear on the page."
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "“Note:” and “Source: Independent Market Research Report.” appear below the occupancy plot."
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f2",
+        "evidence": "“Source: Independent Market Research Report.” appears below the rental plot."
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "The three-series legend is placed below the occupancy plot."
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f2",
+        "evidence": "The three-series legend is placed below the rental plot."
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "The title reads “Average Occupancy Rates in the Singapore CBD (%)”."
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f2",
+        "evidence": "The title includes “(S$ per sq ft per month)”."
+      },
+      {
+        "key": "axis_title_above_axis",
+        "figure_id": "f2",
+        "evidence": "“S$” is printed above the left y-axis."
+      },
+      {
+        "key": "footnote_marker",
+        "figure_id": "f1",
+        "evidence": "The label “84.1%(1)” links to note “(1)” below."
+      },
+      {
+        "key": "value_label_outside",
+        "figure_id": "f1",
+        "evidence": "Percent values are printed adjacent to the line paths."
+      },
+      {
+        "key": "value_label_outside",
+        "figure_id": "f2",
+        "evidence": "Rental values are printed adjacent to the line paths."
+      },
+      {
+        "key": "axis_starts_above_zero",
+        "figure_id": "f1",
+        "evidence": "The left axis begins at 65% and has no break glyph."
+      },
+      {
+        "key": "nonstandard_time_ticks",
+        "figure_id": "f1",
+        "evidence": "The bottom axis includes “Q1 2013”, “Q2 2013” and “Q3 2013”."
+      },
+      {
+        "key": "nonstandard_time_ticks",
+        "figure_id": "f2",
+        "evidence": "The bottom axis includes “Q1 2013”, “Q2 2013” and “Q3 2013”."
+      }
+    ],
+    "new_components": [],
+    "spot_checks": [
+      {
+        "value": "70.3",
+        "figure_id": "f1",
+        "mark": "the 2010 Marina Bay point",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "2010",
+          "Marina Bay"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "96.8",
+        "figure_id": "f1",
+        "mark": "the 2010 Raffles Place point",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "2010",
+          "Raffles Place"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "91.2",
+        "figure_id": "f1",
+        "mark": "the 2012 Shenton Way/Robinson Rd/Cecil Street point",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "2012",
+          "Shenton Way/Robinson Rd/Cecil Street"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "84.1",
+        "figure_id": "f1",
+        "mark": "the Q3 2013 Marina Bay point",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Q3 2013",
+          "Marina Bay"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "97.7",
+        "figure_id": "f1",
+        "mark": "the Q3 2013 Shenton Way/Robinson Rd/Cecil Street point",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Q3 2013",
+          "Shenton Way/Robinson Rd/Cecil Street"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "12.0",
+        "figure_id": "f2",
+        "mark": "the 2011 Marina Bay point",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "2011",
+          "Marina Bay"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "9.0",
+        "figure_id": "f2",
+        "mark": "the 2010 Raffles Place point",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "2010",
+          "Raffles Place"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "7.8",
+        "figure_id": "f2",
+        "mark": "the 2011 Shenton Way/ Robinson Rd/ Cecil Street point",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "2011",
+          "Shenton Way/ Robinson Rd/ Cecil Street"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "11.0",
+        "figure_id": "f2",
+        "mark": "the Q3 2013 Marina Bay point",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Q3 2013",
+          "Marina Bay"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "9.4",
+        "figure_id": "f2",
+        "mark": "the Q3 2013 Raffles Place point",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Q3 2013",
+          "Raffles Place"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      }
+    ],
+    "hardest_step": 3,
+    "hardest_step_why": "91.2需同时绑定“2012”和长系列名；数值已印，5个百分点刻度不构成精度障碍。税务？不。用。 去掉多余。 Wait JSON already bad content? Need final clean. 91.2需同时绑定“2012”和长系列名；数值已印，5个百分点刻度不构成精度障碍。 End.",
+    "examples": []
+  }
+}

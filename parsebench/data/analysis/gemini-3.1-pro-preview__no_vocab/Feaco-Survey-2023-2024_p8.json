@@ -1,0 +1,182 @@
+{
+  "stem": "Feaco-Survey-2023-2024_p8",
+  "document": "Feaco-Survey-2023-2024",
+  "tags": "untagged",
+  "model": "gemini-3.1-pro-preview",
+  "control": "no_vocab",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 50.7,
+  "usage": {
+    "input_tokens": 3161,
+    "output_tokens": 7053,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "## 画出来要什么\n这个页面包含一个水平分组条形图（Grouped bar chart）。Y轴在左侧，表示不同的服务线（Service Lines），X轴在下方，表示百分比。图表需要支持包含负值的绘图，0.0% 的零刻度线位于绘图区中间偏左，负值（如 `-11.5%` 和 `-1.2%`）的条形向左延伸。此外，所有数据点的数值都直接以百分比形式标注在条形的末端外侧。图例位于图表正下方，显示了三个年份（2023、2022、2021）。图表上方直接跟有纯文本标题，没有图表编号。页面上半部分还包含一个同样数据的结构化表格。\n\n## 定位一个值难在哪\n以 `-11.5%` 为例，这是“People & Change”在2023年的数值。由于它是负值，条形向左延伸超出了 -10.0% 的轴刻度。其数值标签 `-11.5%` 直接印在条形的最左端，这导致该标签侵入了本该只属于Y轴（左侧分类标签）的空间区域。这种空间上的越界会使解析器极难判定该文本属于数据标签还是轴分类标签，从而影响其与所属单元格的正确关联。\n\n## 不确定的\n页面上半部分的表格与下方图表数据完全一致，且页面主体正文直接描述了这些趋势。不确定自动解析器在输出时是否会将图表和表格内容去重，或优先提取上方包含更多列说明文字（如 `European panel trend in 2023*`）的原生表格，而非由图例（`2023`）标识的图表数据。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "MC turnover trend by Service Lines (European panel 2021-23)",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "grouped_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 3,
+        "categories": 6,
+        "marks": 18,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "left",
+            "role": "category",
+            "unit_text": "",
+            "low": "People & Change",
+            "high": "Sales & Marketing",
+            "serves": "all bars"
+          },
+          {
+            "side": "bottom",
+            "role": "value",
+            "unit_text": "",
+            "low": "-10.0%",
+            "high": "35.0%",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Sales & Marketing"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "2023"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "People & Change",
+            "2023"
+          ],
+          "value": "-11.5%",
+          "value_source": "printed",
+          "why_hard": "The label overlaps into the negative margin space occupied by the y-axis category labels."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "horizontal_grouped_bar",
+        "figure_id": "f1",
+        "evidence": "horizontal bars grouped by service lines on the y-axis",
+        "affects": []
+      },
+      {
+        "key": "zero_reference_line",
+        "figure_id": "f1",
+        "evidence": "a vertical line at 0.0% acting as the base for all bars",
+        "affects": []
+      },
+      {
+        "key": "value_labels_outside_bars",
+        "figure_id": "f1",
+        "evidence": "percentages are printed just outside the ends of the bars",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "bottom_legend",
+        "figure_id": "f1",
+        "evidence": "legend with years sits below the x-axis",
+        "affects": []
+      }
+    ],
+    "new_components": [
+      {
+        "name": "negative_label_overlap",
+        "figure_id": "f1",
+        "evidence": "-11.5% is printed in the left margin area reserved for categories",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "20.7%",
+        "figure_id": "f1",
+        "mark": "the top blue bar in the Sales & Marketing group",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Sales & Marketing",
+          "2023"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "10.6%",
+        "figure_id": "f1",
+        "mark": "the middle green bar in the Technology group",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Technology",
+          "2022"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "22.0%",
+        "figure_id": "f1",
+        "mark": "the middle green bar in the Strategy group",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Strategy",
+          "2022"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "-11.5%",
+        "figure_id": "f1",
+        "mark": "the bottom blue bar extending left in the People & Change group",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "People & Change",
+          "2023"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      }
+    ],
+    "hardest_step": 3,
+    "hardest_step_why": "负值 -11.5% 的数据标签位于反向生长的条形最左端，严重侵入了左侧类别标签（Y轴）所在的空间，极易导致解析器在提取时产生文本与数据点关联错误。",
+    "examples": [
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "-11.5% bar grows left from the 0.0% line, with label on the far left",
+        "why": "管线需要支持绘制带有负值的条形图，允许零刻度线右移，并能处理在向左生长的条形外侧端点正确放置数值标签的情况。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "MC turnover trend by Service Lines (European panel 2021-23)",
+        "why": "图表标题纯文本且没有前缀编号，需要生成器支持单独配置没有编号的完整标题文本并放置在图表区域正上方。"
+      }
+    ]
+  }
+}

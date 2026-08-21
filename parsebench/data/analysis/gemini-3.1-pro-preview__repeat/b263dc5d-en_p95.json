@@ -1,0 +1,304 @@
+{
+  "stem": "b263dc5d-en_p95",
+  "document": "b263dc5d-en",
+  "tags": "3d_chart+need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "repeat",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 88.7,
+  "usage": {
+    "input_tokens": 5301,
+    "output_tokens": 12999,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n生成器需要支持带分面（3个垂直排列的子面板）的复合图表（柱状图上叠加菱形散点），每个面板共用顶部图例，但各子面板的X轴类别可独立排序。需要实现特定类别的垂直背景高亮（如贯穿所有面板、位于“OECD average”后方的浅蓝色背景带），并能对指定的类别X轴标签应用独立的字体颜色覆盖（如部分代表特殊区域的蓝色标签）。Y轴需在每个面板左侧独立绘制，且轴标题（单位）需直接置于顶部刻度之上。\n\n### 定位一个值难在哪\n以 Panel A 中 Spain 的 Unadjusted 值为例（约等于23），由于图形中没有任何直接标注的数值标签，该值完全依赖柱体顶部与左侧Y轴刻度的主观对齐。而Y轴的主刻度间距为10，且图表中未提供任何横向次级网格线，仅凭肉眼无法将数值精确读取到5%（即±1.15）容差范围内。\n\n### 不确定的\n图中深色菱形（Adjusted）由于体积较小且重叠在柱状图上，部分数值的读取误差可能更大；个别国家名称标蓝（如Flemish Region）的具体含义仅在附注中隐晦提及，无明确的图例映射或图内标注。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 2.20.",
+          "title": "Differences in key information-processing skills, by parental education",
+          "subtitle": "Adjusted and unadjusted differences in average literacy, numeracy and adaptive problem solving scores between adults (highly educated parents minus low-educated parents)",
+          "unit_text": "Score-point difference",
+          "placement": "above"
+        },
+        "type": "compound",
+        "type_other": "",
+        "panels": 3,
+        "series": 2,
+        "categories": 32,
+        "marks": 190,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Score-point difference",
+            "low": "0",
+            "high": "80",
+            "serves": "all marks"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "Germany",
+            "high": "Spain",
+            "serves": "all marks"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "panel",
+            "label_source": "panel_title",
+            "example": "A. Literacy"
+          },
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Spain"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Unadjusted"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "A. Literacy",
+            "Spain",
+            "Unadjusted"
+          ],
+          "value": "23",
+          "value_source": "axis_read",
+          "why_hard": "No printed values and y-axis grid spacing of 10 make exact visual reading impossible."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "mixed_marks",
+        "figure_id": "f1",
+        "evidence": "bars for Unadjusted and diamond markers for Adjusted overlaid"
+      },
+      {
+        "key": "shared_legend",
+        "figure_id": "f1",
+        "evidence": "one legend at the top governing all three panels"
+      },
+      {
+        "key": "small_multiples_4",
+        "figure_id": "f1",
+        "evidence": "3 panels representing different skills vertically stacked"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "page",
+        "evidence": "Note and Source text printed below the figure"
+      },
+      {
+        "key": "legend_above_plot",
+        "figure_id": "f1",
+        "evidence": "the legend sits between the main heading and the top panel"
+      },
+      {
+        "key": "panel_title_per_panel",
+        "figure_id": "f1",
+        "evidence": "A. Literacy, B. Numeracy, etc. inside blue filled banners"
+      },
+      {
+        "key": "axis_title_above_axis",
+        "figure_id": "f1",
+        "evidence": "Score-point difference is set above the top tick of each y-axis"
+      },
+      {
+        "key": "rotated_x_ticks",
+        "figure_id": "f1",
+        "evidence": "country names on x-axis are rotated vertically 90 degrees"
+      },
+      {
+        "key": "footnote_marker",
+        "figure_id": "f1",
+        "evidence": "asterisk attached to Poland*"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "horizontal rules across the panels, no vertical grids"
+      },
+      {
+        "key": "dense_marks_100plus",
+        "figure_id": "f1",
+        "evidence": "approx 190 marks across the three panels"
+      },
+      {
+        "key": "highlighted_category",
+        "figure_id": "f1",
+        "evidence": "OECD average label is in bold"
+      },
+      {
+        "key": "shaded_band",
+        "figure_id": "f1",
+        "evidence": "a vertical light blue band behind OECD average"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "Score-point difference acts as the unit above the axis"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "independent_panel_sorting",
+        "figure_id": "f1",
+        "evidence": "the category order on the x-axis differs per panel",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "name": "category_label_color_override",
+        "figure_id": "f1",
+        "evidence": "some x-axis labels are printed in blue font",
+        "affects": [
+          4
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "75",
+        "figure_id": "f1",
+        "mark": "the Panel A Germany Unadjusted bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. Literacy",
+          "Germany",
+          "Unadjusted"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "23",
+        "figure_id": "f1",
+        "mark": "the Panel A Spain Unadjusted bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. Literacy",
+          "Spain",
+          "Unadjusted"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "24",
+        "figure_id": "not_found",
+        "mark": "unclear which mark reads exactly 24",
+        "printed_on_figure": false,
+        "addressing_keys": [],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "70",
+        "figure_id": "f1",
+        "mark": "the Panel B United States Unadjusted bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "B. Numeracy",
+          "United States",
+          "Unadjusted"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "18",
+        "figure_id": "not_found",
+        "mark": "unclear which mark reads exactly 18",
+        "printed_on_figure": false,
+        "addressing_keys": [],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "27",
+        "figure_id": "not_found",
+        "mark": "unclear which mark reads exactly 27",
+        "printed_on_figure": false,
+        "addressing_keys": [],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "65",
+        "figure_id": "f1",
+        "mark": "the Panel C Germany Unadjusted bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "C. Adaptive problem solving",
+          "Germany",
+          "Unadjusted"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "24",
+        "figure_id": "not_found",
+        "mark": "unclear",
+        "printed_on_figure": false,
+        "addressing_keys": [],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "25",
+        "figure_id": "not_found",
+        "mark": "unclear",
+        "printed_on_figure": false,
+        "addressing_keys": [],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "42",
+        "figure_id": "not_found",
+        "mark": "unclear",
+        "printed_on_figure": false,
+        "addressing_keys": [],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "没有数值标签，Y轴主刻度间距高达10且无次级网格线，无法将无对齐辅助的柱状图或散点高度精确读取到5%（±1.15）的容差内，例如判定某柱子是23还是24。",
+    "examples": [
+      {
+        "gap": "P8",
+        "figure_id": "f1",
+        "quote": "a light blue vertical band behind the OECD average column across all panels",
+        "why": "图表使用背景带在所有面板中高亮了特定类别，且未在图例中映射该背景色，生成器需支持基于指定类别区域的垂直背景高亮。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "the category order on the x-axis differs in each of the three panels",
+        "why": "各分面面板中的X轴类别排序是相互独立的，当前图表生成器在处理分面图(small multiples)时通常强制使用全局统一的类别坐标轴顺序。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "the x-axis labels 'Flemish Region (BE)' and 'England (UK)' are in blue font",
+        "why": "生成器需要支持对个别指定的类别轴标签应用独立的字体颜色覆盖，以区分特殊类别（如次国家实体）。"
+      }
+    ]
+  }
+}

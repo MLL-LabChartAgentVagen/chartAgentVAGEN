@@ -1,0 +1,216 @@
+{
+  "stem": "pdf_d2e0103f64cd_p29",
+  "document": "pdf_d2e0103f64cd",
+  "tags": "3d_chart",
+  "model": "gemini-3.1-pro-preview",
+  "control": "repeat",
+  "effort": "high",
+  "dpi": 150,
+  "seconds": 50.9,
+  "usage": {
+    "input_tokens": 4440,
+    "output_tokens": 7521,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "本页包含两个没有编号的折线图，分别展示新加坡中央商务区（CBD）的平均入住率和平均租金。两个图表的标题均包含了单位。绘制这些图表需要支持带有非标准时间标签（年度与季度并存）的分类X轴、起始非零的Y轴（图一Y轴从65%开始）、位于图表下方居中的图例、Y轴顶端带独立单位文本（图二的S$）、悬浮在各数据点旁的数据标签，以及带有上标脚注的标签（图一的`84.1%(1)`）。所有数值均直接打印在图表上，但由于多条折线交错且数据标签较密集，模型在视觉上关联标签与折线点可能存在少许困难，主要挑战在于步骤1，即将无表格结构的折线图转换为结构化的表格数据。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "Average Occupancy Rates in the Singapore CBD (%)",
+          "subtitle": "",
+          "unit_text": "(%)",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 1,
+        "series": 3,
+        "categories": 6,
+        "marks": 18,
+        "values_printed": "all"
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "",
+          "title": "Average Rental Rates in the Singapore CBD (S$ per sq ft per month)",
+          "subtitle": "",
+          "unit_text": "(S$ per sq ft per month)",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 1,
+        "series": 3,
+        "categories": 6,
+        "marks": 17,
+        "values_printed": "all"
+      }
+    ],
+    "components": [
+      {
+        "key": "multi_figure_page",
+        "figure_id": "page",
+        "evidence": "two distinct line charts on one page"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "page",
+        "evidence": "titles include (%) and (S$ per sq ft per month)"
+      },
+      {
+        "key": "axis_starts_above_zero",
+        "figure_id": "f1",
+        "evidence": "y-axis starts at 65% instead of 0"
+      },
+      {
+        "key": "footnote_marker",
+        "figure_id": "f1",
+        "evidence": "label reads 84.1%(1) with a footnote reference"
+      },
+      {
+        "key": "axis_title_above_axis",
+        "figure_id": "f2",
+        "evidence": "S$ is printed above the top tick of the y-axis"
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "page",
+        "evidence": "legends sit below the x-axis for both figures"
+      },
+      {
+        "key": "value_label_outside",
+        "figure_id": "page",
+        "evidence": "all values are printed next to their data points"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "page",
+        "evidence": "Note: and Source: text below the figures"
+      },
+      {
+        "key": "nonstandard_time_ticks",
+        "figure_id": "page",
+        "evidence": "x-axis mixes years like 2010 with Q1 2013"
+      }
+    ],
+    "new_components": [],
+    "spot_checks": [
+      {
+        "value": "70.3",
+        "figure_id": "f1",
+        "mark": "Marina Bay 2010 point",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Marina Bay",
+          "2010",
+          "Average Occupancy Rates in the Singapore CBD (%)"
+        ]
+      },
+      {
+        "value": "96.8",
+        "figure_id": "f1",
+        "mark": "Raffles Place 2010 point",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Raffles Place",
+          "2010",
+          "Average Occupancy Rates in the Singapore CBD (%)"
+        ]
+      },
+      {
+        "value": "91.2",
+        "figure_id": "f1",
+        "mark": "Shenton Way/Robinson Rd/Cecil Street 2012 point",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Shenton Way/Robinson Rd/Cecil Street",
+          "2012",
+          "Average Occupancy Rates in the Singapore CBD (%)"
+        ]
+      },
+      {
+        "value": "84.1",
+        "figure_id": "f1",
+        "mark": "Marina Bay Q3 2013 point",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Marina Bay",
+          "Q3 2013",
+          "Average Occupancy Rates in the Singapore CBD (%)"
+        ]
+      },
+      {
+        "value": "97.7",
+        "figure_id": "f1",
+        "mark": "Shenton Way/Robinson Rd/Cecil Street Q3 2013 point",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Shenton Way/Robinson Rd/Cecil Street",
+          "Q3 2013",
+          "Average Occupancy Rates in the Singapore CBD (%)"
+        ]
+      },
+      {
+        "value": "12.0",
+        "figure_id": "f2",
+        "mark": "Marina Bay 2011 point",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Marina Bay",
+          "2011",
+          "Average Rental Rates in the Singapore CBD (S$ per sq ft per month)"
+        ]
+      },
+      {
+        "value": "9.0",
+        "figure_id": "f2",
+        "mark": "Raffles Place 2010 point",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Raffles Place",
+          "2010",
+          "Average Rental Rates in the Singapore CBD (S$ per sq ft per month)"
+        ]
+      },
+      {
+        "value": "7.8",
+        "figure_id": "f2",
+        "mark": "Shenton Way/ Robinson Rd/ Cecil Street 2011 point",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Shenton Way/ Robinson Rd/ Cecil Street",
+          "2011",
+          "Average Rental Rates in the Singapore CBD (S$ per sq ft per month)"
+        ]
+      },
+      {
+        "value": "11.0",
+        "figure_id": "f2",
+        "mark": "Marina Bay Q3 2013 point",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Marina Bay",
+          "Q3 2013",
+          "Average Rental Rates in the Singapore CBD (S$ per sq ft per month)"
+        ]
+      },
+      {
+        "value": "9.4",
+        "figure_id": "f2",
+        "mark": "Raffles Place Q3 2013 point",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Raffles Place",
+          "Q3 2013",
+          "Average Rental Rates in the Singapore CBD (S$ per sq ft per month)"
+        ]
+      }
+    ],
+    "hardest_step": 1
+  }
+}

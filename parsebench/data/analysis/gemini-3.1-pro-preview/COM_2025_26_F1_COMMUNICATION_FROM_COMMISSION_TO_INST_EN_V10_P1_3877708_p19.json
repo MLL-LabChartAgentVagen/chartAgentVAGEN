@@ -1,0 +1,253 @@
+{
+  "stem": "COM_2025_26_F1_COMMUNICATION_FROM_COMMISSION_TO_INST_EN_V10_P1_3877708_p19",
+  "document": "COM_2025_26_F1_COMMUNICATION_FROM_COMMISSION_TO_INST_EN_V10_P1_3877708",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 88.9,
+  "usage": {
+    "input_tokens": 5329,
+    "output_tokens": 12739,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "- **画出来要什么**\n要重新绘制此页面，生成器需要能生成包含至少三条折线的折线图，并且允许其中一条线没有对应的图例。必须支持将图例放置在绘图区内部。X轴需要支持绘制稀疏且倾斜的年份刻度（仅显示奇数年份）。Y轴不仅不能有水平网格线，还需要支持将单位直接拼接到最高刻度文本内（如“100 %”）。图表下方需要支持追加Note和Source说明文本，并且整个图表块需要能与右侧的段落正文并排呈现。\n\n- **定位一个值难在哪**\n以US在2012年的值（71）为例，图中X轴仅打印了2011和2013的刻度，完全没有出现“2012”的标签。这意味着如果要用“2012”去定位这个单元格，就用到了页面上不存在的词，直接破坏了所见即所得的提取规则。\n\n- **不确定的**\n图中大约在55%的位置有一条明显的绿色折线，但图例只列出了EU和US，这导致从图表本身看，该系列的身份是不确定的（只能通过阅读右侧正文猜测它是UK）。此外，由于没有任何网格线作为参考，读取43、71这样的精确数据点时带有很大的猜测成分。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 4:",
+          "title": "Household savings invested in bonds, shares, investment funds and similar.",
+          "subtitle": "",
+          "unit_text": "%",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 13,
+        "marks": 39,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "%",
+            "low": "0",
+            "high": "100 %",
+            "serves": "all lines"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "2011",
+            "high": "2023",
+            "serves": "all lines"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "EU"
+          },
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2011"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "EU",
+            "2012"
+          ],
+          "value": "45",
+          "value_source": "axis_read",
+          "why_hard": "The year 2012 is not printed on the sparse x-axis, and the lack of gridlines hinders accurate reading."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "legend_inside_plot",
+        "figure_id": "f1",
+        "evidence": "the EU and US legend sits within the plot area"
+      },
+      {
+        "key": "sparse_time_ticks",
+        "figure_id": "f1",
+        "evidence": "ticks are drawn every 2 years but the line data is clearly yearly"
+      },
+      {
+        "key": "rotated_x_ticks",
+        "figure_id": "f1",
+        "evidence": "the year labels on the x-axis are rotated at an angle"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "Note: and Source: lines sit directly beneath the figure"
+      },
+      {
+        "key": "side_text_bullets",
+        "figure_id": "page",
+        "evidence": "a column of body text runs alongside the right edge of the figure"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "unlabeled_series_line",
+        "figure_id": "f1",
+        "evidence": "a green line is plotted but is entirely missing from the legend",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "45",
+        "figure_id": "f1",
+        "mark": "the 2011 EU point on the blue line",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "EU",
+          "2011"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "70",
+        "figure_id": "f1",
+        "mark": "the 2011 US point on the yellow line",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "US",
+          "2011"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "45",
+        "figure_id": "f1",
+        "mark": "the 2012 EU point on the blue line",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "EU",
+          "2012"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 3
+      },
+      {
+        "value": "71",
+        "figure_id": "f1",
+        "mark": "the 2012 US point on the yellow line",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "US",
+          "2012"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 3
+      },
+      {
+        "value": "45",
+        "figure_id": "f1",
+        "mark": "the 2013 EU point on the blue line",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "EU",
+          "2013"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "72",
+        "figure_id": "f1",
+        "mark": "the 2013 US point on the yellow line",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "US",
+          "2013"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "44",
+        "figure_id": "f1",
+        "mark": "the 2014 EU point on the blue line",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "EU",
+          "2014"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 3
+      },
+      {
+        "value": "70",
+        "figure_id": "f1",
+        "mark": "the 2014 US point on the yellow line",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "US",
+          "2014"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 3
+      },
+      {
+        "value": "43",
+        "figure_id": "f1",
+        "mark": "the 2015 EU point on the blue line",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "EU",
+          "2015"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "72",
+        "figure_id": "f1",
+        "mark": "the 2015 US point on the yellow line",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "US",
+          "2015"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 3,
+    "hardest_step_why": "抽查值包含2012和2014年的数据，但X轴时间刻度稀疏（只印了奇数年）。因为“2012”这个标签在图表中未出现，导致无法将值关联到实际的标签，从而在第三步被拦截。",
+    "examples": [
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "a green line is drawn around 55% but the legend lacks an entry for it",
+        "why": "图表中绘制了代表UK的绿色折线，但图例完全缺失了该系列。当前流水线无法自动识别未在图表中标注的系列，需要能容纳缺省标签列的支持。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "the unit % is printed directly inside the top tick label 100 %",
+        "why": "单位“%”直接合并到最高刻度文本中，流水线的单位分离逻辑无法有效拆分这种刻度自带单位的边缘排版。"
+      }
+    ]
+  }
+}

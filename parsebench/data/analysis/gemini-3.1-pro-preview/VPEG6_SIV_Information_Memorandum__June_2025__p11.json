@@ -1,0 +1,199 @@
+{
+  "stem": "VPEG6_SIV_Information_Memorandum__June_2025__p11",
+  "document": "VPEG6_SIV_Information_Memorandum__June_2025_",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 66.3,
+  "usage": {
+    "input_tokens": 5309,
+    "output_tokens": 8549,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "## 画出来要什么\n生成器需要绘制一个带有4个分类（Quartile 1至4）的柱状图。Y轴刻度从0.5x开始至3.0x，间距为0.5x。主要的图表类型是柱状图，但其中混合了其他元素：需要在`Quartile 1`上为另一个序列（Vantage）单独绘制一个黑底白标的数据点；并且需要在Y轴的2.0x高度处绘制一条贯穿整个绘图区的粗青色参考线。此外，在黑色的数据点旁需要连接一个带有引导线的黑色标注框，其中包含两行说明文字。图例需要放置在Y轴刻度标签的左侧，这在常规布局中较为少见。\n\n## 定位一个值难在哪\n定位Quartile 2的值（1.7）和Quartile 3的值（1.4）非常困难。因为这些值没有作为数据标签直接印在图表上，必须通过柱子顶端对齐Y轴来读取。而Y轴的网格线间距达到了0.5x，且柱子顶端悬空在网格线之间，单纯依靠视觉插值读取这几个非整数倍的数据点，很难将误差控制在5%的容差范围内。\n\n## 不确定的\n2.0x处的粗青色参考线没有对应的图例或文字说明，不确定它是否代表行业阈值。包含“2.1x”值的标注框不仅是数据标签，还承担了结论解释的作用，解析器可能无法自动将其提取并关联到对应的数据单元格中。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "Vantage vs Global Private Equity (Direct Buyout Funds) TVPI - 2009-2018",
+          "subtitle": "Vantage has Generated Top Quartile Returns when Compared to Global Direct Private Equity Funds",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 4,
+        "marks": 5,
+        "values_printed": "some",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "0.5x",
+            "high": "3.0x",
+            "serves": "all marks"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "Quartile 1",
+            "high": "Quartile 4",
+            "serves": "all marks"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Quartile 1"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "GLOBAL PRIVATE EQUITY"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Quartile 2",
+            "GLOBAL PRIVATE EQUITY"
+          ],
+          "value": "1.7x",
+          "value_source": "axis_read",
+          "why_hard": "The value does not fall on a gridline, and a spacing of 0.5 makes visual interpolation to 5% error difficult."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "mixed_marks",
+        "figure_id": "f1",
+        "evidence": "grey bars combined with a black point marker for VANTAGE"
+      },
+      {
+        "key": "reference_line",
+        "figure_id": "f1",
+        "evidence": "thick cyan horizontal line at 2.0x across all categories"
+      },
+      {
+        "key": "annotation_callout",
+        "figure_id": "f1",
+        "evidence": "black text box pointing to the Vantage marker"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "horizontal lines at 0.5x intervals, no vertical lines"
+      },
+      {
+        "key": "legend_beside_plot",
+        "figure_id": "f1",
+        "evidence": "legend items are positioned to the far left of the y-axis"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "small print starting with 'Source: Based on global private equity...'"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "single_point_series",
+        "figure_id": "f1",
+        "evidence": "the VANTAGE series only plots one marker on Quartile 1",
+        "affects": [
+          1,
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "2.1",
+        "figure_id": "f1",
+        "mark": "the black Vantage marker on Quartile 1",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Quartile 1",
+          "VANTAGE"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "2.5",
+        "figure_id": "f1",
+        "mark": "the Quartile 1 bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Quartile 1",
+          "GLOBAL PRIVATE EQUITY"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "1.7",
+        "figure_id": "f1",
+        "mark": "the Quartile 2 bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Quartile 2",
+          "GLOBAL PRIVATE EQUITY"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "1.4",
+        "figure_id": "f1",
+        "mark": "the Quartile 3 bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Quartile 3",
+          "GLOBAL PRIVATE EQUITY"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "1.0",
+        "figure_id": "f1",
+        "mark": "the Quartile 4 bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Quartile 4",
+          "GLOBAL PRIVATE EQUITY"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "由于网格线间距达0.5x且无数据标签，从坐标轴上肉眼插值读取Quartile 2的1.7和Quartile 3的1.4极易超过5%的容差限制，导致步骤2失败。",
+    "examples": [
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "black text box pointing to the Vantage marker",
+        "why": "当前的渲染管道可能不支持将大块解释性文本框直接作为一个数据序列的标签，并带有精确指向点的引导线。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "legend items are positioned to the left of the y-axis labels",
+        "why": "现有的图例布局选项不支持将图例放置在绘图区外侧极左侧，并与纵轴的刻度标签对齐。"
+      }
+    ]
+  }
+}

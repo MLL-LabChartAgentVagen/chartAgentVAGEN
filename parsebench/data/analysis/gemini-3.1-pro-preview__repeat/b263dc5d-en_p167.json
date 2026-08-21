@@ -1,0 +1,292 @@
+{
+  "stem": "b263dc5d-en_p167",
+  "document": "b263dc5d-en",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "repeat",
+  "effort": "high",
+  "dpi": 150,
+  "seconds": 80.3,
+  "usage": {
+    "input_tokens": 5299,
+    "output_tokens": 9872,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n需要支持双面板纵向排列的柱状图（`per_panel_axis_range`，A面板y轴量程为-5至30，B面板为0至30），各面板顶部带有独立的居中标题框（`panel_title_per_panel`）。类别（国家）标签放置在X轴并需要旋转90度显示（`rotated_x_ticks`）。需要支持将特定的横坐标类别（如 OECD average）使用贯穿所有面板的垂直背景色带进行高亮。柱子的颜色深浅不用于区分数据系列，而是编码了额外的统计显著性属性（`color_encodes_extra_attribute`）。单位文字置于Y轴最上方（`axis_title_above_axis`）。图表底部需要支持长篇的图注和数据源说明文本（`source_note_lines`），以及类别标签上的脚注星号（`footnote_marker`）。\n\n### 定位一个值难在哪\n以Panel A中Germany的值（约为13）为例。该图没有任何直接标注的数据标签（`values_printed: none`），所有数值只能通过Y轴读取。然而Y轴的水平网格线间距为5个百分点，对于像13这样不位于网格线上的中间值，肉眼读取极难保证在5%的容差范围内，这会导致在第二步数值校验时失败。\n\n### 不确定的\nPanel A和B中的国家是分别按各自的数值降序排列的，这意味着两个面板的X轴类别顺序完全不同，在垂直对比同一国家在两项指标下的表现时不够直观。图注中说明“较深颜色代表具有统计显著性”，但在实际渲染中部分柱子的边缘颜色过渡不够清晰，肉眼判断分类可能会出现误差。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 4.10.",
+          "title": "Relationship between numeracy and individual well-being",
+          "subtitle": "Difference in likelihood of reporting positive outcomes (high proficiency minus low proficiency)",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "bar",
+        "type_other": "",
+        "panels": 2,
+        "series": 1,
+        "categories": 32,
+        "marks": 64,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Percentage points",
+            "low": "-5",
+            "high": "30",
+            "serves": "all bars"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "Croatia",
+            "high": "Israel",
+            "serves": "all bars"
+          },
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Percentage points",
+            "low": "0",
+            "high": "30",
+            "serves": "all bars"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "Italy",
+            "high": "Korea",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "panel",
+            "label_source": "panel_title",
+            "example": "A. Life satisfaction"
+          },
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Croatia"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "A. Life satisfaction",
+            "Croatia"
+          ],
+          "value": "24",
+          "value_source": "axis_read",
+          "why_hard": "Gridlines are spaced by 5 units, making values between them hard to read precisely."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "per_panel_axis_range",
+        "figure_id": "f1",
+        "evidence": "Panel A y-axis starts at -5, Panel B y-axis starts at 0"
+      },
+      {
+        "key": "panel_title_per_panel",
+        "figure_id": "f1",
+        "evidence": "A. Life satisfaction and B. Health are inside blue banners above each panel"
+      },
+      {
+        "key": "axis_title_above_axis",
+        "figure_id": "f1",
+        "evidence": "'Percentage points' is placed above the highest tick on the y-axis"
+      },
+      {
+        "key": "rotated_x_ticks",
+        "figure_id": "f1",
+        "evidence": "country names on the x-axis are rotated 90 degrees vertically"
+      },
+      {
+        "key": "negative_values",
+        "figure_id": "f1",
+        "evidence": "Panel A y-axis descends to -5"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "horizontal grid lines only are drawn across the plot area"
+      },
+      {
+        "key": "color_encodes_extra_attribute",
+        "figure_id": "f1",
+        "evidence": "note states darker colours denote statistical significance at 5%"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "page",
+        "evidence": "Note: Adults aged 25-65... Source: Table A.4.11..."
+      },
+      {
+        "key": "footnote_marker",
+        "figure_id": "f1",
+        "evidence": "asterisk is attached to Poland*"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "cross_panel_highlight_band",
+        "figure_id": "f1",
+        "evidence": "a vertical shaded band highlights OECD average across both panels",
+        "affects": []
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "24",
+        "figure_id": "f1",
+        "mark": "Croatia bar in Panel A",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. Life satisfaction",
+          "Croatia"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "11",
+        "figure_id": "f1",
+        "mark": "OECD average bar in Panel B",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "B. Health",
+          "OECD average"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-1",
+        "figure_id": "f1",
+        "mark": "Israel bar in Panel A",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. Life satisfaction",
+          "Israel"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "27",
+        "figure_id": "f1",
+        "mark": "Italy bar in Panel B",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "B. Health",
+          "Italy"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "11",
+        "figure_id": "f1",
+        "mark": "Latvia bar in Panel A",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. Life satisfaction",
+          "Latvia"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "1",
+        "figure_id": "f1",
+        "mark": "Korea bar in Panel B",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "B. Health",
+          "Korea"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "18",
+        "figure_id": "f1",
+        "mark": "Canada bar in Panel B",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "B. Health",
+          "Canada"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "13",
+        "figure_id": "f1",
+        "mark": "Germany bar in Panel A",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. Life satisfaction",
+          "Germany"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "11",
+        "figure_id": "f1",
+        "mark": "Sweden bar in Panel A",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. Life satisfaction",
+          "Sweden"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "3",
+        "figure_id": "f1",
+        "mark": "Finland bar in Panel B",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "B. Health",
+          "Finland"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "图中没有任何直接印出的数据标签，Y轴的网格线间距为5个单位，对于如13这样的中间值，仅凭肉眼读取极大可能超出5%的误差容限，导致校验失败。",
+    "examples": [
+      {
+        "gap": "P8",
+        "figure_id": "f1",
+        "quote": "Darker colours denote differences that are statistically significant at the 5% level.",
+        "why": "图表中的颜色深浅编码了统计显著性这一独立属性，目前的管线无法将非图例承载的颜色属性编码为独立键。"
+      },
+      {
+        "gap": "P2",
+        "figure_id": "f1",
+        "quote": "A. Life satisfaction and B. Health panel banners",
+        "why": "图表由上下两个面板组成且横坐标不共享顺序，必须将面板名称加入数据键中以区分不同子图里的同名国家。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "a vertical blue shaded band behind the 'OECD average' category spanning both panels",
+        "why": "目前的生成管线不支持在特定的横轴类别背后添加一条贯穿所有面板背景颜色的垂直高亮色带。"
+      }
+    ]
+  }
+}

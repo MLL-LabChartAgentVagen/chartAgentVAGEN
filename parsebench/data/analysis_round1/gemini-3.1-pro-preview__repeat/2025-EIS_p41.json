@@ -1,0 +1,190 @@
+{
+  "stem": "2025-EIS_p41",
+  "document": "2025-EIS",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "repeat",
+  "effort": "high",
+  "dpi": 150,
+  "seconds": 74.7,
+  "usage": {
+    "input_tokens": 4430,
+    "output_tokens": 10372,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "此页面包含一个水平条形图，叠加了散点（菱形）和垂直线，展示了EU27成员国在“Finance and support”维度的创新表现。\n\n**绘制难点**：\n1. **混合标记叠加**：图表在同一分类轴上结合了条形图（表示2025年得分）、菱形（2018年得分）和垂直线（2024年得分），渲染引擎需要支持多系列的异构图层渲染（`mixed_marks`）。\n2. **颜色编码额外分类**：条形图的颜色并非区分系列，而是编码了国家的整体表现分组（如“Emerging innovators”等），需要额外的数据映射属性支持（`color_encodes_extra_attribute`）。\n3. **特定形状标记**：使用垂直刻度线直接表示数值系列（`tick_marker_as_series`）。\n\n**提取难点**：\n图表未标注具体数据标签，且X轴网格步长为20。由于视觉分辨率不足，像183、178、37等精确到个位的数值无法在合理容差内准确读取，导致系统在评估步骤2时面临重大困难。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 13",
+          "title": "Innovation performance of the EU27 Member States in the Finance and support dimension",
+          "subtitle": "Finance and support",
+          "unit_text": "Score for dimension 2.1 in 2025 (indexed to the EU in 2018)",
+          "placement": "above"
+        },
+        "type": "bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 6,
+        "categories": 28,
+        "marks": 84,
+        "values_printed": "none"
+      }
+    ],
+    "components": [
+      {
+        "key": "horizontal_bars",
+        "figure_id": "f1",
+        "evidence": "categories sit on the y axis and bars grow to the right"
+      },
+      {
+        "key": "mixed_marks",
+        "figure_id": "f1",
+        "evidence": "bars, diamonds, and vertical ticks overlaid in one panel"
+      },
+      {
+        "key": "tick_marker_as_series",
+        "figure_id": "f1",
+        "evidence": "vertical line tick represents Score in 2024"
+      },
+      {
+        "key": "color_encodes_extra_attribute",
+        "figure_id": "f1",
+        "evidence": "bar colors represent overall innovator performance groups"
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "the legend sits below the horizontal axis"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "Note: All performance scores are relative to that..."
+      },
+      {
+        "key": "axis_title_below_plot",
+        "figure_id": "f1",
+        "evidence": "the x axis title sits below the plot"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "indexed to the EU in 2018 is in the axis title"
+      },
+      {
+        "key": "vgrid_only",
+        "figure_id": "f1",
+        "evidence": "vertical grid lines at 20, 40, 60, no horizontal grid"
+      },
+      {
+        "key": "rebased_index_values",
+        "figure_id": "f1",
+        "evidence": "indexed to the EU in 2018"
+      }
+    ],
+    "new_components": [],
+    "spot_checks": [
+      {
+        "value": "183",
+        "figure_id": "f1",
+        "mark": "the France bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "France"
+        ]
+      },
+      {
+        "value": "100",
+        "figure_id": "f1",
+        "mark": "the EU diamond",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "EU",
+          "Score in 2018"
+        ]
+      },
+      {
+        "value": "178",
+        "figure_id": "f1",
+        "mark": "the Denmark vertical line",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Denmark",
+          "Score in 2024"
+        ]
+      },
+      {
+        "value": "152",
+        "figure_id": "f1",
+        "mark": "the Sweden bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Sweden"
+        ]
+      },
+      {
+        "value": "23",
+        "figure_id": "f1",
+        "mark": "the Bulgaria bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Bulgaria"
+        ]
+      },
+      {
+        "value": "37",
+        "figure_id": "f1",
+        "mark": "the Lithuania diamond",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Lithuania",
+          "Score in 2018"
+        ]
+      },
+      {
+        "value": "125",
+        "figure_id": "f1",
+        "mark": "the Spain vertical line",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Spain",
+          "Score in 2024"
+        ]
+      },
+      {
+        "value": "105",
+        "figure_id": "f1",
+        "mark": "the Germany bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Germany"
+        ]
+      },
+      {
+        "value": "152",
+        "figure_id": "f1",
+        "mark": "the Austria vertical line",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Austria",
+          "Score in 2024"
+        ]
+      },
+      {
+        "value": "77",
+        "figure_id": "f1",
+        "mark": "the Malta diamond",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Malta",
+          "Score in 2018"
+        ]
+      }
+    ],
+    "hardest_step": 2
+  }
+}

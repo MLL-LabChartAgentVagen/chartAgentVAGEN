@@ -1,0 +1,228 @@
+{
+  "stem": "2025-EIS_p41",
+  "document": "2025-EIS",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "no_vocab",
+  "effort": "high",
+  "dpi": 150,
+  "seconds": 14.5,
+  "usage": {
+    "input_tokens": 2279,
+    "output_tokens": 1977,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "这张页面包含一个水平条形图，展示了 2025 年 EU27 成员国在“财务与支持”维度的创新表现。图表包含多个系列的数据点，不仅有表示 2025 年表现的条形（按照四个创新者类别进行了颜色编码，另外欧盟（EU）的条形使用深蓝色突出显示），还有表示 2018 年表现的菱形标记和表示 2024 年表现的垂直短线标记。\n\n生成器需要支持：\n1.  **水平条形图叠加散点和垂直线**：在同一条形上叠加不同年份的指标。在欧盟（EU）的条形上，菱形标记为白色，以在深蓝色背景上保持可见。\n2.  **分类颜色的条形图**：条形颜色根据外部定义的创新者类别（Emerging, Moderate, Strong, Innovation leaders）进行着色，需要在图例中说明。\n3.  **图外标题和副标题**：标题在图表上方，包含维度名称，X轴标题在轴下方，说明了分数的基准。\n\n解析难点在于图表未标注具体数值，所有数值（包括条形长度、菱形和竖线位置）都必须从 X 轴读取。X 轴的主刻度间隔为 20，因此对于这三个不同系列的大量标记，很难精确读取到个位数，很容易超出 1% 的容差范围。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 13:",
+          "title": "Innovation performance of the EU27 Member States in the Finance and support dimension",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 7,
+        "categories": 28,
+        "marks": 84,
+        "values_printed": "none"
+      }
+    ],
+    "components": [
+      {
+        "key": "horizontal_bar",
+        "figure_id": "f1",
+        "evidence": "Bars for each country run horizontally from left to right",
+        "affects": [
+          1,
+          2,
+          3
+        ]
+      },
+      {
+        "key": "overlay_scatter_points",
+        "figure_id": "f1",
+        "evidence": "Diamonds for 'Score in 2018' overlay the bars",
+        "affects": [
+          2,
+          3
+        ]
+      },
+      {
+        "key": "overlay_vertical_lines",
+        "figure_id": "f1",
+        "evidence": "Vertical bars for 'Score in 2024' overlay the bars or their track",
+        "affects": [
+          2,
+          3
+        ]
+      },
+      {
+        "key": "categorical_bar_colors",
+        "figure_id": "f1",
+        "evidence": "Bars are colored by 4 innovation groups, plus dark blue for EU",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "x_axis_title",
+        "figure_id": "f1",
+        "evidence": "'Score for dimension 2.1 in 2025 (indexed to the EU in 2018)' sits below the x axis",
+        "affects": [
+          4
+        ]
+      },
+      {
+        "key": "y_axis_labels",
+        "figure_id": "f1",
+        "evidence": "Country names are listed on the left y-axis",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "legend_below",
+        "figure_id": "f1",
+        "evidence": "Legend showing groups and years sits below the x-axis title",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "top_left_subtitle",
+        "figure_id": "f1",
+        "evidence": "'Finance and support' is printed in blue above the top left of the plot area",
+        "affects": [
+          4
+        ]
+      },
+      {
+        "key": "white_scatter_marker",
+        "figure_id": "f1",
+        "evidence": "The diamond marker on the dark blue 'EU' bar is white instead of grey",
+        "affects": [
+          2,
+          3
+        ]
+      }
+    ],
+    "new_components": [
+      {
+        "name": "overlay_multiple_marks",
+        "figure_id": "f1",
+        "evidence": "A bar, a diamond, and a vertical tick are all plotted on the same categorical y-position",
+        "affects": [
+          2,
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "183",
+        "figure_id": "f1",
+        "mark": "the France bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "France"
+        ]
+      },
+      {
+        "value": "100",
+        "figure_id": "f1",
+        "mark": "the EU Score in 2018 diamond",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "EU",
+          "Score in 2018"
+        ]
+      },
+      {
+        "value": "178",
+        "figure_id": "f1",
+        "mark": "the Denmark Score in 2024 vertical line",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Denmark",
+          "Score in 2024"
+        ]
+      },
+      {
+        "value": "152",
+        "figure_id": "f1",
+        "mark": "the Sweden bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Sweden"
+        ]
+      },
+      {
+        "value": "23",
+        "figure_id": "f1",
+        "mark": "the Cyprus bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Cyprus"
+        ]
+      },
+      {
+        "value": "37",
+        "figure_id": "f1",
+        "mark": "the Lithuania Score in 2018 diamond",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Lithuania",
+          "Score in 2018"
+        ]
+      },
+      {
+        "value": "125",
+        "figure_id": "f1",
+        "mark": "the Spain Score in 2024 vertical line",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Spain",
+          "Score in 2024"
+        ]
+      },
+      {
+        "value": "105",
+        "figure_id": "f1",
+        "mark": "the Germany Score in 2024 vertical line",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Germany",
+          "Score in 2024"
+        ]
+      },
+      {
+        "value": "152",
+        "figure_id": "f1",
+        "mark": "the Austria Score in 2024 vertical line",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Austria",
+          "Score in 2024"
+        ]
+      },
+      {
+        "value": "77",
+        "figure_id": "f1",
+        "mark": "the Malta Score in 2018 diamond",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Malta",
+          "Score in 2018"
+        ]
+      }
+    ],
+    "hardest_step": 2
+  }
+}

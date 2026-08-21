@@ -1,0 +1,323 @@
+{
+  "stem": "pdf_d2e0103f64cd_p29",
+  "document": "pdf_d2e0103f64cd",
+  "tags": "3d_chart",
+  "model": "gemini-3.1-pro-preview",
+  "control": "no_vocab",
+  "effort": "high",
+  "dpi": 150,
+  "seconds": 50.1,
+  "usage": {
+    "input_tokens": 3195,
+    "output_tokens": 6251,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "## 画出来要什么\n此页面包含两个带有数据标签的折线图。图表生成器需要能够绘制折线、在数据点附近直接标注数值（并控制位置避免重叠）、支持X轴不规则的时间粒度（年度与季度混排，如`2012`与`Q1 2013`并列）、允许不同数据系列在不同时间点起始（如第二图中的`Marina Bay`缺失2010年数据，直接从2011年开始），以及在数据标签上附加文字注释或脚注（如`84.1%(1)`）。同时需要支持底部居中的一排图例、带有单位说明的顶部居中标题，以及图表外部的备注（Note/Source）。\n\n## 定位一个值难在哪\n定位如 `84.1` 这个值，难点在于该标签在图表中带有上标脚注，写作 `84.1%(1)`。解析器在提取纯数值时容易将其误读为 `84.11` 或无法满足5%的容差（步骤2）；此外，作为折线图，尽管数值全印在图上，解析模型未必能将其正确转化为带表头和系列的表格结构，可能导致连表格都无法生成。\n\n## 不确定的\n数据标签的具体位置（在线的上方或下方）是否是通过防重叠算法自动计算得出，还是为了美观而人工指定的固定坐标位置。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "Average Occupancy Rates in the Singapore CBD (%)",
+          "subtitle": "",
+          "unit_text": "%",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 1,
+        "series": 3,
+        "categories": 6,
+        "marks": 18,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "%",
+            "low": "65%",
+            "high": "100%",
+            "serves": "all lines"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "2010",
+            "high": "Q3 2013",
+            "serves": "all lines"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2010"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Marina Bay"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "2010",
+            "Marina Bay"
+          ],
+          "value": "70.3%",
+          "value_source": "printed",
+          "why_hard": "Being a line chart, the parser might not extract a table."
+        }
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "",
+          "title": "Average Rental Rates in the Singapore CBD (S$ per sq ft per month)",
+          "subtitle": "",
+          "unit_text": "S$ per sq ft per month",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 1,
+        "series": 3,
+        "categories": 6,
+        "marks": 17,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "S$",
+            "low": "0",
+            "high": "14",
+            "serves": "all lines"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "2010",
+            "high": "Q3 2013",
+            "serves": "all lines"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2011"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Marina Bay"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "2011",
+            "Marina Bay"
+          ],
+          "value": "12.0",
+          "value_source": "printed",
+          "why_hard": "Starts late, no 2010 value."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "title_with_units",
+        "figure_id": "page",
+        "evidence": "the title includes (%) and (S$ per sq ft per month)",
+        "affects": [
+          4
+        ]
+      },
+      {
+        "key": "inline_data_labels",
+        "figure_id": "page",
+        "evidence": "values like 96.8% and 12.0 are printed directly beside points",
+        "affects": [
+          1,
+          2
+        ]
+      },
+      {
+        "key": "mixed_x_axis_granularity",
+        "figure_id": "page",
+        "evidence": "x-axis mixes years like 2012 with quarters like Q1 2013",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "new_components": [
+      {
+        "name": "footnote_on_data_label",
+        "figure_id": "f1",
+        "evidence": "the point reads 84.1%(1)",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "name": "late_starting_series",
+        "figure_id": "f2",
+        "evidence": "Marina Bay line starts at 2011 instead of 2010",
+        "affects": [
+          1,
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "70.3",
+        "figure_id": "f1",
+        "mark": "the 2010 point on the Marina Bay line",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "2010",
+          "Marina Bay"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "96.8",
+        "figure_id": "f1",
+        "mark": "the 2010 point on the Raffles Place line",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "2010",
+          "Raffles Place"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "91.2",
+        "figure_id": "f1",
+        "mark": "the 2012 point on the Raffles Place line",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "2012",
+          "Raffles Place"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "84.1",
+        "figure_id": "f1",
+        "mark": "the Q3 2013 point on the Marina Bay line",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Q3 2013",
+          "Marina Bay"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "97.7",
+        "figure_id": "f1",
+        "mark": "the Q3 2013 point on the Shenton Way/Robinson Rd/Cecil Street line",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Q3 2013",
+          "Shenton Way/Robinson Rd/Cecil Street"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "12.0",
+        "figure_id": "f2",
+        "mark": "the 2011 point on the Marina Bay line",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "2011",
+          "Marina Bay"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "9.0",
+        "figure_id": "f2",
+        "mark": "the 2010 point on the Raffles Place line",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "2010",
+          "Raffles Place"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "7.8",
+        "figure_id": "f2",
+        "mark": "the 2011 point on the Shenton Way/Robinson Rd/Cecil Street line",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "2011",
+          "Shenton Way/Robinson Rd/Cecil Street"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "11.0",
+        "figure_id": "f2",
+        "mark": "the Q3 2013 point on the Marina Bay line",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Q3 2013",
+          "Marina Bay"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "9.4",
+        "figure_id": "f2",
+        "mark": "the Q3 2013 point on the Raffles Place line",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Q3 2013",
+          "Raffles Place"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      }
+    ],
+    "hardest_step": 1,
+    "hardest_step_why": "虽然数值直接印在图上，但折线图常被解析器忽略或无法正确构建出包含'年份'与'区域'的二维表格，导致第1步没有对应表格产生。此外84.1自带的脚注易导致提取容差失败。",
+    "examples": [
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "Average Occupancy Rates in the Singapore CBD (%)",
+        "why": "图表标题直接将单位信息以括号形式包裹在行尾，需要独立的标题字段结构以支持包含单位或副标题的复杂重构。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "84.1%(1)",
+        "why": "图表生成器无法支持在绘图区域内特定数据标签上直接附加脚注序号上标。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f2",
+        "quote": "Marina Bay line begins at 12.0 above 2011",
+        "why": "生成器往往预设所有系列共享相同的起止横坐标，难以支持个别系列在X轴中途才开始显示起点的情况。"
+      }
+    ]
+  }
+}

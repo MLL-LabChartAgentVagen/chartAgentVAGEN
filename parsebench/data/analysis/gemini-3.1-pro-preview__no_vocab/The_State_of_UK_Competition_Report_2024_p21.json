@@ -1,0 +1,260 @@
+{
+  "stem": "The_State_of_UK_Competition_Report_2024_p21",
+  "document": "The_State_of_UK_Competition_Report_2024",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "no_vocab",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 65.2,
+  "usage": {
+    "input_tokens": 3187,
+    "output_tokens": 9353,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n生成此页面需要支持绘制包含多条折线的图表，其中需要支持针对单条折线进行样式突出（如加粗的深蓝色 Baseline）和针对一组折线应用统一的弱化样式（如多条细的浅蓝色 Alternative approaches）。需要在绘图区内直接放置文本标签（内联标签）以代替传统的图例。系统还必须能够在图表背景中绘制贯穿Y轴的矩形阴影区域，并在其上方添加居中的文本标签（如 Great Financial Crisis），用于指示特定的时间跨度。Y轴顶端需要能够独立放置单位或说明文本，而不是将其作为常规的轴标题。主标题下方需要支持极长的多行段落式副标题。\n\n### 定位一个值难在哪\n以“104”（Baseline 在2011年的值）为例，难点主要在于数值读取的精度。Y轴的刻度从80到160，主刻度间隔高达20，且图表内部缺乏横向网格线。在没有直接标注数值的情况下，肉眼很难将位于100上方的微小偏移准确判读为104还是103、105，极大概率会超出5%的误差容忍度。此外，对于“141”等存在于 Alternative approaches 中的数值，由于十多条细线共用一个文本标签，根本无法通过图表上的可用信息唯一寻址特定的某一条折线。\n\n### 不确定的\n图中十多条浅蓝色折线（Alternative approaches）具体对应哪些不同的替代计算方法或模型，在图表中并未给出任何标识，因此无法为它们中的每一条分配独立的寻址键。此外，折线上的数据点是否严格对应每年一个点，只能通过X轴标题“Year”和年份刻度的跨度来推测。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 5",
+          "title": "Average markups in GB have risen since 1997",
+          "subtitle": "Economy-wide average markup estimates. Baseline measure: Ordinary Least Square (OLS) estimation of a translog production function with materials as flexible input. Firm-level estimates are aggregated and weighted by turnover. Data from Annual Respondents Database X (ARDx) 1997-2020 and Annual Business Survey (ABS) 2021. GB only",
+          "unit_text": "Material markup (indexed to 1997 = 100)",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 25,
+        "marks": 275,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Material markup (indexed to 1997 = 100)",
+            "low": "80",
+            "high": "160",
+            "serves": "all lines"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "Year",
+            "low": "1997",
+            "high": "2021",
+            "serves": "all lines"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "series",
+            "label_source": "inline_label",
+            "example": "Baseline"
+          },
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2001"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Baseline",
+            "2013"
+          ],
+          "value": "114",
+          "value_source": "axis_read",
+          "why_hard": "Y-axis ticks are every 20 units, making it impossible to read 114 to 5% accuracy visually."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "inline_series_labels",
+        "figure_id": "f1",
+        "evidence": "Labels 'Baseline' and 'Alternative approaches' are written directly on the plot",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "shaded_time_periods",
+        "figure_id": "f1",
+        "evidence": "Grey background bands for 'Great Financial Crisis' and 'Covid-19 Pandemic'",
+        "affects": []
+      },
+      {
+        "key": "axis_title_above_axis",
+        "figure_id": "f1",
+        "evidence": "'Material markup...' is positioned directly above the top of the y-axis",
+        "affects": []
+      },
+      {
+        "key": "x_axis_title_below_ticks",
+        "figure_id": "f1",
+        "evidence": "'Year' is placed centrally below the x-axis tick labels",
+        "affects": []
+      }
+    ],
+    "new_components": [
+      {
+        "name": "shared_group_label",
+        "figure_id": "f1",
+        "evidence": "One label 'Alternative approaches' serves multiple distinct lines without differentiating them",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "100",
+        "figure_id": "f1",
+        "mark": "the 1997 point on the Baseline line",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Baseline",
+          "1997"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "98",
+        "figure_id": "f1",
+        "mark": "the 2001 point on the Baseline line",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Baseline",
+          "2001"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "103",
+        "figure_id": "f1",
+        "mark": "the 2005 point on the Baseline line",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Baseline",
+          "2005"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "103",
+        "figure_id": "f1",
+        "mark": "the 2009 point on the Baseline line",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Baseline",
+          "2009"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "111",
+        "figure_id": "f1",
+        "mark": "the 2010 point on the Baseline line",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Baseline",
+          "2010"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "104",
+        "figure_id": "f1",
+        "mark": "the 2011 point on the Baseline line",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Baseline",
+          "2011"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "111",
+        "figure_id": "f1",
+        "mark": "the 2012 point on the Baseline line",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Baseline",
+          "2012"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "141",
+        "figure_id": "f1",
+        "mark": "the 2011 point on the highest Alternative approaches line",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Alternative approaches",
+          "2011"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "143",
+        "figure_id": "f1",
+        "mark": "the 2012 point on the highest Alternative approaches line",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Alternative approaches",
+          "2012"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "100",
+        "figure_id": "f1",
+        "mark": "the 1997 point on any line",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Baseline",
+          "1997"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "Y轴刻度间距为20且无网格线，无法将104（2011年）等值读取至5%精度内。多条细线共用一个标签也使得141等值无法唯一定位。",
+    "examples": [
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "Grey vertical bands spanning the y-axis for 'Great Financial Crisis' and 'Covid-19 Pandemic'",
+        "why": "系统需要支持在图表背景中绘制贯穿Y轴的自定义矩形阴影区域，并在其上方添加居中的说明文本，以指示特定的时间跨度。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "Multiple light blue lines all sharing the single label 'Alternative approaches'",
+        "why": "系统无法将同一个图例或内联标签映射到图表上的多条无区分的折线上，导致这些折线无法被独立定位。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "Economy-wide average markup estimates. Baseline measure: Ordinary Least Square...",
+        "why": "标题下方包含极其冗长的多行段落式解释性副标题文本，当前系统可能无法支持如此长文本的副标题布局及换行。"
+      }
+    ]
+  }
+}

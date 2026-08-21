@@ -1,0 +1,302 @@
+{
+  "stem": "investing-in-education-2025-NC0125093ENN-1_p14",
+  "document": "investing-in-education-2025-NC0125093ENN-1",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "seconds": 95.1,
+  "usage": {
+    "input_tokens": 5339,
+    "output_tokens": 12193,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n页面包含一个折线图（Figure 6）和一个数据表（Figure 7）。折线图需要绘制两条带标记点的实线，X轴为连续年份，Y轴从100起始，仅有水平虚线网格，图例位于图表底部；图表标题位于带底色的横幅中。表格需要呈现跨列和行列交错的结构，表头和行背景交替渲染颜色。两图底部均需支持添加多行的来源和注释说明，且表格下方附带带方括号的超链接代码。\n\n### 定位一个值难在哪\n以2019年Real线的“109”为例，该值未在图表上直接标注，必须通过折线上的散点与间距为10的Y轴水平对齐来估算。尽管5%的容差范围较宽，但连续17年的长周期折线图极易导致解析模型在提取数据时出现遗漏或年份对齐错误。\n\n### 不确定的\n折线图所有具体数值均无标签，完全依赖视觉刻度估算；表格中2019-2021年表头单元格左上角的微小绿色三角形缺乏图例说明，暂视为装饰元素处理。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 6.",
+          "title": "Evolution of nominal and real public expenditure on education in the EU-27 (index 2007=100)",
+          "subtitle": "",
+          "unit_text": "(index 2007=100)",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 17,
+        "marks": 34,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "100",
+            "high": "160",
+            "serves": "both lines"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "2007",
+            "high": "2023",
+            "serves": "both lines"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Nominal"
+          },
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2015"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Nominal",
+            "2015"
+          ],
+          "value": "116",
+          "value_source": "axis_read",
+          "why_hard": "The value falls between the 110 and 120 ticks on the y-axis, requiring visual interpolation."
+        }
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "Figure 7.",
+          "title": "Public expenditure by function (2019-2023)",
+          "subtitle": "",
+          "unit_text": "% of total",
+          "placement": "above"
+        },
+        "type": "unreadable",
+        "type_other": "a plain table presented as a figure",
+        "panels": 1,
+        "series": 6,
+        "categories": 10,
+        "marks": 60,
+        "values_printed": "all",
+        "axes": [],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "inline_label",
+            "example": "Health"
+          },
+          {
+            "role": "time",
+            "label_source": "heading",
+            "example": "2019"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Health",
+            "2019"
+          ],
+          "value": "14.9",
+          "value_source": "printed",
+          "why_hard": ""
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "the legend sits below the x-axis"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "horizontal dashed lines at 10-unit intervals, no vertical lines"
+      },
+      {
+        "key": "data_table_as_figure",
+        "figure_id": "f2",
+        "evidence": "Figure 7 is a bordered data table with rows and columns"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "page",
+        "evidence": "Notes: and Source: lines printed under both figures"
+      },
+      {
+        "key": "multi_figure_page",
+        "figure_id": "page",
+        "evidence": "the page contains Figure 6 and Figure 7"
+      },
+      {
+        "key": "axis_starts_above_zero",
+        "figure_id": "f1",
+        "evidence": "the y-axis starts at 100 with no break symbol"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "the title contains '(index 2007=100)'"
+      },
+      {
+        "key": "rebased_index_values",
+        "figure_id": "f1",
+        "evidence": "the title says '(index 2007=100)'"
+      },
+      {
+        "key": "data_link_below_figure",
+        "figure_id": "f2",
+        "evidence": "under Figure 7 reads 'Online data code: [gov_10a_exp]'"
+      }
+    ],
+    "new_components": [],
+    "spot_checks": [
+      {
+        "value": "100",
+        "figure_id": "f1",
+        "mark": "the 2007 Nominal line start",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Nominal",
+          "2007"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "100",
+        "figure_id": "f1",
+        "mark": "the 2007 Real line start",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Real",
+          "2007"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "110",
+        "figure_id": "f1",
+        "mark": "the 2011 Nominal point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Nominal",
+          "2011"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "116",
+        "figure_id": "f1",
+        "mark": "the 2015 Nominal point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Nominal",
+          "2015"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "105",
+        "figure_id": "f1",
+        "mark": "the 2015 Real point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Real",
+          "2015"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "130",
+        "figure_id": "f1",
+        "mark": "the 2019 Nominal point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Nominal",
+          "2019"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "109",
+        "figure_id": "f1",
+        "mark": "the 2019 Real point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Real",
+          "2019"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "148",
+        "figure_id": "f1",
+        "mark": "the 2022 Nominal point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Nominal",
+          "2022"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "159",
+        "figure_id": "f1",
+        "mark": "the 2023 Nominal point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Nominal",
+          "2023"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "115",
+        "figure_id": "f1",
+        "mark": "the 2023 Real point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Real",
+          "2023"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      }
+    ],
+    "hardest_step": 1,
+    "hardest_step_why": "折线图包含连续17年的34个无标签数据点，模型极易因点位密集且完全依赖视觉估算而无法生成完整表格，导致步骤1直接失败。",
+    "examples": [
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "Figure 6. Evolution of nominal and real public expenditure on education...",
+        "why": "标题整体嵌入在带紫色背景色的横幅中，需要生成器能够将图表编号和标题合并渲染为这种特定背景样式的横幅框。"
+      },
+      {
+        "gap": "P3",
+        "figure_id": "f2",
+        "quote": "Figure 7. Public expenditure by function (2019-2023)",
+        "why": "图表7实质上是一个带有表头背景色的数据表，生成器需具备将其直接输出为保留样式结构的Markdown或HTML表格的能力。"
+      }
+    ]
+  }
+}

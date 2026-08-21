@@ -1,0 +1,318 @@
+{
+  "stem": "2025-EIS_p69",
+  "document": "2025-EIS",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "repeat",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 129.4,
+  "usage": {
+    "input_tokens": 5349,
+    "output_tokens": 17633,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "**画出来要什么**\n页面包含一个文本观察列表（Box 5）和一个双面板折线图（Figure 26）。Box 5 是一系列结构化段落，加粗了国家名并列出具体数值。Figure 26 包含左右两个并排的折线图面板，共享相同的 Y 轴标题（旋转排列）和 X 轴（年份缩写为 '18）。左侧面板只有一条无标签的折线，右侧面板有 6 条折线，并在末端直接标注国家名称（内联标签）。Y 轴起点为 20，仅有水平网格线。底部带有注释文本。\n\n**定位一个值难在哪**\n以 62.1 为例，该值精确到小数点后一位，直接打印在 Box 5 的自然语言文本中。如果仅依靠 Figure 26 解析，因无数据标签且 Y 轴跨度为 20-90，视觉读取只能得到 62 左右的估值。如果解析器没有能力将这些文本段落识别并转换为数据表（Step 1），则会完全丢失这些精确数据。\n\n**不确定的**\nFigure 26 左侧面板没有图例或直接标题，完全依靠底部的 Note 文本（\"The graph on the left shows...\"）来解释其含义。解析器能否跨组件将这段自由文本正确映射到该面板的元数据中存在极大的不确定性。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Box 5",
+          "title": "Country level observations for Emerging Innovators",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "unreadable",
+        "type_other": "block of body text",
+        "panels": 1,
+        "series": 1,
+        "categories": 1,
+        "marks": 1,
+        "values_printed": "all",
+        "axes": [],
+        "key_parts": [
+          {
+            "role": "series",
+            "label_source": "inline_label",
+            "example": "Hungary"
+          },
+          {
+            "role": "time",
+            "label_source": "inline_label",
+            "example": "2018"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Hungary",
+            "2018"
+          ],
+          "value": "62.1",
+          "value_source": "printed",
+          "why_hard": "Data is embedded in natural language sentences, requiring NLP to extract."
+        }
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "Figure 26",
+          "title": "Performance Emerging Innovators",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 2,
+        "series": 7,
+        "categories": 8,
+        "marks": 56,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "20",
+            "high": "90",
+            "serves": "the average line in the left panel"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "'18",
+            "high": "'25",
+            "serves": "the average line in the left panel"
+          },
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "20",
+            "high": "90",
+            "serves": "the six country lines in the right panel"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "'18",
+            "high": "'25",
+            "serves": "the six country lines in the right panel"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "series",
+            "label_source": "inline_label",
+            "example": "Hungary"
+          },
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "'18"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Hungary",
+            "'18"
+          ],
+          "value": "62",
+          "value_source": "axis_read",
+          "why_hard": "No minor grid lines or data labels; exact decimal reading is impossible."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "small_multiples_4",
+        "figure_id": "f2",
+        "evidence": "Figure 26 has two line chart panels side-by-side"
+      },
+      {
+        "key": "inline_series_labels",
+        "figure_id": "f2",
+        "evidence": "country names like 'Hungary' are written beside the rightmost points of the lines"
+      },
+      {
+        "key": "rotated_axis_title",
+        "figure_id": "f2",
+        "evidence": "the title 'Summary innovation index' is rotated vertically along both y-axes"
+      },
+      {
+        "key": "axis_starts_above_zero",
+        "figure_id": "f2",
+        "evidence": "both y-axes begin at 20, not 0"
+      },
+      {
+        "key": "nonstandard_time_ticks",
+        "figure_id": "f2",
+        "evidence": "years on the x-axes are abbreviated to '18, '19"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f2",
+        "evidence": "only horizontal grid lines are visible on the chart"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f2",
+        "evidence": "a Note text paragraph sits directly beneath the figure"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "unlabeled_panel_identified_in_note",
+        "figure_id": "f2",
+        "evidence": "the left panel has no label or legend, identified only in the footnote",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "62.1",
+        "figure_id": "f1",
+        "mark": "the text '62.1' in the Hungary paragraph",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Hungary",
+          "2018"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "78.3",
+        "figure_id": "f1",
+        "mark": "the text '78.3' in the Hungary paragraph",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Hungary",
+          "2025"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "56.1",
+        "figure_id": "f1",
+        "mark": "the text '56.1' in the Poland paragraph",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Poland",
+          "2018"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "74.2",
+        "figure_id": "f1",
+        "mark": "the text '74.2' in the Poland paragraph",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Poland",
+          "2025"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "62.2",
+        "figure_id": "f1",
+        "mark": "the text '62.2' in the Slovakia paragraph",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Slovakia",
+          "2018"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "71.6",
+        "figure_id": "f1",
+        "mark": "the text '71.6' in the Slovakia paragraph",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Slovakia",
+          "2024"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "63.9",
+        "figure_id": "f1",
+        "mark": "the text '63.9' in the Latvia paragraph",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Latvia",
+          "2025"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "53.8",
+        "figure_id": "f1",
+        "mark": "the text '53.8' in the Bulgaria paragraph",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Bulgaria",
+          "2024"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "34.2",
+        "figure_id": "f1",
+        "mark": "the text '34.2' in the Romania paragraph",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Romania",
+          "2018"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "42.4",
+        "figure_id": "f1",
+        "mark": "the text '42.4' in the Romania paragraph",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Romania",
+          "2025"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      }
+    ],
+    "hardest_step": 1,
+    "hardest_step_why": "题目提供的值(如 62.1)精确到小数位，全部来自 Box 5 的文本。如果解析器未将这些带有加粗实体名的段落块识别为数据表(Step 1)，则直接丢失所有精确数据点。",
+    "examples": [
+      {
+        "gap": "P3",
+        "figure_id": "f1",
+        "quote": "Hungary showed strong and continuous progress, rising from 62.1%... in 2018 to 78.3% in 2025",
+        "why": "此类文本段落包含了高度结构化的精确数据点，如果不具备将其直接解析并映射为数据表的能力，将遗漏关键指标。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f2",
+        "quote": "The graph on the left shows the average performance of the Emerging Innovators",
+        "why": "左侧面板没有任何标题或图例，其代表的实体只能从底部的自然语言注释中推断，现有的解析系统无法建立这种跨组件语义映射。"
+      }
+    ]
+  }
+}

@@ -1,0 +1,395 @@
+{
+  "stem": "deloitte-2025-global-automotive-consumer-study-january-2025_1_p20",
+  "document": "deloitte-2025-global-automotive-consumer-study-january-2025_1",
+  "tags": "untagged",
+  "model": "claude-opus-5",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "seconds": 50.5,
+  "usage": {
+    "input_tokens": 13822,
+    "output_tokens": 3788,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "## 画出来要什么\n三个无编号图形共处一页：两张并排的水平条形图（青色/绿色），各自带一行加粗混排的说明性标题（`Percentage of consumers concerned about **fully autonomous robotaxi services** operating where they live`），无数值轴、无刻度、无网格，数值全部白字印在条内右端；下半页一张 8 行百分比堆叠水平条（Not beneficial / Neutral / Beneficial），图例居下，上方另有一行绿色小标题 `Addition of artificial intelligence in vehicle systems`，其上又有一段加粗结论式正文。还需渲染 `Q56.`/`Q62.`/`Sample size: n = 939 [China]; ...` 多行脚注与页眉页脚。\n\n## 定位一个值难在哪\n`13%` 是 India 行的 Neutral 段：条内标签，但要唯一定位需 3 个键——行类别 `India`、系列 `Neutral`、以及区分它属于下方 AI 图而非上方两张图的图形名 `Addition of artificial intelligence in vehicle systems`。三张图都含 `India` 行，若解析后只留 `India | 13%`，与上图 `63%`/`74%` 同键冲突。\n\n## 不确定的\n三图均无 `Figure` 编号，无法确认报告中是否另有编号；两张上部图是否算一个双面板图形还是两个独立图形不可判定；所有条形无轴刻度，无法验证条长与印刷值是否严格成比例。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "Percentage of consumers concerned about fully autonomous robotaxi services operating where they live",
+          "subtitle": "",
+          "unit_text": "Percentage of consumers",
+          "placement": "above"
+        },
+        "type": "bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 1,
+        "categories": 8,
+        "marks": 8,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "left",
+            "role": "category",
+            "unit_text": "",
+            "low": "India",
+            "high": "Germany",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Rep. of Korea"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "US"
+          ],
+          "value": "52%",
+          "value_source": "printed",
+          "why_hard": "UK and US both read 52%; only the axis tick separates the two identical bars"
+        }
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "",
+          "title": "Percentage of consumers concerned about commercial vehicles operating in a fully autonomous mode on the highway",
+          "subtitle": "",
+          "unit_text": "Percentage of consumers",
+          "placement": "above"
+        },
+        "type": "bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 1,
+        "categories": 8,
+        "marks": 8,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "left",
+            "role": "category",
+            "unit_text": "",
+            "low": "India",
+            "high": "China",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Southeast Asia"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Southeast Asia"
+          ],
+          "value": "64%",
+          "value_source": "printed",
+          "why_hard": "Southeast Asia and US both 64%; no value axis, so only printed labels distinguish"
+        }
+      },
+      {
+        "id": "f3",
+        "heading": {
+          "figure_number": "",
+          "title": "Addition of artificial intelligence in vehicle systems",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "stacked_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 3,
+        "categories": 8,
+        "marks": 24,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "left",
+            "role": "category",
+            "unit_text": "",
+            "low": "India",
+            "high": "Germany",
+            "serves": "all stacked bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Rep. of Korea"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Neutral"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "India",
+            "Not beneficial"
+          ],
+          "value": "5%",
+          "value_source": "printed",
+          "why_hard": "5% segment is very narrow; label barely fits, and no value axis to verify length"
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "horizontal_bars",
+        "figure_id": "f1",
+        "evidence": "country names on the left, bars grow rightward from a common baseline"
+      },
+      {
+        "key": "horizontal_bars",
+        "figure_id": "f2",
+        "evidence": "India, UK, Rep. of Korea listed at left; green bars extend right"
+      },
+      {
+        "key": "horizontal_bars",
+        "figure_id": "f3",
+        "evidence": "eight country rows at left, stacked segments run left to right"
+      },
+      {
+        "key": "stacked_bar",
+        "figure_id": "f3",
+        "evidence": "each row has three segments Not beneficial / Neutral / Beneficial"
+      },
+      {
+        "key": "pct_stacked",
+        "figure_id": "f3",
+        "evidence": "every row reaches the same full width; 5%+13%+82% = 100%"
+      },
+      {
+        "key": "no_value_axis",
+        "figure_id": "f1",
+        "evidence": "only a thin vertical baseline at left; no ticks or numbers along any value axis"
+      },
+      {
+        "key": "no_value_axis",
+        "figure_id": "f2",
+        "evidence": "bars start at a bare vertical rule, no numeric ticks drawn"
+      },
+      {
+        "key": "no_value_axis",
+        "figure_id": "f3",
+        "evidence": "no ticks or 0-100 scale under the stacked rows"
+      },
+      {
+        "key": "value_label_inside",
+        "figure_id": "f1",
+        "evidence": "'63%' printed in white inside the right end of the India bar"
+      },
+      {
+        "key": "value_label_inside",
+        "figure_id": "f2",
+        "evidence": "'74%' set in white within the India bar"
+      },
+      {
+        "key": "value_label_inside",
+        "figure_id": "f3",
+        "evidence": "'5%', '13%', '82%' printed within their segments"
+      },
+      {
+        "key": "thin_segment_label",
+        "figure_id": "f3",
+        "evidence": "'5%' and '6%' labels fill nearly the whole narrow dark-blue segment"
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f3",
+        "evidence": "'Not beneficial  Neutral  Beneficial' row sits under the last bar"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "'Q56. To what extent are you concerned with each of the following scenarios?' and 'Sample size: n = 939 [China]...'"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f3",
+        "evidence": "'Note: Percentages may not add up to 100 due to rounding.' and 'Q62. ...'"
+      },
+      {
+        "key": "multi_figure_page",
+        "figure_id": "page",
+        "evidence": "two side-by-side bar charts with their own captions plus a separate stacked-bar figure below"
+      },
+      {
+        "key": "abbrev_category_axis",
+        "figure_id": "f2",
+        "evidence": "'UK', 'US', 'Rep. of Korea' used as category labels"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "'Percentage of consumers concerned about fully autonomous robotaxi services operating where they live'"
+      },
+      {
+        "key": "side_text_bullets",
+        "figure_id": "page",
+        "evidence": "bold lead-in paragraphs above each figure: 'Consumers surveyed in both India and the United Kingdom are more concerned...'"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "bold_run_inside_caption",
+        "figure_id": "f1",
+        "evidence": "'concerned about **fully autonomous robotaxi services** operating where they live' — bold run mid-sentence in the caption",
+        "affects": [
+          3,
+          4
+        ]
+      },
+      {
+        "name": "colored_figure_subtitle",
+        "figure_id": "f3",
+        "evidence": "'Addition of artificial intelligence in vehicle systems' set in green bold above the plot",
+        "affects": [
+          3,
+          4
+        ]
+      },
+      {
+        "name": "paired_unnumbered_charts_one_footnote",
+        "figure_id": "page",
+        "evidence": "two separate charts share one 'Q56.' / 'Sample size' block spanning both columns",
+        "affects": [
+          1,
+          3
+        ]
+      },
+      {
+        "name": "repeated_category_set_across_figures",
+        "figure_id": "page",
+        "evidence": "India, UK, US, Southeast Asia, Rep. of Korea, China, Japan, Germany appear as rows in all three figures",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "82",
+        "figure_id": "f3",
+        "mark": "the India Beneficial segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Addition of artificial intelligence in vehicle systems",
+          "India",
+          "Beneficial"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "13",
+        "figure_id": "f3",
+        "mark": "the India Neutral segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Addition of artificial intelligence in vehicle systems",
+          "India",
+          "Neutral"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "77",
+        "figure_id": "f3",
+        "mark": "the China Beneficial segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Addition of artificial intelligence in vehicle systems",
+          "China",
+          "Beneficial"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "45",
+        "figure_id": "f3",
+        "mark": "the US Beneficial segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Addition of artificial intelligence in vehicle systems",
+          "US",
+          "Beneficial"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "41",
+        "figure_id": "f3",
+        "mark": "the Germany Beneficial segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Addition of artificial intelligence in vehicle systems",
+          "Germany",
+          "Beneficial"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "31",
+        "figure_id": "f3",
+        "mark": "the UK Neutral segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Addition of artificial intelligence in vehicle systems",
+          "UK",
+          "Neutral"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      }
+    ],
+    "hardest_step": 3,
+    "hardest_step_why": "三图共用 India/UK 等行名；13% 需图名+行+系列三键，否则与上图 63%、74% 同键混淆。",
+    "examples": [
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "Percentage of consumers concerned about fully autonomous robotaxi services operating where they live",
+        "why": "无编号，标题即单位说明且句中含加粗片段，现管线只能生成单行纯文本标题。"
+      },
+      {
+        "gap": "P3",
+        "figure_id": "page",
+        "quote": "Three unnumbered charts on one page share bold lead-in sentences and separate 'Q56.'/'Q62.' footnote blocks",
+        "why": "整页多图导出需记录每图标题与表的相对位置，现无页级 markdown 输出。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f3",
+        "quote": "'5%' printed in white inside a dark-blue segment only as wide as the label itself",
+        "why": "极窄段内白字标签的放置策略未被建模，标签位置不是可控风格维度。"
+      },
+      {
+        "gap": "P2",
+        "figure_id": "page",
+        "quote": "India, UK, US, Southeast Asia, Rep. of Korea, China, Japan, Germany appear as rows in all three figures",
+        "why": "同一类别名跨图重复，键中必须加入图形名维度才能唯一定位。"
+      }
+    ]
+  }
+}

@@ -1,0 +1,304 @@
+{
+  "stem": "2025-EIS_p69",
+  "document": "2025-EIS",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 70.6,
+  "usage": {
+    "input_tokens": 5349,
+    "output_tokens": 9434,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n生成器需要支持将纯文本段落格式化为带有编号和标题的填充色块（如 Box 5）。对于图表部分，需要能够绘制并排的多个子图（面板），且支持在没有显式子图标题的情况下，通过底部的统一脚注来解释各子图的含义。图表本身是折线图，需要支持旋转的 Y 轴标题（位于轴外侧）、自定义格式的非标准时间轴刻度（如 `'18`），以及直接在折线末端添加系列名称标签（Inline series labels），并且仅使用水平网格线。\n\n### 定位一个值难在哪\n以数值 **62.1** 为例。该数值在 Box 5 中是以纯文本句子形式出现的，同时在 Figure 26 中被绘制为右侧面板折线（Hungary）上的一个数据点。由于整个页面没有结构化的数据表格，而且图表上的折线数据点也没有标注数值，解析器会卡在第一步（找不到表格）。如果强行从图表中读取，因坐标轴刻度跨度较大（10 为一档），很难满足 5% 的容差限制。\n\n### 不确定的\n页面上的 Box 5 尽管具有类似图表的标题和编号，但本质上是一段高亮文本。将其分类为图表还是正文部分取决于解析器的提取策略；此外，Figure 26 的两个图表虽并列但无独立标题，判定它们是同一图表的两个面板还是两个独立图表也需要根据底部的 note 推断。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Box 5",
+          "title": "Country level observations for Emerging Innovators",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "unreadable",
+        "type_other": "block of body text in a tinted panel",
+        "panels": 1,
+        "series": 1,
+        "categories": 1,
+        "marks": 0,
+        "values_printed": "none",
+        "axes": [],
+        "key_parts": [],
+        "worked_example": {
+          "key": [],
+          "value": "62.1",
+          "value_source": "not_readable",
+          "why_hard": "It is embedded in body text, not plotted or tabulated."
+        }
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "Figure 26",
+          "title": "Performance Emerging Innovators",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 2,
+        "series": 7,
+        "categories": 8,
+        "marks": 56,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Summary innovation index",
+            "low": "20 -",
+            "high": "90 -",
+            "serves": "the average line"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "'18",
+            "high": "'25",
+            "serves": "the average line"
+          },
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Summary innovation index",
+            "low": "20 -",
+            "high": "90 -",
+            "serves": "the six country lines"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "'18",
+            "high": "'25",
+            "serves": "the six country lines"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "series",
+            "label_source": "inline_label",
+            "example": "Hungary"
+          },
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "'18"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Hungary",
+            "'18"
+          ],
+          "value": "62.1",
+          "value_source": "axis_read",
+          "why_hard": "Values are not printed and axes have wide 10-unit tick intervals."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "inline_series_labels",
+        "figure_id": "f2",
+        "evidence": "country names like Hungary and Poland are written at the end of the lines"
+      },
+      {
+        "key": "nonstandard_time_ticks",
+        "figure_id": "f2",
+        "evidence": "x-axis ticks are abbreviated as '18, '19"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f2",
+        "evidence": "only horizontal grid lines are drawn behind the lines"
+      },
+      {
+        "key": "rotated_axis_title",
+        "figure_id": "f2",
+        "evidence": "Summary innovation index is written vertically along the left y-axis"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f2",
+        "evidence": "Note: Performance is relative to that of the EU in 2018..."
+      }
+    ],
+    "new_components": [
+      {
+        "name": "untitled_side_by_side_panels",
+        "figure_id": "f2",
+        "evidence": "two distinct plots share a title but have no panel labels",
+        "affects": [
+          3,
+          4
+        ]
+      },
+      {
+        "name": "numbered_text_box",
+        "figure_id": "f1",
+        "evidence": "Box 5 behaves as a figure heading but wraps body text",
+        "affects": [
+          1,
+          4
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "62.1",
+        "figure_id": "f2",
+        "mark": "the 2018 Hungary point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Hungary",
+          "'18"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "78.3",
+        "figure_id": "f2",
+        "mark": "the 2025 Hungary point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Hungary",
+          "'25"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "56.1",
+        "figure_id": "f2",
+        "mark": "the 2018 Poland point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Poland",
+          "'18"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "74.2",
+        "figure_id": "f2",
+        "mark": "the 2025 Poland point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Poland",
+          "'25"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "62.2",
+        "figure_id": "f2",
+        "mark": "the 2018 Slovakia point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Slovakia",
+          "'18"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "71.6",
+        "figure_id": "f2",
+        "mark": "the 2024 Slovakia point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Slovakia",
+          "'24"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "63.9",
+        "figure_id": "f2",
+        "mark": "the 2025 Latvia point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Latvia",
+          "'25"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "53.8",
+        "figure_id": "f2",
+        "mark": "the 2024 Bulgaria point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Bulgaria",
+          "'24"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "34.2",
+        "figure_id": "f2",
+        "mark": "the 2018 Romania point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Romania",
+          "'18"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "42.4",
+        "figure_id": "f2",
+        "mark": "the 2025 Romania point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Romania",
+          "'25"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      }
+    ],
+    "hardest_step": 1,
+    "hardest_step_why": "页面并未提供数据表格，所需数值如 62.1 全数作为散文段落存在于 Box 5 中，并在 Figure 26 绘制为无数字标签的折线。解析器在此页面无法定位到提取表格的结构。",
+    "examples": [
+      {
+        "gap": "P2",
+        "figure_id": "f2",
+        "quote": "The graph on the left shows the average... calculated as the unweighted average",
+        "why": "图表并列展示了两个无标题的面板（均值与明细），完全依赖底部注释进行语义区分，解析器需要将这种隐式的面板作用域整合进数据键。"
+      },
+      {
+        "gap": "P3",
+        "figure_id": "f1",
+        "quote": "Box 5: Country level observations for Emerging Innovators",
+        "why": "这是一个带有图表规范标题和编号的文本框段落。导出时系统需要处理这种非表格、非图形的中间态排版，避免将其识别为空图表。"
+      }
+    ]
+  }
+}

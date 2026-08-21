@@ -20,7 +20,8 @@ Five parts:
     4  written     which files get written, by whom, and what each table's rows are
     5  compare     how three models' answers are put side by side
 
-Three calls per model, no more: twenty pages, one overview of them, one failure
+Three kinds of call per model, no more: every sampled page, one overview of them,
+one failure
 batch. Opinions live only in the overviews, where the model has seen its own
 batch and the counts over it; a page answer carries description and evidence.
 
@@ -69,9 +70,15 @@ GENERALITY = {
     "house_style": "this document's own convention",
 }
 
-#: The seven pipeline changes a suggestion can be filed under, kept in sync with
-#: `parsebench/review/04_pipeline_gap.md`. `new` is for what none of them covers;
-#: it is the field that keeps the review list open rather than closed.
+#: The pipeline changes a suggestion can be filed under. P1-P7 are kept in sync with
+#: `parsebench/review/04_pipeline_gap.md`; P8 and P9 were added after the first round
+#: and did not come from an opinion -- P8 out of the `new` names three models proposed
+#: independently, P9 out of the program's own component counts. `new` is for what none
+#: of them covers; it is the field that keeps the review list open rather than closed.
+#:
+#: Nine, not thirty: one entry per thing the pipeline would have to be rebuilt around.
+#: What a change decomposes into is `GAP_PARTS`, which is a reading aid and is never
+#: a field a model fills.
 GAP_ITEMS = {
     "P1": "readable becomes a per-mark attainable precision instead of a boolean gate",
     "P2": "the panel dimension enters the key (panel_key)",
@@ -83,8 +90,40 @@ GAP_ITEMS = {
           "position, negative values and the zero line",
     "P7": "the figure title becomes a field of its own: number, title, subtitle, unit, "
           "and where the heading block sits",
-    "new": "none of the seven covers it",
+    "P8": "colour or highlight encodes an attribute the legend does not carry, and that "
+          "attribute has to enter the key",
+    "P9": "two value axes in one panel and bar+line mixed marks: a value has to record "
+          "which axis and which mark shape it was read from",
+    "new": "none of the nine covers it",
 }
+
+#: What each change decomposes into, two or three parts each. A reading aid for the
+#: report -- never a schema field: a model files an example under `P9`, and the parts
+#: are how the report explains what P9 would take.
+GAP_PARTS = {
+    "P1": ("每个 mark 记下它能被读到的精度，不再只有能读/不能读",
+           "读不出的 mark 留在定位目标里，只退出数值目标"),
+    "P2": ("面板名进入键，成为 panel_key",
+           "面板标题的位置（面板内 / 面板上方 / 共享）成为可控维"),
+    "P3": ("整页 markdown 导出：图之外还有正文、页眉、source/note",
+           "标题与面板名相对表格的位置可配"),
+    "P4": ("族采样从等概率改为权重向量",
+           "权重向量本身是消融的一个自变量"),
+    "P5": ("稠密度上限抬高，稠密度成为受控自变量",
+           "稠密时的标签策略（抽稀 / 旋转 / 换行）跟着成为一维"),
+    "P6": ("值标签位置：条内 / 条外 / 不画",
+           "刻度格式与单位位置：轴标题 / 刻度后缀 / 系列名里",
+           "负值与零线：零线居中的分叉条"),
+    "P7": ("图号、标题、副标题、单位短语四个字段分开生成",
+           "标题块的位置（上 / 下 / 内 / 侧）成为可控维"),
+    "P8": ("颜色分组作为第三个键分量进入 key",
+           "高亮（单条变色 / 加粗标签）与颜色分组分开表示"),
+    "P9": ("同面板两条值轴，每条轴各自的单位与量程",
+           "每个 mark 记下它对着哪条轴、是什么图元形状",
+           "混合图元（bar + line 同面板）成为一个族，而不是多面板关系"),
+}
+
+assert set(GAP_PARTS) == set(GAP_ITEMS) - {"new"}
 
 
 # --------------------------------------------------------------------------- #
@@ -130,11 +169,82 @@ _HEADING = {
     },
 }
 
+#: One axis as drawn. Two value axes in one panel are why this is a list rather than
+#: a pair of fields: under two axes one pixel height means two different numbers, so a
+#: recorded value that does not say which axis it was measured against is ambiguous --
+#: and the pipeline's output unit is exactly a recorded value.
+_AXIS = {
+    "type": "object",
+    "additionalProperties": False,
+    "required": ["side", "role", "unit_text", "low", "high", "serves"],
+    "properties": {
+        "side": {"type": "string", "enum": ["left", "right", "bottom", "top", "radial", "none"]},
+        "role": {"type": "string", "enum": ["value", "category", "time"],
+                 "description": "what the axis carries: a quantity, named categories, "
+                                "or points in time"},
+        "unit_text": {"type": "string",
+                      "description": "the scale phrase written on or beside this axis, "
+                                     "verbatim; empty when the axis carries none"},
+        "low": {"type": "string", "description": "the first tick label as printed; empty "
+                                                 "when the axis has no ticks"},
+        "high": {"type": "string", "description": "the last tick label as printed"},
+        "serves": {"type": "string",
+                   "description": "English, at most 12 words: which marks or series are "
+                                  "measured against this axis. `all bars`, `only the "
+                                  "orange line`. This is the whole point of the field "
+                                  "when a panel has two value axes"},
+    },
+}
+
+#: One component of the address of a single value on this figure -- what the pipeline
+#: calls a key part. `colour_group` and `panel` are the two the current key does not
+#: carry, so they are named rather than folded into `series`.
+_KEY_PART = {
+    "type": "object",
+    "additionalProperties": False,
+    "required": ["role", "label_source", "example"],
+    "properties": {
+        "role": {"type": "string",
+                 "enum": ["category", "series", "panel", "colour_group", "time"],
+                 "description": "`colour_group` only when the colour carries an attribute "
+                                "the legend's series names do not -- a performance band, "
+                                "a significance flag, a region"},
+        "label_source": {"type": "string",
+                         "enum": ["axis_tick", "legend", "panel_title", "inline_label",
+                                  "heading", "colour_only", "not_shown"],
+                         "description": "where the label that names this part is drawn. "
+                                        "`colour_only` means the reader has to name it by "
+                                        "its colour, because no text gives it"},
+        "example": {"type": "string",
+                    "description": "one label of this part, verbatim from the page"},
+    },
+}
+
+#: One value on this figure, fully addressed. The single most useful thing a page
+#: answer carries: it is the pipeline's own output unit, written out by hand for a
+#: real published figure, so it can be held against what the pipeline emits.
+_WORKED = {
+    "type": "object",
+    "additionalProperties": False,
+    "required": ["key", "value", "value_source", "why_hard"],
+    "properties": {
+        "key": {"type": "array", "items": {"type": "string"},
+                "description": "the full address of one value on this figure, one entry "
+                               "per key part above, in that order, verbatim from the page"},
+        "value": {"type": "string", "description": "what that mark reads, as printed or as "
+                                                   "read off the axis"},
+        "value_source": {"type": "string", "enum": ["printed", "axis_read", "not_readable"]},
+        "why_hard": {"type": "string",
+                     "description": "English, at most 20 words: what makes this one hard "
+                                    "to address or to read to 5%. Empty when nothing does"},
+    },
+}
+
 _FIGURE = {
     "type": "object",
     "additionalProperties": False,
     "required": ["id", "heading", "type", "type_other", "panels", "series", "categories",
-                 "marks", "values_printed"],
+                 "marks", "values_printed", "axes", "key_parts", "worked_example"],
     "properties": {
         "id": {"type": "string", "description": "f1, f2, ... in reading order"},
         "heading": _HEADING,
@@ -155,6 +265,15 @@ _FIGURE = {
                                  "segments, points, slices, cells"},
         "values_printed": {"type": "string", "enum": ["all", "some", "none"],
                            "description": "whether the numbers are written on the figure"},
+        "axes": {"type": "array", "items": _AXIS,
+                 "description": "every axis drawn on this figure. A panel with a left and "
+                                "a right value axis gives two entries with role `value`; "
+                                "a pie or a treemap gives none"},
+        "key_parts": {"type": "array", "items": _KEY_PART,
+                      "description": "what it takes to address one value on this figure, "
+                                     "one entry per part. A plain bar chart has one; a "
+                                     "small-multiples grouped bar has three or four"},
+        "worked_example": _WORKED,
     },
 }
 
@@ -177,21 +296,46 @@ _COMPONENT = {
     },
 }
 
-#: One page, one call. Six fields: a report, what is on the page, and the one
+#: One quotable thing on the page, filed under the change it argues for. The report
+#: is built out of these: a claim about a page that carries no quote off that page
+#: cannot be checked, and a change with no example under it is a change nobody has
+#: seen the need for.
+_EXAMPLE = {
+    "type": "object",
+    "additionalProperties": False,
+    "required": ["gap", "figure_id", "quote", "why"],
+    "properties": {
+        "gap": {"type": "string", "enum": list(GAP_ITEMS),
+                "description": "the change this argues for; `new` when none of them covers "
+                               "it, and then `why` has to name what would"},
+        "figure_id": {"type": "string", "description": "the figure, or `page`"},
+        "quote": {"type": "string",
+                  "description": "English, at most 25 words: the words on the page, "
+                                 "verbatim, or exactly what is drawn and where. Has to be "
+                                 "checkable against the image on its own"},
+        "why": {"type": "string",
+                "description": "Chinese, at most 30 words: what the pipeline cannot produce "
+                               "today that this page shows"},
+    },
+}
+
+#: One page, one call. Eight fields: a report, what is on the page, and the one
 #: prediction the annotation can score. Opinions are not here -- they belong to the
-#: overview, where the model has seen its own twenty pages and the counts over them.
+#: overview, where the model has seen its own sampled pages and the counts over them.
 PAGE_SCHEMA = {
     "type": "object",
     "additionalProperties": False,
     "required": ["report_md", "figures", "components", "new_components", "spot_checks",
-                 "hardest_step"],
+                 "hardest_step", "hardest_step_why", "examples"],
     "properties": {
         "report_md": {"type": "string",
-                      "description": "Chinese markdown, at most 150 words: your report on "
-                                     "this page -- what a chart generator would have to be "
-                                     "able to draw to produce it, what makes a value hard to "
-                                     "address here, what you are unsure of. Printed as "
-                                     "written, beside the other models'"},
+                      "description": "Chinese markdown, at most 250 words, in three "
+                                     "labelled parts: `画出来要什么` -- what a chart "
+                                     "generator would have to be able to draw to produce "
+                                     "this page; `定位一个值难在哪` -- argued from one "
+                                     "named value on it; `不确定的` -- what you could not "
+                                     "see or had to guess. Printed as written, beside the "
+                                     "other models'"},
         "figures": {"type": "array", "items": _FIGURE},
         "components": {"type": "array", "items": _COMPONENT,
                        "description": "every vocabulary key present anywhere on the page, "
@@ -222,7 +366,7 @@ PAGE_SCHEMA = {
                 "type": "object",
                 "additionalProperties": False,
                 "required": ["value", "figure_id", "mark", "printed_on_figure",
-                             "addressing_keys"],
+                             "addressing_keys", "keys_verbatim", "blocked_step"],
                 "properties": {
                     "value": {"type": "string", "description": "the value, copied back"},
                     "figure_id": {"type": "string",
@@ -239,11 +383,34 @@ PAGE_SCHEMA = {
                         "type": "array", "items": {"type": "string"},
                         "description": "the labels a table row would need to address this "
                                        "one value and no other, verbatim from the page"},
+                    "keys_verbatim": {
+                        "type": "boolean",
+                        "description": "whether every one of those labels is printed on the "
+                                       "page exactly as you wrote it. False when one had to "
+                                       "be shortened, expanded from an abbreviation, or "
+                                       "named after a colour -- a table can then hold the "
+                                       "right cell and still not be found"},
+                    "blocked_step": {
+                        "type": "integer", "enum": [0, 1, 2, 3, 4],
+                        "description": "the step this one value would block on, 0 when you "
+                                       "expect it to pass. Per value, not per page"},
                 },
             },
         },
         "hardest_step": {"type": "integer", "enum": [1, 2, 3, 4],
                          "description": "the step of the four this page blocks on"},
+        "hardest_step_why": {
+            "type": "string",
+            "description": "Chinese, at most 30 words: argued from this page's own "
+                           "numbers -- the tick spacing against the 5% tolerance, how many "
+                           "labels a value needs, which spot-check value you have in mind. "
+                           "Without this a disagreement between models cannot be settled"},
+        "examples": {
+            "type": "array", "items": _EXAMPLE,
+            "description": "two to five things on this page that a generator would have to "
+                           "be rebuilt to produce, each filed under one change. This is "
+                           "what the report quotes; a page with nothing worth quoting "
+                           "returns an empty list, which is a real answer"},
     },
 }
 
@@ -413,7 +580,7 @@ _OVERVIEW_FIELDS = {
 
 _OVERVIEW_REQUIRED = ["headline", "ranked_items", "numbers_cited", "report_md", "limits"]
 
-#: One call per model, after its twenty pages are answered and counted.
+#: One call per model, after its sampled pages are answered and counted.
 OVERVIEW_SCHEMA = {
     "type": "object",
     "additionalProperties": False,
@@ -463,12 +630,12 @@ AUTHORSHIP = {
 #: How many calls each model makes. A page is one call; the whole failure batch is
 #: one call; the sample overview is one call after the pages are counted.
 WORKLOAD = {
-    "页面分析": "每家 × 20 页 = 60 次，`PAGE_SCHEMA`。每次的 `report_md` 就是这一页的报告",
-    "样例 overview": "每家 1 次 = 3 次，`OVERVIEW_SCHEMA`。输入是它自己的 20 份答案 + "
+    "页面分析": "每家 × 100 页 = 300 次，`PAGE_SCHEMA`。每次的 `report_md` 就是这一页的报告",
+    "样例 overview": "每家 1 次 = 3 次，`OVERVIEW_SCHEMA`。输入是它自己那 100 份答案 + "
                      "程序为它算好的表",
     "失败批次": "每家 1 次 = 3 次，`FAILURE_SCHEMA`。抽样的 case 一次全给，返回逐条归因 "
                 "加这一家的失败 overview",
-    "无词表对照": "三家取一家 × 20 页 = 20 次，`PAGE_SCHEMA`，prompt 里不给词表",
+    "无词表对照": "三家取一家 × 100 页 = 100 次，`PAGE_SCHEMA`，prompt 里不给词表",
 }
 
 #: Which failure cases the models are asked about. Equal size per form rather than
@@ -548,9 +715,9 @@ PAGE_FILE = Report(
 
 MODEL_REPORT = Report(
     "parsebench/reports/<model>.md", "模型",
-    "这一家自己的两份 overview：读完 20 页之后一份，读完自己的归因之后一份",
+    "这一家自己的两份 overview：读完那 100 页之后一份，读完自己的归因之后一份",
     (
-        Section("1", "样例 overview", "它读完自己 20 页之后写的", (
+        Section("1", "样例 overview", "它读完自己那 100 页之后写的", (
             Table("结论", "一句话", ("headline（≤40 词）",), "model_claim"),
             Table("它的排序", "一条",
                   ("what", "why", "证据页", "affects", "对分数", "对能力", "归入哪条 P"),
@@ -724,6 +891,14 @@ SAMPLE_QUANTITIES = (
              "model_claim", "P7 的图号与位置两维"),
     Quantity("卡在哪一步", "页", "hardest_step 相同",
              "model_claim", "与失败运行实测的步对照，校准模型的判断"),
+    Quantity("同向两条值轴", "(页, 图序号)",
+             "同一张图上承载数值的轴占了同一对边（左右 / 上下）的一边还是两边。"
+             "数的是边不是轴：小面板图每个面板各画一条左轴，那仍然只是一边",
+             "model_claim", "P9 的双轴：两条平行值轴时一个像素高度对应两个值。"
+             "散点的 x/y 两个量纲互相垂直，不算这一项"),
+    Quantity("键分量", "(页, 图序号)",
+             "key_parts 的 role 集合相同（类目 / 系列 / 面板 / 颜色分组 / 时间）",
+             "model_claim", "P2 的面板维与 P8 的颜色分组——键要几段才够"),
     Quantity("模型自报 vs 程序实测", "(模型, 一个被引用的数字)",
              "模型 overview 里 `numbers_cited` 的值与程序同一张表里的值相等",
              "program_measured",

@@ -1,0 +1,220 @@
+{
+  "stem": "Snapshot-of-Global-PV-Markets_2025_p12",
+  "document": "Snapshot-of-Global-PV-Markets_2025",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "repeat",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 44.1,
+  "usage": {
+    "input_tokens": 5325,
+    "output_tokens": 5883,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n需要支持标准的堆积柱状图，包含 11 个时间类别（2014-2024）和两个系列（ROOFTOP, UTILITY SCALE）。图表上方有居中标题，左上角 Y 轴顶部上方悬挂单位 `GWp`。绘图区仅有水平网格线，没有边框或垂直网格线。图例位于 X 轴下方，再下方有斜体的数据源说明 `Source: IEA PVPS, Becquerel Institute`。\n\n### 定位一个值难在哪\n图表中完全没有标注具体数值。要读取特定值（例如2024年的 UTILITY SCALE 段的 375），必须用该堆积段顶部的对应刻度（600）减去底部的对应刻度（225）。由于该段悬空且 Y 轴刻度间隔高达 100，肉眼很难将其估读到 5% 误差内，模型生成的提取结果大概率会超出容差。\n\n### 不确定的\n2014年至2020年间的柱体高度较小且为堆叠形态，肉眼无法准确读出具体数值，只能作极粗略的推算。正文中的 1.18 TW 等数据是累计值，虽然与图表有内在关联，但无法直接在图表中定位到该数字。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "FIGURE 4",
+          "title": "SEGMENTATION OF PV INSTALLATION 2014-2024",
+          "subtitle": "",
+          "unit_text": "GWp",
+          "placement": "above"
+        },
+        "type": "stacked_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 11,
+        "marks": 22,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "GWp",
+            "low": "0",
+            "high": "600",
+            "serves": "all bars"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "2014",
+            "high": "2024",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "2024"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "UTILITY SCALE"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "2024",
+            "UTILITY SCALE"
+          ],
+          "value": "375",
+          "value_source": "axis_read",
+          "why_hard": "Y-axis tick spacing is 100; stacked segment lengths are extremely hard to read to 5% accuracy visually."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "stacked_bar",
+        "figure_id": "f1",
+        "evidence": "segments stacked inside one bar"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "horizontal rules across the panel, no vertical ones"
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "the legend sits below the x-axis"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "Source: IEA PVPS, Becquerel Institute below the legend"
+      },
+      {
+        "key": "axis_title_above_axis",
+        "figure_id": "f1",
+        "evidence": "GWp is set above the top y tick"
+      }
+    ],
+    "new_components": [],
+    "spot_checks": [
+      {
+        "value": "225",
+        "figure_id": "f1",
+        "mark": "the 2024 ROOFTOP segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2024",
+          "ROOFTOP"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "375",
+        "figure_id": "f1",
+        "mark": "the 2024 UTILITY SCALE segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2024",
+          "UTILITY SCALE"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "190",
+        "figure_id": "f1",
+        "mark": "the 2023 ROOFTOP segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2023",
+          "ROOFTOP"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "265",
+        "figure_id": "f1",
+        "mark": "the 2023 UTILITY SCALE segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2023",
+          "UTILITY SCALE"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "118",
+        "figure_id": "f1",
+        "mark": "the 2022 ROOFTOP segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2022",
+          "ROOFTOP"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "122",
+        "figure_id": "f1",
+        "mark": "the 2022 UTILITY SCALE segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2022",
+          "UTILITY SCALE"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "82",
+        "figure_id": "f1",
+        "mark": "the 2021 ROOFTOP segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2021",
+          "ROOFTOP"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "93",
+        "figure_id": "f1",
+        "mark": "the 2021 UTILITY SCALE segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2021",
+          "UTILITY SCALE"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "Y轴刻度间距达100，无任何数据标签。读取375这样的悬空段长度时，视觉误差极大，几乎无法控制在5%的容差（约18.75）内，必然因读数不准卡在该步骤。",
+    "examples": [
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "FIGURE 4: SEGMENTATION OF PV INSTALLATION 2014-2024 and GWp set above the left axis",
+        "why": "图表带有独立的编号和主标题，且单位“GWp”独立悬挂于Y轴上方，需要生成器支持将这些结构化字段各自渲染到位。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "horizontal grid lines across the panel, no vertical ones",
+        "why": "图表背景需要支持仅保留水平网格线、去除垂直网格线和四周边框的干净样式。"
+      }
+    ]
+  }
+}

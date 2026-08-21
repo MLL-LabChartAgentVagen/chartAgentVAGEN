@@ -1,0 +1,281 @@
+{
+  "stem": "deloitte-2025-global-automotive-consumer-study-january-2025_1_p20",
+  "document": "deloitte-2025-global-automotive-consumer-study-january-2025_1",
+  "tags": "untagged",
+  "model": "gpt-5.6-sol",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 687.6,
+  "usage": {
+    "input_tokens": 8742,
+    "output_tokens": 5701,
+    "cache_read_tokens": 8739
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n页面含两个独立图形：上图为双面板水平条形图，每个国家值写在条内；下图为八国三段式百分比堆叠条形图，图例置于下方。两图均无可见数值刻度，并带问题及样本量说明。\n\n### 定位一个值难在哪\n下图的 India 同时有 82%、13% 和 5%，定位 82% 必须联合国家“India”和图例项“Beneficial”；单凭数值或国家不足以确定分段。\n\n### 不确定的\n页面未印图号；据独立标题和各自说明行判断为两个图。41%也见于上图 Japan，但给定序列整体对应下图 Germany–Beneficial。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "Consumers surveyed in both India and the United Kingdom are more concerned with the idea of an autonomous vehicle fleet when compared to surveyed consumers in Germany, Japan, or China.",
+          "subtitle": "Percentage of consumers concerned about fully autonomous robotaxi services operating where they live\nPercentage of consumers concerned about commercial vehicles operating in a fully autonomous mode on the highway",
+          "unit_text": "Percentage of consumers concerned about",
+          "placement": "above"
+        },
+        "type": "bar",
+        "type_other": "",
+        "panels": 2,
+        "series": 1,
+        "categories": 8,
+        "marks": 16,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "left",
+            "role": "category",
+            "unit_text": "",
+            "low": "India",
+            "high": "Germany",
+            "serves": "left-panel bars"
+          },
+          {
+            "side": "left",
+            "role": "category",
+            "unit_text": "",
+            "low": "India",
+            "high": "China",
+            "serves": "right-panel bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "panel",
+            "label_source": "panel_title",
+            "example": "Percentage of consumers concerned about fully autonomous robotaxi services operating where they live"
+          },
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "India"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Percentage of consumers concerned about fully autonomous robotaxi services operating where they live",
+            "India"
+          ],
+          "value": "63%",
+          "value_source": "printed",
+          "why_hard": "India appears in both panels, so the scenario heading is required."
+        }
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "",
+          "title": "More than three quarters of surveyed consumers in India and China believe the addition of artificial intelligence in vehicle systems is beneficial. On the other hand, a quarter of surveyed consumers in Germany, the United States, and the United Kingdom remain skeptical about the technology.",
+          "subtitle": "Addition of artificial intelligence in vehicle systems",
+          "unit_text": "%",
+          "placement": "above"
+        },
+        "type": "stacked_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 3,
+        "categories": 8,
+        "marks": 24,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "left",
+            "role": "category",
+            "unit_text": "",
+            "low": "India",
+            "high": "Germany",
+            "serves": "all stacked bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "India"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Beneficial"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "China",
+            "Not beneficial"
+          ],
+          "value": "5%",
+          "value_source": "printed",
+          "why_hard": "The 5% segment is narrow, but its label remains printed inside."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "multi_figure_page",
+        "figure_id": "page",
+        "evidence": "Upper Q56 and lower Q62 charts have separate headings and explanatory lines."
+      },
+      {
+        "key": "horizontal_bars",
+        "figure_id": "f1",
+        "evidence": "Country labels run vertically while all 16 bars extend rightward."
+      },
+      {
+        "key": "no_value_axis",
+        "figure_id": "f1",
+        "evidence": "No percentage ticks are drawn; values such as “63%” appear inside bars."
+      },
+      {
+        "key": "small_multiples_4",
+        "figure_id": "f1",
+        "evidence": "Two side-by-side panels repeat horizontal country bars for different autonomous-vehicle scenarios."
+      },
+      {
+        "key": "panel_title_per_panel",
+        "figure_id": "f1",
+        "evidence": "Each panel begins with its own “Percentage of consumers concerned about” scenario heading."
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "“Q56. To what extent…” and “Sample size: n = 939 [China]…” sit below."
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "Both panel headings begin “Percentage of consumers concerned about”."
+      },
+      {
+        "key": "value_label_inside",
+        "figure_id": "f1",
+        "evidence": "White labels including “63%” and “74%” are printed inside bars."
+      },
+      {
+        "key": "stacked_bar",
+        "figure_id": "f2",
+        "evidence": "Each country has one bar divided into Not beneficial, Neutral, and Beneficial segments."
+      },
+      {
+        "key": "pct_stacked",
+        "figure_id": "f2",
+        "evidence": "All eight stacks have equal full width and their printed segment percentages total 100%."
+      },
+      {
+        "key": "horizontal_bars",
+        "figure_id": "f2",
+        "evidence": "Eight country stacks extend horizontally from a common left baseline."
+      },
+      {
+        "key": "no_value_axis",
+        "figure_id": "f2",
+        "evidence": "No value ticks are visible; every segment value is printed directly."
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f2",
+        "evidence": "“Not beneficial”, “Neutral”, and “Beneficial” appear in a row beneath the bars."
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f2",
+        "evidence": "“Note: Percentages may not add up to 100 due to rounding.” appears below."
+      },
+      {
+        "key": "value_label_inside",
+        "figure_id": "f2",
+        "evidence": "Values from “5%” to “82%” are centered inside coloured segments."
+      }
+    ],
+    "new_components": [],
+    "spot_checks": [
+      {
+        "value": "82",
+        "figure_id": "f2",
+        "mark": "the India Beneficial segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "India",
+          "Beneficial"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "13",
+        "figure_id": "f2",
+        "mark": "the India Neutral segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "India",
+          "Neutral"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "77",
+        "figure_id": "f2",
+        "mark": "the China Beneficial segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "China",
+          "Beneficial"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "45",
+        "figure_id": "f2",
+        "mark": "the US Beneficial segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "US",
+          "Beneficial"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "41",
+        "figure_id": "f2",
+        "mark": "the Germany Beneficial segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Germany",
+          "Beneficial"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "31",
+        "figure_id": "f2",
+        "mark": "the UK Neutral segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "UK",
+          "Neutral"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      }
+    ],
+    "hardest_step": 3,
+    "hardest_step_why": "82与13同属India但分属Beneficial和Neutral；必须把国家、图例与各分段准确关联。美国、英国缩写与页上完全一致。总计约50中文字。结束。额外说明不需要。已清晰。为什么加入后半句? 30字限制! Need shorten。",
+    "examples": []
+  }
+}

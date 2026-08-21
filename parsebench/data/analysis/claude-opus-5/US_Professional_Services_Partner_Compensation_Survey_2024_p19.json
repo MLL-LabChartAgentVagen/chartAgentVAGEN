@@ -1,0 +1,274 @@
+{
+  "stem": "US_Professional_Services_Partner_Compensation_Survey_2024_p19",
+  "document": "US_Professional_Services_Partner_Compensation_Survey_2024",
+  "tags": "untagged",
+  "model": "claude-opus-5",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 39.9,
+  "usage": {
+    "input_tokens": 13758,
+    "output_tokens": 2990,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "## 画出来要什么\n一张横向分组条形图：9 个长类别标签（如 \"Rise of green resources and sustainable technology\"）沿左侧排列，每槽 4 条彩色条（Strategy consulting / Management/advisory consulting / Technology/IT consulting / Other），共 36 个标记。没有任何数值轴、刻度或网格，只有全部印出的数字标签；标签会按条长在条内（81、72）或条外（0、2、7）切换位置。标题分两层：粗体主标题 \"Key external factors influencing outlook (%)\"，其下第二行粗体副标题含 \"(Select all that apply)\"，图例横排在副标题与绘图区之间，最下方是 Source 行。左侧还有一整栏正文与图并列。\n\n## 定位一个值难在哪\n值 81 在 \"Interest rates and their impact on the economy\" 这一槽出现两次：Strategy consulting 与 Management/advisory consulting 都是 81。要唯一定位必须同时给出类别名 + 图例名，缺一就落到两个单元格。而百分号只在主标题里，行内不复现。\n\n## 不确定的\n条长为 0 的项（Rise of industrial automation 的 Other）只有数字没有条，无法确认是真 0 还是缺失；也无法确认是否有隐藏的 0–100 基线。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "Key external factors influencing outlook (%)",
+          "subtitle": "Key external factors influencing outlook for current fiscal year, by firm type (Select all that apply)",
+          "unit_text": "(%)",
+          "placement": "above"
+        },
+        "type": "grouped_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 4,
+        "categories": 9,
+        "marks": 36,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "left",
+            "role": "category",
+            "unit_text": "",
+            "low": "Interest rates and their impact on the economy",
+            "high": "Other",
+            "serves": "all bar rows, one label per group of four bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Increasing threat of cyberattacks"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Technology/IT consulting"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Interest rates and their impact on the economy",
+            "Management/advisory consulting"
+          ],
+          "value": "81",
+          "value_source": "printed",
+          "why_hard": "Two bars in this group both read 81; only legend colour order separates them"
+        }
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "",
+          "title": "",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "none"
+        },
+        "type": "unreadable",
+        "type_other": "left column of body text, prose only, not a figure",
+        "panels": 1,
+        "series": 1,
+        "categories": 0,
+        "marks": 0,
+        "values_printed": "none",
+        "axes": [],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "not_shown",
+            "example": ""
+          }
+        ],
+        "worked_example": {
+          "key": [
+            ""
+          ],
+          "value": "",
+          "value_source": "not_readable",
+          "why_hard": "It is running prose, not a figure"
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "grouped_bar",
+        "figure_id": "f1",
+        "evidence": "four coloured bars stacked side by side within each category row, e.g. 65/51/60/40"
+      },
+      {
+        "key": "horizontal_bars",
+        "figure_id": "f1",
+        "evidence": "category names sit at left and bars grow rightwards from a common left baseline"
+      },
+      {
+        "key": "no_value_axis",
+        "figure_id": "f1",
+        "evidence": "no ticks or numbers under the bars; only printed labels give values"
+      },
+      {
+        "key": "value_label_inside",
+        "figure_id": "f1",
+        "evidence": "\"81\", \"72\", \"65\" printed white inside the right end of the long bars"
+      },
+      {
+        "key": "value_label_outside",
+        "figure_id": "f1",
+        "evidence": "\"0\" and \"2\" sit to the right of the very short or absent bars"
+      },
+      {
+        "key": "wrapped_category_labels",
+        "figure_id": "f1",
+        "evidence": "\"Rise of green resources and sustainable technology\" runs long across the left label column"
+      },
+      {
+        "key": "legend_above_plot",
+        "figure_id": "f1",
+        "evidence": "legend row \"Strategy consulting ... Other\" between the subtitle and the first bar group"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "\"Source: Heidrick & Struggles US professional services partner compensation survey, 2024, n=142\""
+      },
+      {
+        "key": "side_text_bullets",
+        "figure_id": "page",
+        "evidence": "left column prose \"When compared to respondents at other types of firms...\" runs beside the chart"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "title reads \"Key external factors influencing outlook (%)\"; no unit near the bars"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "thin horizontal rules separate each category band across the plot width"
+      },
+      {
+        "key": "missing_value_marker",
+        "figure_id": "f1",
+        "evidence": "\"0\" printed with no bar drawn for Other on \"Rise of industrial automation\""
+      }
+    ],
+    "new_components": [
+      {
+        "name": "zero_length_bar_with_label",
+        "figure_id": "f1",
+        "evidence": "Other rows show \"0\" as a bare numeral with no rectangle at the baseline",
+        "affects": [
+          2,
+          3
+        ]
+      },
+      {
+        "name": "two_line_bold_title_stack",
+        "figure_id": "f1",
+        "evidence": "a large bold title line plus a smaller bold two-line restatement with \"(Select all that apply)\"",
+        "affects": [
+          4
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "81",
+        "figure_id": "f1",
+        "mark": "the Strategy consulting bar (and also the Management/advisory bar) in the \"Interest rates and their impact on the economy\" group",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Interest rates and their impact on the economy",
+          "Strategy consulting"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "60",
+        "figure_id": "f1",
+        "mark": "the Technology/IT consulting bar in \"US presidential elections/geopolitical uncertainty\" (also 60 in \"Rise of AI\")",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "US presidential elections/geopolitical uncertainty",
+          "Technology/IT consulting"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "19",
+        "figure_id": "f1",
+        "mark": "the Management/advisory consulting bar in \"Effects of hybrid work models on our organization\"",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Effects of hybrid work models on our organization",
+          "Management/advisory consulting"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "5",
+        "figure_id": "f1",
+        "mark": "the Strategy consulting bar in \"Increasing threat of cyberattacks\"",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Increasing threat of cyberattacks",
+          "Strategy consulting"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "12",
+        "figure_id": "f1",
+        "mark": "the Management/advisory consulting bar in \"Increasing threat of cyberattacks\"; 12 also appears for Strategy in \"Rise of green resources...\" and Management in \"Commercial real estate market\"",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Increasing threat of cyberattacks",
+          "Management/advisory consulting"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      }
+    ],
+    "hardest_step": 3,
+    "hardest_step_why": "值全部印出，读数无误差；但 81 出现两次、12 出现三次，必须类别名加图例名两级标签才能唯一定位。",
+    "examples": [
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "\"81\" and \"72\" sit white inside the bar ends while \"0\" and \"2\" sit outside to the right",
+        "why": "标签位置随条长自动切换，当前流水线只有全内或全外一种设定。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "\"Key external factors influencing outlook (%)\" above \"Key external factors influencing outlook for current fiscal year, by firm type (Select all that apply)\"",
+        "why": "标题被拆成主标题、含单位的括号、以及重述式粗体副标题三段。"
+      },
+      {
+        "gap": "P3",
+        "figure_id": "page",
+        "quote": "Left column prose \"For respondents in IT consulting, it also makes sense that there was slightly less overall focus on interest rates\"",
+        "why": "正文与图并列成一横带，整页导出需记录文字栏与表的相对位置。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "Row \"Rise of industrial automation\": \"0\" printed at the baseline with no bar drawn",
+        "why": "需要能生成零长度条只留数字的情形；现有生成器不区分零值与缺失。"
+      }
+    ]
+  }
+}

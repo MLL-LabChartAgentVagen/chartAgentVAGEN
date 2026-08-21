@@ -1,0 +1,321 @@
+{
+  "stem": "deloitte-2025-global-automotive-consumer-study-january-2025_p24",
+  "document": "deloitte-2025-global-automotive-consumer-study-january-2025",
+  "tags": "untagged",
+  "model": "claude-opus-5",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 87.4,
+  "usage": {
+    "input_tokens": 13828,
+    "output_tokens": 6798,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "## 画出来要什么\n本页两图无编号，各由三层文字引出：黑色加粗结论段 → 绿色图题 → 图形。图一是**横向百分比堆积条**，8 个国家 × 6 个频率段=48 段，全部数值印在段内，图例横排在图下方，无数值轴、无网格，仅左侧类别刻度（India…Japan）。图二是**纵向单系列柱**，8 根柱、值印在柱顶内侧，同样没有数值轴，只有一条基线。两图各自带独立的 Note/Q 编号/样本量小字块（\"Q70. How often do you drive your current vehicle?\"）。生成器还要能画极窄段（2%、3%）里的标签，并让两图使用同一批国家但**顺序与写法不同**（South Korea vs Rep. of Korea）。\n\n## 定位一个值难在哪\n以 `11%` 为例：它在图一 India、Southeast Asia、US、China 四行同时出现，且都是 \"1-2 times per week\" 系列。要唯一命中，表格行必须同时给出国家与图例全称；只写 \"11%\" 或只写 \"India\" 都会撞上别的格子。`23%`、`25%`、`37%` 同样各出现两次以上。\n\n## 不确定的\n没有图号，无法确认页面是否在别处编号；\"%\"是否算显式单位只能按标题文字判断；Japan 那个 `2%` 标签究竟落在段内还是溢出到相邻段，150 dpi 下难以确证；图二柱高只能靠印字，无轴可校验。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "Frequency of driving personal vehicle",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "stacked_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 6,
+        "categories": 8,
+        "marks": 48,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "left",
+            "role": "category",
+            "unit_text": "",
+            "low": "India",
+            "high": "Japan",
+            "serves": "all eight stacked bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "South Korea"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Once every few months"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Japan",
+            "Once a month"
+          ],
+          "value": "2%",
+          "value_source": "printed",
+          "why_hard": "segment narrower than its label; pale blue against neighbouring blues, label spills toward next segment"
+        }
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "",
+          "title": "Willingness to give up vehicle ownership in favor of MaaS (% somewhat willing/willing/very willing) – 18- to",
+          "subtitle": "34-year-old respondents",
+          "unit_text": "% somewhat willing/willing/very willing",
+          "placement": "above"
+        },
+        "type": "bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 1,
+        "categories": 8,
+        "marks": 8,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "India",
+            "high": "Germany",
+            "serves": "all eight bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Rep. of Korea"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Rep. of Korea"
+          ],
+          "value": "37%",
+          "value_source": "printed",
+          "why_hard": "two bars read 37% (Rep. of Korea and UK); no value axis or gridline to verify height"
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "stacked_bar",
+        "figure_id": "f1",
+        "evidence": "each country row is one bar split into six coloured segments labelled 51%, 25%, 11%, 6%, 3%, 5%"
+      },
+      {
+        "key": "pct_stacked",
+        "figure_id": "f1",
+        "evidence": "all eight bars end at the same right edge; note says \"Percentages may not add up to 100 due to rounding\""
+      },
+      {
+        "key": "horizontal_bars",
+        "figure_id": "f1",
+        "evidence": "country names India…Japan sit on the left axis, bars grow rightward"
+      },
+      {
+        "key": "no_value_axis",
+        "figure_id": "f1",
+        "evidence": "no ticks or gridlines under the bars; only printed segment percentages"
+      },
+      {
+        "key": "no_value_axis",
+        "figure_id": "f2",
+        "evidence": "bars sit on a bare baseline; no y ticks, values only as printed `70%`, `54%`"
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "row of six swatches \"Every day … Once every few months\" under the bars"
+      },
+      {
+        "key": "value_label_inside",
+        "figure_id": "f1",
+        "evidence": "`51%`, `25%`, `11%` printed in white/dark inside each segment"
+      },
+      {
+        "key": "value_label_inside",
+        "figure_id": "f2",
+        "evidence": "`70%`, `44%`, `35%` printed in white inside the top of each bar"
+      },
+      {
+        "key": "thin_segment_label",
+        "figure_id": "f1",
+        "evidence": "Japan `2%` and China `2%` labels are as wide as their segments and crowd neighbours"
+      },
+      {
+        "key": "multi_figure_page",
+        "figure_id": "page",
+        "evidence": "two green-titled charts, each with its own Q number and sample-size block"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "page",
+        "evidence": "\"Note: Percentages may not add up to 100 due to rounding.\"; \"Sample size: n = 1,001 [China]…\""
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f2",
+        "evidence": "title reads \"(% somewhat willing/willing/very willing)\"; no axis carries a unit"
+      },
+      {
+        "key": "abbrev_category_axis",
+        "figure_id": "f2",
+        "evidence": "x tick labels read `US`, `UK`, `Rep. of Korea`"
+      },
+      {
+        "key": "abbrev_category_axis",
+        "figure_id": "f1",
+        "evidence": "left axis labels read `US` and `UK` beside `Southeast Asia`"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "bold_takeaway_above_title",
+        "figure_id": "page",
+        "evidence": "three-line bold sentence \"Half of surveyed consumers in India, Southeast Asia, and the United States say they drive…\" sits above the green title",
+        "affects": [
+          4
+        ]
+      },
+      {
+        "name": "survey_question_and_sample_size_note",
+        "figure_id": "page",
+        "evidence": "\"Q70. How often do you drive your current vehicle?\" and \"Sample size: n = 1,001 [China]…\" under the plot",
+        "affects": [
+          3,
+          4
+        ]
+      },
+      {
+        "name": "same_categories_reordered_across_figures",
+        "figure_id": "page",
+        "evidence": "f1 order India, Southeast Asia, US, China…; f2 order India, China, Southeast Asia, US…, and `South Korea` becomes `Rep. of Korea`",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "name": "repeated_value_labels_within_figure",
+        "figure_id": "f1",
+        "evidence": "`11%` printed on four different rows; `23%`, `25%`, `3%`, `5%` each printed more than once",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "51%",
+        "figure_id": "f1",
+        "mark": "the India `Every day` segment, first (dark blue) segment of the top bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "India",
+          "Every day"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "23%",
+        "figure_id": "f1",
+        "mark": "the Southeast Asia `3-4 times per week` segment; `23%` also appears on South Korea 3-4 times per week and Japan Every day",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Southeast Asia",
+          "3-4 times per week"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "11%",
+        "figure_id": "f1",
+        "mark": "the India `1-2 times per week` segment; the same 11% also printed on Southeast Asia, US and China rows",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "India",
+          "1-2 times per week"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "12%",
+        "figure_id": "f1",
+        "mark": "the UK `Once every few months` segment, last (yellow-green) segment of the UK bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "UK",
+          "Once every few months"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "25%",
+        "figure_id": "f1",
+        "mark": "the India `3-4 times per week` segment; `25%` also printed on the South Korea `Every day` segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "India",
+          "3-4 times per week"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "32%",
+        "figure_id": "f1",
+        "mark": "the Japan `Once every few months` segment, rightmost segment of the bottom bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Japan",
+          "Once every few months"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      }
+    ],
+    "hardest_step": 3,
+    "hardest_step_why": "数值全印在段内，读数无误差；但 11% 在四行重复，23%、25% 各两处，须国家＋频率双标签才能唯一定位。",
+    "examples": [
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "Green line \"Frequency of driving personal vehicle\" sits under a three-line bold takeaway; no figure number anywhere on the page",
+        "why": "标题被拆成结论段+绿色题名且无图号，当前流水线只有单行标题字段。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "Japan bar shows `6%` then a `2%` label in a segment barely wider than the text, before `32%`",
+        "why": "极窄段内的值标签需要挤压/外移策略，现有生成器不产出这种密标签。"
+      },
+      {
+        "gap": "P3",
+        "figure_id": "page",
+        "quote": "Two untitled-by-number charts, each followed by \"Q70.\"/\"Q63.\" and \"Sample size: n = 1,001 [China]; …\" blocks",
+        "why": "整页导出需把两组问卷编号与样本量小字与各自图表绑定。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "`11%` printed on the India, Southeast Asia, US and China bars; `3%` printed on five different bars",
+        "why": "同一图内数值大量重复，键必须唯一化；应加入\"重复值需双层标签\"的评分维度。"
+      }
+    ]
+  }
+}

@@ -1,0 +1,348 @@
+{
+  "stem": "Visa-Fiscal-2025-Annual-Report_p10",
+  "document": "Visa-Fiscal-2025-Annual-Report",
+  "tags": "untagged",
+  "model": "gpt-5.6-sol",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 120000,
+  "seconds": 64.5,
+  "usage": {
+    "input_tokens": 9231,
+    "output_tokens": 4847,
+    "cache_read_tokens": 2365
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n页面需重建两张灰底、七年份的百分比堆叠柱图：双段等高柱、段内百分比、底部年份、左侧折行系列名及彩色连接线，并在图下排注释。图旁还与正文栏并排。\n\n### 定位一个值难在哪\n“74%”出现两次：上图是2022年“Card-on-file & “button” checkout”，下图是2022年“Non-tokenized transactions”。数值均已印出，难点是同时关联图题、年份和左侧系列标签。\n\n### 不确定的\n两图均无编号、图例或数值轴；“%”只随数值出现，因此将其视为单位。左侧彩色横线按直接标签连接线理解，而非图例。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "Share of Visa ecommerce transactions by checkout type",
+          "subtitle": "",
+          "unit_text": "%",
+          "placement": "above"
+        },
+        "type": "stacked_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 7,
+        "marks": 14,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "2019",
+            "high": "2025",
+            "serves": "all stacked bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2019"
+          },
+          {
+            "role": "series",
+            "label_source": "inline_label",
+            "example": "Card-on-file & “button” checkout"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "2025",
+            "Manual entry guest checkout"
+          ],
+          "value": "16%",
+          "value_source": "printed",
+          "why_hard": "Series is identified by a side label rather than a legend."
+        }
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "",
+          "title": "Tokenized share of Visa ecommerce transactions",
+          "subtitle": "",
+          "unit_text": "%",
+          "placement": "above"
+        },
+        "type": "stacked_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 7,
+        "marks": 14,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "2019",
+            "high": "2025",
+            "serves": "all stacked bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2019"
+          },
+          {
+            "role": "series",
+            "label_source": "inline_label",
+            "example": "Tokenized transactions"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "2019",
+            "Tokenized transactions"
+          ],
+          "value": "4%",
+          "value_source": "printed",
+          "why_hard": "The label is squeezed into a very thin bottom segment."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "stacked_bar",
+        "figure_id": "f1",
+        "evidence": "Each year is one bar split into two vertically stacked coloured segments."
+      },
+      {
+        "key": "pct_stacked",
+        "figure_id": "f1",
+        "evidence": "Every yearly stack has equal height; paired percentage labels sum to 100%."
+      },
+      {
+        "key": "no_value_axis",
+        "figure_id": "f1",
+        "evidence": "No value ticks or y-axis are drawn; percentages are printed inside segments."
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "“Note: Reflects Visa processed transactions, among card-not-present approved transactions.” appears below."
+      },
+      {
+        "key": "inline_series_labels",
+        "figure_id": "f1",
+        "evidence": "“Card-on-file & “button” checkout” and “Manual entry guest checkout” sit left of the bars."
+      },
+      {
+        "key": "value_label_inside",
+        "figure_id": "f1",
+        "evidence": "All percentages, including “56%” and “44%”, are printed inside coloured segments."
+      },
+      {
+        "key": "panel_background",
+        "figure_id": "f1",
+        "evidence": "The title, bars and note sit on a light-grey rectangular background."
+      },
+      {
+        "key": "stacked_bar",
+        "figure_id": "f2",
+        "evidence": "Each year is one bar split into tokenized and non-tokenized stacked segments."
+      },
+      {
+        "key": "pct_stacked",
+        "figure_id": "f2",
+        "evidence": "Every yearly stack has equal height; paired percentage labels sum to 100%."
+      },
+      {
+        "key": "no_value_axis",
+        "figure_id": "f2",
+        "evidence": "No value ticks or y-axis are drawn; percentages are printed inside segments."
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f2",
+        "evidence": "“Note: Reflects Visa processed transactions, among card-not-present approved transactions.” appears below."
+      },
+      {
+        "key": "inline_series_labels",
+        "figure_id": "f2",
+        "evidence": "“Non-tokenized transactions” and “Tokenized transactions” sit directly left of the bars."
+      },
+      {
+        "key": "value_label_inside",
+        "figure_id": "f2",
+        "evidence": "All percentages are printed inside their segments, including “4%” in the thinnest segment."
+      },
+      {
+        "key": "thin_segment_label",
+        "figure_id": "f2",
+        "evidence": "The white “4%” label is squeezed into the thin 2019 tokenized segment."
+      },
+      {
+        "key": "panel_background",
+        "figure_id": "f2",
+        "evidence": "The title, bars and note sit on a light-grey rectangular background."
+      },
+      {
+        "key": "multi_figure_page",
+        "figure_id": "page",
+        "evidence": "Two independent titled charts appear: “Share of Visa…” and “Tokenized share…”."
+      },
+      {
+        "key": "side_text_bullets",
+        "figure_id": "page",
+        "evidence": "Running prose sits left of f1 and in a column to the right of f2."
+      }
+    ],
+    "new_components": [
+      {
+        "name": "inline_label_connector_rules",
+        "figure_id": "f1",
+        "evidence": "Blue horizontal rules connect the two left-side series labels to their stack boundaries.",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "name": "inline_label_connector_rules",
+        "figure_id": "f2",
+        "evidence": "Blue horizontal rules connect the two left-side series labels to their stack boundaries.",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "56%",
+        "figure_id": "f1",
+        "mark": "the 2019 Card-on-file & “button” checkout segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "2019",
+          "Card-on-file & “button” checkout"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "16%",
+        "figure_id": "f1",
+        "mark": "the 2025 Manual entry guest checkout segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "2025",
+          "Manual entry guest checkout"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "74%",
+        "figure_id": "f1",
+        "mark": "the 2022 Card-on-file & “button” checkout segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "2022",
+          "Card-on-file & “button” checkout"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "24%",
+        "figure_id": "f1",
+        "mark": "the 2023 Manual entry guest checkout segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "2023",
+          "Manual entry guest checkout"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "81%",
+        "figure_id": "f1",
+        "mark": "the 2024 Card-on-file & “button” checkout segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "2024",
+          "Card-on-file & “button” checkout"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "4%",
+        "figure_id": "f2",
+        "mark": "the 2019 Tokenized transactions segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "2019",
+          "Tokenized transactions"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "54%",
+        "figure_id": "f2",
+        "mark": "the 2025 Tokenized transactions segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "2025",
+          "Tokenized transactions"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "74%",
+        "figure_id": "f2",
+        "mark": "the 2022 Non-tokenized transactions segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "2022",
+          "Non-tokenized transactions"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "93%",
+        "figure_id": "f2",
+        "mark": "the 2020 Non-tokenized transactions segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "2020",
+          "Non-tokenized transactions"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "36%",
+        "figure_id": "f2",
+        "mark": "the 2023 Tokenized transactions segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "2023",
+          "Tokenized transactions"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      }
+    ],
+    "hardest_step": 3,
+    "hardest_step_why": "74%在两图各出现一次，须同时关联图题、年份和左侧系列标签；数值本身均已印出。作为模型最难的是关联标签，而不是读数。安全判断。也不太难。答案最终。此页所有数值都明确打印。步骤3相对最难。好了。等等限制30中文字，我们这太长了。需改到30字以内。比如：“74%出现两次，须凭图题、年份及左侧系列标签区分；数值均已印出。” 31? 74% one word. Chinese char around31. fine。 Need final object in Chinese. ensure hardest_step why at most30 Chinese words likely okay. Replace. Also report title quote has inner curly quote with JSON valid. The report in Markdown has smart quote. fine. Need final only object. Let's ensure no accidental analysis. Use selected phrase. We should perhaps not mention examples. Fine. hardest why 26 chars. final. 74%出现两次，须凭图题、年份及左侧系列标签区分；数值均已印出。",
+    "examples": []
+  }
+}

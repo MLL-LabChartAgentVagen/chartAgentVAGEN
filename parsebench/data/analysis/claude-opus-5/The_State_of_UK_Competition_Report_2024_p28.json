@@ -1,0 +1,316 @@
+{
+  "stem": "The_State_of_UK_Competition_Report_2024_p28",
+  "document": "The_State_of_UK_Competition_Report_2024",
+  "tags": "need_estimate",
+  "model": "claude-opus-5",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 78.6,
+  "usage": {
+    "input_tokens": 13983,
+    "output_tokens": 6230,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "**画出来要什么**\n单面板折线图，7 条分位数序列（Top 5% / Top 10% / Top 25% / Mean / Median / Bottom 25% / Bottom 5%），1997–2021 逐年约 25 个点，共约 175 个标记。无图例：序列名以内联文字写在各线右端点。线型区分序列——6 条虚线（Top 5% 为橙黄粗虚线，其余浅蓝细虚线），Mean 为深蓝实线。两条灰色竖向事件带覆盖全高，带内上方写 “Great Financial Crisis”“Covid-19 Pandemic”。y 轴标题 “Markup” 置于最高刻度 2.5 之上，刻度为 .5、1、1.5、2、2.5；x 轴标题 “Year” 在图下，刻度每 4 年一次（1997…2021）。图下还有三行小字注释，且注释中书名为斜体。标题块在图上方，分为粗体斜体的 “Figure 10: …” 与一段斜体说明。\n\n**定位一个值难在哪**\n以 0.58 为例：它只能是 Bottom 5% 早期某年。图上没有任何数字，y 轴刻度间距 0.5，5% 容差仅 ±0.029，约为刻度间距的 6%；而该线是浅蓝虚线，线宽本身就接近这一量级。年份也不是刻度年，须在 1997 与 2001 之间内插，行标签无法逐字取自页面。\n\n**不确定的**\n浅色水平网格线是否真实存在、各年精确取点、以及 1.50 与 1.52 分别属于哪条线哪一年，均为推测。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 10",
+          "title": "Markups have risen more at the top of the distribution than elsewhere",
+          "subtitle": "Evolution of average markups in different quantiles of the markup distribution. Data from Annual Respondents Database X (ARDx) 1997-2020 and Annual Business Survey (ABS) 2021. GB only",
+          "unit_text": "Markup",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 1,
+        "series": 7,
+        "categories": 25,
+        "marks": 175,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Markup",
+            "low": ".5",
+            "high": "2.5",
+            "serves": "all seven lines"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "Year",
+            "low": "1997",
+            "high": "2021",
+            "serves": "all seven lines"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "series",
+            "label_source": "inline_label",
+            "example": "Top 5%"
+          },
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2009"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Bottom 5%",
+            "2021"
+          ],
+          "value": "~0.60",
+          "value_source": "axis_read",
+          "why_hard": "pale blue dashed line, no printed values, ticks 0.5 apart, endpoint sits under label text"
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "shaded_band",
+        "figure_id": "f1",
+        "evidence": "two grey full-height vertical bands over ~2006-2008 and ~2020-2021"
+      },
+      {
+        "key": "annotation_callout",
+        "figure_id": "f1",
+        "evidence": "\"Great Financial\\nCrisis\" and \"Covid-19\\nPandemic\" set over the plot area above each band"
+      },
+      {
+        "key": "inline_series_labels",
+        "figure_id": "f1",
+        "evidence": "\"Top 5%\", \"Top 10%\", \"Top 25%\", \"Mean\", \"Median\", \"Bottom 25%\", \"Bottom 5%\" at line right ends"
+      },
+      {
+        "key": "dashed_line_series",
+        "figure_id": "f1",
+        "evidence": "six dashed quantile lines against one solid dark-blue \"Mean\" line"
+      },
+      {
+        "key": "highlighted_category",
+        "figure_id": "f1",
+        "evidence": "\"Mean\" drawn thick solid dark blue while all other series are thin dashed"
+      },
+      {
+        "key": "sparse_time_ticks",
+        "figure_id": "f1",
+        "evidence": "yearly data but ticks only 1997, 2001, 2005, 2009, 2013, 2017, 2021"
+      },
+      {
+        "key": "dense_marks_100plus",
+        "figure_id": "f1",
+        "evidence": "7 series over 1997-2021 gives roughly 175 plotted points"
+      },
+      {
+        "key": "axis_title_above_axis",
+        "figure_id": "f1",
+        "evidence": "\"Markup\" printed above the top tick 2.5, left of the plot top"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "y ticks read .5, 1, 1.5, 2, 2.5 bare; only \"Markup\" names the quantity"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "\"Markups are calculated following our baseline approach... Data from the Annual Respondents Databes X\""
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "faint horizontal rules at 1, 1.5, 2 across the panel; no vertical rules"
+      },
+      {
+        "key": "footnote_marker",
+        "figure_id": "f1",
+        "evidence": "note lines set italic for \"Annual Respondents Databes X\" and \"Annual Business Survey\" titles"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "event_band_with_inline_label",
+        "figure_id": "f1",
+        "evidence": "grey band spans plot height with its name \"Covid-19 Pandemic\" printed inside the band top",
+        "affects": [
+          3,
+          4
+        ]
+      },
+      {
+        "name": "note_block_rendered_inside_figure_image",
+        "figure_id": "f1",
+        "evidence": "three lines of small print sit inside the chart graphic below the \"Year\" axis title",
+        "affects": [
+          1,
+          4
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "1.85",
+        "figure_id": "f1",
+        "mark": "the Top 5% dashed orange line at an early-2000s year (roughly 2003)",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Top 5%",
+          "2003"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "0.58",
+        "figure_id": "f1",
+        "mark": "the Bottom 5% dashed line near the start of the series",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Bottom 5%",
+          "1997"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "1.12",
+        "figure_id": "f1",
+        "mark": "the Mean solid line around 2004-2005",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Mean",
+          "2005"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "1.52",
+        "figure_id": "f1",
+        "mark": "the Top 10% dashed line at its pre-crisis level (~2007)",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Top 10%",
+          "2007"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "1.50",
+        "figure_id": "f1",
+        "mark": "the Top 10% dashed line around 2005",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Top 10%",
+          "2005"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "1.08",
+        "figure_id": "f1",
+        "mark": "the Mean solid line around 2000-2001",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Mean",
+          "2001"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "1.30",
+        "figure_id": "f1",
+        "mark": "the Top 25% dashed line in the mid-2010s",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Top 25%",
+          "2013"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "0.82",
+        "figure_id": "f1",
+        "mark": "the Bottom 25% dashed line in the early 2000s",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Bottom 25%",
+          "2001"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "2.10",
+        "figure_id": "f1",
+        "mark": "the Top 5% line near its peak around 2015-2016",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Top 5%",
+          "2016"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "0.60",
+        "figure_id": "f1",
+        "mark": "the Bottom 5% dashed line at the last year",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Bottom 5%",
+          "2021"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "无任何数字标注；y 刻度间距 0.5，0.58 的 5% 容差仅 ±0.029，七条虚线重叠，1.50 与 1.52 无法分辨。",
+    "examples": [
+      {
+        "gap": "P1",
+        "figure_id": "f1",
+        "quote": "seven dashed/solid lines between ticks .5 and 2.5, no number printed anywhere on the plot",
+        "why": "逐点精度不可达：0.58 与 0.60 之差远小于虚线线宽，布尔式\"可读\"判定失效。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "\"Figure 10: Markups have risen more at the top...\" then italic paragraph, then \"Markup\" above the 2.5 tick",
+        "why": "编号、标题、斜体副标题与单位词分处三层，现有流水线只有单行标题。"
+      },
+      {
+        "gap": "P5",
+        "figure_id": "f1",
+        "quote": "7 series plotted yearly from 1997 to 2021 in one panel, about 175 points",
+        "why": "密度需作可控变量：七条同族分位线共面，超出当前标记数上限。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "grey vertical band with \"Great Financial Crisis\" printed inside it, second band \"Covid-19 Pandemic\"",
+        "why": "需新增事件带图层：带名既非序列也非刻度，却是定位与上下文的一部分。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "no legend; \"Top 5%\", \"Mean\", \"Bottom 5%\" written at each line's right endpoint",
+        "why": "序列命名位置需成为风格维度：端点内联标签替代图例，影响标签关联。"
+      }
+    ]
+  }
+}

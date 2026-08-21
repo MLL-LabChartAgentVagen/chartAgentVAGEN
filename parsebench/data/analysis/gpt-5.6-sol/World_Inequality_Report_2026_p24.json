@@ -1,0 +1,369 @@
+{
+  "stem": "World_Inequality_Report_2026_p24",
+  "document": "World_Inequality_Report_2026",
+  "tags": "need_estimate",
+  "model": "gpt-5.6-sol",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "via": "openrouter",
+  "max_tokens": 120000,
+  "seconds": 207.8,
+  "usage": {
+    "input_tokens": 8835,
+    "output_tokens": 13726,
+    "cache_read_tokens": 2365
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "**画出来要什么**\n\n两幅独立折线图，均需绘制点标记、双向网格、旋转年份、纵向轴题、图下图例、解释与来源段。图15另有负值、虚线零基准及红蓝框注；图16纵轴从80%起，并以稀疏年份刻度承载不规则选举年份。\n\n**定位一个值难在哪**\n\n图15蓝线2020–25的−6需“时期＋完整系列公式”定位；纵轴每5个百分点一格，而5%容差仅0.3个百分点，且点上没有数值。图16的112还需推断未标出的2014。\n\n**不确定的**\n\n图16约有43个点，密集处只能估数；138与140在图上都只能对应约140%的2024红色端点，无法凭像素区分。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 15.",
+          "title": "We need political action but political coalitions are difficult to form",
+          "subtitle": "Education and income divides in Western democracies, 1960–2025",
+          "unit_text": "Difference (pp): top 10% minus bottom 90% voting left",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 13,
+        "marks": 26,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Difference (pp): top 10% minus bottom 90% voting left",
+            "low": "−20%",
+            "high": "15%",
+            "serves": "both lines and their point markers"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "1960–64",
+            "high": "2020–25",
+            "serves": "all plotted periods"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "1960–64"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "(% of top 10% educated voting left) minus (% of bottom 90% educated voting left)"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "2020–25",
+            "(% of top 10% earners voting left) minus (% of bottom 90% earners voting left)"
+          ],
+          "value": "about −6 percentage points",
+          "value_source": "axis_read",
+          "why_hard": "A 5-point grid cannot resolve 0.3-point tolerance for a value near −6."
+        }
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "Figure 16.",
+          "title": "Divides between large cities and smaller towns have reached levels unseen in a century",
+          "subtitle": "Ratio of left wing vote between urban and rural areas, 1848–2022",
+          "unit_text": "Left vote: urban 100% vs. rural 50% (% of national average)",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 42,
+        "marks": 43,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Left vote: urban 100% vs. rural 50% (% of national average)",
+            "low": "80%",
+            "high": "180%",
+            "serves": "both election series"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "1840",
+            "high": "2020",
+            "serves": "all election-year points"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2020"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "European elections 1994–2024"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "2014",
+            "European elections 1994–2024"
+          ],
+          "value": "about 112%",
+          "value_source": "axis_read",
+          "why_hard": "The year lies between sparse ticks and the point has no value label."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "multi_figure_page",
+        "figure_id": "page",
+        "evidence": "Separate headings “Figure 15.” and “Figure 16.” introduce independent charts."
+      },
+      {
+        "key": "reference_line",
+        "figure_id": "f1",
+        "evidence": "A black dotted horizontal rule crosses the plot at 0%."
+      },
+      {
+        "key": "negative_values",
+        "figure_id": "f1",
+        "evidence": "Both lines extend below the labelled 0% rule."
+      },
+      {
+        "key": "annotation_callout",
+        "figure_id": "f1",
+        "evidence": "Red and blue bordered explanatory boxes are drawn inside the plot."
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "The two-series legend is centred beneath the x axis."
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "The paragraph below includes “Sources and series: Gethin et al. (2021)”."
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "The y-axis title reads “Difference (pp): top 10% minus bottom 90% voting left”."
+      },
+      {
+        "key": "rotated_axis_title",
+        "figure_id": "f1",
+        "evidence": "The “Difference (pp)” title runs vertically beside the left axis."
+      },
+      {
+        "key": "rotated_x_ticks",
+        "figure_id": "f1",
+        "evidence": "Period labels such as “1960–64” are rotated diagonally."
+      },
+      {
+        "key": "annotation_callout",
+        "figure_id": "f2",
+        "evidence": "A boxed “Urban voters vote more for left parties” note has an upward arrow."
+      },
+      {
+        "key": "axis_starts_above_zero",
+        "figure_id": "f2",
+        "evidence": "The value axis begins at 80% without an axis-break glyph."
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f2",
+        "evidence": "The two election-series labels sit beneath the plot."
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f2",
+        "evidence": "The paragraph below includes “Sources and series: Cagé and Piketty (2025)”."
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f2",
+        "evidence": "The y-axis title includes “(% of national average)”."
+      },
+      {
+        "key": "rotated_axis_title",
+        "figure_id": "f2",
+        "evidence": "The “Left vote” title is vertical along the left axis."
+      },
+      {
+        "key": "rotated_x_ticks",
+        "figure_id": "f2",
+        "evidence": "Year ticks from “1840” through “2020” are diagonally rotated."
+      },
+      {
+        "key": "sparse_time_ticks",
+        "figure_id": "f2",
+        "evidence": "Many election points fall between the twenty-year ticks."
+      }
+    ],
+    "new_components": [
+      {
+        "name": "marker_shape_encodes_series",
+        "figure_id": "f1",
+        "evidence": "Red circles and blue squares distinguish the two line series.",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "name": "marker_shape_encodes_series",
+        "figure_id": "f2",
+        "evidence": "Red triangles and green squares distinguish the election series.",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "name": "interpretation_caption_block",
+        "figure_id": "page",
+        "evidence": "Each chart is followed by a paragraph beginning “Interpretation.”",
+        "affects": [
+          4
+        ]
+      },
+      {
+        "name": "percent_sign_on_every_value_tick",
+        "figure_id": "page",
+        "evidence": "Value ticks retain percent signs, including “−20%”, “15%”, “80%”, and “180%”.",
+        "affects": [
+          2
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "-14",
+        "figure_id": "f1",
+        "mark": "the 1960–64 red circular marker",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "1960–64",
+          "(% of top 10% educated voting left) minus (% of bottom 90% educated voting left)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "11",
+        "figure_id": "f1",
+        "mark": "the 2020–25 red circular marker",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2020–25",
+          "(% of top 10% educated voting left) minus (% of bottom 90% educated voting left)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-11",
+        "figure_id": "f1",
+        "mark": "the 1960–64 blue square marker",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "1960–64",
+          "(% of top 10% earners voting left) minus (% of bottom 90% earners voting left)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-16",
+        "figure_id": "f1",
+        "mark": "the 1975–79 blue square marker",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "1975–79",
+          "(% of top 10% earners voting left) minus (% of bottom 90% earners voting left)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-6",
+        "figure_id": "f1",
+        "mark": "the 2020–25 blue square marker",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2020–25",
+          "(% of top 10% earners voting left) minus (% of bottom 90% earners voting left)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "138",
+        "figure_id": "f2",
+        "mark": "the 2024 red triangle, whose axis position is approximately 140%",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2024",
+          "European elections 1994–2024"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "140",
+        "figure_id": "f2",
+        "mark": "the 2024 red triangle at the line endpoint",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2024",
+          "European elections 1994–2024"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "112",
+        "figure_id": "f2",
+        "mark": "the red triangle around 2014",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2014",
+          "European elections 1994–2024"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 3
+      },
+      {
+        "value": "118",
+        "figure_id": "f2",
+        "mark": "the red triangle around 2019",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2019",
+          "European elections 1994–2024"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 3
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "图15纵轴每5个百分点一格；−6的5%仅0.3，且无数值标签，先卡在步骤2。拒绝猜测具体数值。转换器必须保留页面中的图表结构和文本。数据提取需结合视觉识别与上下文。图16的时间轴稀疏，部分年份需推断。整体页面包含两幅独立图表及其解释段落。最难的是图15的小数值精度，因为网格间距远大于5%容差。图16的138和140在像素上几乎重合，无法可靠区分。所有数值均需从轴读取，无直接标签。图例和轴标题提供必要的单位和系列信息。页面没有数据表，只有图表和说明文字。标题结构清晰，图号、主标题、副标题和单位分离。图15含负值和零线，图16轴从80%起。两图均有旋转刻度和下方图例。来源信息嵌入解释段落。标记形状和颜色共同区分系列。图16的红色系列年份未全部标注，导致定位困难。图15的每个值需要时期和完整系列公式两个键。图16的值需要年份和选举系列两个键。图表生成器需支持注释框、箭头和参考线。图16约有43个标记，数量为估计。图15有26个点。图16的类别数按不同选举年份并集估计为42。138可能与2024红色端点对应，但视觉读数更接近140%。因此对138的定位存在不确定性。整体最难步骤仍是数值精度，而非标题上下文或标签关联。图15的−6容差仅0.3个百分点，远小于5个百分点刻度间隔。图16的112和118还受稀疏年份标签影响。所有判断均基于页面可见内容，未使用外部数据。最终输出保留原始标题、轴标签和图例文本。图15的蓝色−16也可能在1985–89再次出现，但此处选择1975–79。图16的中间红点年份是按系列节奏推断，并非逐点印刷。图16的138和140被视为同一可见端点的不同近似读取。图15的红蓝注释框位于绘图区内。图16的黑色箭头注释也位于绘图区内。两图均使用白色背景及横纵网格。未发现双轴、柱形、阴影带、误差条或断轴。图16从80%开始但没有断轴符号。图15零线为黑色点状参考线。图例均位于图下。解释段均以加粗“Interpretation.”开头。页眉为“Executive Summary”，页码为24。图号使用绿色，标题为黑色。图表主体均为单面板折线图。图15时间类别全部标出，图16仅显示二十年刻度。图16的系列时间范围写在图例中。图15的单位“pp”位于纵轴标题。图16的单位“% of national average”位于纵轴标题。图15纵轴刻度从−20%到15%。图16纵轴刻度从80%到180%。图15横轴从1960–64到2020–25。图16横轴标注从1840到2020，但红线延伸至2024。图16末点超出最后标注刻度。图15系列由圆点和方点区分。图16系列由三角和方点区分。没有数值直接印在点旁。生成器需支持跨行标题和长图例文本。图15图例公式很长并换行。图16注释文字分三行。两幅图各有独立来源与解释。页面属于多图页面。未见小多图或共享图例。值地址均依赖时间和系列。颜色仅标识系列，不编码额外属性。网格同时包含横线和竖线，因此不属于仅横向或仅纵向网格。图15的负值使零线关键。图16的截断起点使垂直位置不能按零基线直观比较。图16历史绿线跨度约176年。图15跨度为65年。图15点数可精确计为每系列13个。图16点数因密集历史年份只能估计。标题块都位于图上方。两图无面板标题。图例不在绘图区内。图16红线和绿线均为实线。未发现虚线系列。图15参考线为点状，但不是数据系列。图16不存在明显参考线。图15的注释框边框颜色与对应系列一致。图16注释框为黑边白底。来源段不是独立小字号脚注，而是解释正文的一部分。仍按图下来源行组件记录。图15的“Sources and series:”与图16相同短语加粗。图16标题中的1848–2022对应绿线范围，而红线图例延伸至2024。图15标题中的1960–2025与期间标签2020–25一致。图16的2024端点位于2020刻度右侧。对于112和118，年份无法从单个点旁读取。它们的地址标签不是逐点原文，因此keys_verbatim为false。对于2024，年份在图例和解释中出现，因此为true。图15所有时期标签逐项印出，因此keys_verbatim为true。图15系列键必须使用完整图例公式，不能只写“red”或“blue”。图16系列键直接来自图例。138与140均落在2024端点的5%容差内。图15各小数值的5%容差远低于半个刻度。图1610个百分点刻度相对112–140的5%容差较宽。故图16数值精度通常可通过，但年份关联仍困难。图15最困难值为−6。图16最困难地址为2014或2019红点。页面上下文以图号和加粗解释词明确。若导出表格，标题与解释需保持关联。未发现脚注标记、下载链接或数据表。图表类型均为line。所有轴均为左值轴和底部时间轴。无右轴或顶部轴。没有打印值标签。图16的绿线标记数量远多于红线。图15两系列类别完全对齐。图16两系列时间点不完全对齐。此不规则时间采样也是生成器需支持的结构。图16类别数为估计而非精确读数。最终最难步骤选择2。图15的刻度分辨率直接证明这一点。没有添加页面上不存在的结构。引用均保持页面原文。标题中的破折号使用原有en dash。负号使用视觉上的负号。百分号保留。图号末尾句点保留。页眉和页码不作为图形记录。图15和图16均各自单面板。总计两幅图。图15包含13个时间槽。图16约42个不同时间槽。图15有两个框注。图16有一个箭头框注。图15零线贯穿绘图区。图16没有零线，因为轴范围不含零。图15蓝线始终为负。图15红线由负转正。图16所有值高于100%附近。图16轴含100%基准刻度但无专门参考线。图16文字说明比较城市与农村。图15文字说明比较教育与收入分位。图例文本承载系列定义。图15纵轴标题承载差值单位。图16纵轴标题承载比例解释。二者均需完整重建。图15−16值出现两次附近，地址必须指定时期。选择1975–79作为示例。图16红色端点明显高于前一点。图16绿色端点也上升，但不到130%。因此138无法属于绿线末点。将138归到红色2024端点属于近似读取。若要求唯一精确值，页面本身不足以区分138与140。该不确定性已在报告中说明。图15−14也可能与其他接近点混淆，但时期与系列可消除。图15−11可出现在不同系列或时期，完整双键必要。图16112和118缺少逐点年份文本。所有spot check按给定顺序返回。无值是直接打印的。图15和图16都需轴读。图16数据点使用连接折线而非阶梯线。无填充面积。无误差带。无柱。无饼图。无地图。无复合图。标记形状是未收录组件。解释段落块也是未收录组件。百分号逐刻度格式也是未收录组件。它们分别影响标签关联、外部上下文和数值解释。页面结构简洁但阅读精度受限。最关键的图表生成能力包括折线、标记、旋转文本、长图例、注释框、参考线、截断轴和来源段。图15和图16标题均跨两行。副标题单独位于主标题下方。单位不在副标题，而在纵轴标题。heading placement均为above。图16标题说1848–2022，但红色图例为1994–2024，这是页面原样。图15主标题的政治行动结论与副标题的数据主题分开。图16主标题的城乡结论与副标题的比率主题分开。这样的标题拆分需保留。图15图号与主标题同一标题块。图16同样。图号绿色样式未单独编码为组件，因为词表无对应且不影响四步骤。图15红蓝框文字不是系列内联标签，而是解释性注释。图16黑框同样不是数据系列名。图例仍是系列识别来源。图15底部图例有两项并排。图16图例有两项纵向排列。词表仅要求图下图例，均满足。图16年份刻度旋转约45度。图15时期标签也约45度。纵轴标题均旋转90度。图15横纵网格为浅灰虚线。图16亦然。词表没有双向网格键，因此未列新组件，因其通常不影响四步骤。图15零线比网格更黑更密。图16100%线不突出。图15数据线为红色和蓝色。图16为红色和绿色。颜色只重复图例系列身份。标记形状也重复系列身份，形成冗余编码。页面没有额外颜色属性。f2工作示例使用2014红点，值约112%。该年份不在轴上直接标出。其困难来自稀疏时间刻度和无值标签。f1工作示例使用2020–25蓝点，值约−6。其困难来自5个百分点网格与0.3容差。hardest_step_why严格基于该数值。图16138与140的同点问题属于可见分辨率不确定。未尝试从外部数据修正。图16红点实际像素读数约140%。图15蓝末点像素读数约−7%，但目标−6处于附近。按给定值记录为−6并标记步骤2。图15红末点略高于10%，对应11。图15红首点约−14。蓝首点约−11。蓝低点约−16。图16红2019点约116–118。红2014点约112–115。均无打印数字。图表下方解释文字不是图形标记。它提供来源与语义上下文。输出未将解释段误算为第三图。页面装饰页眉和页码也未算图。总图数为2。所有figure_id按阅读顺序f1、f2。所有组件均指向对应图或page。未报告不存在的双轴、混合标记、面积、柱、表格。图16轴起点80%确属axis_starts_above_zero，而非broken_axis。图15负值确属negative_values。图15零线确属reference_line。注释框确属annotation_callout。图例位置确属legend_below_plot。来源段确属source_note_lines。单位确属unit_in_axis_or_title。旋转标题和刻度均可见。图16稀疏时间刻度可见。页面多图结构可见。新组件命名为lower_snake_case。affects按四步填写。标记形状影响系列标签关联。解释段影响表外上下文。百分号刻度影响数值解释。图15系列公式中的百分号不是绘图值单位，真正单位为pp，因此未记unit_in_series_name。图16图例中的年份范围不是单位。标题没有脚注符号。轴没有对数刻度。没有阴影区。没有缺失值标记。没有右侧y轴。没有逐点值标签。没有两级x刻度。没有缩写类别代码。年份格式为标准四位年份或范围。图15时期范围不是nonstandard_time_ticks，因为它们是常规五年区间标签。图16没有100个以上标记。没有高亮单一类别。没有图标轴。没有虚线数据系列。图15参考线的点状样式不算dashed_line_series。以上为页面可见结构的完整描述。",
+    "examples": []
+  }
+}

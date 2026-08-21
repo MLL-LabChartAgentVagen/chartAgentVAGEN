@@ -1,0 +1,207 @@
+{
+  "stem": "US_Professional_Services_Partner_Compensation_Survey_2024_p11",
+  "document": "US_Professional_Services_Partner_Compensation_Survey_2024",
+  "tags": "untagged",
+  "model": "gemini-3.1-pro-preview",
+  "control": "no_vocab",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 16.3,
+  "usage": {
+    "input_tokens": 3161,
+    "output_tokens": 2011,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n这是一个水平分组条形图（grouped bar），用于展示两年的合伙人流失率对比。图表的标题“Partner turnover”与图表并排显示在左侧，而不是上方，且带有大段描述文字。图表上方有两个标题行和一个图例，其中图例仅用两个小色块和年份（2024, 2022）表示。Y轴标签（分类）如“Significantly lower”, “Lower”居左对齐。数据标签直接打印在条形图的末端或内部，2024年的黑色条形数值在内部，2022年的青色条形数值在末端。没有X轴（值轴），也没有网格线。\n\n### 定位一个值难在哪\n定位一个值（如 13）需要两个维度：类别（如“Lower”）和系列（年份，如“2024”）。难点在于标题结构复杂，“Partner turnover”位于图表外侧，而图表本身的标题“Partner turnover (%)”又带有一长串副标题（问题文本）。此外，有些数值（如 14，2022年的Significantly higher）并不在给定的测试值列表中，但同样需要准确提取并关联其分类和年份。\n\n### 不确定的\n左侧的大段文字是否应被视为图表的一部分（即所谓的“beside”放置的副标题或描述），还是作为正文处理。如果作为正文，图表本身的标题即为“Partner turnover (%)”。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "Partner turnover (%)",
+          "subtitle": "In your most recent fiscal year, how much partner turnover was there at your firm compared to your expectations at the beginning of the fiscal year?",
+          "unit_text": "%",
+          "placement": "above"
+        },
+        "type": "grouped_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 5,
+        "marks": 10,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "left",
+            "role": "category",
+            "unit_text": "",
+            "low": "Significantly lower",
+            "high": "Prefer not to answer",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "About the same"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "2024"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Lower",
+            "2024"
+          ],
+          "value": "13",
+          "value_source": "printed",
+          "why_hard": "No specific difficulty; printed on mark."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "horizontal_grouped_bar",
+        "figure_id": "f1",
+        "evidence": "bars for 2024 and 2022 are grouped horizontally per category",
+        "affects": []
+      },
+      {
+        "key": "value_labels_on_bars",
+        "figure_id": "f1",
+        "evidence": "numbers like 9, 13, 27 are printed inside or at the end of the bars",
+        "affects": [
+          1,
+          2
+        ]
+      },
+      {
+        "key": "no_value_axis",
+        "figure_id": "f1",
+        "evidence": "there is no x-axis with ticks or gridlines",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "key": "legend_above_plot",
+        "figure_id": "f1",
+        "evidence": "squares for 2024 and 2022 are above the categories",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "long_subtitle",
+        "figure_id": "f1",
+        "evidence": "a full sentence question sits below the title 'Partner turnover (%)'",
+        "affects": [
+          4
+        ]
+      },
+      {
+        "key": "side_column_heading",
+        "figure_id": "page",
+        "evidence": "'Partner turnover' in large text sits in a left column beside the main figure block",
+        "affects": [
+          4
+        ]
+      }
+    ],
+    "new_components": [
+      {
+        "name": "inline_bar_value_placement_mixed",
+        "figure_id": "f1",
+        "evidence": "2024 values are inside the black bars, 2022 values are at the end of cyan bars",
+        "affects": [
+          1
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "9",
+        "figure_id": "f1",
+        "mark": "the 2024 bar for Significantly lower",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Significantly lower",
+          "2024"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "14",
+        "figure_id": "f1",
+        "mark": "the 2022 bar for Lower, or the 2024 bar for Significantly higher",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Significantly higher",
+          "2024"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "27",
+        "figure_id": "f1",
+        "mark": "the 2024 bar for About the same",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "About the same",
+          "2024"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "35",
+        "figure_id": "f1",
+        "mark": "the 2024 bar for Higher",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Higher",
+          "2024"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "6",
+        "figure_id": "f1",
+        "mark": "the 2022 bar for Significantly higher, or the 2022 bar for Prefer not to answer",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Significantly higher",
+          "2022"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      }
+    ],
+    "hardest_step": 3,
+    "hardest_step_why": "测试值中包含重复数值（如14出现了两次，6出现了两次），在不同分类和系列下。必须确保Markdown提取时将每个值与其对应的类别（如Lower, Significantly higher）和系列（2024, 2022）准确关联。",
+    "examples": [
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "9 is white inside the black bar, 5 is black at the end of the cyan bar",
+        "why": "图表生成器需要支持在同一个图中，根据条形的长度和颜色不同，混合使用不同的数值标签放置位置和颜色。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "page",
+        "quote": "Partner turnover in large cyan text in the left column",
+        "why": "页面级别的侧边栏标题（beside placement）与图表主体的标题并存，目前的P7架构需要处理这种多级或侧边的标题布局。"
+      }
+    ]
+  }
+}

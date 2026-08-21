@@ -1,0 +1,250 @@
+{
+  "stem": "COM_2025_26_F1_COMMUNICATION_FROM_COMMISSION_TO_INST_EN_V10_P1_3877708_p19",
+  "document": "COM_2025_26_F1_COMMUNICATION_FROM_COMMISSION_TO_INST_EN_V10_P1_3877708",
+  "tags": "need_estimate",
+  "model": "gpt-5.6-sol",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 120000,
+  "seconds": 77.2,
+  "usage": {
+    "input_tokens": 8840,
+    "output_tokens": 5210,
+    "cache_read_tokens": 2365
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n单图折线图：蓝、绿、黄三条年度线，纵轴为0—100%，横轴为2011—2023；年度节点多于隔年显示的倾斜刻度。图例置于图内，标题、注释和来源位于图表上下，正文在右侧并延续至图下。\n\n### 定位一个值难在哪\n例如“EU—2023”的43未直接印出，只能按纵轴读取。纵轴每10个百分点一格，且没有网格线或点标记；43的5%容差仅约±2.15。\n\n### 不确定的\n绿色线没有图例名称；只能从正文推测可能代表UK，未据此命名。年度节点数按折线转折估为13，部分精确值无法从页面确认。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 4:",
+          "title": "Household savings invested in",
+          "subtitle": "bonds, shares, investment funds and similar.",
+          "unit_text": "%",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 1,
+        "series": 3,
+        "categories": 13,
+        "marks": 39,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "%",
+            "low": "0",
+            "high": "100",
+            "serves": "all three lines"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "2011",
+            "high": "2023",
+            "serves": "all three lines"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "EU"
+          },
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2011"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "US",
+            "2021"
+          ],
+          "value": "70",
+          "value_source": "axis_read",
+          "why_hard": "No point markers or gridlines; value ticks are 10 points apart."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "“Note:” and “Source: European Commission, DG FISMA” appear below the plot."
+      },
+      {
+        "key": "legend_inside_plot",
+        "figure_id": "f1",
+        "evidence": "The “EU” and “US” legend sits above the baseline inside the plotting area."
+      },
+      {
+        "key": "side_text_bullets",
+        "figure_id": "f1",
+        "evidence": "Running prose beginning “Significant amounts of EU savers’ money” occupies the column beside the figure."
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "A bare “%” supplies the unit while value ticks read 0 through 100."
+      },
+      {
+        "key": "axis_title_above_axis",
+        "figure_id": "f1",
+        "evidence": "The “%” symbol is printed above and right of the top value-axis tick."
+      },
+      {
+        "key": "rotated_x_ticks",
+        "figure_id": "f1",
+        "evidence": "Time labels from “2011” to “2023” are angled diagonally."
+      },
+      {
+        "key": "sparse_time_ticks",
+        "figure_id": "f1",
+        "evidence": "Lines have annual bends, but the axis labels only 2011, 2013, …, 2023."
+      }
+    ],
+    "new_components": [
+      {
+        "name": "unlabelled_series",
+        "figure_id": "f1",
+        "evidence": "Three coloured lines are drawn, but the legend names only “EU” and “US”.",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "45",
+        "figure_id": "f1",
+        "mark": "the EU line at 2011",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "EU",
+          "2011"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "70",
+        "figure_id": "f1",
+        "mark": "the US line at 2011",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "US",
+          "2011"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "45",
+        "figure_id": "f1",
+        "mark": "the EU line at 2013",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "EU",
+          "2013"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "71",
+        "figure_id": "f1",
+        "mark": "the US line at 2013",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "US",
+          "2013"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "45",
+        "figure_id": "f1",
+        "mark": "the EU line at 2019",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "EU",
+          "2019"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "72",
+        "figure_id": "f1",
+        "mark": "the US line at 2019",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "US",
+          "2019"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "44",
+        "figure_id": "f1",
+        "mark": "the EU line at 2021",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "EU",
+          "2021"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "70",
+        "figure_id": "f1",
+        "mark": "the US line at 2021",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "US",
+          "2021"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "43",
+        "figure_id": "f1",
+        "mark": "the EU line at 2023",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "EU",
+          "2023"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "72",
+        "figure_id": "f1",
+        "mark": "the US line at 2023",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "US",
+          "2023"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "如43，5%仅±2.15；纵轴每10一格且无线点标签，轴读值精度最难保证。比标签关联更难。片内图例只标EU、US，但抽查均落两线。少量同值需年份定位。总体可读，未见表格。可过。需谨慎。最终仍以精度为主要风险。也因没有横网格线。43尤难。图线较粗。接近43。仍可估。故选2。",
+    "examples": []
+  }
+}

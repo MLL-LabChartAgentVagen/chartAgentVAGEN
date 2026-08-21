@@ -1,0 +1,293 @@
+{
+  "stem": "2024-ltra_corrected_july_2025_p29",
+  "document": "2024-ltra_corrected_july_2025",
+  "tags": "need_estimate",
+  "model": "claude-opus-5",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 68.8,
+  "usage": {
+    "input_tokens": 14598,
+    "output_tokens": 5609,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "## 画出来要什么\n一张单面板堆叠柱图：8 个年份槽（2017–2024），两段堆叠（Interstate 浅蓝在上、Intrastate 深蓝在下），左侧纵轴 0–30、步长 5，仅有水平网格线，纵轴标题「Pipeline Additions」竖排且不含单位；图例横排在绘图区下方；再往下是加粗居中的两行说明「Figure 16: Annual U.S. Natural Gas Pipeline Capacity Additions by Type (2017–2024) Bcf/d (Source: U.S. Energy Information Administration)」——编号、标题、年份范围、单位、来源挤在同一句里。整页还要能把这张图排进右栏，与左栏正文并列，图下继续接「Reliability Implications」小节。\n\n## 定位一个值难在哪\n以 8.5（2021 年 Interstate）为例：图上一个数字都没写，该段悬在 7.3 与 15.8 之间，必须先读段顶再减段底；5% 容差只有 ±0.43，而两条网格线之间就是 5 个单位。更极端的 1.2（2017 Intrastate）容差仅 ±0.06，约等于一个像素。地址还需「2017」＋「Intrastate」两个标签，都只在轴刻度和图例里。\n\n## 不确定的\n2022 年是否真有 Intrastate 段（看不到深蓝）、2024 年那条极薄的深蓝到底是哪一系列；纵轴单位是否就是标题里的「Bcf/d」也只能由说明文字推断。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 16",
+          "title": "Annual U.S. Natural Gas Pipeline Capacity Additions by Type (2017–2024) Bcf/d",
+          "subtitle": "",
+          "unit_text": "Bcf/d",
+          "placement": "below"
+        },
+        "type": "stacked_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 8,
+        "marks": 15,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "0",
+            "high": "30",
+            "serves": "all stacked segments, both Interstate and Intrastate"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "2017",
+            "high": "2024",
+            "serves": "the eight bar slots"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2021"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Interstate"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "2021",
+            "Interstate"
+          ],
+          "value": "8.5",
+          "value_source": "axis_read",
+          "why_hard": "floating segment between 7.3 and 15.8; needs subtraction, no printed labels, gridlines every 5 units"
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "stacked_bar",
+        "figure_id": "f1",
+        "evidence": "each year's bar has a dark lower segment and a light upper segment, total is the bar height"
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "'Interstate' and 'Intrastate' swatches sit in a row under the 2017–2024 tick row"
+      },
+      {
+        "key": "rotated_axis_title",
+        "figure_id": "f1",
+        "evidence": "'Pipeline Additions' set vertically along the left axis"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "y ticks read 0,5,...30 bare; 'Bcf/d' appears only in the caption line"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "caption ends '(Source: U.S. Energy Information Administration)'"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "horizontal rules at 5,10,15,20,25,30 across the panel; no vertical rules"
+      },
+      {
+        "key": "side_text_bullets",
+        "figure_id": "page",
+        "evidence": "left column of body text ('The 2024 LTRA projects...') runs level with the figure, divider rule between"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "caption_bundles_number_title_unit_source",
+        "figure_id": "f1",
+        "evidence": "'Figure 16: ... by Type (2017–2024) Bcf/d (Source: U.S. Energy Information Administration)' is one bold sentence",
+        "affects": [
+          3,
+          4
+        ]
+      },
+      {
+        "name": "legend_order_reverses_stack_order",
+        "figure_id": "f1",
+        "evidence": "legend lists 'Interstate' first but Interstate is drawn as the upper segment above 'Intrastate'",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "name": "series_absent_in_some_slots",
+        "figure_id": "f1",
+        "evidence": "2022 shows only a light bar; 2024 shows only a sliver near zero",
+        "affects": [
+          2,
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "16.2",
+        "figure_id": "f1",
+        "mark": "the 2017 Interstate (light blue) upper segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2017",
+          "Interstate"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "1.2",
+        "figure_id": "f1",
+        "mark": "the 2017 Intrastate (dark blue) base segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2017",
+          "Intrastate"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "21.2",
+        "figure_id": "f1",
+        "mark": "the 2018 Interstate upper segment (5.6 to 26.8)",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2018",
+          "Interstate"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "5.6",
+        "figure_id": "f1",
+        "mark": "the 2018 Intrastate base segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2018",
+          "Intrastate"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "10.8",
+        "figure_id": "f1",
+        "mark": "the 2019 Interstate upper segment (4.2 to 15.0)",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2019",
+          "Interstate"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "4.2",
+        "figure_id": "f1",
+        "mark": "the 2019 Intrastate base segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2019",
+          "Intrastate"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "8.7",
+        "figure_id": "f1",
+        "mark": "the 2020 Interstate upper segment (1.6 to 10.3)",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2020",
+          "Interstate"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "1.6",
+        "figure_id": "f1",
+        "mark": "the 2020 Intrastate base segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2020",
+          "Intrastate"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "8.5",
+        "figure_id": "f1",
+        "mark": "the 2021 Interstate upper segment (7.3 to 15.8)",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2021",
+          "Interstate"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "7.3",
+        "figure_id": "f1",
+        "mark": "the 2021 Intrastate base segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2021",
+          "Intrastate"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "全图无数字，网格线间距5；1.2（2017 Intrastate）容差±0.06，8.5须由15.8减7.3得出，像素读数难达标。",
+    "examples": [
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "Figure 16: Annual U.S. Natural Gas Pipeline Capacity Additions by Type (2017–2024) Bcf/d (Source: U.S. Energy Information Administration)",
+        "why": "编号、标题、年份范围、单位、来源合为一句加粗置于图例之下，现有流水线只会输出单一标题行。"
+      },
+      {
+        "gap": "P1",
+        "figure_id": "f1",
+        "quote": "the 2024 bar is a sliver barely above the 0 line; no value labels anywhere on the plot",
+        "why": "同一图内可读精度差异极大：0.3 的薄段与 21.2 的长段不能用同一个布尔可读性门槛。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "y ticks read 0, 5, 10, 15, 20, 25, 30 with vertical title 'Pipeline Additions'; 'Bcf/d' only in the caption",
+        "why": "轴标题不含单位、单位挪到图下说明句里，当前不能控制单位位置这一风格维度。"
+      },
+      {
+        "gap": "P3",
+        "figure_id": "page",
+        "quote": "left column body text and the figure sit side by side; 'Reliability Implications' heading follows directly under the caption",
+        "why": "需要整页 markdown：正文分栏与图共处一带，标题在表格下方而非上方。"
+      }
+    ]
+  }
+}

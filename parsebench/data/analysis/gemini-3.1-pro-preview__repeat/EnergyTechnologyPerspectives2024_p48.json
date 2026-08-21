@@ -1,0 +1,301 @@
+{
+  "stem": "EnergyTechnologyPerspectives2024_p48",
+  "document": "EnergyTechnologyPerspectives2024",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "repeat",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 73.8,
+  "usage": {
+    "input_tokens": 5328,
+    "output_tokens": 10018,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n\n这页包含一个水平百分比堆叠柱状图。X 轴在顶部，范围从 0% 到 100%，步长为 20%，仅有垂直网格线。Y 轴包含两级分类标签，外层组名（如 Batteries、Wind）旋转了 90 度并垂直居中跨越内层的多个子类别（如 Anodes、Cathodes、Cells）。图表同时混合了两种图元：主体的堆叠柱段（展示 2023 年不同国家或地区的份额，共 7 个系列），以及叠加在对应柱子上的散点圆圈（带有黑色边框的浅蓝色圆点，展示 2021 年中国的份额）。图例和注释位于图表正下方。\n\n### 定位一个值难在哪\n\n以 `16`（欧盟在风力叶片中的制造能力份额）为例。这是一个堆叠在内部的柱段（Wind - Blades 的蓝色部分）。要读取它，必须先在顶部 20% 间距的轴上估算其起止位置（约 60% 到 76%），然后相减得出。在没有次级网格线和数据标签的情况下，这种估算无法满足 5% 的精度要求。\n\n### 不确定的\n\n图表中的 RoW（世界其他地区）等数据段非常狭窄，视觉上难以与 0% 区分；“China in 2021” 的散点标记由于落在两个 20% 的刻度之间，具体坐标值只能通过肉眼粗略估算。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 1.11",
+          "title": "Installed manufacturing capacity by country/region, 2023",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "stacked_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 8,
+        "categories": 18,
+        "marks": 144,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "top",
+            "role": "value",
+            "unit_text": "",
+            "low": "0%",
+            "high": "100%",
+            "serves": "all segments and circles"
+          },
+          {
+            "side": "left",
+            "role": "category",
+            "unit_text": "",
+            "low": "Anodes",
+            "high": "Steel",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Batteries"
+          },
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Anodes"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "European Union"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Wind",
+            "Blades",
+            "European Union"
+          ],
+          "value": "16",
+          "value_source": "axis_read",
+          "why_hard": "Inner segment without printed labels read against 20% ticks."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "stacked_bar",
+        "figure_id": "f1",
+        "evidence": "country shares are stacked segments within each component's bar"
+      },
+      {
+        "key": "pct_stacked",
+        "figure_id": "f1",
+        "evidence": "all bars stretch to the 100% mark"
+      },
+      {
+        "key": "mixed_marks",
+        "figure_id": "f1",
+        "evidence": "circles for China in 2021 are drawn over stacked bars"
+      },
+      {
+        "key": "horizontal_bars",
+        "figure_id": "f1",
+        "evidence": "categories are on the left, bars grow to the right"
+      },
+      {
+        "key": "vgrid_only",
+        "figure_id": "f1",
+        "evidence": "vertical grid lines at 20% intervals, no horizontal lines"
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "the legend with region names sits under the categories"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "Note: and Source: lines appear at the bottom"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "two_level_y_ticks",
+        "figure_id": "f1",
+        "evidence": "Batteries, EV, Solar PV group multiple categories on the y-axis",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "name": "rotated_y_group_labels",
+        "figure_id": "f1",
+        "evidence": "outer y-axis labels like Batteries are rotated 90 degrees",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "name": "top_x_axis",
+        "figure_id": "f1",
+        "evidence": "0% 20% ... 100% ticks run along the top edge",
+        "affects": [
+          2
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "92",
+        "figure_id": "f1",
+        "mark": "the China segment for Batteries - Anodes",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Batteries",
+          "Anodes",
+          "China"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "70",
+        "figure_id": "f1",
+        "mark": "the China in 2021 point for Batteries - Cells",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Batteries",
+          "Cells",
+          "China in 2021"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "16",
+        "figure_id": "f1",
+        "mark": "the European Union segment for Wind - Blades",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Wind",
+          "Blades",
+          "European Union"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "10",
+        "figure_id": "f1",
+        "mark": "the European Union segment for Materials - Ammonia",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Materials",
+          "Ammonia",
+          "European Union"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "91",
+        "figure_id": "f1",
+        "mark": "the China segment for Solar PV - Polysilicon",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Solar PV",
+          "Polysilicon",
+          "China"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "8",
+        "figure_id": "f1",
+        "mark": "the European Union segment for Wind - Towers",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Wind",
+          "Towers",
+          "European Union"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "18",
+        "figure_id": "f1",
+        "mark": "the European Union segment for EV - Electric cars",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "EV",
+          "Electric cars",
+          "European Union"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "41",
+        "figure_id": "f1",
+        "mark": "the China segment for Other - Heat pumps",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Other",
+          "Heat pumps",
+          "China"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "30",
+        "figure_id": "f1",
+        "mark": "the China segment for Materials - Ammonia",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Materials",
+          "Ammonia",
+          "China"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "53",
+        "figure_id": "f1",
+        "mark": "the China segment for Wind - Towers",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Wind",
+          "Towers",
+          "China"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "图表没有打印任何数据标签。类似 16 和 8 这样的值是堆叠柱状图的中间段，在步长宽达 20% 的数值轴上，依靠目测起始位置做减法根本无法达到 5% 的精度。",
+    "examples": [
+      {
+        "gap": "P9",
+        "figure_id": "f1",
+        "quote": "China in 2021 is plotted as circles overlaid on the stacked bars",
+        "why": "图表在同一个面板中混合了堆叠柱状图和散点图，生成器需要支持在同轴上叠加不同类型的图元并记录其数据来源。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "Categories like Anodes, Cathodes, Cells are grouped under Batteries on the y-axis",
+        "why": "Y 轴包含两级嵌套的分类标签，且外层标签进行了 90 度旋转并跨越多行对齐，当前模型无法直接生成此类复杂层次的轴标签。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "0%, 20% ... 100% ticks are drawn at the top of the plot",
+        "why": "数值轴（X 轴）绘制在图表区域的顶部而非默认的底部，目前缺乏配置轴顶部显示的样式参数。"
+      }
+    ]
+  }
+}

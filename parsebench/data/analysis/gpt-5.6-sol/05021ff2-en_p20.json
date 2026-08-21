@@ -1,0 +1,246 @@
+{
+  "stem": "05021ff2-en_p20",
+  "document": "05021ff2-en",
+  "tags": "need_estimate",
+  "model": "gpt-5.6-sol",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 120000,
+  "seconds": 91.2,
+  "usage": {
+    "input_tokens": 8699,
+    "output_tokens": 6100,
+    "cache_read_tokens": 2365
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "**画出来要什么**\n\n单面板双折线图；百分比纵轴含负值与零线，九个倾斜的跨年刻度；图例、注释和来源置于图下。标题需拆出“Figure 2.3.”、完整标题、百分比单位及上方位置。\n\n**定位一个值难在哪**\n\n例如“2022/2023—Merger notifications”的-18只能按纵轴读取。网格间隔为10个百分点，而5%容差仅±0.9，且折线较粗、没有数值标签。\n\n**不确定的**\n\n所有给定数值均未印在图上；5对应两条重合折线。部分整数与图上位置仅近似吻合，因此具体年度配对依据折线位置推断。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 2.3.",
+          "title": "Annual growth rates of CompStats jurisdictions’ GDP (in PPP) and total merger notifications, 2015-2024",
+          "subtitle": "",
+          "unit_text": "%",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 9,
+        "marks": 18,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "%",
+            "low": "-30%",
+            "high": "50%",
+            "serves": "both line series"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "2015/2016",
+            "high": "2023/2024",
+            "serves": "both line series"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2022/2023"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Merger notifications"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "2022/2023",
+            "Merger notifications"
+          ],
+          "value": "-18%",
+          "value_source": "axis_read",
+          "why_hard": "Ten-point grid spacing and no printed values limit precision."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "reference_line",
+        "figure_id": "f1",
+        "evidence": "A horizontal rule crosses the plot at the labeled 0% tick."
+      },
+      {
+        "key": "negative_values",
+        "figure_id": "f1",
+        "evidence": "Both lines fall below 0%; Merger notifications reaches below -10%."
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "“Note: A three-year average…” and “Source: OECD CompStats database and World Bank” appear below."
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "The “GDP in PPP” and “Merger notifications” legend is centered below the x axis."
+      },
+      {
+        "key": "axis_title_above_axis",
+        "figure_id": "f1",
+        "evidence": "“Growth rate” is printed above the top-left of the value axis."
+      },
+      {
+        "key": "rotated_x_ticks",
+        "figure_id": "f1",
+        "evidence": "All nine time labels from “2015/2016” to “2023/2024” are diagonally rotated."
+      },
+      {
+        "key": "nonstandard_time_ticks",
+        "figure_id": "f1",
+        "evidence": "Time ticks use slash-separated spans such as “2015/2016” and “2023/2024”."
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "Horizontal gridlines run from -30% through 50%; no vertical gridlines are drawn."
+      }
+    ],
+    "new_components": [],
+    "spot_checks": [
+      {
+        "value": "5",
+        "figure_id": "f1",
+        "mark": "the GDP in PPP line at 2016/2017",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2016/2017",
+          "GDP in PPP"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "5",
+        "figure_id": "f1",
+        "mark": "the Merger notifications line at 2016/2017",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2016/2017",
+          "Merger notifications"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "6",
+        "figure_id": "f1",
+        "mark": "the GDP in PPP line at 2018/2019",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2018/2019",
+          "GDP in PPP"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-10",
+        "figure_id": "f1",
+        "mark": "the Merger notifications line at 2019/2020",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2019/2020",
+          "Merger notifications"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "9",
+        "figure_id": "f1",
+        "mark": "the GDP in PPP line at 2020/2021",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2020/2021",
+          "GDP in PPP"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "40",
+        "figure_id": "f1",
+        "mark": "the Merger notifications line at 2020/2021",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2020/2021",
+          "Merger notifications"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "11",
+        "figure_id": "f1",
+        "mark": "the GDP in PPP line at 2021/2022",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2021/2022",
+          "GDP in PPP"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-18",
+        "figure_id": "f1",
+        "mark": "the Merger notifications line at 2022/2023",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2022/2023",
+          "Merger notifications"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "8",
+        "figure_id": "f1",
+        "mark": "the GDP in PPP line at 2023/2024",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2023/2024",
+          "GDP in PPP"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "11",
+        "figure_id": "f1",
+        "mark": "the Merger notifications line at 2023/2024",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2023/2024",
+          "Merger notifications"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "纵轴每格10%，5的容差仅±0.25，且无数值标签，最卡读值精度。  ",
+    "examples": []
+  }
+}

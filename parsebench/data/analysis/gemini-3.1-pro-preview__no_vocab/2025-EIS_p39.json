@@ -1,0 +1,283 @@
+{
+  "stem": "2025-EIS_p39",
+  "document": "2025-EIS",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "no_vocab",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 87.9,
+  "usage": {
+    "input_tokens": 3186,
+    "output_tokens": 11797,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n生成器需要支持水平条形图，并允许在每个条形上叠加独立的散点（菱形）和垂直线段以表示不同的时间序列。需要支持双重逻辑的复杂图例系统：颜色映射到非主系列的分类属性（绩效组别），而形状映射到具体的数据点（2018年和2024年得分）。此外，主序列（2025年得分）并未在图例中直接标明，而是由图表下方的注释文本定义。还需支持特定数据行（如EU基准行）的自定义样式覆盖，包括独立的高亮深蓝色条形以及白色的内部标记。\n\n### 定位一个值难在哪\n定位如 `110`（爱尔兰2018年得分），最大难点在于数值未直接标注且需跨度较大的插值。X轴的主刻度间距达20，要在100和120之间准确读出刚好位于中点的110，极度依赖精确的视觉对齐。对于自动解析工具而言，这种无标签的宽间距估算极易引发超过5%的读取误差。\n\n### 不确定的\n部分游离于主刻度之外的数值（如158或75）只能通过上下文标记的相对位置来推测其最可能的归属。主条形代表的系列名称（performance in 2025）需从底部的脚注中提取作为key，这并非标准的图例结构，在映射时存在不确定性。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 12:",
+          "title": "Innovation performance of the EU27 Member States in the Digitalisation dimension",
+          "subtitle": "",
+          "unit_text": "Score for dimension 1.3 in 2025 (indexed to the EU in 2018)",
+          "placement": "above"
+        },
+        "type": "bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 3,
+        "categories": 28,
+        "marks": 84,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "category",
+            "unit_text": "",
+            "low": "Netherlands",
+            "high": "Greece",
+            "serves": "all marks"
+          },
+          {
+            "side": "bottom",
+            "role": "value",
+            "unit_text": "Score for dimension 1.3 in 2025 (indexed to the EU in 2018)",
+            "low": "0",
+            "high": "240",
+            "serves": "all marks"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Netherlands"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Score in 2018"
+          },
+          {
+            "role": "colour_group",
+            "label_source": "legend",
+            "example": "Innovation leaders"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Netherlands",
+            "Score in 2018",
+            "Innovation leaders"
+          ],
+          "value": "215",
+          "value_source": "axis_read",
+          "why_hard": "Value is unprinted and must be interpolated between ticks spaced by 20 units."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "overlaid_mark_series",
+        "figure_id": "f1",
+        "evidence": "diamonds and vertical lines are drawn on top of the bars",
+        "affects": [
+          2,
+          3
+        ]
+      },
+      {
+        "key": "color_mapped_attribute",
+        "figure_id": "f1",
+        "evidence": "bar colors map to performance groups in the legend",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "footnote_series_definition",
+        "figure_id": "f1",
+        "evidence": "note text explains bars represent 'performance in 2025'",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "highlight_row_styling",
+        "figure_id": "f1",
+        "evidence": "the EU row uses a distinct dark blue and white markers",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "x_axis_title_below_ticks",
+        "figure_id": "f1",
+        "evidence": "'Score for dimension 1.3 in 2025...' sits below the x-axis",
+        "affects": [
+          4
+        ]
+      }
+    ],
+    "new_components": [
+      {
+        "name": "series_name_from_footnote",
+        "figure_id": "f1",
+        "evidence": "the main bar series relies on the Note for its name",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "215",
+        "figure_id": "f1",
+        "mark": "the Netherlands diamond",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Netherlands",
+          "Score in 2018",
+          "Innovation leaders"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "230",
+        "figure_id": "f1",
+        "mark": "the Netherlands bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Netherlands",
+          "performance in 2025",
+          "Innovation leaders"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "110",
+        "figure_id": "f1",
+        "mark": "the Ireland diamond",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Ireland",
+          "Score in 2018",
+          "Strong innovators"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "158",
+        "figure_id": "f1",
+        "mark": "the Estonia bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Estonia",
+          "performance in 2025",
+          "Strong innovators"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "44",
+        "figure_id": "f1",
+        "mark": "the Cyprus diamond",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Cyprus",
+          "Score in 2018",
+          "Moderate innovators"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "196",
+        "figure_id": "f1",
+        "mark": "the Malta vertical line",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Malta",
+          "Score in 2024",
+          "Moderate innovators"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "132",
+        "figure_id": "f1",
+        "mark": "the EU vertical line",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "EU",
+          "Score in 2024"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "153",
+        "figure_id": "f1",
+        "mark": "the Hungary bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Hungary",
+          "performance in 2025",
+          "Emerging innovators"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "75",
+        "figure_id": "f1",
+        "mark": "the Italy diamond",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Italy",
+          "Score in 2018",
+          "Moderate innovators"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "100",
+        "figure_id": "f1",
+        "mark": "the EU diamond",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "EU",
+          "Score in 2018"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "X轴刻度间距为20且无标签，读取如爱尔兰的110时需在100和120间精细估算，极易超出5%误差范围。",
+    "examples": [
+      {
+        "gap": "P8",
+        "figure_id": "f1",
+        "quote": "The colours denote each country’s overall performance group based on the 2025 SII.",
+        "why": "图表颜色映射的是绩效组别而非直接的数据序列，需将其作为独立的key_part进行解析和存储。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "Horizontal coloured bars represent countries’ performance in 2025",
+        "why": "主条形序列的名称并未在图例或轴标题中出现，而是由底部的脚注文本定义，当前管线难以跨越结构提取该系列名。"
+      }
+    ]
+  }
+}

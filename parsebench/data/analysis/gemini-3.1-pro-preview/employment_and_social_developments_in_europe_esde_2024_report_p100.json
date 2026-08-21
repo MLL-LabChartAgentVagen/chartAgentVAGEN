@@ -1,0 +1,255 @@
+{
+  "stem": "employment_and_social_developments_in_europe_esde_2024_report_p100",
+  "document": "employment_and_social_developments_in_europe_esde_2024_report",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 58.0,
+  "usage": {
+    "input_tokens": 5358,
+    "output_tokens": 8023,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n\n要生成此页，生成器需要绘制一个带有图表编号、主标题和副标题的折线图。图表包含两条折线，并带有下方图例。X轴为时间轴，需要支持稀疏刻度显示（数据点为每年一个，但标签每两年显示一次，如2021, 2023）。Y轴需要支持跨越零线的负数范围（-20000到40000，步长10000），并且左侧带有一个旋转了90度的垂直轴标题。图表区域内仅包含水平的点状网格线。图表最下方还需绘制来源说明文本。\n\n### 定位一个值难在哪\n\n以“Net contributors”在2021年的值3800为例。首先，折线图上没有任何直接标注的数值，完全依赖视线对齐Y轴来读取。其次，Y轴的刻度间隔高达10000，要在这样的宽泛尺度上肉眼准确分辨出3800，且误差保持在5%（即±190）以内是不可能的，这导致绝大多数数值由于无法满足精度要求而在解析的第2步被拦截。此外，某些年份（如2030年）的X轴标签并未直接打印在图表上，需要通过上下文插值推断，这也使得表头对齐变得困难。\n\n### 不确定的\n\n折线上并没有绘制明确的数据点标记（如圆点），因此数据点的确切密度（是严格按年还是有更细的粒度）只能依靠X轴上每年一个的刻度线推断为年度数据。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Chart A3.1",
+          "title": "Employment increases for regions not receiving ESF+ investment due to spillover effects",
+          "subtitle": "Absolute change in employment following ESF+ investment in skills",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 19,
+        "marks": 38,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Absolute change in employment",
+            "low": "-20000",
+            "high": "40000",
+            "serves": "all lines"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "2021",
+            "high": "2039",
+            "serves": "all lines"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Net contributors"
+          },
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2021"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Net contributors",
+            "2021"
+          ],
+          "value": "3800",
+          "value_source": "axis_read",
+          "why_hard": "Reading 3800 on an axis with 10000 spacing to within 5% error is extremely difficult."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "negative_values",
+        "figure_id": "f1",
+        "evidence": "the y-axis extends down to -20000 below the zero line"
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "the legend is placed centrally below the x-axis"
+      },
+      {
+        "key": "rotated_axis_title",
+        "figure_id": "f1",
+        "evidence": "the y-axis title is rotated vertically along the left edge"
+      },
+      {
+        "key": "sparse_time_ticks",
+        "figure_id": "f1",
+        "evidence": "x-axis ticks are yearly but labels are printed every two years"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "only horizontal dotted grid lines are drawn in the plot"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "a Source line is printed below the plot and legend"
+      }
+    ],
+    "new_components": [],
+    "spot_checks": [
+      {
+        "value": "3800",
+        "figure_id": "f1",
+        "mark": "blue line at 2021",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Net contributors",
+          "2021"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "15000",
+        "figure_id": "f1",
+        "mark": "green line at 2021",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Net receivers",
+          "2021"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "4300",
+        "figure_id": "f1",
+        "mark": "blue line at 2023",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Net contributors",
+          "2023"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "31000",
+        "figure_id": "f1",
+        "mark": "green line at 2023",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Net receivers",
+          "2023"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "35500",
+        "figure_id": "f1",
+        "mark": "green line at 2025",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Net receivers",
+          "2025"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-2000",
+        "figure_id": "f1",
+        "mark": "blue line at 2029",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Net contributors",
+          "2029"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-13000",
+        "figure_id": "f1",
+        "mark": "green line at 2030 tick",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Net receivers",
+          "2030"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "11000",
+        "figure_id": "f1",
+        "mark": "blue line at 2037",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Net contributors",
+          "2037"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "11000",
+        "figure_id": "f1",
+        "mark": "green line at 2037",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Net receivers",
+          "2037"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "13800",
+        "figure_id": "f1",
+        "mark": "green line at 2039",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Net receivers",
+          "2039"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "图上未标注具体数值，Y轴的刻度间距高达10000，要从图上准确读出如3800这样的非刻度线数值，误差极易超过5%的容忍度（190）。",
+    "examples": [
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "x axis has unlabelled tick marks between the printed odd years",
+        "why": "需要支持稀疏的时间轴刻度标签样式，允许数据点的频率高于标签显示的频率，解析时需要进行插值推断缺失的标签如2030。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "Chart A3.1 Employment increases... Absolute change in employment following...",
+        "why": "图表标题区包含图表编号、主标题和副标题三个独立行，需要将标题块拆分为结构化字段进行存储和生成。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "the y axis extends below zero to -20000",
+        "why": "需要支持包含负数范围的Y轴及在零线以下绘制数据点的能力。"
+      }
+    ]
+  }
+}

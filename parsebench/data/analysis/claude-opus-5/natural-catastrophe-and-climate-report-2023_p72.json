@@ -1,0 +1,393 @@
+{
+  "stem": "natural-catastrophe-and-climate-report-2023_p72",
+  "document": "natural-catastrophe-and-climate-report-2023",
+  "tags": "need_estimate",
+  "model": "claude-opus-5",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 58.5,
+  "usage": {
+    "input_tokens": 13842,
+    "output_tokens": 3941,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "## 画出来要什么\n\n两张独立编号的堆叠柱图（Figure 42 / Figure 43），共用一个页面级大标题「Total Number of Billion-Dollar Events: Economic and Insured (1990–2023)」——图本身无标题，标题在页顶。每图 34 个年份柱、两段堆叠（Weather / Climate 深蓝，Other Natural Perils 浅蓝），共约 136 个 segment。x 轴只标偶数年（1990、1992…2022），奇数年柱无刻度。y 轴纯数字、无单位词，Figure 42 顶端 70、Figure 43 顶端 35，无网格线。图例居中置于绘图区下方，紧接一行加粗前缀的说明「**Figure 42:** … | **Data and Graphic:** Gallagher Re」。\n\n## 定位一个值难在哪\n\n以 Figure 43 的 57 为例：该图最高只到 34，57 只能落在 Figure 42 的 2020 年 Weather / Climate 段。但 2020 柱无刻度（刻度只到 2020 有、2021 无），且刻度间距为 10，5% 容差约 ±2.9 像素级读数；深浅两段界线在 57 与 60 之间，仅凭轴读极易与 56 混淆。地址需三个标签：图号、年份、系列名。\n\n## 不确定的\n\n无任何数值印在柱上；奇数年份需按位置推断，年份标签并非逐柱印出。y 轴单位（“events 数量”）全页未写明，只能从标题 “Total Number” 推得。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 42",
+          "title": "Total Number of Billion-Dollar Events: Economic and Insured (1990–2023)",
+          "subtitle": "Total number of billion-dollar economic loss natural catastrophes; losses adjusted to 2023 USD",
+          "unit_text": "losses adjusted to 2023 USD",
+          "placement": "above"
+        },
+        "type": "stacked_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 34,
+        "marks": 68,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "10",
+            "high": "70",
+            "serves": "all stacked bar segments"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "1990",
+            "high": "2022",
+            "serves": "all bars, ticks only on even years"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2020"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Weather / Climate"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "2020",
+            "Weather / Climate"
+          ],
+          "value": "57",
+          "value_source": "axis_read",
+          "why_hard": "No printed value; ticks every 10 units; 2021 bar has no tick label, position inferred."
+        }
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "Figure 43",
+          "title": "Total Number of Billion-Dollar Events: Economic and Insured (1990–2023)",
+          "subtitle": "Total number of billion-dollar insured loss natural catastrophes; losses adjusted to 2023 USD",
+          "unit_text": "losses adjusted to 2023 USD",
+          "placement": "above"
+        },
+        "type": "stacked_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 34,
+        "marks": 68,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "5",
+            "high": "35",
+            "serves": "all stacked bar segments"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "1990",
+            "high": "2022",
+            "serves": "all bars, ticks only on even years"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2018"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Other Natural Perils"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "2018",
+            "Other Natural Perils"
+          ],
+          "value": "1",
+          "value_source": "axis_read",
+          "why_hard": "Top segment about one unit tall against ticks spaced 5 units; unlabelled and very thin."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "stacked_bar",
+        "figure_id": "f1",
+        "evidence": "each year's bar has a dark base and a light cap; legend lists two perils"
+      },
+      {
+        "key": "stacked_bar",
+        "figure_id": "f2",
+        "evidence": "dark Weather / Climate base with light Other Natural Perils cap on each year bar"
+      },
+      {
+        "key": "multi_figure_page",
+        "figure_id": "page",
+        "evidence": "`Figure 42:` and `Figure 43:` captions under two separate plots on one page"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "page",
+        "evidence": "`Data and Graphic: Gallagher Re` printed under both plots"
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "`Weather / Climate` and `Other Natural Perils` swatches centred below the x axis"
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f2",
+        "evidence": "legend row sits between the x tick labels and the Figure 43 caption"
+      },
+      {
+        "key": "sparse_time_ticks",
+        "figure_id": "f1",
+        "evidence": "34 bars but ticks read 1990, 1992, 1994 ... 2022, every second year"
+      },
+      {
+        "key": "sparse_time_ticks",
+        "figure_id": "f2",
+        "evidence": "bars for every year, tick labels only 1990, 1992 ... 2022"
+      },
+      {
+        "key": "thin_segment_label",
+        "figure_id": "f2",
+        "evidence": "1997 and 1994 top segments are one-unit slivers, too thin to carry any label"
+      },
+      {
+        "key": "axis_starts_above_zero",
+        "figure_id": "f1",
+        "evidence": "lowest printed tick is `10`; no `0` tick drawn on the left axis"
+      },
+      {
+        "key": "axis_starts_above_zero",
+        "figure_id": "f2",
+        "evidence": "lowest printed tick is `5`; no zero tick label on the axis"
+      },
+      {
+        "key": "dense_marks_100plus",
+        "figure_id": "page",
+        "evidence": "two figures, 34 years each, two segments per bar: about 136 drawn segments"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "axis shows bare 10..70; scale word only in caption `losses adjusted to 2023 USD`"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "page_title_shared_by_two_figures",
+        "figure_id": "page",
+        "evidence": "one heading `Total Number of Billion-Dollar Events: Economic and Insured (1990–2023)` sits above both Figure 42 and 43",
+        "affects": [
+          3,
+          4
+        ]
+      },
+      {
+        "name": "caption_below_with_bold_label_prefix",
+        "figure_id": "page",
+        "evidence": "`Figure 42:` and `Data and Graphic:` set bold inside an otherwise grey caption line",
+        "affects": [
+          3,
+          4
+        ]
+      },
+      {
+        "name": "no_axis_line_or_gridlines",
+        "figure_id": "f1",
+        "evidence": "only a thin baseline under the bars; no vertical axis rule, no grid lines drawn",
+        "affects": [
+          2
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "26",
+        "figure_id": "f1",
+        "mark": "the 1991 Weather / Climate segment (also 1992)",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Figure 42",
+          "1992",
+          "Weather / Climate"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "7",
+        "figure_id": "f2",
+        "mark": "the 1998 Weather / Climate bar total",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Figure 43",
+          "1998",
+          "Weather / Climate"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "57",
+        "figure_id": "f1",
+        "mark": "the 2020 Weather / Climate segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Figure 42",
+          "2020",
+          "Weather / Climate"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "66",
+        "figure_id": "f1",
+        "mark": "the 2023 total bar (Weather / Climate plus Other Natural Perils)",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Figure 42",
+          "2023"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 3
+      },
+      {
+        "value": "9",
+        "figure_id": "f2",
+        "mark": "the 2009 Weather / Climate bar (also 1996 area)",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Figure 43",
+          "2009",
+          "Weather / Climate"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 3
+      },
+      {
+        "value": "2",
+        "figure_id": "f2",
+        "mark": "the 1997 Weather / Climate bar, roughly one to two units tall",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Figure 43",
+          "1997",
+          "Weather / Climate"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "20",
+        "figure_id": "f2",
+        "mark": "the 2011 Weather / Climate segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Figure 43",
+          "2011",
+          "Weather / Climate"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "23",
+        "figure_id": "f2",
+        "mark": "the 2011 total bar top (Other Natural Perils cap ends at 23)",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Figure 43",
+          "2011",
+          "Other Natural Perils"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "32",
+        "figure_id": "f2",
+        "mark": "the 2020 Weather / Climate bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Figure 43",
+          "2020",
+          "Weather / Climate"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "34",
+        "figure_id": "f2",
+        "mark": "the 2023 total bar including its light cap",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Figure 43",
+          "2023"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 3
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "全部136段无数字标注；Figure 42刻度间隔10，读57需±2.85精度；奇数年如1997、2009、2023无刻度标签，定位与读数双重受阻。",
+    "examples": [
+      {
+        "gap": "P7",
+        "figure_id": "page",
+        "quote": "Total Number of Billion-Dollar Events: Economic and Insured (1990–2023) sits once above both Figure 42 and Figure 43",
+        "why": "一个大标题跨两图，图号与说明在图下，现有生成器只会把标题放单图之上。"
+      },
+      {
+        "gap": "P1",
+        "figure_id": "f2",
+        "quote": "1997 bar is a sliver about one unit tall against y ticks reading 5, 10, 15 ... 35",
+        "why": "单位高度的柱在5单位刻度下不可能读到5%容差，需按标记给可达精度。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "y axis ticks read 10, 20, 30, 40, 50, 60, 70 with no zero tick and no gridlines",
+        "why": "缺零刻度、无网格、单位只在图下说明行，刻度格式与单位位置需成为可控维度。"
+      },
+      {
+        "gap": "P5",
+        "figure_id": "page",
+        "quote": "34 yearly bars with two stacked segments each, drawn twice on one page",
+        "why": "单页约136个堆叠段且x轴每两年一标，密度需作为可控变量而非硬上限。"
+      },
+      {
+        "gap": "P3",
+        "figure_id": "page",
+        "quote": "Figure 42: ... | Data and Graphic: Gallagher Re, with `Figure 42:` and `Data and Graphic:` bold",
+        "why": "整页导出需保留图下加粗前缀说明行与两图分隔，现管线不产出这种页级结构。"
+      }
+    ]
+  }
+}

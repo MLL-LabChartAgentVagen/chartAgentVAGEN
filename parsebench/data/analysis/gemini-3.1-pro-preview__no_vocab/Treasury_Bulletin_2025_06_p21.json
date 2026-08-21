@@ -1,0 +1,321 @@
+{
+  "stem": "Treasury_Bulletin_2025_06_p21",
+  "document": "Treasury_Bulletin_2025_06",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "no_vocab",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 22.4,
+  "usage": {
+    "input_tokens": 3185,
+    "output_tokens": 3039,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n本页包含两张独立编号、有各自标题的图表，布局上一上一下。两张图的标题块都包含图号（如 CHART FFO-A.—）、主标题、副标题（或日期区间）以及可能的单位说明。图表使用了不同的图表类型：\n- **上图（CHART FFO-A.—）**：是一张平滑折线图，包含四条不同颜色的线，底部是时间轴（月份），左侧是数值轴，图例在图表右侧垂直排列。需要绘制平滑曲线，且X轴标签与网格线不对齐（标签在网格线中间）。\n- **下图（CHART FFO-B.—）**：是一张分组柱状图，每组有两个柱子（代表不同年份），底部是类别轴，其中一个类别名称换行显示（Social insurance and retirement receipts），左侧是数值轴，图例在图表底部。图表右下角还有一个带星号的注释。\n\n### 定位一个值难在哪\n定位折线图（CHART FFO-A.—）上的值较为困难。例如值 565，这是 \"On-budget outlays\" 在 \"Aug\" 左右的一个峰值点。困难点在于：首先，图表没有标注具体数据，必须通过目测左侧Y轴（刻度间距100）来估算；其次，折线是平滑曲线，极值点对应的X轴位置不清晰，且X轴只有月份缩写（如 Aug），没有年份，加上曲线交叉多，容易读错对应月份和精确数值。要求5%容差可能无法满足。\n\n### 不确定的\n折线图的X轴仅标注了月份（Mar, Apr ... Mar），而标题中写着 \"2024-2025\"，无法精确确定某个数据点具体属于2024年还是2025年。只能假设按照顺序跨越年份。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "CHART FFO-A.—",
+          "title": "Monthly Receipts and Outlays, 2024-2025",
+          "subtitle": "",
+          "unit_text": "(In billions of dollars)",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 1,
+        "series": 4,
+        "categories": 13,
+        "marks": 52,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "0.0",
+            "high": "700.0",
+            "serves": "all lines"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "Mar",
+            "high": "Mar",
+            "serves": "all lines"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "On-budget receipts"
+          },
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "Aug"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "On-budget outlays",
+            "Aug"
+          ],
+          "value": "565",
+          "value_source": "axis_read",
+          "why_hard": "Smooth lines without data points, axis interval is 100, hard to read to 5% accuracy."
+        }
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "CHART FFO-B.—",
+          "title": "Budget Receipts by Source, Fiscal Year to Date, 2024-2025",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "grouped_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 6,
+        "marks": 12,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "0",
+            "high": "1200",
+            "serves": "all bars"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "Individual income taxes",
+            "high": "Estate/gift taxes",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Corporate income taxes"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "2024"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Individual income taxes",
+            "2024"
+          ],
+          "value": "1140",
+          "value_source": "axis_read",
+          "why_hard": "No values printed, axis interval 150."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "title_block_above",
+        "figure_id": "page",
+        "evidence": "both figures have numbers and titles stacked above the plot area",
+        "affects": [
+          4
+        ]
+      },
+      {
+        "key": "unit_in_title",
+        "figure_id": "f1",
+        "evidence": "(In billions of dollars) under the title",
+        "affects": [
+          4
+        ]
+      },
+      {
+        "key": "legend_right",
+        "figure_id": "f1",
+        "evidence": "legend entries stacked to the right of the plot",
+        "affects": []
+      },
+      {
+        "key": "legend_bottom",
+        "figure_id": "f2",
+        "evidence": "legend entries side by side below the x-axis labels",
+        "affects": []
+      },
+      {
+        "key": "smooth_line",
+        "figure_id": "f1",
+        "evidence": "the lines curve smoothly between implied data points",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "key": "x_axis_labels_between_ticks",
+        "figure_id": "f1",
+        "evidence": "month labels sit between tick marks on the x axis",
+        "affects": []
+      },
+      {
+        "key": "multiline_axis_labels",
+        "figure_id": "f2",
+        "evidence": "x-axis labels break into up to 4 lines, e.g. Social insurance and retirement receipts",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "y_axis_no_line",
+        "figure_id": "f2",
+        "evidence": "y-axis ticks and labels are drawn but there is no vertical line connecting them",
+        "affects": []
+      },
+      {
+        "key": "footnote_bottom_right",
+        "figure_id": "f2",
+        "evidence": "*Prior-year data are for the comparable year placed bottom right",
+        "affects": [
+          4
+        ]
+      },
+      {
+        "key": "gridlines_horizontal",
+        "figure_id": "page",
+        "evidence": "both figures have horizontal gridlines across the plot",
+        "affects": []
+      }
+    ],
+    "new_components": [],
+    "spot_checks": [
+      {
+        "value": "650",
+        "figure_id": "f1",
+        "mark": "first peak of the blue line On-budget receipts",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "On-budget receipts",
+          "Apr"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "565",
+        "figure_id": "f1",
+        "mark": "peak of the red line On-budget outlays around Aug",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "On-budget outlays",
+          "Aug"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "140",
+        "figure_id": "f1",
+        "mark": "end of the green line Off-budget outlays",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Off-budget outlays",
+          "Mar"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "90",
+        "figure_id": "f1",
+        "mark": "dip of the orange line Off-budget receipts around Dec",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Off-budget receipts",
+          "Dec"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "1140",
+        "figure_id": "f2",
+        "mark": "red bar in Individual income taxes",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Individual income taxes",
+          "2025"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "800",
+        "figure_id": "f2",
+        "mark": "blue bar in Social insurance and retirement receipts",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Social insurance\nand\nretirement\nreceipts",
+          "2024"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 3
+      },
+      {
+        "value": "165",
+        "figure_id": "f2",
+        "mark": "red bar in Corporate income taxes",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Corporate income taxes",
+          "2025"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "35",
+        "figure_id": "f2",
+        "mark": "red bar in Excise taxes",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Excise taxes",
+          "2025"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "图表全部无数据标签，必须依靠肉眼读轴。折线图平滑无折点，Y轴间距100；柱状图Y轴间距150，读数极难满足5%的容差，如1140或800只能估算，极易超差。",
+    "examples": [
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "CHART FFO-A.—\nMonthly Receipts and Outlays, 2024-2025\n(In billions of dollars)",
+        "why": "图表标题分为图号、主标题和带括号的单位说明三行，目前的模型缺乏细致解析图表标题层级的能力。"
+      },
+      {
+        "gap": "P1",
+        "figure_id": "f2",
+        "quote": "y-axis goes from 0 to 1200 with steps of 150",
+        "why": "柱状图未标数值，Y轴步长高达150，无法达到严格的5%读取精度，这需要改变精度评估的方式。"
+      }
+    ]
+  }
+}

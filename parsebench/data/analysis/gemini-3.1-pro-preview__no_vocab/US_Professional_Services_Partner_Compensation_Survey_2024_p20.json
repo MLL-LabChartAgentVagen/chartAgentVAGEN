@@ -1,0 +1,278 @@
+{
+  "stem": "US_Professional_Services_Partner_Compensation_Survey_2024_p20",
+  "document": "US_Professional_Services_Partner_Compensation_Survey_2024",
+  "tags": "untagged",
+  "model": "gemini-3.1-pro-preview",
+  "control": "no_vocab",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 18.0,
+  "usage": {
+    "input_tokens": 3163,
+    "output_tokens": 2537,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n本页包含两幅带内联标签（每个分段内标数值）的 100% 堆叠条形图。生成器需要支持：在标题旁并排放置图例；在堆叠条形图的每个部分内部打印百分比数值；左侧分类轴没有轴线和刻度线，直接显示类别名称；隐藏 x 轴（数值轴）；在图表下方添加注释和来源。两幅图表并排于相应的正文段落旁边。\n\n### 定位一个值难在哪\n定位第一个图表中的 `34`：它位于 `Management/ advisory consulting` 类别的橙色 `Pessimistic` 分段中。难点在于图表没有数值轴，只能直接读取分段上印的数字。虽然数值清晰，但要在 Markdown 中关联图例颜色和数据段，需要视觉模型正确识别 `Pessimistic`（橙色）、`Neutral`（灰色）和 `Optimistic`（青色）三种状态，并将其与左侧的长分类名称一一对应。如果不依赖内联文本，则完全无法读取。\n\n### 不确定的\n颜色所代表的情绪类别图例位于第一图的标题下方，但在第二图的标题下方也重复出现了一次，不确定这是否算作同一个全局图例或分别独立的图例。左右并排的排版（左文字、右图表）是否需要在输出中精确保留。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "Key external factors influencing outlook (%)",
+          "subtitle": "Key external factors influencing outlook for current fiscal year, by firm type",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "stacked_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 3,
+        "categories": 4,
+        "marks": 12,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "left",
+            "role": "category",
+            "unit_text": "",
+            "low": "Strategy consulting",
+            "high": "Other",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Strategy consulting"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Pessimistic"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Strategy consulting",
+            "Optimistic"
+          ],
+          "value": "41",
+          "value_source": "printed",
+          "why_hard": "No value axis provided, value must be read from the label inside the bar segment."
+        }
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "",
+          "title": "Key external factors influencing outlook for current fiscal year, by firm revenue",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "stacked_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 3,
+        "categories": 4,
+        "marks": 12,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "left",
+            "role": "category",
+            "unit_text": "",
+            "low": "Less than $1.00bn",
+            "high": "More than $20.00bn",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Less than $1.00bn"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Optimistic"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Less than $1.00bn",
+            "Optimistic"
+          ],
+          "value": "61",
+          "value_source": "printed",
+          "why_hard": "No value axis provided, relying solely on data labels printed on the bar segments."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "legend_below_subtitle",
+        "figure_id": "f1",
+        "evidence": "legend Pessimistic Neutral Optimistic sits immediately below the subtitle",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "stacked_bar_100_percent",
+        "figure_id": "f1",
+        "evidence": "segments sum to 100 on each bar, noted in the note",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "key": "data_labels_inside_segments",
+        "figure_id": "f1",
+        "evidence": "numbers 23, 36, 41 are printed inside the bar segments",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "key": "no_value_axis",
+        "figure_id": "f1",
+        "evidence": "there is no x-axis with ticks or labels to read values against",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "key": "left_axis_no_line",
+        "figure_id": "f1",
+        "evidence": "category labels on the left have no vertical axis line or tick marks",
+        "affects": [
+          1
+        ]
+      },
+      {
+        "key": "note_below_plot",
+        "figure_id": "f1",
+        "evidence": "Note: Numbers may not sum to 100%... below the chart",
+        "affects": [
+          4
+        ]
+      },
+      {
+        "key": "source_below_note",
+        "figure_id": "f1",
+        "evidence": "Source: Heidrick & Struggles... below the note",
+        "affects": [
+          4
+        ]
+      },
+      {
+        "key": "text_beside_plot",
+        "figure_id": "page",
+        "evidence": "body text columns to the left of the charts",
+        "affects": [
+          4
+        ]
+      }
+    ],
+    "new_components": [
+      {
+        "name": "body_text_parallel_to_figure",
+        "figure_id": "page",
+        "evidence": "the main body paragraphs sit left of the charts, aligning top edges",
+        "affects": [
+          4
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "34",
+        "figure_id": "f1",
+        "mark": "the Pessimistic segment for Management/ advisory consulting",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Management/ advisory consulting",
+          "Pessimistic"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "28",
+        "figure_id": "f1",
+        "mark": "the Optimistic segment for Technology/IT consulting",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Technology/IT consulting",
+          "Optimistic"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "83",
+        "figure_id": "f2",
+        "mark": "the Optimistic segment for $1.00bn–$5.00bn",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "$1.00bn–$5.00bn",
+          "Optimistic"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "38",
+        "figure_id": "f2",
+        "mark": "the Neutral segment for More than $20.00bn",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "More than $20.00bn",
+          "Neutral"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "31",
+        "figure_id": "f2",
+        "mark": "the Pessimistic segment for $5.01bn–$20.00bn",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "$5.01bn–$20.00bn",
+          "Pessimistic"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      }
+    ],
+    "hardest_step": 1,
+    "hardest_step_why": "该图表完全没有数值轴线和框架，只有一排排带着内置数字的彩色矩形条和左侧悬空的文字标签，很容易被视觉解析器当成装饰图或文字块而不是规范的表格。",
+    "examples": [
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "labels 23, 36, 41 printed exactly inside the stacked bar segments",
+        "why": "数值标签直接打印在分段内部且图表没有底部的数值轴，这涉及特定的数值标签位置设定。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "Key external factors influencing outlook (%)",
+        "why": "第一幅图同时具有大标题（带百分号）和小标题，需要支持标题块的完整字段提取。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "page",
+        "quote": "body text columns to the left of the charts",
+        "why": "图表与正文在同一水平高度并排显示（左文字，右图表），需要页面级的二维排版生成支持。"
+      }
+    ]
+  }
+}

@@ -1,0 +1,216 @@
+{
+  "stem": "semiconductor_sector_study_p22",
+  "document": "semiconductor_sector_study",
+  "tags": "need_estimate",
+  "model": "gpt-5.6-sol",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 96.2,
+  "usage": {
+    "input_tokens": 8825,
+    "output_tokens": 6011,
+    "cache_read_tokens": 8822
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "**画出来要什么**\n\n单幅按年份排列的青绿色堆叠柱图，11个时间槽、约44个公司细分；纵轴为竖排标题、0M–220M、每20M一格，仅有水平网格线。图题置于图上方，来源行置于图下方。\n\n**定位一个值难在哪**\n\n例如2007年的2M没有印值，只能由纵轴读取；20M刻度间隔远大于其±0.1M的5%容差。年份能定位总柱，但柱内公司没有名称或图例。\n\n**不确定的**\n\n细分数量按正文“Forty-four companies”及分隔线估为44；极薄细分难以逐一辨认。0值对应无柱槽，页面未明确印出数值。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 4.1",
+          "title": "Latest Fundraisings",
+          "subtitle": "",
+          "unit_text": "(GBP)",
+          "placement": "above"
+        },
+        "type": "stacked_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 1,
+        "categories": 11,
+        "marks": 44,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "(GBP)",
+            "low": "0M",
+            "high": "220M",
+            "serves": "all stacked bars"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "2007",
+            "high": "2023",
+            "serves": "all stacked bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2007"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "2007"
+          ],
+          "value": "2",
+          "value_source": "axis_read",
+          "why_hard": "A 20M tick interval cannot resolve 2M within five percent."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "stacked_bar",
+        "figure_id": "f1",
+        "evidence": "Each yearly teal column is divided by thin horizontal segment boundaries."
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "“Source: Beauhurst (all latest fundraisings, 2007 - 2023)” appears below the plot."
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "The vertical axis title ends with “(GBP)”."
+      },
+      {
+        "key": "rotated_axis_title",
+        "figure_id": "f1",
+        "evidence": "“Fundraisings - Amount received by the company in its latest fundraising (GBP)” runs vertically."
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "Horizontal grid rules cross the plot at 20M intervals; no vertical grid rules appear."
+      }
+    ],
+    "new_components": [
+      {
+        "name": "unlabelled_stack_segments",
+        "figure_id": "f1",
+        "evidence": "Teal stacks have segment boundaries, but no company names or legend.",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "2",
+        "figure_id": "f1",
+        "mark": "the 2007 total stack",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2007"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "0",
+        "figure_id": "f1",
+        "mark": "the 2010 empty category slot",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2010"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "23",
+        "figure_id": "f1",
+        "mark": "the 2017 total stack",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2017"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "189",
+        "figure_id": "f1",
+        "mark": "the 2020 total stack",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2020"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "22",
+        "figure_id": "f1",
+        "mark": "the 2021 total stack",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2021"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "84",
+        "figure_id": "f1",
+        "mark": "the 2022 total stack",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2022"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "218",
+        "figure_id": "f1",
+        "mark": "the 2023 total stack",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2023"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "纵轴每格20M；2M的5%仅0.1M，且没有数值标签，无法由轴读精确取得。除0外均须插值。最小的2、22、23最难，189、218较易。无表格，但若转表，精度仍是核心阻碍。页面中的公司细分没有名称，不过目标值是年度总额，只需年份键。",
+    "examples": [
+      {
+        "gap": "P1",
+        "figure_id": "f1",
+        "quote": "The y axis runs from 0M to 220M in 20M intervals, with no printed values.",
+        "why": "2M需达到±0.1M，但现有可读性布尔判断不能表达不同柱值各自可达到的精度。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "Fundraisings - Amount received by the company in its latest fundraising (GBP)",
+        "why": "需重建竖排单位轴题，以及带M后缀的0M至220M刻度格式。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "Figure 4.1 – Latest Fundraisings",
+        "why": "编号与标题同列置于图上方，并由上下两条青色规则界定。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "Each teal yearly bar contains multiple separated segments, but no legend names them.",
+        "why": "需支持同色、无图例的公司细分堆叠，同时保留可读的年度总高度。"
+      }
+    ]
+  }
+}

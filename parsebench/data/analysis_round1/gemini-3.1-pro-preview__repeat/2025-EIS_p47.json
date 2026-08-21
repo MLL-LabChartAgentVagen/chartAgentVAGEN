@@ -1,0 +1,202 @@
+{
+  "stem": "2025-EIS_p47",
+  "document": "2025-EIS",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "repeat",
+  "effort": "high",
+  "dpi": 150,
+  "seconds": 82.9,
+  "usage": {
+    "input_tokens": 4430,
+    "output_tokens": 11746,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "这是一个包含条形图、菱形散点和刻度线（tick marks）的混合标记图表，横轴表示得分，纵轴为各个国家（类别）。\n\n图表的主要挑战在于数值读取：由于X轴范围为0-220，且刻度间隔为20，依赖视觉估算极难达到所需的精度（例如分辨166与173，或确定179的具体位置）。因此最困难的步骤是数值容差判定（Step 2）。\n\n此外，条形的颜色被用来编码额外的分类属性（四个不同的绩效组别），这要求图表生成器支持条件着色。图表包含多个系列且具有不同形状的标记，图例位于底部，且“Innovators”作为类别轴标题独立置于轴上方。存在部分给定的数值在图表中无法准确定位到具体标记（如185和105），说明在没有数据表的情况下还原精确数值非常困难。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 16",
+          "title": "Innovation performance of the EU27 Member States in the Innovators dimension",
+          "subtitle": "",
+          "unit_text": "(indexed to the EU in 2018)",
+          "placement": "above"
+        },
+        "type": "bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 6,
+        "categories": 28,
+        "marks": 84,
+        "values_printed": "none"
+      }
+    ],
+    "components": [
+      {
+        "key": "horizontal_bars",
+        "figure_id": "f1",
+        "evidence": "bars grow horizontally from left to right"
+      },
+      {
+        "key": "mixed_marks",
+        "figure_id": "f1",
+        "evidence": "bars, diamonds, and vertical ticks share the same panel"
+      },
+      {
+        "key": "color_encodes_extra_attribute",
+        "figure_id": "f1",
+        "evidence": "bar colours represent four different innovator performance groups"
+      },
+      {
+        "key": "tick_marker_as_series",
+        "figure_id": "f1",
+        "evidence": "Score in 2024 is drawn as a vertical line marker"
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "the legend sits below the x axis"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "Note: All performance scores are relative... under the legend"
+      },
+      {
+        "key": "highlighted_category",
+        "figure_id": "f1",
+        "evidence": "EU label is bolded and its bar is uniquely coloured"
+      },
+      {
+        "key": "axis_title_below_plot",
+        "figure_id": "f1",
+        "evidence": "Score for dimension 3.1... is placed under the x axis"
+      },
+      {
+        "key": "rebased_index_values",
+        "figure_id": "f1",
+        "evidence": "(indexed to the EU in 2018) appears in the axis title"
+      },
+      {
+        "key": "vgrid_only",
+        "figure_id": "f1",
+        "evidence": "vertical rules extend down from each tick, no horizontal rules"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "(indexed to the EU in 2018) is written in the axis title"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "category_axis_title_above",
+        "figure_id": "f1",
+        "evidence": "the word Innovators sits above the y axis categories",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "209",
+        "figure_id": "f1",
+        "mark": "the 2025 bar for Greece",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Greece",
+          "Score for dimension 3.1 in 2025"
+        ]
+      },
+      {
+        "value": "150",
+        "figure_id": "f1",
+        "mark": "the 2024 vertical tick for Croatia",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Croatia",
+          "Score in 2024"
+        ]
+      },
+      {
+        "value": "185",
+        "figure_id": "not_found",
+        "mark": "cannot confidently locate any mark at exactly 185",
+        "printed_on_figure": false,
+        "addressing_keys": []
+      },
+      {
+        "value": "8",
+        "figure_id": "f1",
+        "mark": "the 2024 vertical tick for Romania",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Romania",
+          "Score in 2024"
+        ]
+      },
+      {
+        "value": "105",
+        "figure_id": "not_found",
+        "mark": "cannot confidently locate any mark at exactly 105",
+        "printed_on_figure": false,
+        "addressing_keys": []
+      },
+      {
+        "value": "179",
+        "figure_id": "f1",
+        "mark": "the 2018 diamond for Portugal",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Portugal",
+          "Score in 2018"
+        ]
+      },
+      {
+        "value": "195",
+        "figure_id": "f1",
+        "mark": "the 2024 vertical tick for Cyprus",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Cyprus",
+          "Score in 2024"
+        ]
+      },
+      {
+        "value": "166",
+        "figure_id": "f1",
+        "mark": "the 2024 vertical tick for Czechia",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Czechia",
+          "Score in 2024"
+        ]
+      },
+      {
+        "value": "173",
+        "figure_id": "f1",
+        "mark": "the 2025 bar for Belgium",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Belgium",
+          "Score for dimension 3.1 in 2025"
+        ]
+      },
+      {
+        "value": "37",
+        "figure_id": "f1",
+        "mark": "the 2025 bar for Bulgaria",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Bulgaria",
+          "Score for dimension 3.1 in 2025"
+        ]
+      }
+    ],
+    "hardest_step": 2
+  }
+}

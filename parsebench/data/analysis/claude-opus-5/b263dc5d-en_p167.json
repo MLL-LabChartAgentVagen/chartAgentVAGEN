@@ -1,0 +1,351 @@
+{
+  "stem": "b263dc5d-en_p167",
+  "document": "b263dc5d-en",
+  "tags": "need_estimate",
+  "model": "claude-opus-5",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "seconds": 99.9,
+  "usage": {
+    "input_tokens": 13829,
+    "output_tokens": 8455,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "**画出来要什么**\n\n一个编号图、两块面板的柱状图：`Figure 4.10. Relationship between numeracy and individual well-being`，副标题 `Difference in likelihood of reporting positive outcomes (high proficiency minus low proficiency)`，单位 `Percentage points` 写在最高刻度 30 之上。每块面板 32 个国家、共 64 根柱，面板名放在深蓝色横幅里（`A. Life satisfaction`、`B. Health`）。柱色深浅另编码显著性（注释：`Darker colours denote differences that are statistically significant at the 5% level.`），无图例。`OECD average` 处有一条浅蓝竖带并加粗标签；`England (UK)`、`Flemish Region (BE)` 的刻度文字用蓝色。面板 A 轴到 -5 且以色列柱为负，面板 B 从 0 起——两板量程不同。国名旋转 90°，全图无数值标注。\n\n**定位一个值难在哪**\n\n以 -1（Israel，面板 A）为例：需要「图号+面板名+国名+深/浅色」四段地址；数值不印，网格线每 5 点一条，5% 容差即 ±0.05，肉眼读柱根本不可能；韩国约 1（面板 B）同理。\n\n**不确定的**\n\n给定的三个 `11` 与 `18` 无法唯一归位：11 可能是 B 板 `OECD average`、`Switzerland` 或 A 板 `Latvia`；18 可能是 A 板 `Portugal` 或 B 板 `Canada`。浅色柱的确切归属（如 Chile、Slovak Republic）在 150 dpi 下也有猜测成分。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 4.10",
+          "title": "Relationship between numeracy and individual well-being",
+          "subtitle": "Difference in likelihood of reporting positive outcomes (high proficiency minus low proficiency)",
+          "unit_text": "Percentage points",
+          "placement": "above"
+        },
+        "type": "bar",
+        "type_other": "",
+        "panels": 2,
+        "series": 1,
+        "categories": 32,
+        "marks": 64,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Percentage points",
+            "low": "-5",
+            "high": "30",
+            "serves": "all bars in Panel A. Life satisfaction"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "Croatia",
+            "high": "Israel",
+            "serves": "names the 32 bars of Panel A"
+          },
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Percentage points",
+            "low": "0",
+            "high": "30",
+            "serves": "all bars in Panel B. Health"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "Italy",
+            "high": "Korea",
+            "serves": "names the 32 bars of Panel B"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "panel",
+            "label_source": "panel_title",
+            "example": "A. Life satisfaction"
+          },
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Croatia"
+          },
+          {
+            "role": "colour_group",
+            "label_source": "colour_only",
+            "example": "statistically significant at the 5% level"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "A. Life satisfaction",
+            "Israel",
+            "not statistically significant (light fill)"
+          ],
+          "value": "-1",
+          "value_source": "axis_read",
+          "why_hard": "tiny bar below the zero line, no printed value, gridlines only every 5 points"
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "small_multiples_4",
+        "figure_id": "f1",
+        "evidence": "two stacked panels of the same country bar chart: 'A. Life satisfaction' and 'B. Health'"
+      },
+      {
+        "key": "panel_title_per_panel",
+        "figure_id": "f1",
+        "evidence": "dark blue filled banners centred above each plot reading 'A. Life satisfaction' and 'B. Health'"
+      },
+      {
+        "key": "per_panel_axis_range",
+        "figure_id": "f1",
+        "evidence": "Panel A ticks run 30 to -5; Panel B ticks stop at 0"
+      },
+      {
+        "key": "negative_values",
+        "figure_id": "f1",
+        "evidence": "Panel A has a '-5' tick and the Israel bar drops below the zero line"
+      },
+      {
+        "key": "color_encodes_extra_attribute",
+        "figure_id": "f1",
+        "evidence": "'Darker colours denote differences that are statistically significant at the 5% level.'"
+      },
+      {
+        "key": "highlighted_category",
+        "figure_id": "f1",
+        "evidence": "'OECD average' tick label set in bold with a pale blue band behind its bar, both panels"
+      },
+      {
+        "key": "rotated_x_ticks",
+        "figure_id": "f1",
+        "evidence": "32 country names per panel set vertically, e.g. 'Slovak Republic', 'Flemish Region (BE)'"
+      },
+      {
+        "key": "footnote_marker",
+        "figure_id": "f1",
+        "evidence": "tick label 'Poland*'; note reads '*Caution is required in interpreting results...'"
+      },
+      {
+        "key": "axis_title_above_axis",
+        "figure_id": "f1",
+        "evidence": "'Percentage points' printed above the top tick '30' on both panels"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "bare ticks 30, 25 ... -5; scale word only in 'Percentage points' above the axis"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "horizontal rules at each 5-point tick across both plots, no vertical grid"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "page",
+        "evidence": "'Note: Adults aged 25-65; ...' and 'Source: Table A.4.11 (N) in Annex A.' below the figure"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "highlight_band_behind_category",
+        "figure_id": "f1",
+        "evidence": "a pale blue vertical band spanning full plot height behind the 'OECD average' bar in both panels",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "name": "coloured_axis_tick_labels",
+        "figure_id": "f1",
+        "evidence": "'England (UK)' and 'Flemish Region (BE)' tick labels printed in blue, all other countries black",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "name": "colour_key_only_in_note",
+        "figure_id": "f1",
+        "evidence": "no legend anywhere; dark/light fill meaning given only in the note text below the figure",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "name": "ranking_rule_stated_in_note",
+        "figure_id": "f1",
+        "evidence": "'Countries and economies are ranked in descending order of the difference in the likelihood of reporting positive outcomes.'",
+        "affects": [
+          4
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "24",
+        "figure_id": "f1",
+        "mark": "the Croatia bar in Panel A",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. Life satisfaction",
+          "Croatia"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "11",
+        "figure_id": "f1",
+        "mark": "the OECD average bar in Panel B (body text: 11 percentage points for health)",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "B. Health",
+          "OECD average"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-1",
+        "figure_id": "f1",
+        "mark": "the Israel bar in Panel A, the only bar below zero",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. Life satisfaction",
+          "Israel"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "27",
+        "figure_id": "f1",
+        "mark": "the Italy bar, tallest in Panel B",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "B. Health",
+          "Italy"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "11",
+        "figure_id": "f1",
+        "mark": "a Panel B bar just above the OECD average, most likely Switzerland; not separable from Singapore/Netherlands by eye",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "B. Health",
+          "Switzerland"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "1",
+        "figure_id": "f1",
+        "mark": "the Korea bar, the shortest in Panel B",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "B. Health",
+          "Korea"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "18",
+        "figure_id": "f1",
+        "mark": "the Portugal bar in Panel A (Canada in Panel B reads about the same)",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. Life satisfaction",
+          "Portugal"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "13",
+        "figure_id": "f1",
+        "mark": "the Czechia bar in Panel A",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. Life satisfaction",
+          "Czechia"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "11",
+        "figure_id": "f1",
+        "mark": "the Latvia bar in Panel A, indistinguishable from Norway and France",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. Life satisfaction",
+          "Latvia"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "3",
+        "figure_id": "f1",
+        "mark": "the Hungary bar in Panel A, light fill",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. Life satisfaction",
+          "Hungary"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "全图无数值标注，网格线每5点；Korea约1、Israel约-1，5%容差仅±0.05，读柱不可能；Latvia与Norway等高柱亦难分辨。",
+    "examples": [
+      {
+        "gap": "P8",
+        "figure_id": "f1",
+        "quote": "Darker colours denote differences that are statistically significant at the 5% level.",
+        "why": "深浅色承载显著性，无图例；该属性必须进入键，现流水线颜色只表系列。"
+      },
+      {
+        "gap": "P2",
+        "figure_id": "f1",
+        "quote": "Banners 'A. Life satisfaction' and 'B. Health' above two 32-country bar panels sharing one figure number",
+        "why": "同一图号下两面板、同一批国名重复出现，面板名必须进入键才能唯一定位。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "Figure 4.10. Relationship between numeracy and individual well-being / Difference in likelihood of reporting positive outcomes (high proficiency minus low proficiency)",
+        "why": "编号、标题、副标题、单位'Percentage points'置于顶刻度上方，四段需分字段生成。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "Panel A y-axis ticks 30, 25, 20, 15, 10, 5, 0, -5 with the Israel bar below zero; Panel B stops at 0",
+        "why": "负值与零线、两面板不同量程并存，现有样式维度无法同时表达。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "'England (UK)' and 'Flemish Region (BE)' tick labels in blue; 'OECD average' bold with a pale blue band behind it",
+        "why": "刻度文字的颜色与加粗也在编码类别属性，需可控的轴标签样式维度。"
+      }
+    ]
+  }
+}

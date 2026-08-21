@@ -1,0 +1,266 @@
+{
+  "stem": "COM_2025_26_F1_COMMUNICATION_FROM_COMMISSION_TO_INST_EN_V10_P1_3877708_p19",
+  "document": "COM_2025_26_F1_COMMUNICATION_FROM_COMMISSION_TO_INST_EN_V10_P1_3877708",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "no_vocab",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 19.5,
+  "usage": {
+    "input_tokens": 3178,
+    "output_tokens": 2488,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n本页包含一个简单的多重折线图（Figure 4）。生成器需要支持：\n- 图表上方左对齐的标题（含图表编号和副标题），没有明确标注单位词组（单位是100 %）。\n- 底部的时间轴呈45度角倾斜。\n- 没有显式的图例框，而是将标签（EU 和 US）以带有相应颜色短线的形式直接放在图表内部折线的下方，作为 inline label 或者一种简化的图例。\n- 只有简单的X、Y轴刻度标签，没有网格线或者多余的边框。\n- 注释（Note）和来源（Source）作为独立的段落位于图表下方。\n\n### 定位一个值难在哪\n定位一个值（如 US 在 2021 年的 70）的难点主要在于数值没有直接标注在图上。读者必须将折线在“2021”这一刻度的位置水平平移至左侧Y轴去估算（介于60到80之间的一半，对齐70刻度）。折线图本身对于未落在整十刻度上的数据点难以精确到 5% 的公差，不过该点恰好在70附近。\n\n### 不确定的\n图例标签“EU”和“US”是直接排在折线下方的一个空隙处，这种处理可以看作是在绘图区内的 custom legend 或者是 inline labels。X轴标签“2011”到“2023”是每两年标注一次，不确定具体的年份数据是否包含了中间未标注的年份（如2012, 2014）。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 4:",
+          "title": "Household savings invested in bonds, shares, investment funds and similar.",
+          "subtitle": "",
+          "unit_text": "%",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 7,
+        "marks": 26,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "100 %",
+            "low": "0",
+            "high": "100",
+            "serves": "both lines"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "2011",
+            "high": "2023",
+            "serves": "both lines"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "series",
+            "label_source": "inline_label",
+            "example": "EU"
+          },
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2013"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "US",
+            "2017"
+          ],
+          "value": "72",
+          "value_source": "axis_read",
+          "why_hard": "Must interpolate visually between 70 and 80 tick marks without grid lines."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "title_block_above",
+        "figure_id": "f1",
+        "evidence": "Figure 4: Household savings... sits above the plot",
+        "affects": [
+          4
+        ]
+      },
+      {
+        "key": "slanted_x_axis_labels",
+        "figure_id": "f1",
+        "evidence": "2011, 2013, etc. are angled 45 degrees",
+        "affects": []
+      },
+      {
+        "key": "inline_legend",
+        "figure_id": "f1",
+        "evidence": "EU and US with colored dashes sit inside the plot area below the lines",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "y_axis_unit_at_top",
+        "figure_id": "f1",
+        "evidence": "100 % is written at the top tick of the y-axis",
+        "affects": [
+          4
+        ]
+      },
+      {
+        "key": "footer_notes_and_source",
+        "figure_id": "f1",
+        "evidence": "Note: ... and Source: ... paragraphs below the x-axis",
+        "affects": [
+          4
+        ]
+      }
+    ],
+    "new_components": [
+      {
+        "name": "y_axis_top_tick_unit",
+        "figure_id": "f1",
+        "evidence": "The top tick reads '100 %' providing both value and unit",
+        "affects": [
+          4
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "45",
+        "figure_id": "f1",
+        "mark": "the 2011 EU line point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "EU",
+          "2011"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "70",
+        "figure_id": "f1",
+        "mark": "the 2011 US line point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "US",
+          "2011"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "45",
+        "figure_id": "f1",
+        "mark": "the 2013 EU line point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "EU",
+          "2013"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "71",
+        "figure_id": "f1",
+        "mark": "the 2013 US line point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "US",
+          "2013"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "45",
+        "figure_id": "f1",
+        "mark": "the 2015 EU line point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "EU",
+          "2015"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "72",
+        "figure_id": "f1",
+        "mark": "the 2015 US line point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "US",
+          "2015"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "44",
+        "figure_id": "f1",
+        "mark": "the 2017 EU line point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "EU",
+          "2017"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "70",
+        "figure_id": "f1",
+        "mark": "the 2017 US line point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "US",
+          "2017"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "43",
+        "figure_id": "f1",
+        "mark": "the 2019 EU line point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "EU",
+          "2019"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "72",
+        "figure_id": "f1",
+        "mark": "the 2019 US line point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "US",
+          "2019"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "该图为折线图且无数值标注，Y轴刻度间隔为10，没有水平网格线。例如2019年US的72或2017年EU的44，仅靠肉眼对齐左侧坐标轴几乎不可能将误差控制在5%以内。",
+    "examples": [
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "100 % as the top tick label",
+        "why": "单位直接写在最高刻度值上（100 %），而其他刻度只有数字，现有的标题或单位生成逻辑无法准确放置这种单位形式。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "EU and US with line segments floating in the plot area",
+        "why": "图例直接作为悬浮元素放置在折线下方绘图区内，没有外框，目前的生成器无法处理这种嵌入式的内联图例。"
+      }
+    ]
+  }
+}

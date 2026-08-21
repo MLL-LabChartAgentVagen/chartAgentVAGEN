@@ -1,0 +1,352 @@
+{
+  "stem": "P505350-59c98ca8-0803-4f23-b470-17f3dab010ab_p106",
+  "document": "P505350-59c98ca8-0803-4f23-b470-17f3dab010ab",
+  "tags": "3d_chart+need_estimate",
+  "model": "claude-opus-5",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 60.5,
+  "usage": {
+    "input_tokens": 13862,
+    "output_tokens": 5391,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "## 画出来要什么\n一个编号图 `FIGURE 5.6`，标题 `Share of workers with AI and GenAI skills, by educational attainment, 2024`，下挂两块并排面板，各自有小写字母面板题 `a. Supply of AI skills, excluding GenAI` / `b. Supply of GenAI skills`。每块是 4 组 × 4 系列的分组柱（HICs/UMICs/LMICs/LICs × Below bachelor's degree…Doctorate），共 32 根柱，无数值标签。两块面板刻度互不相同：左 0–9（步长 1），右 0–1.6（步长 0.2）。单位写在坐标轴上方 `AI skills (%)`、`GenAI skills (%)`；轴题 `Education level` 写在图下方，但刻度其实是收入组。图例一行四项置于两面板之下，被共享。下方两行 Source/Note，Note 里展开缩写。\n\n## 定位一个值难在哪\n`0.2` 是 b 面板 HICs 的 Below bachelor's degree 柱。它的地址要四段：面板题、`HICs`、图例名、再加“右面板的 % 轴”；而 5% 容差只有 ±0.01，比 0.2 的刻度间距小 20 倍，纯靠像素读数无法保证。同名 `1.0` 在 b 面板出现两次（HICs Master's、LMICs Doctorate），不带面板与组名就不唯一。\n\n## 不确定的\n柱值全部为轴读，8.4、4.9、3.4 等只能估；b 面板 LMICs 与 LICs 的 Below bachelor's 高度（约0.42/0.3）难分；`Education level` 与刻度不符，无法判断是印刷错误还是另有含义。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "FIGURE 5.6",
+          "title": "Share of workers with AI and GenAI skills, by educational attainment, 2024",
+          "subtitle": "",
+          "unit_text": "AI skills (%)",
+          "placement": "above"
+        },
+        "type": "grouped_bar",
+        "type_other": "",
+        "panels": 2,
+        "series": 4,
+        "categories": 4,
+        "marks": 32,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "AI skills (%)",
+            "low": "0",
+            "high": "9",
+            "serves": "all bars in panel a"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "Education level",
+            "low": "HICs",
+            "high": "LICs",
+            "serves": "the four bar groups of panel a"
+          },
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "GenAI skills (%)",
+            "low": "0",
+            "high": "1.6",
+            "serves": "all bars in panel b"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "Education level",
+            "low": "HICs",
+            "high": "LICs",
+            "serves": "the four bar groups of panel b"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "panel",
+            "label_source": "panel_title",
+            "example": "b. Supply of GenAI skills"
+          },
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "UMICs"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Doctorate"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "b. Supply of GenAI skills",
+            "HICs",
+            "Below bachelor's degree"
+          ],
+          "value": "0.2",
+          "value_source": "axis_read",
+          "why_hard": "Unprinted; 5% of 0.2 is 0.01, far below the 0.2 tick spacing on panel b"
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "grouped_bar",
+        "figure_id": "f1",
+        "evidence": "four coloured bars side by side within each of HICs, UMICs, LMICs, LICs"
+      },
+      {
+        "key": "small_multiples_4",
+        "figure_id": "f1",
+        "evidence": "two panels a and b, same grouped-bar layout, one figure number"
+      },
+      {
+        "key": "shared_legend",
+        "figure_id": "f1",
+        "evidence": "one legend row under both panels: Below bachelor's degree ... Doctorate"
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "legend sits beneath the two plots, above the Source line"
+      },
+      {
+        "key": "panel_title_per_panel",
+        "figure_id": "f1",
+        "evidence": "'a. Supply of AI skills, excluding GenAI' and 'b. Supply of GenAI skills' above each panel"
+      },
+      {
+        "key": "per_panel_axis_range",
+        "figure_id": "f1",
+        "evidence": "panel a ticks 0..9 by 1; panel b ticks 0..1.6 by 0.2"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "'AI skills (%)' and 'GenAI skills (%)' carry the % scale; bars have no labels"
+      },
+      {
+        "key": "axis_title_above_axis",
+        "figure_id": "f1",
+        "evidence": "'GenAI skills (%)' printed above the 1.6 top tick of panel b"
+      },
+      {
+        "key": "axis_title_below_plot",
+        "figure_id": "f1",
+        "evidence": "'Education level' set in bold below the category ticks of each panel"
+      },
+      {
+        "key": "abbrev_category_axis",
+        "figure_id": "f1",
+        "evidence": "ticks read HICs, UMICs, LMICs, LICs"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "'Source: Original figures for this publication...' and 'Note: AI = artificial intelligence...'"
+      },
+      {
+        "key": "side_text_bullets",
+        "figure_id": "page",
+        "evidence": "body paragraphs 'However, workers are significantly less likely...' fill the page below the figure"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "axis_title_contradicts_ticks",
+        "figure_id": "f1",
+        "evidence": "'Education level' titles an axis whose ticks are HICs, UMICs, LMICs, LICs (income groups)",
+        "affects": [
+          3,
+          4
+        ]
+      },
+      {
+        "name": "abbreviation_glossary_in_note",
+        "figure_id": "f1",
+        "evidence": "'Note: AI = artificial intelligence; ... HICs = high-income countries; LICs = low-income countries'",
+        "affects": [
+          3,
+          4
+        ]
+      },
+      {
+        "name": "panel_letter_prefix",
+        "figure_id": "f1",
+        "evidence": "panel names begin 'a.' and 'b.' separate from the figure number FIGURE 5.6",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "0.8",
+        "figure_id": "f1",
+        "mark": "panel a, HICs group, Below bachelor's degree bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "a. Supply of AI skills, excluding GenAI",
+          "HICs",
+          "Below bachelor's degree",
+          "AI skills (%)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "8.4",
+        "figure_id": "f1",
+        "mark": "panel a, HICs group, Doctorate bar (tallest bar on the page)",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "a. Supply of AI skills, excluding GenAI",
+          "HICs",
+          "Doctorate"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "4.9",
+        "figure_id": "f1",
+        "mark": "panel a, UMICs group, Master's degree bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "a. Supply of AI skills, excluding GenAI",
+          "UMICs",
+          "Master's degree"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "4.5",
+        "figure_id": "f1",
+        "mark": "panel a, LMICs group, Bachelor's degree bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "a. Supply of AI skills, excluding GenAI",
+          "LMICs",
+          "Bachelor's degree"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "3.4",
+        "figure_id": "f1",
+        "mark": "panel a, LICs group, Doctorate bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "a. Supply of AI skills, excluding GenAI",
+          "LICs",
+          "Doctorate"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "0.2",
+        "figure_id": "f1",
+        "mark": "panel b, HICs group, Below bachelor's degree bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "b. Supply of GenAI skills",
+          "HICs",
+          "Below bachelor's degree",
+          "GenAI skills (%)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "1.0",
+        "figure_id": "f1",
+        "mark": "panel b, HICs group, Master's degree bar (LMICs Doctorate reads the same height)",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "b. Supply of GenAI skills",
+          "HICs",
+          "Master's degree"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "0.7",
+        "figure_id": "f1",
+        "mark": "panel b, UMICs group, Doctorate bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "b. Supply of GenAI skills",
+          "UMICs",
+          "Doctorate"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "1.2",
+        "figure_id": "f1",
+        "mark": "panel b, LMICs group, Bachelor's degree bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "b. Supply of GenAI skills",
+          "LMICs",
+          "Bachelor's degree"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "0.4",
+        "figure_id": "f1",
+        "mark": "panel b, UMICs group, Below bachelor's degree bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "b. Supply of GenAI skills",
+          "UMICs",
+          "Below bachelor's degree"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "32根柱全无数值；b面板刻度0.2，读0.2需±0.01精度；a面板刻度1，读8.4、4.9同样只能估到±0.2。",
+    "examples": [
+      {
+        "gap": "P2",
+        "figure_id": "f1",
+        "quote": "Panel titles 'a. Supply of AI skills, excluding GenAI' and 'b. Supply of GenAI skills' over two grouped-bar panels",
+        "why": "1.0与1.2在两面板都出现，键必须含面板名，当前管线不把面板写进键。"
+      },
+      {
+        "gap": "P1",
+        "figure_id": "f1",
+        "quote": "Panel b y-axis ticks read 0, 0.2, 0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6 with no bar labels",
+        "why": "0.2值的5%容差仅±0.01，需按每根柱给出可达精度而非布尔可读。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "'FIGURE 5.6  Share of workers with AI and GenAI skills, by educational attainment, 2024' with 'AI skills (%)' above the axis",
+        "why": "编号、标题、面板题、单位分处四个位置，需作为独立字段建模。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "Bold 'Education level' printed below ticks that read HICs, UMICs, LMICs, LICs",
+        "why": "轴题与刻度语义冲突；需支持轴题与刻度不一致（含错标）的生成与校验。"
+      }
+    ]
+  }
+}

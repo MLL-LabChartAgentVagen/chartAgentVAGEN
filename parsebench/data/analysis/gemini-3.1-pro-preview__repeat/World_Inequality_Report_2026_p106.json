@@ -1,0 +1,273 @@
+{
+  "stem": "World_Inequality_Report_2026_p106",
+  "document": "World_Inequality_Report_2026",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "repeat",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 53.1,
+  "usage": {
+    "input_tokens": 5323,
+    "output_tokens": 7509,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n绘制此页面需要支持多子图（小多图）布局，其中每个子图拥有独立的标题（`By income group` 和 `By world region`）并各自附带独立的图例。需要支持双轴布局的折线图，包含负值轴、0刻度水平参考线以及网格线。此外，需要在Y轴上支持旋转的轴标题，以及在图表外部添加详细的解释段落和来源说明。\n\n### 定位一个值难在哪\n定位诸如 `-3.5` 的值极具挑战性。由于折线图没有提供数值标签，也没有点标记，且X轴刻度非常稀疏（每十年一个标记，如1980、1990），读取具体某一年的数据必须进行复杂的视觉插值。不仅难以准确对应到某一特定年份，而且在Y轴方向上读取也极易产生超过5%的误差，导致无法满足解析精度。\n\n### 不确定的\n图中给定的具体检查值（如 0.8、-1.5 等）在缺乏原始数据的情况下只能通过折线的视觉位置大致猜测所在的年份和所属系列，并且对于未标注的年份（例如1995年或2005年）只能假定其大概位置。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 5.2.",
+          "title": "Rich countries receive 1% of their GDP from the rest of the world due to financial privilege",
+          "subtitle": "Excess yield (assets–liabilities) as % of group GDP, 1970–2025",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 2,
+        "series": 14,
+        "categories": 56,
+        "marks": 784,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Excess yield\n(% of group GDP), MER",
+            "low": "-6%",
+            "high": "3%",
+            "serves": "all lines in left panel"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "1980",
+            "high": "2020",
+            "serves": "all lines in left panel"
+          },
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "-6%",
+            "high": "3%",
+            "serves": "all lines in right panel"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "1980",
+            "high": "2020",
+            "serves": "all lines in right panel"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "panel",
+            "label_source": "panel_title",
+            "example": "By income group"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Top 20%"
+          },
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2020"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "By income group",
+            "Top 20%",
+            "2020"
+          ],
+          "value": "1%",
+          "value_source": "axis_read",
+          "why_hard": "Sparse time ticks require exact year interpolation, and the line has no markers."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "rotated_axis_title",
+        "figure_id": "f1",
+        "evidence": "the y-axis title is rotated vertically"
+      },
+      {
+        "key": "negative_values",
+        "figure_id": "f1",
+        "evidence": "y-axis and lines extend down to -6%"
+      },
+      {
+        "key": "reference_line",
+        "figure_id": "f1",
+        "evidence": "dotted horizontal line drawn at 0%"
+      },
+      {
+        "key": "sparse_time_ticks",
+        "figure_id": "f1",
+        "evidence": "ticks are every 10 years for annual data"
+      },
+      {
+        "key": "per_panel_legend",
+        "figure_id": "f1",
+        "evidence": "each panel has its own legend underneath"
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "legends sit below the axes"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "dotted horizontal lines at every 1% tick"
+      },
+      {
+        "key": "panel_title_per_panel",
+        "figure_id": "f1",
+        "evidence": "titles By income group and By world region above panels"
+      },
+      {
+        "key": "dense_marks_100plus",
+        "figure_id": "f1",
+        "evidence": "14 series across 55 years gives over 700 marks"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "Interpretation and Sources printed below the figure"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "axis title reads (% of group GDP)"
+      }
+    ],
+    "new_components": [],
+    "spot_checks": [
+      {
+        "value": "0.8",
+        "figure_id": "f1",
+        "mark": "the Top 20% line around 2010",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "By income group",
+          "Top 20%",
+          "2010"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-1.5",
+        "figure_id": "f1",
+        "mark": "the Bottom 20% line around 1995",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "By income group",
+          "Bottom 20%",
+          "1995"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "-2",
+        "figure_id": "f1",
+        "mark": "the SSAF line around 1990",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "By world region",
+          "SSAF",
+          "1990"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "2.1",
+        "figure_id": "f1",
+        "mark": "the MENA line around 1974",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "By world region",
+          "MENA",
+          "1974"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "-3.2",
+        "figure_id": "f1",
+        "mark": "the LATA line around 2000",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "By world region",
+          "LATA",
+          "2000"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "1.3",
+        "figure_id": "f1",
+        "mark": "the NAOC line around 2015",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "By world region",
+          "NAOC",
+          "2015"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "-3.5",
+        "figure_id": "f1",
+        "mark": "the SSAF line around 2005",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "By world region",
+          "SSAF",
+          "2005"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "折线图完全依靠平滑线条展示，缺乏具体的散点标记和数据标签。同时X轴每十年才有一个刻度，导致通过视测估计未标注年份的具体数值时难以保证误差在5%以内。",
+    "examples": [
+      {
+        "gap": "P1",
+        "figure_id": "f1",
+        "quote": "dense lines without markers and ticks every 10 years",
+        "why": "需要在没有数据标签和标记的情况下读取折线，当前管线难以跨越长跨度精确插值到5%的公差内。"
+      },
+      {
+        "gap": "P2",
+        "figure_id": "f1",
+        "quote": "two panels 'By income group' and 'By world region'",
+        "why": "图表包含不同的子图和独立图例，定位数据点必须将子图标题作为表格的一列维度。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "Figure 5.2. Rich countries receive 1% of their GDP from the rest of the world due to financial privilege",
+        "why": "需要将图表编号、主标题以及包含时间跨度的副标题分别解析为结构化字段。"
+      }
+    ]
+  }
+}

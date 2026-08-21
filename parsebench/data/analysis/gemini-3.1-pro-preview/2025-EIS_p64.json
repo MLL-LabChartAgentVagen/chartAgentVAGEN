@@ -1,0 +1,284 @@
+{
+  "stem": "2025-EIS_p64",
+  "document": "2025-EIS",
+  "tags": "untagged",
+  "model": "gemini-3.1-pro-preview",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 100.5,
+  "usage": {
+    "input_tokens": 5358,
+    "output_tokens": 13240,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n\n生成此页面需要支持带左右两个独立面板的并排折线图，且这两个面板共享相同的Y轴刻度范围（80-150）。面板本身没有单独的子标题，且左侧面板没有图例，其数据系列身份（平均值）完全隐含在底部的注释文本中。Y轴标题“Summary innovation index”垂直旋转并放置在坐标轴外侧。X轴的时间刻度需要支持非标准缩写格式（如 `'18`, `'19`）。在右侧的多线面板中，需要支持在折线的最右侧末端绘制内联文本标签，并且由于部分终点非常密集，必须支持绘制细长的指引线（leader lines）将文本标签连接到对应的折线末端以避免重叠。\n\n### 定位一个值难在哪\n\n以德国2025年的125.1为例，该具体数值并未打印在图表上，只能在步长为10的Y轴（120-130）上进行视觉估读。更困难的是，在右侧面板的2024-2025年区间，多条颜色相近的折线（如德国、法国、奥地利、卢森堡）高度密集交叠，若要精准关联“Germany”标签与对应的折线终点，极度依赖那条微细的指引线，解析器很容易在此处发生系列关联混淆（阻塞步骤3）。\n\n### 不确定的\n\n左侧面板的折线本身没有任何名称标识，我是基于底部注释中“The graph on the left shows the average performance”才推断出它代表平均水平，自动生成器无法在没有显式字段的情况下建立这种映射。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 24",
+          "title": "Performance of Strong Innovators",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 2,
+        "series": 8,
+        "categories": 8,
+        "marks": 64,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Summary innovation index",
+            "low": "80",
+            "high": "150",
+            "serves": "the left panel line"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "'18",
+            "high": "'25",
+            "serves": "the left panel line"
+          },
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Summary innovation index",
+            "low": "80",
+            "high": "150",
+            "serves": "all lines in right panel"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "'18",
+            "high": "'25",
+            "serves": "all lines in right panel"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "series",
+            "label_source": "inline_label",
+            "example": "Ireland"
+          },
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "'18"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Estonia",
+            "'25"
+          ],
+          "value": "118",
+          "value_source": "axis_read",
+          "why_hard": "The mark falls between the 110 and 120 grid lines on a dense panel, requiring visual interpolation."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "axis_starts_above_zero",
+        "figure_id": "f1",
+        "evidence": "both y-axes start at 80 rather than 0"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "Note: Performance is relative to that of the EU..."
+      },
+      {
+        "key": "rotated_axis_title",
+        "figure_id": "f1",
+        "evidence": "Summary innovation index is printed vertically on the left"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "Summary innovation index serves as the unit on bare axes"
+      },
+      {
+        "key": "rebased_index_values",
+        "figure_id": "f1",
+        "evidence": "Note mentions 'Performance is relative to that of the EU in 2018'"
+      },
+      {
+        "key": "nonstandard_time_ticks",
+        "figure_id": "f1",
+        "evidence": "years are written as '18, '19 instead of 2018"
+      },
+      {
+        "key": "inline_series_labels",
+        "figure_id": "f1",
+        "evidence": "country names are written next to the rightmost data points"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "horizontal grid lines are drawn at 10-unit intervals, no vertical ones"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "leader_lines_for_inline_labels",
+        "figure_id": "f1",
+        "evidence": "thin lines connect right-side labels to line ends",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "138.6",
+        "figure_id": "f1",
+        "mark": "the '25 point on the Ireland line",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Ireland",
+          "'25"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "138.9",
+        "figure_id": "f1",
+        "mark": "the '24 point on the Belgium line",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Belgium",
+          "'24"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "130.1",
+        "figure_id": "f1",
+        "mark": "the '19 point on the Luxembourg line",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Luxembourg",
+          "'19"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "132.3",
+        "figure_id": "f1",
+        "mark": "the '24 point on the Austria line",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Austria",
+          "'24"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "127.8",
+        "figure_id": "f1",
+        "mark": "the '22 point on the Germany line",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Germany",
+          "'22"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "122.3",
+        "figure_id": "f1",
+        "mark": "the '25 point on the France line",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "France",
+          "'25"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "88.0",
+        "figure_id": "f1",
+        "mark": "the '18 point on the Estonia line",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Estonia",
+          "'18"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "118.0",
+        "figure_id": "f1",
+        "mark": "the '25 point on the Estonia line",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Estonia",
+          "'25"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "128.9",
+        "figure_id": "f1",
+        "mark": "the '25 point on the Luxembourg line",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Luxembourg",
+          "'25"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "125.1",
+        "figure_id": "f1",
+        "mark": "the '25 point on the Germany line",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Germany",
+          "'25"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      }
+    ],
+    "hardest_step": 3,
+    "hardest_step_why": "125.1（德国'25）需在步长为10的Y轴上估读，右侧面板多条折线在末端高度密集交织，依赖细微的指引线匹配内联标签，极易发生系列关联错误，从而阻断步骤3。",
+    "examples": [
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "thin leader lines connecting 'Ireland', 'Belgium' text to the line ends",
+        "why": "内联系列标签与数据线末端通过极细的线条连接以防重叠，当前生成器不支持在图表区绘制这种针对标签的指引线。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "Note: ... The graph on the left shows the average performance",
+        "why": "左侧面板完全没有任何标题或图例，其数据含义完全依赖图表底部的文本注释，生成器目前无法构建这种隐式引用的无名面板。"
+      }
+    ]
+  }
+}

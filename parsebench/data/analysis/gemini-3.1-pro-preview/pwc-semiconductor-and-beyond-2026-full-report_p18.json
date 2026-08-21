@@ -1,0 +1,273 @@
+{
+  "stem": "pwc-semiconductor-and-beyond-2026-full-report_p18",
+  "document": "pwc-semiconductor-and-beyond-2026-full-report",
+  "tags": "untagged",
+  "model": "gemini-3.1-pro-preview",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "seconds": 67.7,
+  "usage": {
+    "input_tokens": 5336,
+    "output_tokens": 8736,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "## 画出来要什么\n这是一个带双Y轴的柱线混合图 (Combo Chart)。左侧Y轴为0-300，对应灰色柱状图（Data center semiconductors）；右侧Y轴为0-100，顶部带有“(%)”符号，对应橙色折线（Portion of AI accelerator）。X轴类别包含非标准的时间格式（'24, '25F等）。图例位于主标题与绘图区之间。折线仅在其首尾数据点（'24和'30F）印有数值标签（35%和52%），中间节点无标签。图表带有浅灰色的背景填充，且只绘制了水平网格线，没有垂直网格线。\n\n## 定位一个值难在哪\n以测试值 `41` (对应 '26F, Portion of AI accelerator) 为例。该数值位于折线的中间部分，页面既没有标注出具体的数据，折线上也没有绘制数据点标记 (marker) 来辅助对齐。读者必须通过肉眼将平滑折线在柱子中轴线的交点向右平移，与间距为10的右侧百分比Y轴对比。在这种缺乏精确参考线的情况下，要在 5% 的容差范围内读出 41 非常困难。\n\n## 不确定的\nX轴年份中的“F”（如'25F）根据常识代表Forecast（预测），但图表中并没有显式的注脚或图例对此进行解释；对无标记折线中间点的值只能依靠所在的柱子中心线粗略推算横向位置。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "AI accelerators in the data center",
+          "subtitle": "",
+          "unit_text": "(Unit: $ Billion)",
+          "placement": "above"
+        },
+        "type": "other",
+        "type_other": "bar and line combo",
+        "panels": 1,
+        "series": 2,
+        "categories": 7,
+        "marks": 14,
+        "values_printed": "some",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "0",
+            "high": "300",
+            "serves": "the grey bars"
+          },
+          {
+            "side": "right",
+            "role": "value",
+            "unit_text": "(%)",
+            "low": "0",
+            "high": "100",
+            "serves": "the orange line"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "'24",
+            "high": "'30F",
+            "serves": "all marks"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "'24"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Data center semiconductors"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "'26F",
+            "Portion of AI accelerator"
+          ],
+          "value": "41",
+          "value_source": "axis_read",
+          "why_hard": "The line has no point marker and the right axis has a tick spacing of 10, making exact reading difficult."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "mixed_marks",
+        "figure_id": "f1",
+        "evidence": "grey bars and an orange line in the same panel"
+      },
+      {
+        "key": "dual_axis",
+        "figure_id": "f1",
+        "evidence": "left axis is 0-300, right axis is 0-100"
+      },
+      {
+        "key": "legend_above_plot",
+        "figure_id": "f1",
+        "evidence": "legend sits below the heading and above the plot"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "heading contains (Unit: $ Billion) and right axis has (%)"
+      },
+      {
+        "key": "axis_title_above_axis",
+        "figure_id": "f1",
+        "evidence": "(%) sits above the top tick on the right axis"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "Source: PwC analysis below the figure"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "horizontal lines across the panel, no vertical ones"
+      },
+      {
+        "key": "panel_background",
+        "figure_id": "f1",
+        "evidence": "the plot area carries a light grey tint"
+      },
+      {
+        "key": "nonstandard_time_ticks",
+        "figure_id": "f1",
+        "evidence": "x axis uses '24 and '25F"
+      },
+      {
+        "key": "side_text_bullets",
+        "figure_id": "page",
+        "evidence": "a text column runs alongside the figure on the left"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "partial_value_labels",
+        "figure_id": "f1",
+        "evidence": "only 35% and 52% are printed on the line ends",
+        "affects": [
+          2
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "98",
+        "figure_id": "f1",
+        "mark": "the '24 Data center semiconductors bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "'24",
+          "Data center semiconductors"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "148",
+        "figure_id": "f1",
+        "mark": "the '26F Data center semiconductors bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "'26F",
+          "Data center semiconductors"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "270",
+        "figure_id": "f1",
+        "mark": "the '30F Data center semiconductors bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "'30F",
+          "Data center semiconductors"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "180",
+        "figure_id": "f1",
+        "mark": "the '27F Data center semiconductors bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "'27F",
+          "Data center semiconductors"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "35",
+        "figure_id": "f1",
+        "mark": "the '24 Portion of AI accelerator line start",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "'24",
+          "Portion of AI accelerator"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "52",
+        "figure_id": "f1",
+        "mark": "the '30F Portion of AI accelerator line end",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "'30F",
+          "Portion of AI accelerator"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "41",
+        "figure_id": "f1",
+        "mark": "the '26F Portion of AI accelerator line point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "'26F",
+          "Portion of AI accelerator"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "47",
+        "figure_id": "f1",
+        "mark": "the '28F Portion of AI accelerator line point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "'28F",
+          "Portion of AI accelerator"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "245",
+        "figure_id": "f1",
+        "mark": "the '29F Data center semiconductors bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "'29F",
+          "Data center semiconductors"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "多数测试值（如41、47、148）未标注需凭坐标轴估算。右侧刻度间距为10且折线无数据点标记，读取41和47时极难保证误差在5%以内。",
+    "examples": [
+      {
+        "gap": "P9",
+        "figure_id": "f1",
+        "quote": "left axis reads 0 to 300 for bars, right axis reads 0 to 100 for the line.",
+        "why": "图表包含双Y轴及柱线混合标记，生成器必须能记录单个数值是基于哪个轴以及何种标记形状读出的。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "35% and 52% are printed at the ends of the line, other points have none",
+        "why": "图表生成器目前不支持仅在折线首尾两端展示数据标签而隐藏中间所有节点标签的定制样式。"
+      }
+    ]
+  }
+}

@@ -1,0 +1,281 @@
+{
+  "stem": "m-trends-2025-en_p29",
+  "document": "m-trends-2025-en",
+  "tags": "untagged",
+  "model": "gemini-3.1-pro-preview",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 66.4,
+  "usage": {
+    "input_tokens": 5336,
+    "output_tokens": 9021,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n页面包含一个树状图（Treemap）和一个柱状图，均无图号，标题块置于图表上方，且都分为主标题和副标题（如`Ransomware-Related`）。图1（树状图）没有坐标轴，不同类别的标签和数值（带有`%`符号）直接打印在各个矩形色块内部。图2（柱状图）具有左侧值轴（带有旋转90度的标题`% of Intrusions`）和底部类别轴，所有柱子内部顶端印有白色的数值标签，x轴类别标签`REDBIKE (Akira)`被换行显示。页面排版上，正文文本在右侧与这两个图表并排环绕。\n\n### 定位一个值难在哪\n定位图2中的值`10`（对应REDBIKE）会在Step 3遇到困难。它的x轴标签在图上被分为两行（第一行`REDBIKE`，第二行`(Akira)`），文本提取工具很容易在这里插入换行符或者将其识别为两个独立的词，导致与标准表格中的键值无法精确匹配。\n\n### 不确定的\n图1树状图中各个矩形色块的精确排列算法（是按面积降序从左到右、从上到下，还是有特定的行列约束）无法仅从这一张静态图面上推断得出。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "Observed Malware Families by Category, 2024",
+          "subtitle": "Ransomware-Related",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "treemap",
+        "type_other": "",
+        "panels": 1,
+        "series": 1,
+        "categories": 8,
+        "marks": 8,
+        "values_printed": "all",
+        "axes": [],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "inline_label",
+            "example": "Ransomware"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Tunneler"
+          ],
+          "value": "7%",
+          "value_source": "printed",
+          "why_hard": "Treemaps are rarely parsed into data tables, so the value and its category label are often completely missed."
+        }
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "",
+          "title": "Most Frequently Seen Malware, 2024",
+          "subtitle": "Ransomware-Related",
+          "unit_text": "% of Intrusions",
+          "placement": "above"
+        },
+        "type": "bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 1,
+        "categories": 6,
+        "marks": 6,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "% of Intrusions",
+            "low": "0",
+            "high": "15",
+            "serves": "all bars"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "BEACON",
+            "high": "SYSTEMBC",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "BEACON"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "REDBIKE (Akira)"
+          ],
+          "value": "10%",
+          "value_source": "printed",
+          "why_hard": "The x-axis category label is wrapped onto two lines, which often breaks exact string matching."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "value_label_inside",
+        "figure_id": "page",
+        "evidence": "percentage values are printed inside the blocks and bars across both figures"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f2",
+        "evidence": "Figure 2 features horizontal grid lines but no vertical ones"
+      },
+      {
+        "key": "wrapped_category_labels",
+        "figure_id": "f2",
+        "evidence": "REDBIKE (Akira) is wrapped onto two lines on the x-axis"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f2",
+        "evidence": "the y-axis title is % of Intrusions"
+      },
+      {
+        "key": "side_text_bullets",
+        "figure_id": "page",
+        "evidence": "paragraphs of body text flow in a column to the right of both figures"
+      },
+      {
+        "key": "rotated_axis_title",
+        "figure_id": "f2",
+        "evidence": "the y-axis title '% of Intrusions' is rotated 90 degrees"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "unit_in_value_label",
+        "figure_id": "page",
+        "evidence": "printed values include the % sign directly on the mark",
+        "affects": [
+          2
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "34",
+        "figure_id": "f1",
+        "mark": "the Ransomware block",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Ransomware"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "16",
+        "figure_id": "f1",
+        "mark": "the Other block",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Other"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "12",
+        "figure_id": "f1",
+        "mark": "the Credential Stealer block",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Credential Stealer"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "10",
+        "figure_id": "f1",
+        "mark": "the Backdoor block",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Backdoor"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "15",
+        "figure_id": "f2",
+        "mark": "the BEACON bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "BEACON"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "10",
+        "figure_id": "f2",
+        "mark": "the RANSOMHUB bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "RANSOMHUB"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "10",
+        "figure_id": "f2",
+        "mark": "the REDBIKE (Akira) bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "REDBIKE (Akira)"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 3
+      },
+      {
+        "value": "9",
+        "figure_id": "f2",
+        "mark": "the BASTA bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "BASTA"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "9",
+        "figure_id": "f2",
+        "mark": "the LOCKBIT bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "LOCKBIT"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "7",
+        "figure_id": "f2",
+        "mark": "the SYSTEMBC bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "SYSTEMBC"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      }
+    ],
+    "hardest_step": 1,
+    "hardest_step_why": "解析器通常无法将图1的树状图（Treemap）结构识别为数据表格，导致34和16等直接印在色块上的数值及其标签完全丢失在Markdown输出中。",
+    "examples": [
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "Observed Malware Families by Category, 2024 \n Ransomware-Related",
+        "why": "需要支持将图表标题和副标题作为独立字段存储，并能控制整个标题块相对于图表的摆放位置。"
+      },
+      {
+        "gap": "P3",
+        "figure_id": "page",
+        "quote": "Compared to the overall metrics, ransomware-related intrusions saw...",
+        "why": "当前的排版模型需要支持图表与正文段落（body text）在同一水平位置上并排浮动显示。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f2",
+        "quote": "the label '15%' is printed inside the top of the BEACON bar",
+        "why": "需要增加一个样式维度，以便控制数值标签直接渲染在柱状图内部的顶端。"
+      }
+    ]
+  }
+}

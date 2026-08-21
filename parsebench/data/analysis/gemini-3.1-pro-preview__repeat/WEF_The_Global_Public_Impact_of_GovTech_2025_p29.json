@@ -1,0 +1,162 @@
+{
+  "stem": "WEF_The_Global_Public_Impact_of_GovTech_2025_p29",
+  "document": "WEF_The_Global_Public_Impact_of_GovTech_2025",
+  "tags": "untagged",
+  "model": "gemini-3.1-pro-preview",
+  "control": "repeat",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 32.8,
+  "usage": {
+    "input_tokens": 5302,
+    "output_tokens": 4290,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n\n要生成此页面，图表生成器需要能够绘制带有灰色背景的区域，并在其中并排绘制两个圆环图（Donut Chart）。需要支持在圆环图内部（中心空白处）放置大号文本（如“2024”和“2034”）作为该面板的分类标签。每个扇区上需要直接标注数值（带有美元符号，如“$670”）。此外，生成器还需要一种特殊的跨面板绘图能力：用虚线将左侧圆环图和右侧圆环图的上下边缘连接起来，以视觉化展示整体规模的增长。图例需要水平排列在整个图表区域的正下方。\n\n### 定位一个值难在哪\n\n定位如“670”这个值，数值直接清晰地印在图表扇区上，无需对齐坐标轴，因此读取不存在精度问题。难点主要在于解析器必须识别出圆环中心的“2024”不仅是文字，而是整个左侧圆环图的面板键（时间维度），并将它与图例中的“Public sector”组合在一起，才能在Markdown输出中为该数值生成具有正确层级结构的表格。\n\n### 不确定的\n\n两个圆环图之间的虚线连接逻辑是纯视觉对齐（连接整体的最上和最下边缘），还是与特定扇区的边界存在数据映射关系。从图中看，似乎只是连接两个圆形外缘以突出规模的变化。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "FIGURE 5",
+          "title": "IT spending in various sectors (in $ billions in 2024 and 2034) with an estimate growth rate of 8% per annum",
+          "subtitle": "",
+          "unit_text": "in $ billions",
+          "placement": "above"
+        },
+        "type": "donut",
+        "type_other": "",
+        "panels": 2,
+        "series": 4,
+        "categories": 1,
+        "marks": 8,
+        "values_printed": "all",
+        "axes": [],
+        "key_parts": [
+          {
+            "role": "time",
+            "label_source": "inline_label",
+            "example": "2024"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Public sector"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "2024",
+            "Public sector"
+          ],
+          "value": "$670",
+          "value_source": "printed",
+          "why_hard": "Requires associating the center text of the donut as the time key for all slices."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "small_multiples_4",
+        "figure_id": "f1",
+        "evidence": "two donuts side by side for different years"
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "legend with four categories sits below the grey background"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "in $ billions is written in the figure title"
+      },
+      {
+        "key": "value_label_inside",
+        "figure_id": "f1",
+        "evidence": "values like $670 are printed on the slices"
+      },
+      {
+        "key": "panel_background",
+        "figure_id": "f1",
+        "evidence": "the plot area has a light grey background tint"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "inter_panel_connection_lines",
+        "figure_id": "f1",
+        "evidence": "dotted lines connecting the outer edges of the two donuts",
+        "affects": []
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "670",
+        "figure_id": "f1",
+        "mark": "the 2024 Public sector slice",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "2024",
+          "Public sector"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "220",
+        "figure_id": "f1",
+        "mark": "the 2034 Education slice",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "2034",
+          "Education"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "170",
+        "figure_id": "f1",
+        "mark": "the 2034 Healthcare and life science slice",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "2034",
+          "Healthcare and life science"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "40",
+        "figure_id": "f1",
+        "mark": "the 2024 Transport slice",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "2024",
+          "Transport"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      }
+    ],
+    "hardest_step": 3,
+    "hardest_step_why": "提取如670的值并不难，难点在于模型需将处于圆环中心位置的文本（如2024）识别为该面板的维度键，并正确关联至下方图例生成的表格中。",
+    "examples": [
+      {
+        "gap": "P2",
+        "figure_id": "f1",
+        "quote": "2024 and 2034 placed in the center of the donuts",
+        "why": "生成器需要支持将面板标签（如年份）直接放置在圆环图的中心空白处，而非传统的上方或下方标题。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "dotted lines connecting the top and bottom of the two donuts",
+        "why": "需要支持跨面板绘制连接线。目前管道只能在单个面板内绘制标记，无法在两个独立子图之间画出表示整体增长的关联虚线。"
+      }
+    ]
+  }
+}

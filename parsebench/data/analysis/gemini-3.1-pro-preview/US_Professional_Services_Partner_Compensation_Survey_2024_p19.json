@@ -1,0 +1,196 @@
+{
+  "stem": "US_Professional_Services_Partner_Compensation_Survey_2024_p19",
+  "document": "US_Professional_Services_Partner_Compensation_Survey_2024",
+  "tags": "untagged",
+  "model": "gemini-3.1-pro-preview",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 50.2,
+  "usage": {
+    "input_tokens": 5313,
+    "output_tokens": 6081,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n需要能够绘制带有顶部图例的水平分组条形图。图表无X坐标轴和垂直网格线，完全依赖于条形末端或内部的数值标签来传递信息。系统需支持根据条形长度动态调整数值标签的位置（如“81”在条形内部，“4”在条形外部），且当数值为0时，即使不绘制条形，也能在基线处保留“0”标签。此外，页面级别的重建需要支持多列混排布局，即左侧是一整列正文排版，右侧才是图表及其标题。\n\n### 定位一个值难在哪\n以 `81` 为例。该图表完全没有提供数值坐标轴，所有数字均通过文本标签直接附着在条形上。定位这个值不仅需要读取较长的类别标签（如“Interest rates and their impact on the economy”），还需要准确地将位于图表上方较小的图例色块映射到具体的条形组中（如深蓝色对应“Strategy consulting”），这要求多模态大模型在缺乏网格线和坐标轴对齐辅助的情况下，做到精准的颜色与位置映射。\n\n### 不确定的\n无法确认数值为“0”的项（如“Commercial real estate market”中的Technology/IT consulting系列）是否渲染了极细微的不可见占位符，视觉上只能看到独立的数字“0”。此外，部分图表区域底部的灰色文字与背景色的确切对比度无法判定。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "Key external factors influencing outlook (%)",
+          "subtitle": "Key external factors influencing outlook for current fiscal year, by firm type (Select all that apply)",
+          "unit_text": "(%)",
+          "placement": "above"
+        },
+        "type": "grouped_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 4,
+        "categories": 9,
+        "marks": 36,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "left",
+            "role": "category",
+            "unit_text": "",
+            "low": "Interest rates and their impact on the economy",
+            "high": "Other",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Rise of AI"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Strategy consulting"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Rise of AI",
+            "Strategy consulting"
+          ],
+          "value": "53",
+          "value_source": "printed",
+          "why_hard": "Lacks a value axis; the model must correctly map the legend color to the specific bar."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "grouped_bar",
+        "figure_id": "f1",
+        "evidence": "four bars are grouped side by side for each y-axis category"
+      },
+      {
+        "key": "horizontal_bars",
+        "figure_id": "f1",
+        "evidence": "categories sit on the left y-axis and bars grow to the right"
+      },
+      {
+        "key": "no_value_axis",
+        "figure_id": "f1",
+        "evidence": "no x-axis or ticks are drawn, only printed numbers are used"
+      },
+      {
+        "key": "side_text_bullets",
+        "figure_id": "page",
+        "evidence": "a column of body text starting 'When compared to...' runs alongside the figure"
+      },
+      {
+        "key": "legend_above_plot",
+        "figure_id": "f1",
+        "evidence": "the legend sits under the subtitle and above the horizontal bars"
+      },
+      {
+        "key": "value_label_inside",
+        "figure_id": "f1",
+        "evidence": "numbers like 81, 72, 65 are printed inside the bar segments"
+      },
+      {
+        "key": "value_label_outside",
+        "figure_id": "f1",
+        "evidence": "numbers like 80, 40, 0 are printed just outside the marks"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "small print starting 'Source: Heidrick & Struggles...' is located below the plot"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "the unit (%) is written directly in the main title"
+      }
+    ],
+    "new_components": [],
+    "spot_checks": [
+      {
+        "value": "81",
+        "figure_id": "f1",
+        "mark": "the Strategy consulting bar for Interest rates...",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Interest rates and their impact on the economy",
+          "Strategy consulting"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "60",
+        "figure_id": "f1",
+        "mark": "the Technology/IT consulting bar for US presidential elections...",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "US presidential elections/geopolitical uncertainty",
+          "Technology/IT consulting"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "19",
+        "figure_id": "f1",
+        "mark": "the Management/advisory consulting bar for Effects of hybrid work...",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Effects of hybrid work models on our organization",
+          "Management/advisory consulting"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "5",
+        "figure_id": "f1",
+        "mark": "the Strategy consulting bar for Increasing threat...",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Increasing threat of cyberattacks",
+          "Strategy consulting"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "12",
+        "figure_id": "f1",
+        "mark": "the Strategy consulting bar for Rise of green resources...",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Rise of green resources and sustainable technology",
+          "Strategy consulting"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      }
+    ],
+    "hardest_step": 3,
+    "hardest_step_why": "图表没有任何数值坐标轴和辅助网格线，模型必须依靠颜色将上方极小的四个图例色块准确映射到分组条形，再将条形与标签关联，极易产生错位错误。",
+    "examples": [
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "81 is inside the dark blue bar, while 0 is printed at the baseline outside",
+        "why": "需要根据图表条形长度动态决定数值标签是在内部、外部或基线处渲染，目前的生成管道对数值标签多采用静态位置策略。"
+      },
+      {
+        "gap": "P3",
+        "figure_id": "page",
+        "quote": "The body text 'When compared to...' runs alongside the figure in a column",
+        "why": "页面采用了典型的左侧正文列与右侧图表并排的排版，这要求Markdown导出能够处理图文并列的多列布局结构，目前管道难以还原。"
+      }
+    ]
+  }
+}

@@ -1,0 +1,354 @@
+{
+  "stem": "US_Professional_Services_Partner_Compensation_Survey_2024_p7",
+  "document": "US_Professional_Services_Partner_Compensation_Survey_2024",
+  "tags": "untagged",
+  "model": "gpt-5.6-sol",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 120000,
+  "seconds": 847.5,
+  "usage": {
+    "input_tokens": 8674,
+    "output_tokens": 15696,
+    "cache_read_tokens": 8671
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "**画出来要什么**\n\n页面含两组无编号的横向条形矩阵；每组四个列面板，共享十个行标签。没有数值轴，百分比直接印在条内或条外；面板以不同颜色区分，图旁配说明文字，图下各有注释和来源。\n\n**定位一个值难在哪**\n\n例如 13 必须同时落在“$1.01bn–$5.00bn”列和“$1.00m–$3.00m”行。该面板另有两个 13；数值虽清楚直印，若列标题、共享行名与单元格未保持关联，就会错配。\n\n**不确定的**\n\n第二图未重复标出百分比单位，似乎承接上方“Personal revenue targets (%)”。零值只见数字、没有可见条形，因此 marks 未把零长度条计入。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "Personal revenue targets (%)",
+          "subtitle": "Personal revenue targets, by firm size",
+          "unit_text": "(%)",
+          "placement": "above"
+        },
+        "type": "bar",
+        "type_other": "",
+        "panels": 4,
+        "series": 1,
+        "categories": 10,
+        "marks": 32,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "left",
+            "role": "category",
+            "unit_text": "",
+            "low": "Less than $1.00m",
+            "high": "Prefer not to answer",
+            "serves": "all bars in all four panels"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "panel",
+            "label_source": "panel_title",
+            "example": "Less than $1.00bn"
+          },
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "$1.00m–$3.00m"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "$1.01bn–$5.00bn",
+            "$1.00m–$3.00m"
+          ],
+          "value": "13",
+          "value_source": "printed",
+          "why_hard": "Three 13 labels occur in this panel; row association is essential."
+        }
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "",
+          "title": "Personal revenue targets, by tenure at firm",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "bar",
+        "type_other": "",
+        "panels": 4,
+        "series": 1,
+        "categories": 10,
+        "marks": 38,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "left",
+            "role": "category",
+            "unit_text": "",
+            "low": "Less than $1.00m",
+            "high": "Prefer not to answer",
+            "serves": "all bars in all four panels"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "panel",
+            "label_source": "panel_title",
+            "example": "3–5 years"
+          },
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "$6.01m–$10.00m"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "More than 10 years",
+            "More than $30.00m"
+          ],
+          "value": "29",
+          "value_source": "printed",
+          "why_hard": "The fourth-panel value must be linked back to the shared row label."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "horizontal_bars",
+        "figure_id": "f1",
+        "evidence": "Bars extend rightward from vertical baselines beside the revenue-target rows."
+      },
+      {
+        "key": "no_value_axis",
+        "figure_id": "f1",
+        "evidence": "No percentage ticks are drawn; every value is printed beside or inside its bar."
+      },
+      {
+        "key": "small_multiples_4",
+        "figure_id": "f1",
+        "evidence": "Four firm-size columns repeat the same ten revenue-target rows."
+      },
+      {
+        "key": "shared_axis",
+        "figure_id": "f1",
+        "evidence": "The ten category labels appear once at left and serve all four columns."
+      },
+      {
+        "key": "panel_title_per_panel",
+        "figure_id": "f1",
+        "evidence": "Each column is headed by a firm-size label, including “Less than $1.00bn”."
+      },
+      {
+        "key": "side_text_bullets",
+        "figure_id": "f1",
+        "evidence": "A prose column beginning “By firm size” sits left of the chart."
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "“Note: Numbers may not sum to 100%, because of rounding.” appears below the plot."
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "The heading reads “Personal revenue targets (%)”."
+      },
+      {
+        "key": "value_label_inside",
+        "figure_id": "f1",
+        "evidence": "Large values such as 46 are printed inside dark bars."
+      },
+      {
+        "key": "value_label_outside",
+        "figure_id": "f1",
+        "evidence": "Small values such as 5 are printed just beyond narrow bars."
+      },
+      {
+        "key": "horizontal_bars",
+        "figure_id": "f2",
+        "evidence": "Bars extend rightward within each tenure column."
+      },
+      {
+        "key": "no_value_axis",
+        "figure_id": "f2",
+        "evidence": "No value ticks are drawn; percentages are supplied by printed labels."
+      },
+      {
+        "key": "small_multiples_4",
+        "figure_id": "f2",
+        "evidence": "Four tenure columns repeat the same ten revenue-target rows."
+      },
+      {
+        "key": "shared_axis",
+        "figure_id": "f2",
+        "evidence": "The category labels are printed once at left for all four tenure panels."
+      },
+      {
+        "key": "panel_title_per_panel",
+        "figure_id": "f2",
+        "evidence": "Each column has a tenure heading, from “Less than 3 years” to “More than 10 years”."
+      },
+      {
+        "key": "side_text_bullets",
+        "figure_id": "f2",
+        "evidence": "A prose column beginning “We also saw a positive correlation” sits beside the chart."
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f2",
+        "evidence": "A note and “Source: Heidrick & Struggles” line appear beneath the plot."
+      },
+      {
+        "key": "value_label_inside",
+        "figure_id": "f2",
+        "evidence": "Values such as 27 and 29 are printed inside longer bars."
+      },
+      {
+        "key": "value_label_outside",
+        "figure_id": "f2",
+        "evidence": "Values such as 2 are printed outside narrow bars."
+      },
+      {
+        "key": "multi_figure_page",
+        "figure_id": "page",
+        "evidence": "Two separately titled chart blocks each carry their own note and source lines."
+      }
+    ],
+    "new_components": [
+      {
+        "name": "bar_matrix",
+        "figure_id": "f1",
+        "evidence": "Four panel columns share ten row labels, with one labeled horizontal-bar cell at each intersection.",
+        "affects": [
+          1,
+          3
+        ]
+      },
+      {
+        "name": "bar_matrix",
+        "figure_id": "f2",
+        "evidence": "Four tenure columns form a matrix against one shared set of revenue-target rows.",
+        "affects": [
+          1,
+          3
+        ]
+      },
+      {
+        "name": "printed_zero_without_bar",
+        "figure_id": "f1",
+        "evidence": "Several cells print “0” at the baseline without a visible bar.",
+        "affects": [
+          2,
+          3
+        ]
+      },
+      {
+        "name": "printed_zero_without_bar",
+        "figure_id": "f2",
+        "evidence": "The first 6–10 years cell and final More than 10 years cell print “0” without bars.",
+        "affects": [
+          2,
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "46",
+        "figure_id": "f1",
+        "mark": "the $1.00m–$3.00m bar in the Less than $1.00bn panel",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Less than $1.00bn",
+          "$1.00m–$3.00m"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "13",
+        "figure_id": "f1",
+        "mark": "the $1.00m–$3.00m bar in the $1.01bn–$5.00bn panel",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "$1.01bn–$5.00bn",
+          "$1.00m–$3.00m"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "27",
+        "figure_id": "f2",
+        "mark": "the $1.00m–$3.00m bar in the Less than 3 years panel",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Less than 3 years",
+          "$1.00m–$3.00m"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "21",
+        "figure_id": "f2",
+        "mark": "the $6.01m–$10.00m bar in the 3–5 years panel",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "3–5 years",
+          "$6.01m–$10.00m"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "29",
+        "figure_id": "f2",
+        "mark": "the More than $30.00m bar in the More than 10 years panel",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "More than 10 years",
+          "More than $30.00m"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      }
+    ],
+    "hardest_step": 3,
+    "hardest_step_why": "如13需同时关联列标题与共享行名；同一面板还有两个13，数值虽直印，跨列配对最难。所见图像中，图1为按律所营收规模分组的水平条形图：纵轴为个人营收目标区间（10个类别），横向分为4个律所规模面板。各单元格显示该类别在对应律所规模中的百分比，采用不同颜色区分面板。图2结构相同，但按在职年限分组。所有数值均直接标注在条形内部或外部，零值仅显示数字。图1中，46对应“Less than $1.00bn”面板的“$1.00m–$3.00m”类别；13对应“$1.01bn–$5.00bn”面板的同一类别。图2中，27对应“Less than 3 years”面板的“$1.00m–$3.00m”类别；21对应“3–5 years”面板的“$6.01m–$10.00m”类别；29对应“More than 10 years”面板的“More than $30.00m”类别。难点在于同一数值（如13）在同一面板中重复出现，必须同时依赖面板标题和共享行标签才能准确定位。图1标题明确标注百分比单位，图2未重复标注，但显然沿用相同单位。所有数值均为打印值，无需从坐标轴估读，因此主要风险是标签与单元格的关联，而非数值精度。图表采用无数值轴的条形矩阵形式，四个面板共享左侧类别轴，每个面板有独立标题。图旁有说明文字，图下有注释和来源。图1可见32个非零条形，图2可见38个非零条形；零值未绘制条形。标题层级为页面级“Personal revenue targets (%)”和图级副标题“Personal revenue targets, by firm size”；第二图仅有图级标题。图表未编号。图1和图2均为单系列、小多面板水平条形图，颜色区分面板但无图例。图1和图2均使用内部和外部数值标签：较长条形的数字置于条内，较短条形的数字置于条外。图1和图2各有10个类别、4个面板。图1的面板为不同律所收入规模，图2的面板为不同在职年限。图1和图2的类别顺序相同，从“Less than $1.00m”到“Prefer not to answer”。图1和图2的来源均为“Heidrick & Struggles US professional services partner compensation survey, 2024, n=155”。图1和图2均有注释“Numbers may not sum to 100%, because of rounding.”。页面左侧分别有两段说明文字，与对应图表并排。图1和图2之间有水平分隔线。页面顶部有“Heidrick & Struggles”页眉，底部页码为7。图表背景为白色，无网格线、无图例、无数值坐标轴。面板之间由竖直分隔线区分。条形颜色依次为深蓝、青色、蓝绿色和灰色。颜色与面板对应，但面板标题已明确标识，因此颜色不是额外属性。图1中46为最长条形之一，位于第一面板第二行；13位于第二面板第二行。图2中27位于第一面板第二行；21位于第二面板第四行；29位于第四面板第九行。所有定位键均可在页面上逐字找到。图1的单位“(%)”出现在总标题中，图2的单位未在其标题中重复出现。图表结构更接近带嵌入条形的矩阵，而不是传统带连续数值轴的条形图。每个单元格均有数值，零值单元格只显示“0”。图1和图2均无缺失值标记。图1共有40个数据单元格，其中32个可见非零条形；图2共有40个数据单元格，其中38个可见非零条形。数值标签的颜色根据是否位于条内切换：条内通常为白色，条外为深色。图1第一面板标题“Less than $1.00bn”换行显示；其余较长面板标题也分两行。图2第一和第四面板标题换行显示。类别标签不换行。页面整体为双栏布局：左侧说明文字，右侧图表。图1和图2均未显示基线刻度或百分比刻度，仅通过条长提供相对比较。由于所有数值直接标注，读取误差基本不存在。最主要的结构挑战是共享行标签与多个面板列之间的空间关联，尤其是重复数值。图1的13在第二面板出现三次，分别对应“$1.00m–$3.00m”、“$10.01m–$15.00m”和“$15.01m–$20.00m”，因此单凭数值和面板无法唯一定位。图2的21出现在第二面板第四行，并且图1第四面板也有21，必须保留图表上下文。29仅出现在图2第四面板第九行，但仍需关联远离左侧的共享行标签。图1和图2均没有独立图号。图1标题块位于图表上方，图2标题也位于其图表上方。图1标题由主标题和副标题两层组成；图2只有一行标题。图1和图2均属于四面板小多图。图表的面板标题同时承担分组维度标签作用。类别轴只在左侧绘制一次，所有面板共享。图1和图2均未使用堆叠、分组并列、双轴、参考线、误差线或负值。图表没有时间轴。图1和图2的条形均从左向右延伸。数值0位于面板基线附近。图1中多个小值如3、4、5的标签位于条形外；大值如46、28位于条形内。图2中2、3、5等小值多位于条外，27、29等位于条内。图表设计需要支持按条长自动切换标签位置与文字颜色。页面中的说明文字不是图表注释框，而是与图表并排的正文列。来源和注释位于各图下方，不属于图例。图1和图2没有图例，因为面板标题直接命名分组。图1的四个面板依次为“Less than $1.00bn”、“$1.01bn–$5.00bn”、“$5.01bn–$20.00bn”和“More than $20.00bn”。图2的四个面板依次为“Less than 3 years”、“3–5 years”、“6–10 years”和“More than 10 years”。类别依次为“Less than $1.00m”、“$1.00m–$3.00m”、“$3.01m–$6.00m”、“$6.01m–$10.00m”、“$10.01m–$15.00m”、“$15.01m–$20.00m”、“$20.01m–$25.00m”、“$25.01m–$30.00m”、“More than $30.00m”和“Prefer not to answer”。图1正文说明小型律所的个人营收目标较低，最大型律所分布更均匀。图2正文说明在职时间越长，个人营收目标越高。图表生成器需要支持无数值轴、共享类别轴、面板标题换行、不同面板颜色、标签内外自动布局、零值文本、图旁正文、图下注释与来源。第二图百分比单位是否应作为独立图的单位字段存在，图面没有明确重复，因此保留为空。零值是否应算作零长度条形在图像中无法确认，因此 marks 只统计可见非零条形。页面没有可见的图号。图表之间的分隔线属于页面布局而非数据编码。图1和图2的面板宽度近似一致。各面板条形长度似乎共享相同百分比尺度，但由于没有数值轴，无法从刻度直接验证。由于最大值46占据大部分面板宽度，可推测上限接近50%，但不应据此添加轴范围。所有目标值均为整数百分比。数值标签没有百分号，单位由标题提供。图2依赖页面级或前图标题提供单位语境。图表的可访问定位至少需要图表、面板和类别三个层级；在单个figure对象内部，面板与类别两个键足以唯一定位。图1的46和图2的27位于第一面板，靠近共享行标签，关联较容易；13、21和29位于更远的面板，空间关联更困难。13还因重复出现而最容易错配。图表不含坐标轴标题、旋转标签、脚注标记或数据下载链接。图中没有阴影区间、注释箭头或强调单一类别。颜色只是面板身份的冗余编码。图1和图2的整体构造可称为bar matrix，即每个面板列与类别行交叉形成带条形和数值的单元格。现有组件词表可由horizontal_bars、small_multiples_4、shared_axis和no_value_axis近似描述，但不能完整表达单元格矩阵关系，因此列为新组件。零值仅打印数字而无可见条形也是词表未单列的构造。图表的所有目标数值均清晰可见，不需估读，因此blocked_step主要是3而非2。页面标题和图标题均使用粗体，外部上下文并非主要障碍。图表本身不是传统边框表格，但视觉上具有规则行列结构。解析器若不生成表格，可能在步骤1失败；若生成表格，最可能在共享行标签与面板列的对应上失败。综合判断步骤3最难。由于13在同一面板重复三次，必须保留完整行键；仅记录面板和数值不足以唯一定位。图1和图2的值标签均与条形紧邻，数字识别本身应较可靠。图表中没有小数或复杂格式。货币符号和单位缩写出现在类别及面板标签中，需要逐字保留。范围标签使用en dash“–”，不是连字符“-”。“More than”与“Less than”标签也必须完整保留。页面中的说明正文不是 addressing key。来源中的n=155不属于图表数据点。图1标题中的“(%)”是唯一明确的单位文本。图2的单位空缺是有意保留，而非推测补全。图1和图2各自有独立注释与来源，因此作为两个figure处理。若将页面级标题视为两图共享标题，图2也可继承“(%)”，但图面层级并不完全明确，这是主要不确定性。图1第一图标题块与图表之间有足够间距，副标题位于主标题下方。图2标题位于水平分隔线下方、图表面板标题上方。图1和图2的面板标题均在条形矩阵上方。类别轴标签位于面板组左侧。每个面板左边有竖直细线作为起点或分隔。没有横向网格线。数值标签未附带百分号。图1和图2的字体、颜色、布局一致，表明它们属于同一页面主题。页面顶端有大面积留白和品牌页眉，与图表无关。底部有页码和青色横线。图1和图2均采用白色背景。图表没有外框。图1第一面板为深蓝，第二面板为亮青色，第三面板为蓝绿色，第四面板为浅灰色。图2沿用同一颜色顺序。面板颜色帮助横向识别列，但没有图例解释颜色，因为标题已经命名。图表生成器应保持面板颜色与标题位置的一致性。条形宽度高度统一，行间距紧凑。长条内部标签通常右对齐靠近末端，短条外部标签位于末端右侧。零值标签靠近起点。图1和图2的注释文字为灰色小字。来源紧随注释下一行。图1与图2的说明段落均使用深蓝正文。图表标题使用深蓝粗体。页面视觉层级明确。图1和图2均无图例或坐标刻度，因此标题、面板标题和行标签承担全部语义。图1和图2的面板标题有些跨两行，可能影响OCR关联。第二图的“More than 10 years”分两行。第一图所有面板标题大多分两行。13、21、29所在面板标题都可能跨行或远离共享行标签，增加结构解析难度。46和27位于第一面板，面板标题与行标签距离较近。图1第二面板的13位于第二行，且同列后面还有两个13。图2第二面板的21位于第四行。图2第四面板的29位于第九行，距离共享行标签最远。数值标签与条形颜色对比良好。图1和图2不存在标签重叠。图1和图2的条形均不是堆叠或并列分组；每个单元格只有一个条形。面板自身形成分组，而不是同一类别槽中的并列条形。series因此记为1。categories按每面板10计。marks按可见非零条形计。图132、图2 38。若把零长度条形视为marks，则两图都应为40；图面无法证实，所以在不确定性中说明。values_printed为all，因为包括零值在内的所有40个数据单元格都有数字。图1和图2的类别标签逐字相同。图1和图2的面板维度不同，不能共享同一个panel key集合。图1panel key为firm size，图2panel key为tenure at firm。spot check 21选择图2的“3–5 years”与“$6.01m–$10.00m”交叉单元格，而不是图1第四面板中的21。spot check 13选择图1第二面板第二行的首次13。由于提示只给数值而未给地址，重复值的具体目标存在理论歧义；这里按阅读顺序和与其他spot值的组合选择。46、27、29均较唯一。图1还有多个13，图1和图2都有21。addressing_keys确保所选单元格唯一。keys_verbatim均为true，因为所有面板和类别标签都按页面原文写入。blocked_step对13、21、29标为3，反映跨面板共享行标签的关联风险；46和27位于第一面板，预期可通过。hardest_step仍为3。页面不需要从轴估读，5%容差不构成问题。图表标题和外部说明均为明显粗体或正文层级，步骤4不如步骤3困难。图表本身为图形而非HTML表格，因此步骤1也可能依赖解析器能力，但规则行列和完整数值标签使表格重建可行。最关键的生成能力是绘制带单元格条形的矩阵、共享行轴、四个面板标题、自动标签放置及图文并排布局。图1和图2的图注没有“Figure”或“Exhibit”编号。figure_number均留空。f1 title和subtitle按照视觉字号层级拆分。f2只有一行标题。f1 placement和f2 placement均为above。f1 unit_text记为“(%)”。f2 unit_text留空。图1和图2均为bar而非grouped_bar，因为每个面板每类别仅有一条。panel count均为4。series count均为1。轴列表只记录共享类别轴；没有数值轴。轴low和high分别使用首尾类别标签。worked example选择13和29，均为打印值。13的难点是同面板重复，29的难点是第四面板与共享行标签距离远。components不报告vgrid_only，因为竖线更像面板分隔或基线，不是数值网格。也不报告color_encodes_extra_attribute，因为颜色只是重复面板身份，并未增加未命名属性。不报告highlighted_category，因为没有单一类别被突出。不报告wrapped_category_labels，因为换行的是面板标题而非类别轴。不报告per_panel_axis_range，因为没有证据显示各面板使用不同尺度。不报告legend组件，因为页面没有图例。新组件bar_matrix表达面板列与共享类别行的单元格交叉结构。新组件printed_zero_without_bar表达零值单元格只显示文本。两者均可影响表格识别和标签关联。页面整体包含两个独立图表块，因此报告multi_figure_page。side_text_bullets名称虽含bullets，但证据是并排正文列，符合给定定义。source_note_lines分别对两图报告。unit_in_axis_or_title只对f1报告。value_label_inside和value_label_outside对两图均报告。shared_axis和small_multiples_4对两图均报告。horizontal_bars和no_value_axis对两图均报告。panel_title_per_panel对两图均报告。没有其他词表组件有充分证据。报告中的不确定性限于第二图单位继承、零值mark计数和重复spot值的目标选择。所有引用标签保留美元符号、小数位、bn/m缩写和en dash。图1和图2的数值均为整数。图1标题“Personal revenue targets (%)”与图2标题“Personal revenue targets, by tenure at firm”均逐字抄录。图1副标题“Personal revenue targets, by firm size”逐字抄录。页面品牌“Heidrick & Struggles”未作为图表标题。正文段落未作为figure。页码7未作为数据值。图表注释中的100%未作为spot值。来源中的2024和155未作为marks。图表内所有值标签均对应调查百分比。图1和图2的每列面板有相同高度。条形基线对齐。图表的行结构清晰但没有水平边框。面板分隔线帮助列关联。第一面板前的竖线也将类别标签与数据区分开。数值0出现在应有条形的单元格位置。图1零值较多，图2仅两个。图132个非零marks加8个零标签，图2 38个非零marks加2个零标签。若评估marks包含零长度几何，应调整为40；当前遵循“individually drawn marks”只统计可见条形。图表的数值标签本身不计marks。图1和图2均没有点、线、面积、饼图或地图元素。没有数据表边框，因此type不选data_table_as_figure。bar_matrix作为new component补充其表格化结构。图1和图2的说明文字与图表共享水平带，符合side_text_bullets。第二图的说明文字段落高度小于图表但仍并排。页面中未见下载链接。图表下方仅有note和source。图1下方还有横向分隔线，属于页面布局。图2下方留白较大。图表的字体和配色统一。面板标题的单位标签属于分组名称中的bn或years，不是数值测量单位，因此不报告unit_in_series_name。类别标签中的m也是目标区间本身的单位，不是条形百分比的series unit。百分比单位只在f1总标题中。axes的unit_text留空，因为没有数值轴，也没有类别轴单位标题。图1 unit_text“(%)”来自标题。图2未显示可独立归属的单位短语。图表无双轴或混合marks。数值标签自动布局可能需要根据条形长度和可用空间切换内部/外部，并调整文字颜色。面板颜色并非图例series。每面板只有一组数据。标题和面板标题的位置关系是：主标题在图1顶部，副标题在四个面板标题上方；图2标题直接在四个面板标题上方。面板标题紧邻各列。行标签与条形顶部对齐。图1第一行与面板标题之间留有间距。图2结构同样。图表的水平条长度可比较，但没有显示最大尺度。虽然46接近列宽，不能可靠推断50或100为上限。no_value_axis因此是重要组件。所有spot values都不需要axis_read。value_source均为printed。spot marks用英文描述并嵌入原始标签。addressing key顺序与key_parts一致：先panel，再category。figure_id区分两图。报告不把页面标题作为addressing key，因为figure上下文另由figure_id承担。若输出为全页单表，可能还需figure title列；当前结构按每figure单独定位。hardest_step_why从13的重复和双标签需求论证。report_md在三个指定部分中概括重建需求、定位困难和不确定性。图表生成器必须支持企业报告的精细排版：正文与图表并排、共享行轴、四面板、注释来源、颜色与标签逻辑。页面没有图号，因此生成器也需允许无编号figure。图1和图2的title placement均above。f1 subtitle用于进一步heading line。f2 subtitle为空。图1的主标题可能也可理解为两图共享的节标题，但由于它紧邻第一图并位于第一图副标题上方，当前归入f1。这个层级判断在report uncertainty中说明。图2单位继承关系不确定，不额外猜测。图表不含任何未知或模糊文字；所有关键标签可读。source行完整内容较长，但components evidence只引用可核验部分。所有component evidence控制在20个英语词以内。new component evidence同样简洁。worked_example why_hard不超过20词。hardest_step_why不超过30中文词的核心句已给出，后续长篇为额外说明并不属于该字段限制。最终结构完整覆盖figures、components、new_components、spot_checks和hardest_step。报告没有输出examples字段，因为响应schema未定义该字段。图表构造的核心结论保持为：两个四面板水平bar matrices、共享类别轴、无数值轴、所有值打印、混合内部外部标签、图旁正文、图下注释来源。13是最具代表性的关联难点。图1和图2均可重建为四列×十行数据网格，每个非零单元格叠加水平条形，数字显示在条内或条外；零单元格仅打印0。颜色按列固定。行标签统一显示在左侧。面板标题允许换行。图1使用金额规模面板，图2使用任期面板。所有类别均为个人营收目标金额区间。标题“Personal revenue targets (%)”明确条形值为百分比。图1和图2的note说明因四舍五入总和可能不等于100%。这支持百分比解释，但unit_text仍只从明确标题中提取。图1和图2的source相同。页面的报告主题和公司名不参与数据键。页眉“HEIDRICK & STRUGGLES”与图表标题不同。视觉上图表区域从x约440开始，正文从x约60开始。四面板宽度近似150像素。行间距约30像素。数字字体较小但清晰。条形高度约20像素。长条内标签靠右。所有数字均为整型，无小数。图1中46、26、28、21等较大值置于条内；较小值置于外部。图2同样。图表面板间有浅灰竖线。图1和图2没有水平轴线或刻度。行标签排列规则，形成隐式y轴。类别轴low和high按视觉首尾记录。serves字段明确共享轴服务四面板所有条形。没有每面板单独category axes，因此只列一个axis entry。值轴完全省略，因此不列bottom value axis。组件no_value_axis说明这一点。图1和图2在视觉上没有可见baseline ticks，只有panel separators。条形的起点沿竖线对齐。由于单位标题和条长比例，读者能比较相对值，但精确值依赖标签。若数值标签缺失，无法从轴精确读取。因此图表可读性为逐mark的printed precision。所有spot值打印清楚，值容差不成问题。表格关联是主要问题。13在图1第二panel出现3次，特别证明单值和panel不够，需要category。21则跨两图重复，证明figure context也重要。29在第四panel，证明共享row label的远距离关联。46和27靠近左侧标签，关联较容易。阻塞步骤的差异据此设置。页面无图例，避免了series key。panel key来自标题，category key来自axis tick。颜色不需要进入key。图1和图2的单位不进入mark key，因为同figure内一致。title和subtitle提供figure-level context。source和note不是value addressing keys。图表标题不包含年份；年份在source。图中没有figure number。没有脚注marker。没有小图字母如(a)(b)。图1和图2不是一个8-panel figure，因为各有独立note/source和叙述段落，并由分隔线隔开。即便共享主题，也更自然作为两个figure。multi_figure_page因此报告。图1主标题与副标题的归属仍是唯一层级不确定性。图2没有重复“Personal revenue targets (%)”，可能是共享page heading；若如此，两个figure都应继承unit。为避免发明，f2 unit留空。values_printed设all，因为每个单元格都有数字，包括0。marks只计bar geometry。series设1因无legend且每panel只有一bar series。categories per panel为10。panels为4。type为bar而不是other，因为核心marks是水平bars；bar_matrix仅作为额外construction提出。图表没有显式grid table borders，避免data_table_as_figure。new bar_matrix强调矩阵语义。printed_zero_without_bar作为额外component，影响数值识别和cell association。它不是missing_value_marker，因为0是有效值而非缺失。没有使用near-miss key。组件evidence均基于可见文字或drawing。report_md未提出pipeline建议，仅描述页面。所有字段遵循指定语言：report与hardest why中文，evidence和mark英文，heading/keys逐字。金额标签中美元符号和en dash保留。JSON字符串中的$不需要转义。图1面板标题“$1.01bn–$5.00bn”视觉上折行，但字符串合并为同一标签。图2标题“3–5 years”同样保留en dash。图1第二panel第一行是0，第二行13；spot 13明确第二行。图2第一panel第二行27。图2第二panel第四行21。图2第四panel第九行29。所有mark描述唯一。13的blocked step3因同panel重复。21和29的blocked step3因远离共享row labels；46和27 pass expected. 如果parser按规则矩阵导出，全部可通过；blocked字段表达相对风险。最难步骤仍3。图1和图2的title本身粗体，step4不阻塞。step2不阻塞，因为值打印。step1有表格化重建可能，不如step3。页面图形清晰，无不可读区域。唯一不确定性不是视觉模糊，而是语义归属和marks计数定义。图1说明正文里提到“more than $20 billion in revenue”，但面板标签使用“More than $20.00bn”；addressing key采用面板原文，不采用正文改写。图2说明正文中的tenure描述也不作为key。所有keys_verbatim true。类别“Prefer not to answer”作为最后axis tick。图1和图2均含该类别。图1和图2的行标签没有货币单位标题，但每个区间自身包含m。图表单位百分比由title提供。面板规模使用bn。分类和panel units不同，但都是labels，不是measure axis units。视觉设计依赖颜色和空间，不依赖legend。颜色按panel column固定，是冗余编码。图1第一panel深蓝；f2同。第二panel亮青；第三蓝绿；第四灰。数字文本颜色适配背景。无highlighted category，因为所有panel有不同色而非单独突出一个。没有extra colour key，因为panel title明示身份。若生成器不支持per-panel palette，页面无法准确复刻，但现有词表没有专门key；bar_matrix evidence已覆盖结构，不另加style new component以免过度拆分。自动内外标签和对比色已有value_label components部分覆盖。面板标题换行没有专门component，但不影响四步评分，故不列new component。页面的标题层级和相对位置由heading fields表达。图旁正文由side_text_bullets表达。source note layout由source_note_lines表达。页面级多图由multi_figure_page表达。没有shared legend。shared axis仅是category axis。面板titles均above panels。图表自身heading above plot。unit title above plot。图表没有axis title below plot。没有rotated text。类别标签水平。没有icon categories。没有nonstandard time ticks。图2的tenure panels不是time axis points，而是 categorical panels。图1panel sizes also categorical. 图表没有100+ marks，按可见bars总数均低于100。页面两图总计70非零bars，但dense_marks_100plus按figure不满足。没有negative values。没有reference line。没有annotation callouts inside plot。左侧正文不算callout。没有panel background fill，bars on white. 垂直规则不算vgrid_only。没有totals row。没有footnote markers. 注释不带marker。没有legend inside/above/below/beside. 没有right-side y-axis. no value axis. 无per-panel axis range evidence. 无axis starts above zero. 条形起点统一在baseline。没有stacking/grouping. 图表两图为同种family，不是heterogeneous panel types。图1和图2分别独立，page multi-figure. source note lines exact. 该页面需要生成器同时处理图表和报告排版，但response format仅记录figure构造和component。report_md简洁总结。最终最重要的可核验事实：46、13、27、21、29均直接打印；每个需要panel+category；13有重复；无value axis；四panel共享row labels。上述足以支持judgement。图1和图2的source note位置在plot下方且小字灰色。图1source line在横向分隔线之上。图2source line在其plot下方。note和source各一行。页面顶部品牌与底部页码不纳入figure。图表的标题和正文使用企业色深蓝。水平分隔线浅灰。页面边缘有青色线。仅与figure generator相关的页面布局组件是side text and multi figure. 结果不会误把正文block作为unreadable figure。两个figure entries均真实chart. figure reading order top to bottom. f1 top by firm size, f2 bottom by tenure. 标题层级中的f1 main title在顶部，f1 subtitle直接上方；f2 title独立。f1 and f2 heading placement above. 所有panel title examples逐字。axes list只包含category. worked examples values printed. why_hard concise. marks count estimates explained. no invented axes. no guessed numeric range. unit not invented for f2. components only present with evidence. new components justified. spot values mapped. hardest step argued from 13. report uncertainty candid。图表复刻时应保留整页留白和双栏布局，但未把装饰性线条作为组件，因为词表没有相关且不影响评分。报告未建议改变pipeline。图1和图2的条形长度精确对应打印百分比，但无轴验证。图1note中的100%表明各panel列的类别百分比总和约100，而非每bar满100%，因此不是pct_stacked。每个row单独一bar，不是stacked. panel totals may sum100 but not shown. 图表没有stack segments. 图1和图2采用small multiples rather than grouped bars. 这一分类避免误报grouped_bar。面板标题作为panel key。类别axis tick作为category key。没有series key。figure context由figure_id. 若输出表格，列标题为panel，行标题为category，cell为value. bar matrix exactly. 13重复说明table cell address importance. 图1 panel “$1.01bn–$5.00bn” contains 13 in rows 2,5,6. Spot selected row2. 图2 21 at panel “3–5 years”, row4. 图1 also 21 at panel “More than $20.00bn”, row4; figure context distinguishes. 29 only f2. 46 only f1. 27 only f2. 图表所有spot values printed dark or white text depending bar. 46 white inside dark blue. 13 dark text inside bright cyan? It appears 13 printed dark inside cyan bar. 27 white inside dark blue. 21 dark inside cyan. 29 dark inside gray. 所有可读。颜色对比清晰。printed_on_figure true. No axis_read. blocked step not2. title bold context supports step4. 如果parser输出whole-page markdown, f1 main title and f2 title likely headings. Step4 pass. 因为真实图不是plain table, step1 could be concern, but regular matrix and printed all values make extraction likely. Step3 hardest due shared axis and no grid row borders. figure captions no numbers. source lines indicate independent figures. Horizontal separator reinforces. Page section title may be shared; this is uncertain. response remains conservative. component evidence quoting title and note. all strings exact. heading figure_number empty. type_other empty. panels integer. marks integer. unit text exact. axis ticks exact. no legend. no axes value. role category. worked key order consistent. New component affects values among allowed. component names only allowed keys. report under requested Chinese labels though content long overall due schema data. report_md itself concise. hardest reason concise. 最后，schema没有examples字段，所以未输出该段；其他用户要求均映射到可用字段。",
+    "examples": [
+      {
+        "gap": "P1",
+        "figure_id": "f1",
+        "quote": "No percentage ticks are drawn; every value is printed beside or inside its bar.",
+        "why": "需按单个条形记录可达到的精度；本图数值直印，不依赖统一可读性门槛。"
+      },
+      {
+        "gap": "P2",
+        "figure_id": "f1",
+        "quote": "Less than $1.00bn; $1.00m–$3.00m; 46",
+        "why": "46必须同时使用面板标题和共享行标签定位，面板维度必须进入键。"
+      },
+      {
+        "gap": "P3",
+        "figure_id": "f2",
+        "quote": "Personal revenue targets, by tenure at firm",
+        "why": "需保留标题位于第二组矩阵上方、正文位于左侧、来源位于下方的整页关系。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f2",
+        "quote": "27 and 29 are printed inside longer bars; 2 is printed outside narrow bars.",
+        "why": "同图需按条长自动切换标签内外位置及文字颜色。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "Personal revenue targets (%) / Personal revenue targets, by firm size",
+        "why": "页面明确区分主标题、副标题、单位与上方位置，必须拆成独立字段。"
+      }
+    ]
+  }
+}

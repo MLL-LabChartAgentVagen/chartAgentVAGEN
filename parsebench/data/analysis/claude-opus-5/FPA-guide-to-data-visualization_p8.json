@@ -1,0 +1,328 @@
+{
+  "stem": "FPA-guide-to-data-visualization_p8",
+  "document": "FPA-guide-to-data-visualization",
+  "tags": "need_estimate",
+  "model": "claude-opus-5",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 86.8,
+  "usage": {
+    "input_tokens": 13842,
+    "output_tokens": 6618,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "## 画出来要什么\n一张无编号的「风向袋(windsock)」扇形图:标题 `Western Europe Net Sales Windsock` 在上,图例横排在标题与绘图区之间,含三个逗号分隔的灰色色块 + `Scenarios`、橙线 `Budget`、红线 `Prior Year`、深蓝线 `Forecast`。绘图区要能叠三层深浅不同的灰色情景带(从 Jan 的一点向右张开、到 May 截断),两条贯穿全年的水平参考线,一条只画到 May 的折线,以及 May 处一条无标签的竖向虚线。纵轴 100–220、每 20 一格、只有横向点状网格,单位 `$m` 写在最高刻度 220 之上;横轴首个刻度分两行写 `Jan` / `14`,其余只写月份。图上不印任何数值。\n\n## 定位一个值难在哪\n以 `Forecast` 四月的 210 为例:它没有印在图上,210 落在 200 与 220 两条网格线中间,只能靠线宽约 3px 的深蓝线目测插值;地址需要「系列名 `Forecast` + 月份 `Apr`」两段标签,而灰带把线周围的背景填满,起止点也无标记点。\n\n## 不确定的\n三个灰色色块各代表哪一档情景概率,页面只写 `Scenarios`,无从得知;May 处竖虚线的含义(实际/预测分界?)未标注;Budget 与 Prior Year 是否恰为 218 与 166 只能按刻度读;图下无 Source/Note 行。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "Western Europe Net Sales Windsock",
+          "subtitle": "",
+          "unit_text": "$m",
+          "placement": "above"
+        },
+        "type": "other",
+        "type_other": "windsock fan chart",
+        "panels": 1,
+        "series": 4,
+        "categories": 12,
+        "marks": 8,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "$m",
+            "low": "100",
+            "high": "220",
+            "serves": "all bands and all three lines"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "Jan 14",
+            "high": "Dec",
+            "serves": "all bands and lines along the year"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Forecast"
+          },
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "Apr"
+          },
+          {
+            "role": "colour_group",
+            "label_source": "colour_only",
+            "example": "Scenarios"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Forecast",
+            "Apr",
+            ""
+          ],
+          "value": "210",
+          "value_source": "axis_read",
+          "why_hard": "no printed value; 210 falls midway between the 200 and 220 gridlines, thick line over grey band"
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "reference_line",
+        "figure_id": "f1",
+        "evidence": "orange rule at ~218 and red rule at ~166 span the full year, legend `Budget`, `Prior Year`"
+      },
+      {
+        "key": "error_bars",
+        "figure_id": "f1",
+        "evidence": "grey shaded scenario bands fan out around the forecast path from Jan to May"
+      },
+      {
+        "key": "mixed_marks",
+        "figure_id": "f1",
+        "evidence": "filled grey band polygons and three plotted lines drawn in the same panel"
+      },
+      {
+        "key": "legend_above_plot",
+        "figure_id": "f1",
+        "evidence": "legend row sits between the title and the plot: `Scenarios  Budget  Prior Year  Forecast`"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "dotted horizontal rules at 220,200,180,160,140,120,100; no vertical grid"
+      },
+      {
+        "key": "axis_starts_above_zero",
+        "figure_id": "f1",
+        "evidence": "lowest y tick reads `100`, no break glyph on the axis"
+      },
+      {
+        "key": "axis_title_above_axis",
+        "figure_id": "f1",
+        "evidence": "`$m` printed above the topmost tick `220`"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "y ticks are bare numbers 100..220; only `$m` fixes the scale"
+      },
+      {
+        "key": "color_encodes_extra_attribute",
+        "figure_id": "f1",
+        "evidence": "three grey shades nested inside each other; legend names them all only `Scenarios`"
+      },
+      {
+        "key": "shaded_band",
+        "figure_id": "f1",
+        "evidence": "tinted grey range spans Jan to May marking the statistical risk window"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "multi_swatch_single_legend_entry",
+        "figure_id": "f1",
+        "evidence": "legend shows three grey squares separated by commas before the single word `Scenarios`",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "name": "unlabelled_vertical_cutoff_line",
+        "figure_id": "f1",
+        "evidence": "dashed vertical rule at `May` where the forecast line and bands stop; no label or legend",
+        "affects": [
+          3,
+          4
+        ]
+      },
+      {
+        "name": "year_on_first_time_tick_only",
+        "figure_id": "f1",
+        "evidence": "first x tick reads `Jan` with `14` on a second line; other ticks show month only",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "name": "series_truncated_mid_axis",
+        "figure_id": "f1",
+        "evidence": "Forecast line and grey bands end at `May` while Budget and Prior Year run to `Dec`",
+        "affects": [
+          1,
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "218",
+        "figure_id": "f1",
+        "mark": "the orange Budget line, at Jan 14",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Budget",
+          "Jan"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "218",
+        "figure_id": "f1",
+        "mark": "the orange Budget line, at Dec (constant all year)",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Budget",
+          "Dec"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "166",
+        "figure_id": "f1",
+        "mark": "the red Prior Year line, at Jan 14",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Prior Year",
+          "Jan"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "166",
+        "figure_id": "f1",
+        "mark": "the red Prior Year line, at May",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Prior Year",
+          "May"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "166",
+        "figure_id": "f1",
+        "mark": "the red Prior Year line, at Dec",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Prior Year",
+          "Dec"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "218",
+        "figure_id": "f1",
+        "mark": "the dark blue Forecast line at Jan 14, starting on top of the Budget line",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Forecast",
+          "Jan"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "216",
+        "figure_id": "f1",
+        "mark": "the Forecast line at Feb",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Forecast",
+          "Feb"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "212",
+        "figure_id": "f1",
+        "mark": "the Forecast line at Mar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Forecast",
+          "Mar"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "210",
+        "figure_id": "f1",
+        "mark": "the Forecast line at Apr",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Forecast",
+          "Apr"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "200",
+        "figure_id": "f1",
+        "mark": "the Forecast line endpoint at May, at the dashed vertical cutoff",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Forecast",
+          "May"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      }
+    ],
+    "hardest_step": 1,
+    "hardest_step_why": "图上零数值标注:218、166、200 全靠 20 单位刻度目测,风向袋扇形图不会被解析成任何表格。",
+    "examples": [
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "grey nested scenario bands fan out from a single point at Jan to a full range at May, behind the Forecast line",
+        "why": "需要新增扇形/风向袋族:嵌套概率带+在中途截断的预测线,现管线无此图形。"
+      },
+      {
+        "gap": "P8",
+        "figure_id": "f1",
+        "quote": "legend reads three grey squares separated by commas, then the single word `Scenarios`",
+        "why": "灰度深浅编码情景概率档次,图例不给名字,该属性必须进入键。"
+      },
+      {
+        "gap": "P1",
+        "figure_id": "f1",
+        "quote": "y ticks 100,120,...,220 with `$m` above; no value is printed on any line or band",
+        "why": "每条线的可读精度不同:带边界比线更难读,布尔可读门槛不成立。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "`Western Europe Net Sales Windsock` above the legend; no figure number, no source line",
+        "why": "标题需拆成无编号标题+轴上单位 `$m`,并记录标题块位于图例之上。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "lowest tick is `100`, dotted horizontal grid only, dashed vertical rule at `May`",
+        "why": "轴起点非零、单位置于顶刻度上方、无标签竖参考线,均为当前样式维度外。"
+      }
+    ]
+  }
+}

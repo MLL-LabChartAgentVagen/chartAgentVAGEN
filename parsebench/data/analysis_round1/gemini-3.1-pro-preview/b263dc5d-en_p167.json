@@ -1,0 +1,213 @@
+{
+  "stem": "b263dc5d-en_p167",
+  "document": "b263dc5d-en",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "seconds": 68.0,
+  "usage": {
+    "input_tokens": 4393,
+    "output_tokens": 9328,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "本页包含一个名为 Figure 4.10 的双面板柱状图。图表构建器需要支持在同一个图表中绘制两个共享相同图表类型但独立排序和缩放的面板，支持基于数据属性的条件颜色填充（深色表示统计显著性），在特定类别背后绘制垂直高亮背景色带，以及将分类轴标签垂直旋转90度。\n\n最主要的解析障碍在于**第二步（读取数值公差）**。两个面板的 y 轴网格线间距均为 5，且柱子上没有任何数值标签。要准确提取如 13、24、27 这样的非刻度线整数值仅凭视觉非常困难，模型极易产生超出容忍度的误差。此外，多个柱子的高度非常接近（例如对应数值 11 的柱子在图中出现了多次），如果在没有底层数据表的情况下直接读取，很容易导致数值与类别的匹配错乱。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 4.10.",
+          "title": "Relationship between numeracy and individual well-being",
+          "subtitle": "Difference in likelihood of reporting positive outcomes (high proficiency minus low proficiency)",
+          "unit_text": "Percentage points",
+          "placement": "above"
+        },
+        "type": "bar",
+        "type_other": "",
+        "panels": 2,
+        "series": 1,
+        "categories": 32,
+        "marks": 64,
+        "values_printed": "none"
+      }
+    ],
+    "components": [
+      {
+        "key": "negative_values",
+        "figure_id": "f1",
+        "evidence": "the Israel bar in panel A extends below the zero line to -1"
+      },
+      {
+        "key": "shaded_band",
+        "figure_id": "f1",
+        "evidence": "a light blue vertical band highlights the OECD average column across both panels"
+      },
+      {
+        "key": "per_panel_axis_range",
+        "figure_id": "f1",
+        "evidence": "the y-axis starts at -5 in panel A but at 0 in panel B"
+      },
+      {
+        "key": "color_encodes_extra_attribute",
+        "figure_id": "f1",
+        "evidence": "the note states darker colours denote differences that are statistically significant"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "small print below the plot begins with Note: and Source:"
+      },
+      {
+        "key": "panel_title_per_panel",
+        "figure_id": "f1",
+        "evidence": "each panel is titled A. Life satisfaction and B. Health inside blue banners"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "Percentage points is written directly above each y-axis"
+      },
+      {
+        "key": "footnote_marker",
+        "figure_id": "f1",
+        "evidence": "Poland carries an asterisk in its axis label in both panels"
+      },
+      {
+        "key": "axis_title_above_axis",
+        "figure_id": "f1",
+        "evidence": "Percentage points sits above the top y-axis tick instead of alongside it"
+      },
+      {
+        "key": "rotated_x_ticks",
+        "figure_id": "f1",
+        "evidence": "country names on the x-axis are rotated 90 degrees"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "horizontal grid lines run from the y-axis ticks, with no vertical grid lines"
+      },
+      {
+        "key": "highlighted_category",
+        "figure_id": "f1",
+        "evidence": "OECD average is set in bold type on the x-axis"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "independent_panel_sorting",
+        "figure_id": "f1",
+        "evidence": "the categories on the x-axis are sorted in a different order in panel A compared to panel B",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "24",
+        "figure_id": "f1",
+        "mark": "the Croatia bar in panel A",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. Life satisfaction",
+          "Croatia"
+        ]
+      },
+      {
+        "value": "11",
+        "figure_id": "f1",
+        "mark": "the OECD average bar in panel B",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "B. Health",
+          "OECD average"
+        ]
+      },
+      {
+        "value": "-1",
+        "figure_id": "f1",
+        "mark": "the Israel bar in panel A",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. Life satisfaction",
+          "Israel"
+        ]
+      },
+      {
+        "value": "27",
+        "figure_id": "f1",
+        "mark": "the Italy bar in panel B",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "B. Health",
+          "Italy"
+        ]
+      },
+      {
+        "value": "11",
+        "figure_id": "f1",
+        "mark": "the France bar in panel A",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. Life satisfaction",
+          "France"
+        ]
+      },
+      {
+        "value": "1",
+        "figure_id": "f1",
+        "mark": "the Poland* bar in panel B",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "B. Health",
+          "Poland*"
+        ]
+      },
+      {
+        "value": "18",
+        "figure_id": "f1",
+        "mark": "the Portugal bar in panel A",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. Life satisfaction",
+          "Portugal"
+        ]
+      },
+      {
+        "value": "13",
+        "figure_id": "f1",
+        "mark": "the Czechia bar in panel A",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. Life satisfaction",
+          "Czechia"
+        ]
+      },
+      {
+        "value": "11",
+        "figure_id": "f1",
+        "mark": "the Latvia bar in panel A",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. Life satisfaction",
+          "Latvia"
+        ]
+      },
+      {
+        "value": "3",
+        "figure_id": "f1",
+        "mark": "the Hungary bar in panel A",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. Life satisfaction",
+          "Hungary"
+        ]
+      }
+    ],
+    "hardest_step": 2
+  }
+}

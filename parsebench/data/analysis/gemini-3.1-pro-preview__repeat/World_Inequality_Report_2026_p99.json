@@ -1,0 +1,350 @@
+{
+  "stem": "World_Inequality_Report_2026_p99",
+  "document": "World_Inequality_Report_2026",
+  "tags": "untagged",
+  "model": "gemini-3.1-pro-preview",
+  "control": "repeat",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 71.8,
+  "usage": {
+    "input_tokens": 5339,
+    "output_tokens": 10158,
+    "cache_read_tokens": 2321
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n图表1（Figure 4.10）为多线条折线图，包含一条带有“Gender parity”行内标注的水平参考线，以及置于底部的图例。其纵轴起始于80%而不是0，横轴年份标签每五年标记一次。图表2（Figure 4.11）为分组柱状图，数值标签均放置在各个柱子的上方，横轴的部分类别标签（如“Other Asia”）采用了换行显示。两个图表的头部区域均由绿色的图表编号、加粗的主标题以及下方的副标题共同组成。此外，两个图表的底部均有包含了数据来源说明的“Interpretation.”长段落文本。\n\n### 定位一个值难在哪\n以Figure 4.10中的“101”为例，由于该图表为折线图且数据点上未打印任何数值标签，读取时必须依赖线的位置去对应纵轴。纵轴的刻度间隔为5%，而101落在两条参考线之间，依靠视觉对齐去估算一条线在2025年的结束点达到101%的值，极难保证误差在5%的宽容度以内（会在步骤2被阻断）。\n\n### 不确定的\nFigure 4.10中折线图的具体采样频率无法明确观测（没有点标记），只能假定为连续数据或按年的平滑连接；由于缺乏打印的数据标签，诸如85或101这样在提示中给出的离散值，若不依靠图表下方的辅助文本进行推理，单纯从图中很难精确到个位。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 4.10.",
+          "title": "The high school enrollment gender gap has decreased in the last 25 years",
+          "subtitle": "Female high school enrollment as a share of male enrollment, 2000–2025",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 1,
+        "series": 3,
+        "categories": 6,
+        "marks": 78,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Female high school enrollment (as % of male high school enrollment)",
+            "low": "80%",
+            "high": "105%",
+            "serves": "all lines"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "2000",
+            "high": "2025",
+            "serves": "all lines"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2000"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "High income"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "2000",
+            "High income"
+          ],
+          "value": "98%",
+          "value_source": "axis_read",
+          "why_hard": "values are not printed and the y-axis ticks are 5% apart, making estimation difficult"
+        }
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "Figure 4.11.",
+          "title": "Education alone cannot fully close the gap",
+          "subtitle": "Returns to schooling by gender, 2019",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "grouped_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 8,
+        "marks": 16,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Return to an additional year of schooling (%)",
+            "low": "0%",
+            "high": "14%",
+            "serves": "all bars"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "MENA",
+            "high": "Europe / U.S.",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "China"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Men"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "China",
+            "Women"
+          ],
+          "value": "10.5%",
+          "value_source": "printed",
+          "why_hard": ""
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "axis_starts_above_zero",
+        "figure_id": "f1",
+        "evidence": "the left value axis starts at 80% rather than 0"
+      },
+      {
+        "key": "reference_line",
+        "figure_id": "f1",
+        "evidence": "a red dashed line sits at 100%"
+      },
+      {
+        "key": "annotation_callout",
+        "figure_id": "f1",
+        "evidence": "the text 'Gender parity' is placed directly inside the plot"
+      },
+      {
+        "key": "grouped_bar",
+        "figure_id": "f2",
+        "evidence": "red and green bars sit side by side per category"
+      },
+      {
+        "key": "wrapped_category_labels",
+        "figure_id": "f2",
+        "evidence": "labels like 'Other Asia' are split onto two lines"
+      },
+      {
+        "key": "value_label_outside",
+        "figure_id": "f2",
+        "evidence": "percentage numbers are printed just above the top of the bars"
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "page",
+        "evidence": "both figures position their legends horizontally beneath the axes"
+      },
+      {
+        "key": "rotated_axis_title",
+        "figure_id": "page",
+        "evidence": "both y-axis titles are rotated to read vertically"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "page",
+        "evidence": "both panels show horizontal grid lines but no vertical ones"
+      },
+      {
+        "key": "sparse_time_ticks",
+        "figure_id": "f1",
+        "evidence": "x-axis ticks are drawn every 5 years for continuous series"
+      },
+      {
+        "key": "multi_figure_page",
+        "figure_id": "page",
+        "evidence": "two distinct figures with independent numbering and titles"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "page",
+        "evidence": "paragraph blocks under figures contain 'Sources and series:'"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "colored_figure_number",
+        "figure_id": "page",
+        "evidence": "the figure numbers are styled in green while titles are black",
+        "affects": [
+          4
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "85",
+        "figure_id": "f1",
+        "mark": "the Low & middle income line at 2000",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2000",
+          "Low & middle income"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "101",
+        "figure_id": "f1",
+        "mark": "the High income line at 2025",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2025",
+          "High income"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "4.2",
+        "figure_id": "f2",
+        "mark": "the MENA Men bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "MENA",
+          "Men"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "6.3",
+        "figure_id": "f2",
+        "mark": "the MENA Women bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "MENA",
+          "Women"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "8.3",
+        "figure_id": "f2",
+        "mark": "the China Men bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "China",
+          "Men"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "10.5",
+        "figure_id": "f2",
+        "mark": "the China Women bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "China",
+          "Women"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "7.6",
+        "figure_id": "f2",
+        "mark": "the World Men bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "World",
+          "Men"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "9.9",
+        "figure_id": "f2",
+        "mark": "the World Women bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "World",
+          "Women"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "10",
+        "figure_id": "f2",
+        "mark": "the Europe / U.S. Men bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Europe / U.S.",
+          "Men"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "12.1",
+        "figure_id": "f2",
+        "mark": "the Europe / U.S. Women bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Europe / U.S.",
+          "Women"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "以Figure 4.10中的101为例，折线图没有打印具体数值，纵轴刻度间隔为5%，依靠视觉对齐读取2025年High income线的值无法达到5%的误差宽容度要求。",
+    "examples": [
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "Figure 4.10. The high school enrollment gender gap has decreased...",
+        "why": "图表标题分为带有特定颜色的编号、粗体主标题和独立的副标题，解析器需要将这些成分视作结构化的标题块处理。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f2",
+        "quote": "12.1% printed above the green bar",
+        "why": "将数值标签置于柱状图外部上方，这属于值标签摆放样式的控制范围，当前管线需要增加相应样式配置。"
+      },
+      {
+        "gap": "P3",
+        "figure_id": "page",
+        "quote": "Interpretation. This figure shows the evolution of the gender gap...",
+        "why": "图表下方包含混合了正文解释和数据来源说明的长段落，它介于正文与图表描述之间，属于Markdown页面级导出的排版难点。"
+      }
+    ]
+  }
+}

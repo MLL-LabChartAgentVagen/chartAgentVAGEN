@@ -1,0 +1,313 @@
+{
+  "stem": "ac8b3538-en_p55",
+  "document": "ac8b3538-en",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "no_vocab",
+  "effort": "high",
+  "dpi": 150,
+  "seconds": 24.0,
+  "usage": {
+    "input_tokens": 3168,
+    "output_tokens": 2834,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n这是一个单面板的分组条形图，同时每个条形还带有一个表示另一系列数值的菱形标记。这就要求绘图工具能够支持：\n1. 分组条形图（Grouped Bar Chart）并在同一个 X 轴刻度上绘制多系列。\n2. 条形图与散点/标记图（Scatter/Marker on Bar）的混合使用，即同一个分类节点上既有代表某个系列（Women）的条形，也有代表另一个系列（Men）的散点。\n3. X轴类别标签以倾斜（或旋转）角度显示以适应空间。\n4. 图例位于图表上方，且图例项包含不同的形状（方块和菱形）和颜色。\n5. 特殊的高亮颜色：代表“OECD”平均值的条形和菱形使用了特殊的红色标记，不同于其他国家的绿色，且此颜色并未在图例中说明。\n\n### 定位一个值难在哪\n定位 `GRC` 的 Women 的值（-10.2）或 Men 的值（-9.5）。\n难点在于：图表只在垂直 Y 轴上提供了以 `2` 为间隔的刻度（-12 到 6）。所有的值都没有印在图表上。读取这些具体到十分位的值（如 -10.2 或 -9.5）需要非常精确地对照刻度进行肉眼估计，考虑到条形顶部和菱形中心的位置，很难达到 5% 的精度容忍度。此外，“OECD”的红色高亮没有额外的图例说明，只在图注中提及。\n\n### 不确定的\n无法确定图例中的“Women(↗)”的括号内符号的具体含义，可能是排版错误或某种特殊标记，但在图注中未作说明。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Annex Figure 1.B.2.",
+          "title": "Change in unemployment risk by gender",
+          "subtitle": "Percentage point change in unemployment rate by gender, 2015-22",
+          "unit_text": "Percentage point change",
+          "placement": "above"
+        },
+        "type": "grouped_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 39,
+        "marks": 78,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "p.p",
+            "low": "-12",
+            "high": "6",
+            "serves": "all bars and markers"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "GRC",
+            "high": "CRI",
+            "serves": "all bars and markers"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "GRC"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Women (↗)"
+          },
+          {
+            "role": "colour_group",
+            "label_source": "not_shown",
+            "example": "red for OECD"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "GRC",
+            "Women (↗)"
+          ],
+          "value": "-10.2",
+          "value_source": "axis_read",
+          "why_hard": "Value is not printed, and reading to one decimal place on a scale with increments of 2 is difficult."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "title_block",
+        "figure_id": "f1",
+        "evidence": "Figure number, title and subtitle above the chart",
+        "affects": [
+          4
+        ]
+      },
+      {
+        "key": "top_legend",
+        "figure_id": "f1",
+        "evidence": "Women and Men legend positioned centrally above the plot area",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "mixed_marks_per_category",
+        "figure_id": "f1",
+        "evidence": "Each category has a bar (Women) and a diamond marker (Men)",
+        "affects": [
+          1,
+          2
+        ]
+      },
+      {
+        "key": "highlight_color",
+        "figure_id": "f1",
+        "evidence": "OECD bar and diamond are red, while others are green, without a legend entry",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "rotated_category_labels",
+        "figure_id": "f1",
+        "evidence": "Country codes on bottom axis are rotated",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "y_axis_unit",
+        "figure_id": "f1",
+        "evidence": "'p.p' printed above the top tick of the y-axis",
+        "affects": [
+          3,
+          4
+        ]
+      },
+      {
+        "key": "zero_line",
+        "figure_id": "f1",
+        "evidence": "A distinct horizontal line at y=0, with ticks below and above",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "key": "source_and_note",
+        "figure_id": "f1",
+        "evidence": "Note and Source text printed below the chart",
+        "affects": [
+          4
+        ]
+      }
+    ],
+    "new_components": [
+      {
+        "name": "mixed_mark_legend",
+        "figure_id": "f1",
+        "evidence": "Legend shows a rectangle for Women and a diamond for Men",
+        "affects": [
+          1,
+          3
+        ]
+      },
+      {
+        "name": "unexplained_highlight",
+        "figure_id": "f1",
+        "evidence": "The red mark for OECD is not explained in the legend",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "-9.5",
+        "figure_id": "f1",
+        "mark": "the Men marker for GRC",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "GRC",
+          "Men"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-10.2",
+        "figure_id": "f1",
+        "mark": "the Women bar for GRC",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "GRC",
+          "Women (↗)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-9.5",
+        "figure_id": "f1",
+        "mark": "the Men marker for ESP",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "ESP",
+          "Men"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-6.2",
+        "figure_id": "f1",
+        "mark": "the Women bar for PRT",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "PRT",
+          "Women (↗)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-6.3",
+        "figure_id": "f1",
+        "mark": "the Women bar for IRL",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "IRL",
+          "Women (↗)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-2.0",
+        "figure_id": "f1",
+        "mark": "the Women bar for OECD",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "OECD",
+          "Women (↗)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-2.1",
+        "figure_id": "f1",
+        "mark": "the Men marker for OECD",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "OECD",
+          "Men"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "4.2",
+        "figure_id": "f1",
+        "mark": "the Women bar for CRI",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "CRI",
+          "Women (↗)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "1.5",
+        "figure_id": "f1",
+        "mark": "the Men marker for COL",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "COL",
+          "Men"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "2.5",
+        "figure_id": "f1",
+        "mark": "the Women bar for COL",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "COL",
+          "Women (↗)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "图表未标注具体数值，Y轴刻度间距为2（如从0到-2），而目标值（如GRC的-10.2）需要精确到小数点后一位，肉眼读取极难达到5%的精度要求。",
+    "examples": [
+      {
+        "gap": "P9",
+        "figure_id": "f1",
+        "quote": "Women is a bar, Men is a diamond marker on the same category tick",
+        "why": "目前的生成器难以在同一分类轴位置混合绘制条形图和散点/标记图来表示不同的数据系列。"
+      },
+      {
+        "gap": "P8",
+        "figure_id": "f1",
+        "quote": "OECD bar and marker are red, rest are green",
+        "why": "图例中未包含颜色的含义，特定数据点（OECD）被高亮为红色，需要将这一属性作为键值输入，而当前架构不支持直接的高亮逻辑。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "Annex Figure 1.B.2. Change in unemployment risk by gender\nPercentage point change...",
+        "why": "标题包含了图表编号、主标题和副标题，目前管道中将其视作单独的文本块而非图表的结构化组成部分。"
+      }
+    ]
+  }
+}

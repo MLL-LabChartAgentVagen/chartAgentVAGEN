@@ -1,0 +1,216 @@
+{
+  "stem": "pdf_d2e0103f64cd_p29",
+  "document": "pdf_d2e0103f64cd",
+  "tags": "3d_chart",
+  "model": "gemini-3.1-pro-preview",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "seconds": 64.9,
+  "usage": {
+    "input_tokens": 4440,
+    "output_tokens": 8875,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "这是一页包含两个无编号折线图的商业报告。图表分别展示了新加坡CBD的平均入住率和平均租金，底部附带有数据来源与注释。图表生成器需要能够绘制多条带有外部悬浮数值标签的折线，在同一X轴上混合不同时间颗粒度（从年度平滑过渡到季度），并支持部分数据序列在X轴中段才开始绘制。此页面在解析时最大的难点在于步骤3（标签关联）：所有数据点的值都以浮动文本形式紧贴在折线顶点附近，没有网格线或数据表辅助；尤其在图表1的2013年Q1和Q2区域，多条折线交汇且数值非常接近（如93.6%与93.3%上下紧密堆叠），解析模型极易将数值关联到错误的折线类别上。此外，图表1中附带上标脚注的标签（84.1%⁽¹⁾）也会对精确提取造成干扰。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "Average Occupancy Rates in the Singapore CBD (%)",
+          "subtitle": "",
+          "unit_text": "(%)",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 1,
+        "series": 3,
+        "categories": 6,
+        "marks": 18,
+        "values_printed": "all"
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "",
+          "title": "Average Rental Rates in the Singapore CBD (S$ per sq ft per month)",
+          "subtitle": "",
+          "unit_text": "(S$ per sq ft per month)",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 1,
+        "series": 3,
+        "categories": 6,
+        "marks": 17,
+        "values_printed": "all"
+      }
+    ],
+    "components": [
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "page",
+        "evidence": "both titles contain their units at the end in parentheses"
+      },
+      {
+        "key": "axis_starts_above_zero",
+        "figure_id": "f1",
+        "evidence": "the lowest tick on the y axis is 65%"
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "page",
+        "evidence": "legends are placed directly under the category axes"
+      },
+      {
+        "key": "footnote_marker",
+        "figure_id": "f1",
+        "evidence": "the label 84.1%(1) carries a superscript footnote"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "page",
+        "evidence": "Note and Source texts are printed below the plots"
+      },
+      {
+        "key": "multi_figure_page",
+        "figure_id": "page",
+        "evidence": "two distinct unnumbered charts on the same page"
+      },
+      {
+        "key": "nonstandard_time_ticks",
+        "figure_id": "page",
+        "evidence": "x axes transition from yearly 2012 to quarterly Q1 2013"
+      },
+      {
+        "key": "value_label_outside",
+        "figure_id": "page",
+        "evidence": "numbers are printed near the vertices of the lines"
+      },
+      {
+        "key": "axis_title_above_axis",
+        "figure_id": "f2",
+        "evidence": "S$ is printed right above the top tick of the y axis"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "series_starts_late",
+        "figure_id": "f2",
+        "evidence": "the Marina Bay line begins in 2011, missing 2010 data",
+        "affects": [
+          1,
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "70.3",
+        "figure_id": "f1",
+        "mark": "the 2010 Marina Bay vertex",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Marina Bay",
+          "2010"
+        ]
+      },
+      {
+        "value": "96.8",
+        "figure_id": "f1",
+        "mark": "the 2010 Raffles Place vertex",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Raffles Place",
+          "2010"
+        ]
+      },
+      {
+        "value": "91.2",
+        "figure_id": "f1",
+        "mark": "the 2012 Shenton Way/Robinson Rd/Cecil Street vertex",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Shenton Way/Robinson Rd/Cecil Street",
+          "2012"
+        ]
+      },
+      {
+        "value": "84.1",
+        "figure_id": "f1",
+        "mark": "the Q3 2013 Marina Bay vertex",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Marina Bay",
+          "Q3 2013"
+        ]
+      },
+      {
+        "value": "97.7",
+        "figure_id": "f1",
+        "mark": "the Q3 2013 Raffles Place vertex",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Raffles Place",
+          "Q3 2013"
+        ]
+      },
+      {
+        "value": "12.0",
+        "figure_id": "f2",
+        "mark": "the 2011 Marina Bay vertex",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Marina Bay",
+          "2011"
+        ]
+      },
+      {
+        "value": "9.0",
+        "figure_id": "f2",
+        "mark": "the 2010 Raffles Place vertex",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Raffles Place",
+          "2010"
+        ]
+      },
+      {
+        "value": "7.8",
+        "figure_id": "f2",
+        "mark": "the 2011 Shenton Way/ Robinson Rd/ Cecil Street vertex",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Shenton Way/ Robinson Rd/ Cecil Street",
+          "2011"
+        ]
+      },
+      {
+        "value": "11.0",
+        "figure_id": "f2",
+        "mark": "the Q3 2013 Marina Bay vertex",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Marina Bay",
+          "Q3 2013"
+        ]
+      },
+      {
+        "value": "9.4",
+        "figure_id": "f2",
+        "mark": "the Q3 2013 Raffles Place vertex",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Raffles Place",
+          "Q3 2013"
+        ]
+      }
+    ],
+    "hardest_step": 3
+  }
+}

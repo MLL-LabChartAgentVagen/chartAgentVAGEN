@@ -1,0 +1,549 @@
+{
+  "stem": "CleanEnergyMarketMonitorMarch2024_p13",
+  "document": "CleanEnergyMarketMonitorMarch2024",
+  "tags": "untagged",
+  "model": "gemini-3.1-pro-preview",
+  "control": "no_vocab",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 31.0,
+  "usage": {
+    "input_tokens": 3184,
+    "output_tokens": 4662,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n这是一个由四个柱状图和一个条形图组成的面版，共用一个大标题“Solar PV capacity additions and avoided emissions”。页面顶部带有蓝色背景的页眉标签“Clean energy deployment”。柱状图分为世界、中国、欧盟、美国和印度五个面板，其中前四个在一个行排列中（这在视觉上不太常规，前三个在上一行，美国和印度在下一行左侧），并使用统一颜色的柱子（橙色系和黄色系），每个柱子上都直接打印了数值，Y轴的单位是“GW”，放置在最上方刻度线的左侧。避免的排放量（Avoided emissions）是一个水平条形图，位于右下角，带有数据标签，X轴的单位“Mt CO₂”放在轴的右下方。底部有图注（Notes）和数据来源（IEA 2024. CC BY 4.0.）。\n\n### 定位一个值难在哪\n以“619”为例，这个值在右下角的条形图中。它的定位需要图表的小标题“Avoided emissions”以及类目“China”。对于柱状图中的“420”，需要关联大标题“Solar PV capacity additions”，面板标题“World”，以及X轴的时间“2023”。结构上，这些图表实际上是独立的，但共享了大标题。如果解析器不能将“World”、“China”等作为子标题（panel title）正确关联，就会导致信息丢失。\n\n### 不确定的\n颜色（橙色和黄色）是否代表某种隐藏分类？从图面来看，世界是深橙色，中国和欧盟是黄色，美国和印度也是黄色，可能仅仅是为了区分地区，但没有图例说明。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "Solar PV capacity additions and avoided emissions",
+          "subtitle": "World",
+          "unit_text": "GW",
+          "placement": "above"
+        },
+        "type": "bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 1,
+        "categories": 5,
+        "marks": 5,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "GW",
+            "low": "100",
+            "high": "400",
+            "serves": "all bars"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "2019",
+            "high": "2023",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2023"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "2023"
+          ],
+          "value": "420",
+          "value_source": "printed",
+          "why_hard": "No specific difficulty, value is printed clearly."
+        }
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "",
+          "title": "Solar PV capacity additions and avoided emissions",
+          "subtitle": "China",
+          "unit_text": "GW",
+          "placement": "above"
+        },
+        "type": "bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 1,
+        "categories": 5,
+        "marks": 5,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "GW",
+            "low": "100",
+            "high": "300",
+            "serves": "all bars"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "2019",
+            "high": "2023",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2023"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "2023"
+          ],
+          "value": "261",
+          "value_source": "printed",
+          "why_hard": ""
+        }
+      },
+      {
+        "id": "f3",
+        "heading": {
+          "figure_number": "",
+          "title": "Solar PV capacity additions and avoided emissions",
+          "subtitle": "European Union",
+          "unit_text": "GW",
+          "placement": "above"
+        },
+        "type": "bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 1,
+        "categories": 5,
+        "marks": 5,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "GW",
+            "low": "20",
+            "high": "60",
+            "serves": "all bars"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "2019",
+            "high": "2023",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2023"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "2023"
+          ],
+          "value": "53",
+          "value_source": "printed",
+          "why_hard": ""
+        }
+      },
+      {
+        "id": "f4",
+        "heading": {
+          "figure_number": "",
+          "title": "Solar PV capacity additions and avoided emissions",
+          "subtitle": "United States",
+          "unit_text": "GW",
+          "placement": "above"
+        },
+        "type": "bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 1,
+        "categories": 5,
+        "marks": 5,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "GW",
+            "low": "10",
+            "high": "40",
+            "serves": "all bars"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "2019",
+            "high": "2023",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2023"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "2023"
+          ],
+          "value": "32",
+          "value_source": "printed",
+          "why_hard": ""
+        }
+      },
+      {
+        "id": "f5",
+        "heading": {
+          "figure_number": "",
+          "title": "Solar PV capacity additions and avoided emissions",
+          "subtitle": "India",
+          "unit_text": "GW",
+          "placement": "above"
+        },
+        "type": "bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 1,
+        "categories": 5,
+        "marks": 5,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "GW",
+            "low": "5",
+            "high": "20",
+            "serves": "all bars"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "2019",
+            "high": "2023",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2023"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "2023"
+          ],
+          "value": "18",
+          "value_source": "printed",
+          "why_hard": ""
+        }
+      },
+      {
+        "id": "f6",
+        "heading": {
+          "figure_number": "",
+          "title": "Solar PV capacity additions and avoided emissions",
+          "subtitle": "Avoided emissions",
+          "unit_text": "Mt CO₂",
+          "placement": "above"
+        },
+        "type": "bar",
+        "type_other": "horizontal bar chart",
+        "panels": 1,
+        "series": 1,
+        "categories": 5,
+        "marks": 5,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "left",
+            "role": "category",
+            "unit_text": "",
+            "low": "China",
+            "high": "Rest of world",
+            "serves": "all bars"
+          },
+          {
+            "side": "bottom",
+            "role": "value",
+            "unit_text": "Mt CO₂",
+            "low": "200",
+            "high": "600",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "China"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "China"
+          ],
+          "value": "619",
+          "value_source": "printed",
+          "why_hard": ""
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "page_header_label",
+        "figure_id": "page",
+        "evidence": "a cyan box reading 'Clean energy deployment' sits in the top right",
+        "affects": [
+          4
+        ]
+      },
+      {
+        "key": "shared_main_title",
+        "figure_id": "page",
+        "evidence": "'Solar PV capacity additions and avoided emissions' sits across the top of all 6 panels",
+        "affects": [
+          4
+        ]
+      },
+      {
+        "key": "panel_title",
+        "figure_id": "page",
+        "evidence": "headings like 'World', 'China', 'Avoided emissions' sit centered above each subplot",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "y_axis_unit_above",
+        "figure_id": "f1",
+        "evidence": "'GW' is placed vertically beside the top of the y-axis, above the numbers",
+        "affects": []
+      },
+      {
+        "key": "x_axis_unit_below_right",
+        "figure_id": "f6",
+        "evidence": "'Mt CO₂' sits under the right end of the x-axis",
+        "affects": []
+      },
+      {
+        "key": "bar_labels_inside",
+        "figure_id": "f1",
+        "evidence": "numbers like '420' and '117' are printed inside the bars in white",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "key": "horizontal_grid_lines",
+        "figure_id": "f1",
+        "evidence": "dotted grey lines run across the plot at each y-axis tick",
+        "affects": []
+      },
+      {
+        "key": "vertical_grid_lines",
+        "figure_id": "f6",
+        "evidence": "dotted grey lines run vertically from the x-axis ticks",
+        "affects": []
+      },
+      {
+        "key": "footnote_notes",
+        "figure_id": "page",
+        "evidence": "'Notes: \"Avoided emissions\" refers to...' is printed at the bottom left",
+        "affects": [
+          4
+        ]
+      }
+    ],
+    "new_components": [
+      {
+        "name": "multi_panel_shared_title",
+        "figure_id": "page",
+        "evidence": "one main title serves 6 distinct panels acting as small multiples",
+        "affects": [
+          3,
+          4
+        ]
+      },
+      {
+        "name": "y_axis_label_rotated",
+        "figure_id": "f1",
+        "evidence": "'GW' is rotated 90 degrees",
+        "affects": []
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "420",
+        "figure_id": "f1",
+        "mark": "the 2023 bar in the World panel",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "World",
+          "2023"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "228",
+        "figure_id": "f1",
+        "mark": "the 2022 bar in the World panel",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "World",
+          "2022"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "261",
+        "figure_id": "f2",
+        "mark": "the 2023 bar in the China panel",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "China",
+          "2023"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "53",
+        "figure_id": "f3",
+        "mark": "the 2023 bar in the European Union panel",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "European Union",
+          "2023"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "32",
+        "figure_id": "f4",
+        "mark": "the 2023 bar in the United States panel",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "United States",
+          "2023"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "18",
+        "figure_id": "f5",
+        "mark": "the 2022 bar in the India panel",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "India",
+          "2022"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "12",
+        "figure_id": "f5",
+        "mark": "the 2023 bar in the India panel",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "India",
+          "2023"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "619",
+        "figure_id": "f6",
+        "mark": "the China bar in the Avoided emissions panel",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Avoided emissions",
+          "China"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "221",
+        "figure_id": "f6",
+        "mark": "the Rest of world bar in the Avoided emissions panel",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Avoided emissions",
+          "Rest of world"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "101",
+        "figure_id": "f6",
+        "mark": "the European Union bar in the Avoided emissions panel",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Avoided emissions",
+          "European Union"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      }
+    ],
+    "hardest_step": 3,
+    "hardest_step_why": "这些图表共享一个大标题，但各自有独立的小标题。如果markdown解析器没有把大标题作为全局上下文，或者没把“World”、“China”等识别为不同表格的表头，这些数字将无法与其地区关联。",
+    "examples": [
+      {
+        "gap": "P2",
+        "figure_id": "page",
+        "quote": "World, China, European Union, United States, India, Avoided emissions",
+        "why": "图表由六个相互独立但共享标题的面板组成，必须将面板名称（如World, China）作为键值纳入，才能准确定位特定值（如420或261）。"
+      },
+      {
+        "gap": "P3",
+        "figure_id": "page",
+        "quote": "Solar PV capacity additions and avoided emissions",
+        "why": "该大标题控制整个页面的6个面板，导出markdown时需要正确反映大标题与各个面板小标题的层级关系，否则会丢失重要的上下文。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "117 inside the first bar, 151 inside the second",
+        "why": "数值标签直接打印在柱子内部（顶端附近），目前生成器需支持直接将精确数值嵌入图形内的样式，并处理标签颜色的对比度。"
+      }
+    ]
+  }
+}

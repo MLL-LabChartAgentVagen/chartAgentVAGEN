@@ -1,0 +1,289 @@
+{
+  "stem": "m-trends-2025-en_p32",
+  "document": "m-trends-2025-en",
+  "tags": "need_estimate",
+  "model": "claude-opus-5",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 40.8,
+  "usage": {
+    "input_tokens": 13842,
+    "output_tokens": 3078,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "## 画出来要什么\n一张无编号的分组柱状图：标题 **\"LockBit vs. RANSOMHUB DLS Listings, 2024\"** 置于图上方，左侧竖排轴标题 \"Count of DLS Listings\"，y 轴刻度 0/50/100/150/200，仅有水平网格线。x 轴 12 个月份槽（Jan…Dec，注意 \"March\"、\"April\"、\"Sept\" 混用长短写），每槽两根柱（黑=LockBit，蓝=RANSOMHUB），共 24 根，无数值标签。图例画在绘图区内部右上角。页面左侧另有一列窄栏文字（\"Data leak sites (DLS) are websites…\"）与图并排，正文含上标脚注 \"UNC2165¹⁸\"。\n\n## 定位一个值难在哪\n以 175 为例：它是 May 的黑色 LockBit 柱，柱顶落在 150 与 200 刻度之间、无印数。刻度间距 50，5% 容差只有 ±8.75 像素级别，读者只能目测插值；且必须同时给出 \"May\"+\"LockBit\" 两个标签，图无编号，表格行难以与图关联。10 与 55 各出现两次（Jan/Feb 蓝柱；March 黑柱与 Dec 蓝柱），仅凭数字无法唯一定位。\n\n## 不确定的\n所有数值均为轴读估计，无源注、无数据链接；图例颜色与系列名的对应靠色块判断；\"55\" 究竟指 March LockBit 还是 Dec RANSOMHUB 无法确定。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "LockBit vs. RANSOMHUB DLS Listings, 2024",
+          "subtitle": "",
+          "unit_text": "Count of DLS Listings",
+          "placement": "above"
+        },
+        "type": "grouped_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 12,
+        "marks": 24,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Count of DLS Listings",
+            "low": "0",
+            "high": "200",
+            "serves": "all bars, both LockBit and RANSOMHUB"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "Jan",
+            "high": "Dec",
+            "serves": "the 12 month slots of paired bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "May"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "LockBit"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "May",
+            "LockBit"
+          ],
+          "value": "175",
+          "value_source": "axis_read",
+          "why_hard": "Bar top lies between the 150 and 200 gridlines; no printed label, 50-unit tick spacing."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "grouped_bar",
+        "figure_id": "f1",
+        "evidence": "two bars side by side in each month slot, black and blue"
+      },
+      {
+        "key": "legend_inside_plot",
+        "figure_id": "f1",
+        "evidence": "LockBit / RANSOMHUB legend box drawn over upper-right of plot area"
+      },
+      {
+        "key": "rotated_axis_title",
+        "figure_id": "f1",
+        "evidence": "\"Count of DLS Listings\" set vertically along the left axis"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "axis ticks read 0, 50, 100, 150, 200; scale word only in \"Count of DLS Listings\""
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "horizontal rules at 50/100/150/200 across panel, no vertical rules"
+      },
+      {
+        "key": "side_text_bullets",
+        "figure_id": "page",
+        "evidence": "narrow left column \"Data leak sites (DLS) are websites that publish stolen data...\" beside the figure band"
+      },
+      {
+        "key": "footnote_marker",
+        "figure_id": "page",
+        "evidence": "\"UNC2165\" carries superscript 18 in body text"
+      },
+      {
+        "key": "nonstandard_time_ticks",
+        "figure_id": "f1",
+        "evidence": "ticks mix \"Jan\", \"March\", \"April\", \"Sept\" abbreviations inconsistently"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "unnumbered_figure_title",
+        "figure_id": "f1",
+        "evidence": "bold title \"LockBit vs. RANSOMHUB DLS Listings, 2024\" with no \"Figure n\" prefix anywhere",
+        "affects": [
+          3,
+          4
+        ]
+      },
+      {
+        "name": "inconsistent_month_abbreviations",
+        "figure_id": "f1",
+        "evidence": "axis reads Jan, Feb, March, April, May, June, July, Aug, Sept, Oct, Nov, Dec",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "60",
+        "figure_id": "f1",
+        "mark": "the Jan LockBit (black) bar, just above 50",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Jan",
+          "LockBit"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "10",
+        "figure_id": "f1",
+        "mark": "the Jan RANSOMHUB (blue) bar, or equally the Feb blue bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Jan",
+          "RANSOMHUB"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "100",
+        "figure_id": "f1",
+        "mark": "the Feb LockBit (black) bar, reaching the 100 gridline",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Feb",
+          "LockBit"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "55",
+        "figure_id": "f1",
+        "mark": "the March LockBit (black) bar, slightly above 50",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "March",
+          "LockBit"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "175",
+        "figure_id": "f1",
+        "mark": "the May LockBit (black) bar, the tallest on the chart",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "May",
+          "LockBit"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "35",
+        "figure_id": "f1",
+        "mark": "the June RANSOMHUB (blue) bar, between 0 and 50",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "June",
+          "RANSOMHUB"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "68",
+        "figure_id": "f1",
+        "mark": "the Aug RANSOMHUB (blue) bar, between 50 and 100",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Aug",
+          "RANSOMHUB"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "82",
+        "figure_id": "f1",
+        "mark": "the Oct RANSOMHUB (blue) bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Oct",
+          "RANSOMHUB"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "98",
+        "figure_id": "f1",
+        "mark": "the Nov RANSOMHUB (blue) bar, just under 100",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Nov",
+          "RANSOMHUB"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "55",
+        "figure_id": "f1",
+        "mark": "the Dec RANSOMHUB (blue) bar, just above 50 (same reading as March LockBit)",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Dec",
+          "RANSOMHUB"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "刻度间隔50且无数值标签，175、68、82 需目测插值，5%容差仅±3.4至±8.75，读数极易超差。",
+    "examples": [
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "Bold line \"LockBit vs. RANSOMHUB DLS Listings, 2024\" above the plot, with no \"Figure\" number anywhere",
+        "why": "标题无编号、单位另置于竖排轴标题，需把编号/标题/单位/位置拆成独立字段。"
+      },
+      {
+        "gap": "P1",
+        "figure_id": "f1",
+        "quote": "y axis ticks read 0, 50, 100, 150, 200; no number is printed on any of the 24 bars",
+        "why": "24根柱全靠轴读，可达精度随刻度间距变化，应按标记给出精度而非布尔可读。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "Legend box \"LockBit / RANSOMHUB\" drawn inside the plot area at upper right",
+        "why": "图例置于绘图区内部、竖排轴标题、值标签全缺，这些样式维度当前不可控。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "page",
+        "quote": "Left column text \"Data leak sites (DLS) are websites that publish stolen data...\" runs level with the plot",
+        "why": "需支持图与旁栏文字共占一横带的整页版式；当前只生成孤立图。"
+      }
+    ]
+  }
+}

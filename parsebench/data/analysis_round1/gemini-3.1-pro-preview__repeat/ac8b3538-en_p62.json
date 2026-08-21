@@ -1,0 +1,228 @@
+{
+  "stem": "ac8b3538-en_p62",
+  "document": "ac8b3538-en",
+  "tags": "3d_chart+need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "repeat",
+  "effort": "high",
+  "dpi": 150,
+  "seconds": 64.0,
+  "usage": {
+    "input_tokens": 4395,
+    "output_tokens": 8893,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "要生成此页面，图表生成器需要支持包含15个面板的小型倍数（small multiples）布局，每个面板绘制包含两个系列的阶梯线图（step line）。必须支持各面板独立的Y轴范围和刻度间隔，以及贯穿面板的水平零基准线。X轴需要支持旋转的非标准时间刻度标签（如“May-19”），且图表带有浅灰色背景和白色网格线。\n\n寻址难点在于：所有数值均未直接标注在图上，必须通过视觉读取。然而Y轴刻度间距过大（多数为10或20），导致无法精确提取诸如“17”或“42”的具体数值以满足合理的误差容忍度。此外，页面完全缺失单位说明，这让数据缺乏具体物理意义。\n\n不确定之处：数据阶跃发生的确切时间点，因为它们位于稀疏的6个月间隔刻度之间。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "none"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 15,
+        "series": 2,
+        "categories": 11,
+        "marks": 330,
+        "values_printed": "none"
+      }
+    ],
+    "components": [
+      {
+        "key": "step_line_series",
+        "figure_id": "f1",
+        "evidence": "both series are drawn as lines with horizontal and vertical segments"
+      },
+      {
+        "key": "per_panel_axis_range",
+        "figure_id": "f1",
+        "evidence": "Japan y-axis is -20 to 60, Türkiye is -200 to 800"
+      },
+      {
+        "key": "reference_line",
+        "figure_id": "f1",
+        "evidence": "a black horizontal rule at 0 in all panels"
+      },
+      {
+        "key": "negative_values",
+        "figure_id": "f1",
+        "evidence": "y-axis ticks go down to -10, -20, -30 or -60"
+      },
+      {
+        "key": "shared_legend",
+        "figure_id": "f1",
+        "evidence": "one legend at the top page edge for all 15 panels"
+      },
+      {
+        "key": "legend_above_plot",
+        "figure_id": "f1",
+        "evidence": "legend sits above the first row of panels"
+      },
+      {
+        "key": "small_multiples_5plus",
+        "figure_id": "f1",
+        "evidence": "15 panels showing the same chart for different countries"
+      },
+      {
+        "key": "panel_title_per_panel",
+        "figure_id": "f1",
+        "evidence": "country names like 'Japan', 'Korea' sit above each panel"
+      },
+      {
+        "key": "rotated_x_ticks",
+        "figure_id": "f1",
+        "evidence": "x-axis labels like 'May-19' are rotated 45 degrees"
+      },
+      {
+        "key": "nonstandard_time_ticks",
+        "figure_id": "f1",
+        "evidence": "time axis is labelled 'May-19', 'Nov-19'"
+      },
+      {
+        "key": "sparse_time_ticks",
+        "figure_id": "f1",
+        "evidence": "steps occur between the 6-month ticks"
+      },
+      {
+        "key": "panel_background",
+        "figure_id": "f1",
+        "evidence": "the plot areas are filled with a light grey tint"
+      },
+      {
+        "key": "dense_marks_100plus",
+        "figure_id": "f1",
+        "evidence": "15 panels with continuous step lines over 5 years"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "missing_unit",
+        "figure_id": "page",
+        "evidence": "no unit like %, index, or currency is printed anywhere",
+        "affects": [
+          4
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "10",
+        "figure_id": "f1",
+        "mark": "the Japan Nominal minimum wage step starting at Nov-22",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Japan",
+          "Nominal minimum wage",
+          "Nov-22"
+        ]
+      },
+      {
+        "value": "17",
+        "figure_id": "f1",
+        "mark": "the Netherlands Real minimum wage final step at May-24",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Netherlands",
+          "Real minimum wage",
+          "May-24"
+        ]
+      },
+      {
+        "value": "16",
+        "figure_id": "f1",
+        "mark": "the Portugal Real minimum wage final step at May-24",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Portugal",
+          "Real minimum wage",
+          "May-24"
+        ]
+      },
+      {
+        "value": "90",
+        "figure_id": "f1",
+        "mark": "the Poland Nominal minimum wage final step at May-24",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Poland",
+          "Nominal minimum wage",
+          "May-24"
+        ]
+      },
+      {
+        "value": "42",
+        "figure_id": "f1",
+        "mark": "the Netherlands Nominal minimum wage final step at May-24",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Netherlands",
+          "Nominal minimum wage",
+          "May-24"
+        ]
+      },
+      {
+        "value": "35",
+        "figure_id": "f1",
+        "mark": "the Slovenia Nominal minimum wage step around Nov-23",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Slovenia",
+          "Nominal minimum wage",
+          "Nov-23"
+        ]
+      },
+      {
+        "value": "38",
+        "figure_id": "f1",
+        "mark": "the Portugal Nominal minimum wage final step at May-24",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Portugal",
+          "Nominal minimum wage",
+          "May-24"
+        ]
+      },
+      {
+        "value": "9",
+        "figure_id": "f1",
+        "mark": "the Japan Real minimum wage final step at May-24",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Japan",
+          "Real minimum wage",
+          "May-24"
+        ]
+      },
+      {
+        "value": "700",
+        "figure_id": "f1",
+        "mark": "the Türkiye Nominal minimum wage final step at May-24",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Türkiye",
+          "Nominal minimum wage",
+          "May-24"
+        ]
+      },
+      {
+        "value": "12",
+        "figure_id": "f1",
+        "mark": "the United Kingdom Real minimum wage final step at May-24",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "United Kingdom",
+          "Real minimum wage",
+          "May-24"
+        ]
+      }
+    ],
+    "hardest_step": 2
+  }
+}

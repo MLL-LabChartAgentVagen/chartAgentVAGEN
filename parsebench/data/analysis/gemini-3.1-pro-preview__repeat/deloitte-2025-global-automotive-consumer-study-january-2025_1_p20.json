@@ -1,0 +1,267 @@
+{
+  "stem": "deloitte-2025-global-automotive-consumer-study-january-2025_1_p20",
+  "document": "deloitte-2025-global-automotive-consumer-study-january-2025_1",
+  "tags": "untagged",
+  "model": "gemini-3.1-pro-preview",
+  "control": "repeat",
+  "effort": "high",
+  "dpi": 150,
+  "seconds": 74.4,
+  "usage": {
+    "input_tokens": 5319,
+    "output_tokens": 9522,
+    "cache_read_tokens": 2317
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n要重绘此页面，生成器需要具备以下能力：\n1. **水平与堆叠条形图**：绘制水平方向的单系列条形图（图1）以及百分比堆叠的水平条形图（图2）。\n2. **无数值轴设计**：在不绘制数值X轴及背景网格线的情况下，直接以内置标签的形式显示数值（`value_label_inside`），并支持文本在条形段内部的靠右对齐（如图1）或居中对齐（如图2）。\n3. **多图表面板并排与独立排序**：将两个子图表并排显示并共享顶部主标题和底部注释（图1），且允许这两个面板的类别轴拥有完全独立的数据排序。\n4. **长文本标题排版**：支持将较长的粗体结论性段落作为图表的主标题，并在此下方放置图表的副标题或具体的面板标题。\n5. **底部注释与样本说明**：在图表下方附加相关问题描述和样本量说明（`source_note_lines`）。\n\n### 定位一个值难在哪\n以图2中印度（India）认为“Beneficial”的 `82` 为例。\n该值在图中明确打印为“82%”，且位于蓝色条形段内，其对应的类别标签“India”与图例“Beneficial”均清晰无歧义。没有任何复杂的映射或遮挡，解析难度极低。唯一风险在于提取器可能因缺乏数值轴而未将其当作图表。\n\n### 不确定的\n图2的百分比数值可能经过了四舍五入。此外，图例中“Not benefical”存在拼写错误，假定解析时需要忠实保留原词。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "Consumers surveyed in both India and the United Kingdom are more concerned with the idea of an autonomous vehicle fleet when compared to surveyed consumers in Germany, Japan, or China.",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "bar",
+        "type_other": "",
+        "panels": 2,
+        "series": 1,
+        "categories": 8,
+        "marks": 16,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "left",
+            "role": "category",
+            "unit_text": "",
+            "low": "India",
+            "high": "Germany",
+            "serves": "left panel bars"
+          },
+          {
+            "side": "left",
+            "role": "category",
+            "unit_text": "",
+            "low": "India",
+            "high": "China",
+            "serves": "right panel bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "panel",
+            "label_source": "panel_title",
+            "example": "Percentage of consumers concerned about fully autonomous robotaxi services operating where they live"
+          },
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "India"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Percentage of consumers concerned about fully autonomous robotaxi services operating where they live",
+            "India"
+          ],
+          "value": "63%",
+          "value_source": "printed",
+          "why_hard": ""
+        }
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "",
+          "title": "More than three quarters of surveyed consumers in India and China believe the addition of artificial intelligence in vehicle systems is beneficial. On the other hand, a quarter of surveyed consumers in Germany, the United States, and the United Kingdom remain skeptical about the technology.",
+          "subtitle": "Addition of artificial intelligence in vehicle systems",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "stacked_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 3,
+        "categories": 8,
+        "marks": 24,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "left",
+            "role": "category",
+            "unit_text": "",
+            "low": "India",
+            "high": "Germany",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "India"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Beneficial"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "India",
+            "Beneficial"
+          ],
+          "value": "82%",
+          "value_source": "printed",
+          "why_hard": ""
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "horizontal_bars",
+        "figure_id": "page",
+        "evidence": "all bars in both figures run left to right"
+      },
+      {
+        "key": "no_value_axis",
+        "figure_id": "page",
+        "evidence": "there is no x-axis drawn, values are only on the bars"
+      },
+      {
+        "key": "pct_stacked",
+        "figure_id": "f2",
+        "evidence": "every stacked bar reaches the same full width"
+      },
+      {
+        "key": "value_label_inside",
+        "figure_id": "page",
+        "evidence": "percentages like 63% and 82% are printed inside the bar sections"
+      },
+      {
+        "key": "panel_title_per_panel",
+        "figure_id": "f1",
+        "evidence": "each panel has its own title starting with Percentage of..."
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "page",
+        "evidence": "small print notes like Sample size: n = 939 below figures"
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f2",
+        "evidence": "the legend containing Not benefical sits under the plot"
+      },
+      {
+        "key": "multi_figure_page",
+        "figure_id": "page",
+        "evidence": "two distinct unnumbered figures with separate bold text headers"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "per_panel_category_order",
+        "figure_id": "f1",
+        "evidence": "category labels are ordered differently between the two panels",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "82",
+        "figure_id": "f2",
+        "mark": "the India Beneficial segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "India",
+          "Beneficial"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "13",
+        "figure_id": "f2",
+        "mark": "the India Neutral segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "India",
+          "Neutral"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "77",
+        "figure_id": "f2",
+        "mark": "the China Beneficial segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "China",
+          "Beneficial"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "45",
+        "figure_id": "f2",
+        "mark": "the US Beneficial segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "US",
+          "Beneficial"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "41",
+        "figure_id": "f2",
+        "mark": "the Germany Beneficial segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Germany",
+          "Beneficial"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "31",
+        "figure_id": "f2",
+        "mark": "the UK Neutral segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "UK",
+          "Neutral"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      }
+    ],
+    "hardest_step": 1,
+    "hardest_step_why": "图表没有横轴，直接将数值写在条形图内部，如果解析器过度依赖数值轴线识别，可能会将其视为排版好的纯文本，导致无法生成表格。",
+    "examples": [
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "the 63% label is printed inside the teal bar at its right edge",
+        "why": "图表生成器需要支持将数据标签放置在单侧生长的条形图内部并严格靠右对齐的样式参数"
+      },
+      {
+        "gap": "P3",
+        "figure_id": "f1",
+        "quote": "Consumers surveyed in both India and the United Kingdom are more concerned...",
+        "why": "图表主标题是一个长篇的粗体结论性段落，在导出时必须被正确提取为图表上下文，而不能简单截断或丢弃"
+      }
+    ]
+  }
+}

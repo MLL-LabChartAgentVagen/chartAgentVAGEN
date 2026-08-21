@@ -1,0 +1,300 @@
+{
+  "stem": "Treasury_Bulletin_2025_06_p21",
+  "document": "Treasury_Bulletin_2025_06",
+  "tags": "need_estimate",
+  "model": "gpt-5.6-sol",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 120000,
+  "seconds": 94.2,
+  "usage": {
+    "input_tokens": 8753,
+    "output_tokens": 6415,
+    "cache_read_tokens": 2365
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "**画出来要什么**：页面含两幅独立图：四条平滑月度曲线，图例置右；两年份分组柱图，图例和脚注置于下方。两图仅有水平网格线，第二图需支持多行类别标签。\n\n**定位一个值难在哪**：`Custom duties`的`2024`值35没有印出，而纵轴每150一格；5%容差仅1.75，无法可靠精确估读。曲线图末端140还需把重复的`Mar`解释为2025年。\n\n**不确定的**：所有目标数均由坐标轴估读。90按`Aug`的`Off-budget receipts`判断；第二图没有写明金额单位。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "CHART FFO-A.—",
+          "title": "Monthly Receipts and Outlays, 2024-2025",
+          "subtitle": "",
+          "unit_text": "(In billions of dollars)",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 1,
+        "series": 4,
+        "categories": 13,
+        "marks": 52,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "0.0",
+            "high": "700.0",
+            "serves": "all four lines"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "Mar",
+            "high": "Mar",
+            "serves": "all four lines"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "On-budget receipts"
+          },
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "Aug"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Off-budget receipts",
+            "Aug"
+          ],
+          "value": "90",
+          "value_source": "axis_read",
+          "why_hard": "100-unit ticks are coarse relative to 5% of 90."
+        }
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "CHART FFO-B.—",
+          "title": "Budget Receipts by Source, Fiscal Year to Date, 2024-2025",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "grouped_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 7,
+        "marks": 14,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "0",
+            "high": "1200",
+            "serves": "all bars"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "Individual income taxes",
+            "high": "Estate/gift taxes",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Custom duties"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "2024"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Custom duties",
+            "2024"
+          ],
+          "value": "35",
+          "value_source": "axis_read",
+          "why_hard": "150-unit ticks make a 35 value impossible to read within 5%."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "multi_figure_page",
+        "figure_id": "page",
+        "evidence": "Separate headings “CHART FFO-A.—” and “CHART FFO-B.—” identify two figures."
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "“(In billions of dollars)” is printed directly below the title."
+      },
+      {
+        "key": "legend_beside_plot",
+        "figure_id": "f1",
+        "evidence": "Four series labels and line samples form a column right of the plot."
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "Horizontal rules cross the plot; no vertical grid lines are drawn."
+      },
+      {
+        "key": "grouped_bar",
+        "figure_id": "f2",
+        "evidence": "Blue and red bars stand side by side within each source category."
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f2",
+        "evidence": "The “2024” and “2025” legend is centered below the category labels."
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f2",
+        "evidence": "“*Prior-year data are for the comparable year” appears below the plot."
+      },
+      {
+        "key": "wrapped_category_labels",
+        "figure_id": "f2",
+        "evidence": "“Social insurance and retirement receipts” wraps across four lines."
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f2",
+        "evidence": "Horizontal rules align with value ticks; no vertical grid lines are drawn."
+      }
+    ],
+    "new_components": [
+      {
+        "name": "smoothed_line_series",
+        "figure_id": "f1",
+        "evidence": "All four monthly lines curve smoothly between tick positions rather than using straight segments.",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "name": "repeated_endpoint_time_label",
+        "figure_id": "f1",
+        "evidence": "The bottom axis begins and ends with the identical tick label “Mar”.",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "650",
+        "figure_id": "f1",
+        "mark": "the Apr On-budget receipts point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "On-budget receipts",
+          "Apr"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "565",
+        "figure_id": "f1",
+        "mark": "the Aug On-budget outlays point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "On-budget outlays",
+          "Aug"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "140",
+        "figure_id": "f1",
+        "mark": "the rightmost Mar Off-budget outlays point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Off-budget outlays",
+          "Mar 2025"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 3
+      },
+      {
+        "value": "90",
+        "figure_id": "f1",
+        "mark": "the Aug Off-budget receipts point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Off-budget receipts",
+          "Aug"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "1140",
+        "figure_id": "f2",
+        "mark": "the 2025 Individual income taxes bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Individual income taxes",
+          "2025"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "800",
+        "figure_id": "f2",
+        "mark": "the 2024 Social insurance and retirement receipts bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Social insurance and retirement receipts",
+          "2024"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "165",
+        "figure_id": "f2",
+        "mark": "the 2025 Corporate income taxes bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Corporate income taxes",
+          "2025"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "35",
+        "figure_id": "f2",
+        "mark": "the 2024 Custom duties bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Custom duties",
+          "2024"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "35无标注，纵轴每150一格，5%容差仅1.75；165也只略高于150。最难保证估读精度。仍能定位到类别和年份。区间很大，柱高极短，像素误差会超过容差。需避免猜测。图例清楚但数值不精确。刻度不足以支持准确读取。应判第二步。35尤其困难。",
+    "examples": []
+  }
+}

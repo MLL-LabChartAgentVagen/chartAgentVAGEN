@@ -1,0 +1,292 @@
+{
+  "stem": "b263dc5d-en_p160",
+  "document": "b263dc5d-en",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "no_vocab",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 62.7,
+  "usage": {
+    "input_tokens": 3148,
+    "output_tokens": 8959,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n生成此页图表需要支持复合图形的渲染，即在同一个分类X轴上同时绘制条形图和散点图（菱形）。此外，生成器必须能通过单一颜色的深浅变体（如深蓝/浅蓝、深橙/浅橙）来编码额外的离散属性（此处为统计显著性），并且需要支持部分轴标签的特定文本颜色（如蓝色的“England (UK)”）以及针对特定分类背景的高亮（如“OECD average”背后的浅蓝色柱状阴影）。图例、标题及说明文本的相对排版也需要精准控制。\n\n### 定位一个值难在哪\n定位和读取数值非常困难。以斯洛伐克（Slovak Republic）的算术能力数值（约3）为例，整个图表没有打印数据标签，Y轴的网格线间距为5。3的5%容差只有0.15，在当前图表的高度和密度下，肉眼根本无法凭借条形或散点的高度准确读取到所要求的精度。此外，要完整寻址该值，读者还必须结合图注的文字说明，从颜色的深浅中解析出“统计显著性”这一隐含维度，才能构建完整的主键。\n\n### 不确定的\n虽然图注明确指出了“深色代表差异具有5%水平的统计显著性”，但并未直接说明浅色是否绝对代表“不显著”，只能通过二元对立进行推断。此外，X轴上部分国家（如英国和比利时弗拉芒大区）使用蓝色文本的原因在上下文中并未明确解释。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 4.5.",
+          "title": "Relationship between education, numeracy and wages",
+          "subtitle": "Effect of a one-standard-deviation increase on hourly wages",
+          "unit_text": "% change",
+          "placement": "above"
+        },
+        "type": "compound",
+        "type_other": "bar and point",
+        "panels": 1,
+        "series": 2,
+        "categories": 31,
+        "marks": 62,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "% change",
+            "low": "0",
+            "high": "40",
+            "serves": "all marks"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "Chile",
+            "high": "Slovak Republic",
+            "serves": "all marks"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Chile"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Years of education"
+          },
+          {
+            "role": "colour_group",
+            "label_source": "not_shown",
+            "example": "statistically significant"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Chile",
+            "Years of education",
+            "statistically significant"
+          ],
+          "value": "30",
+          "value_source": "axis_read",
+          "why_hard": "No printed values and sparse 5-unit gridlines make it hard to read exactly."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "heading_block_above",
+        "figure_id": "f1",
+        "evidence": "figure number, title, subtitle and unit are placed above the plot",
+        "affects": [
+          4
+        ]
+      },
+      {
+        "key": "legend_above_plot",
+        "figure_id": "f1",
+        "evidence": "the legend entries sit between the heading and the chart",
+        "affects": [
+          4
+        ]
+      },
+      {
+        "key": "mixed_marks_bar_and_point",
+        "figure_id": "f1",
+        "evidence": "bars for education and diamonds for numeracy on the same axis",
+        "affects": [
+          1,
+          2
+        ]
+      }
+    ],
+    "new_components": [
+      {
+        "name": "color_intensity_for_significance",
+        "figure_id": "f1",
+        "evidence": "darker colors denote statistically significant differences, requiring text parsing",
+        "affects": [
+          2,
+          3
+        ]
+      },
+      {
+        "name": "highlighted_category_background",
+        "figure_id": "f1",
+        "evidence": "vertical light blue shading behind OECD average",
+        "affects": [
+          4
+        ]
+      },
+      {
+        "name": "highlighted_axis_label_color",
+        "figure_id": "f1",
+        "evidence": "England (UK) and Flemish Region (BE) are printed in blue",
+        "affects": [
+          4
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "30",
+        "figure_id": "f1",
+        "mark": "the Chile Years of education bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Chile",
+          "Years of education",
+          "statistically significant"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "15",
+        "figure_id": "f1",
+        "mark": "the England (UK) Years of education bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "England (UK)",
+          "Years of education",
+          "statistically significant"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "36",
+        "figure_id": "f1",
+        "mark": "the Singapore Years of education bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Singapore",
+          "Years of education",
+          "statistically significant"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "13",
+        "figure_id": "f1",
+        "mark": "the France Numeracy diamond",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "France",
+          "Numeracy",
+          "not statistically significant"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "15",
+        "figure_id": "f1",
+        "mark": "the Canada Years of education bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Canada",
+          "Years of education",
+          "statistically significant"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "16",
+        "figure_id": "f1",
+        "mark": "the OECD average Years of education bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "OECD average",
+          "Years of education",
+          "statistically significant"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "9",
+        "figure_id": "f1",
+        "mark": "the New Zealand Numeracy diamond",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "New Zealand",
+          "Numeracy",
+          "statistically significant"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "21",
+        "figure_id": "f1",
+        "mark": "the United States Years of education bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "United States",
+          "Years of education",
+          "statistically significant"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "22",
+        "figure_id": "f1",
+        "mark": "the Korea Years of education bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Korea",
+          "Years of education",
+          "statistically significant"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "3",
+        "figure_id": "f1",
+        "mark": "the Slovak Republic Numeracy diamond",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Slovak Republic",
+          "Numeracy",
+          "not statistically significant"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "以斯洛伐克数值3为例，Y轴间距为5，其5%容差仅0.15。无标签时，肉眼无法读取到此精度。",
+    "examples": [
+      {
+        "gap": "P8",
+        "figure_id": "f1",
+        "quote": "Darker colours denote differences that are statistically significant",
+        "why": "颜色深浅表示显著性，需从图注解析并作为主键。"
+      },
+      {
+        "gap": "P9",
+        "figure_id": "f1",
+        "quote": "bars for education and diamonds for numeracy on the same axis",
+        "why": "混用条形图与散点图，需记录数值对应的具体图形类型。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "vertical light blue shading behind OECD average",
+        "why": "无法表达类别背景高亮，提取时会丢失此类视觉强调信息。"
+      }
+    ]
+  }
+}

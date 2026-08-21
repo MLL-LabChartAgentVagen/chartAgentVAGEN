@@ -1,0 +1,315 @@
+{
+  "stem": "sri-sigma-natural-catastrophes-1-2025_p27",
+  "document": "sri-sigma-natural-catastrophes-1-2025",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "no_vocab",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 71.5,
+  "usage": {
+    "input_tokens": 3182,
+    "output_tokens": 9507,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n页面包含两个带有灰色背景框的图表。图表上方均有独立的图表编号、标题和单位标识。图1是标准的堆叠柱状图，特别之处在于包含多个带有灰色边框的文本注释框，这些注释框通过灰色的引导线精确指向特定的柱状段（如特定年份的飓风事件）。图2是混合图表，在堆叠柱状图的基础上覆盖了一条平滑的指数趋势折线。两个图表的X轴均采用了跳跃式的刻度标签设计，仅每隔3年显示一次年份（如1970, 1973...2024）。Y轴均未绘制垂直轴线，仅有水平网格线贯穿整个绘图面板。图例均水平放置于图表的左下角。\n\n### 定位一个值难在哪\n以定位图2中2021年的“Secondary perils”值（约76）为例。虽然2021年作为一个刻度被印在了X轴上，能够成功完成标签关联，但由于柱子上没有任何数据标签，且Y轴刻度间距高达25（从75跳到100），在没有水平参考辅助线精准对齐的情况下，要将该柱子段顶部的高度精确读取为76并保证误差在5%以内是极其困难的。\n\n### 不确定的\n页面顶部的正文中提到了2024年自然灾害的损失值为1370亿美元，但在图表上只能看出2024年的柱子总高度大约在140左右。无法确定当前的评分系统是否能将这种存在于正文语境中却无法从图表坐标轴上精确读出的数值进行正确的验证通过。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 18",
+          "title": "Insured catastrophe losses, 1970 – 2024 (USD bn, 2024 prices)",
+          "subtitle": "",
+          "unit_text": "(USD bn, 2024 prices)",
+          "placement": "above"
+        },
+        "type": "stacked_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 3,
+        "categories": 55,
+        "marks": 165,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "0",
+            "high": "250",
+            "serves": "all bars"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "1970",
+            "high": "2024",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2012"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Earthquake/tsunami"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "1994",
+            "Earthquake/tsunami"
+          ],
+          "value": "30",
+          "value_source": "axis_read",
+          "why_hard": "Year 1994 is printed, but value requires reading off a 50-unit spaced axis with no precise grid alignment."
+        }
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "Figure 19",
+          "title": "Global insured losses from primary and secondary perils, 1970 – 2024, in USD billion at 2024 prices",
+          "subtitle": "",
+          "unit_text": "Insured losses (USD bn)",
+          "placement": "above"
+        },
+        "type": "compound",
+        "type_other": "stacked bar and line",
+        "panels": 1,
+        "series": 3,
+        "categories": 55,
+        "marks": 165,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Insured losses (USD bn)",
+            "low": "0",
+            "high": "200",
+            "serves": "all marks"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "1970",
+            "high": "2024",
+            "serves": "all marks"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2006"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Secondary perils"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "2018",
+            "Exponential trend (total natcat losses)"
+          ],
+          "value": "85",
+          "value_source": "axis_read",
+          "why_hard": "Reading a point on a curve against a left axis with 25-unit spacing is visually imprecise."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "horizontal_grid_lines",
+        "figure_id": "page",
+        "evidence": "grey horizontal lines span across both plots",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "key": "skip_x_axis_ticks",
+        "figure_id": "page",
+        "evidence": "x-axis only labels every 3 years (e.g., 1970, 1973)",
+        "affects": [
+          2,
+          3
+        ]
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "page",
+        "evidence": "legends are placed below the x-axis",
+        "affects": []
+      },
+      {
+        "key": "figure_background_panel",
+        "figure_id": "page",
+        "evidence": "each figure is enclosed in a light grey box",
+        "affects": []
+      }
+    ],
+    "new_components": [
+      {
+        "name": "annotated_callouts_with_leader_lines",
+        "figure_id": "f1",
+        "evidence": "text boxes pointing to specific bars with lines",
+        "affects": [
+          4
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "55",
+        "figure_id": "f1",
+        "mark": "the 2011 Earthquake/tsunami segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2011",
+          "Earthquake/tsunami"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 3
+      },
+      {
+        "value": "165",
+        "figure_id": "f1",
+        "mark": "the top of the 2005 stacked bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2005"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 3
+      },
+      {
+        "value": "75",
+        "figure_id": "f2",
+        "mark": "the 2024 Secondary perils segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2024",
+          "Secondary perils"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "180",
+        "figure_id": "f2",
+        "mark": "the top of the 2017 stacked bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2017"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 3
+      },
+      {
+        "value": "137",
+        "figure_id": "not_found",
+        "mark": "value is stated in body text, chart mark for 2024 total is not precise enough to read 137",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2024"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "45",
+        "figure_id": "f2",
+        "mark": "the 2018 Secondary perils segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2018",
+          "Secondary perils"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "145",
+        "figure_id": "f1",
+        "mark": "the top of the 2022 stacked bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2022"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 3
+      },
+      {
+        "value": "76",
+        "figure_id": "f2",
+        "mark": "the 2021 Secondary perils segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2021",
+          "Secondary perils"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "81",
+        "figure_id": "f2",
+        "mark": "the 2022 Secondary perils segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2022",
+          "Secondary perils"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 3
+      },
+      {
+        "value": "56",
+        "figure_id": "f2",
+        "mark": "the 2023 Secondary perils segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2023",
+          "Secondary perils"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 3
+      }
+    ],
+    "hardest_step": 3,
+    "hardest_step_why": "大量目标数值（如55、165、180、145等）对应的年份在X轴上被跳过未打印，导致解析器无法提取这些年份标签，进而会在第3步（标签关联）受阻。",
+    "examples": [
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "text boxes with leader lines pointing to bars",
+        "why": "当前管道无法识别和关联图表内的自定义注释框及其引导线，也无法将其与相关数据点绑定并结构化输出。"
+      },
+      {
+        "gap": "P9",
+        "figure_id": "f2",
+        "quote": "Exponential trend line overlaid on stacked bars",
+        "why": "需要支持混合图表类型（如堆叠柱状图叠加折线图），并能将不同标记类型的数据分别独立提取和寻址记录。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "Figure 18 / Insured catastrophe losses, 1970 – 2024 (USD bn, 2024 prices)",
+        "why": "需将包含在同一个文本块中的图表编号、主标题以及括号内的单位进行结构化拆分，以准确分离不同级别的元数据。"
+      }
+    ]
+  }
+}

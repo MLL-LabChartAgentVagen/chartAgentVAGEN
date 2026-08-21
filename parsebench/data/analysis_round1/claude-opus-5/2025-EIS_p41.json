@@ -1,0 +1,227 @@
+{
+  "stem": "2025-EIS_p41",
+  "document": "2025-EIS",
+  "tags": "need_estimate",
+  "model": "claude-opus-5",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "seconds": 0.0,
+  "usage": {
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "本页只有一个图:Figure 13,横向条形图,28 行(EU27 + EU 聚合)。生成器需同时画三套编码:2025 年的横条、2018 年的菱形点、2024 年的短竖线刻度记号,且条形填色不表示系列而表示绩效组(Emerging/Moderate/Strong/Innovation leaders),EU 行另用深蓝突出。图例为两行四列,混合色块、菱形与竖线三种图元,位于图下方。标题分两层:图号+标题在上方,面板小标题「Finance and support」在绘图区左上,数值刻度由绘图区下方的轴标题「Score for dimension 2.1 in 2025 (indexed to the EU in 2018)」给出,指数基准写在注释里。取值难点:图上无任何数字,x 轴每 20 一格,条端需目测;同一国家有三个数(2025/2018/2024),表格行必须同时带国名与「Score in 2018」「Score in 2024」才能唯一定位。不确定:是否存在淡色竖向网格线,以及 152、178 具体落在哪一国的哪一系列。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 13",
+          "title": "Innovation performance of the EU27 Member States in the Finance and support dimension",
+          "subtitle": "Finance and support",
+          "unit_text": "Score for dimension 2.1 in 2025 (indexed to the EU in 2018)",
+          "placement": "above"
+        },
+        "type": "bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 3,
+        "categories": 28,
+        "marks": 84,
+        "values_printed": "none"
+      }
+    ],
+    "components": [
+      {
+        "key": "horizontal_bars",
+        "figure_id": "f1",
+        "evidence": "country names France...Malta on the y axis, bars grow right to ticks 0-200"
+      },
+      {
+        "key": "mixed_marks",
+        "figure_id": "f1",
+        "evidence": "diamonds and short vertical dashes overlaid on the horizontal bars in each row"
+      },
+      {
+        "key": "tick_marker_as_series",
+        "figure_id": "f1",
+        "evidence": "legend glyph a vertical bar: \"Score in 2024\", drawn as a short dash per row"
+      },
+      {
+        "key": "color_encodes_extra_attribute",
+        "figure_id": "f1",
+        "evidence": "\"The colours denote each country's overall performance group based on the 2025 SII\""
+      },
+      {
+        "key": "highlighted_category",
+        "figure_id": "f1",
+        "evidence": "the \"EU\" row bar is dark navy, unlike the four legend group colours"
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "legend block with four colour swatches, diamond and dash sits under the axis title"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "\"Note: All performance scores are relative to that of the EU in 2018 for each dimension.\""
+      },
+      {
+        "key": "axis_title_below_plot",
+        "figure_id": "f1",
+        "evidence": "\"Score for dimension 2.1 in 2025 (indexed to the EU in 2018)\" printed under the 0-200 ticks"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "x ticks read 0, 20 ... 200 bare; scale word only in the axis title line"
+      },
+      {
+        "key": "rebased_index_values",
+        "figure_id": "f1",
+        "evidence": "\"indexed to the EU in 2018\"; note: \"relative to that of the EU in 2018\""
+      },
+      {
+        "key": "wrapped_category_labels",
+        "figure_id": "f1",
+        "evidence": "28 country names stacked down the left axis, France to Malta"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "mixed_glyph_legend",
+        "figure_id": "f1",
+        "evidence": "legend mixes four colour swatches with a diamond marker and a vertical-dash marker in one block",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "name": "dimension_title_above_plot",
+        "figure_id": "f1",
+        "evidence": "\"Finance and support\" in blue bold at top-left of the plot, repeating the dimension name",
+        "affects": [
+          3,
+          4
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "183",
+        "figure_id": "f1",
+        "mark": "the France 2025 bar, the longest bar, ending just past 180",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "France",
+          "Finance and support",
+          "Score for dimension 2.1 in 2025 (indexed to the EU in 2018)"
+        ]
+      },
+      {
+        "value": "100",
+        "figure_id": "f1",
+        "mark": "the diamond on the EU row, sitting on the 100 tick (index base)",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "EU",
+          "Score in 2018",
+          "Finance and support"
+        ]
+      },
+      {
+        "value": "178",
+        "figure_id": "f1",
+        "mark": "the vertical dash on the Denmark row, right of its bar near 175-180",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Denmark",
+          "Score in 2024",
+          "Finance and support"
+        ]
+      },
+      {
+        "value": "152",
+        "figure_id": "f1",
+        "mark": "the Sweden 2025 bar, third bar from top, ending just past 150",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Sweden",
+          "Finance and support",
+          "Score for dimension 2.1 in 2025 (indexed to the EU in 2018)"
+        ]
+      },
+      {
+        "value": "23",
+        "figure_id": "f1",
+        "mark": "the Bulgaria 2025 bar, a short bar just past 20",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Bulgaria",
+          "Finance and support",
+          "Score for dimension 2.1 in 2025 (indexed to the EU in 2018)"
+        ]
+      },
+      {
+        "value": "37",
+        "figure_id": "f1",
+        "mark": "the Latvia 2025 bar, ending just before 40",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Latvia",
+          "Finance and support",
+          "Score for dimension 2.1 in 2025 (indexed to the EU in 2018)"
+        ]
+      },
+      {
+        "value": "125",
+        "figure_id": "f1",
+        "mark": "the Spain 2025 bar, ending just past 120",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Spain",
+          "Finance and support",
+          "Score for dimension 2.1 in 2025 (indexed to the EU in 2018)"
+        ]
+      },
+      {
+        "value": "105",
+        "figure_id": "f1",
+        "mark": "the Germany 2025 bar, ending just past 100",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Germany",
+          "Finance and support",
+          "Score for dimension 2.1 in 2025 (indexed to the EU in 2018)"
+        ]
+      },
+      {
+        "value": "152",
+        "figure_id": "f1",
+        "mark": "second occurrence: most likely the vertical dash on the Finland row near 150; could also be another 2024 dash in the 150s (Austria, Netherlands)",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Finland",
+          "Score in 2024",
+          "Finance and support"
+        ]
+      },
+      {
+        "value": "77",
+        "figure_id": "f1",
+        "mark": "the Luxembourg 2025 bar, ending just below 80; the Malta diamond sits at a similar position",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Luxembourg",
+          "Finance and support",
+          "Score for dimension 2.1 in 2025 (indexed to the EU in 2018)"
+        ]
+      }
+    ],
+    "hardest_step": 2
+  }
+}

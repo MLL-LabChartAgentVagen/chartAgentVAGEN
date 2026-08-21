@@ -1,0 +1,251 @@
+{
+  "stem": "2024-ltra_corrected_july_2025_p29",
+  "document": "2024-ltra_corrected_july_2025",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "no_vocab",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 48.3,
+  "usage": {
+    "input_tokens": 3191,
+    "output_tokens": 6896,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n需要生成一个堆叠柱状图，X轴显示年份（2017至2024），Y轴显示数值。Y轴标签垂直旋转显示“Pipeline Additions”，但并未附带单位。图例水平排列在X轴下方。图表标题、编号及数据源注释整体放置在图表的正下方，且标题末尾包含了单位“Bcf/d”。\n\n### 定位一个值难在哪\n以 2017 年 Interstate 的值（16.2）为例，图表没有提供任何数据标签。该值位于堆叠柱状图的上方段，读者需要先在 Y 轴（刻度间距为 5）上读出整根柱子的总高度（约 17.4），再减去底部的 Intrastate 高度（约 1.2）。由于需要二次估算，且 Y 轴间距较大，肉眼读取的误差极易超过 5%（即 0.81）。\n\n### 不确定的\n2022 年和 2024 年的 Intrastate 数据段非常矮小甚至不可见，无法准确判断其值是 0 还是一个极小的正数。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 16:",
+          "title": "Annual U.S. Natural Gas Pipeline Capacity Additions by Type (2017–2024)",
+          "subtitle": "",
+          "unit_text": "Bcf/d",
+          "placement": "below"
+        },
+        "type": "stacked_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 8,
+        "marks": 16,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Pipeline Additions",
+            "low": "0",
+            "high": "30",
+            "serves": "all bars"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "2017",
+            "high": "2024",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2017"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Interstate"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "2017",
+            "Interstate"
+          ],
+          "value": "16.2",
+          "value_source": "axis_read",
+          "why_hard": "It is a stacked segment with no printed value; reading against a 5-unit tick spacing misses 5% tolerance."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "stacked_bar_chart",
+        "figure_id": "f1",
+        "evidence": "bars are split into two colored segments stacked vertically",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "key": "heading_below_plot",
+        "figure_id": "f1",
+        "evidence": "Figure 16 and its title are printed below the x-axis",
+        "affects": [
+          4
+        ]
+      },
+      {
+        "key": "unit_in_title",
+        "figure_id": "f1",
+        "evidence": "the unit Bcf/d is at the end of the title",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "key": "legend_below_x_axis",
+        "figure_id": "f1",
+        "evidence": "Interstate and Intrastate legend sits below the year labels",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "new_components": [],
+    "spot_checks": [
+      {
+        "value": "16.2",
+        "figure_id": "f1",
+        "mark": "the 2017 Interstate stacked segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2017",
+          "Interstate"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "1.2",
+        "figure_id": "f1",
+        "mark": "the 2017 Intrastate stacked segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2017",
+          "Intrastate"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "21.2",
+        "figure_id": "f1",
+        "mark": "the 2018 Interstate stacked segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2018",
+          "Interstate"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "5.6",
+        "figure_id": "f1",
+        "mark": "the 2018 Intrastate stacked segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2018",
+          "Intrastate"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "10.8",
+        "figure_id": "f1",
+        "mark": "the 2019 Interstate stacked segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2019",
+          "Interstate"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "4.2",
+        "figure_id": "f1",
+        "mark": "the 2019 Intrastate stacked segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2019",
+          "Intrastate"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "8.7",
+        "figure_id": "f1",
+        "mark": "the 2020 Interstate stacked segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2020",
+          "Interstate"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "1.6",
+        "figure_id": "f1",
+        "mark": "the 2020 Intrastate stacked segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2020",
+          "Intrastate"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "8.5",
+        "figure_id": "f1",
+        "mark": "the 2021 Interstate stacked segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2021",
+          "Interstate"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "7.3",
+        "figure_id": "f1",
+        "mark": "the 2021 Intrastate stacked segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2021",
+          "Intrastate"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "图表无数据标签，Y轴刻度间距为5。2017年Interstate的值16.2需在堆叠段上做差计算，极难肉眼读取到5%（0.81）的容差内。",
+    "examples": [
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "Figure 16: Annual U.S. Natural Gas Pipeline Capacity Additions... Bcf/d",
+        "why": "图表标题位于图表正下方，且包含了全局单位 Bcf/d，生成器需要能将底部标题内的单位与 Y 轴正确关联。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "the y-axis label 'Pipeline Additions' is rotated vertically",
+        "why": "生成器需要支持将不含单位的文本垂直旋转放置，作为纯说明性质的 Y 轴标题。"
+      }
+    ]
+  }
+}

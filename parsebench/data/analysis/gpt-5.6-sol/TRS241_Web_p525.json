@@ -1,0 +1,300 @@
+{
+  "stem": "TRS241_Web_p525",
+  "document": "TRS241_Web",
+  "tags": "need_estimate",
+  "model": "gpt-5.6-sol",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 120000,
+  "seconds": 172.2,
+  "usage": {
+    "input_tokens": 7797,
+    "output_tokens": 11211,
+    "cache_read_tokens": 2365
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "**画出来要什么**\n需重建单面板双折线、逐年旋转刻度、纵横点状网格、虚实线型及圆形/菱形端点。图注置于图下。左侧同时绘制“$ / lb”0–60与“$ / kg”0–120换算刻度，系列名以引线直接标在线内。\n\n**定位一个值难在哪**\n例如1980年“95”并非印在标记上，而要从“$ / kg”刻度读取；两条线又在该年重合，必须同时给出年份、系列和单位。\n\n**不确定的**\n折线末端在“1983”附近似有同年多个观测，但没有更细时间标签。部分给定值只能按刻度近似匹配，端点数量估为34。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "FIG.F.3.",
+          "title": "Uranium transaction values.",
+          "subtitle": "",
+          "unit_text": "Price in US $ per kg/lb U₃O₈",
+          "placement": "below"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 16,
+        "marks": 34,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "$ / lb",
+            "low": "0",
+            "high": "60",
+            "serves": "both lines, measured in dollars per pound"
+          },
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "$ / kg",
+            "low": "0",
+            "high": "120",
+            "serves": "both lines, measured in dollars per kilogram"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "1968",
+            "high": "1983",
+            "serves": "all plotted points on both lines"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "1980"
+          },
+          {
+            "role": "series",
+            "label_source": "inline_label",
+            "example": "Constant 1980 dollars (based on US GNP deflator)"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "1980",
+            "Constant 1980 dollars (based on US GNP deflator)"
+          ],
+          "value": "95",
+          "value_source": "axis_read",
+          "why_hard": "Two lines overlap, while adjacent $/lb and $/kg scales give different readings."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "The axis title reads “Price in US $ per kg/lb U₃O₈”."
+      },
+      {
+        "key": "rotated_axis_title",
+        "figure_id": "f1",
+        "evidence": "“Price in US $ per kg/lb U₃O₈” runs vertically beside the plot."
+      },
+      {
+        "key": "rotated_x_ticks",
+        "figure_id": "f1",
+        "evidence": "Year labels “1968” through “1983” are angled beneath the plot."
+      },
+      {
+        "key": "inline_series_labels",
+        "figure_id": "f1",
+        "evidence": "“current dollars” and “Constant 1980 dollars” are written beside their lines."
+      },
+      {
+        "key": "dashed_line_series",
+        "figure_id": "f1",
+        "evidence": "“Constant 1980 dollars” is dashed, while “current dollars” is solid."
+      }
+    ],
+    "new_components": [
+      {
+        "name": "same_side_dual_unit_scale",
+        "figure_id": "f1",
+        "evidence": "Two left tick columns show 0–60 “$ / lb” and 0–120 “$ / kg”.",
+        "affects": [
+          2,
+          3
+        ]
+      },
+      {
+        "name": "intraperiod_multiple_points",
+        "figure_id": "f1",
+        "evidence": "Each line appears to have two late vertices around the single “1983” tick.",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "name": "series_specific_endpoint_markers",
+        "figure_id": "f1",
+        "evidence": "Dashed-line endpoints use circles; solid-line endpoints use diamonds.",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "7",
+        "figure_id": "f1",
+        "mark": "the 1972 current-dollars point read on the dollars-per-pound scale",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "1972",
+          "current dollars",
+          "$ / lb"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "16",
+        "figure_id": "f1",
+        "mark": "the 1975 current-dollars point read on the dollars-per-pound scale",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "1975",
+          "current dollars",
+          "$ / lb"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "43",
+        "figure_id": "f1",
+        "mark": "the 1980 current-dollars point read on the dollars-per-pound scale",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "1980",
+          "current dollars",
+          "$ / lb"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "22",
+        "figure_id": "f1",
+        "mark": "the 1974 Constant 1980 dollars point read on the dollars-per-kilogram scale",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "1974",
+          "Constant 1980 dollars (based on US GNP deflator)",
+          "$ / kg"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "12",
+        "figure_id": "f1",
+        "mark": "the 1970 Constant 1980 dollars point read on the dollars-per-pound scale",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "1970",
+          "Constant 1980 dollars (based on US GNP deflator)",
+          "$ / lb"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "21",
+        "figure_id": "f1",
+        "mark": "the 1975 Constant 1980 dollars point read on the dollars-per-pound scale",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "1975",
+          "Constant 1980 dollars (based on US GNP deflator)",
+          "$ / lb"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "50",
+        "figure_id": "f1",
+        "mark": "the 1982 current-dollars point read on the dollars-per-kilogram scale",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "1982",
+          "current dollars",
+          "$ / kg"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "17",
+        "figure_id": "f1",
+        "mark": "the 1974 current-dollars point read on the dollars-per-kilogram scale",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "1974",
+          "current dollars",
+          "$ / kg"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "95",
+        "figure_id": "f1",
+        "mark": "the 1980 current-dollars point read on the dollars-per-kilogram scale",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "1980",
+          "current dollars",
+          "$ / kg"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "95",
+        "figure_id": "f1",
+        "mark": "the 1980 Constant 1980 dollars point read on the dollars-per-kilogram scale",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "1980",
+          "Constant 1980 dollars (based on US GNP deflator)",
+          "$ / kg"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      }
+    ],
+    "hardest_step": 1,
+    "hardest_step_why": "7、16、43等十值都只在双刻度折线上，页内无数据表，步骤1先阻断。息。要找一项，至少要用年份和线名；若还要把“95”与“43”区分为同一点的不同读数，还必须记录单位刻度。\n\n**不确定的**\n1983附近似乎每条线都有多于一个顶点，但横轴只印一个“1983”，因此34个标记为估计。给定值均未印在标记上，具体年份按折点位置和双刻度近似判定。",
+    "examples": [
+      {
+        "gap": "P9",
+        "figure_id": "f1",
+        "quote": "Two left tick columns show 0–60 “$ / lb” and 0–120 “$ / kg”.",
+        "why": "同一折点可读成两种单位，值必须携带所用刻度，现有单轴记录无法表达。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "“FIG.F.3. Uranium transaction values.” is printed below the plot.",
+        "why": "需分别保存图号、标题和下置位置，而非把整行当作普通标题。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "“Price in US $ per kg/lb U₃O₈” runs vertically beside the plot.",
+        "why": "单位同时出现在旋转轴题和两列单位刻度中，需要可控的单位位置。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "Dashed-line endpoints use circles; solid-line endpoints use diamonds.",
+        "why": "需支持按系列设置虚实线及仅在端点出现的不同符号。"
+      }
+    ]
+  }
+}

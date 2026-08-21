@@ -1,0 +1,218 @@
+{
+  "stem": "semiconductor_sector_study_p22",
+  "document": "semiconductor_sector_study",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "repeat",
+  "effort": "high",
+  "dpi": 150,
+  "seconds": 90.5,
+  "usage": {
+    "input_tokens": 5314,
+    "output_tokens": 11436,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "**画出来要什么**\n此页面包含一段正文和一个堆积柱状图。要绘制此图表，生成器需要支持：\n1. **无标签的堆叠段**：图表中的柱子被白线分割成多个细分段（根据文本，代表个别公司的融资），但没有图例或标签来区分这些段，它们仅用来说明构成总数的个体分布。\n2. **非等距的时间轴**：x轴标签为年份（如2013、2016、2017），但分类之间的物理间距是均匀的，不与实际的时间跨度成正比，实际上被当作分类轴处理。\n3. **刻度后缀**：y轴刻度标签带有“M”作为单位后缀（如20M, 220M），且y轴标题垂直旋转。\n4. **图表外部元素**：图表上方有独立编号的标题，下方有来源说明。\n\n**定位一个值难在哪**\n以2007年的“2”或2021年的“22”为例，难点在于：\n1. **视觉估算精度极低**：具体数值没有直接写在图表上，必须通过观察柱子顶部在y轴上的位置来估算。y轴刻度间距为20M，要求读出2并满足5%的误差（即1.9-2.1之间）在视觉上是不可能的。\n2. **提取歧义**：对于没有图例的堆积柱状图，解析器可能会尝试提取每个细分段的数值而不是整根柱子的总和，导致所求的总计数值根本不会出现在提取的数据表中。\n\n**不确定的**\n系统在没有图例的情况下，是否能够正确忽略细分段而直接提取整根柱子的总计数值。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 4.1",
+          "title": "Latest Fundraisings",
+          "subtitle": "",
+          "unit_text": "(GBP)",
+          "placement": "above"
+        },
+        "type": "stacked_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 1,
+        "categories": 11,
+        "marks": 22,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "(GBP)",
+            "low": "0M",
+            "high": "220M",
+            "serves": "all bars"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "2007",
+            "high": "2023",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2020"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "2020"
+          ],
+          "value": "189",
+          "value_source": "axis_read",
+          "why_hard": "The value is read from a 20M tick interval, and segments are unlabelled."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "stacked_bar",
+        "figure_id": "f1",
+        "evidence": "bars are divided into segments by thin white lines"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "the y-axis title says (GBP)"
+      },
+      {
+        "key": "rotated_axis_title",
+        "figure_id": "f1",
+        "evidence": "the y-axis title is rotated vertically"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "horizontal grid lines across the panel, no vertical ones"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "Source: Beauhurst ... sits under the figure"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "ordinal_time_axis",
+        "figure_id": "f1",
+        "evidence": "equal spacing between 2013, 2016 and 2016, 2017",
+        "affects": [
+          1
+        ]
+      },
+      {
+        "name": "unlabeled_stacked_segments",
+        "figure_id": "f1",
+        "evidence": "bars have internal white separator lines but no legend",
+        "affects": [
+          1,
+          2
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "2",
+        "figure_id": "f1",
+        "mark": "the total height of the 2007 stacked bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2007"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "0",
+        "figure_id": "f1",
+        "mark": "the missing bar for 2010",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2010"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "23",
+        "figure_id": "f1",
+        "mark": "the total height of the 2017 stacked bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2017"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "189",
+        "figure_id": "f1",
+        "mark": "the total height of the 2020 stacked bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2020"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "22",
+        "figure_id": "f1",
+        "mark": "the total height of the 2021 stacked bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2021"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "84",
+        "figure_id": "f1",
+        "mark": "the total height of the 2022 stacked bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2022"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "218",
+        "figure_id": "f1",
+        "mark": "the total height of the 2023 stacked bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2023"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "柱状图的值并未标注，y轴刻度间距高达20M。例如2007年的总计约“2”，5%的误差容限仅为0.1M，从20M的刻度间距中根本无法准确读出。",
+    "examples": [
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "0M, 20M, ..., 220M on the y-axis",
+        "why": "y轴刻度数字使用了“M”作为后缀，当前管道可能不支持这种自定义的刻度后缀格式。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "bars are divided into unlabeled stacked segments",
+        "why": "图表中的柱子被划分为多个堆叠段，但没有任何图例或标签来说明这些段，管道需要支持这种仅表示构成的无标签堆叠。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "2013, 2016, 2017 equally spaced on x-axis",
+        "why": "x轴为年份，但间距均等而不随实际时间跨度成比例，管道需要支持将时间轴作为离散分类轴绘制。"
+      }
+    ]
+  }
+}

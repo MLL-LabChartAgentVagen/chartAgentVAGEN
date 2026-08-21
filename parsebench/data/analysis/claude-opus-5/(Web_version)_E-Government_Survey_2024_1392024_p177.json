@@ -1,0 +1,261 @@
+{
+  "stem": "(Web_version)_E-Government_Survey_2024_1392024_p177",
+  "document": "(Web_version)_E-Government_Survey_2024_1392024",
+  "tags": "untagged",
+  "model": "claude-opus-5",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 37.3,
+  "usage": {
+    "input_tokens": 13822,
+    "output_tokens": 2673,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "**画出来要什么**\n\n一张横向分组条形图（`Figure 4.15 LOSI indicators as a proxy for progress towards smart city development`），4 个指标类别 × 2 个系列（2022 蓝、2024 橙），共 8 根条。类别轴在左侧，文字长且需换行/挤压（`Actual or intended use of emergent technologies`）；值轴在下方，刻度 `0%`—`60%`，每 10% 一格，只有竖向网格线。图例横排在图下方、值轴之下。每根条右端都印有百分比（`46%`、`49%`），标签在条形外侧。标题为蓝色，下方带一条蓝色横条装饰。整图外框为细线矩形。\n\n**定位一个值难在哪**\n\n`49%` 只需两个标签：`Existence of smart city initiatives` + `2024`。但 `2024` 只在图例中以色块+文字出现，条本身无文字；蓝橙两条同宽同槽，表格若只写 `49%` 而丢掉年份，就会与 `46%` 混淆。类别名很长，解析器常截断成 `Existence of smart city…`，使标签不再逐字匹配。\n\n**不确定的**\n\n图下没有 Source/Note 行，未知数据来源；不确定 33% 出现两次（emergent technologies 与 data policy online）时解析器能否分辨；类别轴文字是否真为两行换行，从渲染看是单行。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 4.15",
+          "title": "LOSI indicators as a proxy for progress towards smart city development",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "grouped_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 4,
+        "marks": 8,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "bottom",
+            "role": "value",
+            "unit_text": "",
+            "low": "0%",
+            "high": "60%",
+            "serves": "all bars, both 2022 and 2024 series"
+          },
+          {
+            "side": "left",
+            "role": "category",
+            "unit_text": "",
+            "low": "Actual or intended use of emergent technologies",
+            "high": "Existence of smart city initiatives",
+            "serves": "the four indicator rows"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Open government data sharing"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "2024"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Actual or intended use of emergent technologies",
+            "2024"
+          ],
+          "value": "33%",
+          "value_source": "printed",
+          "why_hard": "33% also printed for 'Open government data policy online' 2024; needs the long category label to disambiguate"
+        }
+      },
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "none"
+        },
+        "type": "unreadable",
+        "type_other": "duplicate placeholder entry removed; page carries only one figure",
+        "panels": 1,
+        "series": 1,
+        "categories": 0,
+        "marks": 0,
+        "values_printed": "none",
+        "axes": [],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "not_shown",
+            "example": ""
+          }
+        ],
+        "worked_example": {
+          "key": [
+            ""
+          ],
+          "value": "",
+          "value_source": "not_readable",
+          "why_hard": "not a figure"
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "grouped_bar",
+        "figure_id": "f1",
+        "evidence": "two bars, blue and orange, side by side in each of four indicator rows"
+      },
+      {
+        "key": "horizontal_bars",
+        "figure_id": "f1",
+        "evidence": "category names sit on the left axis and bars grow rightwards to the 0%-60% scale"
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "'2022  2024' colour keys sit centred beneath the 0%-60% tick row"
+      },
+      {
+        "key": "value_label_outside",
+        "figure_id": "f1",
+        "evidence": "'46%' and '49%' printed just beyond the right end of each bar"
+      },
+      {
+        "key": "vgrid_only",
+        "figure_id": "f1",
+        "evidence": "vertical rules at 10%, 20% ... 50% across the panel; no horizontal rules"
+      },
+      {
+        "key": "wrapped_category_labels",
+        "figure_id": "f1",
+        "evidence": "'Actual or intended use of emergent technologies' runs the full width of the left label column"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "tick labels themselves read '0%','10%'...'60%'; no separate unit phrase anywhere"
+      },
+      {
+        "key": "footnote_marker",
+        "figure_id": "page",
+        "evidence": "body text 'Berlin,20' and 'Copenhagen Solutions Lab21' carry superscript note numbers"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "figure_title_rule_bar",
+        "figure_id": "f1",
+        "evidence": "a solid blue horizontal bar drawn immediately under the 'Figure 4.15' title line, full plot width",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "name": "figure_outer_border_box",
+        "figure_id": "f1",
+        "evidence": "a thin rectangle frames the whole chart including legend, separating it from body text",
+        "affects": []
+      },
+      {
+        "name": "duplicate_printed_values_same_series",
+        "figure_id": "f1",
+        "evidence": "'33%' printed twice for 2024 (emergent technologies and data policy online)",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "30%",
+        "figure_id": "f1",
+        "mark": "the 2022 (blue) bar for 'Actual or intended use of emergent technologies'",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Actual or intended use of emergent technologies",
+          "2022"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "33%",
+        "figure_id": "f1",
+        "mark": "the 2024 (orange) bar for 'Actual or intended use of emergent technologies' (also the 2024 bar for 'Open government data policy online')",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Actual or intended use of emergent technologies",
+          "2024"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "31%",
+        "figure_id": "f1",
+        "mark": "the 2022 (blue) bar for 'Open government data policy online'",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Open government data policy online",
+          "2022"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "37%",
+        "figure_id": "f1",
+        "mark": "the 2024 (orange) bar for 'Open government data sharing'",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Open government data sharing",
+          "2024"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "49%",
+        "figure_id": "f1",
+        "mark": "the 2024 (orange) bar for 'Existence of smart city initiatives'",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Existence of smart city initiatives",
+          "2024"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      }
+    ],
+    "hardest_step": 3,
+    "hardest_step_why": "值全部印出，读数无误差；难在标签：33% 出现两次，须靠长类别名加图例年份 2024 才能唯一定位。",
+    "examples": [
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "Figure 4.15   LOSI indicators as a proxy for progress towards smart city development, in blue above a solid blue rule",
+        "why": "标题需拆成编号与题名，且下方带装饰蓝条，现有流程只输出单行标题。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "'46%' and '49%' sit outside the bar ends; ticks read '0%','10%'...'60%'",
+        "why": "数值标签在条外、刻度自带百分号，标签位置与刻度格式尚不可控。"
+      },
+      {
+        "gap": "P3",
+        "figure_id": "f1",
+        "quote": "Legend '2022  2024' below the 0%-60% axis, entire chart inside a thin rectangular border",
+        "why": "整页导出需记录图例在轴下、外框范围与正文的相对位置。"
+      }
+    ]
+  }
+}

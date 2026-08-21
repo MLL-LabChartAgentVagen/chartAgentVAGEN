@@ -1,0 +1,181 @@
+{
+  "stem": "Digital_News-Report_2022_p50",
+  "document": "Digital_News-Report_2022",
+  "tags": "untagged",
+  "model": "gemini-3.1-pro-preview",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 50.4,
+  "usage": {
+    "input_tokens": 5299,
+    "output_tokens": 6430,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n生成器需要支持百分比堆积柱状图（100% stacked bar），能够在各段内部居中显示无单位的数据值标签（如 `69`、`21` 等）。纵轴的刻度需要支持自带百分号格式（如 `25%`、`50%`）。图表下方需要能够绘制分为两行两列的长文本图例，最底部还需支持多行独立说明文本（source/note）。\n\n### 定位一个值难在哪\n以定位 `46` 为例，该值代表巴西（Brazil）中“Specific journalists or commentators”的比例。提取难点在于：图例标签文本较长，且分为 2x2 网格直接放置在 X 轴标签下方。解析器进行文本分块时，容易将图例文本与紧邻的分类坐标轴文本混淆。此外，需要依赖颜色特征将图例和堆积块正确映射（橘色方块），这在非结构化图像解析时容易丢失层级信息。\n\n### 不确定的\n虽然纵轴明确标示为 `100%` 且图表按百分比堆积拉齐，但个别柱子的内部数值加总并非绝对的 100（例如芬兰 69+7+20+5=101，可能是由于四舍五入导致的），系统若强制校验 `100%` 可能会误报错。另外，上方的文本“NEWS BRANDS OR JOURNALISTS?”和正文段落样式相似，且紧跟着图表的全大写标题，图表标题归属的确切边界会有判定不确定性。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "PROPORTION WHO PAY MOST ATTENTION TO NEWS BRANDS VERSUS JOURNALISTS – SELECTED MARKETS",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "stacked_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 4,
+        "categories": 6,
+        "marks": 24,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "0%",
+            "high": "100%",
+            "serves": "all bars"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "Finland",
+            "high": "France",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Brazil"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Specific journalists or commentators"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Brazil",
+            "Specific journalists or commentators"
+          ],
+          "value": "46",
+          "value_source": "printed",
+          "why_hard": "The 2x2 legend layout below the x-axis makes series-to-color mapping and text extraction prone to parsing errors."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "pct_stacked",
+        "figure_id": "f1",
+        "evidence": "all bars reach exactly the 100% line on the y-axis"
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "a 2x2 legend sits below the country names on the x-axis"
+      },
+      {
+        "key": "value_label_inside",
+        "figure_id": "f1",
+        "evidence": "numbers like 69, 45, 37 are printed inside the colored bar segments"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "horizontal grid lines appear at 25%, 50%, and 75%"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "small text beginning with 'Q_Journalists_1.' is printed at the very bottom"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "tick_labels_carry_unit",
+        "figure_id": "f1",
+        "evidence": "y-axis ticks read 0%, 25%, 50% while values inside bars are bare numbers",
+        "affects": [
+          2
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "69",
+        "figure_id": "f1",
+        "mark": "the Finland 'Specific news brands' bottom segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Finland",
+          "Specific news brands"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "21",
+        "figure_id": "f1",
+        "mark": "the USA 'Specific journalists or commentators' orange segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "USA",
+          "Specific journalists or commentators"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "46",
+        "figure_id": "f1",
+        "mark": "the Brazil 'Specific journalists or commentators' orange segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Brazil",
+          "Specific journalists or commentators"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "24",
+        "figure_id": "f1",
+        "mark": "the France 'I don't use online news' top segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "France",
+          "I don't use online news"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      }
+    ],
+    "hardest_step": 3,
+    "hardest_step_why": "图例分成两行两列紧贴在横轴下方，长文本“Specific journalists or commentators”在视觉解析时极易与分类标签（如Brazil）混淆，导致单元格定位时系列和分类标签关联错误。",
+    "examples": [
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "y-axis labels read 25%, 50% but data marks inside bars are bare numbers like 46",
+        "why": "需要更细粒度地控制单位显示：只在轴刻度上带百分号，而图形内部的值标签完全省略单位，现有的全局单位配置无法区分这两者。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "PROPORTION WHO PAY MOST ATTENTION TO NEWS BRANDS VERSUS JOURNALISTS – SELECTED MARKETS",
+        "why": "图表自身拥有全大写标题，并且紧跟在视觉层级几乎一样且同样全大写的正文小节标题下方，需独立字段妥善存储和排版图表标头区。"
+      }
+    ]
+  }
+}

@@ -1,0 +1,299 @@
+{
+  "stem": "The_State_of_UK_Competition_Report_2024_p21",
+  "document": "The_State_of_UK_Competition_Report_2024",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "repeat",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 89.1,
+  "usage": {
+    "input_tokens": 5338,
+    "output_tokens": 12120,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "**画出来要什么**\n此页面上的图表为折线图，包含一条粗实线（Baseline）及多条交织的细实线（Alternative approaches）。生成器需要支持以下功能：\n1. **时间段阴影与标注**：在图表背景中绘制跨特定X轴区间的垂直灰色阴影带，并支持在阴影内居中或顶部添加内联文本（如“Great Financial Crisis”）。\n2. **多系列共用标签**：多条细线共用一个内联系列标签（Alternative approaches），而不是传统的独立图例。\n3. **坐标轴样式**：Y轴不从0起步（截断在80），其标题和单位置于Y轴顶端正上方。X轴为稀疏时间刻度，数据为年度数据但仅每4年绘制一次刻度标签。\n4. **复杂标题结构**：图表顶部包含主标题及多行详尽的副标题。\n\n**定位一个值难在哪**\n以定位Baseline在2012年的值为例（111）。首先，X轴仅有2009和2013年的刻度，2012年的位置必须通过视觉估算；其次，Y轴的刻度间隔高达20单位，缺乏辅助网格线，导致读数时极难在垂直空间上精确定位，使得肉眼读取数值落入5%容差范围几乎不可能。\n\n**不确定的**\n“Alternative approaches”实际上包含多条（约7条）独立走势的折线，但图中并未区分这些线的具体含义，只能笼统视为一个集合。此外，未标刻度年份上的数值点纯粹基于肉眼插值估算。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 5",
+          "title": "Average markups in GB have risen since 1997",
+          "subtitle": "Economy-wide average markup estimates. Baseline measure: Ordinary Least Square (OLS) estimation of a translog production function with materials as flexible input. Firm-level estimates are aggregated and weighted by turnover. Data from Annual Respondents Database X (ARDx) 1997-2020 and Annual Business Survey (ABS) 2021. GB only",
+          "unit_text": "Material markup\n(indexed to 1997 = 100)",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 25,
+        "marks": 200,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Material markup\n(indexed to 1997 = 100)",
+            "low": "80",
+            "high": "160",
+            "serves": "all lines"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "Year",
+            "low": "1997",
+            "high": "2021",
+            "serves": "all lines"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "series",
+            "label_source": "inline_label",
+            "example": "Baseline"
+          },
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "1997"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Baseline",
+            "2007"
+          ],
+          "value": "107",
+          "value_source": "axis_read",
+          "why_hard": "2007 is implicit between 2005 and 2009 ticks; y-axis has wide 20-unit gaps."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "axis_title_above_axis",
+        "figure_id": "f1",
+        "evidence": "the unit phrase sits above the top tick of the y-axis"
+      },
+      {
+        "key": "axis_starts_above_zero",
+        "figure_id": "f1",
+        "evidence": "the lowest tick on the y-axis is 80"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "only horizontal grey grid lines are drawn"
+      },
+      {
+        "key": "dense_marks_100plus",
+        "figure_id": "f1",
+        "evidence": "8 lines over 25 years means around 200 data points plotted"
+      },
+      {
+        "key": "rebased_index_values",
+        "figure_id": "f1",
+        "evidence": "the unit label specifies (indexed to 1997 = 100)"
+      },
+      {
+        "key": "sparse_time_ticks",
+        "figure_id": "f1",
+        "evidence": "yearly points but ticks are printed every four years (1997, 2001...)"
+      },
+      {
+        "key": "inline_series_labels",
+        "figure_id": "f1",
+        "evidence": "Baseline and Alternative approaches are written directly next to the lines"
+      },
+      {
+        "key": "shaded_band",
+        "figure_id": "f1",
+        "evidence": "grey vertical regions mark periods over 2007-2009 and 2020-2021"
+      },
+      {
+        "key": "annotation_callout",
+        "figure_id": "f1",
+        "evidence": "Great Financial Crisis and Covid-19 Pandemic text drawn inside the plot area"
+      },
+      {
+        "key": "axis_title_below_plot",
+        "figure_id": "f1",
+        "evidence": "the word Year sits below the x-axis tick labels"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "small print starting Markups are calculated... below the figure"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "subtitle and axis title carry (indexed to 1997 = 100)"
+      },
+      {
+        "key": "highlighted_category",
+        "figure_id": "f1",
+        "evidence": "the Baseline line is drawn significantly thicker and darker than other lines"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "grouped_series_label",
+        "figure_id": "f1",
+        "evidence": "Multiple distinct faint blue lines share the single inline label Alternative approaches",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "100",
+        "figure_id": "f1",
+        "mark": "the 1997 Baseline point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Baseline",
+          "1997"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "98",
+        "figure_id": "f1",
+        "mark": "the 2001 Baseline point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Baseline",
+          "2001"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "103",
+        "figure_id": "f1",
+        "mark": "the 2005 Baseline point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Baseline",
+          "2005"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "103",
+        "figure_id": "f1",
+        "mark": "the 2008 Baseline point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Baseline",
+          "2008"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "111",
+        "figure_id": "f1",
+        "mark": "the 2012 Baseline point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Baseline",
+          "2012"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "104",
+        "figure_id": "f1",
+        "mark": "the 2016 Baseline point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Baseline",
+          "2016"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "111",
+        "figure_id": "f1",
+        "mark": "the 2021 Baseline point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Baseline",
+          "2021"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "141",
+        "figure_id": "f1",
+        "mark": "the highest Alternative approaches line in 2012",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Alternative approaches",
+          "2012"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 3
+      },
+      {
+        "value": "143",
+        "figure_id": "f1",
+        "mark": "the highest Alternative approaches line in 2014",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Alternative approaches",
+          "2014"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 3
+      },
+      {
+        "value": "100",
+        "figure_id": "f1",
+        "mark": "the 1997 Alternative approaches point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Alternative approaches",
+          "1997"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "Y轴刻度间距达20单位且无细分网格，X轴每4年显示一次刻度标签。如同2012年的111，须在横纵双向进行视觉插值，极难准确读取至5%的容差内。",
+    "examples": [
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "Figure 5: Average markups in GB have risen since 1997\nEconomy-wide average markup estimates. Baseline measure...",
+        "why": "图表不仅有主标题，还有长达四行的方法学说明副标题以及独立的单位文本块，生成器需要结构化地存储和排版这些复杂的标题信息。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "x-axis ticks are 1997, 2001, 2005, 2009, 2013, 2017, 2021",
+        "why": "需要更精细的样式维度来控制时间轴的刻度密度，支持数据逐年绘制但刻度标签稀疏显示（如每4年一标注）的格式。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "Grey vertical shaded bands over 2007-2009 and 2020-2021 labelled Great Financial Crisis and Covid-19 Pandemic",
+        "why": "渲染管线需要支持在图表中绘制跨越特定X轴区间的背景阴影带，并在其上方直接嵌入说明文本，以标示特定的历史事件时期。"
+      }
+    ]
+  }
+}

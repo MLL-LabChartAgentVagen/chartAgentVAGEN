@@ -1,0 +1,258 @@
+{
+  "stem": "EnergyTechnologyPerspectives2024_p53",
+  "document": "EnergyTechnologyPerspectives2024",
+  "tags": "3d_chart+need_estimate",
+  "model": "gpt-5.6-sol",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 120000,
+  "seconds": 98.0,
+  "usage": {
+    "input_tokens": 8840,
+    "output_tokens": 6535,
+    "cache_read_tokens": 2365
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "**画出来要什么**\n单面板百分比堆叠柱图：11种技术、6个地区，所有柱到100%。需画20个百分点横向网格、柱下两级分类及分组括线、图下共享图例、注释、来源和加粗结论。\n\n**定位一个值难在哪**\n“Nuclear”中“Other Asia Pacific”的19需要同时用类别轴和图例定位，并由堆叠段上下边界相减。其5%容差仅0.95个百分点，远小于20个百分点的刻度间隔。\n\n**不确定的**\n图中没有数值标签；各给定值的位置按柱高和颜色判断。极薄或零值分段不可清楚区分，标记总数为估计。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 1.14",
+          "title": "Energy employment in selected energy technologies by region, 2022",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "stacked_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 6,
+        "categories": 11,
+        "marks": 56,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "%",
+            "low": "0%",
+            "high": "100%",
+            "serves": "all stacked regional segments"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "EV and battery",
+            "high": "Oil",
+            "serves": "all stacks"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Nuclear"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Other Asia Pacific"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Nuclear",
+            "Other Asia Pacific"
+          ],
+          "value": "19%",
+          "value_source": "axis_read",
+          "why_hard": "Its 0.95-point tolerance is below 20-point grid spacing; both segment boundaries require estimation."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "stacked_bar",
+        "figure_id": "f1",
+        "evidence": "Each technology is one vertical bar divided into regional colour segments."
+      },
+      {
+        "key": "pct_stacked",
+        "figure_id": "f1",
+        "evidence": "All eleven stacks reach “100%”; the left axis runs from “0%” to “100%”."
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "“Note: EV = electric vehicles.” and “Source: Adapted from IEA (2023d).” appear below."
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "The six-entry regional legend is arranged in one row below the category labels."
+      },
+      {
+        "key": "two_level_x_ticks",
+        "figure_id": "f1",
+        "evidence": "Technology names sit above grouped labels “Technology manufacturing” and “Fossil fuel supply”."
+      },
+      {
+        "key": "wrapped_category_labels",
+        "figure_id": "f1",
+        "evidence": "“EV and battery”, “Battery storage”, “Heat pumps”, and “Natural gas” wrap onto two lines."
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "Horizontal rules cross the plot at percentage ticks; no vertical grid lines are drawn."
+      }
+    ],
+    "new_components": [
+      {
+        "name": "unit_in_tick_labels",
+        "figure_id": "f1",
+        "evidence": "Left-axis ticks read “0%”, “20%”, through “100%”; no separate unit title appears.",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "name": "bold_takeaway_below_figure",
+        "figure_id": "f1",
+        "evidence": "“Most manufacturing jobs for electric vehicles and batteries” begins a bold blue takeaway below the notes.",
+        "affects": [
+          4
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "73",
+        "figure_id": "f1",
+        "mark": "the EV and battery China segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "EV and battery",
+          "China"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "91",
+        "figure_id": "f1",
+        "mark": "the Battery storage China segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Battery storage",
+          "China"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "82",
+        "figure_id": "f1",
+        "mark": "the Solar PV China segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Solar PV",
+          "China"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "19",
+        "figure_id": "f1",
+        "mark": "the Nuclear Other Asia Pacific segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Nuclear",
+          "Other Asia Pacific"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "38",
+        "figure_id": "f1",
+        "mark": "the Oil Rest of World segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Oil",
+          "Rest of World"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "37",
+        "figure_id": "f1",
+        "mark": "the Coal Other Asia Pacific segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Coal",
+          "Other Asia Pacific"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "20",
+        "figure_id": "f1",
+        "mark": "the Hydro China segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Hydro",
+          "China"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "40",
+        "figure_id": "f1",
+        "mark": "the Hydro Other Asia Pacific segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Hydro",
+          "Other Asia Pacific"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "54",
+        "figure_id": "f1",
+        "mark": "the Coal China segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Coal",
+          "China"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "25",
+        "figure_id": "f1",
+        "mark": "the Oil Middle East segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Oil",
+          "Middle East"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "19的5%仅0.95个百分点；纵轴每20个百分点一格，且该值须由堆叠段两条边界相减。杭州",
+    "examples": []
+  }
+}

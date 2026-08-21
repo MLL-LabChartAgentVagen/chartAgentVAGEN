@@ -1,0 +1,350 @@
+{
+  "stem": "Digital_News-Report_2022_p26",
+  "document": "Digital_News-Report_2022",
+  "tags": "untagged",
+  "model": "gpt-5.6-sol",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 120000,
+  "seconds": 126.9,
+  "usage": {
+    "input_tokens": 8807,
+    "output_tokens": 8603,
+    "cache_read_tokens": 2365
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "**画出来要什么**：三种相邻构造：四个平台的等高百分比堆叠柱，带柱内数值、图例和平台标志；按 Twitter、Facebook 分组的无轴国家排名名单；五地区横向分组条，带灰色满宽轨道、上方图例及条端数值。\n\n**定位一个值难在哪**：右图的 49% 必须同时用“Politics”和“Africa”定位；五条相邻同色序列只由上方共享图例命名。9%还在左图 TikTok 柱中重复出现。\n\n**不确定的**：中间国家名单可能是左图的附属面板，而非独立图；其两组分别有五、六行。灰色轨道按背景处理，未计入数据标记。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "PROPORTION WHO THINK THEY SEE TOO MUCH NEWS",
+          "subtitle": "ON EACH NETWORK – UK",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "stacked_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 4,
+        "categories": 4,
+        "marks": 16,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "Facebook",
+            "high": "TikTok",
+            "serves": "all stacked bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Facebook"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Too much"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Instagram",
+            "Not enough"
+          ],
+          "value": "6%",
+          "value_source": "printed",
+          "why_hard": "A thin segment shares each stack with three other response bands."
+        }
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "",
+          "title": "Top markets",
+          "subtitle": "saying too much",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "other",
+        "type_other": "ranked lists",
+        "panels": 2,
+        "series": 1,
+        "categories": 6,
+        "marks": 11,
+        "values_printed": "all",
+        "axes": [],
+        "key_parts": [
+          {
+            "role": "panel",
+            "label_source": "panel_title",
+            "example": "Twitter"
+          },
+          {
+            "role": "category",
+            "label_source": "inline_label",
+            "example": "India"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Facebook",
+            "UK"
+          ],
+          "value": "21%",
+          "value_source": "printed",
+          "why_hard": "Repeated 21% values require the country label to distinguish rows."
+        }
+      },
+      {
+        "id": "f3",
+        "heading": {
+          "figure_number": "",
+          "title": "PROPORTION WHO SAW FALSE OR MISLEADING",
+          "subtitle": "INFORMATION ABOUT EACH TOPIC IN THE LAST WEEK –\nSELECTED REGIONS",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "grouped_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 5,
+        "categories": 6,
+        "marks": 30,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "left",
+            "role": "category",
+            "unit_text": "",
+            "low": "COVID-19",
+            "high": "Products (e.g. scams)",
+            "serves": "all regional bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "COVID-19"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Europe"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Climate change",
+            "Latin America"
+          ],
+          "value": "21%",
+          "value_source": "printed",
+          "why_hard": "Wrapped topic text and the shared legend identify one of five adjacent bars."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "stacked_bar",
+        "figure_id": "f1",
+        "evidence": "Four response segments are stacked within each network bar."
+      },
+      {
+        "key": "pct_stacked",
+        "figure_id": "f1",
+        "evidence": "All network stacks have equal height; printed segment percentages total approximately 100%."
+      },
+      {
+        "key": "no_value_axis",
+        "figure_id": "f1",
+        "evidence": "Only a baseline and category labels appear; percentages are printed inside segments."
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "“Too much”, “About right”, “Not enough”, and “Don’t know” sit below the bars."
+      },
+      {
+        "key": "value_label_inside",
+        "figure_id": "f1",
+        "evidence": "Percentages including “21%”, “55%”, and “3%” are printed inside coloured segments."
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "“Q12_Social_rightsize ... Base:” is printed in small type below the visual."
+      },
+      {
+        "key": "small_multiples_4",
+        "figure_id": "f2",
+        "evidence": "Twitter and Facebook repeat the same ranked market-row layout."
+      },
+      {
+        "key": "panel_title_per_panel",
+        "figure_id": "f2",
+        "evidence": "“Twitter” and “Facebook” head the two ranked sections."
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f2",
+        "evidence": "The “Q12_Social_rightsize ... Base:” line spans below the adjacent ranked list."
+      },
+      {
+        "key": "grouped_bar",
+        "figure_id": "f3",
+        "evidence": "Each topic contains five separate regional bars."
+      },
+      {
+        "key": "horizontal_bars",
+        "figure_id": "f3",
+        "evidence": "Topic labels sit left while all bars extend horizontally right."
+      },
+      {
+        "key": "no_value_axis",
+        "figure_id": "f3",
+        "evidence": "No numerical value ticks are drawn; every percentage is printed at a bar end."
+      },
+      {
+        "key": "legend_above_plot",
+        "figure_id": "f3",
+        "evidence": "The five-region legend sits between the heading and the COVID-19 bars."
+      },
+      {
+        "key": "value_label_outside",
+        "figure_id": "f3",
+        "evidence": "Labels such as “49%” and “9%” sit just beyond the coloured bar ends."
+      },
+      {
+        "key": "wrapped_category_labels",
+        "figure_id": "f3",
+        "evidence": "“Climate change” and “Products (e.g. scams)” are wrapped onto two lines."
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f3",
+        "evidence": "“Q. FAKE_NEWS 2021a.”, “Base:”, and “Note:” appear below the plot."
+      }
+    ],
+    "new_components": [
+      {
+        "name": "category_logos_below_ticks",
+        "figure_id": "f1",
+        "evidence": "Four platform logos sit below the printed Facebook, Twitter, Instagram and TikTok labels.",
+        "affects": []
+      },
+      {
+        "name": "ranked_list",
+        "figure_id": "f2",
+        "evidence": "Two sections list flag, market name and right-aligned percentage without axes.",
+        "affects": [
+          1,
+          3
+        ]
+      },
+      {
+        "name": "country_flag_icons",
+        "figure_id": "f2",
+        "evidence": "Each market row begins with a national flag icon.",
+        "affects": []
+      },
+      {
+        "name": "unequal_panel_category_counts",
+        "figure_id": "f2",
+        "evidence": "Twitter lists five markets while Facebook lists six.",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "name": "background_bar_tracks",
+        "figure_id": "f3",
+        "evidence": "Every coloured bar overlays a full-width light-grey horizontal track.",
+        "affects": [
+          2
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "21%",
+        "figure_id": "f1",
+        "mark": "the Facebook Too much segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Facebook",
+          "Too much"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "49%",
+        "figure_id": "f3",
+        "mark": "the Politics Africa bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Politics",
+          "Africa"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "9%",
+        "figure_id": "f3",
+        "mark": "the Immigration Asia bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Immigration",
+          "Asia"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      }
+    ],
+    "hardest_step": 3,
+    "hardest_step_why": "49%需同时关联“Politics”和“Africa”；9%又跨图重复，直印数值仍最难在标签关联。负担最高。相邻条和共享图例使得单独的数值不足以定位。需要主题与地区两个键，且中间排名名单还增加面板与国家层级。由于数值都直接打印，精度并非主要问题；最可能失败的是把图例、类别与具体单元格正确关联。这里49%在Politics的Africa条，9%在Immigration的Asia条，但9%也出现在左侧TikTok的Too much段，若缺少完整键会误配。跨图重复和共享图例共同增加步骤3的风险。即使表中包含数值，也必须保存原页标签层级。最难的是关联，不是读取。",
+    "examples": [
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "21%, 55%, 3%, and 20% are printed inside the Facebook stack.",
+        "why": "需控制堆叠段内数值位置，并在极薄色带中保持可读。"
+      },
+      {
+        "gap": "P2",
+        "figure_id": "f2",
+        "quote": "Twitter; Facebook",
+        "why": "同一国家排名构造分成两个网络面板，面板名必须进入键。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f3",
+        "quote": "PROPORTION WHO SAW FALSE OR MISLEADING / INFORMATION ABOUT EACH TOPIC IN THE LAST WEEK – / SELECTED REGIONS",
+        "why": "标题需拆成主标题、续行，并保留其位于图例和绘图区上方的位置。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f3",
+        "quote": "Every coloured bar overlays a full-width light-grey track; percentages sit beyond coloured ends.",
+        "why": "需生成灰色轨道及条外百分比，而不是默认坐标轴读数。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f2",
+        "quote": "Each market row begins with a national flag icon and ends with a percentage.",
+        "why": "现有变化未覆盖无轴排名名单及国旗、文本、右对齐数值的行式组合。"
+      }
+    ]
+  }
+}

@@ -1,0 +1,289 @@
+{
+  "stem": "COM_2025_26_F1_COMMUNICATION_FROM_COMMISSION_TO_INST_EN_V10_P1_3877708_p19",
+  "document": "COM_2025_26_F1_COMMUNICATION_FROM_COMMISSION_TO_INST_EN_V10_P1_3877708",
+  "tags": "need_estimate",
+  "model": "claude-opus-5",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 85.9,
+  "usage": {
+    "input_tokens": 13963,
+    "output_tokens": 6387,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "## 画出来要什么\n一张窄栏折线图，嵌在正文左栏，右侧是与之并排的正文段落（`Significant amounts of EU savers' money are either tied up in bank accounts or invested abroad.`）。图内需要：三条年度折线（蓝、绿、黄，2011–2023 共约 13 个点），但图例只画出两项 `EU`、`US`，绿线（按正文应为 UK）没有名字；图例置于绘图区内部约 y=20 处；左轴 `0`–`100`、每 10 一格、无网格线，单位 `%` 单独写在顶格 `100` 右侧；x 轴刻度斜排且只标奇数年 `2011 … 2023`；下方两段小字 `Note:` 与 `Source: European Commission, DG FISMA`；标题 `Figure 4:` 与标题句在图上方。\n\n## 定位一个值难在哪\n以 EU 的 43 为例：图上没有任何数值标签，只能对着 10 单位一格的刻度读线；而 EU 线在 45→43 之间几乎水平，43 与 45 相差仅 4.4%，小于 5% 容差，等于说相邻年份互相可以冒充。再者 2022 这类偶数年根本没有刻度标签，行标签只能靠推。\n\n## 不确定的\n绿线的名称（正文提到 UK 55%，图上无字）；十个给定值对应的具体年份是我按“末点=43/72”倒推的；是否存在极淡的横向网格线看不清。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 4:",
+          "title": "Household savings invested in bonds, shares, investment funds and similar.",
+          "subtitle": "",
+          "unit_text": "%",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 1,
+        "series": 3,
+        "categories": 13,
+        "marks": 39,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "%",
+            "low": "0",
+            "high": "100",
+            "serves": "all three lines"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "2011",
+            "high": "2023",
+            "serves": "all three lines"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "EU"
+          },
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2023"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "EU",
+            "2023"
+          ],
+          "value": "≈43",
+          "value_source": "axis_read",
+          "why_hard": "EU line nearly flat 45 to 43; 10-unit ticks, no labels, no gridlines, adjacent years within tolerance"
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "legend_inside_plot",
+        "figure_id": "f1",
+        "evidence": "`EU` and `US` swatches drawn over the plot area at about the 20 level"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "`Note: Volumes of household savings in company bonds...` and `Source: European Commission, DG FISMA` below plot"
+      },
+      {
+        "key": "side_text_bullets",
+        "figure_id": "f1",
+        "evidence": "Body paragraph `Significant amounts of EU savers' money...` runs in a column level with the figure"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "`%` is the only unit text, printed next to the top tick `100`"
+      },
+      {
+        "key": "axis_title_above_axis",
+        "figure_id": "f1",
+        "evidence": "`100 %` -- the percent sign sits beside the top tick, above the axis"
+      },
+      {
+        "key": "rotated_x_ticks",
+        "figure_id": "f1",
+        "evidence": "`2011`, `2013` ... `2023` set at roughly 45 degrees under the plot"
+      },
+      {
+        "key": "sparse_time_ticks",
+        "figure_id": "f1",
+        "evidence": "lines bend yearly but ticks are only odd years 2011, 2013 ... 2023"
+      },
+      {
+        "key": "footnote_marker",
+        "figure_id": "page",
+        "evidence": "superscript `94`, `95`, `96` attached to sentences naming Figure 4 and KPI 15"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "series_missing_from_legend",
+        "figure_id": "f1",
+        "evidence": "a green line runs 65 down to ~57 but the legend lists only `EU` and `US`",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "name": "figure_in_narrow_text_column",
+        "figure_id": "page",
+        "evidence": "figure, Note and Source occupy the left half-column; body text fills the right half",
+        "affects": [
+          1,
+          4
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "45",
+        "figure_id": "f1",
+        "mark": "the blue EU line, an early flat point (about 2019)",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "EU",
+          "2019"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "70",
+        "figure_id": "f1",
+        "mark": "the yellow US line at the same early point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "US",
+          "2019"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "45",
+        "figure_id": "f1",
+        "mark": "the blue EU line, next year (about 2020), indistinguishable from the previous",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "EU",
+          "2020"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 3
+      },
+      {
+        "value": "71",
+        "figure_id": "f1",
+        "mark": "the yellow US line at about 2020",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "US",
+          "2020"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 3
+      },
+      {
+        "value": "45",
+        "figure_id": "f1",
+        "mark": "the blue EU line at about 2021",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "EU",
+          "2021"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "72",
+        "figure_id": "f1",
+        "mark": "the yellow US line peak at about 2021",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "US",
+          "2021"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "44",
+        "figure_id": "f1",
+        "mark": "the blue EU line beginning its dip, about 2022",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "EU",
+          "2022"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 3
+      },
+      {
+        "value": "70",
+        "figure_id": "f1",
+        "mark": "the yellow US line dip at about 2022",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "US",
+          "2022"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 3
+      },
+      {
+        "value": "43",
+        "figure_id": "f1",
+        "mark": "the blue EU line endpoint at the right edge",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "EU",
+          "2023"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "72",
+        "figure_id": "f1",
+        "mark": "the yellow US line endpoint at the right edge",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "US",
+          "2023"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "无数值标签，刻度每10；EU 43 与 45 只差4.4%，低于5%容差，且2020、2022无刻度，年份行标签也难对上。",
+    "examples": [
+      {
+        "gap": "P8",
+        "figure_id": "f1",
+        "quote": "three lines are drawn (blue, green, yellow) but the legend shows only `EU` and `US`",
+        "why": "第三条线只能靠颜色和正文的 UK 55% 命名，生成器无法产出“图例缺项”的序列。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "`Figure 4:` and `Household savings invested in bonds, shares, investment funds and similar.` above; `%` only at the top tick",
+        "why": "编号、标题与单位分处三个位置，单位不在标题里而在轴顶，需标题分字段。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "x ticks `2011 2013 2015 2017 2019 2021 2023` slanted, yearly line points between them; y ticks every 10",
+        "why": "刻度稀疏加斜排、单位置于轴顶，这类刻度格式与单位位置目前不可控。"
+      },
+      {
+        "gap": "P3",
+        "figure_id": "page",
+        "quote": "figure, `Note:` and `Source: European Commission, DG FISMA` fill the left column; body text runs beside it",
+        "why": "整页导出需知道图与并排正文、注释源行的相对位置，现无页级 markdown。"
+      }
+    ]
+  }
+}

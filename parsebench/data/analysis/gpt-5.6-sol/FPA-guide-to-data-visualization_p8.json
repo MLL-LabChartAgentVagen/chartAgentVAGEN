@@ -1,0 +1,299 @@
+{
+  "stem": "FPA-guide-to-data-visualization_p8",
+  "document": "FPA-guide-to-data-visualization",
+  "tags": "need_estimate",
+  "model": "gpt-5.6-sol",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 120000,
+  "seconds": 118.7,
+  "usage": {
+    "input_tokens": 8762,
+    "output_tokens": 7699,
+    "cache_read_tokens": 2365
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n重建一幅复合图：标题“Western Europe Net Sales Windsock”置于上方；左轴以“$m”为单位、范围100—220，底轴从“Jan 14”到“Dec”。图内包含三层灰色情景区间、Budget与Prior Year水平基准线、以及截至May的Forecast折线；图例位于图上方。\n\n### 定位一个值难在哪\n“Forecast—Feb—216”需同时依靠图例“Forecast”和横轴“Feb”定位。数值未印出，只能在200与220两条网格线之间估读。\n\n### 不确定的\n三种灰色情景仅共用“Scenarios”标签，没有各层名称；情景区间的数据点数和边界含义只能据图形估计。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "Western Europe Net Sales Windsock",
+          "subtitle": "",
+          "unit_text": "$m",
+          "placement": "above"
+        },
+        "type": "compound",
+        "type_other": "",
+        "panels": 1,
+        "series": 6,
+        "categories": 12,
+        "marks": 25,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "$m",
+            "low": "100",
+            "high": "220",
+            "serves": "all lines and scenario bands"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "Jan\n14",
+            "high": "Dec",
+            "serves": "all lines and scenario bands"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Forecast"
+          },
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "Feb"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Forecast",
+            "Feb"
+          ],
+          "value": "216",
+          "value_source": "axis_read",
+          "why_hard": "No value label; 216 must be interpolated between 200 and 220 ticks."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "mixed_marks",
+        "figure_id": "f1",
+        "evidence": "Three grey filled scenario bands share the panel with Budget, Prior Year, and Forecast lines."
+      },
+      {
+        "key": "reference_line",
+        "figure_id": "f1",
+        "evidence": "Budget and Prior Year are straight horizontal comparison lines across the monthly plot."
+      },
+      {
+        "key": "error_bars",
+        "figure_id": "f1",
+        "evidence": "Grey statistical scenario ranges form shaded uncertainty bands from Jan 14 through May."
+      },
+      {
+        "key": "axis_starts_above_zero",
+        "figure_id": "f1",
+        "evidence": "The left value axis begins at 100 without a break glyph."
+      },
+      {
+        "key": "color_encodes_extra_attribute",
+        "figure_id": "f1",
+        "evidence": "Three grey shades distinguish scenario levels, but all share the label “Scenarios”."
+      },
+      {
+        "key": "legend_above_plot",
+        "figure_id": "f1",
+        "evidence": "The legend row sits between “Western Europe Net Sales Windsock” and the plot."
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "“$m” appears above the numbered left value axis."
+      },
+      {
+        "key": "axis_title_above_axis",
+        "figure_id": "f1",
+        "evidence": "“$m” is positioned above the 220 tick."
+      },
+      {
+        "key": "nonstandard_time_ticks",
+        "figure_id": "f1",
+        "evidence": "“Jan” sits over “14”; later ticks show month abbreviations only."
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "Dotted horizontal grid lines cross the plot; no vertical grid is drawn."
+      }
+    ],
+    "new_components": [
+      {
+        "name": "nested_uncertainty_bands",
+        "figure_id": "f1",
+        "evidence": "Three differently shaded grey scenario ranges are nested across Jan 14 through May.",
+        "affects": [
+          2,
+          3
+        ]
+      },
+      {
+        "name": "multi_swatch_legend_entry",
+        "figure_id": "f1",
+        "evidence": "Three separate grey swatches collectively precede the single legend label “Scenarios”.",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "218",
+        "figure_id": "f1",
+        "mark": "the Jan 14 end of the Budget line",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Budget",
+          "Jan\n14"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "218",
+        "figure_id": "f1",
+        "mark": "the Dec end of the Budget line",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Budget",
+          "Dec"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "166",
+        "figure_id": "f1",
+        "mark": "the Jan 14 position on the Prior Year line",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Prior Year",
+          "Jan\n14"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "166",
+        "figure_id": "f1",
+        "mark": "the May position on the Prior Year line",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Prior Year",
+          "May"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "166",
+        "figure_id": "f1",
+        "mark": "the Dec end of the Prior Year line",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Prior Year",
+          "Dec"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "218",
+        "figure_id": "f1",
+        "mark": "the Jan 14 Forecast point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Forecast",
+          "Jan\n14"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "216",
+        "figure_id": "f1",
+        "mark": "the Feb Forecast point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Forecast",
+          "Feb"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "212",
+        "figure_id": "f1",
+        "mark": "the Mar Forecast point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Forecast",
+          "Mar"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "210",
+        "figure_id": "f1",
+        "mark": "the Apr Forecast point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Forecast",
+          "Apr"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "200",
+        "figure_id": "f1",
+        "mark": "the May Forecast point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Forecast",
+          "May"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      }
+    ],
+    "hardest_step": 1,
+    "hardest_step_why": "218、166仅见于图线，页面无数据表；纵轴20一格，须反读。切换到中文可能更自然。心理还在给出答案格式。需要确保有效JSON，且系统格式不含examples，我们遵循。Chinese report within. One issue final JSON has weird appended? No, currently ended string perhaps I accidentally included extra Chinese after? Looking at final content after hardest_step_why string I see `切换到中文可能更自然。心理还在给出答案格式。需要确保有效JSON，且系统格式不含examples，我们遵循。` This is indeed inside string? Let's inspect final line: `",
+    "examples": [
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "Western Europe Net Sales Windsock",
+        "why": "标题需拆分为独立标题、单位和上方位置字段。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "“$m” is drawn above the 220 tick; the value axis starts at 100.",
+        "why": "需控制单位位置、刻度格式及非零起点。"
+      },
+      {
+        "gap": "P1",
+        "figure_id": "f1",
+        "quote": "Forecast reaches 216 at Feb between the 200 and 220 grid lines.",
+        "why": "无数值标签，精度取决于逐标记插值能力。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "Three grey swatches collectively precede the single legend label “Scenarios”.",
+        "why": "需支持一个图例标签对应多个色阶及嵌套不确定区间。"
+      }
+    ]
+  }
+}

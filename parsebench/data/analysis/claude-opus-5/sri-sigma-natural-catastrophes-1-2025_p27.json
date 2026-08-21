@@ -1,0 +1,424 @@
+{
+  "stem": "sri-sigma-natural-catastrophes-1-2025_p27",
+  "document": "sri-sigma-natural-catastrophes-1-2025",
+  "tags": "need_estimate",
+  "model": "claude-opus-5",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 114.3,
+  "usage": {
+    "input_tokens": 13963,
+    "output_tokens": 9359,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "**画出来要什么**\n两幅同族图叠在一页,各自装在浅蓝底色的图框里(标题、图号、图例、Source 都在框内)。Figure 18:1970–2024 共 55 根年度堆叠柱,三段(Earthquake/tsunami、Weather-related catastrophes、Man-made disasters),约 130+ 个色块;横轴刻度每三年一格(1970、1973 … 2024),纵轴 0–250、每 50 一条横网格;plot 区上方叠着 11 个带引线的事件标注框(\"Hurricanes Katrina, Rita, Wilma\"、\"Hurricane Ian\" 等),互相错层避让。Figure 19:同样 55 根两段堆叠柱,再叠一条只覆盖约 1995 年后的粉色 \"Exponential trend (total natcat losses)\" 曲线;轴标题 \"Insured losses (USD bn)\" 写在顶端刻度 200 的右侧。\n\n**定位一个值难在哪**\n取 145(Figure 18 的 2024 年柱总高)。图上一个数字都没印,只能靠 0/50/100/150 的网格内插;5% 容差只有 ±7,不到网格的七分之一。而且 145 是三段之和,读者要先认出柱顶,再确认 2024 这根确实对齐最后一个刻度;若取 55(1992)则该年根本没有刻度标签,须从 1991 往右数一格。\n\n**不确定的**\n所有测试值都不是印在图上的(137 只出现在正文 \"USD 137 billion in 2024\")。我对 75/76/81/56 归到哪根柱、哪一段只能按高度猜测,Figure 18 与 Figure 19 同年总高相近,极易错配。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 18",
+          "title": "Insured catastrophe losses, 1970 – 2024 (USD bn, 2024 prices)",
+          "subtitle": "",
+          "unit_text": "USD bn, 2024 prices",
+          "placement": "above"
+        },
+        "type": "stacked_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 3,
+        "categories": 55,
+        "marks": 135,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "0",
+            "high": "250",
+            "serves": "all stacked bars"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "1970",
+            "high": "2024",
+            "serves": "all bars, one bar per year"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2024"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Weather-related catastrophes"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "1991",
+            "Weather-related catastrophes"
+          ],
+          "value": "~50",
+          "value_source": "axis_read",
+          "why_hard": "1991 tick exists but segment tops unlabelled; gridlines every 50 USD bn, three-part stack"
+        }
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "Figure 19",
+          "title": "Global insured losses from primary and secondary perils, 1970 – 2024, in USD billion at 2024 prices",
+          "subtitle": "",
+          "unit_text": "in USD billion at 2024 prices",
+          "placement": "above"
+        },
+        "type": "compound",
+        "type_other": "",
+        "panels": 1,
+        "series": 3,
+        "categories": 55,
+        "marks": 140,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Insured losses (USD bn)",
+            "low": "0",
+            "high": "200",
+            "serves": "stacked bars and the pink exponential trend line"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "1970",
+            "high": "2024",
+            "serves": "all bars and the trend line"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2024"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Secondary perils"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "2024",
+            "Secondary perils"
+          ],
+          "value": "~76",
+          "value_source": "axis_read",
+          "why_hard": "dark bottom segment, no printed number; 25-unit gridlines mean 5% of 76 is under a sixth of a grid"
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "stacked_bar",
+        "figure_id": "f1",
+        "evidence": "each yearly bar split into dark, teal and light-green segments; legend lists three loss types"
+      },
+      {
+        "key": "stacked_bar",
+        "figure_id": "f2",
+        "evidence": "each yearly bar has a dark 'Secondary perils' base and a light-green 'Primary perils' top"
+      },
+      {
+        "key": "mixed_marks",
+        "figure_id": "f2",
+        "evidence": "pink 'Exponential trend (total natcat losses)' line drawn over the stacked bars"
+      },
+      {
+        "key": "annotation_callout",
+        "figure_id": "f1",
+        "evidence": "boxed notes over the plot: 'Hurricanes Katrina, Rita, Wilma', 'Hurricane Ian', with leader lines to bars"
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "'Earthquake/tsunami  Weather-related catastrophes  Man-made disasters' row under the x axis"
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f2",
+        "evidence": "'Secondary perils  Primary perils (incl secondary effects)  Exponential trend (total natcat losses)' under the axis"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "'Source: Swiss Re Institute' in small print below the legend"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f2",
+        "evidence": "'Source: Swiss Re Institute' in small print below the legend"
+      },
+      {
+        "key": "multi_figure_page",
+        "figure_id": "page",
+        "evidence": "'Figure 18' and 'Figure 19' with separate titles, captions and source lines on one page"
+      },
+      {
+        "key": "sparse_time_ticks",
+        "figure_id": "f1",
+        "evidence": "bars are annual but ticks read 1970, 1973, 1976 ... 2024, every three years"
+      },
+      {
+        "key": "sparse_time_ticks",
+        "figure_id": "f2",
+        "evidence": "annual bars, ticks only 1970, 1973 ... 2024"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "horizontal rules at 0, 50, 100, 150, 200, 250; no vertical rules"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f2",
+        "evidence": "horizontal rules at 0, 25 ... 200; no vertical rules"
+      },
+      {
+        "key": "panel_background",
+        "figure_id": "f1",
+        "evidence": "the whole figure block including the plot area sits on a pale blue tint"
+      },
+      {
+        "key": "panel_background",
+        "figure_id": "f2",
+        "evidence": "pale blue tint fills the figure block and the plot area"
+      },
+      {
+        "key": "dense_marks_100plus",
+        "figure_id": "f1",
+        "evidence": "55 yearly bars with up to three segments each, roughly 130 drawn blocks"
+      },
+      {
+        "key": "dense_marks_100plus",
+        "figure_id": "f2",
+        "evidence": "55 yearly bars with two segments each plus a line, over 110 marks"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "y ticks read 0 ... 250 bare; scale only in title '(USD bn, 2024 prices)'"
+      },
+      {
+        "key": "axis_title_above_axis",
+        "figure_id": "f2",
+        "evidence": "'Insured losses (USD bn)' set beside the top tick '200', above the axis"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f2",
+        "evidence": "title says 'in USD billion at 2024 prices'; ticks 0, 25 ... 200 are bare"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "partial_span_series",
+        "figure_id": "f2",
+        "evidence": "the pink exponential trend line starts near 1995 and covers only part of the 1970-2024 axis",
+        "affects": [
+          2,
+          3
+        ]
+      },
+      {
+        "name": "tiered_callout_layer",
+        "figure_id": "f1",
+        "evidence": "eleven event boxes at several stacked heights, leader lines dropping to individual year bars",
+        "affects": [
+          3,
+          4
+        ]
+      },
+      {
+        "name": "figure_container_tint_box",
+        "figure_id": "page",
+        "evidence": "heading, plot, legend and source line all enclosed in one pale blue full-width box",
+        "affects": [
+          4
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "55",
+        "figure_id": "f1",
+        "mark": "the 1992 bar total (Hurricane Andrew year), tallest bar of the early 1990s",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Insured catastrophe losses, 1970 – 2024 (USD bn, 2024 prices)",
+          "1992"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 3
+      },
+      {
+        "value": "165",
+        "figure_id": "f1",
+        "mark": "the 2005 bar total under the 'Hurricanes Katrina, Rita, Wilma' callout",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Insured catastrophe losses, 1970 – 2024 (USD bn, 2024 prices)",
+          "2006"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 3
+      },
+      {
+        "value": "75",
+        "figure_id": "f2",
+        "mark": "the 2024 'Secondary perils' dark segment, or the 2021 dark segment of similar height",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2024",
+          "Secondary perils"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "180",
+        "figure_id": "f1",
+        "mark": "the 2017 bar total under 'Hurricanes Harvey, Irma, Maria'",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Insured catastrophe losses, 1970 – 2024 (USD bn, 2024 prices)",
+          "2018"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "137",
+        "figure_id": "f1",
+        "mark": "2024 natcat losses, i.e. the 2024 bar minus the Man-made disasters top segment; only printed in body text",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2024",
+          "Earthquake/tsunami",
+          "Weather-related catastrophes"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "45",
+        "figure_id": "f1",
+        "mark": "a mid-2010s bar total, most likely 2016; several bars near 45 make it ambiguous",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Insured catastrophe losses, 1970 – 2024 (USD bn, 2024 prices)",
+          "2015"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 3
+      },
+      {
+        "value": "145",
+        "figure_id": "f1",
+        "mark": "the 2024 bar total under 'Hurricanes Helene, Milton' (137 natcat + 9 man-made)",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2024",
+          "Earthquake/tsunami",
+          "Weather-related catastrophes",
+          "Man-made disasters"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "76",
+        "figure_id": "f2",
+        "mark": "a dark 'Secondary perils' segment near 2012 or 2024; height between the 75 gridline and 100",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2012",
+          "Secondary perils"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "81",
+        "figure_id": "f2",
+        "mark": "a total-bar height around 2013 (bar following the 2012 peak)",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Global insured losses from primary and secondary perils, 1970 – 2024, in USD billion at 2024 prices",
+          "2012"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 3
+      },
+      {
+        "value": "56",
+        "figure_id": "f2",
+        "mark": "a total-bar height near 2010, midway between the 50 and 75 gridlines; not distinguishable from f1's 2015 bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2009",
+          "Secondary perils",
+          "Primary perils (incl secondary effects)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "两图零数字标注,Figure 18 网格每50;145 与 137 的5%容差仅±7,不足网格1/7,且年份刻度每三年一格。",
+    "examples": [
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "Figure 18 / Insured catastrophe losses, 1970 – 2024 (USD bn, 2024 prices)",
+        "why": "图号、标题、年份范围与单位挤在两行里,单位只藏在括号中,需拆成独立字段"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "Boxed labels 'Hurricane Andrew', 'WTC', 'Hurricanes Harvey, Irma, Maria' over the plot with leader lines to single bars",
+        "why": "需要按类别锚定、分层避让的事件标注层;现管线画不出与某一年柱相连的注释框"
+      },
+      {
+        "gap": "P9",
+        "figure_id": "f2",
+        "quote": "Legend: 'Secondary perils', 'Primary perils (incl secondary effects)', '— Exponential trend (total natcat losses)'",
+        "why": "同一坐标里堆叠柱与拟合曲线共存,值必须记录读自柱段还是折线"
+      },
+      {
+        "gap": "P5",
+        "figure_id": "f1",
+        "quote": "55 annual bars from 1970 to 2024, up to three stacked segments each, ticks only every three years",
+        "why": "密度超百个色块且刻度稀疏,需把密度当可控变量而非上限截断"
+      },
+      {
+        "gap": "P1",
+        "figure_id": "f2",
+        "quote": "y ticks 0, 25, 50, 75, 100, 125, 150, 175 with '200 Insured losses (USD bn)' at top; no value labels",
+        "why": "逐标记可达精度不同:25单位网格下小柱段无法读到5%,不该按整图布尔判定"
+      }
+    ]
+  }
+}

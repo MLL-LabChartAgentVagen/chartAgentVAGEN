@@ -1,0 +1,233 @@
+{
+  "stem": "VPEG6_SIV_Information_Memorandum__June_2025__p11",
+  "document": "VPEG6_SIV_Information_Memorandum__June_2025_",
+  "tags": "need_estimate",
+  "model": "claude-opus-5",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 87.0,
+  "usage": {
+    "input_tokens": 13948,
+    "output_tokens": 6884,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "**画出来要什么**\n一页一图：无编号，标题分两层——蓝灰色副标题「Vantage has Generated Top Quartile Returns when Compared to Global Direct Private Equity Funds」在上，粗体图题「Vantage vs Global Private Equity (Direct Buyout Funds) TVPI - 2009-2018」在下。图形是 4 根细灰柱（Quartile 1–4），左轴只画 0.5x–3.0x 的水平网格线、刻度带「x」后缀，柱子无任何数值标签。叠加一条青色参考线横贯全幅（约 2.0x），线上 Quartile 1 处放一枚 VANTAGE 圆形图标标记。图例是左侧竖排一列，色块之一是品牌图标而非纯色方块。右上角黑底白字注释框压在绘图区内。下方两行 Source 小字。\n\n**定位一个值难在哪**\n取 Quartile 2 的 1.7：柱顶落在 1.5x 与 2.0x 网格之间，网格间距 0.5x，而 5% 容差只有 ±0.085x，必须按像素插值；图上无任何印刷数字，行标只有轴刻度「Quartile 2」和图例「GLOBAL PRIVATE EQUITY」。另一值 2.1 根本不在任何标记上，只写在黑框注释「a 2.1x platform wide Net Multiple」里，与画在 2.0x 的青线并不重合。\n\n**不确定的**\n柱子基线是否为 0（0.5x 以下未标刻度）无法确证；青线到底代表 2.0x 还是 2.1x 只能猜；图例图标的含义仅靠文字「VANTAGE」推断。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "Vantage vs Global Private Equity (Direct Buyout Funds) TVPI - 2009-2018",
+          "subtitle": "Vantage has Generated Top Quartile Returns when Compared to Global Direct Private Equity Funds",
+          "unit_text": "TVPI",
+          "placement": "above"
+        },
+        "type": "compound",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 4,
+        "marks": 6,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "0.5x",
+            "high": "3.0x",
+            "serves": "all four grey bars and the cyan Vantage line"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "Quartile 1",
+            "high": "Quartile 4",
+            "serves": "the four grey bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Quartile 1"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "GLOBAL PRIVATE EQUITY"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Quartile 2",
+            "GLOBAL PRIVATE EQUITY"
+          ],
+          "value": "≈1.7x",
+          "value_source": "axis_read",
+          "why_hard": "No printed labels; bar top sits between the 1.5x and 2.0x gridlines, must be interpolated"
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "reference_line",
+        "figure_id": "f1",
+        "evidence": "a cyan horizontal rule spans the plot at the 2.0x gridline, legend entry 'VANTAGE'"
+      },
+      {
+        "key": "mixed_marks",
+        "figure_id": "f1",
+        "evidence": "four grey bars plus a cyan horizontal line carrying a round icon marker at Quartile 1"
+      },
+      {
+        "key": "annotation_callout",
+        "figure_id": "f1",
+        "evidence": "black box over the plot: 'Vantage has generated a 2.1x platform wide Net Multiple ... Direct Buyout'"
+      },
+      {
+        "key": "legend_beside_plot",
+        "figure_id": "f1",
+        "evidence": "'VANTAGE' and 'GLOBAL PRIVATE EQUITY' stacked in a left column level with the plot"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "'Source: Based on global private equity returns on a Total Value Paid In basis from 2009-2018 ... Preqin.'"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "horizontal rules drawn at 0.5x through 3.0x, no vertical grid lines"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "title ends 'TVPI - 2009-2018'; axis ticks are bare multiples '2.5x', '3.0x'"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "icon_legend_swatch",
+        "figure_id": "f1",
+        "evidence": "the 'VANTAGE' legend key is a black circular brand icon, not a line or colour patch",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "name": "callout_carries_series_value",
+        "figure_id": "f1",
+        "evidence": "the only number for the Vantage series, '2.1x', appears solely in the black annotation box",
+        "affects": [
+          1,
+          2,
+          3
+        ]
+      },
+      {
+        "name": "marker_on_reference_line",
+        "figure_id": "f1",
+        "evidence": "a circular icon sits on the cyan 2.0x line above Quartile 1, marking the Vantage position",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "2.1",
+        "figure_id": "f1",
+        "mark": "the cyan VANTAGE reference line, whose value is stated only in the black callout box",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "VANTAGE",
+          "Vantage vs Global Private Equity (Direct Buyout Funds) TVPI - 2009-2018"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "2.5",
+        "figure_id": "f1",
+        "mark": "the Quartile 1 grey bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Quartile 1",
+          "GLOBAL PRIVATE EQUITY"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "1.7",
+        "figure_id": "f1",
+        "mark": "the Quartile 2 grey bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Quartile 2",
+          "GLOBAL PRIVATE EQUITY"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "1.4",
+        "figure_id": "f1",
+        "mark": "the Quartile 3 grey bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Quartile 3",
+          "GLOBAL PRIVATE EQUITY"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "1.0",
+        "figure_id": "f1",
+        "mark": "the Quartile 4 grey bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Quartile 4",
+          "GLOBAL PRIVATE EQUITY"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      }
+    ],
+    "hardest_step": 1,
+    "hardest_step_why": "四根柱无数值标签，2.5/1.7/1.4/1.0 只能按 0.5x 网格插值，解析器输出不含表格；2.1x 仅存于黑框注释文字。",
+    "examples": [
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "left axis ticks read 0.5x, 1.0x, 1.5x, 2.0x, 2.5x, 3.0x; no number is printed on any bar",
+        "why": "刻度带「x」倍数后缀且完全无数值标签，当前流水线的刻度格式与标签位置不可控。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "'Vantage has Generated Top Quartile Returns when Compared to Global Direct Private Equity Funds' above bold 'Vantage vs Global Private Equity (Direct Buyout Funds) TVPI - 2009-2018'",
+        "why": "无编号图题分为彩色副标题与粗体主标题两层，单一 title 字段无法表达。"
+      },
+      {
+        "gap": "P9",
+        "figure_id": "f1",
+        "quote": "a cyan horizontal line at 2.0x crosses all four bars, with a round VANTAGE icon on it above Quartile 1",
+        "why": "柱+参考线+图标标记混合，读数须记录来自哪种标记形状。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "black box in the plot: 'Vantage has generated a 2.1x platform wide Net Multiple on all funds post GFC, this is Top Quartile for Direct Buyout'",
+        "why": "关键数值只存在于图内注释框、且与所画线位不符；需支持注释携带数值。"
+      }
+    ]
+  }
+}

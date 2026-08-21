@@ -1,0 +1,324 @@
+{
+  "stem": "GWR-2024_Layout_E_RGB_Web_p58",
+  "document": "GWR-2024_Layout_E_RGB_Web",
+  "tags": "3d_chart+need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "repeat",
+  "effort": "high",
+  "dpi": 150,
+  "seconds": 69.4,
+  "usage": {
+    "input_tokens": 5329,
+    "output_tokens": 8774,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n绘制此页面需要生成器支持带双数值轴的小多图（包含四面板）混合图表。每个面板内部包含对应左侧数值轴的柱状图，以及对应右侧数值轴的点图（散点菱形和三角形）。页面需要具有跨面板共享的底部图例、下方注释文本（Notes和Source），并在各面板上方居中独立命名标题。此外，还需支持为右侧数值轴设置包含负数（-4至30）的刻度，无网格线设计，整体面板区域填充浅蓝色背景，并在右侧坐标轴刻度及标题上应用与数据系列一致的红色字体。\n\n### 定位一个值难在哪\n以值 `11` 为例。要定位它，必须先识别 `High-income countries` 面板，找到 X 轴的 `D3`，并寻找 `Median gender wage gap by decile` 对应的黄色三角形标记。定位不难，但提取精确值面临阻碍：数据未标注在图上，而右侧坐标轴的刻度跨度为 2，且背景无任何水平参考网格线，导致像 11 这样处于刻度之间的奇数点通过视觉对齐读数误差极易超过 5% 的容差极限。\n\n### 不确定的\n均值（红色菱形）和中位数（黄色三角形）由于同属右侧数值轴，在多个位置（如 `Low-income countries` 的 `D3`）重叠绘制，仅通过图形边缘微小差别来判断标记；由于图上没有标明图层堆叠顺序，遮挡严重时部分黄色点的值纯凭猜测。右侧 Y 轴标签和刻度全为红色，只能推测其在视觉上主要与红色系绑定，但实际上也服务于黄色的中位线系列。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 5.3.",
+          "title": "Share of women among wage employees in each decile of the hourly wage distribution and the decile-specific gender wage gap by country income group, latest available year",
+          "subtitle": "(percentage)",
+          "unit_text": "(percentage)",
+          "placement": "above"
+        },
+        "type": "other",
+        "type_other": "dual axis bar and scatter",
+        "panels": 4,
+        "series": 3,
+        "categories": 10,
+        "marks": 120,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Female wage workers (%)",
+            "low": "0",
+            "high": "60",
+            "serves": "blue bars"
+          },
+          {
+            "side": "right",
+            "role": "value",
+            "unit_text": "Gender wage gap (%)",
+            "low": "-4",
+            "high": "30",
+            "serves": "red diamonds and yellow triangles"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "Deciles of the hourly wage distribution",
+            "low": "D1",
+            "high": "D10",
+            "serves": "all marks"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "panel",
+            "label_source": "panel_title",
+            "example": "Low-income countries"
+          },
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "D1"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Share of women by decile"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "High-income countries",
+            "D1",
+            "Share of women by decile"
+          ],
+          "value": "56",
+          "value_source": "axis_read",
+          "why_hard": "no horizontal grid lines are drawn, making it extremely hard to read bars precisely off the axis"
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "dual_axis",
+        "figure_id": "f1",
+        "evidence": "each panel has a left axis for share and a right axis for wage gap"
+      },
+      {
+        "key": "mixed_marks",
+        "figure_id": "f1",
+        "evidence": "blue bars and overlaid scatter points are drawn in the same panels"
+      },
+      {
+        "key": "small_multiples_4",
+        "figure_id": "f1",
+        "evidence": "the chart is split into four separate panels by country income group"
+      },
+      {
+        "key": "shared_legend",
+        "figure_id": "f1",
+        "evidence": "one legend sitting at the bottom governs all four panels"
+      },
+      {
+        "key": "panel_title_per_panel",
+        "figure_id": "f1",
+        "evidence": "names like Low-income countries are set above each panel"
+      },
+      {
+        "key": "panel_background",
+        "figure_id": "f1",
+        "evidence": "the plot areas themselves have a light blue tint instead of white"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "Notes and Source text paragraphs sit below the legend"
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "the shared legend is located below the entire plot area"
+      },
+      {
+        "key": "axis_title_below_plot",
+        "figure_id": "f1",
+        "evidence": "Deciles of the hourly wage distribution sits below the category ticks"
+      },
+      {
+        "key": "rotated_axis_title",
+        "figure_id": "f1",
+        "evidence": "the left and right y-axis titles run vertically alongside the axes"
+      },
+      {
+        "key": "negative_values",
+        "figure_id": "f1",
+        "evidence": "the right value axis scale goes down to -4"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "the figure subtitle explicitly states (percentage)"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "colored_axis_text",
+        "figure_id": "f1",
+        "evidence": "the right value axis text and ticks are colored red to visually link to marks",
+        "affects": [
+          2,
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "45",
+        "figure_id": "f1",
+        "mark": "the D1 blue bar in Low-income countries",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Low-income countries",
+          "D1",
+          "Share of women by decile"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "22",
+        "figure_id": "f1",
+        "mark": "the D3 red diamond in Low-income countries",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Low-income countries",
+          "D3",
+          "Mean gender wage gap by decile"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "44",
+        "figure_id": "f1",
+        "mark": "the D1 blue bar in Lower-middle-income countries",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Lower-middle-income countries",
+          "D1",
+          "Share of women by decile"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "24",
+        "figure_id": "f1",
+        "mark": "the D1 red diamond in Lower-middle-income countries",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Lower-middle-income countries",
+          "D1",
+          "Mean gender wage gap by decile"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "54",
+        "figure_id": "f1",
+        "mark": "the D2 blue bar in Upper-middle-income countries",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Upper-middle-income countries",
+          "D2",
+          "Share of women by decile"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "19",
+        "figure_id": "f1",
+        "mark": "the D3 red diamond in Lower-middle-income countries",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Lower-middle-income countries",
+          "D3",
+          "Mean gender wage gap by decile"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "56",
+        "figure_id": "f1",
+        "mark": "the D1 blue bar in High-income countries",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "High-income countries",
+          "D1",
+          "Share of women by decile"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "18",
+        "figure_id": "f1",
+        "mark": "the D10 red diamond in High-income countries",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "High-income countries",
+          "D10",
+          "Mean gender wage gap by decile"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "11",
+        "figure_id": "f1",
+        "mark": "the D3 yellow triangle in High-income countries",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "High-income countries",
+          "D3",
+          "Median gender wage gap by decile"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "28",
+        "figure_id": "f1",
+        "mark": "the D2 red diamond in Low-income countries",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Low-income countries",
+          "D2",
+          "Mean gender wage gap by decile"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "图表中没有任何数字标签打印在标记上。左右坐标轴在没有网格线的情况下间距分别为 10 和 2，视觉读取诸如 44、19 或 11 这样的值误差极大，无法满足 5% 容差。",
+    "examples": [
+      {
+        "gap": "P9",
+        "figure_id": "f1",
+        "quote": "blue bars read on the left axis, red and yellow points read on the right axis",
+        "why": "管线在解析包含双数值轴的混合图表时，需要分辨不同图元种类对应哪一侧的坐标轴，这要求图形层面的特征感知和关联映射。"
+      },
+      {
+        "gap": "P2",
+        "figure_id": "f1",
+        "quote": "four panels like Low-income countries share the legend and axes",
+        "why": "分面标签（如收入分组）必须被纳入表格索引作为地址键的一部分，目前管线往往无法对小多图实现层次化键值关联。"
+      },
+      {
+        "gap": "P1",
+        "figure_id": "f1",
+        "quote": "no grid lines are drawn, values are unlabelled",
+        "why": "在缺乏参考线的情况下视觉提取数据的自然误差过高，无法保证达到判定所需精度，需要放弃布尔型测试并记录此精度损失。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "the right axis text '30, 28... -4' is colored red",
+        "why": "颜色传递了轴属于哪个系列的元信息。需要将“坐标轴文本颜色”作为特征纳入解析，以正确绑定坐标轴和系列图例。"
+      }
+    ]
+  }
+}

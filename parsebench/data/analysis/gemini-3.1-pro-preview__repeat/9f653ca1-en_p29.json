@@ -1,0 +1,331 @@
+{
+  "stem": "9f653ca1-en_p29",
+  "document": "9f653ca1-en",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "repeat",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 80.9,
+  "usage": {
+    "input_tokens": 5307,
+    "output_tokens": 11443,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n\n图表分为两个异构的子图 (heterogeneous panels)，分别带有独立的子标题、图例和坐标轴。Panel A 是一种复合图，混合了表示区间的悬浮柱状图 (floating bars) 和表示具体时间点的散点；Panel B 是带有基准线 (100) 的多线图，部分折线使用虚线样式。两个子图的纵坐标轴标题及单位都置于轴的最顶部，而不是侧面。\n\n### 定位一个值难在哪\n\n定位并准确读取具体数值极其困难。以 Panel B 中 2025 年底的 \"Europe - all sectors\" 为例，其值 (138) 没有任何数据标签，只能在刻度间距高达 20（60 到 260）的纵向坐标轴上进行肉眼估算。这种基于无网格线的密集折线图的估算误差极大，完全无法满足 5% 的容差要求。\n\n### 不确定的\n\nPanel B 中的折线数据点非常密集，且 x 轴只有年份刻度。虽然图注中提到了 \"November 2025\" 的数据截止日期，但由于横轴缺乏具体的月份刻度，我们只能猜测各折线的末端点确切对应的是 11 月还是全年估计值。对于点的位置读数也多依赖推测。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 1.15.",
+          "title": "Elevated equity valuations are supported by the higher expected earnings of technology companies",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "compound",
+        "type_other": "",
+        "panels": 2,
+        "series": 9,
+        "categories": 6,
+        "marks": 450,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Ratio",
+            "low": "0",
+            "high": "75",
+            "serves": "all marks in Panel A"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "USA",
+            "high": "CAN",
+            "serves": "all marks in Panel A"
+          },
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Index Jan 2020 = 100",
+            "low": "60",
+            "high": "260",
+            "serves": "all lines in Panel B"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "2020",
+            "high": "2025",
+            "serves": "all lines in Panel B"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "panel",
+            "label_source": "panel_title",
+            "example": "A. Cyclically adjusted price-to-earnings ratio"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "January 2000"
+          },
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "USA"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "A. Cyclically adjusted price-to-earnings ratio",
+            "January 2000",
+            "USA"
+          ],
+          "value": "42",
+          "value_source": "axis_read",
+          "why_hard": "reading a scatter point against an axis with tick steps of 15"
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "heterogeneous_panel_types",
+        "figure_id": "f1",
+        "evidence": "Panel A is a range/dot plot, Panel B is a line chart"
+      },
+      {
+        "key": "legend_inside_plot",
+        "figure_id": "f1",
+        "evidence": "legends in both panels sit inside their plot areas"
+      },
+      {
+        "key": "per_panel_legend",
+        "figure_id": "f1",
+        "evidence": "each panel carries its own legend"
+      },
+      {
+        "key": "panel_title_per_panel",
+        "figure_id": "f1",
+        "evidence": "Panel A and B have their own titles above them"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "Note and Source lines are printed below the figure"
+      },
+      {
+        "key": "abbrev_category_axis",
+        "figure_id": "f1",
+        "evidence": "country codes like USA, JPN on Panel A x-axis"
+      },
+      {
+        "key": "axis_title_above_axis",
+        "figure_id": "f1",
+        "evidence": "Ratio and Index Jan 2020 = 100 sit above the y-axes"
+      },
+      {
+        "key": "rebased_index_values",
+        "figure_id": "f1",
+        "evidence": "Panel B y-axis unit is Index Jan 2020 = 100"
+      },
+      {
+        "key": "dashed_line_series",
+        "figure_id": "f1",
+        "evidence": "Technology series in Panel B are plotted as dotted lines"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "only horizontal grid lines are drawn in both panels"
+      },
+      {
+        "key": "dense_marks_100plus",
+        "figure_id": "f1",
+        "evidence": "Panel B has 6 lines with many monthly points"
+      },
+      {
+        "key": "axis_starts_above_zero",
+        "figure_id": "f1",
+        "evidence": "Panel B y-axis starts at 60"
+      },
+      {
+        "key": "reference_line",
+        "figure_id": "f1",
+        "evidence": "Panel B has a solid black horizontal line at 100"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "floating_range_bars",
+        "figure_id": "f1",
+        "evidence": "green bars in Panel A represent an interquartile range, not starting from zero",
+        "affects": [
+          1
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "42",
+        "figure_id": "f1",
+        "mark": "the red dot for USA in Panel A",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. Cyclically adjusted price-to-earnings ratio",
+          "January 2000",
+          "USA"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "38",
+        "figure_id": "f1",
+        "mark": "the black dot for USA in Panel A",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. Cyclically adjusted price-to-earnings ratio",
+          "November 2025",
+          "USA"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "67",
+        "figure_id": "f1",
+        "mark": "the red dot for JPN in Panel A",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. Cyclically adjusted price-to-earnings ratio",
+          "January 2000",
+          "JPN"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "16",
+        "figure_id": "f1",
+        "mark": "the black dot for DEU in Panel A",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. Cyclically adjusted price-to-earnings ratio",
+          "November 2025",
+          "DEU"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "230",
+        "figure_id": "f1",
+        "mark": "a point near the end of the red dotted line for US Technology in Panel B",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "B. Corporate 12-month forward earnings per share",
+          "United States - Technology",
+          "2025"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "142",
+        "figure_id": "f1",
+        "mark": "the endpoint of the red solid line for US all sectors in Panel B",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "B. Corporate 12-month forward earnings per share",
+          "United States - all sectors",
+          "2025"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "181",
+        "figure_id": "f1",
+        "mark": "the endpoint of the green dotted line for Japan Technology in Panel B",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "B. Corporate 12-month forward earnings per share",
+          "Japan - Technology",
+          "2025"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "145",
+        "figure_id": "f1",
+        "mark": "the endpoint of the blue dotted line for Europe Technology in Panel B",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "B. Corporate 12-month forward earnings per share",
+          "Europe - Technology",
+          "2025"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "165",
+        "figure_id": "f1",
+        "mark": "the endpoint of the green solid line for Japan all sectors in Panel B",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "B. Corporate 12-month forward earnings per share",
+          "Japan - all sectors",
+          "2025"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "138",
+        "figure_id": "f1",
+        "mark": "the endpoint of the blue solid line for Europe all sectors in Panel B",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "B. Corporate 12-month forward earnings per share",
+          "Europe - all sectors",
+          "2025"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "图表没有任何数据标签，Panel B 的纵轴刻度间距高达 20，要依靠肉眼从密集的折线中读出 138 或 142 这样精确的数值是完全不可能的，绝对会超出 5% 的容差限制。",
+    "examples": [
+      {
+        "gap": "P2",
+        "figure_id": "f1",
+        "quote": "A. Cyclically adjusted price-to-earnings ratio",
+        "why": "图表包含异构的子图，且带有独立的子标题。生成管线需要支持将子图名称作为数据定位的关键维度。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "Figure 1.15. Elevated equity valuations are supported by...",
+        "why": "整个图表的主标题和编号独立于内部的子图标题，需要作为全局字段解析，以正确还原图表的整体层级结构。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "green bars in Panel A representing interquartile range",
+        "why": "当前的生成管线无法绘制上下两端都不在基准线上的悬浮区间柱状图，需要增加此类标记的支持。"
+      }
+    ]
+  }
+}

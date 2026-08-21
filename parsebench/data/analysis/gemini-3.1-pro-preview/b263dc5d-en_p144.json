@@ -1,0 +1,340 @@
+{
+  "stem": "b263dc5d-en_p144",
+  "document": "b263dc5d-en",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 27.4,
+  "usage": {
+    "input_tokens": 5302,
+    "output_tokens": 3385,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "**画出来要什么**\n\n这页的主要图表 (Figure 3.24) 是一个复杂的折线散点图组合（或者叫 multi-marker dot plot / range plot with 3 points per category），被分在 3 个 panel 里（标为 1, 2, 3）。\n生成器需要能做到：\n1.  在一个 panel 里，为每个类别（国家）画多个独立形状的 marker（三角形、菱形、圆形）。\n2.  X轴是类别，且被 panel 分割，panel 的标识（1, 2, 3）和文字说明（Round, Cycle 1:）在图表底部。\n3.  颜色编码：实心/深色和空心/浅色代表了显著性（说明在 Note 里：“Darker colours denote differences that are statistically significant”），这意味着颜色是一个额外的维度，超出了 legend 里定义的 age group。\n4.  一条贯穿所有 panel 的粗黑 zero-line。\n5.  背景是交替的垂直阴影带（vgrid 的变体），用于区分不同的国家列。\n6.  一些轴标签有特殊符号（如 `*`）。\n\n**定位一个值难在哪**\n\n以值 `21` 为例。它在 panel 2 (New Zealand) 的 16-24 year-olds（三角形）标记上。这个标记是深色（深蓝色/黑色）。要准确定位它，需要 keys: `New Zealand` (x-axis), `16-24 year-olds` (legend shape), 和 `statistically significant` (color fill)。问题在于，颜色的含义在图表的 Note 文本中，并不在 legend 本身，且值并没有印在图上。在没有 secondary y-axis 的情况下，依靠 10 分格（-30 到 30，步长 10）的刻度线读取 21 已经接近 5% 容差极限。\n\n**不确定的**\n\n一些标记（如 16-24 year-olds）是向上或向下的三角形，目前不清楚方向是否代表额外信息（例如正负变化，尽管 y 轴本身已经表示了正负），或者只是因为图表形状的默认设计。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 3.24.",
+          "title": "Change in the gap in literacy proficiency between adults with highly educated and medium-/low-educated parents, by age",
+          "subtitle": "Change between cycles in the mean score difference between adults with at least one tertiary-educated parent and adults with parents with at most an upper secondary education (Cycle 2 minus Cycle 1)",
+          "unit_text": "Score-point difference",
+          "placement": "above"
+        },
+        "type": "other",
+        "type_other": "multi-point dot plot",
+        "panels": 3,
+        "series": 3,
+        "categories": 26,
+        "marks": 78,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Score-point difference",
+            "low": "-30",
+            "high": "30",
+            "serves": "all marks"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "Sweden",
+            "high": "Hungary",
+            "serves": "all marks"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "New Zealand"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "16-24 year-olds"
+          },
+          {
+            "role": "colour_group",
+            "label_source": "colour_only",
+            "example": "statistically significant"
+          },
+          {
+            "role": "panel",
+            "label_source": "inline_label",
+            "example": "2"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "New Zealand",
+            "16-24 year-olds",
+            "statistically significant",
+            "2"
+          ],
+          "value": "21",
+          "value_source": "axis_read",
+          "why_hard": "Values must be interpolated between ticks spaced by 10; significance is encoded in fill colour explained only in a footnote."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "legend_above_plot",
+        "figure_id": "f1",
+        "evidence": "the legend showing age groups and marker shapes sits above the main plotting area"
+      },
+      {
+        "key": "rotated_x_ticks",
+        "figure_id": "f1",
+        "evidence": "country names on the bottom axis are rotated 90 degrees vertically"
+      },
+      {
+        "key": "color_encodes_extra_attribute",
+        "figure_id": "f1",
+        "evidence": "darker vs lighter fill in the markers denotes statistical significance, per the note"
+      },
+      {
+        "key": "shared_axis",
+        "figure_id": "f1",
+        "evidence": "the y-axis score-point difference is on the left edge and serves all three horizontal panels"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "horizontal grid lines at 10-point intervals cross the plot, no thin vertical grid lines exist"
+      },
+      {
+        "key": "panel_background",
+        "figure_id": "f1",
+        "evidence": "alternating light and dark vertical bands run behind the categories across the plot area"
+      },
+      {
+        "key": "negative_values",
+        "figure_id": "f1",
+        "evidence": "the y-axis extends down to -30 and markers are placed below the zero line"
+      },
+      {
+        "key": "reference_line",
+        "figure_id": "f1",
+        "evidence": "a thick black horizontal line is drawn at 0"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "a Note block and Source lines are printed below the panel indicator bar"
+      },
+      {
+        "key": "footnote_marker",
+        "figure_id": "f1",
+        "evidence": "Poland has an asterisk '*'"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "'Score-point difference' sits above the top tick of the y-axis"
+      },
+      {
+        "key": "axis_title_above_axis",
+        "figure_id": "f1",
+        "evidence": "'Score-point difference' sits above the top tick of the y-axis"
+      },
+      {
+        "key": "shared_legend",
+        "figure_id": "f1",
+        "evidence": "the legend at the top applies across all three grouped panels below it"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "multi_marker_dot_plot",
+        "figure_id": "f1",
+        "evidence": "three distinct series marked by unconnected shapes (triangle, diamond, circle) per category slot",
+        "affects": [
+          2,
+          3
+        ]
+      },
+      {
+        "name": "panel_indicator_bar_below",
+        "figure_id": "f1",
+        "evidence": "a grey bar below the x-axis labels denotes sections 1, 2, and 3",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "21",
+        "figure_id": "f1",
+        "mark": "triangle marker for New Zealand",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "New Zealand",
+          "16-24 year-olds",
+          "statistically significant",
+          "2"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "1",
+        "figure_id": "f1",
+        "mark": "diamond marker for Ireland",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Ireland",
+          "25-44 year-olds",
+          "not statistically significant",
+          "1"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "13",
+        "figure_id": "f1",
+        "mark": "circle marker for Austria",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Austria",
+          "45-65 year-olds",
+          "statistically significant",
+          "1"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "-25",
+        "figure_id": "f1",
+        "mark": "circle marker for Spain",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Spain",
+          "45-65 year-olds",
+          "statistically significant",
+          "1"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "-22",
+        "figure_id": "f1",
+        "mark": "circle marker for Singapore",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Singapore",
+          "45-65 year-olds",
+          "statistically significant",
+          "2"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "17",
+        "figure_id": "f1",
+        "mark": "triangle marker for Hungary",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Hungary",
+          "16-24 year-olds",
+          "statistically significant",
+          "3"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "-13",
+        "figure_id": "f1",
+        "mark": "triangle marker for Italy",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Italy",
+          "16-24 year-olds",
+          "not statistically significant",
+          "1"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "12",
+        "figure_id": "f1",
+        "mark": "triangle marker for Norway",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Norway",
+          "16-24 year-olds",
+          "not statistically significant",
+          "1"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "13",
+        "figure_id": "f1",
+        "mark": "circle marker for Germany",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Germany",
+          "45-65 year-olds",
+          "statistically significant",
+          "1"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "8",
+        "figure_id": "f1",
+        "mark": "circle marker for Chile",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Chile",
+          "45-65 year-olds",
+          "not statistically significant",
+          "2"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "图表中没有任何打印的值。Y轴刻度间距为 10，标记点（如 Ireland 值为 1，Chile 值为 8）很多落在网格线之间。对于依靠视觉读取的解析器，很难保证误差在 5% 以内，特别是靠近 0 线时。",
+    "examples": [
+      {
+        "gap": "P8",
+        "figure_id": "f1",
+        "quote": "Darker colours denote differences that are statistically significant at the 5% level.",
+        "why": "图例仅说明了形状对应年龄组，而颜色的深浅（空心/实心）编码了统计显著性，这种隐藏维度超出了常规的序列映射。"
+      },
+      {
+        "gap": "P2",
+        "figure_id": "f1",
+        "quote": "Round, Cycle 1: [bar labeled 1, 2, 3 below x-axis]",
+        "why": "X轴类别不仅被旋转，还被分为了三个没有明确名称只有编号的 panel，这需要作为 key 才能完整寻址。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "scatter points (triangles, diamonds, circles) aligned vertically per category without range lines",
+        "why": "这是一种特定的 multi-marker dot plot，不同于折线图或常规散点图，生成器需要原生支持按类别的离散多标记绘制。"
+      }
+    ]
+  }
+}

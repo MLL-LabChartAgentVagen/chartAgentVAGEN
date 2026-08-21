@@ -1,0 +1,284 @@
+{
+  "stem": "US_Professional_Services_Partner_Compensation_Survey_2024_p11",
+  "document": "US_Professional_Services_Partner_Compensation_Survey_2024",
+  "tags": "untagged",
+  "model": "claude-opus-5",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 39.1,
+  "usage": {
+    "input_tokens": 13758,
+    "output_tokens": 2824,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "**画出来要什么**\n\n一张横向分组条形图：6 个类别（Significantly lower … Prefer not to answer），每类两根条（2024 深蓝、2022 青色），图例在图上方一行。没有数值轴、没有刻度、没有网格，只有类别之间的浅色分隔横线；每根条右端印数字（长条为内侧白字，短条如 `1` 为外侧黑字）。标题分两层：`Partner turnover (%)` 与一整句问题式副标题。左侧另有一栏正文 `Partner turnover`，与图并排。图下两行小字 Note / Source。\n\n**定位一个值难在哪**\n\n取 `6`：它在图上出现两次——`Significantly higher` 的 2022 条与 `Prefer not to answer` 的 2022 条。只有同时给出类别名与图例年份（`2022`）才能唯一定位；若解析器只输出「6」和一个类别名，就会指错行。数值本身是印刷的，读数不成问题。\n\n**不确定的**\n\n图无编号，`Figure` 字样是否在别处出现无法判断；条长与数字是否严格成比例（无轴可校验）；`1` 那根深蓝条极短，是否还有更细的描边或标记无法看清。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "Partner turnover (%)",
+          "subtitle": "In your most recent fiscal year, how much partner turnover was there at your firm compared to your expectations at the beginning of the fiscal year?",
+          "unit_text": "(%)",
+          "placement": "above"
+        },
+        "type": "grouped_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 6,
+        "marks": 12,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "left",
+            "role": "category",
+            "unit_text": "",
+            "low": "Significantly lower",
+            "high": "Prefer not to answer",
+            "serves": "all bars, one category row each"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Significantly higher"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "2022"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Significantly higher",
+            "2022"
+          ],
+          "value": "6",
+          "value_source": "printed",
+          "why_hard": "The value 6 also appears for 'Prefer not to answer' 2022; category plus year both required."
+        }
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "",
+          "title": "Partner turnover",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "beside"
+        },
+        "type": "unreadable",
+        "type_other": "side text column: a heading and a paragraph of body prose, not a figure",
+        "panels": 1,
+        "series": 1,
+        "categories": 0,
+        "marks": 0,
+        "values_printed": "none",
+        "axes": [],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "heading",
+            "example": "Partner turnover"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Partner turnover"
+          ],
+          "value": "49% of respondents said partner turnover was higher or significantly higher",
+          "value_source": "printed",
+          "why_hard": "Prose, not a mark; no chart address exists."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "grouped_bar",
+        "figure_id": "f1",
+        "evidence": "two bars per row, dark 2024 above light 2022, in each category slot"
+      },
+      {
+        "key": "horizontal_bars",
+        "figure_id": "f1",
+        "evidence": "category names on the left, bars grow rightward from a common left edge"
+      },
+      {
+        "key": "no_value_axis",
+        "figure_id": "f1",
+        "evidence": "no ticks or numbers along any value axis; only printed labels give the numbers"
+      },
+      {
+        "key": "value_label_inside",
+        "figure_id": "f1",
+        "evidence": "'27', '35', '45' printed in white at the right end inside the bars"
+      },
+      {
+        "key": "value_label_outside",
+        "figure_id": "f1",
+        "evidence": "'1' printed in black just right of the very short dark 2024 bar"
+      },
+      {
+        "key": "legend_above_plot",
+        "figure_id": "f1",
+        "evidence": "'2024' and '2022' swatches sit between the question subtitle and the first bar row"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "'Note: Numbers may not sum to 100%, because of rounding.' and 'Source: Heidrick & Struggles US ... n=144'"
+      },
+      {
+        "key": "side_text_bullets",
+        "figure_id": "page",
+        "evidence": "left column 'Partner turnover' plus paragraph runs level with the chart"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "title reads 'Partner turnover (%)'; no unit appears anywhere on the plot"
+      },
+      {
+        "key": "wrapped_category_labels",
+        "figure_id": "f1",
+        "evidence": "long labels 'Significantly higher', 'Prefer not to answer' stacked down the left"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "thin horizontal rules separate each category row; no vertical rules"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "unit_in_title_parenthetical",
+        "figure_id": "f1",
+        "evidence": "'Partner turnover (%)' — unit carried as a parenthetical suffix on the title line",
+        "affects": [
+          3,
+          4
+        ]
+      },
+      {
+        "name": "question_as_subtitle",
+        "figure_id": "f1",
+        "evidence": "bold survey question 'In your most recent fiscal year, how much partner turnover...' set as the second heading line",
+        "affects": [
+          4
+        ]
+      },
+      {
+        "name": "unnumbered_figure",
+        "figure_id": "f1",
+        "evidence": "no 'Figure n' anywhere; the chart is identified only by its title",
+        "affects": [
+          3,
+          4
+        ]
+      },
+      {
+        "name": "row_separator_rules",
+        "figure_id": "f1",
+        "evidence": "a light horizontal rule drawn between each category group rather than gridlines",
+        "affects": []
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "9",
+        "figure_id": "f1",
+        "mark": "the 'Significantly lower' 2024 bar (dark)",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Significantly lower",
+          "2024"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "14",
+        "figure_id": "f1",
+        "mark": "appears twice: 'Lower' 2022 bar and 'Significantly higher' 2024 bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Lower",
+          "2022"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "27",
+        "figure_id": "f1",
+        "mark": "the 'About the same' 2024 bar (dark)",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "About the same",
+          "2024"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "35",
+        "figure_id": "f1",
+        "mark": "the 'Higher' 2024 bar (dark)",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Higher",
+          "2024"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "6",
+        "figure_id": "f1",
+        "mark": "appears twice: 'Significantly higher' 2022 bar and 'Prefer not to answer' 2022 bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Significantly higher",
+          "2022"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      }
+    ],
+    "hardest_step": 3,
+    "hardest_step_why": "数值全部印在条上，读数无碍；但 14 和 6 各出现两次，必须同时匹配类别名与图例年份 2024/2022 才能唯一定位。",
+    "examples": [
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "'Partner turnover (%)' above 'In your most recent fiscal year, how much partner turnover was there at your firm...'",
+        "why": "标题拆成标题行、括号单位与整句问题副标题，现有流程只有单一 title 字段。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "'1' printed in black outside the short dark bar; '45' printed in white inside the long bar",
+        "why": "同一图内标签位置随条长切换内外并改字色，现无此规则。"
+      },
+      {
+        "gap": "P3",
+        "figure_id": "page",
+        "quote": "Left column heading 'Partner turnover' with prose runs level with the chart's plot area",
+        "why": "整页导出需记录并排文本栏与图的相对位置。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "No value axis, no ticks; only thin horizontal rules between the six category rows",
+        "why": "需支持完全无值轴、仅靠印刷标签读数的条形图样式；现有生成器默认画轴。"
+      }
+    ]
+  }
+}

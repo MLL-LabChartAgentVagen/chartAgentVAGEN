@@ -1,0 +1,270 @@
+{
+  "stem": "(Web_version)_E-Government_Survey_2024_1392024_p93",
+  "document": "(Web_version)_E-Government_Survey_2024_1392024",
+  "tags": "untagged",
+  "model": "claude-opus-5",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 36.0,
+  "usage": {
+    "input_tokens": 13817,
+    "output_tokens": 2734,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "**画出来要什么**\n\n一张水平分组条形图：14 条类别标签（如 \"Portal can be found on search engine\"、\"Specific service transactions initiated through the portal can be saved and accessed later\" 需换行），每类两根条（2024 深蓝、2022 黄），共 28 根条，每根条上都印百分比标签。类别被两处空行分成三组（无组标题），x 轴为 \"0%…100%\"，图例 \"2024 / 2022\" 置于绘图区内右下方。标题行为 \"Figure 2.27  Number of Member States with portals incorporating the assessed technology features, 2022 and 2024\"，下方绿色横条，图下有 \"Sources: 2022 and 2024 United Nations E-Government Surveys.\"。\n\n**定位一个值难在哪**\n\n取 50%：它是 \"Individuals can  modify their own data online\" 的 2022 黄条。标题说 \"Number of Member States\"，但轴与标签全是百分比，单位口径矛盾；类别名内含双空格，且 50 与同图 56、58 等值多次重复，缺少年份键就无法唯一定位。\n\n**不确定的**\n\n三组之间的空行是否代表未印出的分组标题；图例是否恰好落在绘图框内；长标签的换行位置是否为原始文本的一部分。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 2.27",
+          "title": "Number of Member States with portals incorporating the assessed technology features,",
+          "subtitle": "2022 and 2024",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "grouped_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 14,
+        "marks": 28,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "bottom",
+            "role": "value",
+            "unit_text": "",
+            "low": "0%",
+            "high": "100%",
+            "serves": "all bars, both 2024 and 2022 series"
+          },
+          {
+            "side": "left",
+            "role": "category",
+            "unit_text": "",
+            "low": "Portal can be found on search engine",
+            "high": "Portal offers AI-enabled chatbot functionality",
+            "serves": "the 14 feature rows"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "There is a sitemap (or index)"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "2024"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Individuals can  modify their own data online",
+            "2022"
+          ],
+          "value": "50%",
+          "value_source": "printed",
+          "why_hard": "Category label contains a double space; 50% repeats visually near 56%/58% rows without year key."
+        }
+      },
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "none"
+        },
+        "type": "unreadable",
+        "type_other": "duplicate placeholder removed; only one figure on page",
+        "panels": 1,
+        "series": 1,
+        "categories": 1,
+        "marks": 0,
+        "values_printed": "none",
+        "axes": [],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "not_shown",
+            "example": ""
+          }
+        ],
+        "worked_example": {
+          "key": [
+            ""
+          ],
+          "value": "",
+          "value_source": "not_readable",
+          "why_hard": "placeholder entry"
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "grouped_bar",
+        "figure_id": "f1",
+        "evidence": "two bars per feature row, blue 2024 above yellow 2022, e.g. 98% and 98%"
+      },
+      {
+        "key": "horizontal_bars",
+        "figure_id": "f1",
+        "evidence": "feature names on left axis, bars grow rightwards to the 0%-100% scale"
+      },
+      {
+        "key": "value_label_inside",
+        "figure_id": "f1",
+        "evidence": "'98%' printed at right end of blue bar and left end of yellow bar, inside fill"
+      },
+      {
+        "key": "legend_inside_plot",
+        "figure_id": "f1",
+        "evidence": "'2024' and '2022' swatches drawn inside the plot frame at lower right"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "'Sources: 2022 and 2024 United Nations E-Government Surveys.' below the frame"
+      },
+      {
+        "key": "wrapped_category_labels",
+        "figure_id": "f1",
+        "evidence": "'Specific service transactions initiated through the portal can be saved and accessed later' wraps to two lines"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "axis ticks read '0%' ... '100%'; title says 'Number of Member States'"
+      },
+      {
+        "key": "panel_background",
+        "figure_id": "f1",
+        "evidence": "whole chart sits inside a thin bordered white box under a green rule"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "blank_row_category_grouping",
+        "figure_id": "f1",
+        "evidence": "two blank slots split the 14 rows into groups of 7, 4, 3 with no group titles",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "name": "title_unit_contradicts_axis",
+        "figure_id": "f1",
+        "evidence": "title 'Number of Member States' but every label and tick is a percentage",
+        "affects": [
+          2,
+          4
+        ]
+      },
+      {
+        "name": "category_axis_line_as_group_bracket",
+        "figure_id": "f1",
+        "evidence": "a short vertical rule runs beside each block of rows at the axis origin",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "91",
+        "figure_id": "f1",
+        "mark": "the 2024 (blue) bar for 'Portal is developed using responsive web design'",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Portal is developed using responsive web design",
+          "2024"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "83",
+        "figure_id": "f1",
+        "mark": "the 2022 (yellow) bar for 'Portal has been updated in the last month'",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Portal has been updated in the last month",
+          "2022"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "71",
+        "figure_id": "f1",
+        "mark": "the 2024 (blue) bar for 'Businesses can access their own data online' (also the 2022 bar of 'There is a sitemap (or index)' reads 71%)",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Businesses can access their own data online",
+          "2024"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "50",
+        "figure_id": "f1",
+        "mark": "the 2022 (yellow) bar for 'Individuals can  modify their own data online'",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Individuals can  modify their own data online",
+          "2022"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "27",
+        "figure_id": "f1",
+        "mark": "the 2024 (blue) bar for 'Portal offers AI-enabled chatbot functionality'",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Portal offers AI-enabled chatbot functionality",
+          "2024"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      }
+    ],
+    "hardest_step": 3,
+    "hardest_step_why": "值全部印出，读数不难；但 71 在两行重复、50 的类别名含双空格，须类别加年份两键才唯一。",
+    "examples": [
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "Figure 2.27  Number of Member States with portals incorporating the assessed technology features, 2022 and 2024",
+        "why": "编号、标题、续行年份三段分离，且标题单位与轴上百分比不一致，需标题成独立字段。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "98% printed at the right end of the blue bar and at the left end of the yellow bar",
+        "why": "同一图内两个系列的数值标签落位规则不同，现有管线只有统一的标签位置。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "two blank rows split the 14 categories into blocks of 7, 4 and 3, with no block titles",
+        "why": "需支持用空行分组的类别轴；分组语义无文字，无法进入键。"
+      },
+      {
+        "gap": "P5",
+        "figure_id": "f1",
+        "quote": "14 wrapped feature labels each with two bars, 28 value labels all printed",
+        "why": "长换行标签配 28 根条与全量标签，密度与标签避让需可控。"
+      }
+    ]
+  }
+}

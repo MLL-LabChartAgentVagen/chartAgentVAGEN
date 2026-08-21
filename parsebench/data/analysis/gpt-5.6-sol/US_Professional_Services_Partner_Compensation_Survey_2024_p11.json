@@ -1,0 +1,213 @@
+{
+  "stem": "US_Professional_Services_Partner_Compensation_Survey_2024_p11",
+  "document": "US_Professional_Services_Partner_Compensation_Survey_2024",
+  "tags": "untagged",
+  "model": "gpt-5.6-sol",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 120000,
+  "seconds": 47.1,
+  "usage": {
+    "input_tokens": 8674,
+    "output_tokens": 3369,
+    "cache_read_tokens": 2365
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n需绘制单面板横向分组条形图：六个回答类别、2024与2022两个系列、十二个条形；全部数值直接标注，图例位于图上方。图旁还要并排放置“Partner turnover”说明文字，图下保留Note与Source。\n\n### 定位一个值难在哪\n“14”和“6”都各出现两次，单凭数值无法定位。例如目标“14”须同时写明“Lower”和“2022”，而不能只依赖颜色或数值。\n\n### 不确定的\n图中没有数值轴、刻度或明确单位轴，只能依据标题中的“(%)”和条上标签判断。重复值按自上而下的首次出现对应抽查项。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "Partner turnover (%)",
+          "subtitle": "In your most recent fiscal year, how much partner turnover was there at your firm compared to your expectations at the beginning of the fiscal year?",
+          "unit_text": "%",
+          "placement": "above"
+        },
+        "type": "grouped_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 6,
+        "marks": 12,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "left",
+            "role": "category",
+            "unit_text": "",
+            "low": "Significantly lower",
+            "high": "Prefer not to answer",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Significantly lower"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "2024"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Prefer not to answer",
+            "2024"
+          ],
+          "value": "1",
+          "value_source": "printed",
+          "why_hard": "The tiny bar puts its label outside, unlike most values."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "grouped_bar",
+        "figure_id": "f1",
+        "evidence": "Two bars, labelled “2024” and “2022”, appear side by side in every category."
+      },
+      {
+        "key": "horizontal_bars",
+        "figure_id": "f1",
+        "evidence": "Category labels sit left while all bars extend horizontally to the right."
+      },
+      {
+        "key": "no_value_axis",
+        "figure_id": "f1",
+        "evidence": "No numerical value-axis ticks are drawn; values are readable only from bar labels."
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "“Note: Numbers may not sum to 100%, because of rounding.” and “Source:” appear below."
+      },
+      {
+        "key": "legend_above_plot",
+        "figure_id": "f1",
+        "evidence": "The “2024” and “2022” legend sits between the question and the bars."
+      },
+      {
+        "key": "side_text_bullets",
+        "figure_id": "f1",
+        "evidence": "A “Partner turnover” prose column runs beside the chart in the same horizontal band."
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "The chart title reads “Partner turnover (%)”."
+      },
+      {
+        "key": "value_label_inside",
+        "figure_id": "f1",
+        "evidence": "Labels including “9”, “27”, “35” and “45” are printed inside their bars."
+      },
+      {
+        "key": "value_label_outside",
+        "figure_id": "f1",
+        "evidence": "The “1” label is printed just beyond the short 2024 bar."
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "Thin horizontal rules separate category rows; no vertical grid lines are drawn."
+      }
+    ],
+    "new_components": [],
+    "spot_checks": [
+      {
+        "value": "9",
+        "figure_id": "f1",
+        "mark": "the 2024 Significantly lower bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Significantly lower",
+          "2024"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "14",
+        "figure_id": "f1",
+        "mark": "the 2022 Lower bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Lower",
+          "2022"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "27",
+        "figure_id": "f1",
+        "mark": "the 2024 About the same bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "About the same",
+          "2024"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "35",
+        "figure_id": "f1",
+        "mark": "the 2024 Higher bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Higher",
+          "2024"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "6",
+        "figure_id": "f1",
+        "mark": "the 2022 Significantly higher bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Significantly higher",
+          "2022"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      }
+    ],
+    "hardest_step": 3,
+    "hardest_step_why": "14、6各出现两次，须同时绑定类别与年份；其余值也需两级键。த்தே湊ன்து嗷",
+    "examples": [
+      {
+        "gap": "P3",
+        "figure_id": "f1",
+        "quote": "Partner turnover",
+        "why": "图表与左侧解释性正文并排，整页导出必须保存两者的相对位置。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "The “1” label is outside its bar; the other values are inside.",
+        "why": "同一图中标签位置随条形长度变化，不能采用单一的全图标签位置。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "Partner turnover (%)",
+        "why": "需把标题、问句式副标题、单位及图上方位置拆成独立字段。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "Note: Numbers may not sum to 100%, because of rounding.",
+        "why": "需生成图下方独立的注释与来源行，并保持其与绘图区的从属关系。"
+      }
+    ]
+  }
+}

@@ -1,0 +1,362 @@
+{
+  "stem": "sri-sigma-natural-catastrophes-1-2025_p27",
+  "document": "sri-sigma-natural-catastrophes-1-2025",
+  "tags": "need_estimate",
+  "model": "gpt-5.6-sol",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "via": "openrouter",
+  "max_tokens": 120000,
+  "seconds": 1080.1,
+  "usage": {
+    "input_tokens": 15612,
+    "output_tokens": 446533,
+    "cache_read_tokens": 8837
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n页面含两幅浅蓝底年度图。Figure 18 是三系列堆叠柱图，并以方框、锚点和引线标注重大灾害；Figure 19 是两系列堆叠柱加洋红色指数趋势线。两图均有稀疏年份刻度、水平网格线、下置图例和来源行。\n\n### 定位一个值难在哪\nFigure 19 的2024年“Primary perils (incl secondary effects)”为56。它是上层段，须由总高减去约81的下层边界；纵轴每25一格，5%容差仅2.8。\n\n### 不确定的\n柱段均未印数值。55、165、75、180、137等只能按边界估读；未标出的1992、2005、2011、2017须由相邻三年刻度定位。45被判断为1992年堆叠总高。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 18",
+          "title": "Insured catastrophe losses, 1970 – 2024 (USD bn, 2024 prices)",
+          "subtitle": "",
+          "unit_text": "USD bn, 2024 prices",
+          "placement": "above"
+        },
+        "type": "stacked_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 3,
+        "categories": 55,
+        "marks": 165,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "0",
+            "high": "250",
+            "serves": "all stacked bar segments"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "1970",
+            "high": "2024",
+            "serves": "all stacked bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "1970"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Earthquake/tsunami"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "2024",
+            "Weather-related catastrophes"
+          ],
+          "value": "137",
+          "value_source": "axis_read",
+          "why_hard": "The segment begins above a small base; 50-unit ticks challenge a 5% reading."
+        }
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "Figure 19",
+          "title": "Global insured losses from primary and secondary perils, 1970 – 2024, in USD billion at 2024 prices",
+          "subtitle": "",
+          "unit_text": "in USD billion at 2024 prices",
+          "placement": "above"
+        },
+        "type": "compound",
+        "type_other": "",
+        "panels": 1,
+        "series": 3,
+        "categories": 55,
+        "marks": 140,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Insured losses (USD bn)",
+            "low": "0",
+            "high": "200",
+            "serves": "stacked bars and exponential trend"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "1970",
+            "high": "2024",
+            "serves": "all bars and trend points"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "1970"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Primary perils (incl secondary effects)"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "2024",
+            "Primary perils (incl secondary effects)"
+          ],
+          "value": "56",
+          "value_source": "axis_read",
+          "why_hard": "Upper segment requires subtracting two boundaries; 25-unit ticks exceed the 2.8-unit tolerance."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "multi_figure_page",
+        "figure_id": "page",
+        "evidence": "Two independent panels are numbered “Figure 18” and “Figure 19”."
+      },
+      {
+        "key": "stacked_bar",
+        "figure_id": "f1",
+        "evidence": "Three coloured catastrophe-loss segments are stacked within each annual bar."
+      },
+      {
+        "key": "annotation_callout",
+        "figure_id": "f1",
+        "evidence": "Boxed event labels with vertical leaders mark Hurricane Andrew and other years."
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "“Source: Swiss Re Institute” appears beneath the legend."
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "The three-item catastrophe legend is directly below the plotting area."
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "The heading reads “(USD bn, 2024 prices)” while y ticks are bare numbers."
+      },
+      {
+        "key": "sparse_time_ticks",
+        "figure_id": "f1",
+        "evidence": "Annual bars span 1970–2024, but labels appear every three years."
+      },
+      {
+        "key": "panel_background",
+        "figure_id": "f1",
+        "evidence": "The complete chart panel and plot carry a pale blue fill."
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "Horizontal rules cross the plot at value ticks; no vertical gridlines appear."
+      },
+      {
+        "key": "dense_marks_100plus",
+        "figure_id": "f1",
+        "evidence": "Fifty-five annual slots each contain three stacked series, approximately 165 segments."
+      },
+      {
+        "key": "stacked_bar",
+        "figure_id": "f2",
+        "evidence": "Dark “Secondary perils” segments sit below light “Primary perils” segments."
+      },
+      {
+        "key": "mixed_marks",
+        "figure_id": "f2",
+        "evidence": "Stacked annual bars are overlaid by a magenta exponential trend line."
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f2",
+        "evidence": "“Source: Swiss Re Institute” appears beneath the legend."
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f2",
+        "evidence": "The two bar series and trend legend sit below the plotting area."
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f2",
+        "evidence": "The heading says “in USD billion at 2024 prices”."
+      },
+      {
+        "key": "axis_title_above_axis",
+        "figure_id": "f2",
+        "evidence": "“Insured losses (USD bn)” is horizontal above the left-axis scale."
+      },
+      {
+        "key": "sparse_time_ticks",
+        "figure_id": "f2",
+        "evidence": "Annual bars span 1970–2024, but labels appear every three years."
+      },
+      {
+        "key": "panel_background",
+        "figure_id": "f2",
+        "evidence": "The complete chart panel and plot carry a pale blue fill."
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f2",
+        "evidence": "Horizontal rules cross the plot at 25-unit ticks; no vertical gridlines appear."
+      },
+      {
+        "key": "dense_marks_100plus",
+        "figure_id": "f2",
+        "evidence": "Two annual bar segments across 55 years plus the trend exceed 100 marks."
+      }
+    ],
+    "new_components": [],
+    "spot_checks": [
+      {
+        "value": "55",
+        "figure_id": "f1",
+        "mark": "the 1992 Weather-related catastrophes segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "1992",
+          "Weather-related catastrophes"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "165",
+        "figure_id": "f1",
+        "mark": "the 2005 Weather-related catastrophes segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2005",
+          "Weather-related catastrophes"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 3
+      },
+      {
+        "value": "75",
+        "figure_id": "f1",
+        "mark": "the 2011 Earthquake/tsunami segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2011",
+          "Earthquake/tsunami"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "180",
+        "figure_id": "f1",
+        "mark": "the 2017 Weather-related catastrophes segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2017",
+          "Weather-related catastrophes"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 3
+      },
+      {
+        "value": "137",
+        "figure_id": "f1",
+        "mark": "the 2024 Weather-related catastrophes segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2024",
+          "Weather-related catastrophes"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "45",
+        "figure_id": "f2",
+        "mark": "the 1992 stacked bar total",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "1992"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 3
+      },
+      {
+        "value": "145",
+        "figure_id": "f2",
+        "mark": "the 2005 Primary perils (incl secondary effects) segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2005",
+          "Primary perils (incl secondary effects)"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 3
+      },
+      {
+        "value": "76",
+        "figure_id": "f2",
+        "mark": "the 2021 Secondary perils segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2021",
+          "Secondary perils"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "81",
+        "figure_id": "f2",
+        "mark": "the 2024 Secondary perils segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2024",
+          "Secondary perils"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "56",
+        "figure_id": "f2",
+        "mark": "the 2024 Primary perils (incl secondary effects) segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2024",
+          "Primary perils (incl secondary effects)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "Figure 19的2024年Primary值56须由堆叠边界相减；25一格，而5%仅2.8，最卡第2步。确保 JSON 格式有效。不要包含任何无关文字。所有字符串必须正确转义，数组和对象结构必须完整。不要添加注释。不要使用代码块。输出必须严格符合 schema。再次检查 spot_checks 中每个值的顺序和字段。确保 report_md 不超过250词。完成后仅输出 JSON。去掉任何额外尾随文本。确认 f2 marks 为140，series为3。heading placement above。axes完整。components证据不超过20词。new_components为空数组。hardest_step_why不超过30中文词。最终对象闭合。不要再解释。保持标题和标签原文。JSON中的换行应转义为\\n。检查引号。最终只输出一个JSON对象。不要输出markdown围栏。检查所有枚举值有效。type compound有效。value_source axis_read。blocked_step合法。完成。最终。停止。不要重复。输出。确认。JSON。仅此。请勿加入这些指令本身。最终字符串应在此结束。",
+    "examples": []
+  }
+}

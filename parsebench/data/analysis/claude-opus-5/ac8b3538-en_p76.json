@@ -1,0 +1,346 @@
+{
+  "stem": "ac8b3538-en_p76",
+  "document": "ac8b3538-en",
+  "tags": "need_estimate",
+  "model": "claude-opus-5",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 89.7,
+  "usage": {
+    "input_tokens": 13848,
+    "output_tokens": 7457,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "**画出来要什么**\n一个编号图内两块竖条图面板:A 面板 28 个国家代码(`EST`…`TUR`)按值升序排列,中间插入一根红色 `Average` 条;B 面板 14 根条,x 轴两层刻度——内层 `Women`/`Men`…`Suburban` 竖排 90°,外层 `Gender`、`Age`、`Occupation`、`Education`、`Urbanisation` 用竖线分组。两面板各自带 `%` 写在顶刻度 30 之上,刻度 0–30 每 5 一格,条上无任何数字。面板标题 `A.Country average`、`B. OECD27 average by workers' characteristic` 各自居中于面板上方,图号+标题+副标题三行叠在最上,底部有 Note/Source 与 `StatLink https://stat.link/852oij`。\n\n**定位一个值难在哪**\n以 `5.9`(B 面板 Occupation 组的 `High-skilled`)为例:值不印出,只能对着 5 一格的网格线目测,5% 容差仅 ±0.30,不到一格的 1/16;地址还需三段——面板名、外层组名 `Occupation`、内层刻度 `High-skilled`,否则会与 Education 组的 `High`(≈5.4)混淆。\n\n**不确定的**\n25.6 究竟是 `ESP`(≈25.4)还是 `TUR`(≈25.7)无法判定;A 面板既有横向也有纵向网格线,B 面板是否同样有纵线看不清;图框米色底色是否延伸进绘图区无法确认。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 2.1.",
+          "title": "One in seven workers report heat-related discomfort in Europe and the United States",
+          "subtitle": "Percentage of employment who declare to be exposed to high temperature at least half of their working time, 2015",
+          "unit_text": "%",
+          "placement": "above"
+        },
+        "type": "bar",
+        "type_other": "",
+        "panels": 2,
+        "series": 1,
+        "categories": 28,
+        "marks": 42,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "%",
+            "low": "0",
+            "high": "30",
+            "serves": "all bars in Panel A"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "EST",
+            "high": "TUR",
+            "serves": "the 28 country bars in Panel A"
+          },
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "%",
+            "low": "0",
+            "high": "30",
+            "serves": "all bars in Panel B"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "Women",
+            "high": "Suburban",
+            "serves": "the 14 characteristic bars in Panel B"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "panel",
+            "label_source": "panel_title",
+            "example": "B. OECD27 average by workers' characteristic"
+          },
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Occupation"
+          },
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "High-skilled"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "B. OECD27 average by workers' characteristic",
+            "Education",
+            "High"
+          ],
+          "value": "5.4",
+          "value_source": "axis_read",
+          "why_hard": "No printed values; ticks 5 apart while 5% tolerance is ±0.27; 'High' collides with 'High-skilled'"
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "panel_title_per_panel",
+        "figure_id": "f1",
+        "evidence": "'A.Country average' and 'B. OECD27 average by workers' characteristic' centred above each panel"
+      },
+      {
+        "key": "small_multiples_4",
+        "figure_id": "f1",
+        "evidence": "two vertical bar panels of the same form stacked under one figure number"
+      },
+      {
+        "key": "highlighted_category",
+        "figure_id": "f1",
+        "evidence": "the 'Average' bar in Panel A is drawn red among teal country bars"
+      },
+      {
+        "key": "abbrev_category_axis",
+        "figure_id": "f1",
+        "evidence": "Panel A ticks read EST, NOR, ITA, FIN, BEL ... ESP, TUR"
+      },
+      {
+        "key": "rotated_x_ticks",
+        "figure_id": "f1",
+        "evidence": "Panel A codes set at ~45 degrees; Panel B labels set vertically"
+      },
+      {
+        "key": "two_level_x_ticks",
+        "figure_id": "f1",
+        "evidence": "Panel B: Women/Men above an outer row Gender, Age, Occupation, Education, Urbanisation with separators"
+      },
+      {
+        "key": "axis_title_above_axis",
+        "figure_id": "f1",
+        "evidence": "'%' printed above the topmost tick '30' on both panels"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "subtitle 'Percentage of employment who declare to be exposed...'; axis shows only bare 0-30 with '%'"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "'Note: Those who declare to be exposed...' and 'Source: Secretariat's calculations based on data from...'"
+      },
+      {
+        "key": "data_link_below_figure",
+        "figure_id": "f1",
+        "evidence": "'StatLink' logo with 'https://stat.link/852oij' under the note block"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "Panel B shows only horizontal rules at 5, 10, 15, 20, 25, 30 across the plot"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "value_sorted_category_axis",
+        "figure_id": "f1",
+        "evidence": "Panel A country bars run monotonically from EST 5.5 to TUR 25.7, not alphabetical",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "name": "aggregate_bar_inside_sorted_axis",
+        "figure_id": "f1",
+        "evidence": "'Average' tick sits between HUN and FRA in the sorted country run, coloured red",
+        "affects": [
+          3,
+          4
+        ]
+      },
+      {
+        "name": "category_group_separator_rules",
+        "figure_id": "f1",
+        "evidence": "Panel B: vertical rules below the axis split Gender | Age | Occupation | Education | Urbanisation",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "5.4",
+        "figure_id": "f1",
+        "mark": "the EST bar in Panel A (lowest country bar)",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A.Country average",
+          "EST"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "12.8",
+        "figure_id": "f1",
+        "mark": "the red 'Average' bar in Panel A",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A.Country average",
+          "Average"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "18.3",
+        "figure_id": "f1",
+        "mark": "the USA bar in Panel A",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A.Country average",
+          "USA"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "25.6",
+        "figure_id": "f1",
+        "mark": "the TUR bar, rightmost in Panel A (close to ESP at ~25.4)",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A.Country average",
+          "TUR"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "16.7",
+        "figure_id": "f1",
+        "mark": "the 'Men' bar in the Gender group of Panel B",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "B. OECD27 average by workers' characteristic",
+          "Gender",
+          "Men"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "20.1",
+        "figure_id": "f1",
+        "mark": "the 'Middle-skilled' bar in the Occupation group of Panel B",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "B. OECD27 average by workers' characteristic",
+          "Occupation",
+          "Middle-skilled"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "5.9",
+        "figure_id": "f1",
+        "mark": "the 'High-skilled' bar in the Occupation group of Panel B",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "B. OECD27 average by workers' characteristic",
+          "Occupation",
+          "High-skilled"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "21.8",
+        "figure_id": "f1",
+        "mark": "the 'Low' bar in the Education group of Panel B (tallest in B)",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "B. OECD27 average by workers' characteristic",
+          "Education",
+          "Low"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "5.4",
+        "figure_id": "f1",
+        "mark": "the 'High' bar in the Education group of Panel B",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "B. OECD27 average by workers' characteristic",
+          "Education",
+          "High"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "10.5",
+        "figure_id": "f1",
+        "mark": "the 'Urban' bar in the Urbanisation group of Panel B",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "B. OECD27 average by workers' characteristic",
+          "Urbanisation",
+          "Urban"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "无数值标签,网格每5个百分点;5.4与5.9的5%容差仅±0.27,肉眼读格不足半格,二者极易互换。",
+    "examples": [
+      {
+        "gap": "P2",
+        "figure_id": "f1",
+        "quote": "Panel titles 'A.Country average' and 'B. OECD27 average by workers' characteristic' over two separate bar panels",
+        "why": "同一图内两面板各有独立类别轴,5.4在两面板都出现,面板名必须进入键。"
+      },
+      {
+        "gap": "P8",
+        "figure_id": "f1",
+        "quote": "In Panel A one bar, labelled 'Average', is drawn red while all 27 country bars are teal",
+        "why": "红色标示聚合值而非图例系列,当前流水线无法把该属性写入键。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "'Figure 2.1. One in seven workers report heat-related discomfort in Europe and the United States' then a separate subtitle line ending '2015'",
+        "why": "图号、标题、副标题、以及轴顶的'%'四处分离,需作为独立字段生成。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "Panel B x axis: vertical labels Women, Men ... above a grouping row Gender, Age, Occupation, Education, Urbanisation",
+        "why": "两层刻度加分组竖线与旋转标签,现有刻度格式维度无法生成。"
+      },
+      {
+        "gap": "P1",
+        "figure_id": "f1",
+        "quote": "Both panels tick 0, 5, 10, 15, 20, 25, 30 with no number printed on any of the 42 bars",
+        "why": "可读性应按每根条的可达精度评分,5.4级别的条根本达不到5%容差。"
+      }
+    ]
+  }
+}

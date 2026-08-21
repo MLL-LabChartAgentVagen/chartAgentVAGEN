@@ -1,0 +1,255 @@
+{
+  "stem": "US_Professional_Services_Partner_Compensation_Survey_2024_p20",
+  "document": "US_Professional_Services_Partner_Compensation_Survey_2024",
+  "tags": "untagged",
+  "model": "gemini-3.1-pro-preview",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 65.8,
+  "usage": {
+    "input_tokens": 5314,
+    "output_tokens": 8387,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n页面包含两个水平排列的百分比堆叠条形图。图表本身没有数值轴（X轴），所有的数值（如“34”、“28”）都直接以白色字体印刷在对应的彩色条形数据段内。所有数据段加起来代表100%，条形图的右边界是对齐的。图表标题位于绘图区上方，图例（Pessimistic, Neutral, Optimistic）位于标题和数据区之间。每个类别的标签（如“Strategy consulting”）排列在条形图的左侧。页面整体采用了两栏布局：左侧是与图表相关的结论性正文段落，右侧是图表，图表底部还带有“Note”和“Source”注释行。\n\n### 定位一个值难在哪\n以第一张图表中“Management/advisory consulting”类别的“Pessimistic”占比“34”为例。该数值没有数值轴可以作为空间映射参考，解析器必须直接通过OCR识别色块内的文本。由于该类别的名称在页面上是换行显示的（“Management/”和“advisory consulting”分列两行），模型需要具备强大的空间结构理解能力，才能将这个浮在橙色块内部的数值与左侧换行的类别名称以及上方的图例颜色准确关联。一旦行对齐出错，数值就会分配给错误的组别。\n\n### 不确定的\n第二张图表（by firm revenue）没有显式地在标题或图表中包含单位“%”，虽然可以通过第一张图的标题以及条形图的堆叠特性推断出单位是百分比，但在单看该图表时单位的归属并不直接明显。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "Key external factors influencing outlook (%)",
+          "subtitle": "Key external factors influencing outlook for current fiscal year, by firm type",
+          "unit_text": "(%)",
+          "placement": "above"
+        },
+        "type": "stacked_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 3,
+        "categories": 4,
+        "marks": 12,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "left",
+            "role": "category",
+            "unit_text": "",
+            "low": "Strategy consulting",
+            "high": "Other",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Strategy consulting"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Pessimistic"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Management/ advisory consulting",
+            "Pessimistic"
+          ],
+          "value": "34",
+          "value_source": "printed",
+          "why_hard": "Category name breaks across two lines, and the value must be extracted from inside a colored segment."
+        }
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "",
+          "title": "Key external factors influencing outlook for current fiscal year, by firm revenue",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "stacked_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 3,
+        "categories": 4,
+        "marks": 12,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "left",
+            "role": "category",
+            "unit_text": "",
+            "low": "Less than $1.00bn",
+            "high": "More than $20.00bn",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Less than $1.00bn"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Neutral"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Less than $1.00bn",
+            "Neutral"
+          ],
+          "value": "21",
+          "value_source": "printed",
+          "why_hard": ""
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "pct_stacked",
+        "figure_id": "page",
+        "evidence": "all bars span the same full width ending in a straight line at 100%"
+      },
+      {
+        "key": "stacked_bar",
+        "figure_id": "page",
+        "evidence": "segments for pessimistic, neutral, optimistic are stacked within each bar"
+      },
+      {
+        "key": "horizontal_bars",
+        "figure_id": "page",
+        "evidence": "categories sit on the left axis and bars grow horizontally to the right"
+      },
+      {
+        "key": "no_value_axis",
+        "figure_id": "page",
+        "evidence": "neither chart draws an axis with numeric ticks, just the categories"
+      },
+      {
+        "key": "value_label_inside",
+        "figure_id": "page",
+        "evidence": "numbers like 23, 36, 41 are printed on top of the bar segments"
+      },
+      {
+        "key": "side_text_bullets",
+        "figure_id": "page",
+        "evidence": "paragraphs of text run in a narrow column to the left of the figures"
+      },
+      {
+        "key": "legend_above_plot",
+        "figure_id": "page",
+        "evidence": "legends sit directly between the title area and the first category bar"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "page",
+        "evidence": "Note: and Source: lines appear beneath each plot"
+      },
+      {
+        "key": "multi_figure_page",
+        "figure_id": "page",
+        "evidence": "two distinct figures plotted independently with separate titles"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "the main title ends with (%)"
+      }
+    ],
+    "new_components": [],
+    "spot_checks": [
+      {
+        "value": "34",
+        "figure_id": "f1",
+        "mark": "the Management/advisory consulting Pessimistic segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Management/advisory consulting",
+          "Pessimistic"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 0
+      },
+      {
+        "value": "28",
+        "figure_id": "f1",
+        "mark": "the Technology/IT consulting Optimistic segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Technology/IT consulting",
+          "Optimistic"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "83",
+        "figure_id": "f2",
+        "mark": "the $1.00bn-$5.00bn Optimistic segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "$1.00bn-$5.00bn",
+          "Optimistic"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "38",
+        "figure_id": "f2",
+        "mark": "the More than $20.00bn Neutral segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "More than $20.00bn",
+          "Neutral"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "31",
+        "figure_id": "f2",
+        "mark": "the $5.01bn-$20.00bn Pessimistic segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "$5.01bn-$20.00bn",
+          "Pessimistic"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      }
+    ],
+    "hardest_step": 1,
+    "hardest_step_why": "没有数值轴，解析器完全依赖于识别堆叠色块内的白色文字（如“34”）与左侧类别名的相对位置进行行对齐；若未识别，则完全无法成表。",
+    "examples": [
+      {
+        "gap": "P6",
+        "figure_id": "page",
+        "quote": "numbers like 23, 36, 41 printed inside the colored bar segments",
+        "why": "数值标签完全印在数据段内部中央而不是刻度轴上，生成器需要支持将标签直接放置在形状内部。"
+      },
+      {
+        "gap": "P3",
+        "figure_id": "page",
+        "quote": "the text 'By firm type, technology...' sits in a side column level with the plot",
+        "why": "图表并非独占整行，而是与左侧的结论性正文段落构成了并排的左右分栏版式，目前的流式生成难以控制横向空间排版。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "Key external factors influencing outlook (%)",
+        "why": "图表缺乏独立编号，但具有醒目的主标题和次级的副标题，生成器需要支持不带编号的多级独立标题模块。"
+      }
+    ]
+  }
+}

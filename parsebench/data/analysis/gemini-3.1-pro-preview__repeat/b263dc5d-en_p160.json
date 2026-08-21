@@ -1,0 +1,274 @@
+{
+  "stem": "b263dc5d-en_p160",
+  "document": "b263dc5d-en",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "repeat",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 98.5,
+  "usage": {
+    "input_tokens": 5299,
+    "output_tokens": 13320,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n这是一个混合图表（柱状图结合菱形散点），图例居中置于标题下方。X轴类别标签垂直旋转，并且支持为特定类别（如“OECD average”）绘制带背景阴影的突出显示区域。此外，类别轴上的个别标签（如“England (UK)”）使用了不同的字体颜色（蓝色）。图表使用双重视觉编码，标记的颜色深浅额外编码了统计显著性属性，而不仅仅是图例中的基础系列。Y轴的单位“% change”放置在顶部刻度线上方，图表区域仅包含水平网格线。\n\n### 定位一个值难在哪\n以 Korea 的 Numeracy 值为例（值为 3）。图中没有任何数值直接标注在标记上，全部依赖对照 Y 轴刻度线进行估读。Y 轴的刻度间距为 5，读取 3 这样偏离网格线较多的点时，通过视觉对齐很难精确读取到 5% 的容差范围内。\n\n### 不确定的\nX轴上的个别标签（如 England (UK), Flemish Region (BE)）被标记为蓝色文本，但图注或正文中并没有明确说明蓝色的具体含义。此外，表示统计不显著的“浅色”标记在视觉上与深色标记对比不够强烈，有时难以确切分辨。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 4.5.",
+          "title": "Relationship between education, numeracy and wages",
+          "subtitle": "Effect of a one-standard-deviation increase on hourly wages",
+          "unit_text": "% change",
+          "placement": "above"
+        },
+        "type": "other",
+        "type_other": "bar and marker",
+        "panels": 1,
+        "series": 2,
+        "categories": 32,
+        "marks": 64,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "% change",
+            "low": "0",
+            "high": "40",
+            "serves": "all marks"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "Chile",
+            "high": "Slovak Republic",
+            "serves": "all marks"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Korea"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Numeracy"
+          },
+          {
+            "role": "colour_group",
+            "label_source": "not_shown",
+            "example": "statistically significant at the 5% level"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Korea",
+            "Numeracy",
+            "statistically significant at the 5% level"
+          ],
+          "value": "3",
+          "value_source": "axis_read",
+          "why_hard": "Off-grid value against an axis with tick spacing of 5 makes precise estimation difficult."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "mixed_marks",
+        "figure_id": "f1",
+        "evidence": "bars and diamond markers are plotted in the same panel"
+      },
+      {
+        "key": "highlighted_category",
+        "figure_id": "f1",
+        "evidence": "'OECD average' category has a shaded background band behind its marks"
+      },
+      {
+        "key": "axis_title_above_axis",
+        "figure_id": "f1",
+        "evidence": "'% change' is placed directly above the top tick of the y axis"
+      },
+      {
+        "key": "rotated_x_ticks",
+        "figure_id": "f1",
+        "evidence": "category labels like 'Chile' are rotated 90 degrees"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "horizontal grid lines across the panel, no vertical ones"
+      },
+      {
+        "key": "color_encodes_extra_attribute",
+        "figure_id": "f1",
+        "evidence": "the Note says darker colours denote statistically significant differences"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "Note and Source paragraphs sit below the chart"
+      },
+      {
+        "key": "legend_above_plot",
+        "figure_id": "f1",
+        "evidence": "the legend sits between the subtitle and the chart area"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "color_coded_axis_labels",
+        "figure_id": "f1",
+        "evidence": "labels 'England (UK)' and 'Flemish Region (BE)' are printed in blue text",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "30",
+        "figure_id": "f1",
+        "mark": "the bar for Chile",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Chile",
+          "Years of education"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "15",
+        "figure_id": "f1",
+        "mark": "the diamond for Chile",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Chile",
+          "Numeracy"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "36",
+        "figure_id": "f1",
+        "mark": "the bar for Singapore",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Singapore",
+          "Years of education"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "13",
+        "figure_id": "f1",
+        "mark": "the diamond for Singapore",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Singapore",
+          "Numeracy"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "15",
+        "figure_id": "f1",
+        "mark": "the bar for Canada",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Canada",
+          "Years of education"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "16",
+        "figure_id": "f1",
+        "mark": "the bar for OECD average",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "OECD average",
+          "Years of education"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "9",
+        "figure_id": "f1",
+        "mark": "the diamond for OECD average",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "OECD average",
+          "Numeracy"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "21",
+        "figure_id": "f1",
+        "mark": "the bar for United States",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "United States",
+          "Years of education"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "22",
+        "figure_id": "f1",
+        "mark": "the bar for Korea",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Korea",
+          "Years of education"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "3",
+        "figure_id": "f1",
+        "mark": "the diamond for Korea",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Korea",
+          "Numeracy"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "没有任何数值直接标注在图上，全靠读取Y轴。Y轴刻度间距为5，像Korea的Numeracy（值为3）这样偏离刻度线的点，要精确读取到5%容差范围内极难。",
+    "examples": [
+      {
+        "gap": "P8",
+        "figure_id": "f1",
+        "quote": "Darker colours denote differences that are statistically significant at the 5% level.",
+        "why": "图例仅说明了基础系列，而颜色的深浅编码了额外的统计显著性维度，生成器目前无法将此类隐含的补充属性作为额外字段提取到解析结果中。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "category labels 'England (UK)' and 'Flemish Region (BE)' are coloured blue",
+        "why": "目前的图表生成流水线不支持对类别轴上的特定标签单独设置不同的字体颜色，缺少针对个体类别标签的样式映射能力。"
+      }
+    ]
+  }
+}

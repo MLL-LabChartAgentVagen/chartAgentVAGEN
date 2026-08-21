@@ -1,0 +1,314 @@
+{
+  "stem": "r_qt1212e_p9",
+  "document": "r_qt1212e",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "no_vocab",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 78.4,
+  "usage": {
+    "input_tokens": 3178,
+    "output_tokens": 10949,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n图表生成器需要能够绘制带有多个独立面板的复合图表。面板1（左侧）是一个折线图，其数值轴（Y轴）位于右侧。面板2（右侧）是一个混合图表，包含散点图（红色圆点）和柱状图（蓝色柱子），并配有双Y轴（左侧和右侧各一个）。生成器需要支持在同一个图例中通过 \"Lhs:\" 和 \"Rhs:\" 等文字前缀来将数据系列映射到特定的坐标轴上。绘图区域需支持自定义背景色（如灰色），并在其上绘制垂直的白色网格线。此外，各面板上方需要支持独立的标题和单位说明，而不是统一放在主图表标题中。\n\n### 定位一个值难在哪\n定位并精确读取如 `0.33`（03年对应的红色圆点值）非常困难。面板2的左侧Y轴刻度间距为0.1（0.0, 0.1, 0.2...），而且整个图表缺乏水平网格辅助线。由于数据点距离Y轴较远，要将该点的值在0.3和0.4之间目测精确到5%的误差范围内（即允许误差仅为 ±0.0165）几乎是不可能的。\n\n### 不确定的\n面板2的X轴时间刻度只标出了部分年份（80, 83, 86等，间隔3年）。未标出刻度的年份（如03年）所对应的位置只能通过插值推断，因此读取这些年份的图表值时，其时间键名的确切性存在一定的不确定性。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Graph 6",
+          "title": "Reinsurance market developments",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "compound",
+        "type_other": "",
+        "panels": 2,
+        "series": 3,
+        "categories": 32,
+        "marks": 42,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "right",
+            "role": "value",
+            "unit_text": "Per cent",
+            "low": "30",
+            "high": "60",
+            "serves": "the red line"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "00",
+            "high": "11",
+            "serves": "the red line"
+          },
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Per cent of premiums",
+            "low": "0.0",
+            "high": "0.4",
+            "serves": "the red dots"
+          },
+          {
+            "side": "right",
+            "role": "value",
+            "unit_text": "Number of companies",
+            "low": "0",
+            "high": "4",
+            "serves": "the blue bars"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "80",
+            "high": "10",
+            "serves": "the red dots and blue bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "panel",
+            "label_source": "panel_title",
+            "example": "Reinsurance market concentration"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Top 10 market share1"
+          },
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "04"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Failures of reinsurance companies",
+            "Market share of failed companies2",
+            "03"
+          ],
+          "value": "0.33",
+          "value_source": "axis_read",
+          "why_hard": "Small axis increments, no horizontal grid lines, and interpolating unlabelled x-axis ticks."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "panel_titles",
+        "figure_id": "f1",
+        "evidence": "Reinsurance market concentration and Failures of reinsurance companies above panels",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "panel_units",
+        "figure_id": "f1",
+        "evidence": "Per cent, Per cent of premiums, Number of companies above panels",
+        "affects": [
+          4
+        ]
+      },
+      {
+        "key": "dual_y_axes",
+        "figure_id": "f1",
+        "evidence": "left axis reads 0.0 to 0.4, right axis reads 0 to 4 in panel 2",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "key": "legend_axis_pointers",
+        "figure_id": "f1",
+        "evidence": "Lhs: and Rhs: prefixes in the legend",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "grey_background_white_grid",
+        "figure_id": "f1",
+        "evidence": "the plot area is filled grey with white vertical grid lines",
+        "affects": []
+      },
+      {
+        "key": "scatter_and_bar_mixed",
+        "figure_id": "f1",
+        "evidence": "red dots and blue bars in panel 2",
+        "affects": [
+          2
+        ]
+      }
+    ],
+    "new_components": [
+      {
+        "name": "legend_axis_pointers",
+        "figure_id": "f1",
+        "evidence": "Lhs: and Rhs: prefixes in the legend text",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "51",
+        "figure_id": "f1",
+        "mark": "the red line at 00",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Reinsurance market concentration",
+          "Top 10 market share1",
+          "00"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "48",
+        "figure_id": "f1",
+        "mark": "the red line at 01",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Reinsurance market concentration",
+          "Top 10 market share1",
+          "01"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "53",
+        "figure_id": "f1",
+        "mark": "the red line at 03",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Reinsurance market concentration",
+          "Top 10 market share1",
+          "03"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "42",
+        "figure_id": "f1",
+        "mark": "the red line at 09",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Reinsurance market concentration",
+          "Top 10 market share1",
+          "09"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "43",
+        "figure_id": "f1",
+        "mark": "the red line at 06",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Reinsurance market concentration",
+          "Top 10 market share1",
+          "06"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "0.1",
+        "figure_id": "f1",
+        "mark": "the red dot at 86",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Failures of reinsurance companies",
+          "Market share of failed companies2",
+          "86"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "3",
+        "figure_id": "f1",
+        "mark": "the blue bar at 03",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Failures of reinsurance companies",
+          "Number of failures3",
+          "03"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "0",
+        "figure_id": "f1",
+        "mark": "the blue bar at 84",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Failures of reinsurance companies",
+          "Number of failures3",
+          "84"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "0.33",
+        "figure_id": "f1",
+        "mark": "the red dot at 03",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Failures of reinsurance companies",
+          "Market share of failed companies2",
+          "03"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "1",
+        "figure_id": "f1",
+        "mark": "the blue bar at 10",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Failures of reinsurance companies",
+          "Number of failures3",
+          "10"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "面板2的左侧Y轴刻度间距为0.1，缺乏水平网格线使得其在0.30至0.40之间的确切位置极难目测，读取0.33必然超出5%（即±0.0165）的容差。",
+    "examples": [
+      {
+        "gap": "P9",
+        "figure_id": "f1",
+        "quote": "Lhs: Market share of failed companies2 Rhs: Number of failures3",
+        "why": "需要支持在同一个图例中，明确指定不同的数据系列对应于双Y轴图表中的左侧坐标轴或右侧坐标轴。"
+      },
+      {
+        "gap": "P2",
+        "figure_id": "f1",
+        "quote": "Reinsurance market concentration and Failures of reinsurance companies as panel titles",
+        "why": "在多面板图表中，需要提取每个面板上方的独立标题作为定位该面板内部数据点的一个必要键值。"
+      }
+    ]
+  }
+}

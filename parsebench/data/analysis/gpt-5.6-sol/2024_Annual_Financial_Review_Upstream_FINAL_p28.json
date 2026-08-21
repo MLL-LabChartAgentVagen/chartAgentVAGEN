@@ -1,0 +1,265 @@
+{
+  "stem": "2024_Annual_Financial_Review_Upstream_FINAL_p28",
+  "document": "2024_Annual_Financial_Review_Upstream_FINAL",
+  "tags": "need_estimate",
+  "model": "gpt-5.6-sol",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 120000,
+  "seconds": 1270.9,
+  "usage": {
+    "input_tokens": 7788,
+    "output_tokens": 4522,
+    "cache_read_tokens": 7785
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "**画出来要什么**\n单面板双折线：2015—2024十个年度、左轴0%—80%、仅横向网格线。两条线在图内直接标为“all U.S. manufacturing”和“energy companies”。图上方需依次呈现黑色图题与单位“percentage”，更上方还有蓝色结论式页面标题；图下有数据来源和注释。\n\n**定位一个值难在哪**\n“2018 / energy companies”的46须由折线相对10个百分点刻度读取；5%容差仅2.3个百分点。定位还必须同时保留年份和图内系列名。\n\n**不确定的**\n蓝色标题印有42%和56%，但未贴在折线标记上，按页面标题而非数值标签处理。若只看曲线，重复出现的56、65和约42无法脱离年份唯一定位。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "Long-term debt-to-equity ratio for select energy companies and U.S. manufacturing companies",
+          "subtitle": "",
+          "unit_text": "percentage",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 10,
+        "marks": 20,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "percentage",
+            "low": "0%",
+            "high": "80%",
+            "serves": "both line series"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "2015",
+            "high": "2024",
+            "serves": "both line series"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2015"
+          },
+          {
+            "role": "series",
+            "label_source": "inline_label",
+            "example": "all U.S. manufacturing"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "2018",
+            "energy companies"
+          ],
+          "value": "46%",
+          "value_source": "axis_read",
+          "why_hard": "10-point tick spacing; 5% tolerance is only 2.3 points."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "“Data source: Evaluate Energy and U.S. Census Bureau” and a “Note:” line appear below."
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "“percentage” appears directly beneath the chart title."
+      },
+      {
+        "key": "axis_title_above_axis",
+        "figure_id": "f1",
+        "evidence": "“percentage” is placed above the 80% top tick, not beside the y axis."
+      },
+      {
+        "key": "inline_series_labels",
+        "figure_id": "f1",
+        "evidence": "“all U.S. manufacturing” and “energy companies” are written beside their lines."
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "Horizontal rules cross the plot at percentage ticks; no vertical grid lines are drawn."
+      }
+    ],
+    "new_components": [
+      {
+        "name": "page_takeaway_headline",
+        "figure_id": "page",
+        "evidence": "“The long-term debt-to-equity ratio was relatively flat” appears in large blue type above the figure.",
+        "affects": [
+          4
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "63",
+        "figure_id": "f1",
+        "mark": "the 2015 all U.S. manufacturing point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2015",
+          "all U.S. manufacturing"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "56",
+        "figure_id": "f1",
+        "mark": "the 2015 energy companies point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2015",
+          "energy companies"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "72",
+        "figure_id": "f1",
+        "mark": "the 2020 all U.S. manufacturing point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2020",
+          "all U.S. manufacturing"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "69",
+        "figure_id": "f1",
+        "mark": "the 2020 energy companies point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2020",
+          "energy companies"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "56",
+        "figure_id": "f1",
+        "mark": "the 2024 all U.S. manufacturing point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2024",
+          "all U.S. manufacturing"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "42",
+        "figure_id": "f1",
+        "mark": "the 2024 energy companies point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2024",
+          "energy companies"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "65",
+        "figure_id": "f1",
+        "mark": "the 2018 all U.S. manufacturing point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2018",
+          "all U.S. manufacturing"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "46",
+        "figure_id": "f1",
+        "mark": "the 2018 energy companies point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2018",
+          "energy companies"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "55",
+        "figure_id": "f1",
+        "mark": "the 2022 all U.S. manufacturing point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2022",
+          "all U.S. manufacturing"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "43",
+        "figure_id": "f1",
+        "mark": "the 2022 energy companies point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2022",
+          "energy companies"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      }
+    ],
+    "hardest_step": 1,
+    "hardest_step_why": "63、56等十个值都只在两条折线上，页面完全没有表格，因此首先阻于步骤1。",
+    "examples": [
+      {
+        "gap": "P3",
+        "figure_id": "f1",
+        "quote": "The long-term debt-to-equity ratio was relatively flat for the energy companies and U.S. manufacturing companies, at 42% and 56%",
+        "why": "需整页输出，并保留蓝色结论标题位于图题和图表上方的层级关系。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "Long-term debt-to-equity ratio for select energy companies and U.S. manufacturing companies; percentage",
+        "why": "图题与单位是上下分离字段，且整块位于绘图区上方。"
+      },
+      {
+        "gap": "P1",
+        "figure_id": "f1",
+        "quote": "The left axis runs from 0% to 80% in 10% increments; neither line has value labels.",
+        "why": "每个值只能按折线位置读取，10个百分点刻度下各点可达到的精度不同。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "“all U.S. manufacturing” and “energy companies” are written directly beside the lines.",
+        "why": "需支持无图例的图内系列直标，并让直标文本成为数值定位键。"
+      }
+    ]
+  }
+}

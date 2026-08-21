@@ -1,0 +1,215 @@
+{
+  "stem": "World_Inequality_Report_2026_p66",
+  "document": "World_Inequality_Report_2026",
+  "tags": "untagged",
+  "model": "gemini-3.1-pro-preview",
+  "control": "no_vocab",
+  "effort": "high",
+  "dpi": 150,
+  "seconds": 55.6,
+  "usage": {
+    "input_tokens": 2272,
+    "output_tokens": 8005,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "本页包含两个图表。图2.13是分组柱状图，各地区有一对对比柱形，并在顶部带有数据标签，X轴分类标签采用多行显示（如“East\nAsia”被分为两行）。解析器生成表格时，准确关联这些多行标签和图例项是难点（影响Step 3），而将整个带有复杂图例的图表直接转换为Markdown表格本身也是一大挑战（Step 1）。图2.14是双面板折线图，面板带有各自的小标题，并在底部共享同一个颜色图例，包含8个地区的折线。由于图2.13所有抽检数值均已在图上明确打印，无需通过坐标轴估算，故不存在读取精度问题。生成器需要支持分组柱状图的数据标签渲染、多行X轴标签排版，以及折线图跨面板共享同一底图图例的布局结构。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 2.13.",
+          "title": "Redistribution decreases inequality within countries but with large variations",
+          "subtitle": "Top 10/bottom 50 income gaps across regions, 2025",
+          "unit_text": "Top 10% average to bottom 50% average income",
+          "placement": "above"
+        },
+        "type": "grouped_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 8,
+        "marks": 16,
+        "values_printed": "all"
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "Figure 2.14.",
+          "title": "Transfers account for a larger share of redistribution than taxes",
+          "subtitle": "Reduction in top 10/bottom 50 income gaps, 1980–2025",
+          "unit_text": "Reduction in top 10% to bottom 50% income ratio (%)",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 2,
+        "series": 8,
+        "categories": 46,
+        "marks": 736,
+        "values_printed": "none"
+      }
+    ],
+    "components": [
+      {
+        "key": "grouped_bars",
+        "figure_id": "f1",
+        "evidence": "two colored bars displayed side-by-side per region",
+        "affects": [
+          1,
+          3
+        ]
+      },
+      {
+        "key": "data_labels",
+        "figure_id": "f1",
+        "evidence": "numbers such as 19 and 10 printed above each bar",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "key": "multiline_axis_labels",
+        "figure_id": "f1",
+        "evidence": "x-axis labels split across lines, e.g., 'East Asia'",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "shared_legend",
+        "figure_id": "f2",
+        "evidence": "a single legend placed at the bottom for both panels",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "panel_titles",
+        "figure_id": "f2",
+        "evidence": "'Tax progressivity' placed above the individual panels",
+        "affects": [
+          4
+        ]
+      }
+    ],
+    "new_components": [
+      {
+        "name": "rotated_axis_title",
+        "figure_id": "page",
+        "evidence": "both figures feature y-axis titles rotated vertically 90 degrees",
+        "affects": []
+      },
+      {
+        "name": "dotted_zero_line",
+        "figure_id": "f2",
+        "evidence": "the horizontal gridline at 0 is styled as dotted",
+        "affects": []
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "19",
+        "figure_id": "f1",
+        "mark": "the Europe Before redistribution bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Europe",
+          "Before redistribution"
+        ]
+      },
+      {
+        "value": "10",
+        "figure_id": "f1",
+        "mark": "the Europe After redistribution bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Europe",
+          "After redistribution"
+        ]
+      },
+      {
+        "value": "28",
+        "figure_id": "f1",
+        "mark": "the East Asia After redistribution bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "East Asia",
+          "After redistribution"
+        ]
+      },
+      {
+        "value": "18",
+        "figure_id": "f1",
+        "mark": "the North America & Oceania After redistribution bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "North America & Oceania",
+          "After redistribution"
+        ]
+      },
+      {
+        "value": "36",
+        "figure_id": "f1",
+        "mark": "the Russia & Central Asia Before redistribution bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Russia & Central Asia",
+          "Before redistribution"
+        ]
+      },
+      {
+        "value": "33",
+        "figure_id": "f1",
+        "mark": "the Russia & Central Asia After redistribution bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Russia & Central Asia",
+          "After redistribution"
+        ]
+      },
+      {
+        "value": "52",
+        "figure_id": "f1",
+        "mark": "the Sub-Saharan Africa Before redistribution bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Sub-Saharan Africa",
+          "Before redistribution"
+        ]
+      },
+      {
+        "value": "53",
+        "figure_id": "f1",
+        "mark": "the Middle East & North Africa Before redistribution bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Middle East & North Africa",
+          "Before redistribution"
+        ]
+      },
+      {
+        "value": "72",
+        "figure_id": "f1",
+        "mark": "the Latin America Before redistribution bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Latin America",
+          "Before redistribution"
+        ]
+      },
+      {
+        "value": "50",
+        "figure_id": "f1",
+        "mark": "the Latin America After redistribution bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Latin America",
+          "After redistribution"
+        ]
+      }
+    ],
+    "hardest_step": 1
+  }
+}

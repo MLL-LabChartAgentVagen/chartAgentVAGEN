@@ -1,0 +1,346 @@
+{
+  "stem": "b263dc5d-en_p95",
+  "document": "b263dc5d-en",
+  "tags": "3d_chart+need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 104.7,
+  "usage": {
+    "input_tokens": 5301,
+    "output_tokens": 13987,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n本页包含一个图表（Figure 2.20），它由三个子图（A. Literacy, B. Numeracy, C. Adaptive problem solving）组成的小多图（small multiples）构成。图表为混合标记（mixed marks），在每根代表“Unadjusted”的柱子上，都叠加了代表“Adjusted”的菱形散点，且散点带有垂直误差线。图例位于整个图表的顶部，各子图共享同一组图例和相似的坐标轴设置。需要特别注意的是，虽然三个子图的分类轴相同，但每个子图中的国家排列顺序是独立的（根据柱状图高度降序排列），并且参考类别（OECD average）在所有子图中均有贯穿全图的垂直浅蓝色高亮背景。\n\n### 定位一个值难在哪\n以 Panel A 中的 `27`（United States, Adjusted）为例，难度在于图表中没有任何直接打印的数值标签（即触发步骤 2 的读取精度问题）。读者需要根据 0-80 范围、刻度间距为 10 的 Y 轴网格线进行视觉估算。此外，菱形散点本身就被一根很长的垂直误差线穿过，极大地干扰了对其中心位置的判定，导致极难将读数误差控制在 5% 的容忍度以内。\n\n### 不确定的\n图表附注仅提到“所有差异在 5% 的水平上具有统计学显著性”，并未明确菱形散点附带的细黑线是置信区间还是标准差。另外，由于缺乏具体的数值表格，较低的刻度（如 Spain 的某些读数）存在较大的主观估读偏差。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 2.20.",
+          "title": "Differences in key information-processing skills, by parental education",
+          "subtitle": "Adjusted and unadjusted differences in average literacy, numeracy and adaptive problem solving scores between adults (highly educated parents minus low-educated parents)",
+          "unit_text": "Score-point difference",
+          "placement": "above"
+        },
+        "type": "bar",
+        "type_other": "",
+        "panels": 3,
+        "series": 2,
+        "categories": 32,
+        "marks": 192,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Score-point difference",
+            "low": "0",
+            "high": "80",
+            "serves": "panel A bars and markers"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "Germany",
+            "high": "Spain",
+            "serves": "panel A bars and markers"
+          },
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Score-point difference",
+            "low": "0",
+            "high": "80",
+            "serves": "panel B bars and markers"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "Germany",
+            "high": "Spain",
+            "serves": "panel B bars and markers"
+          },
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Score-point difference",
+            "low": "0",
+            "high": "80",
+            "serves": "panel C bars and markers"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "Germany",
+            "high": "Spain",
+            "serves": "panel C bars and markers"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "panel",
+            "label_source": "panel_title",
+            "example": "A. Literacy"
+          },
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Germany"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Unadjusted"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "A. Literacy",
+            "Germany",
+            "Unadjusted"
+          ],
+          "value": "75",
+          "value_source": "axis_read",
+          "why_hard": "Visual estimation is required against gridlines spaced 10 units apart, without explicit data labels."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "mixed_marks",
+        "figure_id": "f1",
+        "evidence": "grey bars and black diamond point markers overlaid"
+      },
+      {
+        "key": "error_bars",
+        "figure_id": "f1",
+        "evidence": "thin vertical lines extending through the diamond markers"
+      },
+      {
+        "key": "rotated_x_ticks",
+        "figure_id": "f1",
+        "evidence": "country category labels are rotated 90 degrees vertically"
+      },
+      {
+        "key": "shared_legend",
+        "figure_id": "f1",
+        "evidence": "a single legend above panel A serves all three panels"
+      },
+      {
+        "key": "small_multiples_4",
+        "figure_id": "f1",
+        "evidence": "three panels stacked vertically with similar structures"
+      },
+      {
+        "key": "panel_title_per_panel",
+        "figure_id": "f1",
+        "evidence": "A. Literacy, B. Numeracy, and C. Adaptive problem solving in blue banners"
+      },
+      {
+        "key": "axis_title_above_axis",
+        "figure_id": "f1",
+        "evidence": "Score-point difference is placed above the top tick on the y-axis"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "page",
+        "evidence": "Note: Adults aged 16-65... Source: Table A.2.12..."
+      },
+      {
+        "key": "highlighted_category",
+        "figure_id": "f1",
+        "evidence": "OECD average has a shaded blue background to distinguish it"
+      },
+      {
+        "key": "shaded_band",
+        "figure_id": "f1",
+        "evidence": "vertical light blue band highlighting the OECD average across the plot"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "horizontal gridlines drawn at 10-point intervals, with no vertical gridlines"
+      },
+      {
+        "key": "dense_marks_100plus",
+        "figure_id": "f1",
+        "evidence": "over 190 marks counted across 32 categories and 3 panels"
+      },
+      {
+        "key": "footnote_marker",
+        "figure_id": "f1",
+        "evidence": "an asterisk symbol is attached to Poland*"
+      },
+      {
+        "key": "legend_above_plot",
+        "figure_id": "f1",
+        "evidence": "the legend sits between the main heading and the first panel"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "per_panel_category_sort",
+        "figure_id": "f1",
+        "evidence": "the order of countries on the x-axis differs in each panel",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "75",
+        "figure_id": "f1",
+        "mark": "the Germany Unadjusted bar in panel A",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. Literacy",
+          "Germany",
+          "Unadjusted"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "23",
+        "figure_id": "f1",
+        "mark": "the Spain Unadjusted bar in panel A",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. Literacy",
+          "Spain",
+          "Unadjusted"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "24",
+        "figure_id": "f1",
+        "mark": "the Slovak Republic Unadjusted bar in panel C",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "C. Adaptive problem solving",
+          "Slovak Republic",
+          "Unadjusted"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "70",
+        "figure_id": "f1",
+        "mark": "the United States Unadjusted bar in panel B",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "B. Numeracy",
+          "United States",
+          "Unadjusted"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "18",
+        "figure_id": "f1",
+        "mark": "the Sweden Adjusted diamond marker in panel B",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "B. Numeracy",
+          "Sweden",
+          "Adjusted"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "27",
+        "figure_id": "f1",
+        "mark": "the United States Adjusted diamond marker in panel A",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. Literacy",
+          "United States",
+          "Adjusted"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "65",
+        "figure_id": "f1",
+        "mark": "the Germany Unadjusted bar in panel C",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "C. Adaptive problem solving",
+          "Germany",
+          "Unadjusted"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "24",
+        "figure_id": "f1",
+        "mark": "the Flemish Region (BE) Adjusted diamond marker in panel A",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. Literacy",
+          "Flemish Region (BE)",
+          "Adjusted"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "25",
+        "figure_id": "f1",
+        "mark": "the Canada Adjusted diamond marker in panel A",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. Literacy",
+          "Canada",
+          "Adjusted"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "42",
+        "figure_id": "f1",
+        "mark": "the OECD average Unadjusted bar in panel C",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "C. Adaptive problem solving",
+          "OECD average",
+          "Unadjusted"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "全图无数值标签，需从间距为10的轴估读。受误差线遮挡干扰，带小数点的散点值（如27）极难精准读取，必定超过5%的容差范围。",
+    "examples": [
+      {
+        "gap": "P2",
+        "figure_id": "f1",
+        "quote": "Three panels stacked vertically titled A. Literacy, B. Numeracy, and C. Adaptive problem solving",
+        "why": "必须支持将子图标题作为寻址键值的一部分，否则无法区分三个子图内完全相同的国家类别。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "black diamonds with thin error bar lines overlaid directly on top of the grey bars",
+        "why": "图表生成引擎目前不支持在同一图表中将柱状图、散点和误差线进行混合渲染叠放。"
+      }
+    ]
+  }
+}

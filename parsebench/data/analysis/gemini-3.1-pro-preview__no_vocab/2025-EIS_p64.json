@@ -1,0 +1,300 @@
+{
+  "stem": "2025-EIS_p64",
+  "document": "2025-EIS",
+  "tags": "untagged",
+  "model": "gemini-3.1-pro-preview",
+  "control": "no_vocab",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 21.6,
+  "usage": {
+    "input_tokens": 3207,
+    "output_tokens": 2872,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n本页包含一个图表（Figure 24）及其上方的一个文本框（Box 3）。图表是一个双面板的折线图（small multiples），左侧面板显示一条总体趋势线（可能代表EU average，但未在图例中标出，仅在底部注释中提及），右侧面板显示六个国家的折线图，颜色各异。图表带有点标记，折线图的类别轴跨越2018至2025年（标注为'18, '19等），左侧有两个垂直的值轴（0-150，但刻度从80到150），两个面板都有独立的纵轴标题（Summary innovation index）。\n\n### 定位一个值难在哪\n定位任何一个数值（如 `138.6`）主要依赖于上方“Box 3”纯文本框中的描述，而非下方图表。图表本身未标注任何具体数值，仅能粗略读取。若要从图表中读取 `Ireland` 2025年的值，需要识别出右侧面板中紫色的线条，对应 `2025` 年的标记点在右侧纵轴的约138-140之间，由于刻度间距为10（从130到140），肉眼很难读到 `138.6` 这样精确到小数点后一位的数值，超出了5%的误差容限。\n\n### 不确定的\n左侧面板的单根折线没有图例或直接的行内标签，只能通过底部注释推测其代表“average performance of the Strong Innovators”或“EU in 2018”，其准确身份在图表内部无法确切核实。所有的具体数值都在 Box 3 纯文本中，模型能否将这些文本内容识别为带有关联实体的数据尚未可知。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 24:",
+          "title": "Performance of Strong Innovators",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 2,
+        "series": 6,
+        "categories": 8,
+        "marks": 56,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Summary innovation index",
+            "low": "80",
+            "high": "150",
+            "serves": "left panel line"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "'18",
+            "high": "'25",
+            "serves": "left panel line"
+          },
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Summary innovation index",
+            "low": "80",
+            "high": "150",
+            "serves": "right panel lines"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "'18",
+            "high": "'25",
+            "serves": "right panel lines"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "panel",
+            "label_source": "not_shown",
+            "example": ""
+          },
+          {
+            "role": "series",
+            "label_source": "inline_label",
+            "example": "Ireland"
+          },
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "'25"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "right panel",
+            "Ireland",
+            "'25"
+          ],
+          "value": "138.6",
+          "value_source": "axis_read",
+          "why_hard": "The value is read from a line chart with a y-axis tick interval of 10, making decimal precision impossible."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "inline_legend",
+        "figure_id": "f1",
+        "evidence": "right panel has series names written at the end of the lines",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "y_axis_title_rotated",
+        "figure_id": "f1",
+        "evidence": "both panels have 'Summary innovation index' rotated 90 degrees on the left",
+        "affects": []
+      },
+      {
+        "key": "text_box_data",
+        "figure_id": "page",
+        "evidence": "Box 3 contains textual descriptions of values over time for various countries",
+        "affects": [
+          1,
+          2,
+          3
+        ]
+      },
+      {
+        "key": "truncated_y_axis",
+        "figure_id": "f1",
+        "evidence": "y axis starts at 80, not 0",
+        "affects": []
+      },
+      {
+        "key": "abbreviated_years",
+        "figure_id": "f1",
+        "evidence": "x axis labels are '18, '19 etc.",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "footer_note",
+        "figure_id": "f1",
+        "evidence": "a long italic note sits below the chart explaining the left graph",
+        "affects": []
+      }
+    ],
+    "new_components": [
+      {
+        "name": "unlabelled_panel_series",
+        "figure_id": "f1",
+        "evidence": "the left panel has a single blue line with no legend or label attached to it directly",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "138.6",
+        "figure_id": "not_found",
+        "mark": "Value is in the text of Box 3, cannot be accurately read from the chart",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Ireland",
+          "2025"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 1
+      },
+      {
+        "value": "138.9",
+        "figure_id": "not_found",
+        "mark": "Value is in the text of Box 3",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Belgium",
+          "2024"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 1
+      },
+      {
+        "value": "130.1",
+        "figure_id": "not_found",
+        "mark": "Value is in the text of Box 3",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Luxembourg",
+          "2019"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 1
+      },
+      {
+        "value": "132.3",
+        "figure_id": "not_found",
+        "mark": "Value is in the text of Box 3",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Austria",
+          "2024"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 1
+      },
+      {
+        "value": "127.8",
+        "figure_id": "not_found",
+        "mark": "Value is in the text of Box 3",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Germany",
+          "2022"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 1
+      },
+      {
+        "value": "122.3",
+        "figure_id": "not_found",
+        "mark": "Value is in the text of Box 3",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "France",
+          "2025"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 1
+      },
+      {
+        "value": "88.0",
+        "figure_id": "not_found",
+        "mark": "Value is in the text of Box 3",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Estonia",
+          "2018"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 1
+      },
+      {
+        "value": "118.0",
+        "figure_id": "not_found",
+        "mark": "Value is in the text of Box 3",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Estonia",
+          "2025"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 1
+      },
+      {
+        "value": "128.9",
+        "figure_id": "not_found",
+        "mark": "Value is in the text of Box 3",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Luxembourg",
+          "2025"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 1
+      },
+      {
+        "value": "125.1",
+        "figure_id": "not_found",
+        "mark": "Value is in the text of Box 3",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Germany",
+          "2025"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 1
+      }
+    ],
+    "hardest_step": 1,
+    "hardest_step_why": "所有的目标数值均出现在上方的“Box 3”正文段落中。图表（Figure 24）中没有任何具体印出的数值，并且折线图纵轴刻度间隔为10，肉眼无法读取小数点后一位的数值（如 138.6），这导致如果没有提取文本中的数据，便无法获得任何评测值。",
+    "examples": [
+      {
+        "gap": "P3",
+        "figure_id": "page",
+        "quote": "Box 3: Country level observations of Strong Innovators\nIreland demonstrated strong upward momentum...",
+        "why": "数值实际分布在一个纯文本段落（Box 3）中，如果 pipeline 不能将正文解析为类似表格的键值对形式，就抓不到这些测试点。"
+      },
+      {
+        "gap": "P2",
+        "figure_id": "f1",
+        "quote": "two panels side by side under one heading, '150 140...' on both y axes",
+        "why": "图表有两个并排的面板，左侧一条线，右侧多条线。左侧面板的线没有明确标签，需要在地址键中引入面板标识。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "Figure 24: Performance of Strong Innovators",
+        "why": "图表标题独立位于图表上方中心，没有单位。"
+      }
+    ]
+  }
+}

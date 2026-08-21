@@ -1,0 +1,282 @@
+{
+  "stem": "ac8b3538-en_p55",
+  "document": "ac8b3538-en",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "repeat",
+  "effort": "high",
+  "dpi": 150,
+  "seconds": 80.5,
+  "usage": {
+    "input_tokens": 5319,
+    "output_tokens": 10014,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n\n绘制此页面需要支持顶部带有编号、主副标题及单位的标题块。图表主体需支持分类轴与数值轴，且数值轴需包含负值范围并支持横向网格线。绘图区内需支持针对同一类别的混合图表类型（柱状图表示女性，菱形散点表示男性）。需要支持通过图例标识不同的系列，图例被放置在图表上方的带背景色框内。同时支持颜色覆盖以高亮特定类别（如将OECD类别的柱和点设为红色）。另外，X轴需支持国家缩写文本及标签旋转，且图表底部需要支持附加说明（Note）、来源（Source）及数据链接（StatLink）文本排版。\n\n### 定位一个值难在哪\n\n以值“-10.2”为例，对应“GRC”分类下的“Women (↗)”系列。难点在于该值没有直接打印在图表上，只能通过柱形的高度对照左侧Y轴进行估读。由于Y轴总范围为-12到6跨度较大，且刻度步长为2，肉眼估读以精确到十分位（如-10.2）是完全不可能的，读取结果必定超出5%的误差容限。\n\n### 不确定的\n\n无法确切知道“(↗)”这个符号的具体输入来源或原始编码；且由于所有数值依赖估读，点和柱形的具体数值分配存在一定主观猜测，尤其是在密集的-2到0范围内的多个散点可能与其他国家混淆。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Annex Figure 1.B.2.",
+          "title": "Change in unemployment risk by gender",
+          "subtitle": "Percentage point change in unemployment rate by gender, 2015-22",
+          "unit_text": "p.p",
+          "placement": "above"
+        },
+        "type": "bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 39,
+        "marks": 78,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "p.p",
+            "low": "-12",
+            "high": "6",
+            "serves": "all marks"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "GRC",
+            "high": "CRI",
+            "serves": "all marks"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "GRC"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Women (↗)"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "GRC",
+            "Women (↗)"
+          ],
+          "value": "-10.2",
+          "value_source": "axis_read",
+          "why_hard": "Reading values like -10.2 precise to 5% off an axis spanning -12 to 6 is impossible."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "mixed_marks",
+        "figure_id": "f1",
+        "evidence": "bars for Women and diamond markers for Men on the same axis"
+      },
+      {
+        "key": "negative_values",
+        "figure_id": "f1",
+        "evidence": "the y axis extends down to -12 with bars below zero"
+      },
+      {
+        "key": "axis_title_above_axis",
+        "figure_id": "f1",
+        "evidence": "'p.p' is written directly above the y-axis"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "'Percentage point' is in the subtitle and 'p.p' above axis"
+      },
+      {
+        "key": "abbrev_category_axis",
+        "figure_id": "f1",
+        "evidence": "x-axis uses country codes like GRC, ESP"
+      },
+      {
+        "key": "rotated_x_ticks",
+        "figure_id": "f1",
+        "evidence": "x-axis country codes are rotated 45 degrees"
+      },
+      {
+        "key": "highlighted_category",
+        "figure_id": "f1",
+        "evidence": "the OECD bar and point are coloured red"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "horizontal grid lines at intervals of 2, no vertical lines"
+      },
+      {
+        "key": "legend_above_plot",
+        "figure_id": "f1",
+        "evidence": "the legend sits above the chart area in a gray box"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "Note: and Source: lines appear below the figure"
+      },
+      {
+        "key": "data_link_below_figure",
+        "figure_id": "f1",
+        "evidence": "StatLink appears below the source lines"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "symbol_in_legend_label",
+        "figure_id": "f1",
+        "evidence": "The legend label 'Women (↗)' contains an arrow symbol",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "-9.5",
+        "figure_id": "f1",
+        "mark": "the GRC Men point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "GRC",
+          "Men"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-10.2",
+        "figure_id": "f1",
+        "mark": "the GRC Women bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "GRC",
+          "Women (↗)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-9.5",
+        "figure_id": "f1",
+        "mark": "the ESP Women bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "ESP",
+          "Women (↗)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-6.2",
+        "figure_id": "f1",
+        "mark": "the PRT Men point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "PRT",
+          "Men"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-6.3",
+        "figure_id": "f1",
+        "mark": "the IRL Men point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "IRL",
+          "Men"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-2.0",
+        "figure_id": "f1",
+        "mark": "the AUS Men point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "AUS",
+          "Men"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-2.1",
+        "figure_id": "f1",
+        "mark": "the BEL Men point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "BEL",
+          "Men"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "4.2",
+        "figure_id": "f1",
+        "mark": "the CRI Women bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "CRI",
+          "Women (↗)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "1.5",
+        "figure_id": "f1",
+        "mark": "the CRI Men point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "CRI",
+          "Men"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "2.5",
+        "figure_id": "f1",
+        "mark": "the COL Women bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "COL",
+          "Women (↗)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "纵轴跨度极大（-12至6）且刻度间距为2，无法直接精确估读出如-10.2这样带有小数位的数值，必然超出5%的误差容限。",
+    "examples": [
+      {
+        "gap": "P8",
+        "figure_id": "f1",
+        "quote": "the OECD bar and point are drawn in red",
+        "why": "颜色用于特殊高亮平均值类别（OECD），而不仅是区分系列，且图例未说明，需作为独立属性加入key以供识别。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "bars for Women and diamond points for Men",
+        "why": "在同一图表和相同类别下混合使用了柱形与散点形状，目前的框架缺乏机制专门记录所读取值关联的具体标记类型。"
+      }
+    ]
+  }
+}

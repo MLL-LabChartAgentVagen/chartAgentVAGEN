@@ -1,0 +1,169 @@
+{
+  "stem": "World_Inequality_Report_2026_p25",
+  "document": "World_Inequality_Report_2026",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "repeat",
+  "effort": "high",
+  "dpi": 150,
+  "seconds": 40.4,
+  "usage": {
+    "input_tokens": 4438,
+    "output_tokens": 5399,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "本页包含一个折线图（Figure 17），展示了法国和韩国按收入十分位数划分的政治捐款百分比。\n\n**图表构建需求：**\n1. **折线图及数据标记**：支持绘制带有点形和方形数据标记的实线折线。\n2. **文本旋转**：X轴分类标签（如P0-P10）倾斜显示，Y轴标题垂直旋转并居中于轴外侧。\n3. **网格与图例**：包含水平和垂直虚线组成的网格；双系列图例（France, South Korea）置于绘图区下方。\n4. **注释文本**：图表底部需支持添加带粗体引导词（Interpretation, Sources and series）的说明段落。\n\n**数据提取难点：**\n所有数值均未直接标注在图表中，且Y轴主刻度间距高达 10%。对于如 5.8%、8.2% 这样的精确小数，凭借视觉估算根本无法达到容差要求。极小的数据点差异被图形标记本身的尺寸掩盖，使得第 2 步（精度内读取数值）成为硬性瓶颈。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 17.",
+          "title": "Without redistribution, political inequality will increase",
+          "subtitle": "Political donations by income decile, % of total",
+          "unit_text": "% of total",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 10,
+        "marks": 20,
+        "values_printed": "none"
+      }
+    ],
+    "components": [
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "the y-axis title contains 'Percentage' and the subtitle ends with '% of total'"
+      },
+      {
+        "key": "rotated_axis_title",
+        "figure_id": "f1",
+        "evidence": "the y-axis title is written vertically along the axis"
+      },
+      {
+        "key": "rotated_x_ticks",
+        "figure_id": "f1",
+        "evidence": "the income decile categories on the x-axis are angled"
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "the legend for France and South Korea is below the chart"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "paragraphs starting with Interpretation and Sources sit below the figure"
+      }
+    ],
+    "new_components": [],
+    "spot_checks": [
+      {
+        "value": "52.0",
+        "figure_id": "f1",
+        "mark": "the France point at P90-P100",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "France",
+          "P90-P100"
+        ]
+      },
+      {
+        "value": "57.0",
+        "figure_id": "f1",
+        "mark": "the South Korea point at P90-P100",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "South Korea",
+          "P90-P100"
+        ]
+      },
+      {
+        "value": "17.5",
+        "figure_id": "f1",
+        "mark": "the France point at P80-P90",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "France",
+          "P80-P90"
+        ]
+      },
+      {
+        "value": "16.5",
+        "figure_id": "f1",
+        "mark": "the South Korea point at P80-P90",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "South Korea",
+          "P80-P90"
+        ]
+      },
+      {
+        "value": "10.5",
+        "figure_id": "f1",
+        "mark": "the France point at P70-P80",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "France",
+          "P70-P80"
+        ]
+      },
+      {
+        "value": "8.2",
+        "figure_id": "f1",
+        "mark": "the South Korea point at P70-P80",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "South Korea",
+          "P70-P80"
+        ]
+      },
+      {
+        "value": "8.0",
+        "figure_id": "f1",
+        "mark": "the France point at P60-P70",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "France",
+          "P60-P70"
+        ]
+      },
+      {
+        "value": "5.8",
+        "figure_id": "f1",
+        "mark": "the South Korea point at P60-P70",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "South Korea",
+          "P60-P70"
+        ]
+      },
+      {
+        "value": "5.0",
+        "figure_id": "f1",
+        "mark": "the France point at P50-P60",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "France",
+          "P50-P60"
+        ]
+      },
+      {
+        "value": "2.8",
+        "figure_id": "f1",
+        "mark": "the South Korea point at P50-P60",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "South Korea",
+          "P50-P60"
+        ]
+      }
+    ],
+    "hardest_step": 2
+  }
+}

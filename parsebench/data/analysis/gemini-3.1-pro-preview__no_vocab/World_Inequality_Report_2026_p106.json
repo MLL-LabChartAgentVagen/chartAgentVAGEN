@@ -1,0 +1,268 @@
+{
+  "stem": "World_Inequality_Report_2026_p106",
+  "document": "World_Inequality_Report_2026",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "no_vocab",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 62.0,
+  "usage": {
+    "input_tokens": 3172,
+    "output_tokens": 8428,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "**画出来要什么**\n要生成此图，生成器需要支持：\n1. **水平双子图布局**：支持并排显示两个折线图面板，每个面板有独立的标题（如 \"By income group\"）。\n2. **分组且跨面板的共享图例**：在图表底部提供一个全局图例区，但图例项在视觉上分为两组，分别对应左面板和右面板的线条含义。\n3. **坐标轴与网格线定制**：Y轴标签支持旋转及多行文本；支持横向网格线，并且能对 `0%` 的零线进行加粗或特殊样式区分。右侧面板需能重复绘制没有标题的独立 Y轴刻度。\n4. **复杂标题块**：支持包含图号、加粗主标题和居中副标题（含单位）的复合标题结构。\n5. **带格式的图注**：支持在图表下方直接追加带有加粗前缀（如 \"Interpretation.\"）的说明段落。\n\n**定位一个值难在哪**\n以定位 2020 年 Top 20% 的值（约 `2.1`）为例，最大的困难在于**图表读取精度极低**。折线图时间跨度大（超50年）且无垂直网格线，Y轴虽有1%间隔刻度，但在十几条折线交错的情况下，肉眼无法将 `2.1` 这样带小数的值从 `2.0` 中准确区分，读取误差必定超过 5% 的容差。\n\n**不确定的**\n无法确定测试值确切属于哪一年或哪一条线，只能根据数值粗略估计其在密集折线上的位置。图上未标注任何具体数值，也缺乏底层数据表。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 5.2.",
+          "title": "Rich countries receive 1% of their GDP from the rest of the world due to financial privilege",
+          "subtitle": "Excess yield (assets-liabilities) as % of group GDP, 1970–2025",
+          "unit_text": "% of group GDP",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 2,
+        "series": 14,
+        "categories": 56,
+        "marks": 784,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Excess yield (% of group GDP), MER",
+            "low": "-6%",
+            "high": "3%",
+            "serves": "all lines in left panel"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "1980",
+            "high": "2020",
+            "serves": "all lines in left panel"
+          },
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "-6%",
+            "high": "3%",
+            "serves": "all lines in right panel"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "1980",
+            "high": "2020",
+            "serves": "all lines in right panel"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "panel",
+            "label_source": "panel_title",
+            "example": "By income group"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Top 20%"
+          },
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "1980"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "By income group",
+            "Top 20%",
+            "2020"
+          ],
+          "value": "2.1%",
+          "value_source": "axis_read",
+          "why_hard": "Dense overlapping lines without vertical gridlines make reading exact decimal values to 5% tolerance impossible."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "horizontal_panels",
+        "figure_id": "f1",
+        "evidence": "two distinct line charts side-by-side with separate sub-titles",
+        "affects": [
+          1,
+          3
+        ]
+      },
+      {
+        "key": "y_axis_title_rotated",
+        "figure_id": "f1",
+        "evidence": "the text 'Excess yield...' is rotated 90 degrees on the far left",
+        "affects": [
+          4
+        ]
+      },
+      {
+        "key": "y_axis_ticks_repeated",
+        "figure_id": "f1",
+        "evidence": "the right panel repeats the full set of y-axis ticks from 3% to -6%",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "key": "zero_line_styled",
+        "figure_id": "f1",
+        "evidence": "the 0% horizontal gridline is drawn noticeably thicker and darker",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "key": "interpretation_note",
+        "figure_id": "f1",
+        "evidence": "a paragraph starting with bold 'Interpretation.' directly below the legend",
+        "affects": [
+          4
+        ]
+      }
+    ],
+    "new_components": [
+      {
+        "name": "legend_split_by_panel",
+        "figure_id": "f1",
+        "evidence": "legend is a single block but left entries match the left panel and right entries the right panel",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "0.8",
+        "figure_id": "f1",
+        "mark": "the Top 20% line in 1980",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "By income group",
+          "Top 20%",
+          "1980"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-1.5",
+        "figure_id": "f1",
+        "mark": "the 20%-40% line in 1990",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "By income group",
+          "20%-40%",
+          "1990"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-2",
+        "figure_id": "f1",
+        "mark": "the 60%-80% line in 2000",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "By income group",
+          "60%-80%",
+          "2000"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "2.1",
+        "figure_id": "f1",
+        "mark": "the Top 20% line in 2020",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "By income group",
+          "Top 20%",
+          "2020"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-3.2",
+        "figure_id": "f1",
+        "mark": "the LATA line in 1980",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "By world region",
+          "LATA",
+          "1980"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "1.3",
+        "figure_id": "f1",
+        "mark": "the NAOC line in 2000",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "By world region",
+          "NAOC",
+          "2000"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-3.5",
+        "figure_id": "f1",
+        "mark": "the LATA line in 1990",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "By world region",
+          "LATA",
+          "1990"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "折线图时间轴长且无垂直网格，Y轴仅标注1%间隔的刻度。在多线交错下肉眼无法将 2.1 这样精确到小数的值从 2.0 中准确区分，误差必然超出5%。",
+    "examples": [
+      {
+        "gap": "P2",
+        "figure_id": "f1",
+        "quote": "Panels titled 'By income group' and 'By world region'",
+        "why": "图表分为两个子图且有独立标题，提取数据时面板维度必须作为复合键的一部分才能准确区分并定位数据。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "the 0% horizontal gridline is drawn thicker and darker than the rest",
+        "why": "包含正负值的图表常对零线进行特殊样式处理以强调正负转换，生成器需支持自定义零线的粗细或样式。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "Figure 5.2. Rich countries... Excess yield (assets-liabilities) as % of group GDP...",
+        "why": "标题由图号、粗体主标题和含单位的常规字体副标题组成，生成器需要结构化解析并渲染这种多层级复合标题。"
+      }
+    ]
+  }
+}

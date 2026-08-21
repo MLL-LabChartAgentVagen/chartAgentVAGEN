@@ -1,0 +1,184 @@
+{
+  "stem": "(Web_version)_E-Government_Survey_2024_1392024_p177",
+  "document": "(Web_version)_E-Government_Survey_2024_1392024",
+  "tags": "untagged",
+  "model": "gemini-3.1-pro-preview",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 38.7,
+  "usage": {
+    "input_tokens": 5319,
+    "output_tokens": 5095,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n生成器需要能够绘制水平分组柱状图（horizontal grouped bar chart），支持在Y轴上放置长文本分类标签，并在底部X轴绘制带有百分号的刻度标签（如`10%`、`20%`）。必须支持仅显示垂直网格线（vgrid_only），并将数值标签（如`30%`、`33%`）直接打印在对应的柱状图末端外部。此外，图例需支持放置在图表底部区域，并使用颜色映射来区分不同年份（2022和2024）。标题模块应独立置于图表上方，包含图表编号和主标题。\n\n### 定位一个值难在哪\n定位 `30%` 这个值，需要依赖长达六个单词的Y轴类别标签 `Actual or intended use of emergent technologies`，以及底部的图例 `2022`。在将图表解析为Markdown表格时，过长的文本标签容易发生换行、截断，导致第三步（将标签与对应单元格关联）失败。\n\n### 不确定的\n无法确定原始数据中小数点后的精度（当前均显示为整数百分比），以及图表边框线和网格线的具体颜色值和粗细比例（如十六进制色号或线宽磅数）。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 4.15",
+          "title": "LOSI indicators as a proxy for progress towards smart city development",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "grouped_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 4,
+        "marks": 8,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "bottom",
+            "role": "value",
+            "unit_text": "",
+            "low": "0%",
+            "high": "60%",
+            "serves": "all bars"
+          },
+          {
+            "side": "left",
+            "role": "category",
+            "unit_text": "",
+            "low": "Actual or intended use of emergent technologies",
+            "high": "Existence of smart city initiatives",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Actual or intended use of emergent technologies"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "2022"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Actual or intended use of emergent technologies",
+            "2022"
+          ],
+          "value": "30%",
+          "value_source": "printed",
+          "why_hard": "Long category labels on the y-axis can be easily truncated by automated parsers."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "grouped_bar",
+        "figure_id": "f1",
+        "evidence": "two bars (2022 and 2024) are drawn side by side within each category slot"
+      },
+      {
+        "key": "horizontal_bars",
+        "figure_id": "f1",
+        "evidence": "categories sit on the left y-axis and the bars grow to the right"
+      },
+      {
+        "key": "vgrid_only",
+        "figure_id": "f1",
+        "evidence": "vertical grid lines are drawn from the x-axis ticks across the panel, with no horizontal grid lines"
+      },
+      {
+        "key": "value_label_outside",
+        "figure_id": "f1",
+        "evidence": "numbers like 30% and 33% are printed just past the right ends of their respective bars"
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "the legend with blue 2022 and orange 2024 squares sits directly beneath the x-axis"
+      }
+    ],
+    "new_components": [],
+    "spot_checks": [
+      {
+        "value": "30%",
+        "figure_id": "f1",
+        "mark": "the top blue bar in the first category group",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Actual or intended use of emergent technologies",
+          "2022"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "33%",
+        "figure_id": "f1",
+        "mark": "the top orange bar in the first category group",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Actual or intended use of emergent technologies",
+          "2024"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "31%",
+        "figure_id": "f1",
+        "mark": "the second blue bar from the top",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Open government data policy online",
+          "2022"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "37%",
+        "figure_id": "f1",
+        "mark": "the third orange bar from the top",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Open government data sharing",
+          "2024"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "49%",
+        "figure_id": "f1",
+        "mark": "the bottom orange bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Existence of smart city initiatives",
+          "2024"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      }
+    ],
+    "hardest_step": 3,
+    "hardest_step_why": "Y轴类别标签（如“Actual or intended use of emergent technologies”）较长，解析器在生成表格并将其与30%等数值进行关联时，极易发生文本截断或对齐错误。",
+    "examples": [
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "30% is printed right next to the end of the top blue bar, beyond its length",
+        "why": "需要支持在水平分组柱状图中，将各数据系列的数值标签直接渲染在柱体末端的外部。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "Figure 4.15 LOSI indicators as a proxy for progress towards smart city development",
+        "why": "图表标题包含独立的编号与说明文字组合，生成管线需要支持复杂的标题块拆分与对齐排版。"
+      }
+    ]
+  }
+}

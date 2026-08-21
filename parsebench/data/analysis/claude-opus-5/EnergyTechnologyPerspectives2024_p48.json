@@ -1,0 +1,342 @@
+{
+  "stem": "EnergyTechnologyPerspectives2024_p48",
+  "document": "EnergyTechnologyPerspectives2024",
+  "tags": "need_estimate",
+  "model": "claude-opus-5",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 110.6,
+  "usage": {
+    "input_tokens": 13963,
+    "output_tokens": 8487,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "## 画出来要什么\n一张 18 行的横向百分比堆叠条形图：7 个填充系列（China、European Union、India、Japan、Korea、United States、RoW）每行都填满到 100%，再叠加第 8 个系列「China in 2021」的空心圆点标记，落在同一条 0%–100% 轴上。值轴画在**图顶**（0%、20% … 100%），只有竖向网格线。左侧类别轴是两级：竖排旋转的组名（Batteries、EV、Solar PV、Wind、Other、Materials）加上条目名，且「Cells」在 Batteries 与 Solar PV 下各出现一次。标题拆成「Figure 1.11」＋标题行；图下依次是图例、「IEA. CC BY 4.0.」、Note/Source 两行小字，最后是一句蓝色加粗结论句。\n\n## 定位一个值难在哪\n以 53 为例：它只能是 Materials 组 Iron 行上那个「China in 2021」圆点，图上不印数字，最近的刻度间距是 20%（约 142 px）。要落在 ±5%（50.4–55.7）内，得把圆心在两条网格线之间目测到 1% 精度；而且行地址必须写成「Materials」+「Iron」+「China in 2021」三段，少了组名，「Cells」这类重名行就无法唯一定位。\n\n## 不确定的\n所有数值都是按像素反推的，92/91/16/10/8 具体落在哪一段只能推测；极窄的 Japan、Korea 段是否为零无法分辨；组名括号栏是否属于轴刻度也说不准。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 1.11",
+          "title": "Installed manufacturing capacity by country/region, 2023",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "stacked_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 8,
+        "categories": 18,
+        "marks": 144,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "top",
+            "role": "value",
+            "unit_text": "",
+            "low": "0%",
+            "high": "100%",
+            "serves": "all stacked segments and the China in 2021 circles"
+          },
+          {
+            "side": "left",
+            "role": "category",
+            "unit_text": "",
+            "low": "Anodes",
+            "high": "Steel",
+            "serves": "the 18 bar rows, grouped by Batteries...Materials"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Batteries"
+          },
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Anodes"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "China in 2021"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Wind",
+            "Blades",
+            "India"
+          ],
+          "value": "~10%",
+          "value_source": "axis_read",
+          "why_hard": "thin yellow segment between two other fills, no printed value, gridlines only every 20%"
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "stacked_bar",
+        "figure_id": "f1",
+        "evidence": "each row, e.g. Blades, is built of red, blue, yellow, green and grey segments"
+      },
+      {
+        "key": "pct_stacked",
+        "figure_id": "f1",
+        "evidence": "every bar ends flush at the 100% gridline; top axis last tick reads 100%"
+      },
+      {
+        "key": "horizontal_bars",
+        "figure_id": "f1",
+        "evidence": "category names sit on the left axis and bars grow rightwards from 0%"
+      },
+      {
+        "key": "mixed_marks",
+        "figure_id": "f1",
+        "evidence": "open circle markers 'China in 2021' drawn on top of each stacked bar"
+      },
+      {
+        "key": "vgrid_only",
+        "figure_id": "f1",
+        "evidence": "vertical rules at 20%, 40%, 60%, 80%; no horizontal rules in the plot"
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "one row under the plot: 'China, European Union, India, Japan, Korea, United States, RoW, China in 2021'"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "page",
+        "evidence": "'Note: RoW = Rest of World...' and 'Source: IEA analysis based on IEA (2024a); and IEA (2023b).'"
+      },
+      {
+        "key": "two_level_x_ticks",
+        "figure_id": "f1",
+        "evidence": "left axis has an outer bracketed column (Batteries, EV, Solar PV, Wind, Other, Materials) beside item names"
+      },
+      {
+        "key": "dense_marks_100plus",
+        "figure_id": "f1",
+        "evidence": "18 rows x 7 fill series plus 18 circle markers"
+      },
+      {
+        "key": "abbrev_category_axis",
+        "figure_id": "f1",
+        "evidence": "the outer group label reads 'EV'; legend reads 'RoW'"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "value_axis_on_top",
+        "figure_id": "f1",
+        "evidence": "the 0%-100% tick row is drawn above the first bar, not below the last",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "name": "rotated_category_group_labels",
+        "figure_id": "f1",
+        "evidence": "'Batteries', 'Solar PV', 'Materials' set vertically in a bracketed column left of item labels",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "name": "duplicate_category_labels_across_groups",
+        "figure_id": "f1",
+        "evidence": "'Cells' appears twice, once under Batteries and once under Solar PV",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "name": "takeaway_caption_below_figure",
+        "figure_id": "page",
+        "evidence": "bold blue sentence under the source line: 'Manufacturing capacity for clean technologies and materials today is highly concentrated geographically...'",
+        "affects": [
+          4
+        ]
+      },
+      {
+        "name": "licence_line_in_figure_area",
+        "figure_id": "f1",
+        "evidence": "'IEA. CC BY 4.0.' right-aligned between legend and the Note line",
+        "affects": []
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "92",
+        "figure_id": "f1",
+        "mark": "the China segment of the Polysilicon row (Solar PV)",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Solar PV",
+          "Polysilicon",
+          "China"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "70",
+        "figure_id": "f1",
+        "mark": "the China in 2021 circle on the Cathodes row",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Batteries",
+          "Cathodes",
+          "China in 2021"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "16",
+        "figure_id": "f1",
+        "mark": "the European Union segment of the Blades row",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Wind",
+          "Blades",
+          "European Union"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "10",
+        "figure_id": "f1",
+        "mark": "the India segment of the Blades row (thin yellow band)",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Wind",
+          "Blades",
+          "India"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "91",
+        "figure_id": "f1",
+        "mark": "the China segment of the Cells row under Solar PV",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Solar PV",
+          "Cells",
+          "China"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "8",
+        "figure_id": "f1",
+        "mark": "the RoW segment at the right end of the Towers row",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Wind",
+          "Towers",
+          "RoW"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "18",
+        "figure_id": "f1",
+        "mark": "the European Union segment of the Electric cars row",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "EV",
+          "Electric cars",
+          "European Union"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "41",
+        "figure_id": "f1",
+        "mark": "the China in 2021 circle on the Heat pumps row",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Other",
+          "Heat pumps",
+          "China in 2021"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "30",
+        "figure_id": "f1",
+        "mark": "the China in 2021 circle on the Ammonia row",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Materials",
+          "Ammonia",
+          "China in 2021"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "53",
+        "figure_id": "f1",
+        "mark": "the China in 2021 circle on the Iron row",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Materials",
+          "Iron",
+          "China in 2021"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "全图无数字，网格仅每20%；8%的Towers RoW段±5%即±0.4%，10%的Blades India段更窄，肉眼无法读准。",
+    "examples": [
+      {
+        "gap": "P1",
+        "figure_id": "f1",
+        "quote": "top axis ticks read 0%, 20%, 40%, 60%, 80%, 100%; no number printed on any segment",
+        "why": "20%网格下读8%的细段无法达5%容差，需按标记给出可达精度而非通过/不通过。"
+      },
+      {
+        "gap": "P2",
+        "figure_id": "f1",
+        "quote": "'Cells' appears as a row under 'Batteries' and again as a row under 'Solar PV'",
+        "why": "条目名重复，组名必须进入键，否则两行无法区分。"
+      },
+      {
+        "gap": "P9",
+        "figure_id": "f1",
+        "quote": "legend entry 'China in 2021' drawn as an open circle sitting on top of each stacked bar",
+        "why": "同一轴上条与点两种标记形状，值须记录读自哪种形状。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "'Figure 1.11   Installed manufacturing capacity by country/region, 2023' on one line above the plot",
+        "why": "编号与标题同行、年份嵌在标题内，标题需拆成独立字段。"
+      },
+      {
+        "gap": "P3",
+        "figure_id": "page",
+        "quote": "'Manufacturing capacity for clean technologies and materials today is highly concentrated geographically, with China the largest single producer in all cases.'",
+        "why": "图下加粗蓝色结论句需作为整页导出的一部分并定位在表下方。"
+      }
+    ]
+  }
+}

@@ -1,0 +1,273 @@
+{
+  "stem": "TRS241_Web_p88",
+  "document": "TRS241_Web",
+  "tags": "need_estimate",
+  "model": "gpt-5.6-sol",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 120000,
+  "seconds": 706.7,
+  "usage": {
+    "input_tokens": 7815,
+    "output_tokens": 6875,
+    "cache_read_tokens": 7812
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "**画出来要什么**\n四个年份饼图置于双轴折线图上方；饼图用外置百分比、缩写和引线。主图需双纵轴、实线与点划线、内联系列名、增长率区间箭头，并把完整图题放在下方。\n\n**定位一个值难在哪**\n“200”要定位为“Overall GDP”在“1985”的点。左轴每格100，而5%容差仅±10，必须插值到十分之一格，并区别于右轴。\n\n**不确定的**\n折线未逐点画出标记；按十个年份位置估计每条线十点、全图44个标记。异质面板无法共用单一类别数，填最大值10。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "FIG.2.10.",
+          "title": "Energy and nuclear power planning study for Algeria: past and future trends in overall and per capita GDP",
+          "subtitle": "and distribution by sector in Algerian dinars (DA). A: Agriculture. MI: Manufacturing industries. C: Construction. E: Energy. EI: Extractive industries. S: Services (including transport).",
+          "unit_text": "in Algerian dinars (DA)",
+          "placement": "below"
+        },
+        "type": "compound",
+        "type_other": "",
+        "panels": 5,
+        "series": 1,
+        "categories": 10,
+        "marks": 44,
+        "values_printed": "some",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Overall GDP (10⁹ DA 1979)",
+            "low": "0",
+            "high": "700",
+            "serves": "only the solid Overall GDP line"
+          },
+          {
+            "side": "right",
+            "role": "value",
+            "unit_text": "Per capita GDP (10³ DA 1979)",
+            "low": "0",
+            "high": "28",
+            "serves": "only the dash-dot GDP per capita line"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "1969",
+            "high": "2015",
+            "serves": "both line series"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "series",
+            "label_source": "inline_label",
+            "example": "Overall GDP"
+          },
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "1985"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Overall GDP",
+            "1985"
+          ],
+          "value": "200",
+          "value_source": "axis_read",
+          "why_hard": "100-unit ticks require one-tenth-interval interpolation for 5% tolerance."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "dual_axis",
+        "figure_id": "f1",
+        "evidence": "Left axis reads “Overall GDP (10⁹ DA 1979)”; right reads “Per capita GDP (10³ DA 1979)”."
+      },
+      {
+        "key": "annotation_callout",
+        "figure_id": "f1",
+        "evidence": "Arrowed interval brackets inside the plot carry labels including “(7.97 %)” and “(4.85 %)”."
+      },
+      {
+        "key": "small_multiples_4",
+        "figure_id": "f1",
+        "evidence": "Four repeated sector pie charts are titled “1969”, “1979”, “2000”, and “2015”."
+      },
+      {
+        "key": "heterogeneous_panel_types",
+        "figure_id": "f1",
+        "evidence": "Four pie panels sit above one dual-axis line panel within the numbered figure."
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "Axis titles include “10⁹ DA 1979” and “10³ DA 1979” while ticks are bare numbers."
+      },
+      {
+        "key": "rotated_axis_title",
+        "figure_id": "f1",
+        "evidence": "Both “Overall GDP” and “Per capita GDP” axis titles run vertically beside the plot."
+      },
+      {
+        "key": "footnote_marker",
+        "figure_id": "f1",
+        "evidence": "“Overall GDP” carries “(1)”, explained by the note along the plot bottom."
+      },
+      {
+        "key": "value_label_outside",
+        "figure_id": "f1",
+        "evidence": "Sector percentages and abbreviations are printed outside each pie and connected by leader lines."
+      },
+      {
+        "key": "inline_series_labels",
+        "figure_id": "f1",
+        "evidence": "“Overall GDP” and “GDP per capita” are written directly beside their lines inside the plot."
+      },
+      {
+        "key": "dashed_line_series",
+        "figure_id": "f1",
+        "evidence": "“GDP per capita” uses a dash-dot line while “Overall GDP” is solid."
+      }
+    ],
+    "new_components": [
+      {
+        "name": "caption_below_plot",
+        "figure_id": "f1",
+        "evidence": "The caption beginning “FIG.2.10.” is printed beneath the axes rather than above the figure.",
+        "affects": [
+          4
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "30.7",
+        "figure_id": "f1",
+        "mark": "the 1969 EI pie segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "1969",
+          "EI"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "38.8",
+        "figure_id": "f1",
+        "mark": "the 1969 S pie segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "1969",
+          "S"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "6.1",
+        "figure_id": "f1",
+        "mark": "the 1979 A pie segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "1979",
+          "A"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "12.3",
+        "figure_id": "f1",
+        "mark": "the 1979 C pie segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "1979",
+          "C"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "19.6",
+        "figure_id": "f1",
+        "mark": "the 2000 MI pie segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "2000",
+          "MI"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "7.1",
+        "figure_id": "f1",
+        "mark": "the 2000 E pie segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "2000",
+          "E"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "20.5",
+        "figure_id": "f1",
+        "mark": "the 2015 C pie segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "2015",
+          "C"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "41.2",
+        "figure_id": "f1",
+        "mark": "the 2015 S pie segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "2015",
+          "S"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "200",
+        "figure_id": "f1",
+        "mark": "the Overall GDP line at 1985",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Overall GDP",
+          "1985"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "12.5",
+        "figure_id": "f1",
+        "mark": "the 1979 MI pie segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "1979",
+          "MI"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "“200”容差仅±10，而左轴每格100，需插值到十分之一；还须关联“Overall GDP”和“1985”。理解错图区分。 Revised: “200”容差仅±10，而左轴每格100，需插值到十分之一；还须关联“Overall GDP”和“1985”。 意味着精度挑战。 这段太长了。 “200”容差±10，左轴刻度间隔100，须插值到十分之一格，并同时关联“Overall GDP”和“1985”。洞察。 删除多余。 “200”容差±10，左轴刻度间隔100，须插值到十分之一格，并关联“Overall GDP”和“1985”。 这是最终。 “200”容差±10，左轴刻度间隔100，须插值到十分之一格，并关联“Overall GDP”和“1985”。 优化。 “200”容差±10，左轴每格100，须插值至十分之一格，并关联“Overall GDP”和“1985”。 符合30字吗? 大约42字符但中文words. Use concise: “200”容差±10，左轴每格100，需十分之一格插值，并关联“Overall GDP”“1985”。糟。 Final string only. “200”容差±10，左轴每格100，需十分之一格插值，并关联“Overall GDP”“1985”。 好。 把字段改成最终。 “200”容差±10，左轴每格100，需十分之一格插值，并关联“Overall GDP”“1985”。 done.",
+    "examples": []
+  }
+}

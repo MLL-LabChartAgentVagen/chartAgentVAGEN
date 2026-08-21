@@ -1,0 +1,301 @@
+{
+  "stem": "2025-EIS_p47",
+  "document": "2025-EIS",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "repeat",
+  "effort": "high",
+  "dpi": 150,
+  "seconds": 111.3,
+  "usage": {
+    "input_tokens": 5336,
+    "output_tokens": 13842,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n需要绘制水平条形图，同时在每个分类（国家）位置叠加菱形点和垂直短线，分别代表三个不同年份的数值。条形的颜色用于对国家进行分组，而不是直接区分指标系列（如2025年得分）。需要支持无图例的系列表示：条形对应的“2025年得分”系列仅由下方的注释文本说明，未包含在图例中。此外，需要支持为特定的分类（如“EU”）应用独立的高亮颜色，该颜色打破了常规的图例分组。\n\n### 定位一个值难在哪\n以罗马尼亚2025年的条形（值为8）为例。X轴的刻度间隔为20，要在这样的坐标轴上肉眼读出8，并保证5%（即0.4）的误差是完全不可能的，必定会在数值提取阶段的精度校验中失败。此外，该值对应的系列名称“performance in 2025”仅存在于注释段落中，如果没有将注释文本解析并关联到图表，表格将缺少该系列的寻址键，导致定位失败。\n\n### 不确定的\n无法在图表中找到测试值 `185` 所对应的明确标记。离该值最近的葡萄牙菱形约为179，塞浦路斯的垂直短线约为195，比利时的条形在180刻度线之前结束（约174），并没有标记落在185的位置。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 16:",
+          "title": "Innovation performance of the EU27 Member States in the Innovators dimension",
+          "subtitle": "Innovators",
+          "unit_text": "(indexed to the EU in 2018)",
+          "placement": "above"
+        },
+        "type": "bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 6,
+        "categories": 28,
+        "marks": 84,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "category",
+            "unit_text": "",
+            "low": "Greece",
+            "high": "Romania",
+            "serves": "all marks"
+          },
+          {
+            "side": "bottom",
+            "role": "value",
+            "unit_text": "Score for dimension 3.1 in 2025 (indexed to the EU in 2018)",
+            "low": "0",
+            "high": "220",
+            "serves": "all marks"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Greece"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Score in 2018"
+          },
+          {
+            "role": "colour_group",
+            "label_source": "legend",
+            "example": "Moderate innovators"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Greece",
+            "performance in 2025",
+            "Moderate innovators"
+          ],
+          "value": "209",
+          "value_source": "axis_read",
+          "why_hard": "The 2025 series is not listed in the legend and its name must be extracted from the footnote prose."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "horizontal_bars",
+        "figure_id": "f1",
+        "evidence": "categories are on the left y-axis and bars grow to the right"
+      },
+      {
+        "key": "mixed_marks",
+        "figure_id": "f1",
+        "evidence": "bars, diamonds, and vertical line segments are drawn in the same panel"
+      },
+      {
+        "key": "color_encodes_extra_attribute",
+        "figure_id": "f1",
+        "evidence": "the colours denote each country's overall performance group rather than the data series"
+      },
+      {
+        "key": "tick_marker_as_series",
+        "figure_id": "f1",
+        "evidence": "Score in 2024 is drawn as a vertical tick marker on the horizontal tracks"
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "the legend sits below the x-axis"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "Note: All performance scores are relative... text sits at the bottom"
+      },
+      {
+        "key": "highlighted_category",
+        "figure_id": "f1",
+        "evidence": "the EU bar is colored dark blue, separating it from the four legend color groups"
+      },
+      {
+        "key": "vgrid_only",
+        "figure_id": "f1",
+        "evidence": "vertical grid lines run across the panel with no horizontal ones"
+      },
+      {
+        "key": "axis_title_below_plot",
+        "figure_id": "f1",
+        "evidence": "Score for dimension 3.1 in 2025... sits below the bottom axis"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "(indexed to the EU in 2018) is written into the bottom axis title"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "series_defined_in_note",
+        "figure_id": "f1",
+        "evidence": "the 2025 bar series is only named in the footnote, not the legend",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "209",
+        "figure_id": "f1",
+        "mark": "Greece bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Greece",
+          "performance in 2025",
+          "Moderate innovators"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 3
+      },
+      {
+        "value": "150",
+        "figure_id": "f1",
+        "mark": "Sweden bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Sweden",
+          "performance in 2025",
+          "Innovation leaders"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 3
+      },
+      {
+        "value": "185",
+        "figure_id": "not_found",
+        "mark": "no mark visible near 185; Belgium bar ends around 174",
+        "printed_on_figure": false,
+        "addressing_keys": [],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "8",
+        "figure_id": "f1",
+        "mark": "Romania bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Romania",
+          "performance in 2025",
+          "Emerging innovators"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "105",
+        "figure_id": "f1",
+        "mark": "Denmark diamond",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Denmark",
+          "Score in 2018",
+          "Strong innovators"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "179",
+        "figure_id": "f1",
+        "mark": "Portugal diamond",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Portugal",
+          "Score in 2018",
+          "Moderate innovators"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "195",
+        "figure_id": "f1",
+        "mark": "Cyprus vertical line",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Cyprus",
+          "Score in 2024",
+          "Moderate innovators"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "166",
+        "figure_id": "f1",
+        "mark": "Czechia vertical line",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Czechia",
+          "Score in 2024",
+          "Moderate innovators"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "173",
+        "figure_id": "f1",
+        "mark": "Italy bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Italy",
+          "performance in 2025",
+          "Moderate innovators"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 3
+      },
+      {
+        "value": "37",
+        "figure_id": "f1",
+        "mark": "Bulgaria bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Bulgaria",
+          "performance in 2025",
+          "Emerging innovators"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "X轴刻度间隔为20，要从图上读出罗马尼亚的值（8）或保加利亚的值（37）并保持5%（即分别不到0.4和1.85）的误差完全不可能，必然在读取阶段失败。",
+    "examples": [
+      {
+        "gap": "P9",
+        "figure_id": "f1",
+        "quote": "diamonds and vertical bars indicate their performance in 2018 and 2024",
+        "why": "需要在一个图表面板中为不同系列混合绘制不同形状的标记（条形、菱形点、短竖线）。"
+      },
+      {
+        "gap": "P8",
+        "figure_id": "f1",
+        "quote": "The colours denote each country's overall performance group",
+        "why": "颜色被用来编码一个未在系列图例中体现的额外分组属性，该属性必须作为数据键的一部分提取。"
+      },
+      {
+        "gap": "P1",
+        "figure_id": "f1",
+        "quote": "Romania bar is around 8 against a tick gap of 20",
+        "why": "对于很小的值（如8），在刻度间隔为20的坐标轴上无法实现5%的读取精度，导致提取校验失败。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "Horizontal coloured bars represent countries' performance in 2025",
+        "why": "条形图对应的系列名称缺失于图例中，仅在底部的注释文本中定义，需要解析外部文本才能获取完整系列名。"
+      }
+    ]
+  }
+}

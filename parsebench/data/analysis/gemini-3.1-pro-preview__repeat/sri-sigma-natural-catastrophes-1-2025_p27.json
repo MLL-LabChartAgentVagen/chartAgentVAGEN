@@ -1,0 +1,341 @@
+{
+  "stem": "sri-sigma-natural-catastrophes-1-2025_p27",
+  "document": "sri-sigma-natural-catastrophes-1-2025",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "repeat",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 81.4,
+  "usage": {
+    "input_tokens": 5333,
+    "output_tokens": 11510,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n本页包含两张展示长时间序列的图表。图1（Figure 18）为堆叠柱状图，X轴从1970年延伸至2024年，标记了三种巨灾损失类型的堆叠情况。图中有密集的分类数据，且在特定年份上方绘制了带连接线或端点的文本注释框（如飓风名称）以标记重大事件年份。图2（Figure 19）在堆叠柱形图（主要与次要自然灾害）的基础上，混合叠加了一条表示总损失指数趋势的折线。两张图表均使用了纯水平网格线（没有垂直网格线），图例放置在图表下方，并且X轴使用了稀疏的时间刻度（每3年标注一次，如1970, 1973等，其他年份需插值）。\n\n### 定位一个值难在哪\n以图1中1999年的“56”为例，该值代表当年的柱形总高度，并关联了注释框“Winter Storm Lothar”。但图表并未直接印出任何数据标签，Y轴刻度范围为0到250，且主刻度线间距高达50。要通过目视估计从柱形总高度中读出如56、76或81这样零散的精确数值，误差极易超过5%的容忍度。\n\n### 不确定的\n文本注释（如“Hurricane Ian”）通常指代当年所有灾害损失的总和，但在2024年，文本提到自然灾害损失为137（对应图2的堆叠总和），而人为灾害还有90亿。注释框的指代目标在极少数年份可能仅针对特定的气候灾害部分而非整根柱子，这需要结合正文数据进行猜测。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 18",
+          "title": "Insured catastrophe losses, 1970 – 2024 (USD bn, 2024 prices)",
+          "subtitle": "",
+          "unit_text": "(USD bn, 2024 prices)",
+          "placement": "above"
+        },
+        "type": "stacked_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 3,
+        "categories": 55,
+        "marks": 150,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "0",
+            "high": "250",
+            "serves": "all bars"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "1970",
+            "high": "2024",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2024"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Weather-related catastrophes"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "2022",
+            "Weather-related catastrophes"
+          ],
+          "value": "135",
+          "value_source": "axis_read",
+          "why_hard": "No values are printed, and segment tops must be subtracted from the previous segments."
+        }
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "Figure 19",
+          "title": "Global insured losses from primary and secondary perils, 1970 – 2024, in USD billion at 2024 prices",
+          "subtitle": "",
+          "unit_text": "in USD billion at 2024 prices",
+          "placement": "above"
+        },
+        "type": "stacked_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 3,
+        "categories": 55,
+        "marks": 165,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Insured losses (USD bn)",
+            "low": "0",
+            "high": "200",
+            "serves": "all marks"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "1970",
+            "high": "2024",
+            "serves": "all marks"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2024"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Secondary perils"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "2024",
+            "Secondary perils"
+          ],
+          "value": "75",
+          "value_source": "axis_read",
+          "why_hard": "Read from a 200-scale y-axis with 25-unit grid increments."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "stacked_bar",
+        "figure_id": "page",
+        "evidence": "both figures contain bars divided into stacked segments"
+      },
+      {
+        "key": "annotation_callout",
+        "figure_id": "f1",
+        "evidence": "boxes with hurricane names pointing to specific bars"
+      },
+      {
+        "key": "sparse_time_ticks",
+        "figure_id": "page",
+        "evidence": "x-axis years are 1970, 1973, 1976 (every 3 years)"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "page",
+        "evidence": "horizontal grey lines across the panels, no vertical ones"
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "page",
+        "evidence": "series names and coloured squares under the x-axis"
+      },
+      {
+        "key": "dense_marks_100plus",
+        "figure_id": "page",
+        "evidence": "55 categories with 2 to 3 series each per figure"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "page",
+        "evidence": "Source: Swiss Re Institute at the bottom of both figures"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "(USD bn, 2024 prices) is written in the title"
+      },
+      {
+        "key": "mixed_marks",
+        "figure_id": "f2",
+        "evidence": "an Exponential trend line is drawn over stacked bars"
+      },
+      {
+        "key": "axis_title_above_axis",
+        "figure_id": "f2",
+        "evidence": "Insured losses (USD bn) is written on the top tick line"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "callout_as_data_point_label",
+        "figure_id": "f1",
+        "evidence": "hurricane name callouts act as keys for specific year totals",
+        "affects": [
+          1,
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "55",
+        "figure_id": "f1",
+        "mark": "total height of the 1992 bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "1992",
+          "Hurricane Andrew"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "165",
+        "figure_id": "f1",
+        "mark": "total height of the 2005 bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2005",
+          "Hurricanes Katrina, Rita, Wilma"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "75",
+        "figure_id": "f1",
+        "mark": "total height of the 2004 bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2004",
+          "Hurricanes Ivan, Charley, Frances"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "180",
+        "figure_id": "f1",
+        "mark": "total height of the 2017 bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2017",
+          "Hurricanes Harvey, Irma, Maria"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "137",
+        "figure_id": "f1",
+        "mark": "total height of the 2024 Weather-related segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2024",
+          "Hurricanes Helene, Milton"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "45",
+        "figure_id": "f1",
+        "mark": "total height of the 2001 bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2001",
+          "WTC"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "145",
+        "figure_id": "f1",
+        "mark": "total height of the 2022 bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2022",
+          "Hurricane Ian"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "76",
+        "figure_id": "f1",
+        "mark": "total height of the 2008 bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2008",
+          "Hurricanes Ike, Gustav"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "81",
+        "figure_id": "f1",
+        "mark": "total height of the 2012 bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2012",
+          "Hurricane Sandy"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "56",
+        "figure_id": "f1",
+        "mark": "total height of the 1999 bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "1999",
+          "Winter Storm Lothar"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "评分依赖的值（如56、76）是带文本注释年份的柱形总高度，Y轴刻度间距高达50且未直接标出数值，目测难以在5%容差内读出这些精确值。",
+    "examples": [
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "Hurricane Andrew pointing to the 1992 bar",
+        "why": "图表使用浮动的注释框（如飓风名称）来强调某些年份的总数据，当前管道无法将注释框文字提取并关联到对应的数据节点上。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "x-axis ticks: 1970, 1973, 1976",
+        "why": "分类时间轴使用了稀疏刻度（每三年标注一次），模型需要具备推算和补全图中未直接标出年份的完整时间序列的能力。"
+      },
+      {
+        "gap": "P9",
+        "figure_id": "f2",
+        "quote": "Exponential trend line drawn over stacked bars",
+        "why": "在同一个面板中混合使用了堆叠柱状图和折线图，系统需要记录每个值是从哪种类型的图形以及哪个系列中读取的。"
+      }
+    ]
+  }
+}

@@ -1,0 +1,281 @@
+{
+  "stem": "m-trends-2025-en_p29",
+  "document": "m-trends-2025-en",
+  "tags": "untagged",
+  "model": "gemini-3.1-pro-preview",
+  "control": "repeat",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 55.3,
+  "usage": {
+    "input_tokens": 5336,
+    "output_tokens": 7573,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n页面包含一个树状图（Treemap）和一个标准的垂直柱状图。要生成这些图表，生成器必须支持树状图这种依据数据大小划分面积的布局形式，并能够将类别文本和不同字号的大号数值标签同时嵌入矩形色块内部。对于柱状图，需要支持将数值标签放置在柱体内部顶端，能够处理多行折叠显示的 X 轴类别标签（如 `REDBIKE (Akira)`），以及支持 Y 轴标题的垂直旋转排版。\n\n### 定位一个值难在哪\n定位图表 2 中的第二个 `10`（即 REDBIKE 类别的值）难在步骤 3（将标签与表格单元格对应）。该类别的 X 轴标签被强行换行排布为两行，解析器在提取时往往会忽略换行符、保留空格或是直接将其展平，这导致在基于原始图像进行精确字符串匹配时极易失败。\n\n### 不确定的\n图 1 树状图的不同色块使用了从深蓝到浅蓝的渐变色阶，但不确定这种颜色的深浅是否仅仅是为了在视觉上区分不同的类别并做美观处理，还是隐含映射了数据的大小排序。这里假设其仅作为类别的区分颜色。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "Observed Malware Families by Category, 2024",
+          "subtitle": "Ransomware-Related",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "other",
+        "type_other": "treemap",
+        "panels": 1,
+        "series": 1,
+        "categories": 8,
+        "marks": 8,
+        "values_printed": "all",
+        "axes": [],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "inline_label",
+            "example": "Ransomware"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Ransomware"
+          ],
+          "value": "34",
+          "value_source": "printed",
+          "why_hard": "A treemap layout has no axes; extracting area-bound text requires spatial awareness."
+        }
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "",
+          "title": "Most Frequently Seen Malware, 2024",
+          "subtitle": "Ransomware-Related",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 1,
+        "categories": 6,
+        "marks": 6,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "% of Intrusions",
+            "low": "0",
+            "high": "15",
+            "serves": "all bars"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "BEACON",
+            "high": "SYSTEMBC",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "BEACON"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "REDBIKE\n(Akira)"
+          ],
+          "value": "10",
+          "value_source": "printed",
+          "why_hard": "The category label is wrapped onto two lines on the axis."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "value_label_inside",
+        "figure_id": "page",
+        "evidence": "values like 34% and 15% are printed inside the blocks and bars"
+      },
+      {
+        "key": "rotated_axis_title",
+        "figure_id": "f2",
+        "evidence": "the y-axis title '% of Intrusions' is set vertically"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f2",
+        "evidence": "only horizontal rules cross the plot area"
+      },
+      {
+        "key": "wrapped_category_labels",
+        "figure_id": "f2",
+        "evidence": "the x-axis label 'REDBIKE (Akira)' wraps onto a second line"
+      },
+      {
+        "key": "side_text_bullets",
+        "figure_id": "page",
+        "evidence": "body text runs in a narrow column beside both figures"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f2",
+        "evidence": "the y-axis title '% of Intrusions' carries the scale phrase"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "treemap",
+        "figure_id": "f1",
+        "evidence": "the figure is composed of area-proportional rectangular blocks",
+        "affects": [
+          1
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "34",
+        "figure_id": "f1",
+        "mark": "the Ransomware block",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Ransomware"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "16",
+        "figure_id": "f1",
+        "mark": "the Other block",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Other"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "12",
+        "figure_id": "f1",
+        "mark": "the Credential Stealer block",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Credential Stealer"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "10",
+        "figure_id": "f1",
+        "mark": "the Backdoor block",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Backdoor"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "15",
+        "figure_id": "f2",
+        "mark": "the BEACON bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "BEACON"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "10",
+        "figure_id": "f2",
+        "mark": "the RANSOMHUB bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "RANSOMHUB"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "10",
+        "figure_id": "f2",
+        "mark": "the REDBIKE (Akira) bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "REDBIKE\n(Akira)"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 3
+      },
+      {
+        "value": "9",
+        "figure_id": "f2",
+        "mark": "the BASTA bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "BASTA"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "9",
+        "figure_id": "f2",
+        "mark": "the LOCKBIT bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "LOCKBIT"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "7",
+        "figure_id": "f2",
+        "mark": "the SYSTEMBC bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "SYSTEMBC"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      }
+    ],
+    "hardest_step": 3,
+    "hardest_step_why": "图2中的类别标签'REDBIKE (Akira)'存在折行，Markdown 表格大多会将其展平为单行，导致基于换行的原始文本无法实现准确关联。",
+    "examples": [
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "the area-proportional rectangular blocks representing malware families",
+        "why": "生成管线需要增加对树状图（Treemap）图表类型的支持，才能根据数据渲染面积色块布局。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "value labels like '34%' with the % symbol set in a smaller font size",
+        "why": "需要支持在一个数据标签内部对数值和单位符号应用不同的字号及排版样式。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f2",
+        "quote": "the y-axis title '% of Intrusions' turned 90 degrees",
+        "why": "需要支持将坐标轴标题文本进行垂直旋转显示以节省横向空间。"
+      }
+    ]
+  }
+}

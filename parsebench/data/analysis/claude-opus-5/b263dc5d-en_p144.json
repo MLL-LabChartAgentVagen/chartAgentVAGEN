@@ -1,0 +1,360 @@
+{
+  "stem": "b263dc5d-en_p144",
+  "document": "b263dc5d-en",
+  "tags": "need_estimate",
+  "model": "claude-opus-5",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 92.5,
+  "usage": {
+    "input_tokens": 13831,
+    "output_tokens": 7147,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "**画出来要什么**\n\n一张 27 国的“区间/哑铃”散点图：每个国家一列，纵向连线串起三个标记（三角=16-24、菱形=25-44、圆=45-65），形状承担系列身份，浅/深两种填色再叠一层“5% 显著”属性（图例每项画了浅深两个字形）。左轴 -30 至 30，单位词“Score-point difference”写在顶端刻度之上；零线加粗、值有正有负；国名 90° 竖排；列间为竖向网格，New Zealand 与 Hungary 前有淡色竖带；轴下另有灰色横幅“Round, Cycle 1:”分段标 1、2、3。标题分三段：编号+两行标题+一段说明性副标题。\n\n**定位一个值难在哪**\n\n以 -25（Spain 的 45-65 深色圆点）为例：图上不印数字，刻度每 10 分一格，5% 容差只有约 1.25 分，肉眼读到这个精度不可能；且一行表要同时给出“Spain”“45-65 year-olds”和“深色=显著”三个键，而显著性只有颜色、没有文字标签。\n\n**不确定的**\n\n8、12、13 这几个值在多国之间形状相近，无法唯一归属（Hungary 菱形 / Chile 圆 / Estonia 圆都可能）；水平网格是否存在（只见 0 线与边框）也看不清；灰色横幅 1/2/3 的确切分界列不完全可辨。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 3.24.",
+          "title": "Change in the gap in literacy proficiency between adults with highly educated and medium-/low-educated parents, by age",
+          "subtitle": "Change between cycles in the mean score difference between adults with at least one tertiary-educated parent and adults with parents with at most an upper secondary education (Cycle 2 minus Cycle 1)",
+          "unit_text": "Score-point difference",
+          "placement": "above"
+        },
+        "type": "other",
+        "type_other": "range plot with markers",
+        "panels": 1,
+        "series": 3,
+        "categories": 27,
+        "marks": 81,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Score-point difference",
+            "low": "-30",
+            "high": "30",
+            "serves": "all triangle, diamond and circle markers and connectors"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "Sweden",
+            "high": "Hungary",
+            "serves": "the 27 country columns"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "Round, Cycle 1:",
+            "low": "1",
+            "high": "3",
+            "serves": "grey banner grouping the country columns by cycle round"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Spain"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "45-65 year-olds"
+          },
+          {
+            "role": "colour_group",
+            "label_source": "colour_only",
+            "example": "Darker colours denote differences that are statistically significant at the 5% level"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Spain",
+            "45-65 year-olds",
+            "darker colour (statistically significant at the 5% level)"
+          ],
+          "value": "-25",
+          "value_source": "axis_read",
+          "why_hard": "No printed value; ticks every 10 score points; dark fill vs light fill is the only significance cue"
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "range_connector_line",
+        "figure_id": "f1",
+        "evidence": "a vertical segment joins the three age-group markers inside each country column"
+      },
+      {
+        "key": "negative_values",
+        "figure_id": "f1",
+        "evidence": "axis ticks -10, -20, -30; markers such as Spain's circle sit well below zero"
+      },
+      {
+        "key": "reference_line",
+        "figure_id": "f1",
+        "evidence": "a thick horizontal rule drawn at the 0 tick across the whole plot"
+      },
+      {
+        "key": "color_encodes_extra_attribute",
+        "figure_id": "f1",
+        "evidence": "\"Darker colours denote differences that are statistically significant at the 5% level\""
+      },
+      {
+        "key": "shaded_band",
+        "figure_id": "f1",
+        "evidence": "pale tan vertical bands drawn just before New Zealand and before Hungary"
+      },
+      {
+        "key": "legend_above_plot",
+        "figure_id": "f1",
+        "evidence": "\"16-24 year-olds  25-44 year-olds  45-65 year-olds\" row sits between subtitle and plot"
+      },
+      {
+        "key": "axis_title_above_axis",
+        "figure_id": "f1",
+        "evidence": "\"Score-point difference\" set above the 30 tick, not alongside the axis"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "the scale word appears only as \"Score-point difference\"; ticks read 30, 20, 10, 0"
+      },
+      {
+        "key": "rotated_x_ticks",
+        "figure_id": "f1",
+        "evidence": "country names \"Sweden\", \"Flemish Region (BE)\" set vertically under the plot"
+      },
+      {
+        "key": "two_level_x_ticks",
+        "figure_id": "f1",
+        "evidence": "grey banner \"Round, Cycle 1:\" with segments 1, 2, 3 under the country row"
+      },
+      {
+        "key": "vgrid_only",
+        "figure_id": "f1",
+        "evidence": "vertical rules separate each country column; only the 0 line runs horizontally"
+      },
+      {
+        "key": "highlighted_category",
+        "figure_id": "f1",
+        "evidence": "\"Flemish Region (BE)\" and \"England (UK)\" tick labels printed in blue, others black"
+      },
+      {
+        "key": "footnote_marker",
+        "figure_id": "f1",
+        "evidence": "\"Poland*\" on the axis and \"*Caution is required in interpreting results\" in the note"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "page",
+        "evidence": "\"Note: Adults aged 16-65...\" and \"Source: OECD (2018[4]; 2015[5]; 2012[6])\" under the figure"
+      },
+      {
+        "key": "wrapped_category_labels",
+        "figure_id": "f1",
+        "evidence": "27 long country names stacked vertically down the category axis"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "marker_shape_encodes_series",
+        "figure_id": "f1",
+        "evidence": "triangle, diamond and circle glyphs in the legend distinguish the three age groups",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "name": "legend_glyph_pair_for_significance",
+        "figure_id": "f1",
+        "evidence": "each legend entry draws two glyphs, one light and one dark, before its text",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "name": "grouping_banner_below_axis",
+        "figure_id": "f1",
+        "evidence": "grey bar labelled \"Round, Cycle 1:\" with segments 1, 2, 3 beneath the country labels",
+        "affects": [
+          3,
+          4
+        ]
+      },
+      {
+        "name": "ranking_rule_in_note",
+        "figure_id": "f1",
+        "evidence": "\"Countries and economies are ranked in descending order of the unadjusted change ... among 16-24 year-olds.\"",
+        "affects": [
+          4
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "21",
+        "figure_id": "f1",
+        "mark": "the Sweden 16-24 triangle, top of the column",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Sweden",
+          "16-24 year-olds"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "1",
+        "figure_id": "f1",
+        "mark": "the Sweden 25-44 diamond, just above the zero line",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Sweden",
+          "25-44 year-olds"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "13",
+        "figure_id": "f1",
+        "mark": "the Norway 16-24 triangle",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Norway",
+          "16-24 year-olds"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-25",
+        "figure_id": "f1",
+        "mark": "the Spain 45-65 dark circle at the bottom of the column",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Spain",
+          "45-65 year-olds"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-22",
+        "figure_id": "f1",
+        "mark": "the Singapore 45-65 dark circle",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Singapore",
+          "45-65 year-olds"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "17",
+        "figure_id": "f1",
+        "mark": "the New Zealand 16-24 triangle",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "New Zealand",
+          "16-24 year-olds"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-13",
+        "figure_id": "f1",
+        "mark": "the low triangle near Italy, 16-24 year-olds",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Italy",
+          "16-24 year-olds"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "12",
+        "figure_id": "f1",
+        "mark": "the New Zealand 25-44 diamond, just above the triangle's mid-range",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "New Zealand",
+          "25-44 year-olds"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "13",
+        "figure_id": "f1",
+        "mark": "the Estonia 45-65 dark circle at the top of its column",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Estonia",
+          "45-65 year-olds"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "8",
+        "figure_id": "f1",
+        "mark": "a diamond near 8; ambiguous between Hungary, Israel and Estonia columns",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Hungary",
+          "25-44 year-olds"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "值全不印；刻度每10分，-25 的5%容差仅1.25分，且 8、12、13 多列形状相近，无法唯一读出。",
+    "examples": [
+      {
+        "gap": "P1",
+        "figure_id": "f1",
+        "quote": "y-axis ticks read 30, 20, 10, 0, -10, -20, -30; no number is printed on any marker",
+        "why": "81 个标记全靠读轴，5% 容差需读到约1分，须按标记给出可达精度而非布尔门。"
+      },
+      {
+        "gap": "P8",
+        "figure_id": "f1",
+        "quote": "\"Darker colours denote differences that are statistically significant at the 5% level.\"",
+        "why": "深浅填色承载显著性，图例文字不含此属性，必须进入键。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "\"Score-point difference\" sits above the top tick; the subtitle line ends \"(Cycle 2 minus Cycle 1)\"",
+        "why": "编号、两行标题、说明性副标题与单位词分处四个位置，需分字段建模。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "grey banner under the country labels: \"Round, Cycle 1:\" with segments numbered 1, 2 and 3",
+        "why": "轴下分组横幅+竖向淡色分隔带，现管线无此“类别外层分组”构件。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "each legend entry shows two glyphs (light and dark triangle/diamond/circle) before its text",
+        "why": "形状表系列、颜色深浅表显著性的双编码图例，需要成对字形的图例生成。"
+      }
+    ]
+  }
+}

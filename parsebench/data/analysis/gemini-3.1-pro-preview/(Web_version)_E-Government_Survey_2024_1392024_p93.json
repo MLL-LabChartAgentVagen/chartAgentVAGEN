@@ -1,0 +1,193 @@
+{
+  "stem": "(Web_version)_E-Government_Survey_2024_1392024_p93",
+  "document": "(Web_version)_E-Government_Survey_2024_1392024",
+  "tags": "untagged",
+  "model": "gemini-3.1-pro-preview",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 50.5,
+  "usage": {
+    "input_tokens": 5314,
+    "output_tokens": 7140,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n页面包含一个水平分组条形图。图表生成器需要支持绘制水平方向的分组条形，并且分类轴需要支持长文本标签的处理（包括自然换行）。绘图区背景仅包含垂直方向的网格线。同时，图例需要能够被放置在绘图区内部的右下角位置。数值标签需要支持根据条形长度动态判断：当条形较长时，标签放置在条形内部；当条形较短时，标签放置在条形外部。\n\n### 定位一个值难在哪\n定位“50”需要对应的类别标签“Individuals can  modify their own data online”和年份系列“2022”。在原始图片中，该类别标签的“can”与“modify”之间存在明显的连续空格，且其他部分标签存在换行。这种非标准排版容易导致文本解析和提取时被规范化为单空格或丢失换行，从而在第三步严格匹配键值时发生阻断。\n\n### 不确定的\n图表的标题提到了“Number of Member States”（成员国数量），但底部的X轴和所有的数据标签均显示为百分比（从0%到100%），由于页面没有提供各年份成员国总数的基数，无法确切知道每个百分比对应的绝对数量。这里只能假定百分比是其主要展示意图。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 2.27",
+          "title": "Number of Member States with portals incorporating the assessed technology features, 2022 and 2024",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "grouped_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 14,
+        "marks": 28,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "left",
+            "role": "category",
+            "unit_text": "",
+            "low": "Portal can be found on search engine",
+            "high": "Portal offers AI-enabled chatbot functionality",
+            "serves": "all bars"
+          },
+          {
+            "side": "bottom",
+            "role": "value",
+            "unit_text": "",
+            "low": "0%",
+            "high": "100%",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Portal can be found on search engine"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "2024"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Portal utilizes HTTPS",
+            "2024"
+          ],
+          "value": "97%",
+          "value_source": "printed",
+          "why_hard": "Some category labels span multiple lines or contain irregular spacing, which could break exact string matching."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "grouped_bar",
+        "figure_id": "f1",
+        "evidence": "two bars per category representing 2024 and 2022"
+      },
+      {
+        "key": "horizontal_bars",
+        "figure_id": "f1",
+        "evidence": "categories lie on the left axis, bars grow rightwards"
+      },
+      {
+        "key": "legend_inside_plot",
+        "figure_id": "f1",
+        "evidence": "the legend for 2024 and 2022 sits inside the bottom right of the plot"
+      },
+      {
+        "key": "value_label_inside",
+        "figure_id": "f1",
+        "evidence": "the 98% label sits inside the blue bar"
+      },
+      {
+        "key": "value_label_outside",
+        "figure_id": "f1",
+        "evidence": "the 91% label sits just beyond the end of the blue bar"
+      },
+      {
+        "key": "vgrid_only",
+        "figure_id": "f1",
+        "evidence": "vertical grid lines at 10% intervals, no horizontal lines"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "Sources: 2022 and 2024 United Nations E-Government Surveys... printed below the plot"
+      },
+      {
+        "key": "wrapped_category_labels",
+        "figure_id": "f1",
+        "evidence": "the label for Specific service transactions... wraps onto two lines"
+      }
+    ],
+    "new_components": [],
+    "spot_checks": [
+      {
+        "value": "91",
+        "figure_id": "f1",
+        "mark": "the 2024 bar for responsive web design",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Portal is developed using responsive web design",
+          "2024"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "83",
+        "figure_id": "f1",
+        "mark": "the 2022 bar for updated in the last month",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Portal has been updated in the last month",
+          "2022"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "71",
+        "figure_id": "f1",
+        "mark": "the 2024 bar for Businesses can access their own data online",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Businesses can access their own data online",
+          "2024"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "50",
+        "figure_id": "f1",
+        "mark": "the 2022 bar for Individuals can modify their own data online",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Individuals can  modify their own data online",
+          "2022"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "27",
+        "figure_id": "f1",
+        "mark": "the 2024 bar for AI-enabled chatbot functionality",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Portal offers AI-enabled chatbot functionality",
+          "2024"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      }
+    ],
+    "hardest_step": 3,
+    "hardest_step_why": "定位 50 对应的标签 'Individuals can  modify...' 存在连续空格，且其他标签带有物理换行，解析器在规范化空白字符时会导致精确键值匹配失败，从而阻塞在第三步。",
+    "examples": [
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "98% label is placed inside the bar, while 91% sits outside its bar",
+        "why": "图表生成算法需要能够根据当前条形的长度及可用空间，动态决定数值标签是内嵌在条形内，还是跟随在条形外部，以避免视觉重叠。"
+      }
+    ]
+  }
+}

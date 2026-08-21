@@ -1,0 +1,528 @@
+{
+  "stem": "ac8b3538-en_p62",
+  "document": "ac8b3538-en",
+  "tags": "3d_chart+need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "no_vocab",
+  "effort": "high",
+  "dpi": 150,
+  "seconds": 106.4,
+  "usage": {
+    "input_tokens": 3150,
+    "output_tokens": 15759,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n要生成此页面，图表生成器需要具备以下核心能力：\n1. **小多图（Small Multiples）高密度布局**：能够在一个大图表中生成3列5行的15个子图排列，并在整体顶部共享单一的图例。\n2. **阶梯折线图（Step Line Chart）**：支持将数据点之间的连线绘制为阶梯状（水平-垂直-水平），以表示某个时间段内恒定不变的数值。\n3. **独立的Y轴范围**：虽然所有子图共享相同的X轴（时间分类），但Y轴的刻度范围和间距必须支持各子图独立设置（例如大部分国家是-20到60，而墨西哥是-60到150，土耳其是-200到800）。\n4. **子图标题与零基准线**：能够将各子图的类别名称（国家名）作为标题置于面板上方，并支持在所有子图的0刻度处绘制一条突出的黑色水平基准线（Zero Line）。\n\n### 定位一个值难在哪\n以土耳其2024年5月的“Nominal minimum wage”（标称值为700）为例。由于没有任何数值标签印刷在图上，定位和读取该值极度依赖对纵坐标轴的视觉估算。该子图Y轴刻度间距高达200，且完全没有次级网格线辅助，阶梯状线条悬停在600和800正中间，要将其精确读取至5%误差容限内（即±35）极为困难，任何轻微的视觉偏差或图片压缩失真都会导致取值超差。\n\n### 不确定的\n图表内外未明确标注Y轴的具体数据单位（例如是百分比增长、指数还是某种本币绝对值），需结合报告外部上下文才能确切知道纵坐标代表什么物理量。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "none"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 15,
+        "series": 2,
+        "categories": 11,
+        "marks": 330,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "-20",
+            "high": "60",
+            "serves": "Japan panel lines"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "May-19",
+            "high": "May-24",
+            "serves": "Japan panel lines"
+          },
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "-20",
+            "high": "60",
+            "serves": "Korea panel lines"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "May-19",
+            "high": "May-24",
+            "serves": "Korea panel lines"
+          },
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "-30",
+            "high": "75",
+            "serves": "Latvia panel lines"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "May-19",
+            "high": "May-24",
+            "serves": "Latvia panel lines"
+          },
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "-30",
+            "high": "75",
+            "serves": "Lithuania panel lines"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "May-19",
+            "high": "May-24",
+            "serves": "Lithuania panel lines"
+          },
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "-20",
+            "high": "60",
+            "serves": "Luxembourg panel lines"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "May-19",
+            "high": "May-24",
+            "serves": "Luxembourg panel lines"
+          },
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "-60",
+            "high": "150",
+            "serves": "Mexico panel lines"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "May-19",
+            "high": "May-24",
+            "serves": "Mexico panel lines"
+          },
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "-20",
+            "high": "60",
+            "serves": "Netherlands panel lines"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "May-19",
+            "high": "May-24",
+            "serves": "Netherlands panel lines"
+          },
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "-20",
+            "high": "60",
+            "serves": "New Zealand panel lines"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "May-19",
+            "high": "May-24",
+            "serves": "New Zealand panel lines"
+          },
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "-40",
+            "high": "100",
+            "serves": "Poland panel lines"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "May-19",
+            "high": "May-24",
+            "serves": "Poland panel lines"
+          },
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "-20",
+            "high": "60",
+            "serves": "Portugal panel lines"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "May-19",
+            "high": "May-24",
+            "serves": "Portugal panel lines"
+          },
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "-20",
+            "high": "60",
+            "serves": "Slovak Republic panel lines"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "May-19",
+            "high": "May-24",
+            "serves": "Slovak Republic panel lines"
+          },
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "-20",
+            "high": "60",
+            "serves": "Slovenia panel lines"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "May-19",
+            "high": "May-24",
+            "serves": "Slovenia panel lines"
+          },
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "-20",
+            "high": "60",
+            "serves": "Spain panel lines"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "May-19",
+            "high": "May-24",
+            "serves": "Spain panel lines"
+          },
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "-200",
+            "high": "800",
+            "serves": "Türkiye panel lines"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "May-19",
+            "high": "May-24",
+            "serves": "Türkiye panel lines"
+          },
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "-20",
+            "high": "60",
+            "serves": "United Kingdom panel lines"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "May-19",
+            "high": "May-24",
+            "serves": "United Kingdom panel lines"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "panel",
+            "label_source": "panel_title",
+            "example": "Japan"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Nominal minimum wage"
+          },
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "May-24"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Türkiye",
+            "Nominal minimum wage",
+            "May-24"
+          ],
+          "value": "700",
+          "value_source": "axis_read",
+          "why_hard": "Y-axis tick interval is 200 without minor gridlines, making reading 700 precisely extremely difficult."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "small_multiples",
+        "figure_id": "f1",
+        "evidence": "15 panels arranged in a 3x5 grid",
+        "affects": [
+          1,
+          3
+        ]
+      },
+      {
+        "key": "zero_line",
+        "figure_id": "f1",
+        "evidence": "black horizontal line at y=0 in each panel",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "key": "independent_y_axes",
+        "figure_id": "f1",
+        "evidence": "each panel has its own independent y-axis scale",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "key": "shared_legend",
+        "figure_id": "f1",
+        "evidence": "one legend at the top serves all panels",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "angled_x_ticks",
+        "figure_id": "f1",
+        "evidence": "x-axis time labels are rotated 45 degrees",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "new_components": [
+      {
+        "name": "step_line_chart",
+        "figure_id": "f1",
+        "evidence": "lines are drawn as discrete horizontal and vertical steps",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "name": "panel_title_as_key",
+        "figure_id": "f1",
+        "evidence": "country names printed directly above individual panels",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "10",
+        "figure_id": "f1",
+        "mark": "Korea Nominal minimum wage at May-22",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Korea",
+          "Nominal minimum wage",
+          "May-22"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "17",
+        "figure_id": "f1",
+        "mark": "Netherlands Real minimum wage at May-24",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Netherlands",
+          "Real minimum wage",
+          "May-24"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "16",
+        "figure_id": "f1",
+        "mark": "Latvia Real minimum wage at May-21",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Latvia",
+          "Real minimum wage",
+          "May-21"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "90",
+        "figure_id": "f1",
+        "mark": "Poland Nominal minimum wage at May-24",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Poland",
+          "Nominal minimum wage",
+          "May-24"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "42",
+        "figure_id": "f1",
+        "mark": "Netherlands Nominal minimum wage at May-24",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Netherlands",
+          "Nominal minimum wage",
+          "May-24"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "35",
+        "figure_id": "f1",
+        "mark": "Slovenia Nominal minimum wage at May-23",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Slovenia",
+          "Nominal minimum wage",
+          "May-23"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "38",
+        "figure_id": "f1",
+        "mark": "Portugal Nominal minimum wage at May-24",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Portugal",
+          "Nominal minimum wage",
+          "May-24"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "9",
+        "figure_id": "f1",
+        "mark": "Slovak Republic Real minimum wage at May-24",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Slovak Republic",
+          "Real minimum wage",
+          "May-24"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "700",
+        "figure_id": "f1",
+        "mark": "Türkiye Nominal minimum wage at May-24",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Türkiye",
+          "Nominal minimum wage",
+          "May-24"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "12",
+        "figure_id": "f1",
+        "mark": "United Kingdom Real minimum wage at May-24",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "United Kingdom",
+          "Real minimum wage",
+          "May-24"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "Y轴刻度跨度大且缺乏次级网格线，步进线图难以精确定位。如读取土耳其的700，在200的刻度间隙中肉眼估算很难保证在5%（±35）的误差容限内。",
+    "examples": [
+      {
+        "gap": "P2",
+        "figure_id": "f1",
+        "quote": "Japan, Korea, Latvia above each panel",
+        "why": "图表由15个小多图组成，必须将面板名称（如国家名）作为数据键的一部分，否则无法区分数据归属。"
+      },
+      {
+        "gap": "P5",
+        "figure_id": "f1",
+        "quote": "15 separate panels combined in a 3x5 grid on a single page",
+        "why": "极高的面板密度突破了现有的子图生成限制，生成器需要开放更高的密度上限来支持这种单页网格。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "lines drawn as right-angle steps rather than direct slopes",
+        "why": "需要支持并识别阶梯折线图（Step line chart），以表达数值在各时间节点间保持恒定的真实意义。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "y-axis includes negative values like -20 and -60",
+        "why": "许多子图的纵坐标向负数延伸，需要支持负值轴刻度和明确的零线（Zero Line）样式。"
+      }
+    ]
+  }
+}

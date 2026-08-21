@@ -1,0 +1,244 @@
+{
+  "stem": "05021ff2-en_p27",
+  "document": "05021ff2-en",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 59.9,
+  "usage": {
+    "input_tokens": 5306,
+    "output_tokens": 8138,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n要生成这个页面，需要支持带有多条折线的折线图，并且能够为不同数据系列设置不同的线型（实线和圆点虚线）。X轴需要支持时间段标签（如`2015/2017`），且标签要能够以45度角倾斜显示。需要支持水平网格线（无垂直网格线），底部图例居中排列，图表上方左对齐带有编号的主标题，以及图表下方的小字注释和数据源信息。\n\n### 定位一个值难在哪\n以“OECD”系列在“2019/2021”的值（112）为例。图中没有任何数据点带有具体的数值标签，必须借助左侧的Y轴来估算。而Y轴的最大值为200，刻度间隔宽达20，要在这样的网格中依靠肉眼准确读出112这样的非整数点非常困难，其误差极易超过5%的容忍度。\n\n### 不确定的\n不确定虚线序列中的具体圆点数量是否与原始数据点的密度有关，还是仅仅作为一种视觉线型样式存在（假设其仅仅是样式处理）。此外，不确定X轴的时间段标签（如2015/2017）对应的坐标点是严格对其该区间的中心点还是某个特定的起始年份。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 3.1.",
+          "title": "Total number of market studies conducted, 2015-2024",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 1,
+        "series": 3,
+        "categories": 8,
+        "marks": 24,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "0",
+            "high": "200",
+            "serves": "all lines"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "2015/2017",
+            "high": "2022/2024",
+            "serves": "all lines"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "OECD"
+          },
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2015/2017"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "OECD",
+            "2019/2021"
+          ],
+          "value": "112",
+          "value_source": "axis_read",
+          "why_hard": "Y-axis tick intervals are 20, making it extremely hard to visually estimate 112 with precision."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "dashed_line_series",
+        "figure_id": "f1",
+        "evidence": "the All and Non-OECD series are drawn with dotted lines"
+      },
+      {
+        "key": "rotated_x_ticks",
+        "figure_id": "f1",
+        "evidence": "the time period labels like 2015/2017 are set at an angle"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "horizontal rules at intervals of 20, with no vertical grid lines"
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "the legend sits below the x axis and tick labels"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "Note and Source paragraphs are printed below the figure"
+      }
+    ],
+    "new_components": [],
+    "spot_checks": [
+      {
+        "value": "165",
+        "figure_id": "f1",
+        "mark": "the 2015/2017 All point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "All",
+          "2015/2017"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "175",
+        "figure_id": "f1",
+        "mark": "the 2016/2018 All point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "All",
+          "2016/2018"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "158",
+        "figure_id": "f1",
+        "mark": "the 2022/2024 All point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "All",
+          "2022/2024"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "90",
+        "figure_id": "f1",
+        "mark": "the 2015/2017 OECD point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "OECD",
+          "2015/2017"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "112",
+        "figure_id": "f1",
+        "mark": "the 2019/2021 OECD point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "OECD",
+          "2019/2021"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "120",
+        "figure_id": "f1",
+        "mark": "the 2020/2022 OECD point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "OECD",
+          "2020/2022"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "95",
+        "figure_id": "f1",
+        "mark": "the 2022/2024 OECD point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "OECD",
+          "2022/2024"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "78",
+        "figure_id": "f1",
+        "mark": "the 2018/2020 Non-OECD point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Non-OECD",
+          "2018/2020"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "58",
+        "figure_id": "f1",
+        "mark": "the 2020/2022 Non-OECD point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Non-OECD",
+          "2020/2022"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "65",
+        "figure_id": "f1",
+        "mark": "the 2022/2024 Non-OECD point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Non-OECD",
+          "2022/2024"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "Y轴最大值200且刻度间距为20，图上无具体数值标签。依靠肉眼估算112或58这样的数值极难保证误差在5%的容忍度之内。",
+    "examples": [
+      {
+        "gap": "P1",
+        "figure_id": "f1",
+        "quote": "the y axis reads 0 to 200 by 20s with no printed values",
+        "why": "图上无数据标签，Y轴刻度间距过大，导致120等落在网格线上的值易读，而112或58却难以精确估取。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "Figure 3.1. Total number of market studies conducted, 2015-2024",
+        "why": "图表标题包含前缀编号及独立表述，将其作为独立字段结构化提取有助于更精准的元数据管理。"
+      }
+    ]
+  }
+}

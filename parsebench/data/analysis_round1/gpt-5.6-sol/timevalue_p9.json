@@ -1,0 +1,168 @@
+{
+  "stem": "timevalue_p9",
+  "document": "timevalue",
+  "tags": "need_estimate",
+  "model": "gpt-5.6-sol",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "seconds": 67.2,
+  "usage": {
+    "input_tokens": 7065,
+    "output_tokens": 4493,
+    "cache_read_tokens": 1555
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "本页是一幅单面板三序列折线图：6个持有期、18个方形／三角形／叉形点，右侧纵向图例，纵轴每500一格且仅有横网格；还需复现大标题、横向色带与浅灰条纹背景。所有点均无数值标签，表格行至少要用系列名和年数共同定位。3850、1550等端点较易辨认，但240、620、250、280、420需在500间距内插值，故步骤2最难。图上未标图号、来源或注释；我不确定中间值能否仅凭像素达到容差。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "Holding Period and Value",
+          "subtitle": "",
+          "unit_text": "Future value of $100 investment",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 1,
+        "series": 3,
+        "categories": 6,
+        "marks": 18,
+        "values_printed": "none"
+      }
+    ],
+    "components": [
+      {
+        "key": "legend_beside_plot",
+        "figure_id": "f1",
+        "evidence": "The legend is a vertical column to the right of the plotting rectangle."
+      },
+      {
+        "key": "unit_in_series_name",
+        "figure_id": "f1",
+        "evidence": "Legend labels read “Stocks ($)”, “Treasury Bonds ($)”, and “Treasury Bills ($)”."
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "The y-axis title reads “Future value of $100 investment”."
+      },
+      {
+        "key": "rotated_axis_title",
+        "figure_id": "f1",
+        "evidence": "“Future value of $100 investment” is rotated vertically along the left axis."
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "Horizontal rules cross the plot at y ticks; no vertical grid lines are drawn."
+      }
+    ],
+    "new_components": [
+      {
+        "name": "series_marker_shapes",
+        "figure_id": "f1",
+        "evidence": "Stocks use squares, bonds triangles, and bills x-shaped markers along their lines.",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "3850",
+        "figure_id": "f1",
+        "mark": "the 40-year Stocks ($) square marker",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Stocks ($)",
+          "40"
+        ]
+      },
+      {
+        "value": "1550",
+        "figure_id": "f1",
+        "mark": "the 30-year Stocks ($) square marker",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Stocks ($)",
+          "30"
+        ]
+      },
+      {
+        "value": "620",
+        "figure_id": "f1",
+        "mark": "the 20-year Stocks ($) square marker",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Stocks ($)",
+          "20"
+        ]
+      },
+      {
+        "value": "240",
+        "figure_id": "f1",
+        "mark": "the 10-year Stocks ($) square marker",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Stocks ($)",
+          "10"
+        ]
+      },
+      {
+        "value": "700",
+        "figure_id": "f1",
+        "mark": "the 40-year Treasury Bonds ($) triangle marker",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Treasury Bonds ($)",
+          "40"
+        ]
+      },
+      {
+        "value": "420",
+        "figure_id": "f1",
+        "mark": "the 30-year Treasury Bonds ($) triangle marker",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Treasury Bonds ($)",
+          "30"
+        ]
+      },
+      {
+        "value": "250",
+        "figure_id": "f1",
+        "mark": "the 20-year Treasury Bonds ($) triangle marker",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Treasury Bonds ($)",
+          "20"
+        ]
+      },
+      {
+        "value": "420",
+        "figure_id": "f1",
+        "mark": "the 40-year Treasury Bills ($) x marker",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Treasury Bills ($)",
+          "40"
+        ]
+      },
+      {
+        "value": "280",
+        "figure_id": "f1",
+        "mark": "the 30-year Treasury Bills ($) x marker",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Treasury Bills ($)",
+          "30"
+        ]
+      }
+    ],
+    "hardest_step": 2
+  }
+}

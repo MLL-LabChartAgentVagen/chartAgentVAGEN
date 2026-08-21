@@ -1,0 +1,275 @@
+{
+  "stem": "wtr24_ch2_e_p3",
+  "document": "wtr24_ch2_e",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "no_vocab",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 45.9,
+  "usage": {
+    "input_tokens": 3189,
+    "output_tokens": 6483,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n这是一个带有双Y轴的混合图表（折线和柱状图）。顶部有一个蓝色底色、白色字体的标题框。左侧Y轴绘制柱状图（Speed of income convergence），包含标题“Speed of income convergence (percentage points)”，范围从-1到8，步长为1，0刻度处有一条加粗的零线。右侧Y轴绘制折线图（Trade participation），包含标题“Trade participation (100=1996)”，范围从40到160，步长为20。底部X轴年份标签（1996-2021）倾斜45度显示。水平网格线与左侧Y轴的刻度对齐。图例放置在图表正下方，分别使用蓝色方块和蓝绿色线段标注。\n\n### 定位一个值难在哪\n所有数值都没有在图上直接标出，完全依赖肉眼估算。以2009年的柱子值 `7.7` 为例，左侧Y轴的步长为1，要精确读到小数点后第一位，误差很容易超过5%。对于折线图中 `155` （2008年）这样的数值，右侧Y轴步长为20，中间跨度过大，定位和读取难度更高，且极容易看错适用的Y轴。\n\n### 不确定的\n1998年的柱子非常短，几乎看不见，只能推断其值为 `0.0`。同样， `125` 这个值可能对应2010年或2021年的折线点，由于缺乏直接的数据标签和精准的网格线，无法确定具体是哪一个。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure B.1:",
+          "title": "Positive correlation between low- and middle-income economies’ convergence speed and trade participation, 1996-2021",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "compound",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 26,
+        "marks": 52,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "percentage points",
+            "low": "-1",
+            "high": "8",
+            "serves": "all bars"
+          },
+          {
+            "side": "right",
+            "role": "value",
+            "unit_text": "100=1996",
+            "low": "40",
+            "high": "160",
+            "serves": "only the line"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "1996",
+            "high": "2021",
+            "serves": "all marks"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2009"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Speed of income convergence"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "2009",
+            "Speed of income convergence"
+          ],
+          "value": "7.7",
+          "value_source": "axis_read",
+          "why_hard": "Interpolating 7.7 visually on an axis with a step size of 1 is hard to do within 5% tolerance."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "dual_y_axis",
+        "figure_id": "f1",
+        "evidence": "left axis is percentage points, right is index",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "key": "mixed_chart_type",
+        "figure_id": "f1",
+        "evidence": "bars for convergence, line for trade participation",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "key": "rotated_x_axis_labels",
+        "figure_id": "f1",
+        "evidence": "years on x-axis are slanted at 45 degrees",
+        "affects": []
+      },
+      {
+        "key": "zero_line",
+        "figure_id": "f1",
+        "evidence": "a solid horizontal line extending from 0 on the left y-axis",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "key": "axis_title_integrated",
+        "figure_id": "f1",
+        "evidence": "y-axis titles are rotated 90 degrees along the axes",
+        "affects": []
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "legend is horizontally centered below the x-axis",
+        "affects": []
+      },
+      {
+        "key": "heading_box",
+        "figure_id": "f1",
+        "evidence": "title is inside a blue background box with white text",
+        "affects": []
+      }
+    ],
+    "new_components": [],
+    "spot_checks": [
+      {
+        "value": "2.7",
+        "figure_id": "f1",
+        "mark": "the 1996 bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "1996",
+          "Speed of income convergence"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "100",
+        "figure_id": "f1",
+        "mark": "the 1996 line point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "1996",
+          "Trade participation"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "0.0",
+        "figure_id": "f1",
+        "mark": "the 1998 bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "1998",
+          "Speed of income convergence"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "4.6",
+        "figure_id": "f1",
+        "mark": "the 2008 bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2008",
+          "Speed of income convergence"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "155",
+        "figure_id": "f1",
+        "mark": "the 2008 line point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2008",
+          "Trade participation"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "7.7",
+        "figure_id": "f1",
+        "mark": "the 2009 bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2009",
+          "Speed of income convergence"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "128",
+        "figure_id": "f1",
+        "mark": "the 2013 line point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2013",
+          "Trade participation"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "138",
+        "figure_id": "f1",
+        "mark": "the 2011 line point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2011",
+          "Trade participation"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-0.2",
+        "figure_id": "f1",
+        "mark": "the 2021 bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2021",
+          "Speed of income convergence"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "125",
+        "figure_id": "f1",
+        "mark": "the 2010 line point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2010",
+          "Trade participation"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "图表中没有任何数据标签，读数完全靠坐标轴。左轴步长为1，右轴步长为20，肉眼定位如 7.7 或 155 这种小数或非网格线上的数值时，极难保证在5%的容差范围内。",
+    "examples": [
+      {
+        "gap": "P9",
+        "figure_id": "f1",
+        "quote": "Speed of income convergence (percentage points) on left, Trade participation (100=1996) on right",
+        "why": "需要支持包含不同单位和标度的双Y轴混合图表，且表格导出必须明确区分哪个系列用哪根轴。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "the -1 tick and horizontal zero line on the left axis",
+        "why": "左侧Y轴跨越零点并延伸到负数区间，需要支持明确加粗绘制的零线和负数标签的格式控制。"
+      }
+    ]
+  }
+}

@@ -1,0 +1,263 @@
+{
+  "stem": "FPA-guide-to-data-visualization_p8",
+  "document": "FPA-guide-to-data-visualization",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "repeat",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 93.0,
+  "usage": {
+    "input_tokens": 5349,
+    "output_tokens": 12093,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "**画出来要什么** 需要能够在一个二维直角坐标系中同时绘制普通的折线与多重嵌套面积图（用于表示统计区间的Scenarios）。图例需放置于图表上方，并且支持在单个图例项内展示多个色块。y轴单位“$m”需直接置于最高刻度线“220”的正上方，图表背景仅含水平虚线网格，且y轴不从0开始（由100起步）。此外，时间轴首个刻度需要采用包含年份的特殊格式（Jan 14），并支持将贯穿全图的水平基准线（Budget和Prior Year）作为独立的折线系列列入图例。 **定位一个值难在哪** 以Forecast在Mar的值（212）为例。该图表没有任何数据点标签，所有的数值读取都必须依靠视觉与y轴刻度对齐。y轴刻度间距达到20，而212对应的5%容差仅约10。在缺乏水平细分网格线和垂直对齐辅助线的情况下，要从没有任何标记点的平滑折线中精确读取出212这样不落在主刻度上的中间值是非常困难且极易出错的。 **不确定的** “Scenarios”面积图所代表的具体上下边界数值完全无法从图表中精确获知。虽然图例中包含浅灰和深灰两个方块，图中也对应绘制了嵌套的深浅面积带，暗示了不同的概率区间或方差范围，但图表周围并未对其确切含义和具体边界进行任何文字释义，只能推测其为一种统计学的置信上下限。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "Western Europe Net Sales Windsock",
+          "subtitle": "",
+          "unit_text": "$m",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 1,
+        "series": 4,
+        "categories": 12,
+        "marks": 40,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "$m",
+            "low": "100",
+            "high": "220",
+            "serves": "all series"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "Jan 14",
+            "high": "Dec",
+            "serves": "all series"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Forecast"
+          },
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "Jan 14"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Forecast",
+            "May"
+          ],
+          "value": "200",
+          "value_source": "axis_read",
+          "why_hard": "The endpoint has no label and must be visually aligned horizontally with the 200 grid line without markers."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "mixed_marks",
+        "figure_id": "f1",
+        "evidence": "a shaded area band and three lines share the plot"
+      },
+      {
+        "key": "reference_line",
+        "figure_id": "f1",
+        "evidence": "Budget and Prior Year are straight horizontal lines acting as thresholds"
+      },
+      {
+        "key": "axis_starts_above_zero",
+        "figure_id": "f1",
+        "evidence": "the value axis begins at 100 instead of 0"
+      },
+      {
+        "key": "legend_above_plot",
+        "figure_id": "f1",
+        "evidence": "the legend sits below the heading and above the plot area"
+      },
+      {
+        "key": "axis_title_above_axis",
+        "figure_id": "f1",
+        "evidence": "the $m unit sits directly above the top tick 220"
+      },
+      {
+        "key": "nonstandard_time_ticks",
+        "figure_id": "f1",
+        "evidence": "the first tick Jan 14 includes the year, the rest do not"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "only horizontal dashed rules span the plot area"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "nested_area_bands",
+        "figure_id": "f1",
+        "evidence": "the Scenarios band has two shades of grey for nested risk ranges",
+        "affects": [
+          2
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "218",
+        "figure_id": "f1",
+        "mark": "the Budget line at Jan 14",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Budget",
+          "Jan 14"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "218",
+        "figure_id": "f1",
+        "mark": "the Budget line at Dec",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Budget",
+          "Dec"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "166",
+        "figure_id": "f1",
+        "mark": "the Prior Year line at Jan 14",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Prior Year",
+          "Jan 14"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "166",
+        "figure_id": "f1",
+        "mark": "the Prior Year line at Jun",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Prior Year",
+          "Jun"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "166",
+        "figure_id": "f1",
+        "mark": "the Prior Year line at Dec",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Prior Year",
+          "Dec"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "218",
+        "figure_id": "f1",
+        "mark": "the Forecast line at Jan 14",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Forecast",
+          "Jan 14"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "216",
+        "figure_id": "f1",
+        "mark": "the Forecast line at Feb",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Forecast",
+          "Feb"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "212",
+        "figure_id": "f1",
+        "mark": "the Forecast line at Mar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Forecast",
+          "Mar"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "210",
+        "figure_id": "f1",
+        "mark": "the Forecast line at Apr",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Forecast",
+          "Apr"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "200",
+        "figure_id": "f1",
+        "mark": "the Forecast line at May",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Forecast",
+          "May"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "全部数值需从折线读取且无数据标签。在刻度间距为20且缺乏网格线辅助的图表中，肉眼估读出212或216这样不落在主刻度上的值极易超出5%（约10）的容差范围。",
+    "examples": [
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "$m directly above the 220 tick",
+        "why": "需要支持将无背景边框的y轴单位文本直接放置在最上方刻度线的正顶部，而不是横置或竖置在轴侧。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "two grey squares separated by a comma for Scenarios",
+        "why": "需要支持在单个图例项中显示多个标记块，以匹配并在视觉上解释图中表示置信区间的嵌套双色面积带。"
+      }
+    ]
+  }
+}

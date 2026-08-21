@@ -1,0 +1,325 @@
+{
+  "stem": "2024_healthatglance_rep_en_p77",
+  "document": "2024_healthatglance_rep_en",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "no_vocab",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 24.6,
+  "usage": {
+    "input_tokens": 3148,
+    "output_tokens": 3401,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n- 页面包含一个带标题和副标题（且包含两行脚注）的表格（Table 2.2），以及一个带标题的点图（Figure 2.17）。\n- **点图**（Figure 2.17）：包含27个分类（国家名称），这些国家名称沿底部x轴倾斜显示（逆时针旋转45度）。在绘图区顶部上方直接居中并排显示了两个图例项（带有线段和圆点）。图表带有垂直参考虚线，连接每个国家的两个数据点，形成类似于dumbbell图的结构，但两端是不同形状和颜色的标记（一端是连着短横线的蓝色粗细线，另一端是蓝色、红色或黑色的圆点，其中只有红色实心圆点有不同颜色表示EU27，其它的都是深蓝色圆点，代表65岁及以上）。实际上，这里短横线带短竖线的T型标记表示18-64岁。\n- 图表包含标题块：编号、主标题在一行。单位 `% of people reporting to spend 150 minutes or more per week of physical activity` 放置在左上角的y轴上方。\n\n### 定位一个值难在哪\n- 在Figure 2.17中，如要定位 `59` 这个值，首先要识别出国家 `Netherlands`，然后根据标记类型区分它是 `18 to 64 years` 还是 `65 years or over`。图例显示短横线（实际图中为带有横线的竖线区间的一端）代表 `From 18 to 64 years`，而圆点代表 `65 years or over`。对于 Netherlands，圆点约在 55，而横线标记在 59。由于没有具体数值打印在图上，读者只能对照左侧 y 轴（每 10 一个刻度）进行估读，估读到 59 并达到 5% 的精度存在一定难度。\n- Table 2.2 中的定位比较简单，只需行名（如 `Physical inactivity (% reporting to spend less than 150 minutes per week)`）和列名（如 `People aged 18-64`）。\n\n### 不确定的\n- 图2.17中，表示18-64岁的标记具体是一个短横线（类似误差棒的顶端），但图例中只是一个带横线的标记 `-From 18 to 64 years`，这在描述为 dumbbell 时，另一端的形式略有非常规（不仅是点，而是T型线）。\n- 图2.17中标记的连线没有明确图例说明，默认为连接两组数据的视觉辅助。EU27用红色圆点标出，是否需要作为一个单独的分组键存在不确定性。",
+    "figures": [
+      {
+        "id": "table_2_2",
+        "heading": {
+          "figure_number": "Table 2.2.",
+          "title": "Overview of behavioural and environmental risk factors among older people compared to younger people",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "unreadable",
+        "type_other": "table",
+        "panels": 1,
+        "series": 1,
+        "categories": 1,
+        "marks": 1,
+        "values_printed": "all",
+        "axes": [],
+        "key_parts": [],
+        "worked_example": {
+          "key": [],
+          "value": "",
+          "value_source": "not_readable",
+          "why_hard": ""
+        }
+      },
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 2.17.",
+          "title": "Only 22% of people aged over 65 meet the WHO recommendation on minimum physical activity per week",
+          "subtitle": "",
+          "unit_text": "% of people reporting to spend 150 minutes or more per week of physical activity",
+          "placement": "above"
+        },
+        "type": "other",
+        "type_other": "dumbbell chart",
+        "panels": 1,
+        "series": 2,
+        "categories": 27,
+        "marks": 54,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "0",
+            "high": "80",
+            "serves": "all marks"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "Norway",
+            "high": "Romania",
+            "serves": "all marks"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Sweden"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "65 years or over"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Sweden",
+            "From 18 to 64 years"
+          ],
+          "value": "56",
+          "value_source": "axis_read",
+          "why_hard": "No data labels are printed, reading against the y-axis (ticks every 10) allows for 1-2 units of error, making exact reading hard."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "table_heading_above",
+        "figure_id": "table_2_2",
+        "evidence": "Table 2.2. ... sits above the table.",
+        "affects": [
+          1,
+          4
+        ]
+      },
+      {
+        "key": "figure_title_above",
+        "figure_id": "f1",
+        "evidence": "Figure 2.17. Only 22% of people... sits above the plot area.",
+        "affects": [
+          4
+        ]
+      },
+      {
+        "key": "unit_top_left_above_plot",
+        "figure_id": "f1",
+        "evidence": "The text '% of people reporting to spend 150 minutes...' is above the top left corner of the grid.",
+        "affects": [
+          4
+        ]
+      },
+      {
+        "key": "legend_top_center_inside_plot",
+        "figure_id": "f1",
+        "evidence": "Legend '- From 18 to 64 years  ● 65 years or over' is centered inside the top edge of the plot.",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "x_axis_labels_rotated_45",
+        "figure_id": "f1",
+        "evidence": "Bottom axis labels like 'Norway', 'Netherlands' are rotated 45 degrees.",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "y_axis_ticks_without_unit",
+        "figure_id": "f1",
+        "evidence": "Y-axis labels are 0, 10, 20... 80 with no % sign next to them.",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "key": "dumbbell_with_line_connection",
+        "figure_id": "f1",
+        "evidence": "Each country has a vertical dashed line connecting the T-mark and the dot.",
+        "affects": [
+          2,
+          3
+        ]
+      },
+      {
+        "key": "highlight_colour_specific_category",
+        "figure_id": "f1",
+        "evidence": "The dot for EU27 is red, while others are dark blue.",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "new_components": [
+      {
+        "name": "asymmetric_dumbbell_marks",
+        "figure_id": "f1",
+        "evidence": "One end is a dot, the other is a horizontal bar (T-shape).",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "name": "y_axis_grid_alternating_bands",
+        "figure_id": "f1",
+        "evidence": "The background has vertical shaded bands alternating for each country.",
+        "affects": []
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "59",
+        "figure_id": "f1",
+        "mark": "The T-mark for Netherlands on the dumbbell",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Netherlands",
+          "From 18 to 64 years"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "69",
+        "figure_id": "f1",
+        "mark": "The T-mark for Norway on the dumbbell",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Norway",
+          "From 18 to 64 years"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "22",
+        "figure_id": "f1",
+        "mark": "The red dot for EU27",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "EU27",
+          "65 years or over"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "35",
+        "figure_id": "table_2_2",
+        "mark": "The cell for Nutrition, 18-64",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Nutrition (% not eating any vegetable or fruit a day)",
+          "People aged 18-64"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "2",
+        "figure_id": "table_2_2",
+        "mark": "The cell for Extreme temperature, people aged < 70",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Extreme temperature (% deaths attributable to heat or cold wave)",
+          "3% (people aged < 70)"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 3
+      },
+      {
+        "value": "9",
+        "figure_id": "table_2_2",
+        "mark": "The cell for Smoking rate, 65 or over",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Smoking rate (% smoking daily)",
+          "People aged 65 or over"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "55",
+        "figure_id": "f1",
+        "mark": "The dot for Netherlands",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Netherlands",
+          "65 years or over"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "52",
+        "figure_id": "table_2_2",
+        "mark": "The cell for Physical inactivity (once a week), 65 or over",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Physical inactivity (% reporting to do physical activity less than once a week)",
+          "People aged 65 or over"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "20",
+        "figure_id": "f1",
+        "mark": "The dot for France",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "France",
+          "65 years or over"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "38",
+        "figure_id": "f1",
+        "mark": "The T-mark for Austria",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Austria",
+          "From 18 to 64 years"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "在Figure 2.17中，因为数据点（如59, 69, 55）没有印在图上，需要对照左侧每隔10为一个刻度的y轴进行估读。要达到5%（±2.95）的精度非常困难。",
+    "examples": [
+      {
+        "gap": "P1",
+        "figure_id": "f1",
+        "quote": "y-axis ticks are 0, 10, 20... 80",
+        "why": "散点/哑铃图的数值全靠每间隔10的y轴估读，没有具体数值标签，机器解析很难保证达到5%的误差容忍度。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "Figure 2.17. Only 22% of people aged over 65 meet the WHO recommendation on minimum physical activity per week",
+        "why": "图表主标题与编号位于图表上方，而单位却位于图表左上方内部，当前生成器无法拆分并将它们正确放置。"
+      }
+    ]
+  }
+}

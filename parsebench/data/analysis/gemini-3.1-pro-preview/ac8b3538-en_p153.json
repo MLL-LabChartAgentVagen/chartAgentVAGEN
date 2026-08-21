@@ -1,0 +1,352 @@
+{
+  "stem": "ac8b3538-en_p153",
+  "document": "ac8b3538-en",
+  "tags": "3d_chart+need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 111.5,
+  "usage": {
+    "input_tokens": 5307,
+    "output_tokens": 16123,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n\n生成器需要能够绘制带有三个面板的并排小图（Small Multiples），每个面板拥有独立的标题（如A. High-emission industries）和独立的Y轴范围（A和B面板Y轴为-70到0，而C面板为-10到0）。Y轴需要支持纯负数的轴刻度，并且在最高刻度的正上方显示单位“%”。\n\n图表类型为堆积柱状图（Stacked Bar）。一个特殊的视觉构造是，图表允许在整体为负的柱子中出现向上的正值分段（例如Panel C中第三年的Days worked分段在负轴中向上反向堆叠）。\n\n此外，生成器需要支持样式定制：图表区域需有浅灰色背景填充，并仅使用白色的水平网格线，无垂直网格线；X轴的类别标签需要支持倾斜显示；图表顶部需有共享的图例；标题部分包含图表编号、主标题和长段副标题。底部需要支持注释（Note）、数据来源（Source）以及右对齐的StatLink链接。\n\n### 定位一个值难在哪\n\n以Panel C中第2年的“Days worked”值（-1.8）为例，难点在于：首先，图表没有任何直接标注的数据标签，必须通过肉眼在Y轴上估读。其次，这是一个堆积柱状图中的第三段，读取时必须用它的终点值（约-4.8）减去它的起点值（约-3.0）才能得到-1.8。在Y轴刻度间距为1的情况下，要准确估读出-1.8并满足5%的误差容忍度（即0.09以内）完全超出肉眼的极限。\n\n### 不确定的\n\n由于图表没有任何直接标出的数值，所有从纵轴读取的分段大小（如-1.8或0.5）都存在严重的估算误差，无法确定原始数据的精确小数位。同时，对于Panel C中包含正负段混合堆叠的柱子（如年份3和4），无法绝对确认其堆叠起点的渲染优先级。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 3.7.",
+          "title": "Differences in earnings losses reflect larger wage losses, fewer days worked as well as longer spells out of work",
+          "subtitle": "Contribution of daily wages, days worked and employment to overall earnings losses after job loss in high- and low-emission industries in percentage (Panel A and B) and the difference in earnings losses between high- and low-emission industries in percentage points (Panel C), average across countries",
+          "unit_text": "%",
+          "placement": "above"
+        },
+        "type": "stacked_bar",
+        "type_other": "",
+        "panels": 3,
+        "series": 3,
+        "categories": 7,
+        "marks": 63,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "%",
+            "low": "-70",
+            "high": "0",
+            "serves": "Panel A bars"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "Average",
+            "high": "6",
+            "serves": "Panel A bars"
+          },
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "%",
+            "low": "-70",
+            "high": "0",
+            "serves": "Panel B bars"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "Average",
+            "high": "6",
+            "serves": "Panel B bars"
+          },
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "%",
+            "low": "-10",
+            "high": "0",
+            "serves": "Panel C bars"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "Average",
+            "high": "6",
+            "serves": "Panel C bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "panel",
+            "label_source": "panel_title",
+            "example": "A. High-emission industries"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Wages"
+          },
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "2"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "A. High-emission industries",
+            "Wages",
+            "2"
+          ],
+          "value": "-8",
+          "value_source": "axis_read",
+          "why_hard": "Values are stacked and unlabelled; reading a segment length to 5% against an axis spaced by 10 is impossible."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "stacked_bar",
+        "figure_id": "f1",
+        "evidence": "the panels show bars with stacked segments for the series"
+      },
+      {
+        "key": "negative_values",
+        "figure_id": "f1",
+        "evidence": "the y axes run from 0 down to -70 and -10"
+      },
+      {
+        "key": "shared_legend",
+        "figure_id": "f1",
+        "evidence": "one legend with three series sits above the three panels"
+      },
+      {
+        "key": "small_multiples_4",
+        "figure_id": "f1",
+        "evidence": "three panels aligned side by side showing A, B, and C"
+      },
+      {
+        "key": "legend_above_plot",
+        "figure_id": "f1",
+        "evidence": "the legend sits between the heading block and the panels"
+      },
+      {
+        "key": "panel_title_per_panel",
+        "figure_id": "f1",
+        "evidence": "each panel has a title like A. High-emission industries"
+      },
+      {
+        "key": "per_panel_axis_range",
+        "figure_id": "f1",
+        "evidence": "Panel C uses 0 to -10, unlike A and B"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "subtitle mentions percentage, and axes have % above top tick"
+      },
+      {
+        "key": "axis_title_above_axis",
+        "figure_id": "f1",
+        "evidence": "the % unit is placed directly above the top tick"
+      },
+      {
+        "key": "rotated_x_ticks",
+        "figure_id": "f1",
+        "evidence": "category labels like Average are rotated"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "Note: ... Source: ... are printed at the bottom"
+      },
+      {
+        "key": "data_link_below_figure",
+        "figure_id": "f1",
+        "evidence": "StatLink https://stat.link/8izqk2 is printed at bottom right"
+      },
+      {
+        "key": "panel_background",
+        "figure_id": "f1",
+        "evidence": "the plot areas are tinted light grey"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "white horizontal grid lines, no vertical ones"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "stacked_bar_mixed_signs",
+        "figure_id": "f1",
+        "evidence": "Panel C year 3 Days worked segment goes upwards in a negative stack",
+        "affects": [
+          2
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "-8",
+        "figure_id": "f1",
+        "mark": "the Panel A year 2 Wages segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. High-emission industries",
+          "Wages",
+          "2"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-25",
+        "figure_id": "f1",
+        "mark": "the Panel A year 2 Employment segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. High-emission industries",
+          "Employment",
+          "2"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-6",
+        "figure_id": "f1",
+        "mark": "the Panel A year 2 Days worked segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. High-emission industries",
+          "Days worked",
+          "2"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-18",
+        "figure_id": "f1",
+        "mark": "the Panel A year 5 Wages segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. High-emission industries",
+          "Wages",
+          "5"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-25",
+        "figure_id": "f1",
+        "mark": "the Panel B year 2 Employment segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "B. Low-emission industries",
+          "Employment",
+          "2"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-6",
+        "figure_id": "f1",
+        "mark": "the Panel B year 2 Wages segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "B. Low-emission industries",
+          "Wages",
+          "2"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-2",
+        "figure_id": "f1",
+        "mark": "the Panel C year 2 Wages segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "C. Difference",
+          "Wages",
+          "2"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-1",
+        "figure_id": "f1",
+        "mark": "the Panel C year 2 Employment segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "C. Difference",
+          "Employment",
+          "2"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-1.8",
+        "figure_id": "f1",
+        "mark": "the Panel C year 2 Days worked segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "C. Difference",
+          "Days worked",
+          "2"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "0.5",
+        "figure_id": "f1",
+        "mark": "the Panel C year 3 Days worked segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "C. Difference",
+          "Days worked",
+          "3"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "所有的数值都没有标注，必须在一个堆叠柱状图中通过纵轴进行估读。比如Panel C中的-1.8和0.5，纵轴刻度间距为1，无法通过肉眼达到5%的精度要求（容差仅为0.09）。",
+    "examples": [
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "Panel C year 3 Days worked segment goes up from -4 to -3.5",
+        "why": "管道目前仅支持同向堆叠或跨零线的正负堆叠，无法在一根整体位于零下（负值）的柱子中正确处理反向（正值）堆叠的线段。"
+      },
+      {
+        "gap": "P2",
+        "figure_id": "f1",
+        "quote": "panels titled A. High-emission industries, B. Low-emission industries, C. Difference",
+        "why": "图表被分为三个面板，每个面板有独立标题，提取数据时必须将面板名称作为定位值的一个维度，否则无法区分同名类别。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "Figure 3.7. Differences in earnings losses reflect larger wage losses...",
+        "why": "标题块包含图表编号、主标题以及说明单位的副标题，生成器需要能独立处理这几个字段并正确排布。"
+      }
+    ]
+  }
+}

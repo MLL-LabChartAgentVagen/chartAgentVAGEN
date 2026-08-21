@@ -1,0 +1,344 @@
+{
+  "stem": "ac8b3538-en_p153",
+  "document": "ac8b3538-en",
+  "tags": "3d_chart+need_estimate",
+  "model": "gpt-5.6-sol",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 120000,
+  "seconds": 101.0,
+  "usage": {
+    "input_tokens": 8703,
+    "output_tokens": 7227,
+    "cache_read_tokens": 2365
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n需绘制三面板负值堆叠柱图，共享置顶图例；各面板重复“Average、1–6”，但纵轴范围分别为−70、−60和−10至0。标题、说明性副标题、面板标题、灰色绘图区、旋转横轴标签及图下注释、来源和StatLink均需保留。\n\n### 定位一个值难在哪\n例如“C. Difference—1—Wages”的0.5没有印在图上，只能从1点间隔的纵轴读取；5%容差仅0.025，且柱段极短，难以可靠辨认。\n\n### 不确定的\n所有数值均未直接标注；若干堆叠段只能由上下边界相减。尤其−6、−1、−1.8及0.5对应位置依据柱高和给定核查值判断。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 3.7",
+          "title": "Differences in earnings losses reflect larger wage losses, fewer days worked as well as longer spells out of work",
+          "subtitle": "Contribution of daily wages, days worked and employment to overall earnings losses after job loss in high- and low-emission industries in percentage (Panel A and B) and the difference in earnings losses between high- and low-emission industries in percentage points (Panel C), average across countries",
+          "unit_text": "in percentage (Panel A and B) and the difference in earnings losses between high- and low-emission industries in percentage points (Panel C)",
+          "placement": "above"
+        },
+        "type": "stacked_bar",
+        "type_other": "",
+        "panels": 3,
+        "series": 3,
+        "categories": 7,
+        "marks": 63,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "%",
+            "low": "-70",
+            "high": "0",
+            "serves": "all stacked bars in Panel A"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "Average",
+            "high": "6",
+            "serves": "all stacked bars in Panel A"
+          },
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "%",
+            "low": "-60",
+            "high": "0",
+            "serves": "all stacked bars in Panel B"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "Average",
+            "high": "6",
+            "serves": "all stacked bars in Panel B"
+          },
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "%",
+            "low": "-10",
+            "high": "0",
+            "serves": "all stacked bars in Panel C"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "Average",
+            "high": "6",
+            "serves": "all stacked bars in Panel C"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "panel",
+            "label_source": "panel_title",
+            "example": "A. High-emission industries"
+          },
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Average"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Wages"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "C. Difference",
+            "1",
+            "Wages"
+          ],
+          "value": "0.5",
+          "value_source": "axis_read",
+          "why_hard": "The tiny positive segment and 1-point ticks cannot support 5% precision."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "stacked_bar",
+        "figure_id": "f1",
+        "evidence": "Each category has one bar containing Wages, Employment, and Days worked segments."
+      },
+      {
+        "key": "negative_values",
+        "figure_id": "f1",
+        "evidence": "Bars extend below the 0 baseline; printed y ticks run down to -70, -60, and -10."
+      },
+      {
+        "key": "per_panel_axis_range",
+        "figure_id": "f1",
+        "evidence": "Panel ranges are -70–0, -60–0, and -10–0."
+      },
+      {
+        "key": "shared_legend",
+        "figure_id": "f1",
+        "evidence": "One legend naming Wages, Employment, and Days worked spans all three panels."
+      },
+      {
+        "key": "small_multiples_4",
+        "figure_id": "f1",
+        "evidence": "Three repeated stacked-bar panels are titled A, B, and C."
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "Lines beginning “Note:” and “Source:” appear below the plots."
+      },
+      {
+        "key": "legend_above_plot",
+        "figure_id": "f1",
+        "evidence": "The shared legend sits in a grey strip above the three plots."
+      },
+      {
+        "key": "panel_title_per_panel",
+        "figure_id": "f1",
+        "evidence": "Panels are titled “A. High-emission industries”, “B. Low-emission industries”, and “C. Difference”."
+      },
+      {
+        "key": "data_link_below_figure",
+        "figure_id": "f1",
+        "evidence": "“StatLink” and “https://stat.link/8izqk2” appear beneath the source."
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "Subtitle says “in percentage (Panel A and B)” and “in percentage points (Panel C)”."
+      },
+      {
+        "key": "axis_title_above_axis",
+        "figure_id": "f1",
+        "evidence": "A “%” symbol is printed above the left y axis of every panel."
+      },
+      {
+        "key": "rotated_x_ticks",
+        "figure_id": "f1",
+        "evidence": "“Average” and 1–6 category labels are diagonally rotated below each panel."
+      },
+      {
+        "key": "panel_background",
+        "figure_id": "f1",
+        "evidence": "Each plot area has a light grey background fill."
+      }
+    ],
+    "new_components": [],
+    "spot_checks": [
+      {
+        "value": "-8",
+        "figure_id": "f1",
+        "mark": "the A. High-emission industries / Average / Wages segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. High-emission industries",
+          "Average",
+          "Wages"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-25",
+        "figure_id": "f1",
+        "mark": "the A. High-emission industries / 1 / Employment segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. High-emission industries",
+          "1",
+          "Employment"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-6",
+        "figure_id": "f1",
+        "mark": "the A. High-emission industries / 5 / Days worked segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. High-emission industries",
+          "5",
+          "Days worked"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-18",
+        "figure_id": "f1",
+        "mark": "the B. Low-emission industries / Average / Employment segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "B. Low-emission industries",
+          "Average",
+          "Employment"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-25",
+        "figure_id": "f1",
+        "mark": "the B. Low-emission industries / 1 / Employment segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "B. Low-emission industries",
+          "1",
+          "Employment"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-6",
+        "figure_id": "f1",
+        "mark": "the B. Low-emission industries / Average / Wages segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "B. Low-emission industries",
+          "Average",
+          "Wages"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-2",
+        "figure_id": "f1",
+        "mark": "the C. Difference / Average / Wages segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "C. Difference",
+          "Average",
+          "Wages"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-1",
+        "figure_id": "f1",
+        "mark": "the C. Difference / 1 / Employment segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "C. Difference",
+          "1",
+          "Employment"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-1.8",
+        "figure_id": "f1",
+        "mark": "the C. Difference / 3 / Wages segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "C. Difference",
+          "3",
+          "Wages"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "0.5",
+        "figure_id": "f1",
+        "mark": "the C. Difference / 1 / Wages segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "C. Difference",
+          "1",
+          "Wages"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "C面板刻度间隔为1，而0.5的5%仅0.025；堆叠段还需比较边界，难以达到容差。及上下边界。全估低。嗯。",
+    "examples": [
+      {
+        "gap": "P2",
+        "figure_id": "f1",
+        "quote": "A. High-emission industries; B. Low-emission industries; C. Difference",
+        "why": "同一类别与系列在三个面板重复，面板名必须进入数值键。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "The y axes run from -70, -60, and -10 up to 0.",
+        "why": "需要控制负值、零基线、面板独立刻度及顶部单位符号。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "Figure 3.7. Differences in earnings losses reflect larger wage losses, fewer days worked as well as longer spells out of work",
+        "why": "图号、主标题、长副标题和单位说明是分离字段，整体位于图上方。"
+      },
+      {
+        "gap": "P3",
+        "figure_id": "f1",
+        "quote": "Note: Average across countries of the contribution of daily wages, the probability of being employed, and days worked",
+        "why": "整页导出需维持图、注释、来源和StatLink的上下文顺序。"
+      }
+    ]
+  }
+}

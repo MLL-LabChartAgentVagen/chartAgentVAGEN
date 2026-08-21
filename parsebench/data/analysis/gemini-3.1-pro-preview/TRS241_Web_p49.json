@@ -1,0 +1,255 @@
+{
+  "stem": "TRS241_Web_p49",
+  "document": "TRS241_Web",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 70.0,
+  "usage": {
+    "input_tokens": 5365,
+    "output_tokens": 9337,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n需要生成一个双数值轴的散点图，散点不仅包含位置信息，其旁边还需要直接印有分类的缩写标签（如\"CH\"、\"US\"）。图表内部放置了一个类似图例的文本框，用于将缩写映射为国家全称。最具挑战性的是，绘图区右侧外边缘需要绘制带有箭头的垂直标尺带（bracket），用来标注“Industrial market economies”、“middle income economies”和“low income economies”这三个不同的数值跨度范围，这超出了传统图表坐标轴和辅助线的范畴。\n\n### 定位一个值难在哪\n以瑞士（CH）的纵坐标值 `17500` 为例，图中既没有水平和垂直网格线，也没有数据点到坐标轴的引导线。Y轴的刻度间距极大（每档2000），要在一个两档之间的广阔空白区域中纯靠肉眼平行映射到Y轴并估算出 17500，且保证误差在5%以内，实际上是不可能的。\n\n### 不确定的\n左下角靠近原点的低收入国家聚类区（如IN、CN、PH）标签和数据点高度重叠。仅凭视觉很难确切对应哪个黑点属于哪个国家，这导致读取这些数据点的坐标值时包含极大的猜测成分。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "FIG.2.2.",
+          "title": "Relation of GDP to energy consumption (both in per capita terms).",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "below"
+        },
+        "type": "scatter",
+        "type_other": "",
+        "panels": 1,
+        "series": 17,
+        "categories": 1,
+        "marks": 17,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "1981 per capita GDP at market prices (US $)",
+            "low": "2000",
+            "high": "18000",
+            "serves": "y-coordinates of all points"
+          },
+          {
+            "side": "bottom",
+            "role": "value",
+            "unit_text": "1981 per capita energy use (GJ)",
+            "low": "100",
+            "high": "400",
+            "serves": "x-coordinates of all points"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "inline_label",
+            "example": "CH"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "CH"
+          ],
+          "value": "17500",
+          "value_source": "axis_read",
+          "why_hard": "Y-axis ticks are spaced by 2000 with no gridlines, making visual alignment highly prone to error."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "legend_inside_plot",
+        "figure_id": "f1",
+        "evidence": "a box mapping country abbreviations to full names sits inside the plot area"
+      },
+      {
+        "key": "inline_series_labels",
+        "figure_id": "f1",
+        "evidence": "country codes like CH and US are printed directly next to their data points"
+      },
+      {
+        "key": "annotation_callout",
+        "figure_id": "f1",
+        "evidence": "arrows and text on the right define income economy brackets"
+      },
+      {
+        "key": "rotated_axis_title",
+        "figure_id": "f1",
+        "evidence": "the left y-axis title runs vertically along the axis"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "US $ and GJ are integrated into the respective axis titles"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "value_range_bracket",
+        "figure_id": "f1",
+        "evidence": "vertical lines with arrows mark specific numeric bands on the right outside edge",
+        "affects": [
+          4
+        ]
+      },
+      {
+        "name": "abbreviation_mapping_legend",
+        "figure_id": "f1",
+        "evidence": "the legend maps codes to names textually rather than decoding mark colours or shapes",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "17500",
+        "figure_id": "f1",
+        "mark": "CH point y-value",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "CH",
+          "1981 per capita GDP at market prices (US $)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "140",
+        "figure_id": "f1",
+        "mark": "CH point x-value",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "CH",
+          "1981 per capita energy use (GJ)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "15000",
+        "figure_id": "f1",
+        "mark": "SE point y-value",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "SE",
+          "1981 per capita GDP at market prices (US $)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "12800",
+        "figure_id": "f1",
+        "mark": "US point y-value",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "US",
+          "1981 per capita GDP at market prices (US $)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "310",
+        "figure_id": "f1",
+        "mark": "US point x-value",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "US",
+          "1981 per capita energy use (GJ)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "11500",
+        "figure_id": "f1",
+        "mark": "CA point y-value",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "CA",
+          "1981 per capita GDP at market prices (US $)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "10200",
+        "figure_id": "f1",
+        "mark": "JP point y-value",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "JP",
+          "1981 per capita GDP at market prices (US $)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "2600",
+        "figure_id": "f1",
+        "mark": "AR point y-value",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "AR",
+          "1981 per capita GDP at market prices (US $)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "300",
+        "figure_id": "f1",
+        "mark": "IN or CN point y-value",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "IN",
+          "1981 per capita GDP at market prices (US $)"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "240",
+        "figure_id": "f1",
+        "mark": "SE point x-value",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "SE",
+          "1981 per capita energy use (GJ)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "图表没有任何网格线，且坐标轴刻度间距极大（如Y轴每2000一档，X轴每100一档），要从中肉眼估算出 17500 或 12800 这样的散点坐标值必然超过5%的容忍误差率。",
+    "examples": [
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "vertical arrows and labels on the right for 'Industrial market economies'",
+        "why": "目前的生成管线不支持在绘图区外侧添加跨越特定数值范围的垂直标尺线及伴随的长文本分类注释。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "legend box mapping AR to ARGENTINA without mark styling",
+        "why": "图例作为单纯的文本字典存在，提供缩写到全称的映射，而不是关联视觉编码（如颜色或形状），现有图例生成模块缺乏这种模式。"
+      }
+    ]
+  }
+}

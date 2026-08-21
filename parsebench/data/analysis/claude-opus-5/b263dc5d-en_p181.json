@@ -1,0 +1,381 @@
+{
+  "stem": "b263dc5d-en_p181",
+  "document": "b263dc5d-en",
+  "tags": "need_estimate",
+  "model": "claude-opus-5",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 99.4,
+  "usage": {
+    "input_tokens": 13846,
+    "output_tokens": 8063,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "**画出来要什么**\n一个编号图形下三个独立面板（A/B/C），每个面板顶部有深蓝色横幅标题（`A. Numeracy`、`B. Years of education`、`C. Older workers (Ref: Younger workers)`）。每个面板各自的纵轴范围不同（-8~4、0~20、-8~8），单位词 `Percentage points` 印在最高刻度之上而非轴旁。每面板约32根单色柱、按值各自独立降序排列，所以同一国家在三面板位置完全不同。柱身填深蓝或浅蓝两种（无图例说明其含义），`OECD average` 一列后面有浅蓝竖向色带且轴标签加粗，`England (UK)`、`Flemish Region (BE)` 的轴标签为蓝色字。国名90°旋转，每个标签格之间有竖线，面板内同时有横向网格线。无任何数值标注、无图例、本页无 Source/Note。\n\n**定位一个值难在哪**\n以 A 面板 `OECD average` 的 -1.3 为例：刻度只有 4、0、-4、-8，间距4个百分点；-1.3 的柱高约为一格的三分之一，5% 容差即 ±0.065 pp，肉眼与像素都无法达到；且必须同时给出面板名和国名两个标签才能唯一定位。\n\n**不确定的**\n深蓝/浅蓝的含义（推测为显著性）在本页没有图例或注释；柱数按标签逐个数得每面板32根（合计96），可能有±1误差；蓝色轴标签是否另有说明也看不到。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 4.17.",
+          "title": "Likelihood of over-qualification, by socio-demographic characteristics [1/2]",
+          "subtitle": "Change in likelihood of over-qualification (relative to reference category)",
+          "unit_text": "Percentage points",
+          "placement": "above"
+        },
+        "type": "bar",
+        "type_other": "",
+        "panels": 3,
+        "series": 1,
+        "categories": 32,
+        "marks": 96,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Percentage points",
+            "low": "-8",
+            "high": "4",
+            "serves": "all bars in panel A. Numeracy"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "Finland",
+            "high": "England (UK)",
+            "serves": "names the 32 bars of panel A"
+          },
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Percentage points",
+            "low": "0",
+            "high": "20",
+            "serves": "all bars in panel B. Years of education"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "Italy",
+            "high": "Israel",
+            "serves": "names the 32 bars of panel B"
+          },
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Percentage points",
+            "low": "-8",
+            "high": "8",
+            "serves": "all bars in panel C. Older workers"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "Lithuania",
+            "high": "Israel",
+            "serves": "names the 32 bars of panel C"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "panel",
+            "label_source": "panel_title",
+            "example": "A. Numeracy"
+          },
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "OECD average"
+          },
+          {
+            "role": "colour_group",
+            "label_source": "colour_only",
+            "example": "dark navy fill vs pale blue fill"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "A. Numeracy",
+            "OECD average",
+            "dark navy fill"
+          ],
+          "value": "-1.3",
+          "value_source": "axis_read",
+          "why_hard": "ticks only every 4 pp; bar is a third of one tick, no printed value"
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "negative_values",
+        "figure_id": "f1",
+        "evidence": "panels A and C draw bars downward from a zero line to ticks -4 and -8"
+      },
+      {
+        "key": "reference_line",
+        "figure_id": "f1",
+        "evidence": "a heavy horizontal rule at 0 runs the width of panels A and C"
+      },
+      {
+        "key": "highlighted_category",
+        "figure_id": "f1",
+        "evidence": "'OECD average' tick label set in bold with a pale blue vertical band behind its bar"
+      },
+      {
+        "key": "shaded_band",
+        "figure_id": "f1",
+        "evidence": "a light-blue vertical band spans the OECD average column top to bottom in each panel"
+      },
+      {
+        "key": "color_encodes_extra_attribute",
+        "figure_id": "f1",
+        "evidence": "bars filled either dark navy or pale blue with no legend naming the two fills"
+      },
+      {
+        "key": "small_multiples_4",
+        "figure_id": "f1",
+        "evidence": "three identical bar panels A, B, C stacked down the page under one figure number"
+      },
+      {
+        "key": "panel_title_per_panel",
+        "figure_id": "f1",
+        "evidence": "dark blue banners read 'A. Numeracy', 'B. Years of education', 'C. Older workers (Ref: Younger workers)'"
+      },
+      {
+        "key": "per_panel_axis_range",
+        "figure_id": "f1",
+        "evidence": "panel A runs -8 to 4, panel B 0 to 20, panel C -8 to 8"
+      },
+      {
+        "key": "rotated_x_ticks",
+        "figure_id": "f1",
+        "evidence": "country names such as 'Slovak Republic' are set vertically under each bar"
+      },
+      {
+        "key": "axis_title_above_axis",
+        "figure_id": "f1",
+        "evidence": "'Percentage points' printed above the top tick (4, 20, 8) of each panel"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "only 'Percentage points' fixes the scale of bare ticks 4, 0, -4, -8"
+      },
+      {
+        "key": "footnote_marker",
+        "figure_id": "f1",
+        "evidence": "category label 'Poland*' carries an asterisk in all three panels"
+      },
+      {
+        "key": "no_value_axis",
+        "figure_id": "f1",
+        "evidence": "no numbers on marks; ticks exist but bar values must be estimated between 4 pp ticks"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "grid_both_directions",
+        "figure_id": "f1",
+        "evidence": "horizontal rules at 4/8/12/16 in panel B plus vertical rules between every category slot",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "name": "per_panel_independent_sort",
+        "figure_id": "f1",
+        "evidence": "Italy is first in panel B but 10th in panel A; each panel sorted by its own values",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "name": "category_label_cell_separators",
+        "figure_id": "f1",
+        "evidence": "vertical rules continue below the axis, boxing each rotated country label in its own cell",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "name": "colored_axis_label_subgroup",
+        "figure_id": "f1",
+        "evidence": "'England (UK)' and 'Flemish Region (BE)' tick labels printed in blue, other countries in black",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "name": "figure_part_indicator_in_title",
+        "figure_id": "f1",
+        "evidence": "title ends '[1/2]', marking the figure as continued on another page",
+        "affects": [
+          4
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "2.5",
+        "figure_id": "f1",
+        "mark": "the Finland bar in panel A, the tallest positive bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. Numeracy",
+          "Finland"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-1.3",
+        "figure_id": "f1",
+        "mark": "the OECD average bar in panel A, inside the pale blue band",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. Numeracy",
+          "OECD average"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-4.9",
+        "figure_id": "f1",
+        "mark": "the England (UK) bar in panel A, the lowest bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. Numeracy",
+          "England (UK)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "16.5",
+        "figure_id": "f1",
+        "mark": "the Italy bar in panel B, the tallest bar of the figure",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "B. Years of education",
+          "Italy"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "10",
+        "figure_id": "f1",
+        "mark": "one of the bars just above the 8 tick in panel B (France / Switzerland / Japan / Spain cluster)",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "B. Years of education",
+          "Switzerland"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "10",
+        "figure_id": "f1",
+        "mark": "a second bar of the same ~10 cluster in panel B; the four are visually indistinguishable",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "B. Years of education",
+          "Japan"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "2.5",
+        "figure_id": "f1",
+        "mark": "the Israel bar in panel B, the shortest bar at the right end",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "B. Years of education",
+          "Israel"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "6.9",
+        "figure_id": "f1",
+        "mark": "the Lithuania bar in panel C, the only large positive bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "C. Older workers (Ref: Younger workers)",
+          "Lithuania"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "-2",
+        "figure_id": "f1",
+        "mark": "one of the mid-range negative bars in panel C (Norway / Canada / Spain range), cannot be pinned uniquely",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "C. Older workers (Ref: Younger workers)",
+          "Canada"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-7.6",
+        "figure_id": "f1",
+        "mark": "the Israel bar in panel C, the deepest negative bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "C. Older workers (Ref: Younger workers)",
+          "Israel"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "面板A刻度间隔4个百分点，-1.3的5%容差仅±0.065pp；且10在B面板四根近等高柱间无法区分。",
+    "examples": [
+      {
+        "gap": "P2",
+        "figure_id": "f1",
+        "quote": "Three banners: 'A. Numeracy', 'B. Years of education', 'C. Older workers (Ref: Younger workers)' over three separate bar panels",
+        "why": "同一国名在三面板出现三次，键必须含面板名，否则Israel的2.5与-7.6无法区分。"
+      },
+      {
+        "gap": "P8",
+        "figure_id": "f1",
+        "quote": "Bars filled either dark navy or pale blue; the page carries no legend and no note explaining the two fills",
+        "why": "颜色承载显著性等属性但页面无图例，现有流程无法把这一属性写入键。"
+      },
+      {
+        "gap": "P1",
+        "figure_id": "f1",
+        "quote": "Panel A y axis ticks read 4, 0, -4, -8 only; the OECD average bar is about a third of one tick",
+        "why": "可读性需按柱逐个判定：16.5可读、-1.3不可读，布尔式门槛无法表达。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "'Figure 4.17. ...[1/2]' then 'Change in likelihood ... (relative to reference category)' then 'Percentage points' above the top tick",
+        "why": "编号、标题、副标题与置于顶刻度之上的单位需拆成四个独立字段。"
+      },
+      {
+        "gap": "P5",
+        "figure_id": "f1",
+        "quote": "Each panel carries 32 vertically labelled country bars; three panels give about 96 bars on one page",
+        "why": "单页近百根柱加三套独立排序，超出当前密度上限与排序控制。"
+      }
+    ]
+  }
+}

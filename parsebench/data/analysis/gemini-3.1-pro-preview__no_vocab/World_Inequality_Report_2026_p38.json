@@ -1,0 +1,345 @@
+{
+  "stem": "World_Inequality_Report_2026_p38",
+  "document": "World_Inequality_Report_2026",
+  "tags": "untagged",
+  "model": "gemini-3.1-pro-preview",
+  "control": "no_vocab",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 23.5,
+  "usage": {
+    "input_tokens": 3176,
+    "output_tokens": 3175,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n这是一个有共同y轴的两面板堆叠柱状图。需要在顶部绘制主标题和副标题。每个面板都有自己的标题。左侧面板需要绘制单独的柱子，而右侧面板是100%堆叠的（虽然这里所有的柱子高度一致为100%，实际上只是堆叠柱状图，数值未以100%缩放）。每个柱段上都有内联数据标签，位置在柱段中央或顶部，有不同的颜色标注。在底部需要一个跨面板共享的图例，图例包含两行（如果算上间距），每行有三个颜色方块和文字说明。\n\n### 定位一个值难在哪\n以值`75%`为例。它属于`Wealth`类别，颜色为红色。图例中红色标注为`Top 10%`。但整个图表的标题区分了`By broad groups`和`More detail on the top 10%`，意味着前两个红色的柱子（在左侧面板）和右侧面板中橙色、粉色、绿色、蓝色的柱段实际上属于不同的数据结构或层次。定位该值需要组合面板标题`By broad groups`、类别`Wealth`和图例`Top 10%`。如果没有正确识别面板划分和图例层级，很难生成完全准确的寻址键。\n\n### 不确定的\n无法确定右侧面板中的深蓝色图例项是否仅对应`Bottom 50%`，因为图例排布中`Bottom 50%`下方紧接着出现`Next 9%`，右侧深蓝色柱段的颜色与左侧相同，但右侧描述的是`More detail on the top 10%`，理论上不应该包含`Bottom 50%`。这可能是图表本身设计的歧义，或者是图例合并显示带来的误导。右下角深蓝色的 `8%` 和 `2%` 似乎是用之前的颜色表示了不同的意思，或者是表示Top 10%里的底层分布？这在视觉解析时容易混淆。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 1.3.",
+          "title": "Income and wealth shares are distributed very unequally",
+          "subtitle": "Global income and wealth inequality, 2025",
+          "unit_text": "Share of global income or wealth",
+          "placement": "above"
+        },
+        "type": "stacked_bar",
+        "type_other": "",
+        "panels": 2,
+        "series": 7,
+        "categories": 2,
+        "marks": 14,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Share of global income or wealth",
+            "low": "0%",
+            "high": "100%",
+            "serves": "all bars"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "Income",
+            "high": "Wealth",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "panel",
+            "label_source": "panel_title",
+            "example": "By broad groups"
+          },
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Income"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Bottom 50%"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "More detail on the top 10%",
+            "Wealth",
+            "Top 1%"
+          ],
+          "value": "37%",
+          "value_source": "printed",
+          "why_hard": "The legend for the right panel is split across two rows and shares colors contextually."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "figure_number",
+        "figure_id": "f1",
+        "evidence": "Figure 1.3.",
+        "affects": [
+          4
+        ]
+      },
+      {
+        "key": "main_title",
+        "figure_id": "f1",
+        "evidence": "Income and wealth shares are distributed very unequally",
+        "affects": [
+          4
+        ]
+      },
+      {
+        "key": "subtitle",
+        "figure_id": "f1",
+        "evidence": "Global income and wealth inequality, 2025",
+        "affects": [
+          4
+        ]
+      },
+      {
+        "key": "panel_title",
+        "figure_id": "f1",
+        "evidence": "By broad groups",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "y_axis_label",
+        "figure_id": "f1",
+        "evidence": "Share of global income or wealth",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "y_axis_ticks",
+        "figure_id": "f1",
+        "evidence": "0% to 100% in increments of 10%",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "key": "x_axis_ticks",
+        "figure_id": "f1",
+        "evidence": "Income, Wealth",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "inline_labels",
+        "figure_id": "f1",
+        "evidence": "Values like 8%, 38%, 53% printed on or above bars",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "key": "legend_bottom",
+        "figure_id": "f1",
+        "evidence": "Bottom 50%, Middle 40%, Top 10% and others shown at bottom",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "gridlines_horizontal",
+        "figure_id": "f1",
+        "evidence": "Dotted lines across the plot at each y-axis tick",
+        "affects": []
+      },
+      {
+        "key": "footnote",
+        "figure_id": "f1",
+        "evidence": "Interpretation. The global bottom 50% capture 8%...",
+        "affects": [
+          4
+        ]
+      }
+    ],
+    "new_components": [
+      {
+        "name": "shared_y_axis_multi_panel",
+        "figure_id": "f1",
+        "evidence": "Both panels have identical y-axes printed on their left",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "name": "mixed_stacking_modes",
+        "figure_id": "f1",
+        "evidence": "Left panel bars sit on x-axis independently, right panel bars are stacked",
+        "affects": [
+          1,
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "8",
+        "figure_id": "f1",
+        "mark": "left panel, Income, blue bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "By broad groups",
+          "Income",
+          "Bottom 50%"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "38",
+        "figure_id": "f1",
+        "mark": "left panel, Income, green bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "By broad groups",
+          "Income",
+          "Middle 40%"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "53",
+        "figure_id": "f1",
+        "mark": "left panel, Income, red bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "By broad groups",
+          "Income",
+          "Top 10%"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "2",
+        "figure_id": "f1",
+        "mark": "left panel, Wealth, blue bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "By broad groups",
+          "Wealth",
+          "Bottom 50%"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "23",
+        "figure_id": "f1",
+        "mark": "left panel, Wealth, green bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "By broad groups",
+          "Wealth",
+          "Middle 40%"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "75",
+        "figure_id": "f1",
+        "mark": "left panel, Wealth, red bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "By broad groups",
+          "Wealth",
+          "Top 10%"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "33",
+        "figure_id": "f1",
+        "mark": "right panel, Income, pink stacked segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "More detail on the top 10%",
+          "Income",
+          "Next 9%"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "20",
+        "figure_id": "f1",
+        "mark": "right panel, Income, orange stacked segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "More detail on the top 10%",
+          "Income",
+          "Top 1%"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "38",
+        "figure_id": "f1",
+        "mark": "right panel, Wealth, pink stacked segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "More detail on the top 10%",
+          "Wealth",
+          "Next 9%"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "37",
+        "figure_id": "f1",
+        "mark": "right panel, Wealth, orange stacked segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "More detail on the top 10%",
+          "Wealth",
+          "Top 1%"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      }
+    ],
+    "hardest_step": 3,
+    "hardest_step_why": "在右侧面板的寻址中，底部蓝色和绿色部分并没有明确在右侧图例中说明。如果模型未能将左侧图例的Bottom 50%和Middle 40%复用到右面板，那么对应值（如右面板底部的8%）将无法分配正确的系列标签。",
+    "examples": [
+      {
+        "gap": "P2",
+        "figure_id": "f1",
+        "quote": "By broad groups / More detail on the top 10%",
+        "why": "图表通过两个独立的面板标题区分了数据的层级结构。需要将面板标题作为维度加入键中才能唯一寻址数据。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "Figure 1.3. Income and wealth shares are distributed very unequally\nGlobal income and wealth inequality, 2025",
+        "why": "整个图表有复杂的标题结构，包括编号、主标题、副标题，并且y轴标签放在了轴外侧，要求生成器能独立处理这些元素。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "left side has individual bars on x-axis, right side has fully stacked bars",
+        "why": "同一张图内的不同面板使用了完全不同的图表类型（非堆叠柱状图和堆叠柱状图混合），这是目前生成器很难原生支持的。"
+      }
+    ]
+  }
+}

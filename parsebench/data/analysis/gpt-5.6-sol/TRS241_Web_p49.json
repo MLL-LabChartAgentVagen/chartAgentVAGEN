@@ -1,0 +1,261 @@
+{
+  "stem": "TRS241_Web_p49",
+  "document": "TRS241_Web",
+  "tags": "need_estimate",
+  "model": "gpt-5.6-sol",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 120000,
+  "seconds": 123.7,
+  "usage": {
+    "input_tokens": 7803,
+    "output_tokens": 8002,
+    "cache_read_tokens": 2365
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n单面板散点图，双数量轴分别表示人均能源使用与人均GDP；17个点以国家代码直接标注。图内还需绘制国家代码对照框、来源框，以及带箭头和分界线的收入经济体分类；图题置于图下。\n\n### 定位一个值难在哪\n例如“CN”的GDP值300只能从纵轴估读。纵轴首个标示刻度是2000，刻度间隔也为2000，而300的5%仅15，远低于图像可辨精度。\n\n### 不确定的\n所有数据值均未印在点旁；140、300等只能按点位和国家代码推定。右侧分类线没有数值刻度，其确切阈值不可见。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "FIG.2.2.",
+          "title": "Relation of GDP to energy consumption (both in per capita terms).",
+          "subtitle": "",
+          "unit_text": "(both in per capita terms)",
+          "placement": "below"
+        },
+        "type": "scatter",
+        "type_other": "",
+        "panels": 1,
+        "series": 1,
+        "categories": 17,
+        "marks": 17,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "(US $)",
+            "low": "2000",
+            "high": "18000",
+            "serves": "GDP coordinate of every country point"
+          },
+          {
+            "side": "bottom",
+            "role": "value",
+            "unit_text": "(GJ)",
+            "low": "100",
+            "high": "400",
+            "serves": "energy-use coordinate of every country point"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "inline_label",
+            "example": "CH"
+          },
+          {
+            "role": "series",
+            "label_source": "heading",
+            "example": "1981 per capita GDP at market prices (US $)"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "CN",
+            "1981 per capita GDP at market prices (US $)"
+          ],
+          "value": "300",
+          "value_source": "axis_read",
+          "why_hard": "The 2,000-dollar tick spacing dwarfs the 15-dollar tolerance at 300."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "reference_line",
+        "figure_id": "f1",
+        "evidence": "Two partial horizontal rules divide the right-side income-economy classifications."
+      },
+      {
+        "key": "annotation_callout",
+        "figure_id": "f1",
+        "evidence": "Arrows and labels identify “industrial market economies”, “middle income economies”, and “low income economies”."
+      },
+      {
+        "key": "legend_inside_plot",
+        "figure_id": "f1",
+        "evidence": "A boxed AR-to-YU country-code key overlays the lower middle of the plot."
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "Axes read “1981 per capita GDP at market prices (US $)” and “1981 per capita energy use (GJ)”."
+      },
+      {
+        "key": "axis_title_below_plot",
+        "figure_id": "f1",
+        "evidence": "“1981 per capita energy use (GJ)” is centered beneath the plot."
+      },
+      {
+        "key": "rotated_axis_title",
+        "figure_id": "f1",
+        "evidence": "“1981 per capita GDP at market prices (US $)” runs vertically along the left axis."
+      }
+    ],
+    "new_components": [
+      {
+        "name": "abbreviated_scatter_labels_with_lookup",
+        "figure_id": "f1",
+        "evidence": "Points use “CH”, “SE”, and other codes; a boxed country-name lookup sits inside.",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "name": "source_box_inside_plot",
+        "figure_id": "f1",
+        "evidence": "A boxed “Sources: IAEA Energy and Economic Data Bank” note overlays the upper plot.",
+        "affects": [
+          4
+        ]
+      },
+      {
+        "name": "caption_heading_below_plot",
+        "figure_id": "f1",
+        "evidence": "“FIG.2.2. Relation of GDP to energy consumption” is printed below the x-axis.",
+        "affects": [
+          4
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "17500",
+        "figure_id": "f1",
+        "mark": "the CH point's GDP coordinate",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "CH",
+          "1981 per capita GDP at market prices (US $)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "140",
+        "figure_id": "f1",
+        "mark": "the CH point's energy-use coordinate",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "CH",
+          "1981 per capita energy use (GJ)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "15000",
+        "figure_id": "f1",
+        "mark": "the SE point's GDP coordinate",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "SE",
+          "1981 per capita GDP at market prices (US $)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "12800",
+        "figure_id": "f1",
+        "mark": "the US point's GDP coordinate",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "US",
+          "1981 per capita GDP at market prices (US $)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "310",
+        "figure_id": "f1",
+        "mark": "the US point's energy-use coordinate",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "US",
+          "1981 per capita energy use (GJ)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "11500",
+        "figure_id": "f1",
+        "mark": "the CA point's GDP coordinate",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "CA",
+          "1981 per capita GDP at market prices (US $)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "10200",
+        "figure_id": "f1",
+        "mark": "the JP point's GDP coordinate",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "JP",
+          "1981 per capita GDP at market prices (US $)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "2600",
+        "figure_id": "f1",
+        "mark": "the AR point's GDP coordinate",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "AR",
+          "1981 per capita GDP at market prices (US $)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "300",
+        "figure_id": "f1",
+        "mark": "the CN point's GDP coordinate",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "CN",
+          "1981 per capita GDP at market prices (US $)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "240",
+        "figure_id": "f1",
+        "mark": "the SE point's energy-use coordinate",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "SE",
+          "1981 per capita energy use (GJ)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "“CN”的300在纵轴上；刻度间隔2000，而5%仅15，无法可靠轴读。周围均是直线增长关系，没有明显异常。人均能源使用越多，GDP越高。右侧有三个经济体类别的标注，工业市场经济体在顶部，中等收入经济体居中，低收入经济体在底部。图内有一个国家代码对照框和一个来源框。图题位于图下。图中没有数据表。纵轴从2000到18000，横轴从100到400。17个国家点均以代码标注。右侧分类线没有刻度，确切阈值不明。图中所有数值都需要从轴读取。CN和IN点很接近，可能存在定位歧义。140可能对应CH或FR的横坐标，但根据点位推定为CH。300可能对应CN或IN的GDP，但根据标签位置推定为CN。所有值均未印在点旁。刻度间隔较大，低值难以满足5%容差。图题为FIG.2.2.，标题为Relation of GDP to energy consumption (both in per capita terms).，单位在轴标题中。图中有来源说明：Sources: IAEA Energy and Economic Data Bank / 1983 World Bank Atlas。图中有国家代码对照：AR Argentina, BR Brazil, CA Canada, CH Switzerland, CN China, DE Germany, ES Spain, FR France, IN India, IT Italy, JP Japan, KR Korea, MY Malaysia, PH Philippines, SE Sweden, US United States of America, YU Yugoslavia。图中有收入类别：industrial market economies、middle income economies、low income economies。图中没有图例系列，只有国家代码对照。散点图有17个点。纵轴标题旋转，横轴标题位于图下。右侧有箭头和水平分界线。图内来源框位于上部。国家代码框位于下部中央。图题位于散点图下方。图页还有正文，但不是独立图。最难的是低GDP值300和2600，因为纵轴每格2000。其他高值大致可在5%内估读。横轴每格100，140、240、310也需要估读，但相对容差较宽。没有负值、对数轴、双轴、误差条、颜色编码或多面板。",
+    "examples": []
+  }
+}

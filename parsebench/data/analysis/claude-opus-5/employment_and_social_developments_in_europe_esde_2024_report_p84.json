@@ -1,0 +1,306 @@
+{
+  "stem": "employment_and_social_developments_in_europe_esde_2024_report_p84",
+  "document": "employment_and_social_developments_in_europe_esde_2024_report",
+  "tags": "need_estimate",
+  "model": "claude-opus-5",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 70.8,
+  "usage": {
+    "input_tokens": 13983,
+    "output_tokens": 5708,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "**画出来要什么**\n\n一张单面板多线图：5 条彩色折线（Quintile 1–5），横轴逐年刻度 `2021`…`2040`（20 格，每年一刻度），纵轴 `0.00`–`0.16`、步长 0.02，只有横向点状网格线；纵轴标题竖排 `% deviation from baseline`；图例横排在绘图区下方。标题块分四层：`Chart 3.11`、蓝色标题句、灰色小字副标题（单位写在副标题括号里）、其后 `Note:` / `Source:` 与一行下载链接 `Click here to download chart.`。全图 100 个数据点，无任何数值标签。\n\n**定位一个值难在哪**\n\n以 0.138 为例：它是 2027 年 Quintile 5 的峰值，没有印在图上。网格线间距 0.02，而 5% 容差只有 ±0.007，即需把一格目测到三分之一以内；且 2027 附近红线（Quintile 4，约 0.122）与蓝线相距不到一格半。行地址还需同时给出 `Quintile 5` 与 `2027`，图例只靠颜色区分五条线。\n\n**不确定的**\n\n各线在 2021 全部汇聚于 0.02，无法判断 0.02 属于哪条序列；0.10 与 0.03 有多个可能落点（Quintile 5 约 2034 年、Quintile 1 约 2030 年低谷）；正文所述 “+0.11% in 2027” 未在图上标出，无法确认对应哪条曲线或均值。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Chart 3.11",
+          "title": "Investment in ALMPs is projected to increase employment during and after the investment period",
+          "subtitle": "Expected impact on employment of investment in labour supply increasing intervention fields of the ESF+, 2021-2027 programming period, by income quintile (% deviation from baseline)",
+          "unit_text": "% deviation from baseline",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 1,
+        "series": 5,
+        "categories": 20,
+        "marks": 100,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "% deviation from baseline",
+            "low": "0.00",
+            "high": "0.16",
+            "serves": "all five quintile lines"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "2021",
+            "high": "2040",
+            "serves": "all five quintile lines"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Quintile 5"
+          },
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2027"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Quintile 3",
+            "2027"
+          ],
+          "value": "0.113",
+          "value_source": "axis_read",
+          "why_hard": "No printed labels; grid every 0.02; yellow peak sits between red and green lines near 2027."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "dotted horizontal rules at 0.02 intervals across the panel, no vertical rules"
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "row 'Quintile 1  Quintile 2  Quintile 3  Quintile 4  Quintile 5' under the x axis"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "'Note: Income quintile 5 indicates the richest quintile...' and 'Source: JRC calculations based on RHOMOLO model.'"
+      },
+      {
+        "key": "data_link_below_figure",
+        "figure_id": "f1",
+        "evidence": "'Click here to download chart.' printed under the Source line"
+      },
+      {
+        "key": "rotated_axis_title",
+        "figure_id": "f1",
+        "evidence": "'% deviation from baseline' set vertically along the left axis"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "subtitle ends '(% deviation from baseline)'; y ticks are bare 0.00-0.16"
+      },
+      {
+        "key": "dense_marks_100plus",
+        "figure_id": "f1",
+        "evidence": "5 quintile lines over 20 yearly points, 2021 to 2040"
+      },
+      {
+        "key": "footnote_marker",
+        "figure_id": "page",
+        "evidence": "bold lead-in 'active labour market policies (182)' with superscript note markers, footnotes listed at page foot"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "converging_series_at_origin",
+        "figure_id": "f1",
+        "evidence": "all five lines start at the same 0.02 point in 2021 and are indistinguishable there",
+        "affects": [
+          2,
+          3
+        ]
+      },
+      {
+        "name": "value_quoted_in_body_text",
+        "figure_id": "f1",
+        "evidence": "'reaching a peak of +0.11% in 2027 (Chart 3.11)' in the paragraph below the chart",
+        "affects": [
+          2,
+          4
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "0.138",
+        "figure_id": "f1",
+        "mark": "the Quintile 5 (light blue) line at its 2027 peak",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Chart 3.11",
+          "Quintile 5",
+          "2027"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "0.122",
+        "figure_id": "f1",
+        "mark": "the Quintile 4 (red) line at its 2027 peak",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Chart 3.11",
+          "Quintile 4",
+          "2027"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "0.095",
+        "figure_id": "f1",
+        "mark": "the Quintile 2 (green) line at its 2027 peak",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Chart 3.11",
+          "Quintile 2",
+          "2027"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "0.09",
+        "figure_id": "f1",
+        "mark": "the Quintile 1 (dark blue) line at its 2027 peak",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Chart 3.11",
+          "Quintile 1",
+          "2027"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "0.078",
+        "figure_id": "f1",
+        "mark": "the Quintile 5 line at the right end, 2040",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Chart 3.11",
+          "Quintile 5",
+          "2040"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "0.04",
+        "figure_id": "f1",
+        "mark": "the Quintile 1 line at the right end, 2040",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Chart 3.11",
+          "Quintile 1",
+          "2040"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "0.02",
+        "figure_id": "f1",
+        "mark": "the common 2021 starting point where all five lines coincide; also a y tick label",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Chart 3.11",
+          "Quintile 1",
+          "2021"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "0.11",
+        "figure_id": "f1",
+        "mark": "peak quoted in body text '+0.11% in 2027'; nearest drawn mark is the Quintile 3 line at 2027",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Chart 3.11",
+          "Quintile 3",
+          "2027"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "0.03",
+        "figure_id": "f1",
+        "mark": "the Quintile 1 line at its post-2030 trough, around 2030-2031",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Chart 3.11",
+          "Quintile 1",
+          "2030"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "0.10",
+        "figure_id": "f1",
+        "mark": "ambiguous: Quintile 5 descending through 0.10 near 2034, or Quintile 3 near 2029",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Chart 3.11",
+          "Quintile 5",
+          "2034"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "网格线间距0.02，0.138的5%容差仅±0.007；100个点无数值标签，Quintile 4(0.122)与5相距不足一格半。",
+    "examples": [
+      {
+        "gap": "P1",
+        "figure_id": "f1",
+        "quote": "y ticks 0.00, 0.02 ... 0.16; five lines, no value labels anywhere on the plot",
+        "why": "每点可达精度约半格0.01，超过0.138的5%容差，需按标记记录可读精度而非布尔门。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "'Chart 3.11' / blue title line / grey subtitle ending '(% deviation from baseline)'",
+        "why": "三层标题＋单位藏在副标题括号内，现有流水线只有单一title字段。"
+      },
+      {
+        "gap": "P5",
+        "figure_id": "f1",
+        "quote": "20 yearly ticks 2021...2040 with five overlapping lines crossing between 2027 and 2031",
+        "why": "100点密度与曲线交叉超出当前密度上限，需把密度作为可控变量。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "y axis labels written as '0.00', '0.02' ... '0.16'; axis title rotated on the left",
+        "why": "两位小数刻度格式与竖排单位位置属样式维度，目前无法指定。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "'Click here to download chart.' printed below 'Source: JRC calculations based on RHOMOLO model.'",
+        "why": "图下数据下载链接行需作为独立结构生成，九项变更均未覆盖。"
+      }
+    ]
+  }
+}

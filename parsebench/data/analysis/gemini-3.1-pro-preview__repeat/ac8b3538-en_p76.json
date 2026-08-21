@@ -1,0 +1,302 @@
+{
+  "stem": "ac8b3538-en_p76",
+  "document": "ac8b3538-en",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "repeat",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 74.5,
+  "usage": {
+    "input_tokens": 5318,
+    "output_tokens": 9492,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n\n要生成这个页面上的图表，管线需要具备以下能力：\n1. **多面板布局与标题**：支持在同一个编号的图表下放置多个独立面板（如Panel A和Panel B），并为每个面板设置独立的居中标题（`panel_title_per_panel`）。\n2. **多级分类轴（X轴）**：Panel B需要支持两级X轴刻度标签（`two_level_x_ticks`），外层为大类（Gender, Age等），内层为具体分类（Women, Men等），并能绘制垂直分隔线来区分这些大类分组。\n3. **刻度标签旋转与缩写**：支持X轴标签的垂直旋转（`rotated_x_ticks`），以及使用国家代码等缩写（`abbrev_category_axis`）。\n4. **特定类别高亮**：在Panel A中，能够在没有图例说明的情况下将特定柱子（Average）渲染为不同颜色（红色）以示强调（`highlighted_category`）。\n5. **单位独立放置**：支持将单位符号（%）直接放置在Y轴最高刻度线上方（`axis_title_above_axis`）。\n\n### 定位一个值难在哪\n\n以**18.3**（Panel A中USA的值）为例，难点在于**无法在误差范围内读取数据**（阻塞在步骤2）。\n图表中的柱子没有任何数值标注，所有数值只能通过Y轴目测。Y轴的刻度间隔为5（0, 5, 10, 15, 20...）。要从视觉上将USA的柱子高度精确解读为18.3，超出了肉眼的精度。5%的容差仅为0.9，在5个单位的刻度间距下，解析器或人类都极难保证插值读数落在这个严格的容差范围内。\n\n### 不确定的\n\nPanel A中红色柱子“Average”的具体数值无法通过图例或标注重建，仅能粗略判断在13左右；所有的精确小数值均是通过页面外的数据表才能提供的完美拟合，在此页面上仅能做视觉验证。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 2.1.",
+          "title": "One in seven workers report heat-related discomfort in Europe and the United States",
+          "subtitle": "Percentage of employment who declare to be exposed to high temperature at least half of their working time, 2015",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "bar",
+        "type_other": "",
+        "panels": 2,
+        "series": 1,
+        "categories": 28,
+        "marks": 42,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "%",
+            "low": "0",
+            "high": "30",
+            "serves": "all bars"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "EST",
+            "high": "TUR",
+            "serves": "all bars"
+          },
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "%",
+            "low": "0",
+            "high": "30",
+            "serves": "all bars"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "Women",
+            "high": "Suburban",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "panel",
+            "label_source": "panel_title",
+            "example": "A.Country average"
+          },
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Gender"
+          },
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Women"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "A.Country average",
+            "USA"
+          ],
+          "value": "18.3",
+          "value_source": "axis_read",
+          "why_hard": "No printed values and y-axis ticks are 5 units apart, making it impossible to read 18.3 to 5% tolerance visually."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "two_level_x_ticks",
+        "figure_id": "f1",
+        "evidence": "Panel B has sub-categories like Women, Men under outer groups like Gender"
+      },
+      {
+        "key": "rotated_x_ticks",
+        "figure_id": "f1",
+        "evidence": "X-axis labels are turned diagonally in Panel A and vertically in Panel B"
+      },
+      {
+        "key": "abbrev_category_axis",
+        "figure_id": "f1",
+        "evidence": "Panel A uses 3-letter country codes like EST, NOR, ITA"
+      },
+      {
+        "key": "highlighted_category",
+        "figure_id": "f1",
+        "evidence": "The Average bar in Panel A is coloured red while others are green"
+      },
+      {
+        "key": "axis_title_above_axis",
+        "figure_id": "f1",
+        "evidence": "The % symbol sits directly above the top tick of both y-axes"
+      },
+      {
+        "key": "panel_title_per_panel",
+        "figure_id": "f1",
+        "evidence": "Each panel has its own title centered above the plot area"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "page",
+        "evidence": "Note and Source text printed below the figure"
+      },
+      {
+        "key": "data_link_below_figure",
+        "figure_id": "page",
+        "evidence": "StatLink and URL printed at the bottom right under the source"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "vertical_group_separators",
+        "figure_id": "f1",
+        "evidence": "Vertical lines on Panel B split the x-axis into section groups matching outer labels",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "5.4",
+        "figure_id": "f1",
+        "mark": "the EST bar in Panel A",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A.Country average",
+          "EST"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "12.8",
+        "figure_id": "f1",
+        "mark": "the Prime bar in Panel B",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "B. OECD27 average by workers' characteristic",
+          "Age",
+          "Prime"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "18.3",
+        "figure_id": "f1",
+        "mark": "the USA bar in Panel A",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A.Country average",
+          "USA"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "25.6",
+        "figure_id": "f1",
+        "mark": "the TUR bar in Panel A",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A.Country average",
+          "TUR"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "16.7",
+        "figure_id": "f1",
+        "mark": "the Men bar in Panel B",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "B. OECD27 average by workers' characteristic",
+          "Gender",
+          "Men"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "20.1",
+        "figure_id": "f1",
+        "mark": "the Middle-skilled bar in Panel B",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "B. OECD27 average by workers' characteristic",
+          "Occupation",
+          "Middle-skilled"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "5.9",
+        "figure_id": "f1",
+        "mark": "the High-skilled bar in Panel B",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "B. OECD27 average by workers' characteristic",
+          "Occupation",
+          "High-skilled"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "21.8",
+        "figure_id": "f1",
+        "mark": "the Low bar in Panel B",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "B. OECD27 average by workers' characteristic",
+          "Education",
+          "Low"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "5.4",
+        "figure_id": "f1",
+        "mark": "the High bar in Panel B",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "B. OECD27 average by workers' characteristic",
+          "Education",
+          "High"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "10.5",
+        "figure_id": "f1",
+        "mark": "the Urban bar in Panel B",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "B. OECD27 average by workers' characteristic",
+          "Urbanisation",
+          "Urban"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "柱状图上没有任何数值标注，且Y轴刻度间隔高达5。例如读取18.3（美国）的值时，仅靠视觉无法在0.9（即5%）的严苛容错范围内插值得出准确数据。",
+    "examples": [
+      {
+        "gap": "P2",
+        "figure_id": "f1",
+        "quote": "A.Country average and B. OECD27 average by workers' characteristic",
+        "why": "管线需要支持多面板图表，并将单个面板本身的标题内容作为数据寻址索引的一部分（panel_key），而不仅仅是依赖全局图表标题。"
+      },
+      {
+        "gap": "P8",
+        "figure_id": "f1",
+        "quote": "the Average bar in Panel A is drawn in red while others are green",
+        "why": "颜色被用来高亮特定的分类（Average），但图表并没有图例。生成器需要支持在无图例的情况下通过颜色独立编码数据属性以示强调。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "the % symbol sits directly above the top tick of both y-axes",
+        "why": "生成器需要扩展轴格式能力，支持将单位符号（%）直接放置在Y轴顶端，而不是只能作为完整的轴标题显示在侧面。"
+      }
+    ]
+  }
+}

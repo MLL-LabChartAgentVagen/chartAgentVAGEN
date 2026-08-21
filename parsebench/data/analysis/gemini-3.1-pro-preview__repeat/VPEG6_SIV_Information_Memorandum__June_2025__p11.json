@@ -1,0 +1,203 @@
+{
+  "stem": "VPEG6_SIV_Information_Memorandum__June_2025__p11",
+  "document": "VPEG6_SIV_Information_Memorandum__June_2025_",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "repeat",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 71.8,
+  "usage": {
+    "input_tokens": 5309,
+    "output_tokens": 10120,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n生成此图表需要支持混合标记图（Mixed Marks），即在同一坐标系中绘制普通柱状图，以及一条贯穿全部类别的水平参考线。必须支持将图例放置在绘图区左侧（与Y轴并排），并在图表内支持指向特定元素（如参考线上特定位置的图标）的浮动注释框（Callout）。Y轴仅有水平网格线（无垂直网格线），且刻度标签带有“x”后缀。底部还有说明文字（Source行）。\n\n### 定位一个值难在哪\n以“1.7”为例，该值（对应 Quartile 2 的 GLOBAL PRIVATE EQUITY）没有直接标注在柱子上，必须通过将柱体顶部对齐 Y 轴来估算。Y 轴的刻度间隔为 0.5x（从 0.5x 到 3.0x），要在 0.5 的空间内准确分辨并估读出 1.7（要求 5% 以内误差，即 ±0.085）在视觉上是非常困难且容易产生偏差的。\n\n### 不确定的\nY轴的最低标出刻度为 0.5x，下方紧挨着图表底部的横线，虽然逻辑上这条基线代表 0，但并未显式标出 0 刻度，因此不确定是否应将其严格解析为包含 0 起点的坐标轴。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "Vantage vs Global Private Equity (Direct Buyout Funds) TVPI - 2009-2018",
+          "subtitle": "Vantage has Generated Top Quartile Returns when Compared to Global Direct Private Equity Funds",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 4,
+        "marks": 5,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "0.5x",
+            "high": "3.0x",
+            "serves": "all marks"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "Quartile 1",
+            "high": "Quartile 4",
+            "serves": "all marks"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Quartile 1"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "GLOBAL PRIVATE EQUITY"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Quartile 2",
+            "GLOBAL PRIVATE EQUITY"
+          ],
+          "value": "1.7",
+          "value_source": "axis_read",
+          "why_hard": "Value is not printed, and reading against 0.5x tick spacing limits visual precision."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "mixed_marks",
+        "figure_id": "f1",
+        "evidence": "grey bars for quartiles and a cyan line for Vantage"
+      },
+      {
+        "key": "reference_line",
+        "figure_id": "f1",
+        "evidence": "cyan line spanning all categories at 2.0x"
+      },
+      {
+        "key": "annotation_callout",
+        "figure_id": "f1",
+        "evidence": "black text box pointing to the cyan line"
+      },
+      {
+        "key": "legend_beside_plot",
+        "figure_id": "f1",
+        "evidence": "legend is drawn to the left of the plot area"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "Source: Based on global private equity returns..."
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "horizontal grid lines at 0.5x intervals, no vertical ones"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "icon_in_plot_area",
+        "figure_id": "f1",
+        "evidence": "animal icon placed directly on the cyan line",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "2.1",
+        "figure_id": "f1",
+        "mark": "cyan line and callout for VANTAGE",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "VANTAGE"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "2.5",
+        "figure_id": "f1",
+        "mark": "the Quartile 1 bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Quartile 1",
+          "GLOBAL PRIVATE EQUITY"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "1.7",
+        "figure_id": "f1",
+        "mark": "the Quartile 2 bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Quartile 2",
+          "GLOBAL PRIVATE EQUITY"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "1.4",
+        "figure_id": "f1",
+        "mark": "the Quartile 3 bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Quartile 3",
+          "GLOBAL PRIVATE EQUITY"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "1.0",
+        "figure_id": "f1",
+        "mark": "the Quartile 4 bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Quartile 4",
+          "GLOBAL PRIVATE EQUITY"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "除2.1外其余数值均未标注。Y轴网格间距为0.5x，在缺乏细分刻度的情况下，通过视觉估读将1.7或1.4精确到5%容差范围（即±0.085）内极为困难。",
+    "examples": [
+      {
+        "gap": "P9",
+        "figure_id": "f1",
+        "quote": "cyan line over grey bars",
+        "why": "需要支持混合图表形式，准确记录并生成跨分类基准线与普通柱状图的组合。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "black text box pointing to the cyan line",
+        "why": "需要提取浮动注释框（Callout）中的关键指标（如2.1x），并能正确关联其指向的系列。"
+      },
+      {
+        "gap": "P3",
+        "figure_id": "f1",
+        "quote": "legend placed to the left of the y-axis",
+        "why": "图例直接放置在 Y 轴左侧，而非传统的上方或下方，需要支持更灵活的相对位置布局结构。"
+      }
+    ]
+  }
+}

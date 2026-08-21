@@ -1,0 +1,170 @@
+{
+  "stem": "WEF_The_Global_Public_Impact_of_GovTech_2025_p29",
+  "document": "WEF_The_Global_Public_Impact_of_GovTech_2025",
+  "tags": "untagged",
+  "model": "gemini-3.1-pro-preview",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 39.3,
+  "usage": {
+    "input_tokens": 5302,
+    "output_tokens": 4787,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "**画出来要什么**\n页面包含两个代表2024和2034年的环形图。生成器需要能够绘制环形图（Donut chart），在中心留白处插入面板标签（年份），在每个扇区内部标注带货币符号的绝对数值，并且支持不同大小的环形图并置。此外，需要在两个环形图的外边缘之间绘制带透视效果的虚线连接线，以强调总量的增长。底部需要一个统一的共享水平图例。\n\n**定位一个值难在哪**\n以数值670为例，它印在左侧的深绿色扇区内。必须通过底部的图例将其分类对应到“Public sector”，并通过环中心的文本“2024”确定其年份维度。因为年份只是悬浮在环中间的文本，完全不具备行列对齐的表格特征，解析器很难建立起 `[2024, Public sector] -> 670` 的正确映射。\n\n**不确定的**\n两个环形图的相对面积大小是否精确映射了总量的比例（约870增至约2030），还是仅仅为了配合虚线锥体产生视觉放大效果而随意缩放。此外，扇区内部数值的位置排版（特别是狭窄扇区）似乎是手工微调的，未见明确的排版规则。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "FIGURE 5",
+          "title": "IT spending in various sectors (in $ billions in 2024 and 2034) with an estimate growth rate of 8% per annum",
+          "subtitle": "",
+          "unit_text": "in $ billions",
+          "placement": "above"
+        },
+        "type": "donut",
+        "type_other": "",
+        "panels": 2,
+        "series": 4,
+        "categories": 1,
+        "marks": 8,
+        "values_printed": "all",
+        "axes": [],
+        "key_parts": [
+          {
+            "role": "panel",
+            "label_source": "inline_label",
+            "example": "2024"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Public sector"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "2024",
+            "Public sector"
+          ],
+          "value": "$670",
+          "value_source": "printed",
+          "why_hard": "Panel labels are floating in donut holes, lacking standard table associations."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "small_multiples_4",
+        "figure_id": "f1",
+        "evidence": "two identical chart types side by side for different years"
+      },
+      {
+        "key": "shared_legend",
+        "figure_id": "f1",
+        "evidence": "one legend with four categories at the bottom for both donuts"
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "the legend sits below the plot area"
+      },
+      {
+        "key": "value_label_inside",
+        "figure_id": "f1",
+        "evidence": "numbers like $670 and $220 are printed inside the colored segments"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "the title includes '(in $ billions in 2024 and 2034)'"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "growth_cone_between_charts",
+        "figure_id": "f1",
+        "evidence": "dashed lines connecting the outer edges of the two donuts",
+        "affects": []
+      },
+      {
+        "name": "panel_label_in_donut_hole",
+        "figure_id": "f1",
+        "evidence": "2024 and 2034 are printed inside the center holes",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "670",
+        "figure_id": "f1",
+        "mark": "the 2024 Public sector slice",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "2024",
+          "Public sector"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "220",
+        "figure_id": "f1",
+        "mark": "the 2034 Education slice",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "2034",
+          "Education"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "170",
+        "figure_id": "f1",
+        "mark": "the 2034 Healthcare and life science slice",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "2034",
+          "Healthcare and life science"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "40",
+        "figure_id": "f1",
+        "mark": "the 2024 Transport slice",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "2024",
+          "Transport"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      }
+    ],
+    "hardest_step": 3,
+    "hardest_step_why": "环形图中心的年份文本（如2024）完全脱离网格，解析模型极难将其作为面板或列标题与深绿色扇区内的数值670正确建立关联。",
+    "examples": [
+      {
+        "gap": "P2",
+        "figure_id": "f1",
+        "quote": "2024 and 2034 text centered inside the respective donut holes",
+        "why": "图表面板的维度（年份）被直接作为文本标签置于环形图的中心，这需要支持将中心留白用作面板标签。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "dashed lines connecting the outer limits of the 2024 and 2034 donuts",
+        "why": "当前的渲染管线无法在两个独立的图表之间跨面板绘制带有透视效果的虚线来暗示体积的扩张。"
+      }
+    ]
+  }
+}

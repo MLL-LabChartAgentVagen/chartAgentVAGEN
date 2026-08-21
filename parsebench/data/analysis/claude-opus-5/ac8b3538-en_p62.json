@@ -1,0 +1,364 @@
+{
+  "stem": "ac8b3538-en_p62",
+  "document": "ac8b3538-en",
+  "tags": "3d_chart+need_estimate",
+  "model": "claude-opus-5",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "seconds": 76.9,
+  "usage": {
+    "input_tokens": 13828,
+    "output_tokens": 6093,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "## 画出来要什么\n一张跨页续排的小倍数图：15 个国家面板（Japan…United Kingdom），每个面板标题在上方，共用一个位于顶部灰条内的图例「Nominal minimum wage / Real minimum wage」。每个面板画两条**阶梯线**（step line，横踏面+竖立面），灰底面板，黑色零线贯穿，负值区域真实存在（Latvia、Netherlands、Lithuania 跌到 -15 以下）。y 轴**每个面板量程不同**：Japan -20~60、Latvia -30~75、Mexico -60~150、Poland -40~100、Türkiye -200~800。x 轴为旋转 45° 的 May-19 … May-24 共 11 个半年刻度，而数据是月度，刻度稀于数据点。整页无图号、无标题、无单位、无 Source/Note，只有页码 60 与页脚。\n\n## 定位一个值难在哪\n以 Mexico 的 Real minimum wage 末端约 90 为例：一个值要 3 个键（面板名 Mexico + 图例名 Real minimum wage + 时点 May-24），三者分别来自面板标题、共享图例、旋转刻度。该面板刻度间距 30，5% 容差仅 ±4.5，且阶梯线末段有陡升，只能靠像素比例估读；页面无任何数字标注。\n\n## 不确定的\n单位（应为百分比变化）未在页面任何位置出现，只能猜；网格线是否只有水平向、面板内是否有竖线难以判读；本页是上一页某编号图的续页，图号与注释不在此页，无法核对。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "none"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 15,
+        "series": 2,
+        "categories": 61,
+        "marks": 1830,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "-20",
+            "high": "60",
+            "serves": "both step lines in the Japan panel (typical panel range)"
+          },
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "-200",
+            "high": "800",
+            "serves": "both step lines in the Türkiye panel only"
+          },
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "-60",
+            "high": "150",
+            "serves": "both step lines in the Mexico panel only"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "May-19",
+            "high": "May-24",
+            "serves": "all step lines, one such axis drawn under each panel"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "panel",
+            "label_source": "panel_title",
+            "example": "Mexico"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Real minimum wage"
+          },
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "May-24"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Türkiye",
+            "Real minimum wage",
+            "May-24"
+          ],
+          "value": "≈40",
+          "value_source": "axis_read",
+          "why_hard": "Panel ticks step by 200; the real line hugs zero, so 5% precision is unattainable"
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "step_line_series",
+        "figure_id": "f1",
+        "evidence": "every series drawn as horizontal treads with vertical risers at wage-uprating dates"
+      },
+      {
+        "key": "reference_line",
+        "figure_id": "f1",
+        "evidence": "a solid black horizontal rule at zero across all 15 panels"
+      },
+      {
+        "key": "negative_values",
+        "figure_id": "f1",
+        "evidence": "Latvia real line falls to about -20; ticks read -15, -30 below zero"
+      },
+      {
+        "key": "per_panel_axis_range",
+        "figure_id": "f1",
+        "evidence": "Japan tops at 60, Mexico at 150, Poland at 100, Türkiye at 800"
+      },
+      {
+        "key": "small_multiples_5plus",
+        "figure_id": "f1",
+        "evidence": "15 country panels laid out 3 across, 5 down"
+      },
+      {
+        "key": "shared_legend",
+        "figure_id": "f1",
+        "evidence": "one legend strip above all panels: Nominal minimum wage / Real minimum wage"
+      },
+      {
+        "key": "legend_above_plot",
+        "figure_id": "f1",
+        "evidence": "grey legend band sits at the top of the page over the Japan/Korea/Latvia row"
+      },
+      {
+        "key": "panel_title_per_panel",
+        "figure_id": "f1",
+        "evidence": "bold names above each panel: Japan, Korea, Latvia, Lithuania, Luxembourg..."
+      },
+      {
+        "key": "panel_background",
+        "figure_id": "f1",
+        "evidence": "each plot area is filled light grey, page around it white"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "faint white horizontal rules at tick levels inside the grey panels"
+      },
+      {
+        "key": "rotated_x_ticks",
+        "figure_id": "f1",
+        "evidence": "May-19, Nov-19 ... May-24 set at roughly 45 degrees under every panel"
+      },
+      {
+        "key": "nonstandard_time_ticks",
+        "figure_id": "f1",
+        "evidence": "time written as `May-19`, `Nov-22`, not ISO dates"
+      },
+      {
+        "key": "sparse_time_ticks",
+        "figure_id": "f1",
+        "evidence": "lines change monthly but ticks appear only every six months"
+      },
+      {
+        "key": "dense_marks_100plus",
+        "figure_id": "f1",
+        "evidence": "15 panels x 2 series x ~61 monthly points"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "figure_continued_across_pages",
+        "figure_id": "page",
+        "evidence": "page carries only panels and legend; no figure number, title, source or note line",
+        "affects": [
+          1,
+          3,
+          4
+        ]
+      },
+      {
+        "name": "no_unit_anywhere",
+        "figure_id": "f1",
+        "evidence": "no `%`, no axis title, no subtitle: bare ticks -20 ... 60 on every panel",
+        "affects": [
+          2,
+          4
+        ]
+      },
+      {
+        "name": "legend_band_background",
+        "figure_id": "f1",
+        "evidence": "the legend row sits in a full-width light grey band above the panel grid",
+        "affects": []
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "10",
+        "figure_id": "f1",
+        "mark": "Japan Nominal minimum wage plateau around Nov-22",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Japan",
+          "Nominal minimum wage",
+          "Nov-22"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "17",
+        "figure_id": "f1",
+        "mark": "Korea Nominal minimum wage final tread at the right edge",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Korea",
+          "Nominal minimum wage",
+          "May-24"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "16",
+        "figure_id": "f1",
+        "mark": "Slovenia Real minimum wage final tread",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Slovenia",
+          "Real minimum wage",
+          "May-24"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "90",
+        "figure_id": "f1",
+        "mark": "Mexico Real minimum wage final tread near the 90 gridline",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Mexico",
+          "Real minimum wage",
+          "May-24"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "42",
+        "figure_id": "f1",
+        "mark": "Netherlands Nominal minimum wage final tread",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Netherlands",
+          "Nominal minimum wage",
+          "May-24"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "35",
+        "figure_id": "f1",
+        "mark": "Poland Real minimum wage final tread",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Poland",
+          "Real minimum wage",
+          "May-24"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "38",
+        "figure_id": "f1",
+        "mark": "United Kingdom Nominal minimum wage final riser at May-24",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "United Kingdom",
+          "Nominal minimum wage",
+          "May-24"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "9",
+        "figure_id": "f1",
+        "mark": "Slovak Republic Real minimum wage final tread",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Slovak Republic",
+          "Real minimum wage",
+          "May-24"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "700",
+        "figure_id": "f1",
+        "mark": "Türkiye Nominal minimum wage final tread near the top of the 800 axis",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Türkiye",
+          "Nominal minimum wage",
+          "May-24"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "12",
+        "figure_id": "f1",
+        "mark": "United Kingdom Real minimum wage final riser",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "United Kingdom",
+          "Real minimum wage",
+          "May-24"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "无任何数字标注；Mexico 刻度间距30、Türkiye间距200，读取「90」「700」误差远超5%容差。",
+    "examples": [
+      {
+        "gap": "P2",
+        "figure_id": "f1",
+        "quote": "15 titled panels (Japan, Korea, Latvia ... United Kingdom) share one legend: Nominal minimum wage / Real minimum wage",
+        "why": "同一图例名在15个面板重复，面板名必须进入键，否则「Real minimum wage, May-24」指向15个值。"
+      },
+      {
+        "gap": "P1",
+        "figure_id": "f1",
+        "quote": "Türkiye panel y ticks read -200, 0, 200, 400, 600, 800; the real line stays near zero",
+        "why": "同一图内可达精度差两个数量级，布尔式「可读」无法描述Türkiye实际线。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "a black horizontal zero rule crosses every panel; Latvia real line dips below -15",
+        "why": "零线与负值区、以及阶梯线（step line）绘制方式当前不作为可控风格维度。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "the page shows only page number `60` and footer `OECD EMPLOYMENT OUTLOOK 2024 © OECD 2024`; no figure number, title or unit",
+        "why": "续页图无编号无标题无单位，标题字段须允许为空并支持跨页续排。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "y axis maxima differ by panel: 60 (Japan), 75 (Latvia), 150 (Mexico), 100 (Poland), 800 (Türkiye)",
+        "why": "需要按面板独立量程生成，并在导出时记录每面板刻度，跨面板读数不可迁移。"
+      }
+    ]
+  }
+}

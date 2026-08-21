@@ -1,0 +1,186 @@
+{
+  "stem": "World_Inequality_Report_2026_p25",
+  "document": "World_Inequality_Report_2026",
+  "tags": "need_estimate",
+  "model": "claude-opus-5",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "seconds": 46.2,
+  "usage": {
+    "input_tokens": 10659,
+    "output_tokens": 3621,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "# Figure 17 页面观察\n\n单图页。标题分两级：绿色 `Figure 17.` + 粗体标题「Without redistribution, political inequality will increase」，其下另有一行居中粗体图内标题「Political donations by income decile, % of total」，比例词只藏在这行与刻度的 `%` 里。\n\n生成器需能画：折线 + 方形/十字标记两条序列（France、South Korea），旋转 90° 的纵轴标题「Percentage of total political donations by income decile」（两行换行），45° 旋转的分位区间刻度 `P0–P10`…`P90–P100`，图下横排图例，以及粗体引导词的 Interpretation / Sources 小字。\n\n难点：图上无任何数值标签，10 个刻度间距为 10%，而待查值 8.0 与 8.2、5.8 与 5.0 的差远小于一格，必须逐点目测；寻址需「序列名 + 分位区间」两把钥匙。\n\n不确定：网格是否同时含竖线，故未报网格键；低分位各点几乎重合，配对归属可能互换。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 17.",
+          "title": "Without redistribution, political inequality will increase",
+          "subtitle": "Political donations by income decile, % of total",
+          "unit_text": "% of total",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 10,
+        "marks": 20,
+        "values_printed": "none"
+      }
+    ],
+    "components": [
+      {
+        "key": "rotated_axis_title",
+        "figure_id": "f1",
+        "evidence": "\"Percentage of total political donations by income decile\" set vertically along the left axis, on two lines"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "chart heading line reads \"Political donations by income decile, % of total\""
+      },
+      {
+        "key": "rotated_x_ticks",
+        "figure_id": "f1",
+        "evidence": "category labels P0\\u2013P10 \\u2026 P90\\u2013P100 turned about 45 degrees under the axis"
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "\"France\" and \"South Korea\" markers in a row centred below the plot area"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "\"Interpretation. Average shares of total political donations\\u2026\" and \"Sources and series: Cag\\u00e9 (2024).\" under the figure"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "percentile_bin_category_axis",
+        "figure_id": "f1",
+        "evidence": "x categories are percentile ranges \"P0\\u2013P10\", \"P10\\u2013P20\" \\u2026 \"P90\\u2013P100\", not names or years",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "name": "bold_lead_in_note_label",
+        "figure_id": "f1",
+        "evidence": "note lines start with bold run-in words \"Interpretation.\" and \"Sources and series:\" before regular text",
+        "affects": [
+          4
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "52.0",
+        "figure_id": "f1",
+        "mark": "the France line's P90\\u2013P100 point, the highest blue marker",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "France",
+          "P90\\u2013P100"
+        ]
+      },
+      {
+        "value": "57.0",
+        "figure_id": "f1",
+        "mark": "the South Korea line's P90\\u2013P100 point, the highest magenta marker",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "South Korea",
+          "P90\\u2013P100"
+        ]
+      },
+      {
+        "value": "17.5",
+        "figure_id": "f1",
+        "mark": "the France point at P80\\u2013P90",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "France",
+          "P80\\u2013P90"
+        ]
+      },
+      {
+        "value": "16.5",
+        "figure_id": "f1",
+        "mark": "the South Korea point at P80\\u2013P90",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "South Korea",
+          "P80\\u2013P90"
+        ]
+      },
+      {
+        "value": "10.5",
+        "figure_id": "f1",
+        "mark": "the France point at P70\\u2013P80",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "France",
+          "P70\\u2013P80"
+        ]
+      },
+      {
+        "value": "8.2",
+        "figure_id": "f1",
+        "mark": "the South Korea point at P70\\u2013P80",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "South Korea",
+          "P70\\u2013P80"
+        ]
+      },
+      {
+        "value": "8.0",
+        "figure_id": "f1",
+        "mark": "the France point at P60\\u2013P70",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "France",
+          "P60\\u2013P70"
+        ]
+      },
+      {
+        "value": "5.8",
+        "figure_id": "f1",
+        "mark": "the South Korea point at P60\\u2013P70",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "South Korea",
+          "P60\\u2013P70"
+        ]
+      },
+      {
+        "value": "5.0",
+        "figure_id": "f1",
+        "mark": "the France point at P50\\u2013P60",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "France",
+          "P50\\u2013P60"
+        ]
+      },
+      {
+        "value": "2.8",
+        "figure_id": "f1",
+        "mark": "the South Korea point at P50\\u2013P60",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "South Korea",
+          "P50\\u2013P60"
+        ]
+      }
+    ],
+    "hardest_step": 2
+  }
+}

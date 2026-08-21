@@ -1,0 +1,268 @@
+{
+  "stem": "2025-EIS_p37",
+  "document": "2025-EIS",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "repeat",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 65.8,
+  "usage": {
+    "input_tokens": 5332,
+    "output_tokens": 8892,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n绘制此图需要支持以下特性：\n1. **水平混合标记图表（子弹图变体）**：以国家为Y轴分类，主图不仅要绘制代表2025年分数的水平柱子，还要在同一个分类槽中叠加两种不同的散点标记（代表2018年的菱形和代表2024年的竖线）。\n2. **分离的颜色维度（Color Encoding）**：颜色的变化并不用来区分度量的年份系列，而是编码了另一个独立的分类变量（表现组别，如\"Strong innovators\"）。图表生成器必须支持在主要度量之外，应用基于另一字段的分类颜色映射。\n3. **多源图例与注释**：图中柱子所代表的含义并未出现在图例中，而是写在底部的图注（Note）里，必须通过文本解析才能知道柱子是2025年的数据。\n4. **特定类别高亮**：\"EU\"类别在Y轴文本上使用了蓝色粗体，并在柱子上使用了区别于所有表现组别的深蓝色进行高亮标识。\n\n### 定位一个值难在哪\n以荷兰的柱子数值“214”为例。第一，图中并未直接标注任何数据点的具体数值；第二，X轴的刻度间距为20，要在0到260的大跨度坐标系中仅凭肉眼准确区分出214和215是不可能的，读取误差必然超过5%。\n\n### 不确定的\n所有的具体数值（如245、186、167等）在图面上均不可见，只能通过估计它们相对于X轴刻度的位置来倒推，无法确认精确值是否与原始表格数据一致。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 11:",
+          "title": "Innovation performance of the EU27 Member States in the Attractive research systems dimension",
+          "subtitle": "Attractive research systems",
+          "unit_text": "Score for dimension 1.2 in 2025 (indexed to the EU in 2018)",
+          "placement": "above"
+        },
+        "type": "other",
+        "type_other": "bullet chart",
+        "panels": 1,
+        "series": 3,
+        "categories": 28,
+        "marks": 84,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "bottom",
+            "role": "value",
+            "unit_text": "Score for dimension 1.2 in 2025 (indexed to the EU in 2018)",
+            "low": "0",
+            "high": "260",
+            "serves": "all marks"
+          },
+          {
+            "side": "left",
+            "role": "category",
+            "unit_text": "",
+            "low": "Luxembourg",
+            "high": "Bulgaria",
+            "serves": "all marks"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Luxembourg"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Score in 2018"
+          },
+          {
+            "role": "colour_group",
+            "label_source": "legend",
+            "example": "Strong innovators"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Netherlands",
+            "performance in 2025",
+            "Strong innovators"
+          ],
+          "value": "214",
+          "value_source": "axis_read",
+          "why_hard": "Values are completely unlabelled and the 20-unit tick spacing makes it visually impossible to resolve to 1% precision."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "mixed_marks",
+        "figure_id": "f1",
+        "evidence": "diamonds and vertical lines overlaying the horizontal bars"
+      },
+      {
+        "key": "horizontal_bars",
+        "figure_id": "f1",
+        "evidence": "countries are on the y-axis, bars extend right"
+      },
+      {
+        "key": "axis_title_below_plot",
+        "figure_id": "f1",
+        "evidence": "Score for dimension 1.2... is under the x-axis"
+      },
+      {
+        "key": "color_encodes_extra_attribute",
+        "figure_id": "f1",
+        "evidence": "colors denote overall performance group, not the time series"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "Note: All performance scores... is printed below the legend"
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "legend entries sit below the plot's x-axis"
+      },
+      {
+        "key": "highlighted_category",
+        "figure_id": "f1",
+        "evidence": "EU label and its bar are distinctly colored dark blue"
+      },
+      {
+        "key": "vgrid_only",
+        "figure_id": "f1",
+        "evidence": "vertical dotted lines drop from the x-axis ticks"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "multiple_overlay_markers",
+        "figure_id": "f1",
+        "evidence": "diamonds and vertical lines overlay the same bar chart",
+        "affects": [
+          1
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "245",
+        "figure_id": "f1",
+        "mark": "Luxembourg bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Luxembourg",
+          "performance in 2025",
+          "Strong innovators"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "215",
+        "figure_id": "f1",
+        "mark": "Denmark bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Denmark",
+          "performance in 2025",
+          "Strong innovators"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "214",
+        "figure_id": "f1",
+        "mark": "Netherlands bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Netherlands",
+          "performance in 2025",
+          "Strong innovators"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "186",
+        "figure_id": "f1",
+        "mark": "Sweden bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Sweden",
+          "performance in 2025",
+          "Strong innovators"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "100",
+        "figure_id": "f1",
+        "mark": "EU diamond marker",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "EU",
+          "Score in 2018"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "182",
+        "figure_id": "f1",
+        "mark": "Belgium diamond marker",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Belgium",
+          "Score in 2018"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "167",
+        "figure_id": "f1",
+        "mark": "Cyprus bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Cyprus",
+          "performance in 2025",
+          "Moderate innovators"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "37",
+        "figure_id": "f1",
+        "mark": "Bulgaria bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Bulgaria",
+          "performance in 2025",
+          "Emerging innovators"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "215",
+        "figure_id": "f1",
+        "mark": "Luxembourg diamond marker",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Luxembourg",
+          "Score in 2018"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "图上没有任何数值标签，X轴刻度间距为20。仅靠肉眼看柱子末端根本无法将荷兰的值精确读取为214，误差必然超过5%。",
+    "examples": [
+      {
+        "gap": "P8",
+        "figure_id": "f1",
+        "quote": "The colours denote each country's overall performance group based on the 2025 SII",
+        "why": "图表颜色被用来编码一个完全独立于图表主体度量（年份系列）的分类维度，需要支持分离的颜色维度映射通道。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "diamonds and vertical bars indicate their performance in 2018 and 2024",
+        "why": "需要支持在水平柱状图的主轴上，为每个分类叠加多个表示不同数据点的散点或标记物，即子弹图的高级变体。"
+      }
+    ]
+  }
+}

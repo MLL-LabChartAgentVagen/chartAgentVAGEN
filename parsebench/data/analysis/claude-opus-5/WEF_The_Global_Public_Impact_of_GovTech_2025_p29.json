@@ -1,0 +1,261 @@
+{
+  "stem": "WEF_The_Global_Public_Impact_of_GovTech_2025_p29",
+  "document": "WEF_The_Global_Public_Impact_of_GovTech_2025",
+  "tags": "untagged",
+  "model": "claude-opus-5",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 71.0,
+  "usage": {
+    "input_tokens": 13933,
+    "output_tokens": 5093,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "**画出来要什么**\n\n一幅编号图（FIGURE 5）里有两个圆环图并排：左 \"2024\"、右 \"2034\"，四个扇段共用底部一行胶囊式图例（Public sector / Education / Healthcare and life science / Transport）。年份写在圆心空洞里，不是标题栏。两环半径不同，右环明显更大，用尺寸暗示总量增长；两环之间还有两条虚线从左环上下缘张开到右环，围出一块灰色楔形，像放大镜连接线。整页图区铺浅灰底色，无坐标轴、无刻度，数值全部以 \"$670\"、\"$1,570\" 形式直接印在扇段上，细扇段（$40、$70）的标签被挤到环外。标题里同时含单位与增长率：\"(in \\$ billions in 2024 and 2034) with an estimate growth rate of 8% per annum\"。\n\n**定位一个值难在哪**\n\n\\$40 是 2024 环的 Transport 段。它没有轴可读，只能靠印字；难点在寻址：系列名只在共享图例里，年份只在圆心文字里。同一页 \"\\$70\" 在 2024（Healthcare）和 2034（Transport）各出现一次，若表格缺 \"2024\"/\"2034\" 这一维，两行会互相冒充。\n\n**不确定的**\n\n两环半径是否严格按总量（770 vs 2,030）缩放，无法确认；灰色楔形是装饰还是表达增长区间也只能猜。图下无 Source/Note，脚注 13,14 只出现在正文里，不属于图。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "FIGURE 5",
+          "title": "IT spending in various sectors (in $ billions in 2024 and 2034) with an estimate growth rate of 8% per annum",
+          "subtitle": "",
+          "unit_text": "in $ billions in 2024 and 2034",
+          "placement": "above"
+        },
+        "type": "donut",
+        "type_other": "",
+        "panels": 2,
+        "series": 4,
+        "categories": 4,
+        "marks": 8,
+        "values_printed": "all",
+        "axes": [],
+        "key_parts": [
+          {
+            "role": "panel",
+            "label_source": "inline_label",
+            "example": "2024"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Transport"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "2024",
+            "Transport"
+          ],
+          "value": "$40",
+          "value_source": "printed",
+          "why_hard": "Thin cyan sliver; label pushed outside the ring; year label only inside the donut hole."
+        }
+      },
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "none"
+        },
+        "type": "unreadable",
+        "type_other": "duplicate guard entry removed - not a separate figure",
+        "panels": 1,
+        "series": 1,
+        "categories": 1,
+        "marks": 0,
+        "values_printed": "none",
+        "axes": [],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "not_shown",
+            "example": ""
+          }
+        ],
+        "worked_example": {
+          "key": [
+            ""
+          ],
+          "value": "",
+          "value_source": "not_readable",
+          "why_hard": ""
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "shared_legend",
+        "figure_id": "f1",
+        "evidence": "One legend row below both donuts: Public sector, Education, Healthcare and life science, Transport"
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "Legend pill sits under both rings, above the page footer"
+      },
+      {
+        "key": "small_multiples_4",
+        "figure_id": "f1",
+        "evidence": "Two donuts of identical construction, one per year, side by side"
+      },
+      {
+        "key": "panel_title_per_panel",
+        "figure_id": "f1",
+        "evidence": "'2024' and '2034' set large in the centre hole of each donut"
+      },
+      {
+        "key": "no_value_axis",
+        "figure_id": "f1",
+        "evidence": "No ticks or axis anywhere; values readable only from printed labels like '$670'"
+      },
+      {
+        "key": "value_label_inside",
+        "figure_id": "f1",
+        "evidence": "'$670', '$1,570', '$220' printed on top of their ring segments"
+      },
+      {
+        "key": "value_label_outside",
+        "figure_id": "f1",
+        "evidence": "'$40' and '$70' sit just outside the ring above the thin cyan slices"
+      },
+      {
+        "key": "thin_segment_label",
+        "figure_id": "f1",
+        "evidence": "'$40' and 2034's '$70' crowd the narrow Transport slivers and shift off the segment"
+      },
+      {
+        "key": "panel_background",
+        "figure_id": "f1",
+        "evidence": "Full-bleed pale grey band fills the whole figure area behind both rings"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "Title reads 'IT spending in various sectors (in $ billions in 2024 and 2034)'"
+      },
+      {
+        "key": "wrapped_category_labels",
+        "figure_id": "f1",
+        "evidence": "Legend entry 'Healthcare and life science' is a long multi-word category name"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "zoom_connector_between_panels",
+        "figure_id": "f1",
+        "evidence": "Two dashed lines fan from the 2024 ring's top and bottom edges to the 2034 ring, enclosing grey wedge",
+        "affects": []
+      },
+      {
+        "name": "panel_size_encodes_total",
+        "figure_id": "f1",
+        "evidence": "The 2034 donut is drawn with a visibly larger radius than the 2024 donut",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "name": "panel_title_in_donut_hole",
+        "figure_id": "f1",
+        "evidence": "'2024' and '2034' are set inside the white centre hole, not above the panel",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "name": "figure_number_in_side_column",
+        "figure_id": "f1",
+        "evidence": "'FIGURE 5' sits in a left margin column, ruled off from the title text",
+        "affects": [
+          4
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "670",
+        "figure_id": "f1",
+        "mark": "the 2024 Public sector segment (large green arc)",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "2024",
+          "Public sector"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "220",
+        "figure_id": "f1",
+        "mark": "the 2034 Education segment (yellow arc)",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "2034",
+          "Education"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "170",
+        "figure_id": "f1",
+        "mark": "the 2034 Healthcare and life science segment (orange arc)",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "2034",
+          "Healthcare and life science"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "40",
+        "figure_id": "f1",
+        "mark": "the 2024 Transport segment (thin cyan sliver)",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "2024",
+          "Transport"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      }
+    ],
+    "hardest_step": 3,
+    "hardest_step_why": "年份键只印在圆心：$70在2024与2034各一次，$40、$670若缺\"2024\"列即无法唯一定位。",
+    "examples": [
+      {
+        "gap": "P2",
+        "figure_id": "f1",
+        "quote": "'2024' set in the white centre hole of the left donut, '2034' in the right; one legend below both",
+        "why": "面板维度只以圆心文字存在，导出表需把年份作为键，否则$70在两环重复。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "FIGURE 5 | IT spending in various sectors (in $ billions in 2024 and 2034) with an estimate growth rate of 8% per annum",
+        "why": "编号在左侧边栏，单位与增长率写进同一句标题，需拆成编号/标题/单位字段。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "Two dashed lines fan from the 2024 ring's edges to the larger 2034 ring, enclosing a grey wedge",
+        "why": "面板间放大连接线与按总量放大的半径，现有流水线只能画等径独立饼图。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "'$670' printed on the green ring, while '$40' sits outside the ring above the thin cyan sliver",
+        "why": "标签需按扇段厚度自动内外切换，并保留\"$\"与千分位格式。"
+      }
+    ]
+  }
+}

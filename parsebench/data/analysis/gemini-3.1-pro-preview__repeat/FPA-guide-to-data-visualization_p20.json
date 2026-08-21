@@ -1,0 +1,340 @@
+{
+  "stem": "FPA-guide-to-data-visualization_p20",
+  "document": "FPA-guide-to-data-visualization",
+  "tags": "untagged",
+  "model": "gemini-3.1-pro-preview",
+  "control": "repeat",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 89.4,
+  "usage": {
+    "input_tokens": 5337,
+    "output_tokens": 12406,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n本页包含两个饼图（f1, f2）和一个水平分组条形图（f3）。饼图的生成需要支持扇区外部标签，并通过细实线（引导线）连接到对应扇区，百分比数值直接打印在分类标签下方。标题块包含主标题（如 `FY 14 Q2 Forecast`）和副标题（`Total: $750,000`）。条形图需要支持类别标签在左侧多行显示，图例放置于底部，数值轴位于图表顶部且刻度自带 `%` 符号。此外，页面整体采用了多图布局，并与左侧的文本说明列并排显示，这要求生成管线具备整页级别的图文混排和布局控制能力。\n\n### 定位一个值难在哪\n以饼图中的 `61` 为例，该值需要关联到标签 `Salaries and Benefits`。由于饼图没有坐标轴和网格线，许多基于坐标系的图表解析器会将其完全忽略（导致 Step 1 失败）。另外，即使能够提取出文本，也必须能够通过视觉引导线正确地将外部多行文本与相应的扇区和百分比数值绑定，若解析器未能理解连线的指向，则会导致 Step 3 匹配失败。\n\n### 不确定的\n在条形图（f3）中，实际绘制的条形长度似乎对应了前面饼图中的精确数值（如 `60.3%`），但在没有任何网格线且顶部刻度间距仅为 10% 的情况下，单凭视觉完全无法从 f3 中精确读取出十分位的值。提取任务默认会依赖 f1 和 f2 上直接打印的数字。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "FY 14 Q2 Forecast",
+          "subtitle": "Total: $750,000",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "pie",
+        "type_other": "",
+        "panels": 1,
+        "series": 8,
+        "categories": 1,
+        "marks": 8,
+        "values_printed": "all",
+        "axes": [],
+        "key_parts": [
+          {
+            "role": "series",
+            "label_source": "inline_label",
+            "example": "Salaries and Benefits"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Salaries and Benefits"
+          ],
+          "value": "61%",
+          "value_source": "printed",
+          "why_hard": "Leader lines connecting outside labels to slices require robust spatial association."
+        }
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "",
+          "title": "FY 14 Jan Actual",
+          "subtitle": "Total: $387,000k",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "pie",
+        "type_other": "",
+        "panels": 1,
+        "series": 8,
+        "categories": 1,
+        "marks": 8,
+        "values_printed": "all",
+        "axes": [],
+        "key_parts": [
+          {
+            "role": "series",
+            "label_source": "inline_label",
+            "example": "Salaries and Benefits"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Salaries and Benefits"
+          ],
+          "value": "60.3%",
+          "value_source": "printed",
+          "why_hard": "Leader lines connecting outside labels to slices require robust spatial association."
+        }
+      },
+      {
+        "id": "f3",
+        "heading": {
+          "figure_number": "",
+          "title": "Data graphed after applying data visualization rules:",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "grouped_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 8,
+        "marks": 16,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "top",
+            "role": "value",
+            "unit_text": "",
+            "low": "0%",
+            "high": "70%",
+            "serves": "all bars"
+          },
+          {
+            "side": "left",
+            "role": "category",
+            "unit_text": "",
+            "low": "Salaries and Benefits",
+            "high": "Editing/Publishing",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Salaries and Benefits"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "FY14 Jan Actual"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Salaries and Benefits",
+            "FY14 Jan Actual"
+          ],
+          "value": "60.3",
+          "value_source": "axis_read",
+          "why_hard": "Without gridlines, reading 60.3 precisely against ticks spaced by 10 is impossible."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "grouped_bar",
+        "figure_id": "f3",
+        "evidence": "bars for Actual and Forecast are grouped per category"
+      },
+      {
+        "key": "horizontal_bars",
+        "figure_id": "f3",
+        "evidence": "categories are on the left, bars grow to the right"
+      },
+      {
+        "key": "value_label_outside",
+        "figure_id": "f1",
+        "evidence": "percentages are printed outside the pie slices"
+      },
+      {
+        "key": "multi_figure_page",
+        "figure_id": "page",
+        "evidence": "three independent figures with separate titles"
+      },
+      {
+        "key": "inline_series_labels",
+        "figure_id": "f1",
+        "evidence": "slice names like Salaries and Benefits printed beside them"
+      },
+      {
+        "key": "side_text_bullets",
+        "figure_id": "page",
+        "evidence": "a column of text runs along the left side"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f2",
+        "evidence": "asterisk note printed below the f2 and f3 charts"
+      },
+      {
+        "key": "wrapped_category_labels",
+        "figure_id": "f3",
+        "evidence": "Depreciation, Interest and Maintenance wraps onto two lines"
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f3",
+        "evidence": "legend sits below the bar chart in f3"
+      },
+      {
+        "key": "footnote_marker",
+        "figure_id": "f1",
+        "evidence": "asterisk in Office Expenses and Other Costs* label"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "label_leader_lines",
+        "figure_id": "f1",
+        "evidence": "thin lines connect outside labels to pie slices",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "61",
+        "figure_id": "f1",
+        "mark": "Salaries and Benefits slice",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Salaries and Benefits"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "60.3",
+        "figure_id": "f2",
+        "mark": "Salaries and Benefits slice",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Salaries and Benefits"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "9",
+        "figure_id": "f1",
+        "mark": "Contracts and Professional Fees slice",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Contracts and Professional Fees"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "10.1",
+        "figure_id": "f2",
+        "mark": "Contracts and Professional Fees slice",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Contracts and Professional Fees"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "10",
+        "figure_id": "f1",
+        "mark": "Depreciation, Interest and Maintenance slice",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Depreciation, Interest and Maintenance"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "9",
+        "figure_id": "f2",
+        "mark": "Depreciation, Interest and Maintenance slice",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Depreciation, Interest and Maintenance"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "7",
+        "figure_id": "f1",
+        "mark": "Office Expenses and Other Costs* slice",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Office Expenses and Other Costs*"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "8",
+        "figure_id": "f2",
+        "mark": "Office Expenses and Other Costs* slice",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Office Expenses and Other Costs*"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "7",
+        "figure_id": "f1",
+        "mark": "Conference, Meetings and Exhibits slice",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Conference, Meetings and Exhibits"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "5",
+        "figure_id": "f2",
+        "mark": "Conference, Meetings and Exhibits slice",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Conference, Meetings and Exhibits"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      }
+    ],
+    "hardest_step": 1,
+    "hardest_step_why": "饼图（f1, f2）没有坐标轴或网格线，部分解析器可能无法将其识别为图表并输出表格，导致 `61` 等所有测试值完全无法定位。",
+    "examples": [
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "leader lines connecting outside labels to pie slices",
+        "why": "饼图外部标签通过细实线连接到相应扇区，当前样式库需增加此类外部标签位置和引导线的支持。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "FY 14 Q2 Forecast and Total: $750,000",
+        "why": "标题块包含了主标题和带有总计金额的副标题，需要支持将其作为多层级独立字段建模输出。"
+      },
+      {
+        "gap": "P3",
+        "figure_id": "page",
+        "quote": "text column starting with 'There's a big debate'",
+        "why": "页面左侧存在与图表并排的长篇正文列，现有的单图生成管线无法还原这种多列图文排版布局。"
+      }
+    ]
+  }
+}

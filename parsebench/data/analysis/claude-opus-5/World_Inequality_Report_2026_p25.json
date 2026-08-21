@@ -1,0 +1,291 @@
+{
+  "stem": "World_Inequality_Report_2026_p25",
+  "document": "World_Inequality_Report_2026",
+  "tags": "need_estimate",
+  "model": "claude-opus-5",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "seconds": 52.3,
+  "usage": {
+    "input_tokens": 13983,
+    "output_tokens": 2925,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "**画出来要什么**\n\n单面板折线图,两条序列(France、South Korea),各带方形/十字标记,10 个收入分位类别。标题需拆成三层:绿色 `Figure 17.` + 粗体标题「Without redistribution, political inequality will increase」,再加居中的图内副标题「Political donations by income decile, % of total」。左轴为竖排两行轴标题「Percentage of total political donations by income decile」,刻度 `0%`–`60%`,仅横向虚线网格。x 轴标签 `P0–P10`…`P90–P100` 旋转约 45°。图例在图下方一行,下面还有 **Interpretation.** 与 **Sources and series:** 两段小字。\n\n**定位一个值难在哪**\n\n取 57.0:它是 South Korea 在 `P90–P100` 的端点,未标数值。刻度间距 10 个百分点,5% 容差约 ±2.85 个百分点,而两条线在该点相距仅约 5 个点且几乎重叠,读错序列就整体偏 5。地址需要三段:图号、序列名、分位名。\n\n**不确定的**\n\n低分位(P0–P10 至 P30–P40)两线在 0–1% 内完全叠合,无法分辨谁在上;2.8、5.0、5.8 等值只能按视觉排序猜归属。也无法确认副标题是图内文本还是标题的第二行。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 17.",
+          "title": "Without redistribution, political inequality will increase",
+          "subtitle": "Political donations by income decile, % of total",
+          "unit_text": "% of total",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 10,
+        "marks": 20,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Percentage of total political donations by income decile",
+            "low": "0%",
+            "high": "60%",
+            "serves": "both the France and South Korea lines"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "P0–P10",
+            "high": "P90–P100",
+            "serves": "all plotted points of both lines"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "South Korea"
+          },
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "P90–P100"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "South Korea",
+            "P90–P100"
+          ],
+          "value": "~57%",
+          "value_source": "axis_read",
+          "why_hard": "Unlabelled endpoint above the 50% tick; the two series nearly touch, so series identity is ambiguous."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "\"Interpretation. Average shares of total political donations...\" and \"Sources and series: Cagé (2024).\" below plot"
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "a single row \"France  South Korea\" with markers sits under the x tick labels"
+      },
+      {
+        "key": "rotated_x_ticks",
+        "figure_id": "f1",
+        "evidence": "\"P0–P10\" through \"P90–P100\" set at roughly 45 degrees below the axis"
+      },
+      {
+        "key": "rotated_axis_title",
+        "figure_id": "f1",
+        "evidence": "\"Percentage of total political donations by income decile\" set vertically in two lines on the left"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "subtitle reads \"Political donations by income decile, % of total\"; ticks are \"0%\"..\"60%\""
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "dotted horizontal rules at 10% intervals; no vertical rules inside the plot"
+      },
+      {
+        "key": "abbrev_category_axis",
+        "figure_id": "f1",
+        "evidence": "categories written as percentile codes \"P40–P50\", \"P50–P60\""
+      }
+    ],
+    "new_components": [
+      {
+        "name": "overlapping_series_at_baseline",
+        "figure_id": "f1",
+        "evidence": "France and South Korea lines coincide within 1% across P0–P10 to P30–P40, markers overprinted",
+        "affects": [
+          2,
+          3
+        ]
+      },
+      {
+        "name": "colored_figure_number_prefix",
+        "figure_id": "f1",
+        "evidence": "\"Figure 17.\" printed in green, the title text following in black bold on the same line",
+        "affects": [
+          4
+        ]
+      },
+      {
+        "name": "marker_shape_per_series",
+        "figure_id": "f1",
+        "evidence": "France drawn with a small cross/plus marker, South Korea with a filled square marker",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "52.0",
+        "figure_id": "f1",
+        "mark": "the France endpoint at P90–P100",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "France",
+          "P90–P100"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "57.0",
+        "figure_id": "f1",
+        "mark": "the South Korea endpoint at P90–P100",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "South Korea",
+          "P90–P100"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "17.5",
+        "figure_id": "f1",
+        "mark": "the France point at P80–P90",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "France",
+          "P80–P90"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "16.5",
+        "figure_id": "f1",
+        "mark": "the South Korea point at P80–P90",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "South Korea",
+          "P80–P90"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "10.5",
+        "figure_id": "f1",
+        "mark": "the France point at P70–P80",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "France",
+          "P70–P80"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "8.2",
+        "figure_id": "f1",
+        "mark": "the South Korea point at P70–P80",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "South Korea",
+          "P70–P80"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "8.0",
+        "figure_id": "f1",
+        "mark": "the France point at P60–P70",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "France",
+          "P60–P70"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "5.8",
+        "figure_id": "f1",
+        "mark": "the France point at P50–P60",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "France",
+          "P50–P60"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "5.0",
+        "figure_id": "f1",
+        "mark": "the South Korea point at P60–P70",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "South Korea",
+          "P60–P70"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "2.8",
+        "figure_id": "f1",
+        "mark": "the South Korea point at P50–P60",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "South Korea",
+          "P50–P60"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "全图无数值标签,刻度10个百分点一格;2.8与5.0在近零区两线重叠,5%容差约±0.14,肉眼不可达。",
+    "examples": [
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "\"Figure 17.\" in green, then bold \"Without redistribution, political inequality will increase\", then centred \"Political donations by income decile, % of total\"",
+        "why": "标题需拆为编号、主标题、副标题、单位四字段,且编号带独立颜色,当前流水线只出单行标题。"
+      },
+      {
+        "gap": "P1",
+        "figure_id": "f1",
+        "quote": "France and South Korea lines overlap within one percent across P0–P10 through P30–P40, markers printed on top of each other",
+        "why": "低分位处可达精度远低于5%容差,需按标记逐点给出可读精度而非整图布尔判定。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "left ticks read \"0%\", \"10%\" ... \"60%\"; axis title set vertically in two wrapped lines",
+        "why": "刻度带百分号、轴标题竖排换行、单位同时出现在副标题,需要刻度格式与单位位置成为可控维度。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "x tick labels \"P0–P10\", \"P10–P20\" ... \"P90–P100\" rotated about 45 degrees under the axis",
+        "why": "需支持带en dash的分位区间类别轴生成;当前仅有普通类别或年份轴。"
+      }
+    ]
+  }
+}

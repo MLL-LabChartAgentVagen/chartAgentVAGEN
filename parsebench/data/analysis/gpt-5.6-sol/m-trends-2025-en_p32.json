@@ -1,0 +1,237 @@
+{
+  "stem": "m-trends-2025-en_p32",
+  "document": "m-trends-2025-en",
+  "tags": "need_estimate",
+  "model": "gpt-5.6-sol",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "via": "openrouter",
+  "max_tokens": 120000,
+  "seconds": 55.2,
+  "usage": {
+    "input_tokens": 8762,
+    "output_tokens": 3849,
+    "cache_read_tokens": 2365
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "**画出来要什么**\n\n需重建一个单面板分组柱状图：12个月、LockBit与RANSOMHUB两系列、24根柱；左侧纵排计数轴、仅水平网格线，图例置于绘图区右上角。标题位于图上方，页面左侧另有蓝色竖线和说明栏。\n\n**定位一个值难在哪**\n\n例如“Jan—RANSOMHUB—10”必须同时依赖月份轴与图例。数值未印在柱上，纵轴每50一格；10的5%容差仅±0.5，难以由柱高稳定读准。\n\n**不确定的**\n\n柱上没有数据标签，因此给定值与具体柱的对应及精确整数只能按柱高、月份顺序和图例推定；尤其多个矮柱都接近10。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "LockBit vs. RANSOMHUB DLS Listings, 2024",
+          "subtitle": "",
+          "unit_text": "Count of DLS Listings",
+          "placement": "above"
+        },
+        "type": "grouped_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 12,
+        "marks": 24,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Count of DLS Listings",
+            "low": "0",
+            "high": "200",
+            "serves": "all bars"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "Jan",
+            "high": "Dec",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "Jan"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "RANSOMHUB"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Jan",
+            "RANSOMHUB"
+          ],
+          "value": "10",
+          "value_source": "axis_read",
+          "why_hard": "50-unit ticks cannot support ±0.5 precision for a value of 10."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "grouped_bar",
+        "figure_id": "f1",
+        "evidence": "Black and blue bars are drawn side by side for each month."
+      },
+      {
+        "key": "legend_inside_plot",
+        "figure_id": "f1",
+        "evidence": "The “LockBit” and “RANSOMHUB” legend is inside the upper-right plot area."
+      },
+      {
+        "key": "side_text_bullets",
+        "figure_id": "f1",
+        "evidence": "A narrow “Data leak sites (DLS)” explanatory column runs beside the figure area."
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "The left axis title reads “Count of DLS Listings”."
+      },
+      {
+        "key": "rotated_axis_title",
+        "figure_id": "f1",
+        "evidence": "“Count of DLS Listings” is rotated vertically beside the left axis."
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "Horizontal rules cross the plot at 0, 50, 100, 150 and 200; no vertical gridlines."
+      }
+    ],
+    "new_components": [],
+    "spot_checks": [
+      {
+        "value": "60",
+        "figure_id": "f1",
+        "mark": "the January LockBit bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Jan",
+          "LockBit"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "10",
+        "figure_id": "f1",
+        "mark": "the January RANSOMHUB bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Jan",
+          "RANSOMHUB"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "100",
+        "figure_id": "f1",
+        "mark": "the February LockBit bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Feb",
+          "LockBit"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "55",
+        "figure_id": "f1",
+        "mark": "the March LockBit bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "March",
+          "LockBit"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "175",
+        "figure_id": "f1",
+        "mark": "the May LockBit bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "May",
+          "LockBit"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "35",
+        "figure_id": "f1",
+        "mark": "the June RANSOMHUB bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "June",
+          "RANSOMHUB"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "68",
+        "figure_id": "f1",
+        "mark": "the August RANSOMHUB bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Aug",
+          "RANSOMHUB"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "82",
+        "figure_id": "f1",
+        "mark": "the October RANSOMHUB bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Oct",
+          "RANSOMHUB"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "98",
+        "figure_id": "f1",
+        "mark": "the November RANSOMHUB bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Nov",
+          "RANSOMHUB"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "55",
+        "figure_id": "f1",
+        "mark": "the December RANSOMHUB bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Dec",
+          "RANSOMHUB"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "10仅占50单位刻度间距的五分之一，5%容差仅±0.5且柱上未印数值，最难卡在读值。防止错误读取图表。请注意，图表中的数值仅供参考，实际数值可能因四舍五入或其他因素有所不同。最终报告应以原始数据源为准。",
+    "examples": []
+  }
+}

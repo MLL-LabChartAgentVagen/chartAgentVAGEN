@@ -1,0 +1,225 @@
+{
+  "stem": "timevalue_p9",
+  "document": "timevalue",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "repeat",
+  "effort": "high",
+  "dpi": 150,
+  "seconds": 72.6,
+  "usage": {
+    "input_tokens": 5345,
+    "output_tokens": 9067,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "**画出来要什么**\n生成器需要支持标准的折线图（含方块、三角、叉号等不同的点标记），绘制左侧Y轴且仅显示水平网格线。X轴为离散时间轴，标题置于底部居中。Y轴标题需支持垂直旋转并沿轴放置。图例需能放置在绘图区右侧，并且图例项需支持在名称中直接包含单位符号（如“($)”）。\n\n**定位一个值难在哪**\n以第10年的Stocks值为例（240），难点在于图表未提供数据标签，所有数值全靠对照Y轴估算。Y轴刻度间距高达500，而该数值5%的容差仅为12（即区间228-252）。在如此大的刻度跨度下，仅凭视觉根本无法将数值精确读取到目标容差范围内。\n\n**不确定的**\nX轴的年份刻度（1, 5, 10, 20, 30, 40）在横向空间上的物理间距并非完全按照实际的时间跨度比例映射，更像是直接被当作等距的离散类别标签处理。不确定这是否为原作者有意为之的非线性缩放，以及生成器是否需要刻意复现这种将数值轴转为类别轴的排列逻辑。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "Holding Period and Value",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 1,
+        "series": 3,
+        "categories": 6,
+        "marks": 18,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Future value of $100 investment",
+            "low": "0",
+            "high": "4500",
+            "serves": "all lines"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "Holding period (in years)",
+            "low": "1",
+            "high": "40",
+            "serves": "all lines"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "40"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Stocks ($)"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "40",
+            "Stocks ($)"
+          ],
+          "value": "3850",
+          "value_source": "axis_read",
+          "why_hard": "The y-axis ticks are in increments of 500, making it impossible to accurately read 3850 to 5% tolerance."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "rotated_axis_title",
+        "figure_id": "f1",
+        "evidence": "the y-axis title is printed vertically alongside the axis"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "only horizontal grid lines are drawn in the plot area"
+      },
+      {
+        "key": "legend_beside_plot",
+        "figure_id": "f1",
+        "evidence": "the legend sits in a column to the right of the plot"
+      },
+      {
+        "key": "unit_in_series_name",
+        "figure_id": "f1",
+        "evidence": "every series name in the legend ends with '($)'"
+      },
+      {
+        "key": "axis_title_below_plot",
+        "figure_id": "f1",
+        "evidence": "the x-axis title sits below the bottom axis and ticks"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "decorative_banner",
+        "figure_id": "page",
+        "evidence": "a thick blue/grey solid banner separates the title from the chart area",
+        "affects": []
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "3850",
+        "figure_id": "f1",
+        "mark": "the Stocks line at year 40",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "40",
+          "Stocks ($)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "1550",
+        "figure_id": "f1",
+        "mark": "the Stocks line at year 30",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "30",
+          "Stocks ($)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "620",
+        "figure_id": "f1",
+        "mark": "the Stocks line at year 20",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "20",
+          "Stocks ($)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "240",
+        "figure_id": "f1",
+        "mark": "the Stocks line at year 10",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "10",
+          "Stocks ($)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "700",
+        "figure_id": "f1",
+        "mark": "the Treasury Bonds line at year 40",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "40",
+          "Treasury Bonds ($)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "420",
+        "figure_id": "f1",
+        "mark": "the Treasury Bonds line at year 30",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "30",
+          "Treasury Bonds ($)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "250",
+        "figure_id": "f1",
+        "mark": "the Treasury Bonds line at year 20",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "20",
+          "Treasury Bonds ($)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "420",
+        "figure_id": "f1",
+        "mark": "the Treasury Bills line at year 40",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "40",
+          "Treasury Bills ($)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "280",
+        "figure_id": "f1",
+        "mark": "the Treasury Bills line at year 30",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "30",
+          "Treasury Bills ($)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "全图无数据标签，数值只能通过间距为500的Y轴读取。对于240这样的小值，5%的容差仅为12（228-252），肉眼根本无法在图上精准定位到如此微小的区间。",
+    "examples": []
+  }
+}

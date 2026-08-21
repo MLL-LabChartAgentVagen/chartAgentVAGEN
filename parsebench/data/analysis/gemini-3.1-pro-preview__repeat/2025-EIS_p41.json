@@ -1,0 +1,294 @@
+{
+  "stem": "2025-EIS_p41",
+  "document": "2025-EIS",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "repeat",
+  "effort": "high",
+  "dpi": 150,
+  "seconds": 83.5,
+  "usage": {
+    "input_tokens": 5336,
+    "output_tokens": 10440,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n\n这是一个水平混合标记图（类似子弹图）。图表引擎需要支持以下特性：1）**分类轴样式**：Y轴的特定分类标签（“EU”）需要加粗，以突出显示参照系；2）**混合图形叠加**：在同一面板内，为主序列绘制水平条形图，同时在相应的类别槽内叠加菱形散点（`◆`）和竖线刻度标记（`|`）来表示不同的历史年份数据；3）**颜色编码独立属性**：条形的颜色并不代表不同的时间序列，而是编码国家的“整体绩效分组”（如Strong innovators），图例单独提供颜色对应的分组名称；4）**图例与文本说明结合**：图例中未给出主序列（条形图）的名称，其代表“2025年表现”这一信息必须通过底部的长注释文本解析；5）**网格线**：仅绘制垂直于X轴的值网格线，无需水平网格线。\n\n### 定位一个值难在哪\n\n以法国2025年的得分为例（183）。首先，条形的序列名称并未明确标注在图例中，需要通过阅读自然语言注释来赋予键值；其次，该值本身没有任何数据标签。X轴的刻度间隔高达20，要在这个无次级刻度线的长跨度区间内，仅凭肉眼估读出条形末端为“183”并确保误差在5%（约9个单位）以内，几乎是不可能完成的。\n\n### 不确定的\n\n条形图对应的确切序列标签是隐式的，必须从底部的句子“Horizontal coloured bars represent countries' performance in 2025”中人为提炼出序列名称；对图中很多相互靠近的标记，如果没有原始数据表，无法判断遮挡情况。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 13:",
+          "title": "Innovation performance of the EU27 Member States in the Finance and support dimension",
+          "subtitle": "Finance and support",
+          "unit_text": "indexed to the EU in 2018",
+          "placement": "above"
+        },
+        "type": "other",
+        "type_other": "bullet chart",
+        "panels": 1,
+        "series": 3,
+        "categories": 28,
+        "marks": 84,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "category",
+            "unit_text": "",
+            "low": "France",
+            "high": "Malta",
+            "serves": "all marks"
+          },
+          {
+            "side": "bottom",
+            "role": "value",
+            "unit_text": "Score for dimension 2.1 in 2025 (indexed to the EU in 2018)",
+            "low": "0",
+            "high": "200",
+            "serves": "all marks"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "France"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Score in 2018"
+          },
+          {
+            "role": "colour_group",
+            "label_source": "legend",
+            "example": "Strong innovators"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "France",
+            "performance in 2025",
+            "Strong innovators"
+          ],
+          "value": "183",
+          "value_source": "axis_read",
+          "why_hard": "Interpolating an exact value like 183 between ticks spaced by 20 without printed labels is highly inaccurate."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "horizontal_bars",
+        "figure_id": "f1",
+        "evidence": "categories sit on the left y-axis and bars grow to the right"
+      },
+      {
+        "key": "mixed_marks",
+        "figure_id": "f1",
+        "evidence": "bars, diamonds, and vertical ticks are overlaid in one panel"
+      },
+      {
+        "key": "color_encodes_extra_attribute",
+        "figure_id": "f1",
+        "evidence": "bar colors denote performance groups, separate from the time series"
+      },
+      {
+        "key": "tick_marker_as_series",
+        "figure_id": "f1",
+        "evidence": "Score in 2024 is drawn as a vertical tick marker |"
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "the legend sits below the x-axis"
+      },
+      {
+        "key": "highlighted_category",
+        "figure_id": "f1",
+        "evidence": "the EU category label on the y-axis is bolded"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "Note: All performance scores are relative..."
+      },
+      {
+        "key": "vgrid_only",
+        "figure_id": "f1",
+        "evidence": "vertical grid lines at tick intervals, no horizontal lines"
+      },
+      {
+        "key": "axis_title_below_plot",
+        "figure_id": "f1",
+        "evidence": "Score for dimension 2.1... is below the x-axis ticks"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "series_defined_in_note",
+        "figure_id": "f1",
+        "evidence": "the 2025 series is only named in the bottom note",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "183",
+        "figure_id": "f1",
+        "mark": "France's bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "France",
+          "performance in 2025",
+          "Strong innovators"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "100",
+        "figure_id": "f1",
+        "mark": "EU's diamond marker",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "EU",
+          "Score in 2018",
+          "Innovation leaders"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "178",
+        "figure_id": "f1",
+        "mark": "Denmark's vertical tick marker",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Denmark",
+          "Score in 2024",
+          "Innovation leaders"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "152",
+        "figure_id": "f1",
+        "mark": "Sweden's bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Sweden",
+          "performance in 2025",
+          "Innovation leaders"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "23",
+        "figure_id": "f1",
+        "mark": "Bulgaria's bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Bulgaria",
+          "performance in 2025",
+          "Emerging innovators"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "37",
+        "figure_id": "f1",
+        "mark": "Latvia's bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Latvia",
+          "performance in 2025",
+          "Emerging innovators"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "125",
+        "figure_id": "f1",
+        "mark": "Netherlands' diamond marker",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Netherlands",
+          "Score in 2018",
+          "Innovation leaders"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "105",
+        "figure_id": "f1",
+        "mark": "Germany's bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Germany",
+          "performance in 2025",
+          "Strong innovators"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "152",
+        "figure_id": "f1",
+        "mark": "Austria's vertical tick marker",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Austria",
+          "Score in 2024",
+          "Strong innovators"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "77",
+        "figure_id": "f1",
+        "mark": "Malta's diamond marker",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Malta",
+          "Score in 2018",
+          "Emerging innovators"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "图中没有任何数值标签，X轴刻度间隔高达20。要在这样一个宽泛的网格上将183、178等值仅凭肉眼估读到5%（即1个单位）的容差内是不可能的。",
+    "examples": [
+      {
+        "gap": "P8",
+        "figure_id": "f1",
+        "quote": "The colours denote each country's overall performance group",
+        "why": "颜色不表示时间序列，而是编码国家所属的额外类别（如Strong innovators），提取时需要将该颜色分组加入到多维键值中以完整描述该点。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "Horizontal coloured bars represent countries' performance in 2025",
+        "why": "主体柱状图代表的序列名称并未出现在图例项中，而是写在底部的注释文本里，解析引擎必须支持从自然语言中提取序列映射。"
+      },
+      {
+        "gap": "P9",
+        "figure_id": "f1",
+        "quote": "◆ Score in 2018 | Score in 2024",
+        "why": "同一面板内混合了柱形、菱形散点和竖线刻度三种不同形状来表达并列的数据序列，提取的值需要记录它是从哪种形状的标记上读取的。"
+      }
+    ]
+  }
+}

@@ -1,0 +1,166 @@
+{
+  "stem": "timevalue_p9",
+  "document": "timevalue",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "repeat",
+  "effort": "high",
+  "dpi": 150,
+  "seconds": 39.3,
+  "usage": {
+    "input_tokens": 4439,
+    "output_tokens": 5572,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "本页包含一个展示不同投资工具（股票、国债、国库券）在不同持有期内未来价值变化的折线图。图例放置在绘图区右侧，Y轴标题旋转且X轴标题位于绘图区下方。图表仅有水平网格线。\n\n图表重建和数据提取的主要挑战在于：\n1. **数值读取困难**：所有数据点均未标注具体数值。Y轴的主刻度间距高达500，像 3850、620 或 420 这样的值不在网格线上，几乎无法通过肉眼精确读取，极易导致提取的值超出容差范围（严重阻塞步骤 2）。\n2. **X轴离散化处理**：X轴标签（1, 5, 10, 20, 30, 40）在数值上是非线性的，但在图表上被等距绘制为离散的类别。图表生成器需具备将非线性连续变量作为等距类别轴渲染的能力。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "Holding Period and Value",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 1,
+        "series": 3,
+        "categories": 6,
+        "marks": 18,
+        "values_printed": "none"
+      }
+    ],
+    "components": [
+      {
+        "key": "legend_beside_plot",
+        "figure_id": "f1",
+        "evidence": "the legend sits in a column to the right of the plot"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "horizontal lines run across the plot area, but no vertical ones"
+      },
+      {
+        "key": "rotated_axis_title",
+        "figure_id": "f1",
+        "evidence": "the y-axis title Future value of $100 investment is rotated 90 degrees"
+      },
+      {
+        "key": "axis_title_below_plot",
+        "figure_id": "f1",
+        "evidence": "the x-axis title Holding period (in years) sits below the axis ticks"
+      },
+      {
+        "key": "unit_in_series_name",
+        "figure_id": "f1",
+        "evidence": "the unit ($) is written in every legend entry"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "continuous_variable_as_categorical_axis",
+        "figure_id": "f1",
+        "evidence": "x-axis values 1, 5, 10, 20 are drawn evenly spaced despite unequal numeric differences",
+        "affects": []
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "3850",
+        "figure_id": "f1",
+        "mark": "the Stocks ($) point at 40",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Stocks ($)",
+          "40"
+        ]
+      },
+      {
+        "value": "1550",
+        "figure_id": "f1",
+        "mark": "the Stocks ($) point at 30",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Stocks ($)",
+          "30"
+        ]
+      },
+      {
+        "value": "620",
+        "figure_id": "f1",
+        "mark": "the Stocks ($) point at 20",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Stocks ($)",
+          "20"
+        ]
+      },
+      {
+        "value": "240",
+        "figure_id": "f1",
+        "mark": "the Stocks ($) point at 10",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Stocks ($)",
+          "10"
+        ]
+      },
+      {
+        "value": "700",
+        "figure_id": "f1",
+        "mark": "the Treasury Bonds ($) point at 40",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Treasury Bonds ($)",
+          "40"
+        ]
+      },
+      {
+        "value": "420",
+        "figure_id": "f1",
+        "mark": "the Treasury Bonds ($) point at 30",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Treasury Bonds ($)",
+          "30"
+        ]
+      },
+      {
+        "value": "250",
+        "figure_id": "f1",
+        "mark": "the Treasury Bonds ($) point at 20",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Treasury Bonds ($)",
+          "20"
+        ]
+      },
+      {
+        "value": "420",
+        "figure_id": "f1",
+        "mark": "the Treasury Bills ($) point at 40",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Treasury Bills ($)",
+          "40"
+        ]
+      },
+      {
+        "value": "280",
+        "figure_id": "f1",
+        "mark": "the Treasury Bills ($) point at 30",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Treasury Bills ($)",
+          "30"
+        ]
+      }
+    ],
+    "hardest_step": 2
+  }
+}

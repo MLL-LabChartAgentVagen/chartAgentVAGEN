@@ -1,0 +1,390 @@
+{
+  "stem": "r_qt1212e_p9",
+  "document": "r_qt1212e",
+  "tags": "need_estimate",
+  "model": "claude-opus-5",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 116.8,
+  "usage": {
+    "input_tokens": 13967,
+    "output_tokens": 9186,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "**画出来要什么**\n一个编号图 `Graph 6`（标题行右端排编号），下挂两个异构面板：左面板是折线，值轴只画在**右侧**且从 `30` 起（30/40/50/60，单位词 `Per cent` 置于顶端刻度之上）；右面板是柱＋点混合的**双轴**图，左轴 `Per cent of premiums`（0.0–0.4）读红点，右轴 `Number of companies`（0–4）读蓝柱，图例还分成 `Lhs:` 与 `Rhs:` 两组来指派轴。两面板各有自己的面板标题与面板下图例，标签带上标脚注 `1 2 3`，年份写成两位 `00`、`80`，右面板每 3 年一个刻度但柱是逐年的。\n\n**定位一个值难在哪**\n`0.33`：它是 2003 年那个红点，须读左轴（不是柱的右轴），而 0.3 与 0.4 之间无中间网格，5% 容差只有 ±0.017；更麻烦的是横轴只印 `01` 和 `04`，这一点所属年份根本没有刻度标签。\n\n**不确定的**\n图上无任何数字标注，全部靠像素读数；右面板逐年柱与红点的具体年份、以及近零红点的个数只能估计（约 14 柱、20 点）。右面板底色是否与左面板一样有灰底，分辨率下看不真切。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Graph 6",
+          "title": "Reinsurance market developments",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "compound",
+        "type_other": "",
+        "panels": 2,
+        "series": 3,
+        "categories": 32,
+        "marks": 46,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "right",
+            "role": "value",
+            "unit_text": "Per cent",
+            "low": "30",
+            "high": "60",
+            "serves": "the red Top 10 market share line, left panel"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "00",
+            "high": "11",
+            "serves": "the red line points, left panel"
+          },
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Per cent of premiums",
+            "low": "0.0",
+            "high": "0.4",
+            "serves": "only the red dots, right panel"
+          },
+          {
+            "side": "right",
+            "role": "value",
+            "unit_text": "Number of companies",
+            "low": "0",
+            "high": "4",
+            "serves": "only the blue bars, right panel"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "80",
+            "high": "10",
+            "serves": "bars and dots, right panel"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "panel",
+            "label_source": "panel_title",
+            "example": "Failures of reinsurance companies"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Market share of failed companies"
+          },
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "04"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Failures of reinsurance companies",
+            "Market share of failed companies",
+            "03"
+          ],
+          "value": "0.33",
+          "value_source": "axis_read",
+          "why_hard": "Dot read on lhs not rhs; no gridline between 0.3 and 0.4; year 03 has no tick"
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "dual_axis",
+        "figure_id": "f1",
+        "evidence": "right panel: `Per cent of premiums` 0.0-0.4 at left, `Number of companies` 0-4 at right"
+      },
+      {
+        "key": "mixed_marks",
+        "figure_id": "f1",
+        "evidence": "blue bars with red round point markers overlaid in the same right panel"
+      },
+      {
+        "key": "right_side_y_axis",
+        "figure_id": "f1",
+        "evidence": "left panel's only value ticks 30, 40, 50, 60 are drawn on the right edge"
+      },
+      {
+        "key": "axis_starts_above_zero",
+        "figure_id": "f1",
+        "evidence": "left panel lowest tick is `30`, no break glyph on the axis"
+      },
+      {
+        "key": "heterogeneous_panel_types",
+        "figure_id": "f1",
+        "evidence": "left panel a single red line, right panel bars plus dots, under one `Graph 6`"
+      },
+      {
+        "key": "panel_title_per_panel",
+        "figure_id": "f1",
+        "evidence": "`Reinsurance market concentration` and `Failures of reinsurance companies` above each panel"
+      },
+      {
+        "key": "per_panel_legend",
+        "figure_id": "f1",
+        "evidence": "`Top 10 market share1` under left panel; `Lhs:`/`Rhs:` legend under right panel"
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "both legends sit under their plot areas, above the footnote lines"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "`Sources: IAIS, based on industry data; authors' calculations.` plus numbered notes 1-3"
+      },
+      {
+        "key": "footnote_marker",
+        "figure_id": "f1",
+        "evidence": "superscripts on `Top 10 market share1`, `Market share of failed companies2`, `Number of failures3`"
+      },
+      {
+        "key": "axis_title_above_axis",
+        "figure_id": "f1",
+        "evidence": "`Per cent`, `Per cent of premiums`, `Number of companies` set above the top ticks"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "scale words `Per cent` and `Per cent of premiums` appear only over the axes"
+      },
+      {
+        "key": "nonstandard_time_ticks",
+        "figure_id": "f1",
+        "evidence": "x ticks read `00 01 02 ... 11` and `80 83 86 ... 10`, bare two-digit years"
+      },
+      {
+        "key": "sparse_time_ticks",
+        "figure_id": "f1",
+        "evidence": "right panel bars are yearly but ticks appear every three years"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "horizontal rules at 40/50/60 and at 0.1/0.2/0.3/0.4; no vertical rules"
+      },
+      {
+        "key": "panel_background",
+        "figure_id": "f1",
+        "evidence": "left panel plot area is filled grey with white horizontal grid lines"
+      },
+      {
+        "key": "shared_legend",
+        "figure_id": "f1",
+        "evidence": "`Lhs:`/`Rhs:` legend row spans the width under the right panel governing dots and bars"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "lhs_rhs_legend_grouping",
+        "figure_id": "f1",
+        "evidence": "legend split into two labelled groups `Lhs:` and `Rhs:` naming which axis each series is read against",
+        "affects": [
+          2,
+          3
+        ]
+      },
+      {
+        "name": "figure_number_beside_title",
+        "figure_id": "f1",
+        "evidence": "`Reinsurance market developments` at left, `Graph 6` right-aligned on the same rule-bounded line",
+        "affects": [
+          3,
+          4
+        ]
+      },
+      {
+        "name": "panel_axis_side_differs",
+        "figure_id": "f1",
+        "evidence": "left panel value axis only on the right edge; right panel carries axes on both edges",
+        "affects": [
+          2,
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "51",
+        "figure_id": "f1",
+        "mark": "the red line point at 00 in the left panel",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Reinsurance market concentration",
+          "Top 10 market share",
+          "00"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "48",
+        "figure_id": "f1",
+        "mark": "the red line point at 01, the local dip",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Reinsurance market concentration",
+          "Top 10 market share",
+          "01"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "53",
+        "figure_id": "f1",
+        "mark": "the red line peak at 04",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Reinsurance market concentration",
+          "Top 10 market share",
+          "04"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "42",
+        "figure_id": "f1",
+        "mark": "the red line point at the right-hand end, 11",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Reinsurance market concentration",
+          "Top 10 market share",
+          "11"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "43",
+        "figure_id": "f1",
+        "mark": "the red line point at 09, the small rebound",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Reinsurance market concentration",
+          "Top 10 market share",
+          "09"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "0.1",
+        "figure_id": "f1",
+        "mark": "a red dot at about 0.1 on the lhs, near 92",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Failures of reinsurance companies",
+          "Market share of failed companies",
+          "92"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 3
+      },
+      {
+        "value": "3",
+        "figure_id": "f1",
+        "mark": "a blue bar reaching 3 on the rhs, the year after 92",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Failures of reinsurance companies",
+          "Number of failures",
+          "93"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 3
+      },
+      {
+        "value": "0",
+        "figure_id": "f1",
+        "mark": "one of the many red dots sitting on the 0.0 baseline",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Failures of reinsurance companies",
+          "Market share of failed companies",
+          "83"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 3
+      },
+      {
+        "value": "0.33",
+        "figure_id": "f1",
+        "mark": "the isolated high red dot near 03, read on the lhs axis",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Failures of reinsurance companies",
+          "Market share of failed companies",
+          "03"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "1",
+        "figure_id": "f1",
+        "mark": "a blue bar of height 1 on the rhs, e.g. near 10",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Failures of reinsurance companies",
+          "Number of failures",
+          "10"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 3
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "全图无数字标注；0.33 需在 0.3–0.4 无中间网格间读到 ±0.017，且要认出它读左轴而非柱的右轴。",
+    "examples": [
+      {
+        "gap": "P9",
+        "figure_id": "f1",
+        "quote": "Lhs: red dot `Market share of failed companies2`  Rhs: blue bar `Number of failures3`",
+        "why": "同一面板柱与点分读两轴，取值必须记录轴与标记形状，现管线无此键。"
+      },
+      {
+        "gap": "P2",
+        "figure_id": "f1",
+        "quote": "`Reinsurance market concentration` and `Failures of reinsurance companies` under one heading `Graph 6`",
+        "why": "一个图号下两个异构面板，面板名必须进入键，否则两列同名年份撞车。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "`Reinsurance market developments` at left, `Graph 6` right-aligned on the same line; `Per cent` above the top tick",
+        "why": "编号与标题同行分列、单位置于顶刻度上方，现有标题块无法拆成这些字段与位置。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "left panel value ticks `30 40 50 60` drawn only on the right edge, lowest tick 30",
+        "why": "仅右侧值轴且起点非零的折线，刻度位置与轴起点尚不是可控风格维度。"
+      },
+      {
+        "gap": "P1",
+        "figure_id": "f1",
+        "quote": "no number is printed on any bar, dot or line point across both panels",
+        "why": "逐标记可达精度不同：折线格距10易读，红点格距0.1读不到5%，需按标记评级。"
+      }
+    ]
+  }
+}

@@ -1,0 +1,225 @@
+{
+  "stem": "Snapshot-of-Global-PV-Markets_2025_p12",
+  "document": "Snapshot-of-Global-PV-Markets_2025",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 36.4,
+  "usage": {
+    "input_tokens": 5325,
+    "output_tokens": 4791,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n一个单面板的堆叠柱状图，展示2014至2024年（横轴，分类时间序列）的ROOFTOP与UTILITY SCALE两类光伏装机量（系列，通过颜色区分，图例位于底部）。纵轴刻度为0到600，只有水平网格线，没有垂直网格线。特殊点在于，图表的标题居中，而单位“GWp”放置在标题同一行的最左侧、紧挨着左侧纵轴的上方。图表最下方有数据源“Source: IEA PVPS, Becquerel Institute”的斜体说明。\n\n### 定位一个值难在哪\n以2024年UTILITY SCALE的值375为例，该数值本身并未在图表上标注。要在图表上定位它，需要依靠图例和横轴年份标签（`UTILITY SCALE`，`2024`）。但它是一个堆叠条形图的顶部段，纵轴刻度间隔大（每档100），读者需要目测柱子总高度（约600）并减去底部ROOFTOP的高度（约225）才能得出该值。肉眼估算读数的误差极大，完全无法保证5%的精度要求。\n\n### 不确定的\n所有的值（如225, 375, 190等）在图上完全没有印刷出来，只能大致与柱体比例对应，可以确定这是生成图表的后台数据，但对于解析器或人类读者，只能给出粗略估值。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "FIGURE 4:",
+          "title": "SEGMENTATION OF PV INSTALLATION 2014-2024",
+          "subtitle": "",
+          "unit_text": "GWp",
+          "placement": "above"
+        },
+        "type": "stacked_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 11,
+        "marks": 22,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "GWp",
+            "low": "0",
+            "high": "600",
+            "serves": "all bars"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "2014",
+            "high": "2024",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "UTILITY SCALE"
+          },
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2024"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "UTILITY SCALE",
+            "2024"
+          ],
+          "value": "375",
+          "value_source": "not_readable",
+          "why_hard": "Top segment of a stacked bar with 100-unit tick gaps and no labels, impossible to read to 5%."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "stacked_bar",
+        "figure_id": "f1",
+        "evidence": "bars are split vertically into two coloured segments"
+      },
+      {
+        "key": "axis_title_above_axis",
+        "figure_id": "f1",
+        "evidence": "GWp sits above the top tick of the y-axis"
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "ROOFTOP and UTILITY SCALE sit below the x-axis"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "Source: IEA PVPS, Becquerel Institute below the legend"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "horizontal lines run across from the y-axis ticks, no vertical ones"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "GWp is placed beside the title above the axis"
+      }
+    ],
+    "new_components": [],
+    "spot_checks": [
+      {
+        "value": "225",
+        "figure_id": "f1",
+        "mark": "the 2024 ROOFTOP bottom segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "ROOFTOP",
+          "2024"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "375",
+        "figure_id": "f1",
+        "mark": "the 2024 UTILITY SCALE top segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "UTILITY SCALE",
+          "2024"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "190",
+        "figure_id": "f1",
+        "mark": "the 2023 ROOFTOP bottom segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "ROOFTOP",
+          "2023"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "265",
+        "figure_id": "f1",
+        "mark": "the 2023 UTILITY SCALE top segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "UTILITY SCALE",
+          "2023"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "118",
+        "figure_id": "f1",
+        "mark": "the 2022 ROOFTOP bottom segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "ROOFTOP",
+          "2022"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "122",
+        "figure_id": "f1",
+        "mark": "the 2022 UTILITY SCALE top segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "UTILITY SCALE",
+          "2022"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "82",
+        "figure_id": "f1",
+        "mark": "the 2021 ROOFTOP bottom segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "ROOFTOP",
+          "2021"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "93",
+        "figure_id": "f1",
+        "mark": "the 2021 UTILITY SCALE top segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "UTILITY SCALE",
+          "2021"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "堆叠柱状图无数字标签，纵轴刻度间隔达100，像2024年UTILITY SCALE的375这种顶部段，必须先估算总高再减去底段，肉眼根本无法满足5%的误差容忍度。",
+    "examples": [
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "GWp FIGURE 4: SEGMENTATION OF PV INSTALLATION 2014-2024",
+        "why": "单位“GWp”和居中的主标题在同一直线上但分居左侧和中部，当前生成管线需要有专门针对这种多段式标题布局的控制能力。"
+      },
+      {
+        "gap": "P1",
+        "figure_id": "f1",
+        "quote": "no values printed on the bars, y axis ticks at 100 intervals",
+        "why": "缺少数据标签的堆叠图中，非底部的数值几乎不可读，需要将图表在解析输出中的数值精度纳入能力评估。"
+      }
+    ]
+  }
+}

@@ -1,0 +1,178 @@
+{
+  "stem": "deloitte-2025-global-automotive-consumer-study-january-2025_1_p20",
+  "document": "deloitte-2025-global-automotive-consumer-study-january-2025_1",
+  "tags": "untagged",
+  "model": "gemini-3.1-pro-preview",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "seconds": 48.8,
+  "usage": {
+    "input_tokens": 4413,
+    "output_tokens": 6596,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "此页面包含三个无编号的图表。上方是两个并列放置的简单水平柱状图，下方是一个100%堆叠的水平柱状图。\n\n所有图表均没有数值轴（`no_value_axis`），完全依赖于在条形内部打印的百分比数值（`value_label_inside`）。图表生成器需要能够支持隐藏数值轴、进行水平条形布局，并将数据标签强制右对齐或居中显示在条形块内部。\n\n对于数据提取，最大的挑战在第3步。由于下方的堆叠图没有任何网格线或坐标轴作为对齐参考，解析器必须通过颜色映射将底部的图例（如“Beneficial”）准确关联到堆叠的各个数据块上。如果模型无法有效处理颜色编码到图例的映射，极易丢失数据点与类别的绑定关系。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "Percentage of consumers concerned about fully autonomous robotaxi services operating where they live",
+          "subtitle": "",
+          "unit_text": "Percentage",
+          "placement": "above"
+        },
+        "type": "bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 1,
+        "categories": 8,
+        "marks": 8,
+        "values_printed": "all"
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "",
+          "title": "Percentage of consumers concerned about commercial vehicles operating in a fully autonomous mode on the highway",
+          "subtitle": "",
+          "unit_text": "Percentage",
+          "placement": "above"
+        },
+        "type": "bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 1,
+        "categories": 8,
+        "marks": 8,
+        "values_printed": "all"
+      },
+      {
+        "id": "f3",
+        "heading": {
+          "figure_number": "",
+          "title": "Addition of artificial intelligence in vehicle systems",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "stacked_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 3,
+        "categories": 8,
+        "marks": 24,
+        "values_printed": "all"
+      }
+    ],
+    "components": [
+      {
+        "key": "horizontal_bars",
+        "figure_id": "page",
+        "evidence": "categories like India sit on the y axis and bars grow right"
+      },
+      {
+        "key": "no_value_axis",
+        "figure_id": "page",
+        "evidence": "no ticks or numerical scales appear on the x axes"
+      },
+      {
+        "key": "value_label_inside",
+        "figure_id": "page",
+        "evidence": "percentage numbers are printed directly on top of the bars"
+      },
+      {
+        "key": "pct_stacked",
+        "figure_id": "f3",
+        "evidence": "stacked segments span the full width to represent 100%"
+      },
+      {
+        "key": "multi_figure_page",
+        "figure_id": "page",
+        "evidence": "three separate charts with distinct titles on one page"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "page",
+        "evidence": "Note: Percentages may not add up... printed below the charts"
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f3",
+        "evidence": "the legend starting with Not beneficial sits below the bars"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "page",
+        "evidence": "the word Percentage is written in the f1 and f2 titles"
+      }
+    ],
+    "new_components": [],
+    "spot_checks": [
+      {
+        "value": "82",
+        "figure_id": "f3",
+        "mark": "the India Beneficial segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "India",
+          "Beneficial"
+        ]
+      },
+      {
+        "value": "13",
+        "figure_id": "f3",
+        "mark": "the India Neutral segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "India",
+          "Neutral"
+        ]
+      },
+      {
+        "value": "77",
+        "figure_id": "f3",
+        "mark": "the China Beneficial segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "China",
+          "Beneficial"
+        ]
+      },
+      {
+        "value": "45",
+        "figure_id": "f3",
+        "mark": "the US Beneficial segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "US",
+          "Beneficial"
+        ]
+      },
+      {
+        "value": "41",
+        "figure_id": "f3",
+        "mark": "the Germany Beneficial segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Germany",
+          "Beneficial"
+        ]
+      },
+      {
+        "value": "31",
+        "figure_id": "f3",
+        "mark": "the UK Neutral segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "UK",
+          "Neutral"
+        ]
+      }
+    ],
+    "hardest_step": 3
+  }
+}

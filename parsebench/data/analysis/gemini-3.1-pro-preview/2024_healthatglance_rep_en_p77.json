@@ -1,0 +1,346 @@
+{
+  "stem": "2024_healthatglance_rep_en_p77",
+  "document": "2024_healthatglance_rep_en",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 106.3,
+  "usage": {
+    "input_tokens": 5299,
+    "output_tokens": 14899,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n本页包含一个数据表格（Table 2.2）和一个哑铃图（Figure 2.17）。\n绘制表格需要支持标准的行列结构以及跨行的分组表头（如`Behavioural risk factors`），且需处理特定单元格内的后缀注释（如`2% (people aged < 70)`），这类注释实际上覆盖了对应的列名上下文。\n绘制哑铃图需要支持将极短的横线（`-`）作为独立的数据点标记（而非连线），并用垂直线段连接同一分类下两个不同系列的标记。此外，需支持对特定分类（如`EU27`）的数据点应用不同的颜色（红色）以示强调。X轴的分类标签需支持倾斜排版以适应长文本。\n\n### 定位一个值难在哪\n以图2.17中`EU27`的`From 18 to 64 years`系列的值（35）为例，模型需要将图例中极其微小的短横线（`-`）与图表中垂直线段底部的横线标记正确对应。多数解析器极易将其误认为误差线或普通线段而忽略，导致无法建立正确的标签关联或无法提取该系列的值。\n\n### 不确定的\n图2.17中除文本提及的数值外，其余数据点的具体数值并未标注，需依赖视觉对齐左侧Y轴的网格线（间距为10）进行估算。例如Norway的圆点看起来略低于70，估算为69。对于18至64岁组的短横线，定位精度可能会受线段本身粗细和图表清晰度的干扰。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Table 2.2.",
+          "title": "Overview of behavioural and environmental risk factors among older people compared to younger people",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "unreadable",
+        "type_other": "a plain data table",
+        "panels": 1,
+        "series": 2,
+        "categories": 8,
+        "marks": 16,
+        "values_printed": "all",
+        "axes": [],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "not_shown",
+            "example": "Environmental risk factors (mortality)"
+          },
+          {
+            "role": "category",
+            "label_source": "not_shown",
+            "example": "Extreme temperature (% deaths attributable to heat or cold wave)"
+          },
+          {
+            "role": "series",
+            "label_source": "heading",
+            "example": "People aged 18-64"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Environmental risk factors (mortality)",
+            "Extreme temperature (% deaths attributable to heat or cold wave)",
+            "People aged 18-64"
+          ],
+          "value": "2",
+          "value_source": "printed",
+          "why_hard": "Cell value includes an inline annotation overriding the column context"
+        }
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "Figure 2.17.",
+          "title": "Only 22% of people aged over 65 meet the WHO recommendation on minimum physical activity per week",
+          "subtitle": "% of people reporting to spend 150 minutes or more per week of physical activity",
+          "unit_text": "%",
+          "placement": "above"
+        },
+        "type": "other",
+        "type_other": "dumbbell chart",
+        "panels": 1,
+        "series": 2,
+        "categories": 28,
+        "marks": 56,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "0",
+            "high": "80",
+            "serves": "all markers"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "Norway",
+            "high": "Romania",
+            "serves": "all markers"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Netherlands"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "65 years or over"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Netherlands",
+            "65 years or over"
+          ],
+          "value": "59",
+          "value_source": "axis_read",
+          "why_hard": "Dot sits just below the 60 grid line, requiring careful visual interpolation"
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "data_table_as_figure",
+        "figure_id": "f1",
+        "evidence": "Table 2.2 is a formatted data table with a title"
+      },
+      {
+        "key": "mixed_marks",
+        "figure_id": "f2",
+        "evidence": "Uses both circles and horizontal dashes as point markers"
+      },
+      {
+        "key": "range_connector_line",
+        "figure_id": "f2",
+        "evidence": "A vertical line connects the two markers for each category"
+      },
+      {
+        "key": "tick_marker_as_series",
+        "figure_id": "f2",
+        "evidence": "The 18-64 series is drawn as a short horizontal dash"
+      },
+      {
+        "key": "legend_above_plot",
+        "figure_id": "f2",
+        "evidence": "The legend sits below the heading and above the plot"
+      },
+      {
+        "key": "rotated_x_ticks",
+        "figure_id": "f2",
+        "evidence": "Country names on the x-axis are rotated"
+      },
+      {
+        "key": "highlighted_category",
+        "figure_id": "f2",
+        "evidence": "The EU27 dot is coloured red instead of blue"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f2",
+        "evidence": "Only horizontal grid lines are present across the panel"
+      },
+      {
+        "key": "panel_background",
+        "figure_id": "f2",
+        "evidence": "The plot area has a light grey background tint"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "page",
+        "evidence": "Both figures have Note and Source lines beneath them"
+      },
+      {
+        "key": "multi_figure_page",
+        "figure_id": "page",
+        "evidence": "The page contains both Table 2.2 and Figure 2.17"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "table_section_headers",
+        "figure_id": "f1",
+        "evidence": "Rows like Behavioural risk factors span the table to group rows",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "name": "inline_cell_annotation",
+        "figure_id": "f1",
+        "evidence": "Cell reads 2% (people aged < 70) overriding the column header",
+        "affects": [
+          3,
+          4
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "59",
+        "figure_id": "f2",
+        "mark": "Netherlands dot",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Netherlands",
+          "65 years or over"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "69",
+        "figure_id": "f2",
+        "mark": "Norway dot",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Norway",
+          "65 years or over"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "22",
+        "figure_id": "f2",
+        "mark": "EU27 dot",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "EU27",
+          "65 years or over"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "35",
+        "figure_id": "f2",
+        "mark": "EU27 dash",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "EU27",
+          "From 18 to 64 years"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "2",
+        "figure_id": "f1",
+        "mark": "Extreme temperature row, 18-64 column",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Environmental risk factors (mortality)",
+          "Extreme temperature (% deaths attributable to heat or cold wave)",
+          "People aged 18-64"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "9",
+        "figure_id": "f1",
+        "mark": "Smoking rate row, 65 or over column",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Behavioural risk factors",
+          "Smoking rate (% smoking daily)",
+          "People aged 65 or over"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "55",
+        "figure_id": "f2",
+        "mark": "Sweden dot",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Sweden",
+          "65 years or over"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "52",
+        "figure_id": "f1",
+        "mark": "Physical inactivity (% reporting to do physical activity less than once a week) row, 65 or over column",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Behavioural risk factors",
+          "Physical inactivity (% reporting to do physical activity less than once a week)",
+          "People aged 65 or over"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "20",
+        "figure_id": "f2",
+        "mark": "France dot",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "France",
+          "65 years or over"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "38",
+        "figure_id": "f2",
+        "mark": "Germany dot",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Germany",
+          "65 years or over"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      }
+    ],
+    "hardest_step": 3,
+    "hardest_step_why": "定位数值35时，图2.17哑铃图的短横线标记极易被忽略或误认为普通连线，导致无法将图例与图中标记关联，阻塞步骤3。",
+    "examples": [
+      {
+        "gap": "P8",
+        "figure_id": "f2",
+        "quote": "EU27 dot is coloured red instead of blue",
+        "why": "模型需要识别并提取EU27被特别标红以示强调的这一视觉属性，将其作为键的一部分。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "2% (people aged < 70) in the 18-64 column",
+        "why": "表格单元格内的数据附带注释，且该注释覆盖了所在列的表头上下文，需要处理单元格级别的元数据。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f2",
+        "quote": "legend series marked with a short dash -",
+        "why": "需要原生支持哑铃图并识别短横线作为独立的散点标记，否则无法关联图例并提取特定系列的值。"
+      }
+    ]
+  }
+}

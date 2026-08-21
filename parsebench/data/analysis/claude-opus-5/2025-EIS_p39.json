@@ -1,0 +1,343 @@
+{
+  "stem": "2025-EIS_p39",
+  "document": "2025-EIS",
+  "tags": "need_estimate",
+  "model": "claude-opus-5",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 95.5,
+  "usage": {
+    "input_tokens": 13142,
+    "output_tokens": 7995,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "## 画出来要什么\n单面板水平条形图，28 行（27 成员国 + `EU`），条形按 2025 分数向右生长；每行还叠了两个只有标记的系列：菱形 `Score in 2018` 与竖短线 `Score in 2024`。条形填色不表示系列，而表示四个绩效组（`Emerging innovators` / `Moderate innovators` / `Strong innovators` / `Innovation leaders`），`EU` 行另用深蓝＋白菱形突出。图外要素：图号与斜体标题在上，蓝色粗体 `Digitalisation` 贴在绘图区左上，量纲写在绘图区下方的轴标题 `Score for dimension 1.3 in 2025 (indexed to the EU in 2018)`，图例在下（色块＋标记混排），再下是 `Note:` 三行斜体。仅竖向网格线。\n\n## 定位一个值难在哪\n`44`：它是 Greece 的 2018 菱形，图上不印数字，x 轴 0–240 每 20 一格，5% 容差只有 ±2.2 单位；而 Cyprus 的菱形几乎在同一横坐标上，行与行仅靠 y 轴国名区分。要唯一定位还需三个标签：维度、国名、`Score in 2018`，绩效组颜色又是第四层信息。\n\n## 不确定的\n菱形/竖线的精确读数只能按像素折算，`110`、`132`、`75`、`196` 归属哪一行（Bulgaria 还是 Austria、Spain 还是 Ireland）无法确证；Netherlands 行是否画了 2024 竖线看不清；网格线是否覆盖整幅也难判断。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 12",
+          "title": "Innovation performance of the EU27 Member States in the Digitalisation dimension",
+          "subtitle": "",
+          "unit_text": "Score for dimension 1.3 in 2025 (indexed to the EU in 2018)",
+          "placement": "above"
+        },
+        "type": "compound",
+        "type_other": "",
+        "panels": 1,
+        "series": 3,
+        "categories": 28,
+        "marks": 84,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "bottom",
+            "role": "value",
+            "unit_text": "Score for dimension 1.3 in 2025 (indexed to the EU in 2018)",
+            "low": "0",
+            "high": "240",
+            "serves": "all bars, 2018 diamonds and 2024 tick markers"
+          },
+          {
+            "side": "left",
+            "role": "category",
+            "unit_text": "",
+            "low": "Netherlands",
+            "high": "Greece",
+            "serves": "one row per country plus the EU row"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "panel",
+            "label_source": "inline_label",
+            "example": "Digitalisation"
+          },
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Greece"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Score in 2018"
+          },
+          {
+            "role": "colour_group",
+            "label_source": "legend",
+            "example": "Emerging innovators"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Digitalisation",
+            "Greece",
+            "Score in 2018",
+            "Emerging innovators"
+          ],
+          "value": "44",
+          "value_source": "axis_read",
+          "why_hard": "Unlabelled diamond; ticks every 20 units; Greece and Cyprus diamonds sit at nearly the same x."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "horizontal_bars",
+        "figure_id": "f1",
+        "evidence": "country names on the left axis, bars grow rightwards to a 0-240 bottom axis"
+      },
+      {
+        "key": "mixed_marks",
+        "figure_id": "f1",
+        "evidence": "diamond markers and vertical tick markers drawn on top of each horizontal bar"
+      },
+      {
+        "key": "tick_marker_as_series",
+        "figure_id": "f1",
+        "evidence": "legend glyph '|' labelled 'Score in 2024' placed on each bar, same axis"
+      },
+      {
+        "key": "color_encodes_extra_attribute",
+        "figure_id": "f1",
+        "evidence": "bar fills keyed to 'Emerging innovators', 'Moderate innovators', 'Strong innovators', 'Innovation leaders'"
+      },
+      {
+        "key": "highlighted_category",
+        "figure_id": "f1",
+        "evidence": "the 'EU' row is drawn in dark blue with a white diamond, unlike all others"
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "two rows of swatches and glyphs sit under the axis title, outside the plot"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "'Note: All performance scores are relative to that of the EU in 2018 for each dimension.'"
+      },
+      {
+        "key": "axis_title_below_plot",
+        "figure_id": "f1",
+        "evidence": "'Score for dimension 1.3 in 2025 (indexed to the EU in 2018)' centred under the ticks"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "axis ticks are bare 0,20...240; the scale phrase only appears in the line below"
+      },
+      {
+        "key": "rebased_index_values",
+        "figure_id": "f1",
+        "evidence": "'(indexed to the EU in 2018)' and the EU diamond sitting at 100"
+      },
+      {
+        "key": "wrapped_category_labels",
+        "figure_id": "f1",
+        "evidence": "28 country names stacked down the left axis, 'Luxembourg' the longest"
+      },
+      {
+        "key": "vgrid_only",
+        "figure_id": "f1",
+        "evidence": "faint vertical rules at the 20-unit ticks; no horizontal rules across rows"
+      },
+      {
+        "key": "panel_title_per_panel",
+        "figure_id": "f1",
+        "evidence": "bold blue 'Digitalisation' set above the plot area, separate from the caption"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "time_points_as_marker_series",
+        "figure_id": "f1",
+        "evidence": "bar = 2025, diamond = 2018, tick = 2024: three years per row, no time axis",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "name": "mixed_legend_swatches_and_glyphs",
+        "figure_id": "f1",
+        "evidence": "one legend block mixes four colour swatches (groups) with two marker glyphs (years)",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "name": "emphasis_span_in_title",
+        "figure_id": "f1",
+        "evidence": "'Digitalisation' set in italics inside the otherwise roman Figure 12 title line",
+        "affects": [
+          4
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "215",
+        "figure_id": "f1",
+        "mark": "the Netherlands diamond (Score in 2018)",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Digitalisation",
+          "Netherlands",
+          "Score in 2018"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "230",
+        "figure_id": "f1",
+        "mark": "the Netherlands bar end (2025 score)",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Digitalisation",
+          "Netherlands",
+          "Score for dimension 1.3 in 2025 (indexed to the EU in 2018)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "110",
+        "figure_id": "f1",
+        "mark": "probably the Bulgaria bar end (2025 score); Latvia's bar is close",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Digitalisation",
+          "Bulgaria",
+          "Score for dimension 1.3 in 2025 (indexed to the EU in 2018)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "158",
+        "figure_id": "f1",
+        "mark": "the Estonia bar end (2025 score)",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Digitalisation",
+          "Estonia",
+          "Score for dimension 1.3 in 2025 (indexed to the EU in 2018)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "44",
+        "figure_id": "f1",
+        "mark": "the Greece diamond (Score in 2018); Cyprus's diamond sits within 2 units",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Digitalisation",
+          "Greece",
+          "Score in 2018"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "196",
+        "figure_id": "f1",
+        "mark": "the Spain bar end (2025 score); Ireland and Malta bars are within a few units",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Digitalisation",
+          "Spain",
+          "Score for dimension 1.3 in 2025 (indexed to the EU in 2018)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "132",
+        "figure_id": "f1",
+        "mark": "probably the Lithuania vertical tick (Score in 2024)",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Digitalisation",
+          "Lithuania",
+          "Score in 2024"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "153",
+        "figure_id": "f1",
+        "mark": "the Hungary bar end (2025 score)",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Digitalisation",
+          "Hungary",
+          "Score for dimension 1.3 in 2025 (indexed to the EU in 2018)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "75",
+        "figure_id": "f1",
+        "mark": "a low diamond, Bulgaria or Austria Score in 2018",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Digitalisation",
+          "Bulgaria",
+          "Score in 2018"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "100",
+        "figure_id": "f1",
+        "mark": "the white diamond on the EU row (Score in 2018, the index base)",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Digitalisation",
+          "EU",
+          "Score in 2018"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "无数字标注，刻度每20单位；44（Greece 2018菱形）5%容差仅±2.2，与Cyprus菱形几乎同位，196在Spain/Ireland间也难分。",
+    "examples": [
+      {
+        "gap": "P8",
+        "figure_id": "f1",
+        "quote": "Legend swatches: 'Emerging innovators', 'Moderate innovators', 'Strong innovators', 'Innovation leaders'; the EU row alone is dark blue",
+        "why": "填色编码绩效组而非系列，EU行为突出色；该属性必须进入键，现有管线不产出。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "Legend: diamond '♦ Score in 2018' and vertical bar '| Score in 2024' drawn on top of each 2025 bar",
+        "why": "同一行含三个年份、两个纯标记系列共用条形轴；需要“标记系列即时间键”的新构造。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "'Figure 12: Innovation performance of the EU27 Member States in the Digitalisation dimension' above; bold blue 'Digitalisation' beside the plot top-left",
+        "why": "图号、斜体标题、绘图区内维度名三段分离，标题块位置需成为独立字段。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "Axis ticks read 0, 20, ... 240; the unit line 'Score for dimension 1.3 in 2025 (indexed to the EU in 2018)' sits below the plot",
+        "why": "量纲位置在轴下方而非轴旁，且为指数基准表述，需单位位置维度可控。"
+      }
+    ]
+  }
+}

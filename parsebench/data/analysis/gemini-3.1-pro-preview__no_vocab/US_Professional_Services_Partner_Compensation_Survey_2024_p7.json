@@ -1,0 +1,219 @@
+{
+  "stem": "US_Professional_Services_Partner_Compensation_Survey_2024_p7",
+  "document": "US_Professional_Services_Partner_Compensation_Survey_2024",
+  "tags": "untagged",
+  "model": "gemini-3.1-pro-preview",
+  "control": "no_vocab",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 79.9,
+  "usage": {
+    "input_tokens": 3163,
+    "output_tokens": 10703,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n这页包含两个由水平条形图组成的表格（小倍数图）。需要支持：1. 以表格形式排版条形图，多列面板共享最左侧的类别标签（行名）；2. 隐藏数值轴，直接在条形内部或末端显示百分比数值；3. 当数值为0时仅显示数字0而不绘制条形；4. 各列（面板）独立着色，颜色与面板标题对应；5. 常规的主副标题及底部的注记文本排版。\n\n### 定位一个值难在哪\n以 f1 中的 `13` 为例。该值位于第二列（$1.01bn–$5.00bn），其关联的行标签（$1.00m–$3.00m）位于最左侧，二者之间跨越了其他列的图形和空白。解析器在构建表格时，极易因列宽和缩进判断失误导致行未对齐，从而无法将数值与正确的行标签精准关联。\n\n### 不确定的\n第一张图上方的 \"Personal revenue targets (%)\" 既像是整个页面的主标题，也像是该图的专属标题，此处视作 f1 的标题。另外，由于未绘制数值轴，条形长度的最大比例尺是根据列内最大值自适应还是固定为100%存在不确定性。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "Personal revenue targets (%)",
+          "subtitle": "Personal revenue targets, by firm size",
+          "unit_text": "(%)",
+          "placement": "above"
+        },
+        "type": "bar",
+        "type_other": "",
+        "panels": 4,
+        "series": 1,
+        "categories": 10,
+        "marks": 32,
+        "values_printed": "all",
+        "axes": [],
+        "key_parts": [
+          {
+            "role": "panel",
+            "label_source": "panel_title",
+            "example": "Less than $1.00bn"
+          },
+          {
+            "role": "category",
+            "label_source": "inline_label",
+            "example": "$1.00m–$3.00m"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "$1.01bn–$5.00bn",
+            "$1.00m–$3.00m"
+          ],
+          "value": "13",
+          "value_source": "printed",
+          "why_hard": "Row label is far left across other data columns, risking misalignment."
+        }
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "",
+          "title": "Personal revenue targets, by tenure at firm",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "bar",
+        "type_other": "",
+        "panels": 4,
+        "series": 1,
+        "categories": 10,
+        "marks": 38,
+        "values_printed": "all",
+        "axes": [],
+        "key_parts": [
+          {
+            "role": "panel",
+            "label_source": "panel_title",
+            "example": "Less than 3 years"
+          },
+          {
+            "role": "category",
+            "label_source": "inline_label",
+            "example": "$6.01m–$10.00m"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "3–5 years",
+            "$6.01m–$10.00m"
+          ],
+          "value": "21",
+          "value_source": "printed",
+          "why_hard": "Row label is far left across other data columns, risking misalignment."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "table_bar_chart",
+        "figure_id": "f1",
+        "evidence": "bars are inside columns sharing row labels on the left",
+        "affects": [
+          1,
+          3
+        ]
+      },
+      {
+        "key": "data_labels_on_bars",
+        "figure_id": "f1",
+        "evidence": "numbers like 46 are printed directly on the bars",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "key": "zero_value_no_bar",
+        "figure_id": "f1",
+        "evidence": "the value 0 has no bar drawn, only the text 0",
+        "affects": []
+      }
+    ],
+    "new_components": [
+      {
+        "name": "shared_row_labels",
+        "figure_id": "f1",
+        "evidence": "category labels are only on the far left column",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "name": "panel_colouring",
+        "figure_id": "f1",
+        "evidence": "each panel column uses a distinct bar colour without a legend",
+        "affects": []
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "46",
+        "figure_id": "f1",
+        "mark": "the $1.00m–$3.00m bar in the Less than $1.00bn column",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Less than $1.00bn",
+          "$1.00m–$3.00m"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "13",
+        "figure_id": "f1",
+        "mark": "the $1.00m–$3.00m bar in the $1.01bn–$5.00bn column",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "$1.01bn–$5.00bn",
+          "$1.00m–$3.00m"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "27",
+        "figure_id": "f2",
+        "mark": "the $1.00m–$3.00m bar in the Less than 3 years column",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Less than 3 years",
+          "$1.00m–$3.00m"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "21",
+        "figure_id": "f2",
+        "mark": "the $6.01m–$10.00m bar in the 3–5 years column",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "3–5 years",
+          "$6.01m–$10.00m"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "29",
+        "figure_id": "f2",
+        "mark": "the More than $30.00m bar in the More than 10 years column",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "More than 10 years",
+          "More than $30.00m"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      }
+    ],
+    "hardest_step": 3,
+    "hardest_step_why": "值13位于第二列，而其对应的行标签\"$1.00m–$3.00m\"仅在最左侧出现。视觉上跨越多列，解析器在对齐行时极易发生错位，导致关联失败。",
+    "examples": [
+      {
+        "gap": "P3",
+        "figure_id": "f1",
+        "quote": "Less than $1.00m ... Less than $1.00bn ... $1.01bn–$5.00bn",
+        "why": "图表采用类似表格的布局，各列作为独立的面板共享最左侧的分类标签，当前无法生成这种共享行标签的嵌套小倍数结构。"
+      },
+      {
+        "gap": "P8",
+        "figure_id": "f1",
+        "quote": "bars under Less than $1.00bn are dark blue, others vary",
+        "why": "不同面板的条形使用不同颜色，颜色直接映射到列标题（面板名称），缺乏单独图例，需要支持按面板独立着色。"
+      }
+    ]
+  }
+}

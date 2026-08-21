@@ -1,0 +1,288 @@
+{
+  "stem": "05021ff2-en_p20",
+  "document": "05021ff2-en",
+  "tags": "need_estimate",
+  "model": "claude-opus-5",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 72.8,
+  "usage": {
+    "input_tokens": 13830,
+    "output_tokens": 5890,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "**画出来要什么**\n一张单面板折线图:两条无标记点的折线(深蓝 `GDP in PPP`、洋红 `Merger notifications`),9 个时间槽用斜杠年对 `2015/2016`…`2023/2024`,标签旋转约 45°;左轴带百分号刻度 `-30%`…`50%`,步长 10 个百分点,只有横向网格线,零线穿过图中,洋红线在 `2020/2021` 冲到 40%、在 `2022/2023` 掉到 -18%(负值双向);轴标题 `Growth rate` 单独排在最高刻度之上而非沿轴竖排;图例横排在绘图区下方;下面两行小字 `Note:` 与 `Source: OECD CompStats database and World Bank`;标题分为编号 `Figure 2.3.` 加两行折行标题,单位短语 `(in PPP)` 嵌在标题里。\n\n**定位一个值难在哪**\n取 `5`(`GDP in PPP` 在 `2016/2017`)。图上没有任何数字标签,只能靠刻度读数;网格线间距 10 个百分点,而 5% 容差意味着 ±0.25 个百分点——约为一格的 2.5%,肉眼不可能达到。而且深蓝与洋红在 2015–2018 段几乎重合,连是哪条线都要靠颜色区分。\n\n**不确定的**\n第 5 个值 `9` 无法确定归属:洋红 `2017/2018` 约 7%、`2023/2024` 约 10%,两者都可能;`11` 出现两次,我按 `GDP in PPP` 的 `2020/2021` 与 `2021/2022` 两点(几乎等高)配对。是否存在 StatLink 类数据链接,页面上看不到。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 2.3.",
+          "title": "Annual growth rates of CompStats jurisdictions' GDP (in PPP) and total merger notifications, 2015-2024",
+          "subtitle": "",
+          "unit_text": "Growth rate",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 9,
+        "marks": 18,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Growth rate",
+            "low": "-30%",
+            "high": "50%",
+            "serves": "both lines, GDP in PPP and Merger notifications"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "2015/2016",
+            "high": "2023/2024",
+            "serves": "the plotted points of both lines"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Merger notifications"
+          },
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2020/2021"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "GDP in PPP",
+            "2021/2022"
+          ],
+          "value": "about 11%",
+          "value_source": "axis_read",
+          "why_hard": "No printed values; the navy line is almost flat between the 10% and 20% gridlines"
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "negative_values",
+        "figure_id": "f1",
+        "evidence": "axis ticks run to -30% and the magenta line dips to about -18% at 2022/2023"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "horizontal rules at each 10% step across the panel, no vertical rules"
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "'GDP in PPP' and 'Merger notifications' swatches in a row under the x tick labels"
+      },
+      {
+        "key": "rotated_x_ticks",
+        "figure_id": "f1",
+        "evidence": "'2015/2016' ... '2023/2024' set at roughly 45 degrees under the axis"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "'Note: A three-year average is used...' and 'Source: OECD CompStats database and World Bank'"
+      },
+      {
+        "key": "axis_title_above_axis",
+        "figure_id": "f1",
+        "evidence": "'Growth rate' printed above the top tick '50%', not alongside the axis"
+      },
+      {
+        "key": "nonstandard_time_ticks",
+        "figure_id": "f1",
+        "evidence": "time slots written as year pairs '2019/2020', '2020/2021' rather than single years"
+      },
+      {
+        "key": "reference_line",
+        "figure_id": "f1",
+        "evidence": "a 0% gridline crosses the panel and both lines cross it"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "transition_period_axis_labels",
+        "figure_id": "f1",
+        "evidence": "ticks '2015/2016'...'2023/2024' name a change between two years, not one point in time",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "name": "smoothing_disclosed_in_note",
+        "figure_id": "f1",
+        "evidence": "'Note: A three-year average is used to smooth out volatility caused by random fluctuations.'",
+        "affects": [
+          4
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "5",
+        "figure_id": "f1",
+        "mark": "the GDP in PPP point at 2016/2017",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "GDP in PPP",
+          "2016/2017"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "5",
+        "figure_id": "f1",
+        "mark": "the GDP in PPP point at 2017/2018",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "GDP in PPP",
+          "2017/2018"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "6",
+        "figure_id": "f1",
+        "mark": "the GDP in PPP point at 2018/2019",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "GDP in PPP",
+          "2018/2019"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-10",
+        "figure_id": "f1",
+        "mark": "the Merger notifications trough at 2019/2020",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Merger notifications",
+          "2019/2020"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "9",
+        "figure_id": "f1",
+        "mark": "probably the Merger notifications point at 2017/2018 (drawn near 7%); could also be the 2023/2024 endpoint",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Merger notifications",
+          "2017/2018"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "40",
+        "figure_id": "f1",
+        "mark": "the Merger notifications peak at 2020/2021",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Merger notifications",
+          "2020/2021"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "11",
+        "figure_id": "f1",
+        "mark": "the GDP in PPP point at 2020/2021",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "GDP in PPP",
+          "2020/2021"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-18",
+        "figure_id": "f1",
+        "mark": "the Merger notifications trough at 2022/2023",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Merger notifications",
+          "2022/2023"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "8",
+        "figure_id": "f1",
+        "mark": "the GDP in PPP endpoint at 2023/2024 (drawn just under 10%)",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "GDP in PPP",
+          "2023/2024"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "11",
+        "figure_id": "f1",
+        "mark": "the GDP in PPP point at 2021/2022, the second of two near-equal plateau points",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "GDP in PPP",
+          "2021/2022"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "无数值标签,网格10个百分点一格;读`5`要±0.25点,两条线2015-2018几乎重合,`8`与`9`更难分辨。",
+    "examples": [
+      {
+        "gap": "P1",
+        "figure_id": "f1",
+        "quote": "y axis ticks read 50%, 40%, ... 0%, -10%, -20%, -30%; no number is printed on either line",
+        "why": "折线无标注,10点一格下小值(如5)的可读精度远低于5%容差,需按标记给精度而非通过/不通过。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "Figure 2.3. Annual growth rates of CompStats jurisdictions' GDP (in PPP) and total merger notifications, 2015-2024",
+        "why": "编号、折行标题、嵌在标题里的单位`(in PPP)`与轴上方的`Growth rate`需拆成独立字段。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "the magenta line runs from +40% at 2020/2021 down through the 0% gridline to about -18% at 2022/2023",
+        "why": "跨零线的负值折线、百分号刻度格式与轴上方单位位置目前不作为可控风格维度生成。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "x ticks '2015/2016', '2016/2017' ... '2023/2024' rotated about 45 degrees",
+        "why": "类别是年对(变化区间)而非单一时间点;需要支持“过渡期”刻度并使其进入键。"
+      }
+    ]
+  }
+}

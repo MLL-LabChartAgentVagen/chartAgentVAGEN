@@ -1,0 +1,364 @@
+{
+  "model": "claude-opus-5",
+  "effort": "high",
+  "via": "",
+  "seconds": 163.7,
+  "usage": {
+    "input_tokens": 63104,
+    "output_tokens": 12581,
+    "cache_read_tokens": 0
+  },
+  "answer": {
+    "headline": "这 100 页的瓶颈是读数：85 页不印数值、67 页卡在容差，先把 readable 从布尔门改成每标记可达精度，其余都是次级。",
+    "ranked_items": [
+      {
+        "what": "`readable` 布尔门（值不印 + 5% 容差）→ 每标记可达精度",
+        "why": "卡在第 2 步 67 页，数值印不印 none=85 页，两个计数同向；这是唯一同时是分数瓶颈与生成约束的量。",
+        "evidence": [
+          "05021ff2-en_p20",
+          "Snapshot-of-Global-PV-Markets_2025_p12",
+          "2024-ltra_corrected_july_2025_p29",
+          "b263dc5d-en_p95",
+          "employment_and_social_developments_in_europe_esde_2024_report_p84"
+        ],
+        "affects": [
+          2
+        ],
+        "score_effect": "直接动第 2 步那 67 页：读不到的格子由判错改为按可达精度计分。",
+        "capability_effect": "生成时每个标记可声明可读位数，容差随刻度密度与标记大小自动放宽。",
+        "new_ablation_row": "每标记可达精度 on/off（默认 = 现行布尔 readable）",
+        "maps_to": "P1"
+      },
+      {
+        "what": "单位位置 / 值标签位置 / 零线三维（`unit_in_axis_or_title`、`no_value_axis`、`value_label_outside`、`negative_values`）",
+        "why": "85、18、22、27 页四项在「我们画得出」一栏全是否，是覆盖面最大的能力缺口，且后三项都挂在第 2 步。",
+        "evidence": [
+          "9f653ca1-en_p23",
+          "GWR-2024_Layout_E_RGB_Web_p33",
+          "US_Professional_Services_Partner_Compensation_Survey_2024_p19",
+          "ac8b3538-en_p153",
+          "Feaco-Survey-2023-2024_p8"
+        ],
+        "affects": [
+          2
+        ],
+        "score_effect": "改动无值轴与负值页的读值路径，涉及 18 页无轴、27 页负值。",
+        "capability_effect": "单位位置、标签内外、零线样式成为三个可配维度，默认保持轴内单位与柱顶标签。",
+        "new_ablation_row": "单位位置 × 值标签位置 × 零线样式 的三维交叉行",
+        "maps_to": "P6"
+      },
+      {
+        "what": "面板维度进键（`panel_title_per_panel`、`small_multiples_4`、`per_panel_axis_range`）",
+        "why": "面板题 30 页、切板 22 页、各板独立值域 16 页；第 3 步的 30 页失败里，缺面板名是最常见的一种键缺。",
+        "evidence": [
+          "2024_healthatglance_rep_en_p115",
+          "9f653ca1-en_p29",
+          "ac8b3538-en_p93",
+          "World_Inequality_Report_2026_p78",
+          "b263dc5d-en_p181",
+          "ac8b3538-en_p62"
+        ],
+        "affects": [
+          2,
+          3
+        ],
+        "score_effect": "面板名入键可救第 3 步中同名行跨板串位的部分；独立值域也影响读值。",
+        "capability_effect": "能生成各面板自带量程与标题的小倍数，键中带 panel_key。",
+        "new_ablation_row": "panel_key 入键 on/off × 面板共享/独立值域",
+        "maps_to": "P2"
+      },
+      {
+        "what": "双值轴与混合图元（`mixed_marks` + 同向两条值轴 + 标记形状承载系列）",
+        "why": "混合图元 29 页；同向两条值轴三家冲突 7 页；词表外 `marker_shape_encodes_series` 7 页。值不记轴与记号就不可核。",
+        "evidence": [
+          "9f653ca1-en_p28",
+          "r_qt1212e_p9",
+          "wtr24_ch2_e_p14",
+          "GWR-2024_Layout_E_RGB_Web_p58",
+          "2025-EIS_p37",
+          "employment_and_social_developments_in_europe_esde_2024_report_p76"
+        ],
+        "affects": [
+          2,
+          3
+        ],
+        "score_effect": "同一像素高度两读的页，值能被判为对；影响第 2、3 步。",
+        "capability_effect": "一个面板可画左右双轴＋柱线混排，键里记录轴 id 与标记形状。",
+        "new_ablation_row": "轴 id / 标记形状入键 on/off",
+        "maps_to": "P9"
+      },
+      {
+        "what": "整页 markdown 导出与图外文本（`multi_figure_page`、`side_text_bullets`）",
+        "why": "一页多图 31 页、旁栏正文 24 页；残差里 interpretation 段与编号文本框各 2 页，落在第 1、4 步。",
+        "evidence": [
+          "2024_healthatglance_rep_en_p115",
+          "Digital_News-Report_2022_p63",
+          "Treasury_Bulletin_2025_06_p21",
+          "US_Professional_Services_Partner_Compensation_Survey_2024_p20",
+          "natural-catastrophe-and-climate-report-2023_p72"
+        ],
+        "affects": [
+          1,
+          3,
+          4
+        ],
+        "score_effect": "决定「有没有表」和图题/面板名相对表的位置，影响第 1、4 步。",
+        "capability_effect": "能输出整页多图＋并排正文的 markdown，标题块位置可配。",
+        "new_ablation_row": "整页导出 on/off × 标题块置于表前/表后",
+        "maps_to": "P3"
+      },
+      {
+        "what": "颜色承载图例外的属性（`color_encodes_extra_attribute`、`highlighted_category`）",
+        "why": "15 页与 23 页，两项都标画不出；显著性、绩效组、汇总行不进键，整列会错位，直接命中第 3 步。",
+        "evidence": [
+          "ac8b3538-en_p130",
+          "ac8b3538-en_p55",
+          "b263dc5d-en_p144",
+          "b263dc5d-en_p160",
+          "2025-EIS_p39"
+        ],
+        "affects": [
+          3
+        ],
+        "score_effect": "让「深色=显著」「红=OECD」成为键的一段，减少第 3 步误配。",
+        "capability_effect": "可生成第三变量着色，并把该属性写进单元格键。",
+        "new_ablation_row": "属性着色入键 on/off（默认颜色仅表系列）",
+        "maps_to": "P8"
+      },
+      {
+        "what": "密度上限（`dense_marks_100plus`）",
+        "why": "61–150 档 32 页、151–400 档 6 页、>400 档 6 页，而 100+ 标记项仍标画不出；密度是读数难度的主因之一。",
+        "evidence": [
+          "Quarterly-Sector-and-Investment-Research-Update-Q1-2025_p12",
+          "EnergyTechnologyPerspectives2024_p48",
+          "sri-sigma-natural-catastrophes-1-2025_p27",
+          "b263dc5d-en_p95",
+          "employment_and_social_developments_in_europe_esde_2024_report_p30"
+        ],
+        "affects": [
+          2
+        ],
+        "score_effect": "密度可控后，容差与密度的关系可分离测量，间接影响第 2 步。",
+        "capability_effect": "标记数可作为受控变量拉到 400 以上，而非默认稀疏。",
+        "new_ablation_row": "密度档 ≤20 / 21–60 / 61–150 / 151–400 / >400 逐档",
+        "maps_to": "P5"
+      },
+      {
+        "what": "族权重向量（含 `horizontal_bars` 与 compound 配比）",
+        "why": "横向条 20 页仍画不出；compound 我记 22 张、另两家 32 与 5 张，类型冲突 40 页——配比本身不稳，先当权重调。",
+        "evidence": [
+          "US_Professional_Services_Partner_Compensation_Survey_2024_p11",
+          "US_Professional_Services_Partner_Compensation_Survey_2024_p19",
+          "deloitte-2025-global-automotive-consumer-study-january-2025_p17",
+          "FPA-guide-to-data-visualization_p20",
+          "EnergyTechnologyPerspectives2024_p48"
+        ],
+        "affects": [],
+        "score_effect": "度量看不见它",
+        "capability_effect": "族生成频率成为一个权重向量，横向条与 compound 可按目标配比抽样。",
+        "new_ablation_row": "族权重：均匀 / 对齐本基准配比 两组",
+        "maps_to": "P4"
+      },
+      {
+        "what": "图题块成为独立字段（编号、标题、副标题、单位、位置）",
+        "why": "标题位置 above 129、below 7，第 4 步在我这列 0 页——分数几乎不动，但四层标题是复现版面的必需件。",
+        "evidence": [
+          "pdf_d2e0103f64cd_p29",
+          "TSLA-Q4-2024-Update_p9",
+          "sri-sigma-natural-catastrophes-1-2025_p20",
+          "investing-in-education-2025-NC0125093ENN-1_p14",
+          "Renewables2025_1_p111"
+        ],
+        "affects": [
+          4
+        ],
+        "score_effect": "我这列第 4 步 0 页，分数近乎不动。",
+        "capability_effect": "编号/标题/副标题/单位可分层排布，标题可置于图下或图侧。",
+        "new_ablation_row": "标题块位置 above/below/beside × 单位独立成行 on/off",
+        "maps_to": "P7"
+      },
+      {
+        "what": "图与非图的边界：编号文本框、表格当图",
+        "why": "卡在第 1 步三家为 3 / 16 / 11，分歧最大；残差 narrative_data_box、numbered_text_box、zebra_striped_table_rows 各 2 页，说明「算不算图」无定义。",
+        "evidence": [
+          "2025-EIS_p64",
+          "2025-EIS_p69",
+          "investing-in-education-2025-NC0125093ENN-1_p14",
+          "2024_healthatglance_rep_en_p77",
+          "TSLA-Q4-2024-Update_p9"
+        ],
+        "affects": [
+          1
+        ],
+        "score_effect": "直接决定第 1 步判定，我这列仅 3 页但另两家 16、11 页。",
+        "capability_effect": "可生成带编号的文本框/斑马纹表格类「图」，默认关闭。",
+        "new_ablation_row": "非图形图对象（Box/表格）纳入 on/off",
+        "maps_to": "new"
+      }
+    ],
+    "numbers_cited": [
+      {
+        "claim": "本批页数",
+        "value": "100",
+        "source": "题面给定"
+      },
+      {
+        "claim": "我这列卡在第 2 步的页数",
+        "value": "67",
+        "source": "卡在哪一步（三家并列）"
+      },
+      {
+        "claim": "我这列卡在第 3 步的页数",
+        "value": "30",
+        "source": "卡在哪一步（三家并列）"
+      },
+      {
+        "claim": "我这列卡在第 1 步的页数",
+        "value": "3",
+        "source": "卡在哪一步（三家并列）"
+      },
+      {
+        "claim": "我这列卡在第 4 步的页数",
+        "value": "0",
+        "source": "卡在哪一步（三家并列）"
+      },
+      {
+        "claim": "数值一个都不印的图数（none）",
+        "value": "85",
+        "source": "数值印不印（三家并列）"
+      },
+      {
+        "claim": "`unit_in_axis_or_title` 页数",
+        "value": "85",
+        "source": "组件计数表"
+      },
+      {
+        "claim": "`negative_values` 页数",
+        "value": "27",
+        "source": "组件计数表"
+      },
+      {
+        "claim": "`value_label_outside` 页数",
+        "value": "22",
+        "source": "组件计数表"
+      },
+      {
+        "claim": "`no_value_axis` 页数",
+        "value": "18",
+        "source": "组件计数表"
+      },
+      {
+        "claim": "`panel_title_per_panel` 页数",
+        "value": "30",
+        "source": "组件计数表"
+      },
+      {
+        "claim": "`small_multiples_4` 页数",
+        "value": "22",
+        "source": "组件计数表"
+      },
+      {
+        "claim": "`per_panel_axis_range` 页数",
+        "value": "16",
+        "source": "组件计数表"
+      },
+      {
+        "claim": "`mixed_marks` 页数",
+        "value": "29",
+        "source": "组件计数表"
+      },
+      {
+        "claim": "「同向两条值轴」三家冲突页数",
+        "value": "7",
+        "source": "三家一致率表"
+      },
+      {
+        "claim": "残差 `marker_shape_encodes_series` 出现页数",
+        "value": "7",
+        "source": "词表外残差表"
+      },
+      {
+        "claim": "`horizontal_bars` 页数",
+        "value": "20",
+        "source": "组件计数表"
+      },
+      {
+        "claim": "compound 图数（我 / gpt / gemini）",
+        "value": "22 / 32 / 5",
+        "source": "类型配比表"
+      },
+      {
+        "claim": "图表类型判定冲突页数",
+        "value": "40",
+        "source": "三家一致率表"
+      },
+      {
+        "claim": "标题位置 above 的图数",
+        "value": "129",
+        "source": "标题位置表"
+      },
+      {
+        "claim": "标题位置 below 的图数",
+        "value": "7",
+        "source": "标题位置表"
+      },
+      {
+        "claim": "组件命中集合按页平均一致率",
+        "value": "67.1%",
+        "source": "三家一致率表"
+      },
+      {
+        "claim": "我的定位键命中率",
+        "value": "69.0%",
+        "source": "预测定位键 vs 规则真实标签"
+      },
+      {
+        "claim": "`footnote_marker` 页数（我 / gpt / gemini）",
+        "value": "32 / 13 / 12",
+        "source": "组件计数表"
+      },
+      {
+        "claim": "`wrapped_category_labels` 页数（我 / gpt / gemini）",
+        "value": "31 / 15 / 9",
+        "source": "组件计数表"
+      },
+      {
+        "claim": "密度 61–150 档页数",
+        "value": "32",
+        "source": "稠密度档表"
+      },
+      {
+        "claim": "密度 151–400 档页数",
+        "value": "6",
+        "source": "稠密度档表"
+      },
+      {
+        "claim": "密度 >400 档页数",
+        "value": "6",
+        "source": "稠密度档表"
+      },
+      {
+        "claim": "`multi_figure_page` 页数",
+        "value": "31",
+        "source": "组件计数表"
+      },
+      {
+        "claim": "`side_text_bullets` 页数",
+        "value": "24",
+        "source": "组件计数表"
+      },
+      {
+        "claim": "`color_encodes_extra_attribute` 页数",
+        "value": "15",
+        "source": "组件计数表"
+      },
+      {
+        "claim": "`highlighted_category` 页数",
+        "value": "23",
+        "source": "组件计数表"
+      }
+    ],
+    "report_md": "## 结论\n这 100 页的瓶颈是读数，不是画不画得出。我这一列卡在第 2 步 67 页，第 3 步 30 页，第 1 步 3 页，第 4 步 0 页；同时「一个数值都不印」的图有 85 张。两个计数同向：绝大多数格子只能对着刻度目测，而 readable 现在是个布尔门。先把它换成每标记可达精度（P1），这是唯一同时改分数与改生成约束的一项。\n\n## 三件最该做的\n1. **单位与零线（P6）**。`unit_in_axis_or_title` 85 页、`negative_values` 27 页、`value_label_outside` 22 页、`no_value_axis` 18 页，四项在「我们画得出」一栏全是否。覆盖面最大的能力缺口就在这里，且后三项都落在第 2 步。\n2. **面板进键（P2）**。面板题 30 页、切板 22 页、各板独立值域 16 页。第 3 步那 30 页失败里，缺面板名是最常见的一种键缺。\n3. **轴与标记形状进键（P9）**。`mixed_marks` 29 页；「同向两条值轴」三家冲突 7 页；词表外 `marker_shape_encodes_series` 7 页。一个值不写清读的是哪条轴、哪种记号，就不可核。\n\n## 次一级\n整页导出（P3）：一页多图 31 页、旁栏正文 24 页，决定「有没有表」与标题块位置。属性着色（P8）：15 页颜色编码第三变量、23 页单独高亮某类目，两项都画不出。密度（P5）：61–150 档 32 页、151–400 档 6 页、>400 档 6 页，密度该是受控变量。\n\n## 度量看不见但仍要做的\n族权重（P4）：横向条 20 页画不出；compound 我记 22 张而另两家是 32 与 5，类型判定冲突 40 页——配比本身不稳，先当权重向量调，不必新增画法。标题块（P7）：标题位置 above 129、below 7，而第 4 步在我这列是 0 页，分数几乎不动。\n\n## 我这一列的偏差\n组件一致率 67.1%，我的键命中率 69.0%。`footnote_marker` 我报 32 页、另两家 13 与 12；`wrapped_category_labels` 我 31 页对 15 与 9。这两项更像我的读法而非基准的性质，排序时已下调。",
+    "limits": "仅 100 页，且是我一列的读法；组件一致率 67.1%，`footnote_marker`、`wrapped_category_labels` 明显是我的偏差。像素级细节（网格线、底色、薄段）多为目测，真实数值表不可见，归属处有猜测。"
+  }
+}

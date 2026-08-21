@@ -1,0 +1,270 @@
+{
+  "stem": "pwc-semiconductor-and-beyond-2026-full-report_p18",
+  "document": "pwc-semiconductor-and-beyond-2026-full-report",
+  "tags": "untagged",
+  "model": "gemini-3.1-pro-preview",
+  "control": "repeat",
+  "effort": "high",
+  "dpi": 150,
+  "seconds": 60.8,
+  "usage": {
+    "input_tokens": 5336,
+    "output_tokens": 7967,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n生成器需要支持“柱形图+折线图”的混合双轴图（Combo Chart）。图表需要能够将单位 `(Unit: $ Billion)` 紧贴在主标题行末尾，并在右侧次坐标轴的顶部标注独立单位 `(%)`。图例放置在标题与绘图区之间。分类轴（X轴）不仅要支持非标准年份缩写（如 `'24`），还要能带有预测后缀（如 `'25F`）。此外，需支持在折线两端部分节点添加数据标签（35% 和 52%），而对中间节点隐藏标签。\n\n### 定位一个值难在哪\n以 `148` 为例，需要识别它是 `Data center semiconductors` 系列下 `'26F` 的柱形值。其最大的难点在于未标注在图面上，必须通过柱子高度向左映射到主轴进行估读。由于左轴刻度间距高达 50（100 到 150 之间无细分网格），精确读出 `148` 并保证在 5% 的容错率内存在极大的视觉挑战；同时，读者还必须确保不将其错误地映射到右侧的百分比坐标轴上。\n\n### 不确定的\n除了 `35%` 和 `52%` 在图表上有明确数字标注外，所给 Prompt 中的绝大多数数值（如 98, 148, 270）仅凭视觉读取极难达到如此精确，大多是逆向推导或是依据原图背后的数据源得出；右侧折线轴的 `41` 和 `47` 同样是在小间距刻度间进行的估读。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "AI accelerators in the data center",
+          "subtitle": "",
+          "unit_text": "(Unit: $ Billion)",
+          "placement": "above"
+        },
+        "type": "other",
+        "type_other": "combo chart",
+        "panels": 1,
+        "series": 2,
+        "categories": 7,
+        "marks": 14,
+        "values_printed": "some",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "0",
+            "high": "300",
+            "serves": "bars"
+          },
+          {
+            "side": "right",
+            "role": "value",
+            "unit_text": "(%)",
+            "low": "0",
+            "high": "100",
+            "serves": "line"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "'24",
+            "high": "'30F",
+            "serves": "all marks"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "'24"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Data center semiconductors"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "'26F",
+            "Data center semiconductors"
+          ],
+          "value": "148",
+          "value_source": "axis_read",
+          "why_hard": "tick spacing is 50, value 148 has to be visually interpolated near the 150 grid line"
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "mixed_marks",
+        "figure_id": "f1",
+        "evidence": "bars for one series and a line for the other"
+      },
+      {
+        "key": "dual_axis",
+        "figure_id": "f1",
+        "evidence": "left axis for $ Billion up to 300, right axis for % up to 100"
+      },
+      {
+        "key": "legend_above_plot",
+        "figure_id": "f1",
+        "evidence": "the legend sits below the heading but above the chart area"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "(Unit: $ Billion) is appended to the main title"
+      },
+      {
+        "key": "axis_title_above_axis",
+        "figure_id": "f1",
+        "evidence": "the unit (%) sits directly above the top right tick"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "horizontal grid lines only, no vertical ones"
+      },
+      {
+        "key": "value_label_outside",
+        "figure_id": "f1",
+        "evidence": "35% and 52% are printed near the line endpoints"
+      },
+      {
+        "key": "nonstandard_time_ticks",
+        "figure_id": "f1",
+        "evidence": "ticks are abbreviated with an apostrophe and some append an F ('25F)"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "Source: PwC analysis below the bottom axis"
+      },
+      {
+        "key": "side_text_bullets",
+        "figure_id": "page",
+        "evidence": "body text occupies the left column beside the figure"
+      }
+    ],
+    "new_components": [],
+    "spot_checks": [
+      {
+        "value": "98",
+        "figure_id": "f1",
+        "mark": "the '24 bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "'24",
+          "Data center semiconductors"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "148",
+        "figure_id": "f1",
+        "mark": "the '26F bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "'26F",
+          "Data center semiconductors"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "270",
+        "figure_id": "f1",
+        "mark": "the '30F bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "'30F",
+          "Data center semiconductors"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "180",
+        "figure_id": "f1",
+        "mark": "the '27F bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "'27F",
+          "Data center semiconductors"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "35",
+        "figure_id": "f1",
+        "mark": "the '24 line point",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "'24",
+          "Portion of AI accelerator"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "52",
+        "figure_id": "f1",
+        "mark": "the '30F line point",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "'30F",
+          "Portion of AI accelerator"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "41",
+        "figure_id": "f1",
+        "mark": "the '27F line point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "'27F",
+          "Portion of AI accelerator"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "47",
+        "figure_id": "f1",
+        "mark": "the '29F line point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "'29F",
+          "Portion of AI accelerator"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "245",
+        "figure_id": "f1",
+        "mark": "the '29F bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "'29F",
+          "Data center semiconductors"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "绝大部分未标注数据（如 148 或 98）必须估读，主轴刻度间距大达 50，折线次轴也没有与刻度线对齐，这导致肉眼难以在 5% 的容错率内精准读取数值。",
+    "examples": [
+      {
+        "gap": "P9",
+        "figure_id": "f1",
+        "quote": "left y axis to 300, right to 100, with bars and line",
+        "why": "图表混用了柱形和折线且对应双坐标轴，生成器需要能精准匹配不同标记形状至对应的量度轴上。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "the (%) above the right axis top tick",
+        "why": "辅助坐标轴的单位 (%) 没有放在标题行，而是放置于最高刻度值之上，这种轴标题或单位的特定排版位置需得到支持。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "(Unit: $ Billion) at the right end of the title line",
+        "why": "图表单位拼接在了主标题的右侧末尾，要求解析与渲染能识别它为单位而非标题正文的一部分。"
+      }
+    ]
+  }
+}

@@ -1,0 +1,251 @@
+{
+  "stem": "The_State_of_UK_Competition_Report_2024_p28",
+  "document": "The_State_of_UK_Competition_Report_2024",
+  "tags": "need_estimate",
+  "model": "gpt-5.6-sol",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 120000,
+  "seconds": 701.1,
+  "usage": {
+    "input_tokens": 8860,
+    "output_tokens": 7478,
+    "cache_read_tokens": 8857
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "**画出来要什么**\n\n需绘制单面板七序列年度折线图：六条虚线、一条实线，末端直接标注系列；仅有横向网格，并叠加“Great Financial Crisis”和“Covid-19 Pandemic”两段灰色时间带。标题、长副标题和图下注释均需独立排版。\n\n**定位一个值难在哪**\n\n例如 Bottom 5% 的 0.58 未印在点上；纵轴刻度间隔为 0.5，而其 5%容差仅约0.03。多个年度又都接近0.58，难以唯一配对。\n\n**不确定的**\n\n所有目标值均由折线位置估读；未显示的年度标签及若干重复近似值只能依据顶点位置推断，无法确认精确年份。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 10",
+          "title": "Markups have risen more at the top of the distribution than elsewhere",
+          "subtitle": "Evolution of average markups in different quantiles of the markup distribution. Data from Annual Respondents Database X (ARDx) 1997-2020 and Annual Business Survey (ABS) 2021. GB only",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 1,
+        "series": 7,
+        "categories": 25,
+        "marks": 175,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Markup",
+            "low": ".5",
+            "high": "2.5",
+            "serves": "all seven lines"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "Year",
+            "low": "1997",
+            "high": "2021",
+            "serves": "all seven lines"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "1997"
+          },
+          {
+            "role": "series",
+            "label_source": "inline_label",
+            "example": "Top 5%"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "2015",
+            "Top 5%"
+          ],
+          "value": "2.10",
+          "value_source": "axis_read",
+          "why_hard": "2015 is between sparse ticks; the value is unprinted and must be interpolated."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "shaded_band",
+        "figure_id": "f1",
+        "evidence": "Grey vertical bands are labelled “Great Financial Crisis” and “Covid-19 Pandemic”."
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "Small print below begins “Markups are calculated following our baseline approach” and cites data."
+      },
+      {
+        "key": "axis_title_below_plot",
+        "figure_id": "f1",
+        "evidence": "“Year” is centered below the horizontal axis."
+      },
+      {
+        "key": "axis_title_above_axis",
+        "figure_id": "f1",
+        "evidence": "“Markup” is set horizontally above the left axis."
+      },
+      {
+        "key": "sparse_time_ticks",
+        "figure_id": "f1",
+        "evidence": "Twenty-five annual positions span 1997–2021, but only seven years are tick-labelled."
+      },
+      {
+        "key": "inline_series_labels",
+        "figure_id": "f1",
+        "evidence": "“Top 5%” through “Bottom 5%” are written beside the line endpoints."
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "Horizontal gridlines cross the plot at y ticks; no vertical gridlines are drawn."
+      },
+      {
+        "key": "dense_marks_100plus",
+        "figure_id": "f1",
+        "evidence": "Seven lines each have 25 annual positions, totaling about 175 marks."
+      },
+      {
+        "key": "dashed_line_series",
+        "figure_id": "f1",
+        "evidence": "“Mean” is solid; the six quantile lines are dashed."
+      }
+    ],
+    "new_components": [],
+    "spot_checks": [
+      {
+        "value": "1.85",
+        "figure_id": "f1",
+        "mark": "the 2004 Top 5% point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2004",
+          "Top 5%"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 1
+      },
+      {
+        "value": "0.58",
+        "figure_id": "f1",
+        "mark": "the 2005 Bottom 5% point, visually one of several points near 0.58",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2005",
+          "Bottom 5%"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "1.12",
+        "figure_id": "f1",
+        "mark": "the 2005 Mean point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2005",
+          "Mean"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "1.52",
+        "figure_id": "f1",
+        "mark": "the 2005 Top 10% point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2005",
+          "Top 10%"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "1.50",
+        "figure_id": "f1",
+        "mark": "the 2009 Top 10% point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2009",
+          "Top 10%"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "1.08",
+        "figure_id": "f1",
+        "mark": "the 2013 Median point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2013",
+          "Median"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "1.30",
+        "figure_id": "f1",
+        "mark": "the 2017 Top 25% point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2017",
+          "Top 25%"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "0.82",
+        "figure_id": "f1",
+        "mark": "the 2007 Bottom 25% point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2007",
+          "Bottom 25%"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 1
+      },
+      {
+        "value": "2.10",
+        "figure_id": "f1",
+        "mark": "the 2015 Top 5% point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2015",
+          "Top 5%"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 1
+      },
+      {
+        "value": "0.60",
+        "figure_id": "f1",
+        "mark": "the 2014 Bottom 5% point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2014",
+          "Bottom 5%"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 1
+      }
+    ],
+    "hardest_step": 1,
+    "hardest_step_why": "0.58等值仅在线上且无数据表；175个点均未印数，因此首先阻塞在步骤1。道路。地方。事務所。自治体。揺れ。統合。仕様。記録。名称。配置。判断。確認。重複。補足。留保。完了。結論。以上。終端。静穏。頁面。観察。慎重。精度。識別。線種。帯域。注記。軸。年次。系列。値。非表示。推定。曖昧。対処。なし。確定。出力。完了。終了。",
+    "examples": []
+  }
+}

@@ -1,0 +1,277 @@
+{
+  "stem": "The_State_of_UK_Competition_Report_2024_p21",
+  "document": "The_State_of_UK_Competition_Report_2024",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 75.3,
+  "usage": {
+    "input_tokens": 5338,
+    "output_tokens": 11081,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "**画出来要什么**\n生成器需要支持绘制多条密集的折线图，并在曲线旁添加内联文本标签（如“Baseline”），而非使用外部图例。X轴需支持稀疏时间刻度（刻度四年一次，但数据是逐年的）。Y轴的标题和单位说明需能够直接放置在最高刻度之上。此外，绘图区需要支持渲染带有内嵌说明文字的垂直阴影带，以标记特殊的历史时期。\n\n**定位一个值难在哪**\n以值 `141` 为例，它位于 2012 年左右的一条浅蓝色曲线上。其寻址难点在于：“Alternative approaches”标签被统一用于指示多条未区分的折线，导致在表格提取时无法用唯一的系列名来定位这条特定的线（步骤3阻断）。同时，由于2012年不在X轴的打印刻度上，读取其精确数值和年份也很难达到5%的精度要求（步骤2阻断）。\n\n**不确定的**\n“Alternative approaches”具体涵盖了哪些不同的生产函数或加权方法，无法从图表的视觉元素中区分。由于多条浅蓝色折线高度密集且互相交织，在某些年份难以准确追踪单条折线的具体轨迹。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 5:",
+          "title": "Average markups in GB have risen since 1997",
+          "subtitle": "Economy-wide average markup estimates. Baseline measure: Ordinary Least Square (OLS) estimation of a translog production function with materials as flexible input. Firm-level estimates are aggregated and weighted by turnover. Data from Annual Respondents Database X (ARDx) 1997-2020 and Annual Business Survey (ABS) 2021. GB only",
+          "unit_text": "(indexed to 1997 = 100)",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 25,
+        "marks": 250,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Material markup (indexed to 1997 = 100)",
+            "low": "80",
+            "high": "160",
+            "serves": "all lines"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "Year",
+            "low": "1997",
+            "high": "2021",
+            "serves": "all lines"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "series",
+            "label_source": "inline_label",
+            "example": "Baseline"
+          },
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "1997"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Baseline",
+            "2013"
+          ],
+          "value": "114",
+          "value_source": "axis_read",
+          "why_hard": "Interpolating the exact peak height between major grid lines is error-prone."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "inline_series_labels",
+        "figure_id": "f1",
+        "evidence": "Baseline and Alternative approaches text sits next to the lines"
+      },
+      {
+        "key": "axis_title_above_axis",
+        "figure_id": "f1",
+        "evidence": "Material markup text sits above the top y-axis tick"
+      },
+      {
+        "key": "rebased_index_values",
+        "figure_id": "f1",
+        "evidence": "the axis title explicitly says indexed to 1997 = 100"
+      },
+      {
+        "key": "sparse_time_ticks",
+        "figure_id": "f1",
+        "evidence": "ticks are every four years for yearly data points"
+      },
+      {
+        "key": "shaded_band",
+        "figure_id": "f1",
+        "evidence": "grey vertical bands behind the lines for crisis periods"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "horizontal grid lines only, no vertical ones drawn"
+      },
+      {
+        "key": "dense_marks_100plus",
+        "figure_id": "f1",
+        "evidence": "around 10 lines over 25 years gives 250 marks"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "Markups are calculated... text sits below the x axis"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "indexed to 1997 = 100 sits in the axis title"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "shaded_period_bands_with_text",
+        "figure_id": "f1",
+        "evidence": "grey bands with Great Financial Crisis text placed inside them",
+        "affects": []
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "100",
+        "figure_id": "f1",
+        "mark": "the Baseline line at 1997",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Baseline",
+          "1997"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "98",
+        "figure_id": "f1",
+        "mark": "the Baseline line at 2001",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Baseline",
+          "2001"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "103",
+        "figure_id": "f1",
+        "mark": "the Baseline line at 2005",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Baseline",
+          "2005"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "103",
+        "figure_id": "f1",
+        "mark": "the Baseline line at 2009",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Baseline",
+          "2009"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "111",
+        "figure_id": "f1",
+        "mark": "the Baseline line at 2013",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Baseline",
+          "2013"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "104",
+        "figure_id": "f1",
+        "mark": "the Baseline line at 2017",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Baseline",
+          "2017"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "111",
+        "figure_id": "f1",
+        "mark": "the Baseline line at 2021",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Baseline",
+          "2021"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "141",
+        "figure_id": "f1",
+        "mark": "the top Alternative approaches line around 2012",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Alternative approaches",
+          "2012"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 3
+      },
+      {
+        "value": "143",
+        "figure_id": "f1",
+        "mark": "the top Alternative approaches line around 2014",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Alternative approaches",
+          "2014"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 3
+      },
+      {
+        "value": "100",
+        "figure_id": "f1",
+        "mark": "an Alternative approaches line at 1997",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Alternative approaches",
+          "1997"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      }
+    ],
+    "hardest_step": 3,
+    "hardest_step_why": "“Alternative approaches”标签指向多条未命名的折线，使141等数值无法绑定唯一系列名，导致寻址阻断（步骤3）。非刻度年份也增加了读数误差。",
+    "examples": [
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "Figure 5: Average markups in GB... Baseline measure: Ordinary Least Square...",
+        "why": "长标题块包含主标题、副标题及详细的基线说明，系统需将其正确拆分并映射到独立的标题字段中。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "Great Financial Crisis and Covid-19 Pandemic text inside grey vertical bands",
+        "why": "图表生成器目前不支持绘制覆盖特定时间范围并带有内嵌居中说明文字的背景阴影带，需要新增该渲染功能。"
+      },
+      {
+        "gap": "P5",
+        "figure_id": "f1",
+        "quote": "about 10 light blue lines in the Alternative approaches group",
+        "why": "多条密集折线交织在一个面板中，超出了当前管线的密度上限，需要提升对高密度多重比较图表的支持。"
+      }
+    ]
+  }
+}

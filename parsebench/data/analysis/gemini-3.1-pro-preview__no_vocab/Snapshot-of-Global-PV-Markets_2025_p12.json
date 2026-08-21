@@ -1,0 +1,233 @@
+{
+  "stem": "Snapshot-of-Global-PV-Markets_2025_p12",
+  "document": "Snapshot-of-Global-PV-Markets_2025",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "no_vocab",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 43.0,
+  "usage": {
+    "input_tokens": 3174,
+    "output_tokens": 5994,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n\n- 需要绘制堆叠柱状图（Stacked Bar Chart），支持按年份将两个系列的数据分段堆叠。\n- **标题与单位布局**：需要支持标题组件拆分，`FIGURE 4: ...` 作为标题水平居中位于图表上方，而单位 `GWp` 作为独立元素放置在Y轴的最顶部左侧。\n- **坐标轴样式**：Y轴需要支持显示刻度标签（0, 100... 600）和水平网格线，但隐藏Y轴的主线本身；X轴的短刻度线需要绘制在两个年份标签的中间，以分隔各个柱子。\n- **图例**：图例需水平排列放置在X轴的下方。\n\n### 定位一个值难在哪\n\n图表中没有任何直接标注的数据标签，所有值都必须通过左侧的Y轴（刻度间距为100）来估算。这使得上方的堆叠段（如 `UTILITY SCALE`）读取变得异常困难。以2021年的 `UTILITY SCALE`（93）为例，读者需要先估算出整根柱子的总高度（约175），再减去底部 `ROOFTOP` 段的高度（约82）。在100的粗略刻度间距下，两次估算的误差会叠加，几乎不可能将这种相减得出的数值精度控制在目标值93的5%（±4.65）以内。\n\n### 不确定的\n\n图表下方的 `Source: IEA PVPS, Becquerel Institute` 是否应作为图表的标准脚注字段进行结构化提取，还是仅视为正文流的一部分。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "FIGURE 4",
+          "title": "SEGMENTATION OF PV INSTALLATION 2014-2024",
+          "subtitle": "",
+          "unit_text": "GWp",
+          "placement": "above"
+        },
+        "type": "stacked_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 11,
+        "marks": 22,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "GWp",
+            "low": "0",
+            "high": "600",
+            "serves": "all stacked segments"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "2014",
+            "high": "2024",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2024"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "ROOFTOP"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "2024",
+            "UTILITY SCALE"
+          ],
+          "value": "375",
+          "value_source": "axis_read",
+          "why_hard": "It is a top stacked segment; reading it requires subtracting the bottom segment's height from the total."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "stacked_bar",
+        "figure_id": "f1",
+        "evidence": "two coloured segments are stacked to form a single bar for each year",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "key": "unit_top_left",
+        "figure_id": "f1",
+        "evidence": "the unit 'GWp' is printed alone above the highest y-axis tick",
+        "affects": []
+      },
+      {
+        "key": "y_axis_no_line",
+        "figure_id": "f1",
+        "evidence": "y-axis has numbers and gridlines but no vertical axis line",
+        "affects": []
+      },
+      {
+        "key": "horizontal_gridlines",
+        "figure_id": "f1",
+        "evidence": "grey lines extend horizontally from every y-axis tick across the panel",
+        "affects": []
+      },
+      {
+        "key": "x_axis_interstitial_ticks",
+        "figure_id": "f1",
+        "evidence": "small vertical ticks on the x-axis are placed between the year labels",
+        "affects": []
+      },
+      {
+        "key": "legend_bottom_center",
+        "figure_id": "f1",
+        "evidence": "the legend with brown and tan squares is centered under the x-axis",
+        "affects": []
+      }
+    ],
+    "new_components": [],
+    "spot_checks": [
+      {
+        "value": "225",
+        "figure_id": "f1",
+        "mark": "the 2024 ROOFTOP segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2024",
+          "ROOFTOP"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "375",
+        "figure_id": "f1",
+        "mark": "the 2024 UTILITY SCALE segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2024",
+          "UTILITY SCALE"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "190",
+        "figure_id": "f1",
+        "mark": "the 2023 ROOFTOP segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2023",
+          "ROOFTOP"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "265",
+        "figure_id": "f1",
+        "mark": "the 2023 UTILITY SCALE segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2023",
+          "UTILITY SCALE"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "118",
+        "figure_id": "f1",
+        "mark": "the 2022 ROOFTOP segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2022",
+          "ROOFTOP"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "122",
+        "figure_id": "f1",
+        "mark": "the 2022 UTILITY SCALE segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2022",
+          "UTILITY SCALE"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "82",
+        "figure_id": "f1",
+        "mark": "the 2021 ROOFTOP segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2021",
+          "ROOFTOP"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "93",
+        "figure_id": "f1",
+        "mark": "the 2021 UTILITY SCALE segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2021",
+          "UTILITY SCALE"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "Y轴刻度间距达100且无数据标签。读取如2021年UTILITY SCALE(93)需用总高度减去底部高度，两次视觉估算的误差累加后极难满足5%(±4.65)的容差要求。",
+    "examples": [
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "unit 'GWp' on the top left, 'FIGURE 4: ...' centered above",
+        "why": "生成器需要将单位作为独立属性剥离并渲染在Y轴顶部左侧，同时保持主副标题在图表上方居中，而不能简单拼接为一整行文本。"
+      },
+      {
+        "gap": "P1",
+        "figure_id": "f1",
+        "quote": "stacked segments without printed values on a 100-unit scale",
+        "why": "堆叠柱状图顶部的段无法直接对齐基线，在100为单位的刻度下，通过肉眼相减计算数值会导致极大的读取误差，精度不可控。"
+      }
+    ]
+  }
+}

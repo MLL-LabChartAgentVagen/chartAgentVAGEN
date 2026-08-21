@@ -1,0 +1,307 @@
+{
+  "stem": "2025-EIS_p64",
+  "document": "2025-EIS",
+  "tags": "untagged",
+  "model": "gemini-3.1-pro-preview",
+  "control": "repeat",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 121.3,
+  "usage": {
+    "input_tokens": 5358,
+    "output_tokens": 15842,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n页面包含一个名为 Box 3 的带背景色文本框，其中以加粗国家名和文字段落的形式列出了多项精确数据；其下方是 Figure 24，由左右两个独立的面板组成。左面板展示平均值，既没有图例也没有子标题；右面板展示多国折线，右侧附有图例。两个面板各自绘制了独立的 y 轴（范围 80-150，仅有水平网格线，起点不为零）和 x 轴（带有 `'18` 等非标准年份缩写）。生成此页需要处理无显式标题的隐式子图，以及绘制高度密集的交错折线。\n\n### 定位一个值难在哪\n以 127.8（德国 2022 年数据）为例，该精确值仅在 Box 3 中以纯文本形式给出，不会被解析器识别为表格。如果系统退而从图表提取，在右侧面板的 2022-2025 年区间内，德国、奥地利、卢森堡等国的折线频繁交叉，且颜色极为相近，模型极易因追踪线条失败而将标签与错误的数值关联。\n\n### 不确定的\n左侧面板完全没有任何标签或图例，仅靠图表下方的注释说明这是“平均表现”，提取时能否正确推断并命名其系列名称存在极大的不确定性。此外，解析系统是否会因 Box 3 并非表格而完全遗漏其中的高精度数据也难以预料。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Box 3",
+          "title": "Country level observations of Strong Innovators",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "unreadable",
+        "type_other": "text box of paragraphs",
+        "panels": 1,
+        "series": 1,
+        "categories": 1,
+        "marks": 0,
+        "values_printed": "all",
+        "axes": [],
+        "key_parts": [],
+        "worked_example": {
+          "key": [],
+          "value": "138.6",
+          "value_source": "printed",
+          "why_hard": "Data is embedded in prose paragraphs rather than a structured layout."
+        }
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "Figure 24",
+          "title": "Performance of Strong Innovators",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 2,
+        "series": 8,
+        "categories": 8,
+        "marks": 64,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Summary innovation index",
+            "low": "80",
+            "high": "150",
+            "serves": "average line"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "'18",
+            "high": "'25",
+            "serves": "average line"
+          },
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Summary innovation index",
+            "low": "80",
+            "high": "150",
+            "serves": "country lines"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "'18",
+            "high": "'25",
+            "serves": "country lines"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Ireland"
+          },
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "'25"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Germany",
+            "'25"
+          ],
+          "value": "125.1",
+          "value_source": "axis_read",
+          "why_hard": "Lines of multiple countries intersect closely here, sharing similar hues."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "hgrid_only",
+        "figure_id": "f2",
+        "evidence": "Figure 24 has only horizontal rules, no vertical ones"
+      },
+      {
+        "key": "legend_beside_plot",
+        "figure_id": "f2",
+        "evidence": "the legend for countries sits to the right of the right panel"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f2",
+        "evidence": "the text 'Note: Performance is relative to...' below the figure"
+      },
+      {
+        "key": "nonstandard_time_ticks",
+        "figure_id": "f2",
+        "evidence": "x-axis years are abbreviated as '18, '19, etc."
+      },
+      {
+        "key": "axis_starts_above_zero",
+        "figure_id": "f2",
+        "evidence": "the y-axis lowest tick is 80, not 0"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f2",
+        "evidence": "the y-axis title says 'Summary innovation index'"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "text_box_with_data",
+        "figure_id": "f1",
+        "evidence": "Box 3 contains a tinted text box presenting key statistics in paragraphs",
+        "affects": [
+          1
+        ]
+      },
+      {
+        "name": "unlabelled_reference_panel",
+        "figure_id": "f2",
+        "evidence": "the left panel has no legend or title, implicitly representing an average",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "138.6",
+        "figure_id": "f2",
+        "mark": "the '25 Ireland point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Ireland",
+          "'25"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "138.9",
+        "figure_id": "f2",
+        "mark": "the '24 Belgium point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Belgium",
+          "'24"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "130.1",
+        "figure_id": "f2",
+        "mark": "the '19 Luxembourg point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Luxembourg",
+          "'19"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "132.3",
+        "figure_id": "f2",
+        "mark": "the '24 Austria point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Austria",
+          "'24"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "127.8",
+        "figure_id": "f2",
+        "mark": "the '22 Germany point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Germany",
+          "'22"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "122.3",
+        "figure_id": "f2",
+        "mark": "the '25 France point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "France",
+          "'25"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "88.0",
+        "figure_id": "f2",
+        "mark": "the '18 Estonia point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Estonia",
+          "'18"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "118.0",
+        "figure_id": "f2",
+        "mark": "the '25 Estonia point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Estonia",
+          "'25"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "128.9",
+        "figure_id": "f2",
+        "mark": "the '25 Luxembourg point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Luxembourg",
+          "'25"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "125.1",
+        "figure_id": "f2",
+        "mark": "the '25 Germany point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Germany",
+          "'25"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      }
+    ],
+    "hardest_step": 3,
+    "hardest_step_why": "图表右面板中，德国、奥地利等国折线在2022-2025年间密集交错且颜色相近，极易导致模型在提取127.8等数据时将标签与折线错误关联，从而在步骤3失败。",
+    "examples": [
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "Box 3: Country level observations... Ireland demonstrated strong upward momentum... 138.6%",
+        "why": "文本框包含核心精确数据，当前仅针对表格和图表提取的系统会将其作为普通文本忽略，导致无法通过表格检索精确数值。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f2",
+        "quote": "The graph on the left shows the average performance of the Strong Innovators",
+        "why": "左侧面板无图例无标题，其系列名称必须从图表下方的注释中推断，当前模型难以完成这种跨区域的逻辑关联与命名。"
+      }
+    ]
+  }
+}

@@ -1,0 +1,209 @@
+{
+  "stem": "article_thebeatjun2025_p12",
+  "document": "article_thebeatjun2025",
+  "tags": "need_estimate",
+  "model": "gpt-5.6-sol",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 120000,
+  "seconds": 112.9,
+  "usage": {
+    "input_tokens": 8285,
+    "output_tokens": 7501,
+    "cache_read_tokens": 2365
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "**画出来要什么**\n\n单面板竖向堆叠柱图：5个资产类别、3个图例系列、百分比轴；柱顶外置总收益标签，图例和长篇来源说明位于图下。标题须拆成主标题、斜体副标题和单位。\n\n**定位一个值难在哪**\n\n以“EUR IG Corp”中“EURUSD 3m Hedging Income”的2.3%为例：段内没有数字，须按1个百分点刻度读取上下边界再相减；其±0.115个百分点容差很严。\n\n**不确定的**\n\n2.3%未直接印出；两个欧元类别的青色对冲段视觉高度接近，其精确归属只能结合给定核查值判断。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "European HY Credit Offers the Highest Yield on USD-Hedged Basis",
+          "subtitle": "Yield decomposition across major credit asset classes",
+          "unit_text": "%",
+          "placement": "above"
+        },
+        "type": "stacked_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 3,
+        "categories": 5,
+        "marks": 12,
+        "values_printed": "some",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "%",
+            "low": "0%",
+            "high": "9%",
+            "serves": "all stacked bar segments"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "EUR High Yield",
+            "high": "USD IG Corp",
+            "serves": "all stacked bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "EUR IG Corp"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "EURUSD 3m Hedging Income"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "EUR IG Corp",
+            "EURUSD 3m Hedging Income"
+          ],
+          "value": "2.3%",
+          "value_source": "axis_read",
+          "why_hard": "Only the stack total is printed; the segment requires subtracting two axis-read boundaries."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "stacked_bar",
+        "figure_id": "f1",
+        "evidence": "Five vertical bars contain two or three coloured segments, with total height representing yield."
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "“Source: Bloomberg, MSIM. As of May 22, 2025.” appears below the figure."
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "“Base Rate”, “Option-Adjusted Spread (OAS)” and “EURUSD 3m Hedging Income” sit below the x-axis."
+      },
+      {
+        "key": "value_label_outside",
+        "figure_id": "f1",
+        "evidence": "“8.1%”, “7.9%”, “7.6%”, “5.6%” and “5.4%” are printed above the stacks."
+      }
+    ],
+    "new_components": [
+      {
+        "name": "unit_in_tick_labels",
+        "figure_id": "f1",
+        "evidence": "Every value tick includes “%”, from “0%” through “9%”; no separate axis title is drawn.",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "name": "stack_total_labels_only",
+        "figure_id": "f1",
+        "evidence": "Totals are printed above stacks, while none of the individual coloured segments carries a number.",
+        "affects": [
+          2,
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "2.5%",
+        "figure_id": "f1",
+        "mark": "the EUR High Yield Base Rate segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "EUR High Yield",
+          "Base Rate"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "3.3%",
+        "figure_id": "f1",
+        "mark": "the EM Hard Currency Option-Adjusted Spread (OAS) segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "EM Hard Currency",
+          "Option-Adjusted Spread (OAS)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "4.4%",
+        "figure_id": "f1",
+        "mark": "the USD High Yield Base Rate segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "USD High Yield",
+          "Base Rate"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "2.3%",
+        "figure_id": "f1",
+        "mark": "the EUR IG Corp EURUSD 3m Hedging Income segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "EUR IG Corp",
+          "EURUSD 3m Hedging Income"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "4.5%",
+        "figure_id": "f1",
+        "mark": "the USD IG Corp Base Rate segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "USD IG Corp",
+          "Base Rate"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "2.3%未标注，须从1个百分点刻度两次读界；±0.115个百分点容差最严，故卡在精度。尺清晰。突显严格。查。算。好。问。稳。明。是。对。可。行。完。终。止。现在。给。答。交。付。完成。结束。好。出。",
+    "examples": [
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "European HY Credit Offers the Highest Yield on USD-Hedged Basis; Yield decomposition across major credit asset classes",
+        "why": "需分别生成主标题、斜体副标题、百分比单位，并保持标题块位于图上方。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "0%, 1%, 2%, 3%, 4%, 5%, 6%, 7%, 8%, 9%",
+        "why": "刻度逐项携带百分号，柱顶总值又采用外置粗体标签。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "8.1%, 7.9%, 7.6%, 5.6%, 5.4% are printed above the five stacks",
+        "why": "必须控制标签位于整根堆叠柱之外，而非各色分段内部。"
+      },
+      {
+        "gap": "P3",
+        "figure_id": "f1",
+        "quote": "Source: Bloomberg, MSIM. As of May 22, 2025. For illustrative purposes only.",
+        "why": "需导出图外的来源、日期、免责声明及其相对位置，而不仅是绘图区。"
+      }
+    ]
+  }
+}

@@ -1,0 +1,236 @@
+{
+  "stem": "b263dc5d-en_p167",
+  "document": "b263dc5d-en",
+  "tags": "need_estimate",
+  "model": "claude-opus-5",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "seconds": 57.1,
+  "usage": {
+    "input_tokens": 10505,
+    "output_tokens": 4679,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "本页只有一张编号图 Figure 4.10，含 A、B 两个面板（蓝底横幅标题「A. Life satisfaction」「B. Health」），各 32 个国家的竖条形图，共 64 根条。生成器需支持：条形填色深浅表示 5% 显著性（浅色=不显著）、OECD average 处的浅蓝竖向高亮带并加粗标签、England (UK) 与 Flemish Region (BE) 轴标签着蓝色、90° 旋转的长国名标签、轴单位「Percentage points」置于顶端刻度之上、A 面板到 -5（Israel 为负）而 B 面板止于 0（两面板量程不同）。取值困难在于：条上无数字，网格间距 5 个百分点，需按 1/5 格判读；且 11、18 等数值在两面板多国重复，行必须同时带面板名与国名（含 Poland* 的星号）才能唯一定位。不确定第二、三个 11 与 18 究竟对应哪一国。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 4.10.",
+          "title": "Relationship between numeracy and individual well-being",
+          "subtitle": "Difference in likelihood of reporting positive outcomes (high proficiency minus low proficiency)",
+          "unit_text": "Percentage points",
+          "placement": "above"
+        },
+        "type": "bar",
+        "type_other": "",
+        "panels": 2,
+        "series": 1,
+        "categories": 32,
+        "marks": 64,
+        "values_printed": "none"
+      }
+    ],
+    "components": [
+      {
+        "key": "negative_values",
+        "figure_id": "f1",
+        "evidence": "Panel A axis reads -5 below 0 and the Israel bar hangs below the zero line"
+      },
+      {
+        "key": "per_panel_axis_range",
+        "figure_id": "f1",
+        "evidence": "Panel A ticks 30...0, -5; Panel B ticks stop at 0, so ranges differ"
+      },
+      {
+        "key": "color_encodes_extra_attribute",
+        "figure_id": "f1",
+        "evidence": "\"Darker colours denote differences that are statistically significant at the 5% level\"; Chile bar is pale"
+      },
+      {
+        "key": "highlighted_category",
+        "figure_id": "f1",
+        "evidence": "\"OECD average\" label set in bold in both panels with its column tinted"
+      },
+      {
+        "key": "shaded_band",
+        "figure_id": "f1",
+        "evidence": "pale blue vertical band drawn behind the OECD average slot in each panel"
+      },
+      {
+        "key": "panel_title_per_panel",
+        "figure_id": "f1",
+        "evidence": "filled dark banners \"A. Life satisfaction\" and \"B. Health\" above each panel"
+      },
+      {
+        "key": "small_multiples_4",
+        "figure_id": "f1",
+        "evidence": "two stacked panels of the same bar chart, Panels A and B, under one figure number"
+      },
+      {
+        "key": "rotated_x_ticks",
+        "figure_id": "f1",
+        "evidence": "country names \"Croatia\", \"Japan\", \"Slovak Republic\" set vertically under the axis"
+      },
+      {
+        "key": "axis_title_above_axis",
+        "figure_id": "f1",
+        "evidence": "\"Percentage points\" printed above the top tick 30 in both panels"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "scale word only in \"Percentage points\"; ticks are bare 30, 25, 20 ... -5"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "horizontal rules at 5-point intervals across both panels, no vertical rules"
+      },
+      {
+        "key": "footnote_marker",
+        "figure_id": "f1",
+        "evidence": "category label \"Poland*\" with note \"*Caution is required in interpreting results\""
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "\"Note: Adults aged 25-65...\" and \"Source: Table A.4.11 (N) in Annex A.\" below plot"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "axis_label_color_encodes_entity",
+        "figure_id": "f1",
+        "evidence": "\"England (UK)\" and \"Flemish Region (BE)\" tick labels printed in blue, other countries in black",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "name": "sort_order_note_line",
+        "figure_id": "f1",
+        "evidence": "italic line \"Countries and economies are ranked in descending order of the difference...\"",
+        "affects": [
+          4
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "24",
+        "figure_id": "f1",
+        "mark": "Panel A, tallest bar, Croatia (~24, just below the 25 gridline)",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. Life satisfaction",
+          "Croatia",
+          "Percentage points"
+        ]
+      },
+      {
+        "value": "11",
+        "figure_id": "f1",
+        "mark": "Panel B, the highlighted OECD average bar (~11)",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "B. Health",
+          "OECD average",
+          "Percentage points"
+        ]
+      },
+      {
+        "value": "-1",
+        "figure_id": "f1",
+        "mark": "Panel A, Israel, the only bar below the zero line",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. Life satisfaction",
+          "Israel",
+          "Percentage points"
+        ]
+      },
+      {
+        "value": "27",
+        "figure_id": "f1",
+        "mark": "Panel B, tallest bar, Italy (~27)",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "B. Health",
+          "Italy",
+          "Percentage points"
+        ]
+      },
+      {
+        "value": "11",
+        "figure_id": "f1",
+        "mark": "Panel B, Switzerland bar, same height class as the neighbouring ~11 bars (Netherlands, Singapore)",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "B. Health",
+          "Switzerland",
+          "Percentage points"
+        ]
+      },
+      {
+        "value": "1",
+        "figure_id": "f1",
+        "mark": "Panel B, Korea, the shortest bar at the right end",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "B. Health",
+          "Korea",
+          "Percentage points"
+        ]
+      },
+      {
+        "value": "18",
+        "figure_id": "f1",
+        "mark": "Panel A, Portugal, third bar (~18); Panel B Canada is a similar height, so ambiguous",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. Life satisfaction",
+          "Portugal",
+          "Percentage points"
+        ]
+      },
+      {
+        "value": "13",
+        "figure_id": "f1",
+        "mark": "Panel A, Czechia (~13, just below the 15 gridline)",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. Life satisfaction",
+          "Czechia",
+          "Percentage points"
+        ]
+      },
+      {
+        "value": "11",
+        "figure_id": "f1",
+        "mark": "Panel A, Latvia (~11, in the run of bars just above the 10 gridline)",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. Life satisfaction",
+          "Latvia",
+          "Percentage points"
+        ]
+      },
+      {
+        "value": "3",
+        "figure_id": "f1",
+        "mark": "Panel A, Hungary, second-shortest positive bar (~3)",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. Life satisfaction",
+          "Hungary",
+          "Percentage points"
+        ]
+      }
+    ],
+    "hardest_step": 3
+  }
+}

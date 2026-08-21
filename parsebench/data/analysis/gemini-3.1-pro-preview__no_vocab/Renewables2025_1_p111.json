@@ -1,0 +1,326 @@
+{
+  "stem": "Renewables2025_1_p111",
+  "document": "Renewables2025_1",
+  "tags": "3d_chart+need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "no_vocab",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 78.4,
+  "usage": {
+    "input_tokens": 3177,
+    "output_tokens": 10917,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n该页面包含一个分为左右两个面板的分组柱状图（分面图）。图表顶部有一行蓝色的主标题，无图表编号。左侧面板标题为“China”，右侧面板标题为“Outside of China”。两个面板共享相同的Y轴范围（-30%到30%），刻度间隔为10%，且刻度值附带“%”符号。最左侧有一个旋转90度的Y轴标题“Weighted average net margin”。所有图形都包含一条贯穿两面板的加粗零轴，负值柱状图从零轴向下延伸。X轴采用了嵌套的层级标签形式：上方是季度（如Q1、Q2），各季度之间有短竖线分隔；下方居中显示年份（如2023、2024）。图例位于整个图表的底部，通过方形色块标注四个不同的系列。\n\n### 定位一个值难在哪\n以数值 `1.3` 或 `7` 为例，定位和提取的难度在于极低的视觉读取精度。图表的Y轴网格线间隔高达10%，且柱子上并未打印任何具体的数据标签。读者仅能依靠肉眼在宽阔的网格之间进行视觉插值。在这个尺度下，分辨1.3%与0%或2%几乎是不可能的，必定会导致超出5%误差容忍度的读取偏差。\n\n### 不确定的\n图例中的“Solar PV integrated mfg”（黄色柱子）在“中国”和“中国以外”两个面板中的高度变化似乎完全一致，不确定这是排版错误，还是该指标代表的是全球统一数据。此外，数值 1.3 在图中找不到清晰对应的柱子，只能推测其属于某个极接近零轴的细小正值。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "Weighted average net margins of renewable energy companies and large utilities (Q1 2023-Q2 2025)",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "grouped_bar",
+        "type_other": "",
+        "panels": 2,
+        "series": 4,
+        "categories": 10,
+        "marks": 50,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Weighted average net margin",
+            "low": "-30%",
+            "high": "30%",
+            "serves": "all bars in the China panel"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "Q1",
+            "high": "Q2",
+            "serves": "all bars in the China panel"
+          },
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "-30%",
+            "high": "30%",
+            "serves": "all bars in the Outside of China panel"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "Q1",
+            "high": "Q2",
+            "serves": "all bars in the Outside of China panel"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "panel",
+            "label_source": "panel_title",
+            "example": "China"
+          },
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2024"
+          },
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "Q2"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Polysilicon"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "China",
+            "2024",
+            "Q2",
+            "Polysilicon"
+          ],
+          "value": "-17%",
+          "value_source": "axis_read",
+          "why_hard": "Values must be interpolated across a 10% grid, making precise readings highly subjective."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "side_by_side_panels",
+        "figure_id": "f1",
+        "evidence": "China and Outside of China plots are arranged horizontally",
+        "affects": [
+          3,
+          4
+        ]
+      },
+      {
+        "key": "rotated_y_axis_title",
+        "figure_id": "f1",
+        "evidence": "Weighted average net margin is rotated 90 degrees on the left",
+        "affects": [
+          4
+        ]
+      },
+      {
+        "key": "nested_categorical_axis",
+        "figure_id": "f1",
+        "evidence": "Q1 to Q4 are grouped under years 2023, 2024, 2025",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "negative_value_bars",
+        "figure_id": "f1",
+        "evidence": "Bars extend downwards from a prominent 0% line",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "key": "legend_with_square_markers",
+        "figure_id": "f1",
+        "evidence": "Legend below the x-axis uses coloured squares",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "new_components": [
+      {
+        "name": "nested_time_axis",
+        "figure_id": "f1",
+        "evidence": "Q1, Q2 quarters sitting above spanning year labels like 2024",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "name": "rotated_axis_title",
+        "figure_id": "f1",
+        "evidence": "the y-axis title is printed vertically along the left edge",
+        "affects": [
+          4
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "28",
+        "figure_id": "f1",
+        "mark": "the Q1 2023 Polysilicon bar in the China panel",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "China",
+          "2023",
+          "Q1",
+          "Polysilicon"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-17",
+        "figure_id": "f1",
+        "mark": "the Q2 2024 Polysilicon bar in the China panel",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "China",
+          "2024",
+          "Q2",
+          "Polysilicon"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "0",
+        "figure_id": "f1",
+        "mark": "the Q3 2023 Polysilicon bar in the China panel",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "China",
+          "2023",
+          "Q3",
+          "Polysilicon"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-7",
+        "figure_id": "f1",
+        "mark": "the Q1 2024 Solar PV integrated mfg bar in the China panel",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "China",
+          "2024",
+          "Q1",
+          "Solar PV integrated mfg"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "2",
+        "figure_id": "f1",
+        "mark": "the Q2 2025 Solar PV integrated mfg bar in the China panel",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "China",
+          "2025",
+          "Q2",
+          "Solar PV integrated mfg"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-7",
+        "figure_id": "f1",
+        "mark": "the Q2 2024 Wind integrated mfg bar in the Outside of China panel",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Outside of China",
+          "2024",
+          "Q2",
+          "Wind integrated mfg"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "7",
+        "figure_id": "f1",
+        "mark": "the Q1 2024 Wind integrated mfg bar in the Outside of China panel",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Outside of China",
+          "2024",
+          "Q1",
+          "Wind integrated mfg"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "1.3",
+        "figure_id": "not_found",
+        "mark": "cannot reliably distinguish 1.3% from 0% or 2% given the 10% y-axis gridline interval",
+        "printed_on_figure": false,
+        "addressing_keys": [],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "10",
+        "figure_id": "f1",
+        "mark": "the Q4 2023 Utilities bar in the Outside of China panel",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Outside of China",
+          "2023",
+          "Q4",
+          "Utilities"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-5",
+        "figure_id": "f1",
+        "mark": "the Q4 2024 Wind integrated mfg bar in the Outside of China panel",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Outside of China",
+          "2024",
+          "Q4",
+          "Wind integrated mfg"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "图表的Y轴网格线间隔高达10%，且没有直接标记在柱子上的数据标签。对于1.3或7这样的具体数值，肉眼估算的误差很容易超出5%的精度容忍度。",
+    "examples": [
+      {
+        "gap": "P2",
+        "figure_id": "f1",
+        "quote": "China and Outside of China headings above the two plot panels",
+        "why": "图表被分为两个面板，面板的标题（如China）必须作为区分数据的独立维度写入表格键中。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "Q1 | Q2 | Q3 | Q4 under each year 2023, 2024, 2025",
+        "why": "X轴使用了嵌套的层级标签形式，年份覆盖在季度的下方，目前的图表生成器无法渲染这种双层复合坐标轴。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "Bars extend downwards from a prominent 0% line for negative margins",
+        "why": "图表中包含大量的负值，柱状图跨越了0轴并向下延伸，这需要新增对负值轴和跨零渲染的支持。"
+      }
+    ]
+  }
+}

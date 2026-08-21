@@ -1,0 +1,337 @@
+{
+  "stem": "9f653ca1-en_p33",
+  "document": "9f653ca1-en",
+  "tags": "need_estimate",
+  "model": "claude-opus-5",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 82.0,
+  "usage": {
+    "input_tokens": 13828,
+    "output_tokens": 6647,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "**画出来要什么**\n\n一张编号图 `Figure 1.18. Trade patterns are evolving with emerging markets becoming a key driver of growth`,下含两块并列面板:`A. Contributions to global trade growth`(第二行 `Averages of annual growth`)与 `B. Contributions to global current account balance`。两板共用一个位于面板上方、跨两栏排布的图例(7 个色块系列 + 三角形 `World, %`)。A 板为纯正值堆叠柱,轴标 `% pts` 写在最高刻度 `5` 之上;B 板为正负双向堆叠柱,零线为加粗黑线,轴从 `-1.5` 到 `1.5`,轴标 `% of nominal World GDP`。每板柱上叠一个黑三角(总量),与柱共用同一数值轴。类别刻度是跨年区间 `2001-09`、`2011-14`、`2015-19`、`2022-25`、`2026-27`。图下 Note/Source 与 `StatLink https://stat.link/mhq1ks`。\n\n**定位一个值难在哪**\n\n以 `0.6` 为例:它是 B 板 `2011-14` 的三角形 `World, %`。要唯一定位需三个标签(面板名、类别、图例名),而三角形与柱共轴却不是柱;图上无任何数字,刻度间距 0.5,5% 容差仅 ±0.03,只能目测。\n\n**不确定的**\n\n各段具体数值全靠读轴;`0.9`、`0.7`、`-0.1` 落在哪一段(China / Europe / India)无法确证。面板内是否有淡色水平网格线,分辨率下看不清。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 1.18.",
+          "title": "Trade patterns are evolving with emerging markets becoming a key driver of growth",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "stacked_bar",
+        "type_other": "",
+        "panels": 2,
+        "series": 8,
+        "categories": 5,
+        "marks": 80,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "% pts",
+            "low": "0",
+            "high": "5",
+            "serves": "all stacked segments and triangles in Panel A"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "2001-09",
+            "high": "2026-27",
+            "serves": "the five stacked bars of Panel A"
+          },
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "% of nominal World GDP",
+            "low": "-1.5",
+            "high": "1.5",
+            "serves": "all stacked segments and triangles in Panel B"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "2001-09",
+            "high": "2026-27",
+            "serves": "the five stacked bars of Panel B"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "panel",
+            "label_source": "panel_title",
+            "example": "A. Contributions to global trade growth"
+          },
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2026-27"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "South-East Asian economies"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "A. Contributions to global trade growth",
+            "2026-27",
+            "South-East Asian economies"
+          ],
+          "value": "about 0.35",
+          "value_source": "axis_read",
+          "why_hard": "thin red band mid-stack, no printed value, ticks 1 unit apart, both edges floating"
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "stacked_bar",
+        "figure_id": "f1",
+        "evidence": "both panels draw seven coloured segments inside each bar over 2001-09 to 2026-27"
+      },
+      {
+        "key": "negative_values",
+        "figure_id": "f1",
+        "evidence": "Panel B axis reads -1.5 to 1.5 and dark red segments extend below zero"
+      },
+      {
+        "key": "reference_line",
+        "figure_id": "f1",
+        "evidence": "a heavy black horizontal rule at 0.0 across the whole Panel B plot"
+      },
+      {
+        "key": "mixed_marks",
+        "figure_id": "f1",
+        "evidence": "black triangles overlaid on the stacked bars in both panels"
+      },
+      {
+        "key": "tick_marker_as_series",
+        "figure_id": "f1",
+        "evidence": "legend entry '▲ World, %' drawn as a triangle at each category position"
+      },
+      {
+        "key": "shared_legend",
+        "figure_id": "f1",
+        "evidence": "one legend block above both panels lists North America ... Rest of the World"
+      },
+      {
+        "key": "panel_title_per_panel",
+        "figure_id": "f1",
+        "evidence": "'A. Contributions to global trade growth' and 'B. Contributions to global current account balance'"
+      },
+      {
+        "key": "per_panel_axis_range",
+        "figure_id": "f1",
+        "evidence": "Panel A runs 0 to 5, Panel B runs -1.5 to 1.5"
+      },
+      {
+        "key": "legend_above_plot",
+        "figure_id": "f1",
+        "evidence": "legend rows sit between the panel titles and the plot areas"
+      },
+      {
+        "key": "axis_title_above_axis",
+        "figure_id": "f1",
+        "evidence": "'% pts' printed above the top tick '5'; '% of nominal World GDP' above '1.5'"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "'% pts' and '% of nominal World GDP' carry the scale; bars have no numbers"
+      },
+      {
+        "key": "unit_in_series_name",
+        "figure_id": "f1",
+        "evidence": "legend entry reads 'World, %'"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "'Note: North America includes Canada, Mexico...' and 'Source: OECD Economic Outlook 118 database; and OECD calculations.'"
+      },
+      {
+        "key": "data_link_below_figure",
+        "figure_id": "f1",
+        "evidence": "'StatLink  https://stat.link/mhq1ks' under the note block"
+      },
+      {
+        "key": "nonstandard_time_ticks",
+        "figure_id": "f1",
+        "evidence": "x ticks read '2001-09', '2011-14', '2015-19', '2022-25', '2026-27'"
+      },
+      {
+        "key": "small_multiples_4",
+        "figure_id": "f1",
+        "evidence": "two side-by-side stacked-bar panels A and B with the same series and category slots"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "panel_subtitle_line",
+        "figure_id": "f1",
+        "evidence": "'Averages of annual growth' set in smaller type under panel title A only",
+        "affects": [
+          3,
+          4
+        ]
+      },
+      {
+        "name": "panels_differ_by_measure",
+        "figure_id": "f1",
+        "evidence": "Panel A measures '% pts' of trade growth, Panel B '% of nominal World GDP' — different quantities, same series",
+        "affects": [
+          2,
+          3
+        ]
+      },
+      {
+        "name": "legend_wrapped_two_column_blocks",
+        "figure_id": "f1",
+        "evidence": "eight legend entries laid out in two separate multi-row blocks, one over each panel",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "4.5",
+        "figure_id": "f1",
+        "mark": "the 2001-09 'World, %' triangle in Panel A (top of the stack, just under 4.5)",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. Contributions to global trade growth",
+          "2001-09",
+          "World, %"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "0.6",
+        "figure_id": "f1",
+        "mark": "the 2011-14 'World, %' triangle in Panel B",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "B. Contributions to global current account balance",
+          "2011-14",
+          "World, %"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "0.4",
+        "figure_id": "f1",
+        "mark": "the 2022-25 'World, %' triangle in Panel B (just below 0.5)",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "B. Contributions to global current account balance",
+          "2022-25",
+          "World, %"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "0.9",
+        "figure_id": "f1",
+        "mark": "the 2015-19 China segment in Panel A, running from 0 to about 0.9",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. Contributions to global trade growth",
+          "2015-19",
+          "China"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "0.4",
+        "figure_id": "f1",
+        "mark": "the 2026-27 'World, %' triangle in Panel B, or the 2026-27 South-East Asian segment in Panel A",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "B. Contributions to global current account balance",
+          "2026-27",
+          "World, %"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "0.7",
+        "figure_id": "f1",
+        "mark": "a mid-stack segment in Panel A, most likely the 2026-27 Europe band (about 1.0 to 1.7)",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. Contributions to global trade growth",
+          "2026-27",
+          "Europe"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-0.1",
+        "figure_id": "f1",
+        "mark": "a thin negative band below zero in Panel B, most likely the 2011-14 India segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "B. Contributions to global current account balance",
+          "2011-14",
+          "India"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "图上无任何数字;A板刻度间隔1.0,B板0.5,而0.4的5%容差仅±0.02,堆叠段与三角形只能目测。",
+    "examples": [
+      {
+        "gap": "P2",
+        "figure_id": "f1",
+        "quote": "'A. Contributions to global trade growth' and 'B. Contributions to global current account balance' side by side under one figure number",
+        "why": "两面板类别与系列同名,值必须带面板键,否则2011-14 China在A、B板无法区分。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "Panel B ticks -1.5, -1.0, -0.5, 0.0, 0.5, 1.0, 1.5 with a heavy black rule at 0.0",
+        "why": "需要生成正负双向堆叠、零线加粗、负段位于零线下方的构造。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "'Figure 1.18.' + title line, then panel title, then 'Averages of annual growth', then '% pts' above tick 5",
+        "why": "标题分四层:编号、图题、面板题、面板副题,单位又单独放在顶刻度之上。"
+      },
+      {
+        "gap": "P1",
+        "figure_id": "f1",
+        "quote": "a thin orange 'India' band about two pixels tall inside the 2011-14 negative stack",
+        "why": "薄段可达精度远低于粗段,不能用统一的可读/不可读布尔门。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "'▲ World, %' legend entry: triangles plotted at each bar top, read on the same axis as the bars",
+        "why": "总量以三角标记而非柱表示,值需记录标记形状;当前无此形态键。"
+      }
+    ]
+  }
+}

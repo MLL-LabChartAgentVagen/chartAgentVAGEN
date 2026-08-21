@@ -1,0 +1,207 @@
+{
+  "stem": "US_Professional_Services_Partner_Compensation_Survey_2024_p11",
+  "document": "US_Professional_Services_Partner_Compensation_Survey_2024",
+  "tags": "untagged",
+  "model": "gemini-3.1-pro-preview",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 58.3,
+  "usage": {
+    "input_tokens": 5312,
+    "output_tokens": 7612,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n要生成此页面，图表生成器需要支持水平分组条形图（horizontal grouped bars），并且能够完全移除数值轴（无刻度、无轴线），仅通过直接在条形上打印数据标签来展示数值。数据标签需要根据条形长度自适应位置：大部分标签位于条形内部右侧，但像“1”这样的极小值必须放置在条形外部。分类轴需要水平网格线（hgrid）分隔不同类别。\n\n在页面排版层面，需要支持将大段描述性文本与图表本体左右并排显示（side_text_bullets）。图表的标题模块需支持多行长句作为副标题，且图例放置在副标题与绘图区之间。\n\n### 定位一个值难在哪\n以“35”为例，该图表完全没有任何数值轴作为参考，数值提取高度依赖于直接打印在条形上的标签。定位这个值要求解析器能够准确识别水平分组的条形组，并将其与上方的图例（2024）和左侧的长文本类别（Higher）进行精确的空间关联。由于标签位置不一（内/外），若解析器对相对位置判断存在偏差，容易将数值张冠李戴。\n\n### 不确定的\n图例中“深蓝色”和“青蓝色”是否带有某种特定的品牌视觉规范映射，或是仅用作年份的随意区分，在当前上下文中无法确定。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "Partner turnover (%)",
+          "subtitle": "In your most recent fiscal year, how much partner turnover was there at your firm compared to your expectations at the beginning of the fiscal year?",
+          "unit_text": "(%)",
+          "placement": "above"
+        },
+        "type": "grouped_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 6,
+        "marks": 12,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "left",
+            "role": "category",
+            "unit_text": "",
+            "low": "Significantly lower",
+            "high": "Prefer not to answer",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Higher"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "2024"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Prefer not to answer",
+            "2024"
+          ],
+          "value": "1",
+          "value_source": "printed",
+          "why_hard": "The label '1' is printed outside its very short bar, complicating its spatial association with the mark."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "horizontal_bars",
+        "figure_id": "f1",
+        "evidence": "categories sit on the y axis and the bars grow to the right"
+      },
+      {
+        "key": "grouped_bar",
+        "figure_id": "f1",
+        "evidence": "two bars for 2024 and 2022 sit side by side per category"
+      },
+      {
+        "key": "no_value_axis",
+        "figure_id": "f1",
+        "evidence": "there is no value axis or ticks drawn at the bottom or top"
+      },
+      {
+        "key": "value_label_inside",
+        "figure_id": "f1",
+        "evidence": "values like 9, 13, 27 are printed inside the bar segments"
+      },
+      {
+        "key": "value_label_outside",
+        "figure_id": "f1",
+        "evidence": "the value 1 is printed just outside its very short bar"
+      },
+      {
+        "key": "legend_above_plot",
+        "figure_id": "f1",
+        "evidence": "the legend sits below the subtitle and above the plot area"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "the title includes the unit (%)"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "Note and Source text sit beneath the plot area"
+      },
+      {
+        "key": "side_text_bullets",
+        "figure_id": "page",
+        "evidence": "a column of text describing partner turnover runs left of the figure"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "horizontal lines separate the categories, with no vertical grid lines"
+      }
+    ],
+    "new_components": [],
+    "spot_checks": [
+      {
+        "value": "9",
+        "figure_id": "f1",
+        "mark": "the 2024 bar in the Significantly lower category",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Significantly lower",
+          "2024"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "14",
+        "figure_id": "f1",
+        "mark": "the 2022 bar in the Lower category",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Lower",
+          "2022"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "27",
+        "figure_id": "f1",
+        "mark": "the 2024 bar in the About the same category",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "About the same",
+          "2024"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "35",
+        "figure_id": "f1",
+        "mark": "the 2024 bar in the Higher category",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Higher",
+          "2024"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "6",
+        "figure_id": "f1",
+        "mark": "the 2022 bar in the Prefer not to answer category",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Prefer not to answer",
+          "2022"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      }
+    ],
+    "hardest_step": 3,
+    "hardest_step_why": "图表没有数值轴，提取完全依赖于标签打印。要求模型必须准确关联悬浮数值标签与水平分组的条形、上方图例及左侧文本，空间对齐容易出错。",
+    "examples": [
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "value label 1 is outside the dark bar, while 35 is inside",
+        "why": "需要支持根据条形长度动态决定数据标签应放置于条形内部还是外部的渲染逻辑。"
+      },
+      {
+        "gap": "P3",
+        "figure_id": "page",
+        "quote": "body text starting 'In response to' runs beside the figure",
+        "why": "页面排版将大段正文段落与图表左右并排显示，超出了单图表区域渲染的常规布局范畴。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "subtitle 'In your most recent fiscal year, how much partner turnover...'",
+        "why": "图表的标题模块需要支持多行文字的完整长句作为独立副标题。"
+      }
+    ]
+  }
+}

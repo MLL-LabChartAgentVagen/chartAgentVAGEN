@@ -1,0 +1,363 @@
+{
+  "stem": "2024_healthatglance_rep_en_p77",
+  "document": "2024_healthatglance_rep_en",
+  "tags": "need_estimate",
+  "model": "gpt-5.6-sol",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 120000,
+  "seconds": 91.0,
+  "usage": {
+    "input_tokens": 8699,
+    "output_tokens": 6509,
+    "cache_read_tokens": 2365
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n页面含一张分组数据表，以及一张29国单面板范围图；后者须绘制圆点、短横、垂直连接线、灰色底板、双向网格、旋转国名、图上方图例及红色EU27重点值。\n\n### 定位一个值难在哪\n例如38须同时绑定“Germany”和“65 years or over”。它没有数值标签，只能依据0–80轴及10点间隔估读，还要区别圆点与短横系列。\n\n### 不确定的\n20和38在图中可能各有多个近似或相同值；按阅读顺序分别归于France老年圆点和Germany老年圆点。连接线计入marks。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Table 2.2.",
+          "title": "Overview of behavioural and environmental risk factors among older people compared to younger people",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "other",
+        "type_other": "data table",
+        "panels": 1,
+        "series": 2,
+        "categories": 8,
+        "marks": 16,
+        "values_printed": "all",
+        "axes": [],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "inline_label",
+            "example": "Physical inactivity (% reporting to spend less than 150 minutes per week)"
+          },
+          {
+            "role": "series",
+            "label_source": "heading",
+            "example": "People aged 18-64"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Extreme temperature (% deaths attributable to heat or cold wave)",
+            "People aged 18-64"
+          ],
+          "value": "2% (people aged < 70)",
+          "value_source": "printed",
+          "why_hard": "The cell's under-70 qualifier differs from the column's 18-64 heading."
+        }
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "Figure 2.17.",
+          "title": "Only 22% of people aged over 65 meet the WHO recommendation on minimum physical activity per week",
+          "subtitle": "",
+          "unit_text": "% of people reporting to spend 150 minutes or more per week of physical activity",
+          "placement": "above"
+        },
+        "type": "other",
+        "type_other": "range plot",
+        "panels": 1,
+        "series": 2,
+        "categories": 29,
+        "marks": 87,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "% of people reporting to spend 150 minutes or more per week of physical activity",
+            "low": "0",
+            "high": "80",
+            "serves": "both age-series markers and connectors"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "Norway",
+            "high": "Romania",
+            "serves": "all country positions"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Germany"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "65 years or over"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Germany",
+            "65 years or over"
+          ],
+          "value": "38",
+          "value_source": "axis_read",
+          "why_hard": "Ten-point ticks and adjacent tick-marker series hinder exact reading."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "multi_figure_page",
+        "figure_id": "page",
+        "evidence": "“Table 2.2.” and “Figure 2.17.” have separate captions."
+      },
+      {
+        "key": "data_table_as_figure",
+        "figure_id": "f1",
+        "evidence": "“Table 2.2.” captions a ruled table with two age columns."
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "“Note: Data refer to 2019” and “Source: Eurostat” appear below."
+      },
+      {
+        "key": "mixed_marks",
+        "figure_id": "f2",
+        "evidence": "Blue circular points and black horizontal tick markers share one panel."
+      },
+      {
+        "key": "tick_marker_as_series",
+        "figure_id": "f2",
+        "evidence": "“From 18 to 64 years” is represented by short horizontal ticks."
+      },
+      {
+        "key": "range_connector_line",
+        "figure_id": "f2",
+        "evidence": "A vertical segment joins the two age-series markers for each country."
+      },
+      {
+        "key": "legend_above_plot",
+        "figure_id": "f2",
+        "evidence": "The two-entry legend sits between the title and plotting area."
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f2",
+        "evidence": "“Note: The EU average is weighted.” and “Source: Eurostat” appear below."
+      },
+      {
+        "key": "data_link_below_figure",
+        "figure_id": "f2",
+        "evidence": "“StatLink https://stat.link/79bcw8” is printed below the figure."
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f2",
+        "evidence": "“% of people reporting to spend 150 minutes or more per week of physical activity” fixes the scale."
+      },
+      {
+        "key": "axis_title_above_axis",
+        "figure_id": "f2",
+        "evidence": "The percentage axis title is horizontally printed above the top-left plot edge."
+      },
+      {
+        "key": "rotated_x_ticks",
+        "figure_id": "f2",
+        "evidence": "Country labels from “Norway” to “Romania” are diagonally rotated."
+      },
+      {
+        "key": "panel_background",
+        "figure_id": "f2",
+        "evidence": "The plotting area has a light grey fill."
+      },
+      {
+        "key": "highlighted_category",
+        "figure_id": "f2",
+        "evidence": "The EU27 older-age point is red while other older-age points are blue."
+      }
+    ],
+    "new_components": [
+      {
+        "name": "table_row_group_headers",
+        "figure_id": "f1",
+        "evidence": "“Behavioural risk factors” and “Environmental risk factors (mortality)” divide the table into row groups.",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "name": "cell_parenthetical_subgroup_qualifier",
+        "figure_id": "f1",
+        "evidence": "Environmental cells append qualifiers such as “(people aged < 70)” after percentages.",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "59",
+        "figure_id": "f2",
+        "mark": "the Norway “65 years or over” point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Norway",
+          "65 years or over"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "69",
+        "figure_id": "f2",
+        "mark": "the Norway “From 18 to 64 years” tick marker",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Norway",
+          "From 18 to 64 years"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "22",
+        "figure_id": "f1",
+        "mark": "the Smoking rate row under People aged 18-64",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Smoking rate (% smoking daily)",
+          "People aged 18-64"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "35",
+        "figure_id": "f1",
+        "mark": "the Nutrition row under People aged 18-64",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Nutrition (% not eating any vegetable or fruit a day)",
+          "People aged 18-64"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "2",
+        "figure_id": "f1",
+        "mark": "the Extreme temperature row under People aged 18-64",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Extreme temperature (% deaths attributable to heat or cold wave)",
+          "People aged 18-64"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "9",
+        "figure_id": "f1",
+        "mark": "the Smoking rate row under People aged 65 or over",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Smoking rate (% smoking daily)",
+          "People aged 65 or over"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "55",
+        "figure_id": "f2",
+        "mark": "the Netherlands “65 years or over” point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Netherlands",
+          "65 years or over"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "52",
+        "figure_id": "f1",
+        "mark": "the physical inactivity frequency row under People aged 65 or over",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Physical inactivity (% reporting to do physical activity less than once a week)",
+          "People aged 65 or over"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "20",
+        "figure_id": "f2",
+        "mark": "the France “65 years or over” point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "France",
+          "65 years or over"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "38",
+        "figure_id": "f2",
+        "mark": "the Germany “65 years or over” point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Germany",
+          "65 years or over"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      }
+    ],
+    "hardest_step": 3,
+    "hardest_step_why": "38需绑定Germany和65 years or over；29个旋转国名使标签关联最难。境。接线计入marks。",
+    "examples": [
+      {
+        "gap": "P7",
+        "figure_id": "f2",
+        "quote": "Figure 2.17. Only 22% of people aged over 65 meet the WHO recommendation on minimum physical activity per week",
+        "why": "需拆分图号、标题、单位轴题，并保留其相对位置。"
+      },
+      {
+        "gap": "P9",
+        "figure_id": "f2",
+        "quote": "Blue circular points and black horizontal tick markers are joined vertically for every country.",
+        "why": "同面板两种标记必须记录系列与标记形状，避免把短横误作误差棒。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f2",
+        "quote": "The value axis runs from 0 to 80 in ticks of 10.",
+        "why": "无点值标签，精度取决于刻度间隔和标记位置。"
+      },
+      {
+        "gap": "P3",
+        "figure_id": "f1",
+        "quote": "Behavioural risk factors; Environmental risk factors (mortality)",
+        "why": "整页导出须保留表题、分组行、注释和来源的层级。"
+      },
+      {
+        "gap": "P8",
+        "figure_id": "f2",
+        "quote": "The EU27 older-age point is red; the other older-age points are blue.",
+        "why": "红色强调未由图例命名，但承载EU27重点值的语义。"
+      }
+    ]
+  }
+}

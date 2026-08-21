@@ -1,0 +1,294 @@
+{
+  "stem": "Activate_Consulting_Technology_&_Media_Outlook_2026_(10)_p65",
+  "document": "Activate_Consulting_Technology_&_Media_Outlook_2026_(10)",
+  "tags": "untagged",
+  "model": "claude-opus-5",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 73.3,
+  "usage": {
+    "input_tokens": 15589,
+    "output_tokens": 5591,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "**画出来要什么**\n一张分组柱图：3 个分段(SUPER GAMERS²/AVID GAMERS³/CASUAL GAMERS⁴)×3 个平台(MOBILE/CONSOLE/PC)，共 9 根柱。没有任何数值轴或刻度，只有一条基线，数字全部以 93%、82% 的形式印在柱顶外侧。图例不在上下方，而是贴在绘图区左侧的一列，每行由一个设备图标 + 文字 + 一条与柱色对应的横线组成。标题是整条蓝色色带：加粗的 “SHARE OF GAMERS¹ USING EACH PLATFORM FOR GAMING IN THE LAST 12 MONTHS” 后接常规体 “U.S., 2025, % GAMERS¹ BY SEGMENT”。绘图区带浅蓝六边形底纹，四处手绘风格的绿色椭圆圈住若干柱。\n\n**定位一个值难在哪**\n89% 在页面上出现两次：一次是 SUPER GAMERS² 的 PC 柱，一次是 AVID GAMERS³ 的 MOBILE 柱。要区分它们必须同时拿到分段名(x 轴)和平台名(左侧图例)，而平台与颜色的对应只靠图例文字下方那条细色线，没有色块，解析器很容易把两个 89% 混为一谈。\n\n**不确定的**\n图例三行的颜色横线是否真与柱色一一对应，只能按从上到下=从左到右推断；绿色椭圆到底圈了哪几根柱(Super Gamers 组似乎三根全圈)边界不清；页面无图号，是否属于更大编号体系无法判断。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "SHARE OF GAMERS¹ USING EACH PLATFORM FOR GAMING IN THE LAST 12 MONTHS",
+          "subtitle": "",
+          "unit_text": "U.S., 2025, % GAMERS¹ BY SEGMENT",
+          "placement": "above"
+        },
+        "type": "grouped_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 3,
+        "categories": 3,
+        "marks": 9,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "SUPER GAMERS²",
+            "high": "CASUAL GAMERS⁴",
+            "serves": "all nine bars, three per segment group"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "MOBILE"
+          },
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "AVID GAMERS³"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "MOBILE",
+            "AVID GAMERS³"
+          ],
+          "value": "89%",
+          "value_source": "printed",
+          "why_hard": "89% appears twice on the page; only the legend colour rule separates Avid MOBILE from Super PC"
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "grouped_bar",
+        "figure_id": "f1",
+        "evidence": "three bars sit side by side inside each of SUPER GAMERS², AVID GAMERS³, CASUAL GAMERS⁴"
+      },
+      {
+        "key": "no_value_axis",
+        "figure_id": "f1",
+        "evidence": "only a black baseline under the bars; no ticks or numbers on any vertical axis"
+      },
+      {
+        "key": "value_label_outside",
+        "figure_id": "f1",
+        "evidence": "`93%`, `82%`, `89%` printed above the top of each bar, not inside it"
+      },
+      {
+        "key": "annotation_callout",
+        "figure_id": "f1",
+        "evidence": "hand-drawn green ellipses drawn over the plot around the Super Gamers bars, 89% and 87%"
+      },
+      {
+        "key": "legend_beside_plot",
+        "figure_id": "f1",
+        "evidence": "MOBILE / CONSOLE / PC stacked in a left-hand column level with the plot"
+      },
+      {
+        "key": "footnote_marker",
+        "figure_id": "f1",
+        "evidence": "`GAMERS¹`, `SUPER GAMERS²`, `AVID GAMERS³`, `CASUAL GAMERS⁴` superscripts keyed to notes 1-4"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "`Sources: Activate analysis, Activate 2025 Consumer Technology & Media Research Study (n = 4,026)`"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "banner ends `U.S., 2025, % GAMERS¹ BY SEGMENT`; no axis carries a unit"
+      },
+      {
+        "key": "panel_background",
+        "figure_id": "f1",
+        "evidence": "plot area filled with a pale blue hexagon/plus pattern instead of white"
+      },
+      {
+        "key": "wrapped_category_labels",
+        "figure_id": "f1",
+        "evidence": "notes block under the plot wraps the four definitions across seven lines"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "icon_legend_entries",
+        "figure_id": "f1",
+        "evidence": "each legend row shows a phone / gamepad / monitor pictogram in a box left of MOBILE, CONSOLE, PC",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "name": "legend_swatch_as_underline_rule",
+        "figure_id": "f1",
+        "evidence": "series colour shown only as a coloured horizontal rule under each legend label, no colour patch",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "name": "handdrawn_ellipse_highlight",
+        "figure_id": "f1",
+        "evidence": "green marker-style ovals enclose whole groups of bars and their printed labels",
+        "affects": [
+          4
+        ]
+      },
+      {
+        "name": "heading_band_bold_plus_regular_runon",
+        "figure_id": "f1",
+        "evidence": "one blue band: bold title then regular `, U.S., 2025, % GAMERS¹ BY SEGMENT` continuing the same line",
+        "affects": [
+          4
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "93",
+        "figure_id": "f1",
+        "mark": "the SUPER GAMERS² MOBILE bar (leftmost, dark navy)",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "MOBILE",
+          "SUPER GAMERS²"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "82",
+        "figure_id": "f1",
+        "mark": "the SUPER GAMERS² CONSOLE bar (middle, mid blue)",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "CONSOLE",
+          "SUPER GAMERS²"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "89",
+        "figure_id": "f1",
+        "mark": "the SUPER GAMERS² PC bar (third, light teal)",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "PC",
+          "SUPER GAMERS²"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "89",
+        "figure_id": "f1",
+        "mark": "the AVID GAMERS³ MOBILE bar (dark navy)",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "MOBILE",
+          "AVID GAMERS³"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "56",
+        "figure_id": "f1",
+        "mark": "the AVID GAMERS³ CONSOLE bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "CONSOLE",
+          "AVID GAMERS³"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "70",
+        "figure_id": "f1",
+        "mark": "the AVID GAMERS³ PC bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "PC",
+          "AVID GAMERS³"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "87",
+        "figure_id": "f1",
+        "mark": "the CASUAL GAMERS⁴ MOBILE bar, circled in green",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "MOBILE",
+          "CASUAL GAMERS⁴"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "34",
+        "figure_id": "f1",
+        "mark": "the CASUAL GAMERS⁴ CONSOLE bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "CONSOLE",
+          "CASUAL GAMERS⁴"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "24",
+        "figure_id": "f1",
+        "mark": "the CASUAL GAMERS⁴ PC bar (rightmost, shortest)",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "PC",
+          "CASUAL GAMERS⁴"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      }
+    ],
+    "hardest_step": 3,
+    "hardest_step_why": "九个值全部印出，读数无碍；但 89% 出现两次，必须靠左侧图例的 MOBILE/PC 与分段名双标签才能区分。",
+    "examples": [
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "Blue band above the plot: bold \"SHARE OF GAMERS¹ USING EACH PLATFORM...LAST 12 MONTHS\" then regular \", U.S., 2025, % GAMERS¹ BY SEGMENT\"",
+        "why": "标题、地域年份与单位在同一条色带里连排，现有管线只能输出单一标题字符串。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "No vertical axis or ticks at all; only a baseline, with 93%, 82%, 89% printed above each bar",
+        "why": "整图无数值轴，数值只存在于柱顶外侧标签，需把标签位置作为独立样式维度生成。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "Green hand-drawn ovals encircling the three Super Gamers bars, the 89% Avid bar and the 87% Casual bar",
+        "why": "跨多根柱的手绘椭圆强调层，现有生成器无标注图层；应新增 emphasis_overlay 维度。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "Left column: device icons boxed beside MOBILE, CONSOLE, PC, each underlined by a rule in that series' colour",
+        "why": "图例为侧栏图标行、且颜色以下划线而非色块表示，需新增图例排版与色标形态维度。"
+      }
+    ]
+  }
+}

@@ -1,0 +1,248 @@
+{
+  "stem": "World_Inequality_Report_2026_p25",
+  "document": "World_Inequality_Report_2026",
+  "tags": "need_estimate",
+  "model": "gpt-5.6-sol",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 76.9,
+  "usage": {
+    "input_tokens": 8860,
+    "output_tokens": 5280,
+    "cache_read_tokens": 8857
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "**画出来要什么**\n\n单面板双系列折线图：10个倾斜的收入十分位标签、百分比纵轴、横纵网格、蓝色菱形与紫色方形点标记，以及图下图例。“Figure 17.”、主标题、副标题和单位均置于图上；下方另有“Interpretation.”及来源行。\n\n**定位一个值难在哪**\n\n例如 South Korea 的“P50–P60”值2.8未印在图上。纵轴主刻度相隔10个百分点，而5%容差仅±0.14个百分点，必须依靠点位进行很细的插值。\n\n**不确定的**\n\n所有给定数值都没有数据标签；8.0、5.8等具体归属依据点位、系列和给定值推定，无法从页面文字直接核实。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 17.",
+          "title": "Without redistribution, political inequality will increase",
+          "subtitle": "Political donations by income decile, % of total",
+          "unit_text": "% of total",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 10,
+        "marks": 20,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Percentage of total political donations by income decile",
+            "low": "0%",
+            "high": "60%",
+            "serves": "both lines"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "P0–P10",
+            "high": "P90–P100",
+            "serves": "both lines"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "P50–P60"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "South Korea"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "P50–P60",
+            "South Korea"
+          ],
+          "value": "2.8",
+          "value_source": "axis_read",
+          "why_hard": "Ten-point ticks; 5% tolerance is only 0.14 percentage point."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "“Sources and series: Cagé (2024).” appears below the figure."
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "The “France” and “South Korea” legend is centered below the plot."
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "“Political donations by income decile, % of total” appears above the plot."
+      },
+      {
+        "key": "rotated_axis_title",
+        "figure_id": "f1",
+        "evidence": "“Percentage of total political donations by income decile” runs vertically along the left axis."
+      },
+      {
+        "key": "rotated_x_ticks",
+        "figure_id": "f1",
+        "evidence": "Income-decile labels from “P0–P10” to “P90–P100” are diagonally rotated."
+      }
+    ],
+    "new_components": [
+      {
+        "name": "marker_shape_encodes_series",
+        "figure_id": "f1",
+        "evidence": "France uses blue diamonds; South Korea uses magenta squares along their lines.",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "name": "interpretation_caption",
+        "figure_id": "f1",
+        "evidence": "A paragraph beginning “Interpretation.” sits between the legend and source line.",
+        "affects": [
+          4
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "52.0",
+        "figure_id": "f1",
+        "mark": "the France point at P90–P100",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "P90–P100",
+          "France"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "57.0",
+        "figure_id": "f1",
+        "mark": "the South Korea point at P90–P100",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "P90–P100",
+          "South Korea"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "17.5",
+        "figure_id": "f1",
+        "mark": "the France point at P80–P90",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "P80–P90",
+          "France"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "16.5",
+        "figure_id": "f1",
+        "mark": "the South Korea point at P80–P90",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "P80–P90",
+          "South Korea"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "10.5",
+        "figure_id": "f1",
+        "mark": "the France point at P70–P80",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "P70–P80",
+          "France"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "8.2",
+        "figure_id": "f1",
+        "mark": "the South Korea point at P70–P80",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "P70–P80",
+          "South Korea"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "8.0",
+        "figure_id": "f1",
+        "mark": "the France point at P60–P70",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "P60–P70",
+          "France"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "5.8",
+        "figure_id": "f1",
+        "mark": "the France point at P50–P60",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "P50–P60",
+          "France"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "5.0",
+        "figure_id": "f1",
+        "mark": "the South Korea point at P60–P70",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "P60–P70",
+          "South Korea"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "2.8",
+        "figure_id": "f1",
+        "mark": "the South Korea point at P50–P60",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "P50–P60",
+          "South Korea"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "如2.8，5%仅±0.14个百分点；纵轴每格10个百分点且无数值标签，轴上插值难达容差。八个小值尤其困难。方形与菱形点有助系列关联，但不解决精度。页面没有表格。Figure 17. 需要10个类别与2个系列两个标签才能定位。标题上下文清楚。最难的是低值读取。数值未打印。2.8最严格。图例清晰。横轴标签均逐项显示。纵轴0%-60%。刻度10%。需亚刻度估读。故步骤2最难。标题和来源不阻塞。系列名称逐字可见。类别标签逐字可见。无面板歧义。无双轴。无值标签。结论明确。读图误差主导。无需猜上下文。最终判断为2。精度低于容差。特别是2.8。其容差很窄。纵轴主格太粗。点中心虽可见，仍不足可靠恢复一位小数。其他低值同理。定位键并不困难。表格若生成，键可直接关联。上下文有粗体Interpretation.及Figure标题。故步骤3、4较弱。步骤1依赖导出是否生成表，但页面结构清晰。步骤2由图本身决定。使用给定值也不能证明页面可读。评分要求搜索解析结果。小数无法从文字OCR得到。只能视觉估算。十个百分点格距与0.14容差差约71倍。由此最困难。以上。",
+    "examples": []
+  }
+}

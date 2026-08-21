@@ -1,0 +1,297 @@
+{
+  "stem": "employment_and_social_developments_in_europe_esde_2024_report_p100",
+  "document": "employment_and_social_developments_in_europe_esde_2024_report",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "repeat",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 78.8,
+  "usage": {
+    "input_tokens": 5358,
+    "output_tokens": 11129,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n\n本页包含一个折线图（Chart A3.1）和一个文本框（Box A3.3）。\n生成该折线图需要：\n1. **坐标轴与网格线**：Y轴包含负值区间（至-20000），使用10000的大间隔，且仅绘制水平虚线网格；X轴需要支持时间序列，带有次级（无标签）刻度线，标签仅每两年显示一次（如2021、2023）。\n2. **折线样式**：两条平滑的折线，且跨越零点，在零轴上下均有分布。\n3. **图例与排版**：底部居中的图例，侧边旋转的Y轴标题，图表底部带有详细的来源说明和下载链接文本（\"Click here to download chart.\"）。\n\nBox A3.3则需要生成器支持将大段文字、复杂的数学公式（包含分数、上下标）渲染为一个带边框和标题的独立浮动模块，不属于常规的数据图表范畴。\n\n### 定位一个值难在哪\n\n以值 `3800`（2021年Net contributors）为例，难点在于**数值读取精度（Step 2）**。该图表没有任何数据标签，必须依靠Y轴读取。Y轴的刻度间距高达10000，而3800的5%容差仅为190。在这样的比例尺下，190所对应的像素高度极小，仅凭视觉根本无法将其与3500或4000区分开来。像2022或2030年这样的数据点，其X轴标签甚至是隐藏的，进一步增加了精确定位的难度。\n\n### 不确定的\n\n折线在年份刻度之间是否代表连续时间的数据插值，还是仅为年度离散数据的连接线，在视觉上存在歧义。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Chart A3.1",
+          "title": "Employment increases for regions not receiving ESF+ investment due to spillover effects",
+          "subtitle": "Absolute change in employment following ESF+ investment in skills",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 19,
+        "marks": 38,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Absolute change in employment",
+            "low": "-20000",
+            "high": "40000",
+            "serves": "both lines"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "2021",
+            "high": "2039",
+            "serves": "both lines"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Net contributors"
+          },
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2021"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Net receivers",
+            "2030"
+          ],
+          "value": "-13000",
+          "value_source": "axis_read",
+          "why_hard": "Interpolating a value on a 10000-unit grid to a 5% tolerance is visually impossible."
+        }
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "Box A3.3:",
+          "title": "Calculating Income Stabilisation Coefficients",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "inside"
+        },
+        "type": "unreadable",
+        "type_other": "block of body text and math equation",
+        "panels": 1,
+        "series": 1,
+        "categories": 1,
+        "marks": 1,
+        "values_printed": "none",
+        "axes": [],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "not_shown",
+            "example": "text"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "text"
+          ],
+          "value": "",
+          "value_source": "not_readable",
+          "why_hard": "This is a descriptive text box, not a data chart."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "negative_values",
+        "figure_id": "f1",
+        "evidence": "the y axis ranges down to -20000"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "only horizontal dashed grid lines are drawn"
+      },
+      {
+        "key": "rotated_axis_title",
+        "figure_id": "f1",
+        "evidence": "\"Absolute change in employment\" is set vertically along the y axis"
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "the legend sits below the x axis"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "\"Source: JRC calculations based on RHOMOLO model.\" below the chart"
+      },
+      {
+        "key": "data_link_below_figure",
+        "figure_id": "f1",
+        "evidence": "\"Click here to download chart.\" under the source line"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "sparse_tick_labels",
+        "figure_id": "f1",
+        "evidence": "the x axis has unlabelled minor ticks for years between the labels",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "3800",
+        "figure_id": "f1",
+        "mark": "the 2021 Net contributors point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Net contributors",
+          "2021"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "15000",
+        "figure_id": "f1",
+        "mark": "the 2021 Net receivers point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Net receivers",
+          "2021"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "4300",
+        "figure_id": "f1",
+        "mark": "the 2022 Net contributors point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Net contributors",
+          "2022"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "31000",
+        "figure_id": "f1",
+        "mark": "the 2023 Net receivers point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Net receivers",
+          "2023"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "35500",
+        "figure_id": "f1",
+        "mark": "the 2025 Net receivers point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Net receivers",
+          "2025"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-2000",
+        "figure_id": "f1",
+        "mark": "the 2029 Net contributors point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Net contributors",
+          "2029"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-13000",
+        "figure_id": "f1",
+        "mark": "the 2030 Net receivers point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Net receivers",
+          "2030"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "11000",
+        "figure_id": "f1",
+        "mark": "the 2039 Net contributors point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Net contributors",
+          "2039"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "11000",
+        "figure_id": "f1",
+        "mark": "the 2037 Net receivers point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Net receivers",
+          "2037"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "13800",
+        "figure_id": "f1",
+        "mark": "the 2039 Net receivers point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Net receivers",
+          "2039"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "以值3800为例，需在跨度10000的网格中依靠刻度线进行目测。其5%容差仅为190，视觉高度差极小，无法精确读取。",
+    "examples": [
+      {
+        "gap": "P1",
+        "figure_id": "f1",
+        "quote": "Net contributors in 2021 reads 3800 against a 10000 unit tick spacing",
+        "why": "坐标轴刻度间距极大，依靠坐标轴读取数值绝对无法满足5%的容差，需要引入逐标记的精度评估机制。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "the y axis ranges from -20000 to 40000 with a zero line drawn",
+        "why": "目前的生成器不一定支持负值Y轴和跨越零点的折线，也无法保证正确渲染零基线的视觉层级。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "x axis has minor ticks for years in between the labels 2021, 2023",
+        "why": "生成器需要支持时间轴上的无标签次级刻度线，以便在横轴数据点密集时保持年份对齐准确且不重叠。"
+      }
+    ]
+  }
+}

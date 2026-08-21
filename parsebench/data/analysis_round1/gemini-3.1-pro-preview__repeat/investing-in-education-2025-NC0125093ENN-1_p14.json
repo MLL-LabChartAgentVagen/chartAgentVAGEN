@@ -1,0 +1,214 @@
+{
+  "stem": "investing-in-education-2025-NC0125093ENN-1_p14",
+  "document": "investing-in-education-2025-NC0125093ENN-1",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "repeat",
+  "effort": "high",
+  "dpi": 150,
+  "seconds": 49.9,
+  "usage": {
+    "input_tokens": 4433,
+    "output_tokens": 7444,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "本页包含两部分：Figure 6（折线图）与Figure 7（展示为图表的数据表）。Figure 6绘制了2007-2023年间教育类支出的名义与实际演变指数，y轴起点为100，网格线间距为10，图例位于底部，所有数据点均未标出具体数值。Figure 7是一张带有斑马线及含单位（如`% of total`）双层表头的表格，部分年份表头左上角甚至带有Excel中的绿色报错小三角。\n\n本页提取的难点在于步骤2（精度容差）：提示词给出的所有测算值全部分布在Figure 6未标数值的折线上。由于网格线只提供了10为单位的刻度，对于如116、159等偏离网格线且缺少视觉参考的精准个位数值，视觉系统极难准确估算，且无法保证满足容差要求。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 6.",
+          "title": "Evolution of nominal and real public expenditure on education in the EU-27 (index 2007=100)",
+          "subtitle": "",
+          "unit_text": "index 2007=100",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 17,
+        "marks": 34,
+        "values_printed": "none"
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "Figure 7.",
+          "title": "Public expenditure by function (2019-2023)",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "unreadable",
+        "type_other": "data table",
+        "panels": 1,
+        "series": 10,
+        "categories": 6,
+        "marks": 60,
+        "values_printed": "all"
+      }
+    ],
+    "components": [
+      {
+        "key": "multi_figure_page",
+        "figure_id": "page",
+        "evidence": "Figure 6 and Figure 7 appear on the same page"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "dashed horizontal grid lines across the panel"
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "the Nominal and Real legend sits below the x-axis"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "Notes: and Source: lines printed under the chart"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "index 2007=100 is in the figure title"
+      },
+      {
+        "key": "rebased_index_values",
+        "figure_id": "f1",
+        "evidence": "the title states index 2007=100"
+      },
+      {
+        "key": "axis_starts_above_zero",
+        "figure_id": "f1",
+        "evidence": "the y-axis lowest tick is 100, not zero"
+      },
+      {
+        "key": "data_table_as_figure",
+        "figure_id": "f2",
+        "evidence": "numbered as Figure 7 but presents a tabular grid"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "excel_warning_triangles",
+        "figure_id": "f2",
+        "evidence": "green triangles in top left of year headers",
+        "affects": []
+      },
+      {
+        "name": "zebra_striped_table_rows",
+        "figure_id": "f2",
+        "evidence": "alternating white and purple row backgrounds",
+        "affects": []
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "100",
+        "figure_id": "f1",
+        "mark": "the 2007 Nominal point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2007",
+          "Nominal"
+        ]
+      },
+      {
+        "value": "100",
+        "figure_id": "f1",
+        "mark": "the 2007 Real point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2007",
+          "Real"
+        ]
+      },
+      {
+        "value": "110",
+        "figure_id": "f1",
+        "mark": "the 2010 Nominal point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2010",
+          "Nominal"
+        ]
+      },
+      {
+        "value": "116",
+        "figure_id": "f1",
+        "mark": "the 2015 Nominal point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2015",
+          "Nominal"
+        ]
+      },
+      {
+        "value": "105",
+        "figure_id": "f1",
+        "mark": "the 2015 Real point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2015",
+          "Real"
+        ]
+      },
+      {
+        "value": "130",
+        "figure_id": "f1",
+        "mark": "the 2019 Nominal point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2019",
+          "Nominal"
+        ]
+      },
+      {
+        "value": "109",
+        "figure_id": "f1",
+        "mark": "the 2019 Real point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2019",
+          "Real"
+        ]
+      },
+      {
+        "value": "148",
+        "figure_id": "f1",
+        "mark": "the 2022 Nominal point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2022",
+          "Nominal"
+        ]
+      },
+      {
+        "value": "159",
+        "figure_id": "f1",
+        "mark": "the 2023 Nominal point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2023",
+          "Nominal"
+        ]
+      },
+      {
+        "value": "115",
+        "figure_id": "f1",
+        "mark": "the 2023 Real point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2023",
+          "Real"
+        ]
+      }
+    ],
+    "hardest_step": 2
+  }
+}

@@ -1,0 +1,216 @@
+{
+  "stem": "b263dc5d-en_p167",
+  "document": "b263dc5d-en",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "no_vocab",
+  "effort": "high",
+  "dpi": 150,
+  "seconds": 43.6,
+  "usage": {
+    "input_tokens": 2242,
+    "output_tokens": 6054,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "本页包含一个由两个垂直排列面板组成的柱状图（Figure 4.10），分别展示生活满意度和健康方面的差异。\n\n图表生成器需要支持：\n1. **面板标题在图表内**：面板标题（如“A. Life satisfaction”）以蓝色背景框的形式叠加在图表顶部边框中心。\n2. **垂直高亮带**：在“OECD average”类别后方有贯穿整个绘图区的浅蓝色垂直高亮背景带。\n3. **基于统计显著性的颜色映射**：深色柱子表示在5%水平上统计显著，浅色表示不显著（通过图注说明，无独立图例）。\n4. **类别标签垂直放置**：X轴国家标签顺时针旋转90度。\n5. **双向柱状图**：Y轴包含负值（如Panel A的Israel）。\n\n由于Y轴网格线间隔为5，且所有具体数值均未直接标注在图上，肉眼读取精确到1个单位（如24、27、13）的数值非常困难，极易超出容差范围，这是本页解析的最大难点。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 4.10.",
+          "title": "Relationship between numeracy and individual well-being",
+          "subtitle": "Difference in likelihood of reporting positive outcomes (high proficiency minus low proficiency)",
+          "unit_text": "Percentage points",
+          "placement": "above"
+        },
+        "type": "bar",
+        "type_other": "",
+        "panels": 2,
+        "series": 1,
+        "categories": 32,
+        "marks": 64,
+        "values_printed": "none"
+      }
+    ],
+    "components": [
+      {
+        "key": "category_labels_vertical",
+        "figure_id": "f1",
+        "evidence": "country names on the x-axis are rotated 90 degrees",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "y_axis_title_top",
+        "figure_id": "f1",
+        "evidence": "'Percentage points' is placed at the top of the y-axis",
+        "affects": [
+          4
+        ]
+      },
+      {
+        "key": "grid_lines_horizontal_solid",
+        "figure_id": "f1",
+        "evidence": "solid grey lines run horizontally from each y-axis tick",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "key": "baseline_zero_thick",
+        "figure_id": "f1",
+        "evidence": "the horizontal line at 0 is drawn thicker and black",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "key": "y_axis_ticks_outside",
+        "figure_id": "f1",
+        "evidence": "small tick marks extend outwards to the left of the y-axis",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "key": "mark_outline_black",
+        "figure_id": "f1",
+        "evidence": "all bars are drawn with a thin black border",
+        "affects": []
+      }
+    ],
+    "new_components": [
+      {
+        "name": "panel_title_overlapping_border",
+        "figure_id": "f1",
+        "evidence": "'A. Life satisfaction' sits in a blue box overlapping the top axis",
+        "affects": [
+          1,
+          3
+        ]
+      },
+      {
+        "name": "highlight_band_vertical",
+        "figure_id": "f1",
+        "evidence": "a light blue vertical band highlights the 'OECD average' category",
+        "affects": [
+          4
+        ]
+      },
+      {
+        "name": "mark_color_significance",
+        "figure_id": "f1",
+        "evidence": "darker vs lighter blue bars show statistical significance, explained in note",
+        "affects": [
+          4
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "24",
+        "figure_id": "f1",
+        "mark": "the Croatia bar in Panel A",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. Life satisfaction",
+          "Croatia"
+        ]
+      },
+      {
+        "value": "11",
+        "figure_id": "f1",
+        "mark": "the OECD average bar in Panel B",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "B. Health",
+          "OECD average"
+        ]
+      },
+      {
+        "value": "-1",
+        "figure_id": "f1",
+        "mark": "the Israel bar in Panel A",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. Life satisfaction",
+          "Israel"
+        ]
+      },
+      {
+        "value": "27",
+        "figure_id": "f1",
+        "mark": "the Italy bar in Panel B",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "B. Health",
+          "Italy"
+        ]
+      },
+      {
+        "value": "11",
+        "figure_id": "f1",
+        "mark": "the Poland* bar in Panel A",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. Life satisfaction",
+          "Poland*"
+        ]
+      },
+      {
+        "value": "1",
+        "figure_id": "f1",
+        "mark": "the Poland* bar in Panel B",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "B. Health",
+          "Poland*"
+        ]
+      },
+      {
+        "value": "18",
+        "figure_id": "f1",
+        "mark": "the Portugal bar in Panel A",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. Life satisfaction",
+          "Portugal"
+        ]
+      },
+      {
+        "value": "13",
+        "figure_id": "f1",
+        "mark": "the England (UK) bar in Panel A",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. Life satisfaction",
+          "England (UK)"
+        ]
+      },
+      {
+        "value": "11",
+        "figure_id": "f1",
+        "mark": "the Latvia bar in Panel A",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. Life satisfaction",
+          "Latvia"
+        ]
+      },
+      {
+        "value": "3",
+        "figure_id": "f1",
+        "mark": "the Finland bar in Panel B",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "B. Health",
+          "Finland"
+        ]
+      }
+    ],
+    "hardest_step": 2
+  }
+}

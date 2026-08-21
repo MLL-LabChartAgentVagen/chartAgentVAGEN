@@ -1,0 +1,250 @@
+{
+  "stem": "deloitte-2025-global-automotive-consumer-study-january-2025_p24",
+  "document": "deloitte-2025-global-automotive-consumer-study-january-2025",
+  "tags": "untagged",
+  "model": "gemini-3.1-pro-preview",
+  "control": "repeat",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 67.8,
+  "usage": {
+    "input_tokens": 5325,
+    "output_tokens": 9362,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n\n生成器需要能够处理多图表页面的无缝垂直排版，其中不仅包含不同种类的图表（图1为水平100%堆叠条形图，图2为标准垂直柱状图），还穿插了段落级别的正文。一个核心的设计特点是，**整个页面的图表彻底去除了数值轴（连轴线和刻度线也没有保留）**，所有的数值指标（如“51%”、“70%”）都是完全通过内部数据标签直接印刷在各个柱状图或其堆叠分段之上的。为了重现此布局，生成器需要支持“无轴线+纯标签”的绘图模式，并允许图例紧贴在图表底部（如左侧图例横向排列）。此外，还需要将没有图号前缀的加粗绿色标题独立放置在图表正上方。\n\n### 定位一个值难在哪\n\n以图1中定位印在蓝色分段上的“51%”为例，难点在于**完全依赖于图形的颜色属性和位置关系映射**。由于没有底部的X数值轴提供坐标参考系，解析器只能通过OCR识别出柱状条带内部的数字，然后识别该色块的颜色特征，再去下方图例区查表比对获得“Every day”，并横向关联到左侧分类轴的“India”。这种在空间上跨越多个维度没有任何基准参考线辅助的查找，很容易导致行列绑定错误（步骤3）。\n\n### 不确定的\n\n图1中诸如中国条带内的“2%”标签非常小且边缘紧贴分段边界，这种拥挤排版在自动化提取时是否会造成跨分段误读，存在一定不确定性。图2底部X轴虽有文本，但缺乏明确的基准分隔线标识出每个柱子的精准根基。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "Frequency of driving personal vehicle",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "stacked_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 6,
+        "categories": 8,
+        "marks": 48,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "left",
+            "role": "category",
+            "unit_text": "",
+            "low": "India",
+            "high": "Japan",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "India"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Every day"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "India",
+            "Every day"
+          ],
+          "value": "51%",
+          "value_source": "printed",
+          "why_hard": "No value axis; associating the value requires mapping segment color directly to the legend."
+        }
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "",
+          "title": "Willingness to give up vehicle ownership in favor of MaaS (% somewhat willing/willing/very willing) – 18- to 34-year-old respondents",
+          "subtitle": "",
+          "unit_text": "% somewhat willing/willing/very willing",
+          "placement": "above"
+        },
+        "type": "bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 1,
+        "categories": 8,
+        "marks": 8,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "India",
+            "high": "Germany",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "India"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "India"
+          ],
+          "value": "70%",
+          "value_source": "printed",
+          "why_hard": ""
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "stacked_bar",
+        "figure_id": "f1",
+        "evidence": "segments stacked horizontally inside one bar"
+      },
+      {
+        "key": "pct_stacked",
+        "figure_id": "f1",
+        "evidence": "every stack reaches the exact same full width to 100%"
+      },
+      {
+        "key": "horizontal_bars",
+        "figure_id": "f1",
+        "evidence": "categories sit on the left y axis and grow to the right"
+      },
+      {
+        "key": "no_value_axis",
+        "figure_id": "page",
+        "evidence": "no value axis line or ticks are drawn on either figure"
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "the legend sits below the stacked plot area"
+      },
+      {
+        "key": "multi_figure_page",
+        "figure_id": "page",
+        "evidence": "two separate charts on the page with distinct headings"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "page",
+        "evidence": "Note: Percentages may not add up... Sample size..."
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f2",
+        "evidence": "(% somewhat willing/willing/very willing) in figure title"
+      },
+      {
+        "key": "value_label_inside",
+        "figure_id": "page",
+        "evidence": "numbers like 51% are printed inside the bars or segments"
+      }
+    ],
+    "new_components": [],
+    "spot_checks": [
+      {
+        "value": "51%",
+        "figure_id": "f1",
+        "mark": "the India Every day segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "India",
+          "Every day"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "23%",
+        "figure_id": "f1",
+        "mark": "the Japan Every day segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Japan",
+          "Every day"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "11%",
+        "figure_id": "f1",
+        "mark": "the India 1-2 times per week segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "India",
+          "1-2 times per week"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "12%",
+        "figure_id": "f1",
+        "mark": "the UK Once every few months segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "UK",
+          "Once every few months"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "25%",
+        "figure_id": "f1",
+        "mark": "the India 3-4 times per week segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "India",
+          "3-4 times per week"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "32%",
+        "figure_id": "f1",
+        "mark": "the Japan Once every few months segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Japan",
+          "Once every few months"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      }
+    ],
+    "hardest_step": 3,
+    "hardest_step_why": "整个页面的图表都没有绘制数值轴，提取51%等数值必须直接读取柱体上的文本。由于缺乏数值坐标系辅助验证，解析器将离散文本与图例颜色正确映射极为困难。",
+    "examples": [
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "no ticks or line on the value axis",
+        "why": "图表完全去除了底层数值轴线和刻度，只保留条带内部的数字标签，生成器需要支持这种无轴线的极端极简展示风格。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "Frequency of driving personal vehicle",
+        "why": "主标题悬浮在图表上方且没有默认的图号前缀。生成器需要将标题区作为一个独立的结构字段来自由控制放置和排版。"
+      }
+    ]
+  }
+}

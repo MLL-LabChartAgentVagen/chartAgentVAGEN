@@ -1,0 +1,385 @@
+{
+  "stem": "TRS241_Web_p88",
+  "document": "TRS241_Web",
+  "tags": "need_estimate",
+  "model": "claude-opus-5",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "seconds": 151.9,
+  "usage": {
+    "input_tokens": 12846,
+    "output_tokens": 11426,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "**画出来要什么**\n一页一个编号图 FIG.2.10,但由两组异质图形组成:上排四个单色阴影(hatch)饼图,面板标题为「1969」「1979」「2000」「2015」,六个扇区只用代码「EI」「MI」「C」「A」「E」「S」加箭头引出线标在圆外,数值全印(如「30.7%」);下方一个双值轴折线图,左轴「Overall GDP (10⁹ DA 1979)」0–700,右轴「Per capita GDP (10³ DA 1979)」0–28,时间轴「Years」刻度 1969, 1974, 1979, **1985**, 1990…2015(1979→1985 间隔为 6 年,非等距)。无图例:线名「Overall GDP (1)」「GDP per capita」直接写在线旁,一条实线一条点划线;图内还有 5 个带箭头的增长率注记「(7.97 %)」「(4.85 %)」和脚注「(1) Average annual growth rate…」。图号、标题与代码释义全部在图下方。\n\n**定位一个值难在哪**\n「12.5」在页面上出现两次:1979 饼的 MI 与 2000 饼的 EI。要唯一定位必须同时拿到面板年份和扇区代码,而代码含义只在图下一行「MI: Manufacturing industries.」给出;解析器若丢掉面板标题,两行会互相冒充。\n\n**不确定的**\n折线的实际数据点位置(只在端点画了菱形/圆点标记),以及 2000 年人均 GDP 具体读数;另外这四饼+一线究竟应算一图五面板还是两图,页面只给了一个图号一条题注。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "none"
+        },
+        "type": "pie",
+        "type_other": "",
+        "panels": 4,
+        "series": 6,
+        "categories": 6,
+        "marks": 24,
+        "values_printed": "all",
+        "axes": [],
+        "key_parts": [
+          {
+            "role": "panel",
+            "label_source": "panel_title",
+            "example": "1979"
+          },
+          {
+            "role": "category",
+            "label_source": "inline_label",
+            "example": "MI"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "1979",
+            "MI"
+          ],
+          "value": "12.5%",
+          "value_source": "printed",
+          "why_hard": "12.5% also appears as EI in the 2000 pie; slice codes defined only in the caption below"
+        }
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "FIG.2.10.",
+          "title": "Energy and nuclear power planning study for Algeria: past and future trends in overall and per capita GDP and distribution by sector (in Algerian dinars (DA)).",
+          "subtitle": "A: Agriculture. MI: Manufacturing industries. C: Construction. E: Energy. EI: Extractive industries. S: Services (including transport).",
+          "unit_text": "(in Algerian dinars (DA))",
+          "placement": "below"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 10,
+        "marks": 20,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Overall GDP (10⁹ DA 1979)",
+            "low": "0",
+            "high": "700",
+            "serves": "only the solid Overall GDP line"
+          },
+          {
+            "side": "right",
+            "role": "value",
+            "unit_text": "Per capita GDP (10³ DA 1979)",
+            "low": "0",
+            "high": "28",
+            "serves": "only the dash-dot GDP per capita line"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "Years",
+            "low": "1969",
+            "high": "2015",
+            "serves": "both lines"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "series",
+            "label_source": "inline_label",
+            "example": "GDP per capita"
+          },
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2000"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "GDP per capita",
+            "2000"
+          ],
+          "value": "≈12.4 (10³ DA 1979)",
+          "value_source": "axis_read",
+          "why_hard": "right-axis ticks every 4 units, curve flat and unmarked; reader must know which of two axes"
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "small_multiples_4",
+        "figure_id": "f1",
+        "evidence": "four identical pies in a row titled 1969, 1979, 2000, 2015"
+      },
+      {
+        "key": "panel_title_per_panel",
+        "figure_id": "f1",
+        "evidence": "'1969', '1979', '2000', '2015' printed above each pie"
+      },
+      {
+        "key": "value_label_outside",
+        "figure_id": "f1",
+        "evidence": "'EI 30.7%', 'S 38.8%' set outside the circle on arrow leader lines"
+      },
+      {
+        "key": "dual_axis",
+        "figure_id": "f2",
+        "evidence": "left 'Overall GDP (10⁹ DA 1979)' 0-700, right 'Per capita GDP (10³ DA 1979)' 0-28"
+      },
+      {
+        "key": "rotated_axis_title",
+        "figure_id": "f2",
+        "evidence": "both value-axis titles set vertically along the left and right axes"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f2",
+        "evidence": "axis titles carry '(10⁹ DA 1979)' and '(10³ DA 1979)'"
+      },
+      {
+        "key": "annotation_callout",
+        "figure_id": "f2",
+        "evidence": "arrowed notes '(7.97 %)', '(7.3 %)', '(6.7 %)', '(6.2 %)', '(4.85 %)' drawn over the curve"
+      },
+      {
+        "key": "inline_series_labels",
+        "figure_id": "f2",
+        "evidence": "'Overall GDP (1)' and 'GDP per capita' written beside the two lines; no legend"
+      },
+      {
+        "key": "footnote_marker",
+        "figure_id": "f2",
+        "evidence": "'Overall GDP (1)' with note '(1) Average annual growth rate of overall GDP compared to 1979 (in brackets).'"
+      },
+      {
+        "key": "dashed_line_series",
+        "figure_id": "f2",
+        "evidence": "Overall GDP solid, GDP per capita drawn as a dash-dot line"
+      },
+      {
+        "key": "legend_inside_plot",
+        "figure_id": "f2",
+        "evidence": "the '(1)' explanatory note sits inside the plot frame above the x axis"
+      },
+      {
+        "key": "heterogeneous_panel_types",
+        "figure_id": "page",
+        "evidence": "one caption 'FIG.2.10.' covers four pies and one dual-axis line panel"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "pie_small_multiples_over_time",
+        "figure_id": "f1",
+        "evidence": "four pies whose panel titles are years 1969, 1979, 2000, 2015 sharing one sector code set",
+        "affects": [
+          2,
+          3
+        ]
+      },
+      {
+        "name": "leader_line_labels_outside_pie",
+        "figure_id": "f1",
+        "evidence": "each '%' label joined to its slice by a long arrow, some arrows crossing the circle",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "name": "abbrev_key_in_caption",
+        "figure_id": "page",
+        "evidence": "'A: Agriculture. MI: Manufacturing industries. C: Construction.' defines slice codes only below the figure",
+        "affects": [
+          3,
+          4
+        ]
+      },
+      {
+        "name": "irregular_time_axis_spacing",
+        "figure_id": "f2",
+        "evidence": "x ticks 1969, 1974, 1979, 1985, 1990 - a 6-year gap among 5-year gaps",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "name": "hatch_fill_encodes_series",
+        "figure_id": "f1",
+        "evidence": "monochrome slices distinguished by hatching, cross-hatch and dots; no colour, no legend",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "30.7",
+        "figure_id": "f1",
+        "mark": "the EI slice of the 1969 pie",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "1969",
+          "EI"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "38.8",
+        "figure_id": "f1",
+        "mark": "the S slice of the 1969 pie",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "1969",
+          "S"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "6.1",
+        "figure_id": "f1",
+        "mark": "the A slice of the 1979 pie",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "1979",
+          "A"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "12.3",
+        "figure_id": "f1",
+        "mark": "the C slice of the 1979 pie",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "1979",
+          "C"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "19.6",
+        "figure_id": "f1",
+        "mark": "the MI slice of the 2000 pie",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "2000",
+          "MI"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "7.1",
+        "figure_id": "f1",
+        "mark": "the E slice of the 2000 pie",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "2000",
+          "E"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "20.5",
+        "figure_id": "f1",
+        "mark": "the C slice of the 2015 pie",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "2015",
+          "C"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "41.2",
+        "figure_id": "f1",
+        "mark": "the S slice of the 2015 pie",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "2015",
+          "S"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "200",
+        "figure_id": "f2",
+        "mark": "the '200' tick on the left axis; the Overall GDP curve crosses 200 near 1988, no printed point",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Overall GDP (10⁹ DA 1979)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "12.5",
+        "figure_id": "f1",
+        "mark": "the MI slice of the 1979 pie (the EI slice of the 2000 pie also reads 12.5%)",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "1979",
+          "MI"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      }
+    ],
+    "hardest_step": 3,
+    "hardest_step_why": "饼图数值全印,但12.5%在1979-MI与2000-EI各出现一次;必须同时带面板年份与只在题注释义的代码才能唯一定位。",
+    "examples": [
+      {
+        "gap": "P9",
+        "figure_id": "f2",
+        "quote": "left axis 'Overall GDP (10⁹ DA 1979)' 0-700, right axis 'Per capita GDP (10³ DA 1979)' 0-28",
+        "why": "同一面板两条不同轴的线,读数必须记录轴与线型,现流水线无此键。"
+      },
+      {
+        "gap": "P2",
+        "figure_id": "f1",
+        "quote": "four pies titled 1969, 1979, 2000, 2015, each with slices labelled EI, MI, C, A, E, S",
+        "why": "同一代码在四个面板重复,面板年份必须进入键,否则12.5%无法唯一。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f2",
+        "quote": "FIG.2.10. Energy and nuclear power planning study for Algeria: past and future trends in overall and per capita GDP and distribution by sector",
+        "why": "图号、标题、单位与代码释义全在图下方一整块,现无法拆成独立字段并放在表下。"
+      },
+      {
+        "gap": "P8",
+        "figure_id": "f1",
+        "quote": "slices filled with hatching, cross-hatch and stipple; no legend anywhere on the figure",
+        "why": "单色阴影承担系列身份,只靠引出线命名,生成器只会画彩色带图例的饼。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f2",
+        "quote": "x ticks read 1969, 1974, 1979, 1985, 1990, 1995, 2000, 2005, 2010, 2015",
+        "why": "时间刻度间距不等(1979→1985为6年),需要可控的刻度格式维度。"
+      }
+    ]
+  }
+}

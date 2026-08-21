@@ -1,0 +1,297 @@
+{
+  "stem": "deloitte-2025-global-automotive-consumer-study-january-2025_1_p20",
+  "document": "deloitte-2025-global-automotive-consumer-study-january-2025_1",
+  "tags": "untagged",
+  "model": "gemini-3.1-pro-preview",
+  "control": "no_vocab",
+  "effort": "high",
+  "dpi": 150,
+  "seconds": 22.5,
+  "usage": {
+    "input_tokens": 3168,
+    "output_tokens": 2617,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n两个水平堆积条形图，无外框和背景线。标题很长，起概括说明作用。第一张图实际上有两个并排的独立面板，各自带有不同标题，共用一部分但不完全相同的Y轴类别标签。Y轴类别文字右对齐。图形没有X轴，值直接印在条形内部或者旁边（第一张图），以及印在第二张图的各段条形上。\n\n### 定位一个值难在哪\n定位 `82` 需要关联它所在的行类别 `India` 和它的颜色对应的图例 `Beneficial`。第二图的标题没有编号，只有加粗的长说明文字和绿色的副标题。由于图表本身没有明确的值轴和刻度，如果生成出来的 markdown 表格丢失了图例或分类标签的关联关系，将很难判断这个值属于哪一项。第一图分为左右两部分，各自拥有独立的类别集和不同的长标题。\n\n### 不确定的\n图一顶部的加粗文本是否应算作整个图表的标题，还是仅仅为导语文本。图一实际上更像是左右两张独立的条形图并排摆放，由于它们共用的类别并没有在中间而是在各自的左侧，这到底是算单面板还是多面板。第二图的标题是否包含前面加粗的整段长句。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "Consumers surveyed in both India and the United Kingdom are more concerned with the idea of an autonomous vehicle fleet when compared to surveyed consumers in Germany, Japan, or China.",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "bar",
+        "type_other": "",
+        "panels": 2,
+        "series": 1,
+        "categories": 7,
+        "marks": 14,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "left",
+            "role": "category",
+            "unit_text": "",
+            "low": "India",
+            "high": "Germany",
+            "serves": "left panel bars"
+          },
+          {
+            "side": "left",
+            "role": "category",
+            "unit_text": "",
+            "low": "India",
+            "high": "China",
+            "serves": "right panel bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "panel",
+            "label_source": "panel_title",
+            "example": "Percentage of consumers concerned about fully autonomous robotaxi services operating where they live"
+          },
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "India"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Percentage of consumers concerned about commercial vehicles operating in a fully autonomous mode on the highway",
+            "Rep. of Korea"
+          ],
+          "value": "65%",
+          "value_source": "printed",
+          "why_hard": "Panel title is long text forming part of a sentence with bolded keywords"
+        }
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "",
+          "title": "More than three quarters of surveyed consumers in India and China believe the addition of artificial intelligence in vehicle systems is beneficial. On the other hand, a quarter of surveyed consumers in Germany, the United States, and the United Kingdom remain skeptical about the technology.",
+          "subtitle": "Addition of artificial intelligence in vehicle systems",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "stacked_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 3,
+        "categories": 7,
+        "marks": 21,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "left",
+            "role": "category",
+            "unit_text": "",
+            "low": "India",
+            "high": "Germany",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "India"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Beneficial"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "China",
+            "Neutral"
+          ],
+          "value": "18%",
+          "value_source": "printed",
+          "why_hard": ""
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "horizontal_stacked_bar",
+        "figure_id": "f2",
+        "evidence": "Figure 2 draws horizontal stacked bars",
+        "affects": [
+          1
+        ]
+      },
+      {
+        "key": "printed_values_inside_bars",
+        "figure_id": "page",
+        "evidence": "percentage numbers are printed inside the bar segments in both figures",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "key": "no_value_axis",
+        "figure_id": "page",
+        "evidence": "neither figure has a horizontal axis with numerical ticks",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "key": "side_by_side_panels_different_categories",
+        "figure_id": "f1",
+        "evidence": "two panels side by side, left has 7 categories, right has 7 but in different order and one missing",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "long_paragraph_heading",
+        "figure_id": "page",
+        "evidence": "the main titles for both figures are long descriptive paragraphs",
+        "affects": [
+          4
+        ]
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f2",
+        "evidence": "the legend with 'Not benefical', 'Neutral', 'Beneficial' is placed below the bars",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "footnotes_below_plot",
+        "figure_id": "page",
+        "evidence": "text like 'Note: Percentages may not add up...' at the bottom of the page and under first figure",
+        "affects": [
+          4
+        ]
+      },
+      {
+        "key": "panel_title_with_bold_text",
+        "figure_id": "f1",
+        "evidence": "panel titles contain inline bolding like 'fully autonomous robotaxi services'",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "new_components": [
+      {
+        "name": "inline_bolding_in_panel_titles",
+        "figure_id": "f1",
+        "evidence": "panel titles have selective bolding to emphasize concepts",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "82",
+        "figure_id": "f2",
+        "mark": "India, Beneficial segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "India",
+          "Beneficial"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "13",
+        "figure_id": "f2",
+        "mark": "India, Neutral segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "India",
+          "Neutral"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "77",
+        "figure_id": "f2",
+        "mark": "China, Beneficial segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "China",
+          "Beneficial"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "45",
+        "figure_id": "f2",
+        "mark": "US, Beneficial segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "US",
+          "Beneficial"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "41",
+        "figure_id": "f2",
+        "mark": "Germany, Beneficial segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Germany",
+          "Beneficial"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "31",
+        "figure_id": "f2",
+        "mark": "UK, Neutral segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "UK",
+          "Neutral"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      }
+    ],
+    "hardest_step": 4,
+    "hardest_step_why": "图表的标题都是长句子，且没有明确的编号，在解析出来的markdown中，这种上下文可能不会被识别为表格的标题或上下文结构，导致表格外文不满足第四步的条件。",
+    "examples": [
+      {
+        "gap": "P7",
+        "figure_id": "page",
+        "quote": "More than three quarters of surveyed consumers in India and China believe... skeptical about the technology.",
+        "why": "图表标题是一长段描述性文字，并且没有Figure编号，需要生成器支持这种长文本叙述式标题。"
+      },
+      {
+        "gap": "P2",
+        "figure_id": "f1",
+        "quote": "Percentage of consumers concerned about fully autonomous robotaxi services operating where they live",
+        "why": "图一由两个面板组成，面板标题是长句子，提取数据需要把面板标题作为关键维度，当前可能不支持。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f2",
+        "quote": "13% and 82% inside the blue and cyan bar segments",
+        "why": "数值标签直接印在条形图分段内部，生成器需要控制标签是在条内还是条外放置。"
+      }
+    ]
+  }
+}

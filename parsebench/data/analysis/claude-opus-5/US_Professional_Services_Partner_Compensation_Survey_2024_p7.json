@@ -1,0 +1,396 @@
+{
+  "stem": "US_Professional_Services_Partner_Compensation_Survey_2024_p7",
+  "document": "US_Professional_Services_Partner_Compensation_Survey_2024",
+  "tags": "untagged",
+  "model": "claude-opus-5",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 99.3,
+  "usage": {
+    "input_tokens": 13758,
+    "output_tokens": 8087,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "**画出来要什么**\n一个 10 行 × 4 列的条形矩阵：行是收入目标区间（`Less than $1.00m` … `Prefer not to answer`），列是四个分组（`Less than $1.00bn`…`More than $20.00bn`），每格一根向右的水平条，无数值轴、无刻度、无图例，数字全部印出——长条内白字（46、27、29），短条外黑字（5、3、2）。为 0 的格子只印 `0`，不画条。列首标题两行折行，颜色随列变化但不另表意。整页两张同构图（by firm size / by tenure at firm），共用上方标题 `Personal revenue targets (%)`，各自带 Note 与 Source 两行，左侧还有一栏正文。\n\n**定位一个值难在哪**\n`13`：在 by firm size 图的 `$1.01bn–$5.00bn` 列里出现三次（`$1.00m–$3.00m`、`$10.01m–$15.00m`、`$15.01m–$20.00m`）。要唯一定位必须同时给出图小标题、行标签和折成两行的列标题；数字本身印在条旁，读数不难，难的是三层标签的绑定。`21`、`29` 同样跨两图重复。\n\n**不确定的**\n`(%)` 是否管到第二张图（它只印在第一张之上）；列间的细竖线是分栏线还是每列的基线；无轴时条长与数值是否严格成比例。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "Personal revenue targets (%)",
+          "subtitle": "Personal revenue targets, by firm size",
+          "unit_text": "(%)",
+          "placement": "above"
+        },
+        "type": "bar",
+        "type_other": "",
+        "panels": 4,
+        "series": 1,
+        "categories": 10,
+        "marks": 32,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "left",
+            "role": "category",
+            "unit_text": "",
+            "low": "Less than $1.00m",
+            "high": "Prefer not to answer",
+            "serves": "all bar rows across the four columns"
+          },
+          {
+            "side": "top",
+            "role": "category",
+            "unit_text": "",
+            "low": "Less than $1.00bn",
+            "high": "More than $20.00bn",
+            "serves": "names the four columns of bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "panel",
+            "label_source": "heading",
+            "example": "Personal revenue targets, by firm size"
+          },
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "$1.00m–$3.00m"
+          },
+          {
+            "role": "panel",
+            "label_source": "panel_title",
+            "example": "$1.01bn–$5.00bn"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Personal revenue targets, by firm size",
+            "$1.00m–$3.00m",
+            "$1.01bn–$5.00bn"
+          ],
+          "value": "13",
+          "value_source": "printed",
+          "why_hard": "13 occurs three times in this column; only the row label distinguishes them, no axis exists"
+        }
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "",
+          "title": "Personal revenue targets, by tenure at firm",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "bar",
+        "type_other": "",
+        "panels": 4,
+        "series": 1,
+        "categories": 10,
+        "marks": 38,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "left",
+            "role": "category",
+            "unit_text": "",
+            "low": "Less than $1.00m",
+            "high": "Prefer not to answer",
+            "serves": "all bar rows across the four columns"
+          },
+          {
+            "side": "top",
+            "role": "category",
+            "unit_text": "",
+            "low": "Less than 3 years",
+            "high": "More than 10 years",
+            "serves": "names the four columns of bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "panel",
+            "label_source": "heading",
+            "example": "Personal revenue targets, by tenure at firm"
+          },
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "$6.01m–$10.00m"
+          },
+          {
+            "role": "panel",
+            "label_source": "panel_title",
+            "example": "3–5 years"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Personal revenue targets, by tenure at firm",
+            "$6.01m–$10.00m",
+            "3–5 years"
+          ],
+          "value": "21",
+          "value_source": "printed",
+          "why_hard": "21 also appears in the firm-size figure; figure subtitle must join row and column labels"
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "horizontal_bars",
+        "figure_id": "f1",
+        "evidence": "category names sit at the left, bars grow rightwards from a vertical rule in each column"
+      },
+      {
+        "key": "horizontal_bars",
+        "figure_id": "f2",
+        "evidence": "rows '$1.00m–$3.00m' etc. with bars extending right inside each tenure column"
+      },
+      {
+        "key": "no_value_axis",
+        "figure_id": "f1",
+        "evidence": "no ticks or numbers on any value axis; only the printed labels 5, 46, 22 give scale"
+      },
+      {
+        "key": "no_value_axis",
+        "figure_id": "f2",
+        "evidence": "bars sit on bare vertical rules; no tick labels anywhere below or above the bars"
+      },
+      {
+        "key": "value_label_inside",
+        "figure_id": "f1",
+        "evidence": "'46', '22', '16', '26', '28' printed in white inside the long bars"
+      },
+      {
+        "key": "value_label_inside",
+        "figure_id": "f2",
+        "evidence": "'27', '14', '22', '24', '29' printed inside the coloured bars"
+      },
+      {
+        "key": "value_label_outside",
+        "figure_id": "f1",
+        "evidence": "'5', '3', '2', '9' printed in dark text to the right of short bars"
+      },
+      {
+        "key": "value_label_outside",
+        "figure_id": "f2",
+        "evidence": "'5', '2', '3' printed beside short bars, outside the mark"
+      },
+      {
+        "key": "small_multiples_4",
+        "figure_id": "f1",
+        "evidence": "four identical column panels: 'Less than $1.00bn', '$1.01bn–$5.00bn', '$5.01bn–$20.00bn', 'More than $20.00bn'"
+      },
+      {
+        "key": "small_multiples_4",
+        "figure_id": "f2",
+        "evidence": "four columns headed 'Less than 3 years', '3–5 years', '6–10 years', 'More than 10 years'"
+      },
+      {
+        "key": "panel_title_per_panel",
+        "figure_id": "f1",
+        "evidence": "each column carries its own bold two-line header above its bars"
+      },
+      {
+        "key": "panel_title_per_panel",
+        "figure_id": "f2",
+        "evidence": "'Less than\\n3 years' and 'More than\\n10 years' set above their own columns"
+      },
+      {
+        "key": "shared_axis",
+        "figure_id": "f1",
+        "evidence": "the ten row labels are drawn once at the far left and serve all four columns"
+      },
+      {
+        "key": "shared_axis",
+        "figure_id": "f2",
+        "evidence": "row labels 'Less than $1.00m'…'Prefer not to answer' drawn once for four columns"
+      },
+      {
+        "key": "multi_figure_page",
+        "figure_id": "page",
+        "evidence": "two captioned charts each with its own Note and Source lines, separated by a rule"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "'Note: Numbers may not sum to 100%, because of rounding.' and 'Source: Heidrick & Struggles US...survey, 2024, n=155'"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f2",
+        "evidence": "same two-line Note and Source block printed under the tenure chart"
+      },
+      {
+        "key": "side_text_bullets",
+        "figure_id": "page",
+        "evidence": "left column reads 'By firm size, we saw a correlation between personal revenue targets and firm size...'"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "'Personal revenue targets (%)' is the only place the percent scale is stated"
+      },
+      {
+        "key": "wrapped_category_labels",
+        "figure_id": "f1",
+        "evidence": "column headers wrap onto two lines: 'Less than' / '$1.00bn'; ten row labels stack down the left"
+      },
+      {
+        "key": "vgrid_only",
+        "figure_id": "f1",
+        "evidence": "thin vertical rules at the left edge of each column run the full height as bar baselines"
+      },
+      {
+        "key": "vgrid_only",
+        "figure_id": "f2",
+        "evidence": "four faint vertical rules separate the tenure columns; no horizontal rules in the plot"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "crosstab_bar_matrix",
+        "figure_id": "f1",
+        "evidence": "10 row labels by 4 headed columns, one single bar per cell, no legend and no value axis",
+        "affects": [
+          1,
+          3
+        ]
+      },
+      {
+        "name": "zero_printed_without_mark",
+        "figure_id": "f1",
+        "evidence": "'0' printed at the baseline for '$10.01m–$15.00m' under 'Less than $1.00bn' with no bar drawn",
+        "affects": [
+          2,
+          3
+        ]
+      },
+      {
+        "name": "shared_title_over_two_figures",
+        "figure_id": "page",
+        "evidence": "'Personal revenue targets (%)' sits above both bold sub-headings and supplies the unit for both",
+        "affects": [
+          3,
+          4
+        ]
+      },
+      {
+        "name": "column_colour_matches_panel",
+        "figure_id": "f2",
+        "evidence": "navy, cyan, teal and grey fills correspond one-to-one with the four column headers; no legend",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "46",
+        "figure_id": "f1",
+        "mark": "the '$1.00m–$3.00m' row bar in the 'Less than $1.00bn' column",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Personal revenue targets, by firm size",
+          "$1.00m–$3.00m",
+          "Less than $1.00bn"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "13",
+        "figure_id": "f1",
+        "mark": "the '$1.00m–$3.00m' row bar in the '$1.01bn–$5.00bn' column (13 also appears at $10.01m–$15.00m and $15.01m–$20.00m)",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Personal revenue targets, by firm size",
+          "$1.00m–$3.00m",
+          "$1.01bn–$5.00bn"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "27",
+        "figure_id": "f2",
+        "mark": "the '$1.00m–$3.00m' row bar in the 'Less than 3 years' column",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Personal revenue targets, by tenure at firm",
+          "$1.00m–$3.00m",
+          "Less than 3 years"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "21",
+        "figure_id": "f1",
+        "mark": "the '$6.01m–$10.00m' row bar in the 'More than $20.00bn' column; 21 also occurs in f2 at '3–5 years'",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Personal revenue targets, by firm size",
+          "$6.01m–$10.00m",
+          "More than $20.00bn"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "29",
+        "figure_id": "f2",
+        "mark": "the 'More than $30.00m' row bar in the 'More than 10 years' column",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Personal revenue targets, by tenure at firm",
+          "More than $30.00m",
+          "More than 10 years"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      }
+    ],
+    "hardest_step": 3,
+    "hardest_step_why": "值全印出，读数无误差；但 13 在同一列出现三次，21 跨两图重复，需图小标题+行+折行列首三层标签才能唯一定位。",
+    "examples": [
+      {
+        "gap": "P2",
+        "figure_id": "f1",
+        "quote": "Column headers 'Less than $1.00bn', '$1.01bn–$5.00bn', '$5.01bn–$20.00bn', 'More than $20.00bn' over four columns of one-bar cells",
+        "why": "列（panel）维度必须进入键；否则同一行的四个值无法区分。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "'Personal revenue targets (%)' above, then bold 'Personal revenue targets, by firm size' above the plot",
+        "why": "标题拆成总标题+单位+子图小标题三层，且总标题跨两图，当前无此结构。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f2",
+        "quote": "'29' in white inside the grey bar, '2' in dark text outside the short bar, same row block",
+        "why": "同一图内标签内外混排，由条长决定放置位置，需按标记级样式生成。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "'0' printed at the baseline for '$10.01m–$15.00m' under 'Less than $1.00bn', no bar drawn",
+        "why": "零值只印文字不画条：需要“无标记但有数值标签”的单元格渲染规则。"
+      },
+      {
+        "gap": "P3",
+        "figure_id": "page",
+        "quote": "Body text column at left level with the charts; 'Note:' and 'Source: ... n=155' under each chart",
+        "why": "整页导出需保留旁栏正文与每图各自的注/源与表格的相对位置。"
+      }
+    ]
+  }
+}

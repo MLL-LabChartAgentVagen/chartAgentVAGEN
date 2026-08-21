@@ -1,0 +1,296 @@
+{
+  "stem": "TRS241_Web_p88",
+  "document": "TRS241_Web",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "no_vocab",
+  "effort": "high",
+  "dpi": 150,
+  "seconds": 95.7,
+  "usage": {
+    "input_tokens": 3210,
+    "output_tokens": 13475,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n本页包含一个复合图表，需要生成器支持多种复杂的排版和绘制能力：\n1. **复合结构与时间线**：上半部分是由箭头横向连接的四个独立饼图（代表1969至2015年的横截面数据），下半部分是带有双Y轴的折线图。\n2. **引线标签（Leader Lines）**：饼图的扇区通过密集的细实线连接到外部的类别缩写和百分比数值，布局紧凑。\n3. **图注图例（Caption Legend）**：饼图中的类别缩写（A, MI, C, E, EI, S）没有独立的图例块，而是直接在图表下方的说明文字（Caption）中统一进行定义。\n4. **线段注释**：折线图的各线段上直接标注了带括号的年均增长率（如 `(7.97 %)`）。\n5. **双Y轴对齐**：折线图左右两侧均有Y轴，且两者的主要网格线完美对齐。\n6. **带箭头的折线**：代表总体GDP的实线在终点（2015年）处绘制了一个指示趋势的箭头。\n\n### 定位一个值难在哪\n以1969年“EI”扇区的 `30.7%` 为例。其难点在于它位于一个没有常规坐标系的饼图中，多数解析器极易遗漏；其次，它的类别标识仅为一个缩写“EI”，完整的业务定义位于底部的长图注中，要求极强的上下文关联能力。\n\n### 不确定的\n折线图在1985年至2000年间的数据点因为没有直接打印数值且由于存在曲率和双轴干扰，很难从Y轴精确读取到5%误差以内。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "FIG.2.10.",
+          "title": "Energy and nuclear power planning study for Algeria: past and future trends in overall and per capita GDP and distribution by sector (in Algerian dinars (DA)).",
+          "subtitle": "A: Agriculture. MI: Manufacturing industries. C: Construction. E: Energy. EI: Extractive industries. S: Services (including transport).",
+          "unit_text": "",
+          "placement": "below"
+        },
+        "type": "compound",
+        "type_other": "",
+        "panels": 2,
+        "series": 8,
+        "categories": 10,
+        "marks": 38,
+        "values_printed": "some",
+        "axes": [
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "Years",
+            "low": "1969",
+            "high": "2015",
+            "serves": "all lines"
+          },
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Overall GDP (10^9 DA 1979)",
+            "low": "0",
+            "high": "700",
+            "serves": "Overall GDP line"
+          },
+          {
+            "side": "right",
+            "role": "value",
+            "unit_text": "Per capita GDP (10^3 DA 1979)",
+            "low": "0",
+            "high": "28",
+            "serves": "GDP per capita line"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "time",
+            "label_source": "inline_label",
+            "example": "1969"
+          },
+          {
+            "role": "series",
+            "label_source": "inline_label",
+            "example": "EI"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "1969",
+            "EI"
+          ],
+          "value": "30.7%",
+          "value_source": "printed",
+          "why_hard": "Labels use leader lines and abbreviations defined in the caption below."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "compound_figure",
+        "figure_id": "f1",
+        "evidence": "pies on top, line chart at the bottom within one figure",
+        "affects": [
+          1,
+          3
+        ]
+      },
+      {
+        "key": "leader_lines",
+        "figure_id": "f1",
+        "evidence": "thin lines connecting pie slices to their labels",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "dual_y_axes",
+        "figure_id": "f1",
+        "evidence": "left axis for Overall GDP, right axis for Per capita GDP",
+        "affects": [
+          2
+        ]
+      }
+    ],
+    "new_components": [
+      {
+        "name": "pie_timeline",
+        "figure_id": "f1",
+        "evidence": "four pie charts arranged chronologically and connected by arrows",
+        "affects": [
+          1,
+          4
+        ]
+      },
+      {
+        "name": "caption_legend",
+        "figure_id": "f1",
+        "evidence": "abbreviations A, MI, C etc. are defined in the caption paragraph",
+        "affects": [
+          3,
+          4
+        ]
+      },
+      {
+        "name": "line_segment_annotations",
+        "figure_id": "f1",
+        "evidence": "percentages like '(7.97 %)' written directly on line segments",
+        "affects": [
+          2,
+          3
+        ]
+      },
+      {
+        "name": "arrow_headed_line",
+        "figure_id": "f1",
+        "evidence": "the solid line ends with an arrowhead at 2015",
+        "affects": []
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "30.7",
+        "figure_id": "f1",
+        "mark": "the 1969 EI slice",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "1969",
+          "EI"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "38.8",
+        "figure_id": "f1",
+        "mark": "the 1969 S slice",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "1969",
+          "S"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "6.1",
+        "figure_id": "f1",
+        "mark": "the 1979 A slice",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "1979",
+          "A"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "12.3",
+        "figure_id": "f1",
+        "mark": "the 1979 C slice",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "1979",
+          "C"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "19.6",
+        "figure_id": "f1",
+        "mark": "the 2000 MI slice",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "2000",
+          "MI"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "7.1",
+        "figure_id": "f1",
+        "mark": "the 2000 E slice",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "2000",
+          "E"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "20.5",
+        "figure_id": "f1",
+        "mark": "the 2015 C slice",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "2015",
+          "C"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "41.2",
+        "figure_id": "f1",
+        "mark": "the 2015 S slice",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "2015",
+          "S"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "200",
+        "figure_id": "f1",
+        "mark": "the 200 tick label on the left y-axis",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Overall GDP"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "12.5",
+        "figure_id": "f1",
+        "mark": "the 1979 MI slice",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "1979",
+          "MI"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      }
+    ],
+    "hardest_step": 1,
+    "hardest_step_why": "上半部分为由箭头连接的多个独立饼图，无标准坐标轴，常规解析器极易漏判并不生成表格，导致多数测试值（如30.7）完全缺失，阻断于步骤1。",
+    "examples": [
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "Pies for 1969, 1979, 2000, 2015 connected by horizontal arrows",
+        "why": "当前的图表生成体系需要支持将多个独立饼图通过时间轴和箭头水平连接成复合结构布局。"
+      },
+      {
+        "gap": "P9",
+        "figure_id": "f1",
+        "quote": "Left axis Overall GDP (10^9 DA 1979), right axis Per capita GDP",
+        "why": "图表包含两个不同量级的Y轴，必须分别记录折线所对应的值是基于左轴还是右轴。"
+      },
+      {
+        "gap": "P3",
+        "figure_id": "f1",
+        "quote": "A: Agriculture. MI: Manufacturing industries. C: Construction.",
+        "why": "饼图的缩写图例直接定义在了底部的正文级图注中，要求生成时能控制外部段落与图表的关联。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "Growth rates like '(6.2 %)' positioned on the line segments",
+        "why": "要求在折线的具体线段上直接定位并绘制特定的注释文本（如年均增长率），这属于高级样式控制。"
+      }
+    ]
+  }
+}

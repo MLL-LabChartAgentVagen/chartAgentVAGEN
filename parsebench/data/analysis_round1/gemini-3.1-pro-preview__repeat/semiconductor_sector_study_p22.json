@@ -1,0 +1,141 @@
+{
+  "stem": "semiconductor_sector_study_p22",
+  "document": "semiconductor_sector_study",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "repeat",
+  "effort": "high",
+  "dpi": 150,
+  "seconds": 56.5,
+  "usage": {
+    "input_tokens": 4408,
+    "output_tokens": 7615,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "该页面包含一个单面板堆叠柱状图（Figure 4.1）。图表的显著特点是，所有堆叠分段均使用相同的青色，仅通过白色的细水平边框线进行区分，且没有图例说明每个分段代表的具体实体（结合上下文推测为单个公司）。这要求图表生成器必须支持绘制单色、无图例的堆叠柱状图。此外，X轴虽然表示时间跨度，但仅仅在有数据分布或特定选定的年份处标注了刻度和标签，而非等间距的连续年份。\n\n提取数据的最大障碍是步骤2（视觉读取精度）。图表的Y轴网格线间隔高达20M（0M至220M），且未在柱子或分段上标注具体数值。对于给定的189、23、84等精确到个位数的数值，依靠肉眼对齐坐标轴进行读取，完全无法达到所需的容差范围。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 4.1",
+          "title": "Latest Fundraisings",
+          "subtitle": "",
+          "unit_text": "Fundraisings - Amount received by the company in its latest fundraising (GBP)",
+          "placement": "above"
+        },
+        "type": "stacked_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 1,
+        "categories": 11,
+        "marks": 23,
+        "values_printed": "none"
+      }
+    ],
+    "components": [
+      {
+        "key": "stacked_bar",
+        "figure_id": "f1",
+        "evidence": "bars for 2020, 2022, and 2023 are divided into horizontal segments by white lines"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "the y-axis title ends with '(GBP)'"
+      },
+      {
+        "key": "rotated_axis_title",
+        "figure_id": "f1",
+        "evidence": "the y-axis title is set vertically alongside the axis"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "horizontal grid lines stretch across the panel, with no vertical grid lines present"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "a 'Source: Beauhurst...' line is printed directly below the chart's x-axis"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "monochrome_stacked_bar",
+        "figure_id": "f1",
+        "evidence": "segments within a stacked bar share the exact same color and have no legend distinguishing them",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "2",
+        "figure_id": "f1",
+        "mark": "the 2007 bar total",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2007"
+        ]
+      },
+      {
+        "value": "0",
+        "figure_id": "f1",
+        "mark": "the empty space above the 2010 tick",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2010"
+        ]
+      },
+      {
+        "value": "23",
+        "figure_id": "f1",
+        "mark": "the 2017 bar total",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2017"
+        ]
+      },
+      {
+        "value": "189",
+        "figure_id": "f1",
+        "mark": "the 2020 bar total",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2020"
+        ]
+      },
+      {
+        "value": "22",
+        "figure_id": "f1",
+        "mark": "the 2021 bar total",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2021"
+        ]
+      },
+      {
+        "value": "84",
+        "figure_id": "f1",
+        "mark": "the 2022 bar total",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2022"
+        ]
+      },
+      {
+        "value": "218",
+        "figure_id": "f1",
+        "mark": "the 2023 bar total",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2023"
+        ]
+      }
+    ],
+    "hardest_step": 2
+  }
+}

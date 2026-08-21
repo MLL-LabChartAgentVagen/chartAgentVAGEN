@@ -1,0 +1,324 @@
+{
+  "stem": "b263dc5d-en_p144",
+  "document": "b263dc5d-en",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "repeat",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 91.0,
+  "usage": {
+    "input_tokens": 5302,
+    "output_tokens": 12455,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n绘制此页需要实现带分类X轴的多系列散点图（Categorical Scatter/Dot Plot）。图表具有以下特征：\n1. **坐标轴与网格**：左侧Y轴无水平网格线（仅有一条加粗的0刻度参考线），但每个X轴分类处有垂直网格线贯穿图表（`vgrid_only`）。\n2. **多层X轴**：底部的国家名称垂直旋转排列，其下方还有带有灰色背景块的第二层分组标签（Round, Cycle 1: 1, 2, 3）。\n3. **复合图例与视觉编码**：图例位于图表上方，包含不同形状的空心和实心标记，形状代表年龄段（16-24、25-44、45-65岁）。实心颜色（较深颜色）代表统计显著性，这一额外维度未在图例文本中直接命名，而是写在了下方的注释（Note）中。\n4. **高亮分类**：X轴上部分分类名称（如“Flemish Region (BE)”和“England (UK)”）使用了蓝色字体进行特殊高亮。\n\n### 定位一个值难在哪\n以定位New Zealand的17为例：该标记（实心三角形）位于图表右侧，远离左侧唯一的Y轴。由于缺乏水平网格线，读数时需要将视线平行穿越二十多个垂直分类线，极易产生超过5%容差（全距60，容差为3）的视觉误差。此外，该标记的实心属性代表“统计显著”，需要跨上下文从注释中提取并加入键值。\n\n### 不确定的\nX轴上的蓝色字体高亮（Flemish Region (BE) 和 England (UK)）在正文及附注中均未明确解释其特殊含义，推测可能代表次国家级地区。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 3.24.",
+          "title": "Change in the gap in literacy proficiency between adults with highly educated and medium-/low-educated parents, by age",
+          "subtitle": "Change between cycles in the mean score difference between adults with at least one tertiary-educated parent and adults with parents with at most an upper secondary education (Cycle 2 minus Cycle 1)",
+          "unit_text": "Score-point difference",
+          "placement": "above"
+        },
+        "type": "other",
+        "type_other": "categorical dot plot",
+        "panels": 1,
+        "series": 3,
+        "categories": 27,
+        "marks": 81,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Score-point difference",
+            "low": "-30",
+            "high": "30",
+            "serves": "all markers"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "Sweden",
+            "high": "Hungary",
+            "serves": "all markers"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "panel",
+            "label_source": "axis_tick",
+            "example": "1"
+          },
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Sweden"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "16-24 year-olds"
+          },
+          {
+            "role": "colour_group",
+            "label_source": "colour_only",
+            "example": "darker colours"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "1",
+            "Sweden",
+            "16-24 year-olds",
+            "darker colours"
+          ],
+          "value": "21",
+          "value_source": "axis_read",
+          "why_hard": "Requires visual projection across many vertical lines to the y-axis, and resolving color meaning from the note."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "negative_values",
+        "figure_id": "f1",
+        "evidence": "y-axis has ticks down to -30"
+      },
+      {
+        "key": "color_encodes_extra_attribute",
+        "figure_id": "f1",
+        "evidence": "filled versus open markers encode statistical significance per note"
+      },
+      {
+        "key": "two_level_x_ticks",
+        "figure_id": "f1",
+        "evidence": "groups 1, 2, and 3 sit below the country names"
+      },
+      {
+        "key": "rotated_x_ticks",
+        "figure_id": "f1",
+        "evidence": "country names on the x-axis are set vertically"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "Note and Source text sit below the plot"
+      },
+      {
+        "key": "legend_above_plot",
+        "figure_id": "f1",
+        "evidence": "legend shapes and labels are above the plot area"
+      },
+      {
+        "key": "vgrid_only",
+        "figure_id": "f1",
+        "evidence": "vertical lines at categories, no horizontal grid lines drawn"
+      },
+      {
+        "key": "reference_line",
+        "figure_id": "f1",
+        "evidence": "bold horizontal line marks the zero level"
+      },
+      {
+        "key": "highlighted_category",
+        "figure_id": "f1",
+        "evidence": "Flemish Region (BE) and England (UK) use blue text"
+      },
+      {
+        "key": "footnote_marker",
+        "figure_id": "f1",
+        "evidence": "Poland* carries an asterisk on its label"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "scatter_on_categorical_axis",
+        "figure_id": "f1",
+        "evidence": "point markers placed along vertical category lines",
+        "affects": [
+          1
+        ]
+      },
+      {
+        "name": "legend_color_explained_in_note",
+        "figure_id": "f1",
+        "evidence": "the meaning of filled vs open is in the note, not legend",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "21",
+        "figure_id": "f1",
+        "mark": "the filled triangle for Sweden",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "1",
+          "Sweden",
+          "16-24 year-olds",
+          "statistically significant"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "1",
+        "figure_id": "f1",
+        "mark": "the open diamond for Sweden",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "1",
+          "Sweden",
+          "25-44 year-olds",
+          "not statistically significant"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "13",
+        "figure_id": "f1",
+        "mark": "the filled triangle for Estonia",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "1",
+          "Estonia",
+          "16-24 year-olds",
+          "statistically significant"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "-25",
+        "figure_id": "f1",
+        "mark": "the filled circle for Spain",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2",
+          "Spain",
+          "45-65 year-olds",
+          "statistically significant"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "-22",
+        "figure_id": "f1",
+        "mark": "the filled circle for Singapore",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "3",
+          "Singapore",
+          "45-65 year-olds",
+          "statistically significant"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "17",
+        "figure_id": "f1",
+        "mark": "the filled triangle for New Zealand",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "3",
+          "New Zealand",
+          "16-24 year-olds",
+          "statistically significant"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "-13",
+        "figure_id": "f1",
+        "mark": "the open triangle for Italy",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2",
+          "Italy",
+          "16-24 year-olds",
+          "not statistically significant"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "12",
+        "figure_id": "f1",
+        "mark": "the filled triangle for Hungary",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "3",
+          "Hungary",
+          "16-24 year-olds",
+          "statistically significant"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "13",
+        "figure_id": "f1",
+        "mark": "the open diamond for New Zealand",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "3",
+          "New Zealand",
+          "25-44 year-olds",
+          "not statistically significant"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "8",
+        "figure_id": "f1",
+        "mark": "the open circle for Lithuania",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "3",
+          "Lithuania",
+          "45-65 year-olds",
+          "not statistically significant"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "图表仅在最左侧设有纵轴且无水平网格线，全图跨度达60，5%容差仅为3。对于位于右侧的数据点（如New Zealand的17），长距离视线平移极易产生超差的读取误差。",
+    "examples": [
+      {
+        "gap": "P8",
+        "figure_id": "f1",
+        "quote": "Darker colours denote differences that are statistically significant",
+        "why": "图例仅说明形状代表年龄组，而标记的实心与空心（颜色属性）所代表的统计显著性仅在附注中说明，此维度需跨层提取并加入数据表。"
+      },
+      {
+        "gap": "P1",
+        "figure_id": "f1",
+        "quote": "y-axis on the left and markers for Hungary on the far right",
+        "why": "缺乏水平网格线导致不同位置的数据点读取精度差异巨大，右侧数据点的读取误差远高于左侧，全局固定容差无法适应这种随位置变化的精度递减。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "Score-point difference",
+        "why": "纵轴单位独立位于图表左上方，与主标题及副标题分离，模型需要支持将分散的文本块解析并组装为一个完整的标题结构。"
+      }
+    ]
+  }
+}

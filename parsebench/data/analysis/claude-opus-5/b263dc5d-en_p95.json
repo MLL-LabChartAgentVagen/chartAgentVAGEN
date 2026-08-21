@@ -1,0 +1,350 @@
+{
+  "stem": "b263dc5d-en_p95",
+  "document": "b263dc5d-en",
+  "tags": "3d_chart+need_estimate",
+  "model": "claude-opus-5",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 89.2,
+  "usage": {
+    "input_tokens": 13828,
+    "output_tokens": 7663,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "## 画出来要什么\n一个编号图 `Figure 2.20`、一行副标题、三个带填色横幅的面板(`A. Literacy`/`B. Numeracy`/`C. Adaptive problem solving`),共用一个位于顶部的图例(方块 `Unadjusted` + 菱形 `Adjusted`)。每个面板 32 个国家、竖排 90° 旋转标签、条形上叠加菱形点(约 192 个 marks),y 轴 0–80、只有横向网格线,轴标题 `Score-point difference` 写在最高刻度之上。`OECD average` 用浅蓝竖带+加粗标签突出,`Flemish Region (BE)`、`England (UK)` 标签为蓝色,`Poland*` 带脚注星号。三个面板各自按本面板的 unadjusted 值降序重排,国家顺序不一致。\n\n## 定位一个值难在哪\n以 `42` 为例:它是 A. Literacy 面板 Israel 的 Adjusted 菱形。要唯一定位需四个标签:图号/面板名 `A. Literacy`、类别 `Israel`、系列 `Adjusted`。图上没有任何数字,刻度间隔 10 分,5% 容差只有 ±2.1 分,只能靠像素在 40–45 间估读;而 Israel 在 B、C 面板同样有 ~34 的菱形,缺面板名就会串行。\n\n## 不确定的\n所有数值均为按轴估读,±2 分内无法确定;`75`、`70`、`65` 究竟落在 A 面板 Germany/Switzerland 还是 B/C 面板的同名条上无法分辨;菱形中心位置在条形阴影中略被遮挡;页面无 StatLink 行(可能被裁掉)。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 2.20.",
+          "title": "Differences in key information-processing skills, by parental education",
+          "subtitle": "Adjusted and unadjusted differences in average literacy, numeracy and adaptive problem solving scores between adults (highly educated parents minus low-educated parents)",
+          "unit_text": "Score-point difference",
+          "placement": "above"
+        },
+        "type": "compound",
+        "type_other": "",
+        "panels": 3,
+        "series": 2,
+        "categories": 32,
+        "marks": 192,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Score-point difference",
+            "low": "0",
+            "high": "80",
+            "serves": "all bars and all diamonds, in each of the three panels"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "Germany",
+            "high": "Spain",
+            "serves": "country slots; order differs per panel"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "panel",
+            "label_source": "panel_title",
+            "example": "A. Literacy"
+          },
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Israel"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Adjusted"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "A. Literacy",
+            "Israel",
+            "Adjusted"
+          ],
+          "value": "≈42",
+          "value_source": "axis_read",
+          "why_hard": "No printed value; ticks every 10 while 5% tolerance is ±2; diamond sits inside shaded bar."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "mixed_marks",
+        "figure_id": "f1",
+        "evidence": "black diamonds ('Adjusted') drawn on top of the light blue bars in every panel"
+      },
+      {
+        "key": "shared_legend",
+        "figure_id": "f1",
+        "evidence": "one legend 'Unadjusted  Adjusted' above panel A governs all three panels"
+      },
+      {
+        "key": "legend_above_plot",
+        "figure_id": "f1",
+        "evidence": "legend row sits between the subtitle and the 'A. Literacy' panel"
+      },
+      {
+        "key": "small_multiples_4",
+        "figure_id": "f1",
+        "evidence": "three stacked panels A, B, C of the same bar+diamond chart"
+      },
+      {
+        "key": "panel_title_per_panel",
+        "figure_id": "f1",
+        "evidence": "filled dark-blue banners 'A. Literacy', 'B. Numeracy', 'C. Adaptive problem solving'"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "horizontal rules at 10,20,...,80 across each panel; no vertical grid"
+      },
+      {
+        "key": "dense_marks_100plus",
+        "figure_id": "f1",
+        "evidence": "3 panels x 32 countries x 2 series = about 192 marks"
+      },
+      {
+        "key": "highlighted_category",
+        "figure_id": "f1",
+        "evidence": "'OECD average' label in bold with a pale blue column behind it in each panel"
+      },
+      {
+        "key": "shaded_band",
+        "figure_id": "f1",
+        "evidence": "pale blue vertical band spanning the plot height at the OECD average slot"
+      },
+      {
+        "key": "rotated_x_ticks",
+        "figure_id": "f1",
+        "evidence": "country names such as 'Slovak Republic' set vertically, rotated 90 degrees"
+      },
+      {
+        "key": "footnote_marker",
+        "figure_id": "f1",
+        "evidence": "'Poland*' on the category axis; note reads '*Caution is required in interpreting results'"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "page",
+        "evidence": "'Note: Adults aged 16-65...' and 'Source: Table A.2.12 (L, N, A) in Annex A.'"
+      },
+      {
+        "key": "axis_title_above_axis",
+        "figure_id": "f1",
+        "evidence": "'Score-point difference' printed above the 80 tick at the top-left of each panel"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "bare ticks 0..80; scale word only in 'Score-point difference'"
+      },
+      {
+        "key": "color_encodes_extra_attribute",
+        "figure_id": "f1",
+        "evidence": "'Flemish Region (BE)' and 'England (UK)' tick labels printed in blue, others black"
+      },
+      {
+        "key": "abbrev_category_axis",
+        "figure_id": "f1",
+        "evidence": "category labels 'Flemish Region (BE)', 'England (UK)' carry bracketed country codes"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "per_panel_category_order",
+        "figure_id": "f1",
+        "evidence": "'ranked in descending order of the unadjusted difference'; Hungary is 5th in A, 4th in B, 3rd in C",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "name": "marker_shape_encodes_series",
+        "figure_id": "f1",
+        "evidence": "legend shows a square for 'Unadjusted' and a diamond for 'Adjusted'; shape, not colour, separates them",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "75",
+        "figure_id": "f1",
+        "mark": "the Germany Unadjusted bar in panel A (tallest bar, just above 75)",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. Literacy",
+          "Germany",
+          "Unadjusted"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "23",
+        "figure_id": "f1",
+        "mark": "an Adjusted diamond near 23, most likely 'Poland*' in panel A",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. Literacy",
+          "Poland*",
+          "Adjusted"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "24",
+        "figure_id": "f1",
+        "mark": "an Adjusted diamond near 24, plausibly Latvia in panel A",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. Literacy",
+          "Latvia",
+          "Adjusted"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "70",
+        "figure_id": "f1",
+        "mark": "the Switzerland Unadjusted bar in panel A (second tallest, at 70)",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. Literacy",
+          "Switzerland",
+          "Unadjusted"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "18",
+        "figure_id": "f1",
+        "mark": "an Adjusted diamond near 18, plausibly Japan in panel A",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. Literacy",
+          "Japan",
+          "Adjusted"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "27",
+        "figure_id": "f1",
+        "mark": "an Adjusted diamond near 27, plausibly Chile in panel A",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. Literacy",
+          "Chile",
+          "Adjusted"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "65",
+        "figure_id": "f1",
+        "mark": "the Germany Unadjusted bar in panel C (tallest bar, about 65)",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "C. Adaptive problem solving",
+          "Germany",
+          "Unadjusted"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "24",
+        "figure_id": "f1",
+        "mark": "an Adjusted diamond near 24 in panel B, plausibly Croatia",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "B. Numeracy",
+          "Croatia",
+          "Adjusted"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "25",
+        "figure_id": "f1",
+        "mark": "the OECD average Adjusted diamond in panel A, about 25",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. Literacy",
+          "OECD average",
+          "Adjusted"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "42",
+        "figure_id": "f1",
+        "mark": "the Israel Adjusted diamond in panel A, sitting far above its neighbours",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. Literacy",
+          "Israel",
+          "Adjusted"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "无任何数字,刻度间隔10分;值24的5%容差仅±1.2分,菱形只能像素估读,42与Israel邻近点也难分。",
+    "examples": [
+      {
+        "gap": "P1",
+        "figure_id": "f1",
+        "quote": "y axis ticks read 0,10,20,...,80 with no value labels on any bar or diamond",
+        "why": "192个mark全靠估读,10分刻度下±1.2分容差不可达,需要按mark给出可达精度。"
+      },
+      {
+        "gap": "P2",
+        "figure_id": "f1",
+        "quote": "Panels banners 'A. Literacy', 'B. Numeracy', 'C. Adaptive problem solving'; Germany appears in all three",
+        "why": "同一国名在三个面板各有一值,键必须含面板名,否则无法唯一定位。"
+      },
+      {
+        "gap": "P9",
+        "figure_id": "f1",
+        "quote": "legend: a square 'Unadjusted' and a diamond 'Adjusted'; diamonds drawn on top of the bars",
+        "why": "同一轴上两种mark形状并存,值须记录读自条形还是菱形。"
+      },
+      {
+        "gap": "P8",
+        "figure_id": "f1",
+        "quote": "'OECD average' in bold over a pale blue vertical band; 'England (UK)' label printed in blue",
+        "why": "高亮与蓝色标签编码了聚合行与次国家实体,这些属性不在图例中。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "'Figure 2.20. Differences in key information-processing skills, by parental education' then a two-line subtitle; unit only as 'Score-point difference'",
+        "why": "编号、标题、副标题、单位分处四处,需作为独立字段与位置生成。"
+      }
+    ]
+  }
+}

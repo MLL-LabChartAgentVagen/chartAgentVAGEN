@@ -1,0 +1,283 @@
+{
+  "stem": "m-trends-2025-en_p29",
+  "document": "m-trends-2025-en",
+  "tags": "untagged",
+  "model": "gemini-3.1-pro-preview",
+  "control": "no_vocab",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 62.2,
+  "usage": {
+    "input_tokens": 3185,
+    "output_tokens": 8826,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n生成器需要支持树状图（Treemap），能根据各分类的数值比例分配矩形面积，并在各区块内部排布类别名称及大字号的百分比数值标签。对于柱状图，需要支持将数值标签以反白形式嵌在柱状体顶部内部；y轴标签需要支持逆时针旋转90度；x轴分类标签需支持多行换行（如 `REDBIKE\\n(Akira)`）。\n\n### 定位一个值难在哪\n以图1中的 `34` 为例，它位于树状图的区块内，没有坐标轴进行对齐。传统的文档解析模型很难将此类无表格结构的视觉面积图转换为标准的行列数据，往往在第一步建表时就会失败。\n\n### 不确定的\n图1中的分类名称（如 `Utility` 与 `Downloader` 等）在视觉上有上下排列，不确定这是否代表层级关系（嵌套树状图），还是仅仅由于空间限制而进行的平铺换行排版。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "Observed Malware Families by Category, 2024",
+          "subtitle": "Ransomware-Related",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "treemap",
+        "type_other": "",
+        "panels": 1,
+        "series": 1,
+        "categories": 8,
+        "marks": 8,
+        "values_printed": "all",
+        "axes": [],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "inline_label",
+            "example": "Ransomware"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Ransomware"
+          ],
+          "value": "34%",
+          "value_source": "printed",
+          "why_hard": "No explicit axes exist, making tabular representation very difficult."
+        }
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "",
+          "title": "Most Frequently Seen Malware, 2024",
+          "subtitle": "Ransomware-Related",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 1,
+        "categories": 6,
+        "marks": 6,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "% of Intrusions",
+            "low": "0",
+            "high": "15",
+            "serves": "all bars"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "BEACON",
+            "high": "SYSTEMBC",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "BEACON"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "REDBIKE (Akira)"
+          ],
+          "value": "10%",
+          "value_source": "printed",
+          "why_hard": "The label has a line break, complicating exact string matching."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "y_axis_title_rotated",
+        "figure_id": "f2",
+        "evidence": "% of Intrusions text is rotated 90 degrees along the left axis",
+        "affects": []
+      },
+      {
+        "key": "bar_data_labels_inside",
+        "figure_id": "f2",
+        "evidence": "percentages are printed inside the top of each bar in white",
+        "affects": [
+          2,
+          3
+        ]
+      },
+      {
+        "key": "multiline_tick_labels",
+        "figure_id": "f2",
+        "evidence": "REDBIKE and (Akira) are printed on two separate lines",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "treemap_inline_labels",
+        "figure_id": "f1",
+        "evidence": "category names and large percentage values sit inside each colored block",
+        "affects": [
+          1,
+          3
+        ]
+      }
+    ],
+    "new_components": [
+      {
+        "name": "treemap_layout",
+        "figure_id": "f1",
+        "evidence": "nested rectangular blocks sized by percentage filling a single frame",
+        "affects": [
+          1
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "34",
+        "figure_id": "f1",
+        "mark": "the Ransomware block",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Ransomware"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "16",
+        "figure_id": "f1",
+        "mark": "the Other block",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Other"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "12",
+        "figure_id": "f1",
+        "mark": "the Credential Stealer block",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Credential Stealer"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "10",
+        "figure_id": "f1",
+        "mark": "the Backdoor block",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Backdoor"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "15",
+        "figure_id": "f2",
+        "mark": "the BEACON bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "BEACON"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "10",
+        "figure_id": "f2",
+        "mark": "the RANSOMHUB bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "RANSOMHUB"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "10",
+        "figure_id": "f2",
+        "mark": "the REDBIKE (Akira) bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "REDBIKE (Akira)"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 3
+      },
+      {
+        "value": "9",
+        "figure_id": "f2",
+        "mark": "the BASTA bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "BASTA"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "9",
+        "figure_id": "f2",
+        "mark": "the LOCKBIT bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "LOCKBIT"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "7",
+        "figure_id": "f2",
+        "mark": "the SYSTEMBC bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "SYSTEMBC"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      }
+    ],
+    "hardest_step": 1,
+    "hardest_step_why": "图1是树状面积图，没有坐标轴支撑，通常的解析模型无法将其识别并转换为标准表格，包含34等数值的提取往往在第一步建表时就会彻底失败。",
+    "examples": [
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "Ransomware 34% inside a large rectangular block",
+        "why": "管线需支持生成树状图（Treemap/Mosaic图），根据数值动态分配矩形面积并在其内部排版标签。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f2",
+        "quote": "REDBIKE (Akira) spread across two lines on the x-axis",
+        "why": "需要支持x轴分类标签的多行自定义换行显示，以避免文字重叠或超出图表边界。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f2",
+        "quote": "15% in white text inside the top of the blue bar",
+        "why": "需要支持将数据标签以反白字体嵌在柱状体顶部的内部，而不是只放在柱子外面。"
+      }
+    ]
+  }
+}

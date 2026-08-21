@@ -1,0 +1,394 @@
+{
+  "stem": "sri-sigma-natural-catastrophes-1-2025_p20",
+  "document": "sri-sigma-natural-catastrophes-1-2025",
+  "tags": "need_estimate",
+  "model": "claude-opus-5",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 92.2,
+  "usage": {
+    "input_tokens": 13973,
+    "output_tokens": 6985,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "## 画出来要什么\n两张独立编号图，都放在浅蓝色底的整块面板里，标题块（`Figure 12` + `US Construction cost indices`）位于绘图区**左侧一列**而非上方。图12是四条月度指数折线，y 轴 100–150（不从零起、无单位词、无 `2020=100` 基期说明），x 轴只有 2020…2025 六个年刻度，约 250 个数据点；图例四项在图下一行半排列。图13是**一条面积序列按正负换色**：0% 以上填深青 `Underwriting profit`，0% 以下填浅绿 `Underwriting loss`，y 轴 10% 到 −15%，负值与零线是主要构图。两图都只有横向网格线、图下 `Source:` 行。\n\n## 定位一个值难在哪\n取 `-6%`：图13上没有任何数字标签，刻度间距 5 个百分点，而 2020、2022、2024 三年读数都落在 −5% 与 −7% 之间；5% 相对容差意味着要读到 ±0.3pp，靠像素无法区分这三年，且只能用 `Underwriting loss` + 年份两个标签寻址，而颜色本身又不区分年份。\n\n## 不确定的\n图12哪条线对应哪个图例只能靠颜色深浅推断（`CPI` 深青最低线、`PPI, Final Demand, Construction` 深蓝最高线）；月度点的实际频率、指数基期日期、以及 138 属于哪两条线，均为推测。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 12",
+          "title": "US Construction cost indices",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "beside"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 1,
+        "series": 4,
+        "categories": 62,
+        "marks": 248,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "100",
+            "high": "150",
+            "serves": "all four index lines"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "2020",
+            "high": "2025",
+            "serves": "all four index lines"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "PPI, Materials & Components for Construction"
+          },
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2022"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "PPI, Final Demand, Construction",
+            "2025"
+          ],
+          "value": "≈140",
+          "value_source": "axis_read",
+          "why_hard": "Three lines converge within 4 index points near the right edge; ticks are 10 points apart."
+        }
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "Figure 13",
+          "title": "US homeowner insurance underwriting result",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "beside"
+        },
+        "type": "area",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 11,
+        "marks": 11,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "−15%",
+            "high": "10%",
+            "serves": "the whole filled area, both colours"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "2014",
+            "high": "2024",
+            "serves": "all area vertices"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Underwriting loss"
+          },
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2023"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Underwriting loss",
+            "2024"
+          ],
+          "value": "≈−6.5%",
+          "value_source": "axis_read",
+          "why_hard": "No printed labels; ticks 5pp apart; 2020, 2022 and 2024 all sit between −5% and −7%."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "multi_figure_page",
+        "figure_id": "page",
+        "evidence": "`Figure 12 US Construction cost indices` and `Figure 13 US homeowner insurance underwriting result` on one page"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "`Source: Bureau of Labor Statistics, Census Bureau, S&P Capital IQ, Swiss Re Institute` under the plot"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f2",
+        "evidence": "`Source: AM Best, Swiss Re Institute` printed under the legend"
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "four legend entries in two rows below the x axis, starting with `CPI`"
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f2",
+        "evidence": "`Underwriting profit` and `Underwriting loss` swatches sit below the 2014–2024 axis"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "horizontal rules at 100,110,120,130,140,150; no vertical rules in the panel"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f2",
+        "evidence": "horizontal rules at 10%,5%,0%,−5%,−10%,−15%; no vertical rules"
+      },
+      {
+        "key": "panel_background",
+        "figure_id": "f1",
+        "evidence": "the whole figure block including the plot area sits on a pale blue tint"
+      },
+      {
+        "key": "panel_background",
+        "figure_id": "f2",
+        "evidence": "pale blue tinted block behind heading, plot, legend and source line"
+      },
+      {
+        "key": "axis_starts_above_zero",
+        "figure_id": "f1",
+        "evidence": "lowest y tick is `100`, no break glyph drawn on the axis"
+      },
+      {
+        "key": "sparse_time_ticks",
+        "figure_id": "f1",
+        "evidence": "lines move month to month but ticks read only 2020, 2021, 2022, 2023, 2024, 2025"
+      },
+      {
+        "key": "dense_marks_100plus",
+        "figure_id": "f1",
+        "evidence": "four lines over roughly five years of monthly points, ~250 plotted points"
+      },
+      {
+        "key": "negative_values",
+        "figure_id": "f2",
+        "evidence": "area drops to about −10% in 2023; axis runs to `−15%` below the 0% line"
+      },
+      {
+        "key": "reference_line",
+        "figure_id": "f2",
+        "evidence": "a rule at `0%` separates the dark profit fill above from the green loss fill below"
+      },
+      {
+        "key": "color_encodes_extra_attribute",
+        "figure_id": "f2",
+        "evidence": "one continuous result series is filled dark teal above zero, green below, per profit/loss"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "sign_split_area_fill",
+        "figure_id": "f2",
+        "evidence": "single area series whose fill flips colour at 0%; each colour gets its own legend entry",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "name": "index_base_unstated",
+        "figure_id": "f1",
+        "evidence": "all four lines start at 100 in early 2020 but no `2020 = 100` phrase appears anywhere",
+        "affects": [
+          4
+        ]
+      },
+      {
+        "name": "heading_block_in_left_margin_column",
+        "figure_id": "page",
+        "evidence": "`Figure 12` and its title sit in a narrow left column level with the plot, inside the tinted block",
+        "affects": [
+          3,
+          4
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "100",
+        "figure_id": "f1",
+        "mark": "the common starting level of all four lines at the left edge, early 2020",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "CPI",
+          "2020"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "102",
+        "figure_id": "f1",
+        "mark": "an early-2020 point on one of the lines just above the 100 gridline",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "PPI, Final Demand, Construction",
+          "2020"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "138",
+        "figure_id": "f1",
+        "mark": "the light blue One-Family Houses line near its 2024–2025 plateau",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "One-Family Houses under Construction, Census",
+          "2024"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "138",
+        "figure_id": "f1",
+        "mark": "the dark blue PPI Final Demand line at a similar plateau level, converging with the others",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "PPI, Final Demand, Construction",
+          "2023"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "122",
+        "figure_id": "f1",
+        "mark": "the lowest (dark teal) line at its 2025 endpoint",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "CPI",
+          "2025"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "9%",
+        "figure_id": "f2",
+        "mark": "the dark teal profit plateau at 2014–2015, just under the 10% gridline",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Underwriting profit",
+          "2014"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-7%",
+        "figure_id": "f2",
+        "mark": "the green loss trough at 2017 (or the 2020 dip), between −5% and −10%",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Underwriting loss",
+          "2017"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "2.5%",
+        "figure_id": "f2",
+        "mark": "the small dark teal profit peak at 2019 above the 0% line",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Underwriting profit",
+          "2019"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-10%",
+        "figure_id": "f2",
+        "mark": "the deepest green trough at 2023",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Underwriting loss",
+          "2023"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-6%",
+        "figure_id": "f2",
+        "mark": "a green loss level near 2024 (or 2020/2022), between the −5% and −10% rules",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Underwriting loss",
+          "2024"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "两图零数字标签：图13刻度间隔5pp，-6%与-7%需读到±0.3pp；图12月度线在138附近三线相叠，年刻度无法定点。",
+    "examples": [
+      {
+        "gap": "P6",
+        "figure_id": "f2",
+        "quote": "Area filled dark teal above the 0% rule, green below it; legend reads `Underwriting profit` `Underwriting loss`",
+        "why": "同一序列按零线正负换色并各自成图例项，现管线只能画单色面积。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "`Figure 12` above `US Construction cost indices`, set in a left column level with the plot, no unit line",
+        "why": "标题块作为独立字段并置于绘图区左侧，编号与标题分行、无单位短语。"
+      },
+      {
+        "gap": "P1",
+        "figure_id": "f1",
+        "quote": "Three lines run between 136 and 141 from 2023 to 2025 with y ticks only every 10 points",
+        "why": "密集重叠处每个点可达精度远低于5%，需按标记记录可读精度而非布尔判定。"
+      },
+      {
+        "gap": "P5",
+        "figure_id": "f1",
+        "quote": "Four monthly index lines spanning 2020 to 2025, roughly 250 plotted points, no markers",
+        "why": "月频四序列约250点，超出当前密度上限，需把密度作为可控变量。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "All four lines start at 100 in 2020; no `= 100` base phrase appears on the figure",
+        "why": "指数图无基期说明，需支持“单位/基期缺失”这一可标注状态，影响图外语境判定。"
+      }
+    ]
+  }
+}

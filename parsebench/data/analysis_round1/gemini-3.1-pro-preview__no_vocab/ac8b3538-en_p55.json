@@ -1,0 +1,205 @@
+{
+  "stem": "ac8b3538-en_p55",
+  "document": "ac8b3538-en",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "no_vocab",
+  "effort": "high",
+  "dpi": 150,
+  "seconds": 60.1,
+  "usage": {
+    "input_tokens": 2262,
+    "output_tokens": 8518,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "此页面包含一个复合图表，展示了按性别划分的失业率变化。图表生成器需具备双图层渲染能力：将“Women”数据绘制为条形图（且需支持单一分类“OECD”的异色高亮），并将“Men”数据绘制为对应分类的散点。图表还包含垂直的斑马线背景和倾斜的X轴标签。由于数据值未标出，且Y轴主刻度间距较大（2 p.p），模型仅凭视觉无法精准读取小数值（如 -10.2 与 -2.1），必定在步骤2（精度容差）受阻。部分散点重叠较多，只能依靠上下文数值进行大致匹配。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Annex Figure 1.B.2.",
+          "title": "Change in unemployment risk by gender",
+          "subtitle": "Percentage point change in unemployment rate by gender, 2015-22",
+          "unit_text": "p.p",
+          "placement": "above"
+        },
+        "type": "compound",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 39,
+        "marks": 78,
+        "values_printed": "none"
+      }
+    ],
+    "components": [
+      {
+        "key": "x_axis_labels_angled",
+        "figure_id": "f1",
+        "evidence": "country codes GRC, ESP are tilted 45 degrees",
+        "affects": []
+      },
+      {
+        "key": "legend_above_chart",
+        "figure_id": "f1",
+        "evidence": "Women and Men legend sits above the plot area",
+        "affects": []
+      },
+      {
+        "key": "y_axis_title_top",
+        "figure_id": "f1",
+        "evidence": "p.p sits vertically above the y axis labels",
+        "affects": []
+      },
+      {
+        "key": "horizontal_gridlines",
+        "figure_id": "f1",
+        "evidence": "white gridlines pass through y axis ticks on grey bands",
+        "affects": []
+      },
+      {
+        "key": "y_axis_zero_line",
+        "figure_id": "f1",
+        "evidence": "the horizontal line at 0 is thicker and black",
+        "affects": []
+      }
+    ],
+    "new_components": [
+      {
+        "name": "compound_bar_scatter",
+        "figure_id": "f1",
+        "evidence": "Women are bars and Men are diamond points",
+        "affects": [
+          1
+        ]
+      },
+      {
+        "name": "highlight_bar_color",
+        "figure_id": "f1",
+        "evidence": "OECD bar is red while other countries are green",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "name": "zebra_background_vertical",
+        "figure_id": "f1",
+        "evidence": "alternating light grey and white vertical bands for each country",
+        "affects": []
+      },
+      {
+        "name": "legend_symbol_special_character",
+        "figure_id": "f1",
+        "evidence": "the Women legend entry contains an arrow (↗)",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "-9.5",
+        "figure_id": "f1",
+        "mark": "the GRC Men point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "GRC",
+          "Men"
+        ]
+      },
+      {
+        "value": "-10.2",
+        "figure_id": "f1",
+        "mark": "the GRC Women (↗) bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "GRC",
+          "Women (↗)"
+        ]
+      },
+      {
+        "value": "-9.5",
+        "figure_id": "f1",
+        "mark": "the ESP Women (↗) bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "ESP",
+          "Women (↗)"
+        ]
+      },
+      {
+        "value": "-6.2",
+        "figure_id": "f1",
+        "mark": "the PRT Women (↗) bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "PRT",
+          "Women (↗)"
+        ]
+      },
+      {
+        "value": "-6.3",
+        "figure_id": "f1",
+        "mark": "the IRL Men point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "IRL",
+          "Men"
+        ]
+      },
+      {
+        "value": "-2.0",
+        "figure_id": "f1",
+        "mark": "the OECD Women (↗) bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "OECD",
+          "Women (↗)"
+        ]
+      },
+      {
+        "value": "-2.1",
+        "figure_id": "f1",
+        "mark": "the NOR Men point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "NOR",
+          "Men"
+        ]
+      },
+      {
+        "value": "4.2",
+        "figure_id": "f1",
+        "mark": "the CRI Women (↗) bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "CRI",
+          "Women (↗)"
+        ]
+      },
+      {
+        "value": "1.5",
+        "figure_id": "f1",
+        "mark": "the CRI Men point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "CRI",
+          "Men"
+        ]
+      },
+      {
+        "value": "2.5",
+        "figure_id": "f1",
+        "mark": "the COL Women (↗) bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "COL",
+          "Women (↗)"
+        ]
+      }
+    ],
+    "hardest_step": 2
+  }
+}

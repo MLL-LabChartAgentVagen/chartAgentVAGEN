@@ -1,0 +1,226 @@
+{
+  "stem": "pdf_d2e0103f64cd_p29",
+  "document": "pdf_d2e0103f64cd",
+  "tags": "3d_chart",
+  "model": "gemini-3.1-pro-preview",
+  "control": "no_vocab",
+  "effort": "high",
+  "dpi": 150,
+  "seconds": 15.8,
+  "usage": {
+    "input_tokens": 2289,
+    "output_tokens": 2032,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "本页包含两张折线图，展示了新加坡中央商务区（CBD）的平均入住率和平均租金率。这些图表均未编号。\n\n**图表构建要求：**\n1.  **图表 1 (入住率):** 标题位于上方，Y轴单位为百分比，数据点有标签。图例位于底部，水平排列，使用带颜色的短线表示不同的区域。X轴包含年份和季度，但第一项 '2010' 没有对应的点，折线从 '2011' 开始或之前开始但标签对齐方式不明确（实际上，图表中的数据点与X轴标签之间存在不对齐或表示时间段的问题）。\n2.  **图表 2 (租金率):** 标题位于上方，Y轴顶部有货币单位（S$）。结构与图表1类似，折线起点同样存在与X轴标签不对齐的情况，且某条线缺少 '2010' 的起始点。\n\n**提取难点 (最难步骤 2):**\n对于没有直接印出数值的数据点（如图1中蓝线的第一个点虽然有70.3%，但图2中蓝线 '2010' 没有点），很难准确读取。更重要的是，X轴上的标签（2010, 2011, Q1 2013等）与数据点的对齐非常混乱。数据点看起来绘制在两个刻度之间，或者某些年份/季度缺失，导致确定具体某个数据点属于哪个时间段极为困难，极易造成关联错误（步骤3）。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "Average Occupancy Rates in the Singapore CBD (%)",
+          "subtitle": "",
+          "unit_text": "%",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 1,
+        "series": 3,
+        "categories": 6,
+        "marks": 17,
+        "values_printed": "all"
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "",
+          "title": "Average Rental Rates in the Singapore CBD (S$ per sq ft per month)",
+          "subtitle": "",
+          "unit_text": "S$",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 1,
+        "series": 3,
+        "categories": 6,
+        "marks": 17,
+        "values_printed": "all"
+      }
+    ],
+    "components": [
+      {
+        "key": "unit_in_title",
+        "figure_id": "f1",
+        "evidence": "the title ends with (%)",
+        "affects": [
+          4
+        ]
+      },
+      {
+        "key": "bottom_legend",
+        "figure_id": "f1",
+        "evidence": "Marina Bay, Raffles Place, Shenton Way/Robinson Rd/Cecil Street at bottom",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "data_labels",
+        "figure_id": "f1",
+        "evidence": "values like 96.8% printed next to points",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "key": "footnote_reference",
+        "figure_id": "f1",
+        "evidence": "the point for Marina Bay Q3 2013 has a superscript (1)",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "y_axis_unit_at_top",
+        "figure_id": "f2",
+        "evidence": "S$ sits at the top of the y-axis",
+        "affects": [
+          4
+        ]
+      },
+      {
+        "key": "x_axis_ticks_between_labels",
+        "figure_id": "f1",
+        "evidence": "tick marks are between the years 2010, 2011 etc",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "new_components": [
+      {
+        "name": "uneven_time_axis",
+        "figure_id": "f1",
+        "evidence": "axis mixes years (2010) and quarters (Q1 2013)",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "name": "missing_series_point",
+        "figure_id": "f2",
+        "evidence": "Marina Bay line does not have a point for 2010",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "70.3",
+        "figure_id": "f1",
+        "mark": "first point on the Marina Bay line",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Marina Bay",
+          "2010"
+        ]
+      },
+      {
+        "value": "96.8",
+        "figure_id": "f1",
+        "mark": "first point on the Raffles Place line",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Raffles Place",
+          "2010"
+        ]
+      },
+      {
+        "value": "91.2",
+        "figure_id": "f1",
+        "mark": "point on the Shenton Way... line for 2012",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Shenton Way/Robinson Rd/Cecil Street",
+          "2012"
+        ]
+      },
+      {
+        "value": "84.1",
+        "figure_id": "f1",
+        "mark": "last point on the Marina Bay line",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Marina Bay",
+          "Q3 2013"
+        ]
+      },
+      {
+        "value": "97.7",
+        "figure_id": "f1",
+        "mark": "last point on the Shenton Way... line",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Shenton Way/Robinson Rd/Cecil Street",
+          "Q3 2013"
+        ]
+      },
+      {
+        "value": "12.0",
+        "figure_id": "f2",
+        "mark": "first point on the Marina Bay line",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Marina Bay",
+          "2011"
+        ]
+      },
+      {
+        "value": "9.0",
+        "figure_id": "f2",
+        "mark": "first point on the Raffles Place line",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Raffles Place",
+          "2010"
+        ]
+      },
+      {
+        "value": "7.8",
+        "figure_id": "f2",
+        "mark": "second point on the Shenton Way... line",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Shenton Way/ Robinson Rd/ Cecil Street",
+          "2011"
+        ]
+      },
+      {
+        "value": "11.0",
+        "figure_id": "f2",
+        "mark": "last point on the Marina Bay line",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Marina Bay",
+          "Q3 2013"
+        ]
+      },
+      {
+        "value": "9.4",
+        "figure_id": "f2",
+        "mark": "last point on the Raffles Place line",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Raffles Place",
+          "Q3 2013"
+        ]
+      }
+    ],
+    "hardest_step": 3
+  }
+}

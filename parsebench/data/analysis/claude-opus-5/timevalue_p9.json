@@ -1,0 +1,273 @@
+{
+  "stem": "timevalue_p9",
+  "document": "timevalue",
+  "tags": "need_estimate",
+  "model": "claude-opus-5",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "seconds": 68.1,
+  "usage": {
+    "input_tokens": 13839,
+    "output_tokens": 5025,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "**画出来要什么**\n一张 PowerPoint 幻灯片:大标题「Holding Period and Value」+ 装饰色块横条,页脚页码「9」,整页带浅色横条纹背景。图本身是单面板折线图,三条带点标记的线(方块/三角/叉),图例竖排在绘图区右侧(legend_beside_plot),无图号、无标题、无 source 行。左轴竖排标题「Future value of $100 investment」,刻度 0–4500、步长 500,只有横向网格线;下轴标题「Holding period (in years)」,刻度 1、5、10、20、30、40——数值间隔不等却等距排布,实为文本类目轴。单位分两处:轴标题里的「$100 investment」和图例名里的「($)」。所有数值都不打标签。\n\n**定位一个值难在哪**\n取 Stocks ($) 在 10 年的 240:没有数据标签,只能对着 500 一格的网格读数;5% 容差仅 ±12,而 500 单位约 68 px,12 单位不到 2 px。更糟的是 10 年处三条线几乎重叠(Bonds 约 190、Bills 约 170),标记互相压住,连归属哪条线都要靠颜色分辨。700、420、280、250 同理。\n\n**不确定的**\n无法确认 240 究竟是 Stocks 的 10 年点还是别的点;两个 420 分别属于 Treasury Bonds(30)与 Treasury Bills(40),只能按趋势推断。绘图区是否有独立底色、条纹是否穿过绘图区,分辨率下看不清。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "Holding Period and Value",
+          "subtitle": "",
+          "unit_text": "Future value of $100 investment",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 1,
+        "series": 3,
+        "categories": 6,
+        "marks": 18,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Future value of $100 investment",
+            "low": "0",
+            "high": "4500",
+            "serves": "all three lines: Stocks, Treasury Bonds, Treasury Bills"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "Holding period (in years)",
+            "low": "1",
+            "high": "40",
+            "serves": "the six plotted points of each line"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Treasury Bonds ($)"
+          },
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "30"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Treasury Bonds ($)",
+            "20"
+          ],
+          "value": "280",
+          "value_source": "axis_read",
+          "why_hard": "No labels; gridlines every 500; Bonds/Bills/Stocks markers overlap near the baseline at 20 years."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "legend_beside_plot",
+        "figure_id": "f1",
+        "evidence": "legend column 'Stocks ($) / Treasury Bonds ($) / Treasury Bills ($)' sits right of the plot area"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "horizontal rules at 500, 1000 ... 4500 across the panel; no vertical gridlines"
+      },
+      {
+        "key": "rotated_axis_title",
+        "figure_id": "f1",
+        "evidence": "'Future value of $100 investment' set vertically along the left axis"
+      },
+      {
+        "key": "unit_in_series_name",
+        "figure_id": "f1",
+        "evidence": "legend entries end in '($)': 'Stocks ($)', 'Treasury Bills ($)'"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "axis title 'Future value of $100 investment' fixes the scale of bare ticks 0-4500"
+      },
+      {
+        "key": "mixed_marks",
+        "figure_id": "f1",
+        "evidence": "each line carries square, triangle or cross point markers drawn over the line"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "uneven_numeric_category_axis",
+        "figure_id": "f1",
+        "evidence": "x ticks '1, 5, 10, 20, 30, 40' spaced equally though intervals differ",
+        "affects": [
+          2,
+          3
+        ]
+      },
+      {
+        "name": "slide_title_not_figure_title",
+        "figure_id": "page",
+        "evidence": "'Holding Period and Value' is the slide heading with a decorative bar, no figure number",
+        "affects": [
+          3,
+          4
+        ]
+      },
+      {
+        "name": "striped_page_background",
+        "figure_id": "page",
+        "evidence": "fine horizontal stripe texture covers the whole slide behind title and plot",
+        "affects": []
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "3850",
+        "figure_id": "f1",
+        "mark": "the Stocks line's point at 40 years",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Stocks ($)",
+          "40"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "1550",
+        "figure_id": "f1",
+        "mark": "the Stocks line's point at 30 years",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Stocks ($)",
+          "30"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "620",
+        "figure_id": "f1",
+        "mark": "the Stocks line's point at 20 years",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Stocks ($)",
+          "20"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "240",
+        "figure_id": "f1",
+        "mark": "the Stocks line's point at 10 years",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Stocks ($)",
+          "10"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "700",
+        "figure_id": "f1",
+        "mark": "the Treasury Bonds point at 40 years",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Treasury Bonds ($)",
+          "40"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "420",
+        "figure_id": "f1",
+        "mark": "the Treasury Bonds point at 30 years",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Treasury Bonds ($)",
+          "30"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "250",
+        "figure_id": "f1",
+        "mark": "the Treasury Bills point at 30 years",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Treasury Bills ($)",
+          "30"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "420",
+        "figure_id": "f1",
+        "mark": "the Treasury Bills point at 40 years (same reading as Bonds at 30)",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Treasury Bills ($)",
+          "40"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "280",
+        "figure_id": "f1",
+        "mark": "the Treasury Bonds point at 20 years",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Treasury Bonds ($)",
+          "20"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "网格每500单位约68px,读240需±12(约2px);10–20年处三线重叠,240、280、250几乎无法区分。",
+    "examples": [
+      {
+        "gap": "P1",
+        "figure_id": "f1",
+        "quote": "y axis ticks 0, 500, 1000 ... 4500 with no value labels on any of the 18 markers",
+        "why": "底部四个值(240/250/280/420)在500一格的轴上不可能读到5%,可读性应按点给精度。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "page",
+        "quote": "'Holding Period and Value' set large at top, then a teal square and purple bar; no figure number or caption",
+        "why": "标题是幻灯片级、与图分离且带装饰条,现有流水线只会生成图内标题。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "legend reads 'Stocks ($)' while the left axis title reads 'Future value of $100 investment'",
+        "why": "单位同时出现在图例名和竖排轴标题两处,单位位置需要成为可控维度。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "x tick labels 1, 5, 10, 20, 30, 40 drawn at equal spacing under 'Holding period (in years)'",
+        "why": "数值间隔不等却按类目等距摆放;需要新增'非等距数值类目轴'构造。"
+      }
+    ]
+  }
+}

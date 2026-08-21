@@ -1,0 +1,334 @@
+{
+  "stem": "b263dc5d-en_p95",
+  "document": "b263dc5d-en",
+  "tags": "3d_chart+need_estimate",
+  "model": "gpt-5.6-sol",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "via": "openrouter",
+  "max_tokens": 120000,
+  "seconds": 142.2,
+  "usage": {
+    "input_tokens": 8699,
+    "output_tokens": 9431,
+    "cache_read_tokens": 2365
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "**画出来要什么**\n三联小多图：每面板32个国家或地区，浅蓝柱叠加黑色菱形，共约192个标记。还需共享上方图例、蓝色面板标题条、横向网格、旋转国家标签、OECD average竖向高亮带，以及完整注释和来源。\n\n**定位一个值难在哪**\n例如“B. Numeracy—Japan—Adjusted”的18须同时依靠面板、国家和系列三层标签定位。数值未印出，纵轴每10分一格，而5%容差仅0.9分。\n\n**不确定的**\n所有给定值都只能按柱顶或菱形中心估读；75及重复的24可能对应其他非常接近的标记。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 2.20.",
+          "title": "Differences in key information-processing skills, by parental education",
+          "subtitle": "Adjusted and unadjusted differences in average literacy, numeracy and adaptive problem solving scores between adults (highly educated parents minus low-educated parents)",
+          "unit_text": "Score-point difference",
+          "placement": "above"
+        },
+        "type": "compound",
+        "type_other": "",
+        "panels": 3,
+        "series": 2,
+        "categories": 32,
+        "marks": 192,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Score-point difference",
+            "low": "0",
+            "high": "80",
+            "serves": "A. Literacy bars and diamonds"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "Germany",
+            "high": "Spain",
+            "serves": "A. Literacy bars and diamonds"
+          },
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Score-point difference",
+            "low": "0",
+            "high": "80",
+            "serves": "B. Numeracy bars and diamonds"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "Germany",
+            "high": "Spain",
+            "serves": "B. Numeracy bars and diamonds"
+          },
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Score-point difference",
+            "low": "0",
+            "high": "80",
+            "serves": "C. Adaptive problem solving bars and diamonds"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "Germany",
+            "high": "Spain",
+            "serves": "C. Adaptive problem solving bars and diamonds"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "panel",
+            "label_source": "panel_title",
+            "example": "A. Literacy"
+          },
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Germany"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Unadjusted"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "C. Adaptive problem solving",
+            "Korea",
+            "Adjusted"
+          ],
+          "value": "18",
+          "value_source": "axis_read",
+          "why_hard": "Ten-point ticks make 5% of 18, only 0.9 points, difficult to judge."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "mixed_marks",
+        "figure_id": "f1",
+        "evidence": "Pale vertical bars and black diamond markers overlap at every country in all three panels."
+      },
+      {
+        "key": "shaded_band",
+        "figure_id": "f1",
+        "evidence": "A pale blue vertical band spans the OECD average slot in every panel."
+      },
+      {
+        "key": "shared_legend",
+        "figure_id": "f1",
+        "evidence": "One “Unadjusted” and “Adjusted” legend governs all three panels."
+      },
+      {
+        "key": "small_multiples_4",
+        "figure_id": "f1",
+        "evidence": "Three repeated panels are titled “A. Literacy”, “B. Numeracy”, and “C. Adaptive problem solving”."
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "“Note: Adults aged 16-65” and “Source: Table A.2.12 (L, N, A) in Annex A.” appear below."
+      },
+      {
+        "key": "legend_above_plot",
+        "figure_id": "f1",
+        "evidence": "The “Unadjusted” and “Adjusted” legend sits between the subtitle and panel A."
+      },
+      {
+        "key": "panel_title_per_panel",
+        "figure_id": "f1",
+        "evidence": "Each panel has a dark-blue banner carrying its own lettered title."
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "“Score-point difference” appears above each left axis whose ticks read 0 through 80."
+      },
+      {
+        "key": "footnote_marker",
+        "figure_id": "f1",
+        "evidence": "The category label “Poland*” is explained by “*Caution is required” in the note."
+      },
+      {
+        "key": "axis_title_above_axis",
+        "figure_id": "f1",
+        "evidence": "“Score-point difference” is printed horizontally above the top-left of each value axis."
+      },
+      {
+        "key": "rotated_x_ticks",
+        "figure_id": "f1",
+        "evidence": "All country and economy labels are rotated vertically beneath the panels."
+      },
+      {
+        "key": "dense_marks_100plus",
+        "figure_id": "f1",
+        "evidence": "Three panels each contain 32 bars and 32 diamonds, about 192 marks total."
+      },
+      {
+        "key": "highlighted_category",
+        "figure_id": "f1",
+        "evidence": "“OECD average” is bold and backed by a pale blue strip in every panel."
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "Horizontal rules cross each plot at 10-point intervals; no vertical grid lines are drawn."
+      }
+    ],
+    "new_components": [
+      {
+        "name": "per_panel_category_order",
+        "figure_id": "f1",
+        "evidence": "Country order changes between “A. Literacy”, “B. Numeracy”, and “C. Adaptive problem solving”.",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "75",
+        "figure_id": "f1",
+        "mark": "the A. Literacy Germany Unadjusted bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. Literacy",
+          "Germany",
+          "Unadjusted"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "23",
+        "figure_id": "f1",
+        "mark": "the A. Literacy France Adjusted diamond",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. Literacy",
+          "France",
+          "Adjusted"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "24",
+        "figure_id": "f1",
+        "mark": "the B. Numeracy France Adjusted diamond",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "B. Numeracy",
+          "France",
+          "Adjusted"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "70",
+        "figure_id": "f1",
+        "mark": "the A. Literacy Switzerland Unadjusted bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. Literacy",
+          "Switzerland",
+          "Unadjusted"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "18",
+        "figure_id": "f1",
+        "mark": "the B. Numeracy Japan Adjusted diamond",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "B. Numeracy",
+          "Japan",
+          "Adjusted"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "27",
+        "figure_id": "f1",
+        "mark": "the B. Numeracy Canada Adjusted diamond",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "B. Numeracy",
+          "Canada",
+          "Adjusted"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "65",
+        "figure_id": "f1",
+        "mark": "the B. Numeracy Switzerland Unadjusted bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "B. Numeracy",
+          "Switzerland",
+          "Unadjusted"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "24",
+        "figure_id": "f1",
+        "mark": "the A. Literacy Spain Unadjusted bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. Literacy",
+          "Spain",
+          "Unadjusted"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "25",
+        "figure_id": "f1",
+        "mark": "the C. Adaptive problem solving Canada Adjusted diamond",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "C. Adaptive problem solving",
+          "Canada",
+          "Adjusted"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "42",
+        "figure_id": "f1",
+        "mark": "the C. Adaptive problem solving England (UK) Unadjusted bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "C. Adaptive problem solving",
+          "England (UK)",
+          "Unadjusted"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "值18的5%仅0.9分，纵轴却每10分一格且菱形无数值标签，最易卡在精度。与三层标签定位相比，这更难。 (Panel、国家、series 的标签都在图上。) 。 另外，值75和重复的24也只能从柱顶或菱形中心估读，可能对应多个接近标记。因此，对低值而言，精度是主要阻碍。 综上，最难的是步骤2。 (这段话为加强说明，实际关键句已在前面。) 。 结论：步骤2。 具体来说，18的容差仅0.9，而刻度间隔为10。 无印刷数值标签。 这使精确读取困难。 选步骤2。 结束。  （抱歉，为满足30字限制应简化。） 18的5%仅0.9分，纵轴每10分一格且无数值标签，最难保证读取精度。  最终理由：18容差0.9，刻度10，无标签。 选择步骤2。 以上。 终。  ",
+    "examples": []
+  }
+}

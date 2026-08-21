@@ -1,0 +1,339 @@
+{
+  "stem": "2025-EIS_p47",
+  "document": "2025-EIS",
+  "tags": "need_estimate",
+  "model": "gpt-5.6-sol",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 617.1,
+  "usage": {
+    "input_tokens": 8127,
+    "output_tokens": 11165,
+    "cache_read_tokens": 8124
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "**画出来要什么**\n单面复合图：28个国家横条表示2025年，叠加2018年菱形和2024年短竖线；条色编码四类创新表现，EU另作深蓝高亮。还需两行标题、面板名、纵向网格、下置图例、指数轴标题和注释。\n\n**定位一个值难在哪**\n值8对应Romania的2025年短条。完整定位还需“Innovators”、年份尺度标题及“Emerging innovators”；数值未印，且短条与2024刻线几乎重叠，20分刻度难满足±0.4。\n\n**不确定的**\n所有数值均靠轴估读；低值处标记重叠。150、105等附近存在相邻候选，但按三种标记系列的分布作了归属。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 16",
+          "title": "Innovation performance of the EU27 Member States in the Innovators",
+          "subtitle": "dimension",
+          "unit_text": "indexed to the EU in 2018",
+          "placement": "above"
+        },
+        "type": "compound",
+        "type_other": "",
+        "panels": 1,
+        "series": 6,
+        "categories": 28,
+        "marks": 84,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "category",
+            "unit_text": "",
+            "low": "Greece",
+            "high": "Romania",
+            "serves": "all bars and overlaid markers"
+          },
+          {
+            "side": "bottom",
+            "role": "value",
+            "unit_text": "Score for dimension 3.1 in 2025 (indexed to the EU in 2018)",
+            "low": "0",
+            "high": "220",
+            "serves": "bars, diamonds and vertical ticks"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "panel",
+            "label_source": "panel_title",
+            "example": "Innovators"
+          },
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Romania"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Score in 2024"
+          },
+          {
+            "role": "colour_group",
+            "label_source": "legend",
+            "example": "Emerging innovators"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Innovators",
+            "Romania",
+            "Score for dimension 3.1 in 2025 (indexed to the EU in 2018)",
+            "Emerging innovators"
+          ],
+          "value": "8",
+          "value_source": "axis_read",
+          "why_hard": "Near-zero bar overlaps a tick; 20-point spacing far exceeds 5% of 8."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "mixed_marks",
+        "figure_id": "f1",
+        "evidence": "Horizontal bars are overlaid with diamond markers and short vertical tick markers."
+      },
+      {
+        "key": "horizontal_bars",
+        "figure_id": "f1",
+        "evidence": "Country categories run down the left while bars extend rightward."
+      },
+      {
+        "key": "color_encodes_extra_attribute",
+        "figure_id": "f1",
+        "evidence": "Four bar colours denote countries’ overall performance groups."
+      },
+      {
+        "key": "tick_marker_as_series",
+        "figure_id": "f1",
+        "evidence": "“Score in 2024” is drawn as a short vertical tick for each country."
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "The six-entry legend is arranged beneath the x-axis title."
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "“Note: All performance scores are relative to that of the EU in 2018” appears below."
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "The bottom title reads “Score for dimension 3.1 in 2025 (indexed to the EU in 2018)”."
+      },
+      {
+        "key": "axis_title_below_plot",
+        "figure_id": "f1",
+        "evidence": "The indexed-score axis title is centred below the plotting area."
+      },
+      {
+        "key": "rebased_index_values",
+        "figure_id": "f1",
+        "evidence": "The scale explicitly says “indexed to the EU in 2018”."
+      },
+      {
+        "key": "panel_title_per_panel",
+        "figure_id": "f1",
+        "evidence": "“Innovators” is printed in blue immediately above the panel."
+      },
+      {
+        "key": "highlighted_category",
+        "figure_id": "f1",
+        "evidence": "The EU bar is dark blue and its diamond white, unlike the group-coloured country bars."
+      },
+      {
+        "key": "vgrid_only",
+        "figure_id": "f1",
+        "evidence": "Only pale vertical grid lines cross the plotting area."
+      }
+    ],
+    "new_components": [
+      {
+        "name": "point_marker_as_series",
+        "figure_id": "f1",
+        "evidence": "Black diamonds represent “Score in 2018” at every country row.",
+        "affects": [
+          2,
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "209",
+        "figure_id": "f1",
+        "mark": "the Greece 2025 horizontal bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Innovators",
+          "Greece",
+          "Score for dimension 3.1 in 2025 (indexed to the EU in 2018)",
+          "Moderate innovators"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "150",
+        "figure_id": "f1",
+        "mark": "the Austria Score in 2018 diamond",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Innovators",
+          "Austria",
+          "Score in 2018",
+          "Strong innovators"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "185",
+        "figure_id": "f1",
+        "mark": "the Belgium 2025 horizontal bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Innovators",
+          "Belgium",
+          "Score for dimension 3.1 in 2025 (indexed to the EU in 2018)",
+          "Strong innovators"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "8",
+        "figure_id": "f1",
+        "mark": "the Romania 2025 horizontal bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Innovators",
+          "Romania",
+          "Score for dimension 3.1 in 2025 (indexed to the EU in 2018)",
+          "Emerging innovators"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "105",
+        "figure_id": "f1",
+        "mark": "the Sweden Score in 2018 diamond",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Innovators",
+          "Sweden",
+          "Score in 2018",
+          "Innovation leaders"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "179",
+        "figure_id": "f1",
+        "mark": "the Portugal Score in 2018 diamond",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Innovators",
+          "Portugal",
+          "Score in 2018",
+          "Moderate innovators"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "195",
+        "figure_id": "f1",
+        "mark": "the Cyprus Score in 2024 vertical tick",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Innovators",
+          "Cyprus",
+          "Score in 2024",
+          "Moderate innovators"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "166",
+        "figure_id": "f1",
+        "mark": "the Germany Score in 2024 vertical tick",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Innovators",
+          "Germany",
+          "Score in 2024",
+          "Strong innovators"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "173",
+        "figure_id": "f1",
+        "mark": "the Finland Score in 2024 vertical tick",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Innovators",
+          "Finland",
+          "Score in 2024",
+          "Innovation leaders"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "37",
+        "figure_id": "f1",
+        "mark": "the Bulgaria 2025 horizontal bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Innovators",
+          "Bulgaria",
+          "Score for dimension 3.1 in 2025 (indexed to the EU in 2018)",
+          "Emerging innovators"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "值8未印出，20分刻度而5%仅0.4；罗马尼亚短条与刻线重叠。42116",
+    "examples": [
+      {
+        "gap": "P9",
+        "figure_id": "f1",
+        "quote": "Horizontal coloured bars represent countries’ performance in 2025, while diamonds and vertical bars indicate 2018 and 2024.",
+        "why": "同一面板需生成横条、菱形及短竖线，并保持三个年份共用同一数值轴。"
+      },
+      {
+        "gap": "P8",
+        "figure_id": "f1",
+        "quote": "The colours denote each country’s overall performance group based on the 2025 SII.",
+        "why": "条形颜色编码独立的表现组属性，而非年份系列；EU还使用额外高亮样式。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "Figure 16: Innovation performance of the EU27 Member States in the Innovators dimension",
+        "why": "需分别保存图号、跨行标题、面板名及指数单位的位置。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "Score for dimension 3.1 in 2025 (indexed to the EU in 2018)",
+        "why": "单位兼基期信息位于图下轴标题，刻度自身只显示裸数字。"
+      },
+      {
+        "gap": "P1",
+        "figure_id": "f1",
+        "quote": "The bottom axis runs from 0 to 220 in increments of 20; no values are printed on marks.",
+        "why": "高值可按轴估读，Romania的8仅容±0.4且与刻线重叠，精度必须逐标记判断。"
+      }
+    ]
+  }
+}

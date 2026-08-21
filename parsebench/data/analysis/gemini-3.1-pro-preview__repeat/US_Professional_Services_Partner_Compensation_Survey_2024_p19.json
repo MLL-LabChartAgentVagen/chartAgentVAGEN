@@ -1,0 +1,201 @@
+{
+  "stem": "US_Professional_Services_Partner_Compensation_Survey_2024_p19",
+  "document": "US_Professional_Services_Partner_Compensation_Survey_2024",
+  "tags": "untagged",
+  "model": "gemini-3.1-pro-preview",
+  "control": "repeat",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 57.3,
+  "usage": {
+    "input_tokens": 5313,
+    "output_tokens": 7386,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "**画出来要什么**\n生成器需要能够绘制水平分组条形图，并支持取消数值轴线和刻度显示。图例需水平放置在标题下方、绘图区上方。数值标签应能直接绘制在条形内部末端，当数值为0无条形时，需支持标签溢出到条形原本所在的外部位置。页面级排版要求支持在图表左侧并列分布独立的文本段落。\n\n**定位一个值难在哪**\n以“Rise of green resources and sustainable technology”中“Other”的值0为例，由于其对应的条形宽度为零，“0”作为文本悬空浮动显示，可能导致对齐解析错误。此外，Y轴类别和图例中均含有“Other”，极易在重建表格时引发行列键名冲突。\n\n**不确定的**\n对于数值为0的项，从视觉上无法确认底层渲染时是否存在极微小的占位条形，还是仅仅利用坐标将文本“0”定位在对应位置上。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "Key external factors influencing outlook (%)",
+          "subtitle": "Key external factors influencing outlook for current fiscal year, by firm type (Select all that apply)",
+          "unit_text": "(%)",
+          "placement": "above"
+        },
+        "type": "grouped_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 4,
+        "categories": 9,
+        "marks": 36,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "left",
+            "role": "category",
+            "unit_text": "",
+            "low": "Interest rates and their impact on the economy",
+            "high": "Other",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Rise of AI"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Technology/IT consulting"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Rise of green resources and sustainable technology",
+            "Other"
+          ],
+          "value": "0",
+          "value_source": "printed",
+          "why_hard": "the mark itself has zero width so the printed zero floats outside, breaking alignment"
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "grouped_bar",
+        "figure_id": "f1",
+        "evidence": "four colored bars are grouped side by side per category"
+      },
+      {
+        "key": "horizontal_bars",
+        "figure_id": "f1",
+        "evidence": "categories sit on the left y-axis and bars grow to the right"
+      },
+      {
+        "key": "no_value_axis",
+        "figure_id": "f1",
+        "evidence": "there is no x-axis line or ticks at the bottom"
+      },
+      {
+        "key": "value_label_inside",
+        "figure_id": "f1",
+        "evidence": "most numbers like 81 and 53 are printed inside the colored bars"
+      },
+      {
+        "key": "value_label_outside",
+        "figure_id": "f1",
+        "evidence": "the number 0 is printed outside where the bar would end"
+      },
+      {
+        "key": "legend_above_plot",
+        "figure_id": "f1",
+        "evidence": "the legend squares and text sit below the subtitle and above the bars"
+      },
+      {
+        "key": "side_text_bullets",
+        "figure_id": "page",
+        "evidence": "a column of body text starts with 'When compared...' alongside the figure"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "the unit (%) is written in the main figure title"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "Source line printed at the very bottom below the plot area"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "faint horizontal grid lines separate each category row"
+      }
+    ],
+    "new_components": [],
+    "spot_checks": [
+      {
+        "value": "81",
+        "figure_id": "f1",
+        "mark": "the Interest rates... segment for Strategy consulting",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Interest rates and their impact on the economy",
+          "Strategy consulting"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "60",
+        "figure_id": "f1",
+        "mark": "the US presidential... segment for Technology/IT consulting",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "US presidential elections/geopolitical uncertainty",
+          "Technology/IT consulting"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "19",
+        "figure_id": "f1",
+        "mark": "the Effects of hybrid... segment for Management/advisory consulting",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Effects of hybrid work models on our organization",
+          "Management/advisory consulting"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "5",
+        "figure_id": "f1",
+        "mark": "the Increasing threat... segment for Strategy consulting",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Increasing threat of cyberattacks",
+          "Strategy consulting"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "12",
+        "figure_id": "f1",
+        "mark": "the Increasing threat... segment for Management/advisory consulting",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Increasing threat of cyberattacks",
+          "Management/advisory consulting"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      }
+    ],
+    "hardest_step": 3,
+    "hardest_step_why": "类别名称和图例系列中都包含完全一致的“Other”，可能在重构二维表格时导致行列索引重名冲突，影响标签与单元格的准确关联。",
+    "examples": [
+      {
+        "gap": "P3",
+        "figure_id": "page",
+        "quote": "When compared to respondents at other types of firms",
+        "why": "左侧大段正文与右侧图表水平并行排版，当前的页面级渲染管线难以直接支持这种多列并排空间布局。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "the zero in Rise of industrial automation sits beyond the bar",
+        "why": "在无数值轴的情况下，将不同长度的条形及零值溢出的数值标签直接排布，要求样式维度支持更细粒度的标签摆放控制。"
+      }
+    ]
+  }
+}

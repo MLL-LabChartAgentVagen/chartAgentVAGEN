@@ -1,0 +1,311 @@
+{
+  "stem": "EnergyTechnologyPerspectives2024_p53",
+  "document": "EnergyTechnologyPerspectives2024",
+  "tags": "3d_chart+need_estimate",
+  "model": "claude-opus-5",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 98.3,
+  "usage": {
+    "input_tokens": 13963,
+    "output_tokens": 7788,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "## 画出来要什么\n一张 100% 堆叠柱图：11 个类别（EV and battery … Oil）、6 个图例系列（China…Rest of World），共约 66 个堆叠段，全部不标数值。纵轴刻度自带百分号「0%、20%…100%」，没有轴标题。横轴是两层：内层技术名（多行折行，如「EV and battery」「Heat pumps」），外层用方括号分成「Technology manufacturing」与「Fossil fuel supply」。图例横排在绘图区下方，右下角有「IEA. CC BY 4.0.」，下面两行小字 Note/Source，再下面是一句加粗蓝色结论句。标题行为「Figure 1.14   Energy employment in selected energy technologies by region, 2022」，编号与标题同一行。\n\n## 定位一个值难在哪\n以 20（Hydro 的 China 段）为例：柱高 100% 对应约 236 像素，1 个百分点仅 2.4 像素；5% 容差即 ±1pp，眼读几乎不可能稳定命中；而 Hydro 里 Middle East 那条橙色只有约 2pp，必须靠相邻边界相减才能得到，且顺序还得靠颜色对图例。地址需要三个标签：外层组、技术名、系列名。\n\n## 不确定的\n绘图区是否有横向网格线看不清；Wind、Nuclear、Bioenergy 各段边界只能目测，19、38、37、40、25 归到哪一段属于推测；极薄段（如 Coal 的 European Union）是否真实存在无法确认。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 1.14",
+          "title": "Energy employment in selected energy technologies by region, 2022",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "stacked_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 6,
+        "categories": 11,
+        "marks": 66,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "0%",
+            "high": "100%",
+            "serves": "all stacked segments in all eleven bars"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "EV and battery",
+            "high": "Oil",
+            "serves": "the eleven bars, one technology each"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "Technology manufacturing",
+            "high": "Fossil fuel supply",
+            "serves": "outer bracket grouping the eleven bars into two blocks"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Technology manufacturing"
+          },
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Hydro"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Middle East"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Technology manufacturing",
+            "Hydro",
+            "Middle East"
+          ],
+          "value": "~2%",
+          "value_source": "axis_read",
+          "why_hard": "Segment about two percentage points tall, no printed value; must subtract two cumulative stack boundaries"
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "stacked_bar",
+        "figure_id": "f1",
+        "evidence": "each technology is one bar built of six coloured segments from China up to Rest of World"
+      },
+      {
+        "key": "pct_stacked",
+        "figure_id": "f1",
+        "evidence": "axis ticks 0%, 20%, 40%, 60%, 80%, 100% and every bar tops out at 100%"
+      },
+      {
+        "key": "two_level_x_ticks",
+        "figure_id": "f1",
+        "evidence": "technology names row, below it brackets labelled 'Technology manufacturing' and 'Fossil fuel supply'"
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "'China  European Union  Middle East  North America  Other Asia Pacific  Rest of World' in a row under the axis"
+      },
+      {
+        "key": "wrapped_category_labels",
+        "figure_id": "f1",
+        "evidence": "'EV and battery', 'Battery storage', 'Heat pumps', 'Natural gas' wrap onto two lines"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "'Note: EV = electric vehicles.' and 'Source: Adapted from IEA (2023d).' under the plot"
+      },
+      {
+        "key": "footnote_marker",
+        "figure_id": "f1",
+        "evidence": "'Note: EV = electric vehicles.' expands the abbreviation used in the category label 'EV and battery'"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "bold_key_message_below_figure",
+        "figure_id": "f1",
+        "evidence": "bold blue sentence under source lines: 'Most manufacturing jobs for electric vehicles and batteries, renewables and heat pumps are located in China...'",
+        "affects": [
+          4
+        ]
+      },
+      {
+        "name": "rights_statement_line",
+        "figure_id": "f1",
+        "evidence": "'IEA. CC BY 4.0.' right-aligned between plot and note lines, repeated rotated in the page margin",
+        "affects": [
+          4
+        ]
+      },
+      {
+        "name": "group_bracket_axis",
+        "figure_id": "f1",
+        "evidence": "square-bracket rules under the tick row span bars 1-8 and bars 9-11 with a group name",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "73",
+        "figure_id": "f1",
+        "mark": "the China (red) segment of the 'EV and battery' bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "EV and battery",
+          "China"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "91",
+        "figure_id": "f1",
+        "mark": "the China (red) segment of the 'Battery storage' bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Battery storage",
+          "China"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "82",
+        "figure_id": "f1",
+        "mark": "the China (red) segment of the 'Solar PV' bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Solar PV",
+          "China"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "19",
+        "figure_id": "f1",
+        "mark": "most likely the Middle East (orange) segment of the 'Natural gas' bar; boundaries only eyeballed",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Natural gas",
+          "Middle East"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "38",
+        "figure_id": "f1",
+        "mark": "most likely the Rest of World (dark grey) top segment of the 'Natural gas' bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Natural gas",
+          "Rest of World"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "37",
+        "figure_id": "f1",
+        "mark": "most likely the Rest of World (dark grey) top segment of the 'Oil' bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Oil",
+          "Rest of World"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "20",
+        "figure_id": "f1",
+        "mark": "the China (red) segment of the 'Hydro' bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Hydro",
+          "China"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "40",
+        "figure_id": "f1",
+        "mark": "most likely the China (red) segment of the 'Nuclear' bar (red top sits just above 40%)",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Nuclear",
+          "China"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "54",
+        "figure_id": "f1",
+        "mark": "the China (red) segment of the 'Coal' bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Coal",
+          "China"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "25",
+        "figure_id": "f1",
+        "mark": "most likely the Rest of World (dark grey) top segment of the 'Hydro' bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Hydro",
+          "Rest of World"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "无任何数字标注，刻度间隔20%；19、20、25 这类小段5%容差仅±1pp，需相邻堆叠边界相减，眼读不可达。",
+    "examples": [
+      {
+        "gap": "P1",
+        "figure_id": "f1",
+        "quote": "in the Hydro bar an orange Middle East band about two percentage points tall sits between blue and teal",
+        "why": "细段的可达精度远低于5%，现有布尔式可读判定无法表达逐段精度差异。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "Figure 1.14   Energy employment in selected energy technologies by region, 2022",
+        "why": "编号与标题同一行、无副标题、单位只在刻度里，标题需拆成独立字段。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "y axis ticks read 0%, 20%, 40%, 60%, 80%, 100% with no axis title anywhere",
+        "why": "单位以百分号后缀写在每个刻度上，而非轴标题，需刻度格式与单位位置维度。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "Bold blue line under the source: \"Most manufacturing jobs for electric vehicles and batteries, renewables and heat pumps are located in China\"",
+        "why": "图下加粗结论句是页面级上下文，需要图外富文本导出，九项改动均未覆盖。"
+      },
+      {
+        "gap": "P3",
+        "figure_id": "f1",
+        "quote": "Brackets below the tick row label bars 1-8 'Technology manufacturing' and bars 9-11 'Fossil fuel supply'",
+        "why": "两层类别轴的外层分组要作为表列进入markdown，否则同名系列无法定位。"
+      }
+    ]
+  }
+}

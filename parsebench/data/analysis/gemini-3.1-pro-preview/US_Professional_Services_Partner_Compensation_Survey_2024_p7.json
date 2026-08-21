@@ -1,0 +1,263 @@
+{
+  "stem": "US_Professional_Services_Partner_Compensation_Survey_2024_p7",
+  "document": "US_Professional_Services_Partner_Compensation_Survey_2024",
+  "tags": "untagged",
+  "model": "gemini-3.1-pro-preview",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 72.6,
+  "usage": {
+    "input_tokens": 5314,
+    "output_tokens": 9990,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n页面包含两个图表，都采用了带有数据条的表格（或者说小多图形式的水平柱状图）布局。每个图表有一个共享的分类轴（位于左侧），右侧分为4个面板（列），代表不同的公司规模或任期。每个单元格内有一个水平柱子和对应的数值。图表没有绘制数值轴，数值直接标在柱子内部或外部，并且不同的面板使用不同的颜色。图表左侧有说明文字（侧边栏文本）。\n\n### 定位一个值难在哪\n以\"46\"为例，它位于第一个图表的\"Less than $1.00bn\"列和\"$1.00m-$3.00m\"行的交叉处。定位它的主要难点在于解析器需要正确识别这种带有图形元素的表格结构。如果模型将其视为纯图表而未能输出带有行列表头的Markdown表格，则无法通过表格匹配来定位到该数值。\n\n### 不确定的\n零值（如\"0\"）没有绘制任何图形，仅显示数字，不确定生成器是否能够处理这种条件渲染。图表颜色的选取似乎仅为了区分不同的列维度，没有额外的图例说明。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "Personal revenue targets (%)",
+          "subtitle": "Personal revenue targets, by firm size",
+          "unit_text": "%",
+          "placement": "above"
+        },
+        "type": "bar",
+        "type_other": "",
+        "panels": 4,
+        "series": 1,
+        "categories": 10,
+        "marks": 40,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "left",
+            "role": "category",
+            "unit_text": "",
+            "low": "Less than $1.00m",
+            "high": "Prefer not to answer",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "panel",
+            "label_source": "heading",
+            "example": "Less than $1.00bn"
+          },
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Less than $1.00m"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "$1.01bn-$5.00bn",
+            "$3.01m-$6.00m"
+          ],
+          "value": "26",
+          "value_source": "printed",
+          "why_hard": "Data is presented in a table structure with inline bars, which might be missed by parsers."
+        }
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "",
+          "title": "Personal revenue targets, by tenure at firm",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "bar",
+        "type_other": "",
+        "panels": 4,
+        "series": 1,
+        "categories": 10,
+        "marks": 40,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "left",
+            "role": "category",
+            "unit_text": "",
+            "low": "Less than $1.00m",
+            "high": "Prefer not to answer",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "panel",
+            "label_source": "heading",
+            "example": "Less than 3 years"
+          },
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Less than $1.00m"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "More than 10 years",
+            "More than $30.00m"
+          ],
+          "value": "29",
+          "value_source": "printed",
+          "why_hard": "Identifying the column header correctly in a mixed graphic-table layout."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "horizontal_bars",
+        "figure_id": "f1",
+        "evidence": "bars grow to the right from the categories"
+      },
+      {
+        "key": "no_value_axis",
+        "figure_id": "f1",
+        "evidence": "no value axis ticks or lines are drawn, only printed labels"
+      },
+      {
+        "key": "small_multiples_4",
+        "figure_id": "f1",
+        "evidence": "four columns of bars partitioned by firm size"
+      },
+      {
+        "key": "shared_axis",
+        "figure_id": "f1",
+        "evidence": "categories listed once on the left for all four panels"
+      },
+      {
+        "key": "multi_figure_page",
+        "figure_id": "page",
+        "evidence": "two distinct chart blocks with their own titles"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "Note: Numbers may not sum to 100%... Source: Heidrick..."
+      },
+      {
+        "key": "side_text_bullets",
+        "figure_id": "page",
+        "evidence": "body text runs in a column alongside the figures"
+      },
+      {
+        "key": "panel_title_per_panel",
+        "figure_id": "f1",
+        "evidence": "column headers like Less than $1.00bn sit over each panel"
+      },
+      {
+        "key": "value_label_inside",
+        "figure_id": "f1",
+        "evidence": "46 is printed inside the dark blue bar"
+      },
+      {
+        "key": "value_label_outside",
+        "figure_id": "f1",
+        "evidence": "5 is printed to the right of a short bar"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "(%) is printed in the figure title"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "data_bars_in_table",
+        "figure_id": "f1",
+        "evidence": "bars are drawn inside the columns of a table structure",
+        "affects": [
+          1
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "46",
+        "figure_id": "f1",
+        "mark": "the $1.00m-$3.00m bar under Less than $1.00bn",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Less than $1.00bn",
+          "$1.00m-$3.00m"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "13",
+        "figure_id": "f1",
+        "mark": "the $1.00m-$3.00m bar under $1.01bn-$5.00bn",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "$1.01bn-$5.00bn",
+          "$1.00m-$3.00m"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "27",
+        "figure_id": "f2",
+        "mark": "the $1.00m-$3.00m bar under Less than 3 years",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Less than 3 years",
+          "$1.00m-$3.00m"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "21",
+        "figure_id": "f2",
+        "mark": "the $6.01m-$10.00m bar under 3-5 years",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "3-5 years",
+          "$6.01m-$10.00m"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "29",
+        "figure_id": "f2",
+        "mark": "the More than $30.00m bar under More than 10 years",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "More than 10 years",
+          "More than $30.00m"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      }
+    ],
+    "hardest_step": 1,
+    "hardest_step_why": "以46为例，它在带有数据条的表格中。这种混合图表极易被解析器误认为纯图片而漏报Markdown表格，导致步骤1找不到对应表格结构而失败。",
+    "examples": [
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "bars are drawn inside the columns of a table structure",
+        "why": "图表引擎当前不支持生成单元格内嵌数据条(data bars)的混合表格结构。"
+      },
+      {
+        "gap": "P3",
+        "figure_id": "page",
+        "quote": "By firm size, we saw a correlation... in a column beside the figure",
+        "why": "页面排版为图文并排的两列结构，当前流水线无法生成并排文本区，需要整页级别的排版支持。"
+      }
+    ]
+  }
+}

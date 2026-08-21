@@ -1,0 +1,342 @@
+{
+  "stem": "sri-sigma-natural-catastrophes-1-2025_p20",
+  "document": "sri-sigma-natural-catastrophes-1-2025",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "repeat",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 72.3,
+  "usage": {
+    "input_tokens": 5340,
+    "output_tokens": 9968,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n页面包含两个图表。图12是一个多线图，包含4条没有数据标签的折线，X轴为连续时间（仅标出年份），Y轴无单位，范围100至150，网格线间距为10。图13是一个面积图，展示正负交替的数据，且面积在零轴以上和以下呈现不同颜色，并在图例中分别标注为利润和损失；Y轴刻度带有“%”符号，范围-15%到10%，网格线间距为5%。两个图表的标题和编号都放置在图表左侧的独立排版列中，下方都有数据来源说明，图例均位于底部。\n\n### 定位一个值难在哪\n定位并准确读取如 `-7%` 这样的值非常困难。所有的数值均未在图表中标出，必须依赖坐标轴估算。以图13中2017年的 `-7%` 为例，Y轴的网格线间距为 5%，且没有次级刻度线，肉眼根本无法将一个位于 -5% 和 -10% 之间的点精确估读至 5% 的误差容忍度内。同样地，图12中的 `102` 也很难从间距为 10 的刻度中读出。因此，所有的抽查点都会在读取精度（步骤2）上失败。\n\n### 不确定的\n图13中的正负面积变色是否在原始数据中属于两个不同的数据系列，还是单一指标在渲染时根据正负值自动应用的条件格式，仅从视觉上无法绝对确定。图12中102等具体数值确切对应的月份只能大致估算。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 12",
+          "title": "US Construction cost indices",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "beside"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 1,
+        "series": 4,
+        "categories": 60,
+        "marks": 240,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "100",
+            "high": "150",
+            "serves": "all lines"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "2020",
+            "high": "2025",
+            "serves": "all lines"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "CPI"
+          },
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2022"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "PPI, Materials & Components for Construction",
+            "2022"
+          ],
+          "value": "116",
+          "value_source": "axis_read",
+          "why_hard": "Sparse y-axis ticks (every 10 units) and unlabelled intermediate time points make reading exact values difficult."
+        }
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "Figure 13",
+          "title": "US homeowner insurance underwriting result",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "beside"
+        },
+        "type": "area",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 11,
+        "marks": 11,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "-15%",
+            "high": "10%",
+            "serves": "all areas"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "2014",
+            "high": "2024",
+            "serves": "all areas"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Underwriting loss"
+          },
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2017"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Underwriting loss",
+            "2017"
+          ],
+          "value": "-7%",
+          "value_source": "axis_read",
+          "why_hard": "The value must be interpolated between -5% and -10% gridlines, which is error-prone."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "the legend sits below the x-axis"
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f2",
+        "evidence": "the legend sits below the x-axis"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "Source: Bureau of Labor Statistics..."
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f2",
+        "evidence": "Source: AM Best, Swiss Re Institute"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "horizontal grid lines are drawn, no vertical ones"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f2",
+        "evidence": "horizontal grid lines are drawn, no vertical ones"
+      },
+      {
+        "key": "negative_values",
+        "figure_id": "f2",
+        "evidence": "y-axis drops to -15% with a distinct zero line"
+      },
+      {
+        "key": "sparse_time_ticks",
+        "figure_id": "f1",
+        "evidence": "ticks are yearly but the lines plot high-frequency data between them"
+      },
+      {
+        "key": "multi_figure_page",
+        "figure_id": "page",
+        "evidence": "Figure 12 and Figure 13 appear on the same page"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "heading_beside_plot",
+        "figure_id": "page",
+        "evidence": "figure numbers and titles are placed in a side column to the left of the plots",
+        "affects": [
+          4
+        ]
+      },
+      {
+        "name": "color_split_by_sign",
+        "figure_id": "f2",
+        "evidence": "a single area chart changes color depending on whether it is above or below zero",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "100",
+        "figure_id": "f1",
+        "mark": "CPI line around 2020",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "CPI",
+          "2020"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "102",
+        "figure_id": "f1",
+        "mark": "CPI line in early 2021",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "CPI",
+          "2021"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "138",
+        "figure_id": "f1",
+        "mark": "PPI, Final Demand, Construction line around 2023",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "PPI, Final Demand, Construction"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "138",
+        "figure_id": "f1",
+        "mark": "One-Family Houses under Construction line around 2025",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "One-Family Houses under Construction, Census",
+          "2025"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "122",
+        "figure_id": "f1",
+        "mark": "CPI line at 2025",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "CPI",
+          "2025"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "9%",
+        "figure_id": "f2",
+        "mark": "Underwriting profit area at 2014",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Underwriting profit",
+          "2014"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-7%",
+        "figure_id": "f2",
+        "mark": "Underwriting loss area at 2017",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Underwriting loss",
+          "2017"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "2.5%",
+        "figure_id": "f2",
+        "mark": "Underwriting profit area at 2019",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Underwriting profit",
+          "2019"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-10%",
+        "figure_id": "f2",
+        "mark": "Underwriting loss area at 2023",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Underwriting loss",
+          "2023"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-6%",
+        "figure_id": "f2",
+        "mark": "Underwriting loss area at 2020",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Underwriting loss",
+          "2020"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "图表没有任何数据标签，Y轴网格间距过大（图12为10，图13为5%），纯靠肉眼比对坐标轴完全无法将-7%或102等数值读到5%的误差容忍度内，必然在数值读取步骤失败。",
+    "examples": [
+      {
+        "gap": "P7",
+        "figure_id": "page",
+        "quote": "Figure 12 and its title are drawn in a dedicated left column beside the plot area",
+        "why": "当前的图表生成器假定标题位于图表的正上方或正下方，无法生成标题和图表主体分列左右排版的布局。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f2",
+        "quote": "y-axis ticks are written as 10%, 5%, 0%, -5% with the unit on every label",
+        "why": "需要支持将百分号等单位符号内联追加到每一个Y轴刻度标签上，而不是只在轴顶部显示一次单位。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f2",
+        "quote": "A single area chart changes color from dark to light green when crossing zero",
+        "why": "需要支持面积图在穿过零轴时自动改变填充颜色，并为正负面积分配不同的图例名称，这超出了基础的分类颜色映射功能。"
+      }
+    ]
+  }
+}

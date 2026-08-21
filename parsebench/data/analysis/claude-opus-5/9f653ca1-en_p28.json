@@ -1,0 +1,357 @@
+{
+  "stem": "9f653ca1-en_p28",
+  "document": "9f653ca1-en",
+  "tags": "need_estimate",
+  "model": "claude-opus-5",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 93.2,
+  "usage": {
+    "input_tokens": 13834,
+    "output_tokens": 7767,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "## 画出来要什么\n一个编号图 `Figure 1.14`（标题折两行），下辖两个自带小标题的面板 `A. Trimmed mean inflation`、`B. Inflation expectations, one year ahead`。每个面板都是柱＋三角标记的混合图：绿色柱 `Latest`，橙色三角 `One year ago` / `December 2024` 叠在同一类别位上，图例画在绘图区内部、每板各一个。面板 A 还要能在一个面板里做两套刻度：左轴 0–5、右轴 0–50，中间用一条竖黑线把 `TUR` 单独隔出来读右轴。类别轴是三字母代码、竖排旋转 90°，`EA` 那根柱换成蓝色以示汇总体。单位写在顶端刻度之上（`Y-o-y % changes`、`%`），图下有 Note/Source 与 `StatLink https://stat.link/0bjrsm`。\n\n## 定位一个值难在哪\n`32.0` 是面板 A 最右侧 `TUR` 的绿柱。它既不印数字，也不能按左轴读：柱高约 3.15，只有认出竖线右侧改用右轴 0–50、刻度间隔 10，才得 ≈32。5% 容差即 ±1.6，不到刻度的六分之一。要写清它，行键需同时含面板名、`TUR`、`Latest` 和“右轴”。\n\n## 不确定的\n第二个 `2.8` 无法唯一定位：面板 A 的 `USA` 柱、`GBR` 三角、面板 B 的 `EA`/`NZL` 柱都在 2.75–2.85 之间。面板 A 三角的精确值（如 IND 3.8）也全靠目测。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 1.14.",
+          "title": "Underlying inflation and short-term inflation expectations have risen in some economies",
+          "subtitle": "",
+          "unit_text": "Y-o-y % changes",
+          "placement": "above"
+        },
+        "type": "compound",
+        "type_other": "",
+        "panels": 2,
+        "series": 2,
+        "categories": 19,
+        "marks": 62,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Y-o-y % changes",
+            "low": "0",
+            "high": "5",
+            "serves": "Panel A bars and triangles for GBR through FRA"
+          },
+          {
+            "side": "right",
+            "role": "value",
+            "unit_text": "Y-o-y % changes",
+            "low": "0",
+            "high": "50",
+            "serves": "only the TUR bar and triangle, right of the divider"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "GBR",
+            "high": "TUR",
+            "serves": "all Panel A bars and triangles"
+          },
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "%",
+            "low": "0",
+            "high": "8",
+            "serves": "all Panel B bars and triangles"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "GRC",
+            "high": "FRA",
+            "serves": "all Panel B bars and triangles"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "panel",
+            "label_source": "panel_title",
+            "example": "A. Trimmed mean inflation"
+          },
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "TUR"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "One year ago"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "A. Trimmed mean inflation",
+            "TUR",
+            "Latest"
+          ],
+          "value": "≈32 (right axis)",
+          "value_source": "axis_read",
+          "why_hard": "TUR sits past a vertical divider and reads on the right 0-50 axis, ticks every 10"
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "dual_axis",
+        "figure_id": "f1",
+        "evidence": "Panel A has left ticks 0-5 and right ticks 0-50, both labelled 'Y-o-y % changes'"
+      },
+      {
+        "key": "mixed_marks",
+        "figure_id": "f1",
+        "evidence": "orange triangles overlaid on green bars in both panels"
+      },
+      {
+        "key": "tick_marker_as_series",
+        "figure_id": "f1",
+        "evidence": "legend 'One year ago' is an orange triangle drawn at each category position over the bar"
+      },
+      {
+        "key": "highlighted_category",
+        "figure_id": "f1",
+        "evidence": "the EA bar is blue while all other bars are green, in both panels"
+      },
+      {
+        "key": "abbrev_category_axis",
+        "figure_id": "f1",
+        "evidence": "x ticks read GBR, USA, ESP, JPN, CAN, DEU, EA ... TUR"
+      },
+      {
+        "key": "rotated_x_ticks",
+        "figure_id": "f1",
+        "evidence": "all three-letter codes set vertically under the baseline"
+      },
+      {
+        "key": "panel_title_per_panel",
+        "figure_id": "f1",
+        "evidence": "'A. Trimmed mean inflation' and 'B. Inflation expectations, one year ahead' above each plot"
+      },
+      {
+        "key": "per_panel_legend",
+        "figure_id": "f1",
+        "evidence": "Panel A legend 'Latest / One year ago'; Panel B legend 'Latest / December 2024'"
+      },
+      {
+        "key": "legend_inside_plot",
+        "figure_id": "f1",
+        "evidence": "both legends are drawn over the upper part of their own plot areas"
+      },
+      {
+        "key": "per_panel_axis_range",
+        "figure_id": "f1",
+        "evidence": "Panel A left axis ends at 5, Panel B left axis ends at 8"
+      },
+      {
+        "key": "small_multiples_4",
+        "figure_id": "f1",
+        "evidence": "two panels A and B of the same bar-plus-marker construction under one figure number"
+      },
+      {
+        "key": "axis_title_above_axis",
+        "figure_id": "f1",
+        "evidence": "'Y-o-y % changes' sits above the '5' tick; '%' sits above the '8' tick"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "axis line reads 'Y-o-y % changes' while ticks are bare 0,1,2,3,4,5"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "faint horizontal rules at each value tick, no vertical grid"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "'Note: In Panel A, the latest data are for October 2025...' and 'Source: Banco de Mexico; ...'"
+      },
+      {
+        "key": "data_link_below_figure",
+        "figure_id": "f1",
+        "evidence": "'StatLink  https://stat.link/0bjrsm' under the note block"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "category_axis_split_with_second_scale",
+        "figure_id": "f1",
+        "evidence": "a vertical black rule after FRA separates TUR, which is read against the right 0-50 axis",
+        "affects": [
+          2,
+          3
+        ]
+      },
+      {
+        "name": "duplicate_axis_title_both_sides",
+        "figure_id": "f1",
+        "evidence": "'Y-o-y % changes' printed above both the left and the right axis of Panel A",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "name": "series_name_differs_per_panel",
+        "figure_id": "f1",
+        "evidence": "comparison series is 'One year ago' in Panel A but 'December 2024' in Panel B",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "3.3",
+        "figure_id": "f1",
+        "mark": "the GBR green bar in Panel A, tallest on the left axis",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. Trimmed mean inflation",
+          "GBR",
+          "Latest"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "2.8",
+        "figure_id": "f1",
+        "mark": "the USA Latest bar in Panel A (~2.85); the GBR 'One year ago' triangle sits at the same height",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. Trimmed mean inflation",
+          "USA",
+          "Latest"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "3.8",
+        "figure_id": "f1",
+        "mark": "the orange triangle above IND in Panel A, far above the 1.25 IND bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. Trimmed mean inflation",
+          "IND",
+          "One year ago"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "32.0",
+        "figure_id": "f1",
+        "mark": "the TUR green bar right of the divider in Panel A, read on the 0-50 right axis",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. Trimmed mean inflation",
+          "TUR",
+          "Latest"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "46.0",
+        "figure_id": "f1",
+        "mark": "the topmost orange triangle above TUR in Panel A, on the right axis",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. Trimmed mean inflation",
+          "TUR",
+          "One year ago"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "8.0",
+        "figure_id": "f1",
+        "mark": "the GRC bar in Panel B, reaching the top tick 8",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "B. Inflation expectations, one year ahead",
+          "GRC",
+          "Latest"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "4.5",
+        "figure_id": "f1",
+        "mark": "the USA bar in Panel B, third from the left",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "B. Inflation expectations, one year ahead",
+          "USA",
+          "Latest"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "2.8",
+        "figure_id": "f1",
+        "mark": "the blue EA bar in Panel B (~2.75); NZL and the DEU triangle sit at nearly the same height",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "B. Inflation expectations, one year ahead",
+          "EA",
+          "Latest"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "无任何数值标注：32.0 要认出右轴（刻度间隔10，5%容差仅±1.6）；2.8 在两板多根柱与三角间无法区分。",
+    "examples": [
+      {
+        "gap": "P9",
+        "figure_id": "f1",
+        "quote": "Panel A: left ticks 0..5 and right ticks 0..50 both titled 'Y-o-y % changes'; TUR sits right of a vertical rule",
+        "why": "同一面板内柱与三角混合、且末列改读右轴，值必须记录轴与标记形状，现管线无此键。"
+      },
+      {
+        "gap": "P2",
+        "figure_id": "f1",
+        "quote": "'A. Trimmed mean inflation' and 'B. Inflation expectations, one year ahead' under one 'Figure 1.14.'",
+        "why": "USA、EA、CAN 在两板都出现，不带面板键的行无法唯一定位一个值。"
+      },
+      {
+        "gap": "P8",
+        "figure_id": "f1",
+        "quote": "the EA bar is drawn blue in both panels while every other bar is green",
+        "why": "颜色标记“欧元区汇总体”这一图例未表达的属性，需进入键。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "'Y-o-y % changes' printed above the top tick on both left and right axes; '%' above '8' in Panel B",
+        "why": "单位既非轴旁也非标题，而是置于顶刻度上方且左右各一份，现无对应字段。"
+      },
+      {
+        "gap": "P1",
+        "figure_id": "f1",
+        "quote": "Panel A y ticks are 0,1,2,3,4,5 with no printed values on any bar or triangle",
+        "why": "3.3 的5%容差为0.165，仅刻度间距的六分之一，可读性应按标记给精度而非布尔门。"
+      }
+    ]
+  }
+}

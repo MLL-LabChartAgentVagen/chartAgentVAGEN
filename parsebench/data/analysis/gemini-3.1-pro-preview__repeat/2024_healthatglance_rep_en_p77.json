@@ -1,0 +1,338 @@
+{
+  "stem": "2024_healthatglance_rep_en_p77",
+  "document": "2024_healthatglance_rep_en",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "repeat",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 147.9,
+  "usage": {
+    "input_tokens": 5299,
+    "output_tokens": 20563,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "- **画出来要什么** — 页面包含一个带标题的数据表格（Table 2.2）以及一个展示各国年龄组间体能活动差异的图表（Figure 2.17）。后者是一种变体范围图（哑铃图），其中“18至64岁”系列使用水平短横线标记，而“65岁及以上”系列使用圆点，同类别的两点间通过垂直线段相连。图表底部有交替的灰色垂直背景带以辅助对齐，x轴的国家名称倾斜显示，图例及y轴的单位说明均位于图表正上方。代表欧盟平均水平（EU27）的圆点被特别标记为红色以示强调。\n- **定位一个值难在哪** — 所有的抽查数值均来自Figure 2.17，由于其y轴范围为0到80且步长为10，整个绘图区仅有水平主网格线，要求模型从图上准确读出非整十的数值。例如保加利亚的圆点值为2、波兰的圆点值为9，由于基数极小，要在没有细分刻度线的情况下将其估算到5%的容错率（对2而言即±0.1）之内，肉眼几乎无法完成，必然会在精度验证步骤失败。\n- **不确定的** — 数值9对应的国家有多个（波兰、克罗地亚、立陶宛的数据点均位于9左右），只能合理推测选取其中一个（如波兰）作为其定位依据。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Table 2.2.",
+          "title": "Overview of behavioural and environmental risk factors among older people compared to younger people",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "other",
+        "type_other": "data table",
+        "panels": 1,
+        "series": 2,
+        "categories": 8,
+        "marks": 16,
+        "values_printed": "all",
+        "axes": [],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "inline_label",
+            "example": "Obesity rate"
+          },
+          {
+            "role": "series",
+            "label_source": "heading",
+            "example": "People aged 18-64"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Obesity rate",
+            "People aged 18-64"
+          ],
+          "value": "15%",
+          "value_source": "printed",
+          "why_hard": "The value is contained within a table cell rather than on a traditional plot."
+        }
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "Figure 2.17.",
+          "title": "Only 22% of people aged over 65 meet the WHO recommendation on minimum physical activity per week",
+          "subtitle": "",
+          "unit_text": "% of people reporting to spend 150 minutes or more per week of physical activity",
+          "placement": "above"
+        },
+        "type": "other",
+        "type_other": "dumbbell chart",
+        "panels": 1,
+        "series": 2,
+        "categories": 29,
+        "marks": 87,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "% of people reporting to spend 150 minutes or more per week of physical activity",
+            "low": "0",
+            "high": "80",
+            "serves": "all marks"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "Norway",
+            "high": "Romania",
+            "serves": "all marks"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Norway"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "65 years or over"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Sweden",
+            "From 18 to 64 years"
+          ],
+          "value": "59",
+          "value_source": "axis_read",
+          "why_hard": "Requires visually interpolating a small mark on a large 0-80 scale with interval gaps of 10."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "data_table_as_figure",
+        "figure_id": "f1",
+        "evidence": "Table 2.2 is a formatted table with a title and numbers"
+      },
+      {
+        "key": "range_connector_line",
+        "figure_id": "f2",
+        "evidence": "a vertical line connects the dash and dot for each country"
+      },
+      {
+        "key": "tick_marker_as_series",
+        "figure_id": "f2",
+        "evidence": "the 'From 18 to 64 years' series is drawn as a flat dash"
+      },
+      {
+        "key": "legend_above_plot",
+        "figure_id": "f2",
+        "evidence": "the legend sits above the plot area in a gray box"
+      },
+      {
+        "key": "axis_title_above_axis",
+        "figure_id": "f2",
+        "evidence": "the unit '% of people...' is written above the y-axis"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f2",
+        "evidence": "'% of people...' is placed as the axis title"
+      },
+      {
+        "key": "rotated_x_ticks",
+        "figure_id": "f2",
+        "evidence": "country names on the x-axis are rotated"
+      },
+      {
+        "key": "highlighted_category",
+        "figure_id": "f2",
+        "evidence": "the dot for EU27 is uniquely coloured red"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f2",
+        "evidence": "the plot only has horizontal grid lines"
+      },
+      {
+        "key": "panel_background",
+        "figure_id": "f2",
+        "evidence": "alternating gray vertical bands in the plot background"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "page",
+        "evidence": "source and note lines are printed under both figures"
+      },
+      {
+        "key": "multi_figure_page",
+        "figure_id": "page",
+        "evidence": "the page contains both Table 2.2 and Figure 2.17"
+      },
+      {
+        "key": "data_link_below_figure",
+        "figure_id": "f2",
+        "evidence": "a StatLink URL appears below Figure 2.17"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "alternating_category_bands",
+        "figure_id": "f2",
+        "evidence": "vertical gray shading alternates behind each category column",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "59",
+        "figure_id": "f2",
+        "mark": "the Sweden From 18 to 64 years dash",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Sweden",
+          "From 18 to 64 years"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "69",
+        "figure_id": "f2",
+        "mark": "the Norway From 18 to 64 years dash",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Norway",
+          "From 18 to 64 years"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "22",
+        "figure_id": "f2",
+        "mark": "the EU27 65 years or over dot",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "EU27",
+          "65 years or over"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "35",
+        "figure_id": "f2",
+        "mark": "the EU27 From 18 to 64 years dash",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "EU27",
+          "From 18 to 64 years"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "2",
+        "figure_id": "f2",
+        "mark": "the Bulgaria 65 years or over dot",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Bulgaria",
+          "65 years or over"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "9",
+        "figure_id": "f2",
+        "mark": "the Poland 65 years or over dot",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Poland",
+          "65 years or over"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "55",
+        "figure_id": "f2",
+        "mark": "the Netherlands 65 years or over dot",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Netherlands",
+          "65 years or over"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "52",
+        "figure_id": "f2",
+        "mark": "the Sweden 65 years or over dot",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Sweden",
+          "65 years or over"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "20",
+        "figure_id": "f2",
+        "mark": "the France 65 years or over dot",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "France",
+          "65 years or over"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "38",
+        "figure_id": "f2",
+        "mark": "the Germany 65 years or over dot",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Germany",
+          "65 years or over"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "图2.17的y轴范围为0-80且步长为10，对于较小的值（如保加利亚的点为2，波兰为9），肉眼极难将其估算到5%的容错率（例如2的容错区间仅为1.9-2.1）之内，必然在精度验证时失败。",
+    "examples": [
+      {
+        "gap": "P1",
+        "figure_id": "f2",
+        "quote": "the Bulgaria 65 years or over dot is at 2",
+        "why": "0-80的大跨度坐标轴上极小的值无法以统一的5%容忍度被准确读取，此类图形需要系统具备因数值大小而异的动态精度判断能力。"
+      },
+      {
+        "gap": "P8",
+        "figure_id": "f2",
+        "quote": "the dot for EU27 is coloured red instead of blue",
+        "why": "图表中EU27的数据点被特殊标记为红色以表示强调，而图例中并未声明红色的含义，目前的流水线无法捕获这种依靠颜色传递的额外属性信息。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f2",
+        "quote": "a vertical line connects a dash and a dot",
+        "why": "同一类别的两个系列分别使用水平短横线和圆点，并通过垂直线段相连，系统当前缺乏对此类带有特殊系列标记的范围图或哑铃图的支持。"
+      }
+    ]
+  }
+}

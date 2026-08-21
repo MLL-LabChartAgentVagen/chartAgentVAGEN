@@ -1,0 +1,194 @@
+{
+  "stem": "(Web_version)_E-Government_Survey_2024_1392024_p93",
+  "document": "(Web_version)_E-Government_Survey_2024_1392024",
+  "tags": "untagged",
+  "model": "gemini-3.1-pro-preview",
+  "control": "no_vocab",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 37.8,
+  "usage": {
+    "input_tokens": 3163,
+    "output_tokens": 4913,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n这是一个水平分组条形图。生成器需要支持：\n- Y轴放置超长文本标签，并支持自动换行（如“Specific service transactions...”被拆分为两行并右对齐）。\n- 动态的数据标签位置：数值标签在条形较长时位于条形内部右对齐（如 98%），在条形较短时位于条形外部左对齐（如 26%），同时标签文字颜色根据位置自动适配（内部为白色或深色，外部为深色）。\n- 图例放置在绘图区内部的右下角空白处，而不是传统的图表外侧。\n- X轴的刻度标签带有 `%` 符号，且内部网格线仅在垂直方向出现。\n\n### 定位一个值难在哪\n定位 `61%` 时，需要匹配的类别标签为 `Specific service transactions initiated through\nthe portal can be saved and accessed later`。该标签在图中跨两行显示，解析工具在提取表格时可能保留换行符、截断文本或由于排版将其解析为两个独立的类别，导致表格行键值无法与原文精确关联。\n\n### 不确定的\n图表标题写的是 `Number of Member States`，但图表中所有的数值及X轴刻度都是百分比（%）。无法从本页确定这些百分比是基于多少个成员国的总数计算得出的，坐标轴也没有额外的单位说明。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 2.27",
+          "title": "Number of Member States with portals incorporating the assessed technology features, 2022 and 2024",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "grouped_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 12,
+        "marks": 24,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "bottom",
+            "role": "value",
+            "unit_text": "",
+            "low": "0%",
+            "high": "100%",
+            "serves": "all bars"
+          },
+          {
+            "side": "left",
+            "role": "category",
+            "unit_text": "",
+            "low": "Portal offers AI-enabled chatbot functionality",
+            "high": "Portal can be found on search engine",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Portal can be found on search engine"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "2024"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Specific service transactions initiated through the portal can be saved and accessed later",
+            "2024"
+          ],
+          "value": "61%",
+          "value_source": "printed",
+          "why_hard": "The category label is long and split across two lines, which can break table extraction."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "horizontal_grouped_bar",
+        "figure_id": "f1",
+        "evidence": "bars for 2022 and 2024 extend horizontally for each category",
+        "affects": [
+          1
+        ]
+      },
+      {
+        "key": "multi_line_axis_labels",
+        "figure_id": "f1",
+        "evidence": "the label starting with 'Specific service transactions' spans two lines",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "legend_inside_plot",
+        "figure_id": "f1",
+        "evidence": "the 2024 and 2022 legend is placed inside the bottom right of the chart area",
+        "affects": []
+      },
+      {
+        "key": "source_note",
+        "figure_id": "f1",
+        "evidence": "the line starting with 'Sources:' is placed below the x-axis",
+        "affects": []
+      }
+    ],
+    "new_components": [
+      {
+        "name": "dynamic_data_label_placement",
+        "figure_id": "f1",
+        "evidence": "98% is inside the bar, while 26% is placed outside the short bar",
+        "affects": []
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "91",
+        "figure_id": "f1",
+        "mark": "the 2024 blue bar for 'Portal is developed using responsive web design'",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Portal is developed using responsive web design",
+          "2024"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "83",
+        "figure_id": "f1",
+        "mark": "the 2022 yellow bar for 'Portal has been updated in the last month'",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Portal has been updated in the last month",
+          "2022"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "71",
+        "figure_id": "f1",
+        "mark": "the 2024 blue bar for 'Businesses can access their own data online'",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Businesses can access their own data online",
+          "2024"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "50",
+        "figure_id": "f1",
+        "mark": "the 2022 yellow bar for 'Individuals can modify their own data online'",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Individuals can modify their own data online",
+          "2022"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "27",
+        "figure_id": "f1",
+        "mark": "the 2024 blue bar for 'Portal offers AI-enabled chatbot functionality'",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Portal offers AI-enabled chatbot functionality",
+          "2024"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      }
+    ],
+    "hardest_step": 3,
+    "hardest_step_why": "图表中包含跨行的长文本标签（如包含换行符的“Specific service...”），如果在转换为 Markdown 表格时处理不当，极易导致键值截断或错位，从而无法将数据值与完整标签关联。",
+    "examples": [
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "The '98%' label sits inside the long blue bar, whereas '26%' sits outside the short yellow bar",
+        "why": "图表生成器需要能够根据条形的实际长度，智能决定数据标签是放置在条形内部还是外部，以避免遮挡。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "'Specific service transactions initiated through\nthe portal can be saved and accessed later' spans two lines",
+        "why": "需要支持坐标轴长文本标签的自动换行排版，这不仅涉及文本处理，还会动态影响图表的左边距和绘图区大小。"
+      }
+    ]
+  }
+}

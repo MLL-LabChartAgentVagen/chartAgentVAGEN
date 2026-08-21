@@ -1,0 +1,263 @@
+{
+  "stem": "EnergyTechnologyPerspectives2024_p53",
+  "document": "EnergyTechnologyPerspectives2024",
+  "tags": "3d_chart+need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 82.0,
+  "usage": {
+    "input_tokens": 5329,
+    "output_tokens": 11202,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n这是一个百分比堆叠柱状图。Y轴显示百分比，刻度间隔为20%。X轴需要支持双层分组标签：内层是具体的11种技术类别（部分长标签如“EV and battery”需要换行），外层用“Technology manufacturing”和“Fossil fuel supply”对内层标签进行分组并添加顶部分隔线。图例包含6个系列，放置在X轴下方。图表主体有水平网格线，无垂直网格线。图表最下方有出处说明以及一段加粗的总结文本。\n\n### 定位一个值难在哪\n以定位 Natural gas 的 Rest of World 值为例（数值为38）。它在图表中位于最顶端的悬空堆叠段，图上未直接标注数值。读者必须将其顶部（100%）和底部（约62%）分别水平对齐到左侧间隔宽达20%的Y轴上进行两次估读，然后再相减计算。这几乎不可能用肉眼将误差控制在5%（约1.9%）以内。\n\n### 不确定的\n部分堆叠段（例如 Middle East 系列在 EV and battery 和 Battery storage 类别中）在图上未显示或极薄，无法从图中确切确认其数值是绝对的0还是极小的百分比值。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 1.14",
+          "title": "Energy employment in selected energy technologies by region, 2022",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "stacked_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 6,
+        "categories": 11,
+        "marks": 66,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "0%",
+            "high": "100%",
+            "serves": "all bars"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "EV and battery",
+            "high": "Oil",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Natural gas"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Rest of World"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Natural gas",
+            "Rest of World"
+          ],
+          "value": "38",
+          "value_source": "axis_read",
+          "why_hard": "It is a floating segment in a stacked bar read against 20% spaced ticks, requiring two estimations and subtraction."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "stacked_bar",
+        "figure_id": "f1",
+        "evidence": "bars are divided into vertically stacked coloured segments"
+      },
+      {
+        "key": "pct_stacked",
+        "figure_id": "f1",
+        "evidence": "the y axis ends at 100% and all bars reach the top tick"
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "the legend sits below the category axis and grouping labels"
+      },
+      {
+        "key": "two_level_x_ticks",
+        "figure_id": "f1",
+        "evidence": "Technology manufacturing and Fossil fuel supply sit below the main categories"
+      },
+      {
+        "key": "wrapped_category_labels",
+        "figure_id": "f1",
+        "evidence": "EV and battery, Battery storage, and Heat pumps wrap onto two lines"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "horizontal grid lines sit behind the bars, with no vertical ones"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "Note: and Source: lines sit below the legend"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "figure_takeaway_text",
+        "figure_id": "f1",
+        "evidence": "bold text summarizing the chart sits below source lines",
+        "affects": [
+          4
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "73",
+        "figure_id": "f1",
+        "mark": "the China segment in EV and battery",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "EV and battery",
+          "China"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "91",
+        "figure_id": "f1",
+        "mark": "the China segment in Battery storage",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Battery storage",
+          "China"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "82",
+        "figure_id": "f1",
+        "mark": "the China segment in Solar PV",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Solar PV",
+          "China"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "19",
+        "figure_id": "f1",
+        "mark": "the European Union segment in EV and battery",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "EV and battery",
+          "European Union"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "38",
+        "figure_id": "f1",
+        "mark": "the Rest of World segment in Natural gas",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Natural gas",
+          "Rest of World"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "37",
+        "figure_id": "f1",
+        "mark": "the Rest of World segment in Oil",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Oil",
+          "Rest of World"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "20",
+        "figure_id": "f1",
+        "mark": "the China segment in Hydro",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Hydro",
+          "China"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "40",
+        "figure_id": "f1",
+        "mark": "the Other Asia Pacific segment in Hydro",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Hydro",
+          "Other Asia Pacific"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "54",
+        "figure_id": "f1",
+        "mark": "the China segment in Wind",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Wind",
+          "China"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "25",
+        "figure_id": "f1",
+        "mark": "the North America segment in Bioenergy",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Bioenergy",
+          "North America"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "图为无数值标签的堆叠图。以38（Natural gas的Rest of World）为例，悬空段需在间隔20%的Y轴上分别估读两端点并相减，不可能达到5%的精度。",
+    "examples": [
+      {
+        "gap": "P1",
+        "figure_id": "f1",
+        "quote": "the Rest of World segment in Natural gas floats without labels",
+        "why": "读取悬空段需目测两端并相减，误差极大。管道必须支持在图元级别评估可读性，不能以整图是否可读一刀切。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "Most manufacturing jobs... in bold below the source note",
+        "why": "图表底部有加粗的独立结论总结。目前管道可能仅提取标题和主体，需将此类文本作为图表上下文提取。"
+      }
+    ]
+  }
+}

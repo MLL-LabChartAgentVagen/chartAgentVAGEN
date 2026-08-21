@@ -1,0 +1,653 @@
+{
+  "_what": "agent 对三家分歧的裁决。裁决是数据：并排文件可以重渲染而不丢它，模型的原答案一个字不改。",
+  "_how": "每条写清依据。可核的依据优先：失败运行在这一页上的实际形态（rule_checkable）> 三家自己答案里的其他字段（program_measured）> 看页面（agent）。",
+  "verdicts": {
+    "2025-EIS_p41/type#f1": {
+      "verdict": "compound",
+      "reason": "三家的图元数都是 84、都报了 mixed_marks，读法一致，分歧只在命名。图上是横条 + 菱形点 + 短竖线三种图元共用一根轴，按「一图两种以上图元形状」记 compound。"
+    },
+    "2025-EIS_p47/type#f1": {
+      "verdict": "compound",
+      "reason": "同上：三家 mixed_marks 都为真，图元数 84/84/75，条 + 点叠加。"
+    },
+    "GWR-2024_Layout_E_RGB_Web_p58/type#f1": {
+      "verdict": "compound",
+      "reason": "三家图元数都是 120、都报 mixed_marks；gemini 写成 other · mixed bar and scatter，说的是同一件事。"
+    },
+    "ac8b3538-en_p55/type#f1": {
+      "verdict": "compound",
+      "reason": "三家图元数都是 78、都报 mixed_marks；gemini 的 other · bar and point overlaid 与 compound 同义。"
+    },
+    "b263dc5d-en_p120/type#f1": {
+      "verdict": "compound",
+      "reason": "图元数 50/48/49，三家都报 mixed_marks；gemini 只记了条那一层。"
+    },
+    "pwc-semiconductor-and-beyond-2026-full-report_p18/type#f1": {
+      "verdict": "compound",
+      "reason": "图元数三家都是 14，都报 mixed_marks。"
+    },
+    "wtr24_ch2_e_p14/type#f1": {
+      "verdict": "compound",
+      "reason": "图元数三家都是 58，都报 mixed_marks；gemini 的 other · bar and line 与 compound 同义。"
+    },
+    "article_thebeatjun2025_p35/type#f1": {
+      "verdict": "other · 区间条 + 当前值标记",
+      "reason": "三家都判 other，自拟名字分别是 high-low range bar with current marker / range bar plot / range bar with markers，指同一种画法。这一条记为归一化没能合并三个自拟名字，不是读图分歧。"
+    },
+    "deloitte-2025-global-automotive-consumer-study-january-2025_1_p20/type#f2": {
+      "verdict": "三张图：两张并排的横向条形 + 一张百分比堆叠条",
+      "reason": "看页面。上半页是左右并排的两张独立横条图（各 8 条，各有自己的副标题），下半页是 8 行三段的堆叠条。opus 与 gemini 的三图切分对；gpt 把并排的两张合成了一张（16 个图元）。"
+    },
+    "investing-in-education-2025-NC0125093ENN-1_p14/type#f2": {
+      "verdict": "other · data table（Figure 7 是带图号的表格）",
+      "reason": "看页面。Figure 6 是折线图，Figure 7 是一张带紫色标题条与图号的表格。opus 与 gpt 都记了它，gemini 只报了一张图，漏了 Figure 7。"
+    },
+    "article_thebeatjun2025_p35/printed#f1": {
+      "verdict": "all",
+      "reason": "opus 与 gemini 都说 all；gpt 答 some，但它自己的 report_md 写「所有目标数值均直接标注」，两处矛盾，取 all。"
+    },
+    "article_thebeatjun2025_p35/density#f1": {
+      "verdict": "21–60（约 40 个图元）",
+      "reason": "10 个板块 × High / Low / Average / Current 四个量 = 40 个图元。gpt 31、gemini 41 都落在 21–60，opus 的 20 只数了条与点两层。"
+    },
+    "ac8b3538-en_p62/density#f1": {
+      "verdict": ">400（1830 个图元）",
+      "reason": "opus 与 gpt 都算出 15 面板 × 61 个时间点 × 2 系列 = 1830；gemini 把时间点数成 11，得 330。"
+    },
+    "deloitte-2025-global-automotive-consumer-study-january-2025_1_p20/density#f2": {
+      "verdict": "≤20（8 个图元）",
+      "reason": "承上一条的三图切分：第二张是 8 条的横条图。gpt 的 21–60 来自它把两张并排的图合成了一张。"
+    },
+    "GWR-2024_Layout_E_RGB_Web_p58/hardest_step": {
+      "verdict": "3",
+      "reason": "以实测为准：这一页 10 个抽查点过 4 个，6 个失败全是 label_unlinked（第三步）。三家分别报 2 / 1 / 2，无一命中。"
+    },
+    "ac8b3538-en_p62/hardest_step": {
+      "verdict": "3",
+      "reason": "以实测为准：10 个点只过 1 个，9 个失败全是 label_unlinked。opus 报 3，命中；gpt 报 1、gemini 报 2。"
+    },
+    "semiconductor_sector_study_p22/hardest_step": {
+      "verdict": "3",
+      "reason": "以实测为准：7 个点全败，6 个 row_missing + 1 个 label_unlinked，全在第三步。三家分别报 2 / 1 / 2，无一命中。"
+    },
+    "TRS241_Web_p88/hardest_step": {
+      "verdict": "2 与 3 各一半",
+      "reason": "实测 10 个点过 8 个，两个失败一个 value_off（第二步）一个 label_unlinked（第三步），没有多数。opus 的 3 与 gpt 的 2 各中一半，gemini 的 1 不成立（这一页有表）。"
+    },
+    "World_Inequality_Report_2026_p66/hardest_step": {
+      "verdict": "未裁决 · 无实测证据",
+      "reason": "这一页 10 个抽查点全过，运行没有在任何一步卡住，三家的 3 / 1 / 1 都无法证伪。"
+    },
+    "article_thebeatjun2025_p35/hardest_step": {
+      "verdict": "未裁决 · 无实测证据",
+      "reason": "这一页 10 个抽查点全过。"
+    },
+    "b263dc5d-en_p167/hardest_step": {
+      "verdict": "未裁决 · 无实测证据",
+      "reason": "这一页 10 个抽查点全过。"
+    },
+    "employment_and_social_developments_in_europe_esde_2024_report_p55/hardest_step": {
+      "verdict": "未裁决 · 无实测证据",
+      "reason": "这一页 10 个抽查点全过。"
+    },
+    "timevalue_p9/key_roles#f1": {
+      "verdict": "category × series",
+      "reason": "x 轴是 `Holding period (in years)`，刻度 1/5/10/20/30/40 等距排开，是离散的有序类目而不是时间轴（时间轴要有可比的间隔）。gemini 记的 time 不成立。三段图例 Stocks / Treasury Bonds / Treasury Bills 是系列。"
+    },
+    "pwc-semiconductor-and-beyond-2026-full-report_p18/key_roles#f1": {
+      "verdict": "series × time",
+      "reason": "x 轴是 '24…'30F 的年份，是时间；两个系列一柱一线，分别对着左轴（$ Billion 0–300）与右轴（% 0–100）。gemini 记的 category 是把年份当类目，与另两家读的是同一张图。这一页是本轮最标准的双轴 + 混合图元实例。"
+    },
+    "semiconductor_sector_study_p22/key_roles#f1": {
+      "verdict": "time",
+      "reason": "堆叠段是一家家公司，但页面上没有任何文字标注它们，段与段之间只有一条细白线。按「能定位到唯一图元的标签」判，只有年份这一段键；opus 记的 series 在页面上没有可用的名字（正是 `label_source: not_shown` 的情形）。"
+    },
+    "semiconductor_sector_study_p22/density#f1": {
+      "verdict": "不裁",
+      "reason": "2023 那一根柱里的细段肉眼数不清（每段是一家公司的融资额），三家给的 21–60 与 61–150 都在合理范围。数不清本身是 P5 的一个例子：这类图的图元数只能由生成端知道。"
+    },
+    "2025-EIS_p41/key_roles#f1": {
+      "verdict": "category × colour_group × series",
+      "reason": "类目是国家、颜色是四个绩效组、图例的三项（2025 条 / 2018 菱形 / 2024 竖线）是系列。gpt 把第三段记成 time——图例项确实是年份，但页面上没有时间轴，它们是并列的三个系列。三家在「颜色是第三段键」上一致，这才是要点。"
+    },
+    "2025-EIS_p47/key_roles#f1": {
+      "verdict": "category × colour_group × series",
+      "reason": "与 p41 同一份文档的同一种版式。gpt 多记的 panel 不成立：这一页只有一张图，没有面板。"
+    },
+    "b263dc5d-en_p120/key_roles#f1": {
+      "verdict": "category × colour_group × series",
+      "reason": "类目是国家、系列是 Unadjusted 条与 Adjusted 菱形、颜色分组是「是否在 5% 水平显著」（实心 / 空心菱形与深浅填色）。opus 多记的 panel 指底部 `Round, Cycle 1: 1 / 2 / 3` 的分组带——那是二级 x 分组（`two_level_x_ticks`），没有各自的绘图区，不是面板。"
+    },
+    "deloitte-2025-global-automotive-consumer-study-january-2025_1_p20/key_roles#f1": {
+      "verdict": "category（按标题切图）",
+      "reason": "切图粒度的分歧，和 TRS241_Web_p88 同类。这一页没有图号，按标题切成三张图：两张并排的横向条形各自只需要「国家」一段键。gpt 与 gemini 把并排的两张当成一张图的两个面板，于是多一段 panel——两种读法对页面本身的描述完全相同。"
+    },
+    "deloitte-2025-global-automotive-consumer-study-january-2025_1_p20/key_roles#f2": {
+      "verdict": "category（按标题切图）",
+      "reason": "同上。第二张仍是横向条形，只需要国家一段；gpt 与 gemini 记的 series 来自把并排两张合成一张之后的「哪一张」。"
+    },
+    "investing-in-education-2025-NC0125093ENN-1_p14/key_roles#f2": {
+      "verdict": "category × time",
+      "reason": "f2 是 Figure 7：一张带图号与紫色标题条的**表格型图**。行是公共支出职能（类目），列是 2019–2023 的年份（时间）加一列区间变化。opus 记的 series 指的是同一批列，但那些列就是年份，记 time 更准；gemini 只报了一张图，漏了 Figure 7。"
+    },
+    "TRS241_Web_p88/key_roles#f1": {
+      "verdict": "category × panel × series（整图 5 个面板）",
+      "reason": "一个图号 FIG.2.10 下是 5 个面板：4 个饼（1969 / 1979 / 2000 / 2015）+ 1 个双轴折线。饼要「扇区标签 × 年份面板」，折线要「年份 × 系列」，整图的键至少四段。opus 把每个面板当一张图（它的 f1 = 第一个饼），gpt 与 gemini 把整体当一张图——分歧是切图粒度，三家对画的是什么完全一致。"
+    },
+    "TRS241_Web_p88/type#f1": {
+      "verdict": "compound（异质面板：饼 + 双轴折线）",
+      "reason": "按「一个图号 = 一张图」记。opus 的 pie 是把第一个饼面板当成了 f1，就那个面板而言它是对的。"
+    },
+    "TRS241_Web_p88/printed#f1": {
+      "verdict": "some",
+      "reason": "四个饼每个扇区都印了百分比，下面的折线只印了括号里的年均增长率、没印序列值。整图算 some。opus 的 all 是对第一个饼面板说的。"
+    },
+    "TRS241_Web_p88/heading#f1": {
+      "verdict": "有图号，在下方",
+      "reason": "FIG.2.10 与整段说明印在图的下方；各个饼上方的 1969 / 1979 / 2000 / 2015 是面板标题，不是图标题。"
+    },
+    "TRS241_Web_p88/value_axes#f1": {
+      "verdict": "2",
+      "reason": "折线面板左轴 Overall GDP（10⁹ DA 1979）0–700、右轴 Per capita GDP（10³ DA 1979）0–28。opus 的 0 是对饼面板说的。"
+    },
+    "2025-EIS_p41/hardest_step": {
+      "verdict": "2 或 3，不分高下",
+      "reason": "实测这一页 10 个抽查点过 8 个，失败两条：一条卡第 2 步、一条卡第 3 步，分不出高下。但 gpt 的第 1 步不成立——这一页产出了表。"
+    },
+    "b263dc5d-en_p167/key_roles#f1": {
+      "verdict": "category × colour_group × panel",
+      "reason": "分面板 A / B 各有面板标题；每个面板里类目是国家，深蓝实心与浅色空心两种填色编码的是「差异是否统计显著」，OECD average 另有高亮。gpt 漏了 colour_group 这一段。这一页与同一份文档的 p120 是同一套画法。"
+    },
+    "2024_Annual_Financial_Review_Upstream_FINAL_p28/hardest_step": {
+      "verdict": "3",
+      "reason": "以实测为准：10 个点过 9 个，唯一的失败是 label_unlinked——`2024` 这个键写进了同一张表，只是不在这个值那一行（第三步）。三家报 2 / 1 / 2，无一命中。"
+    },
+    "2024_healthatglance_rep_en_p77/hardest_step": {
+      "verdict": "2",
+      "reason": "以实测为准：10 个点过 9 个，唯一的失败是 value_off，相对误差 50%（第二步）。opus 报 2，命中；gpt 与 gemini 报 3。"
+    },
+    "2025-EIS_p64/hardest_step": {
+      "verdict": "未裁决 · 无实测证据",
+      "reason": "这一页 10 个抽查点全过，运行没有在任何一步卡住，三家的 1 / 3 / 3 都无法证伪。"
+    },
+    "2025-EIS_p69/hardest_step": {
+      "verdict": "未裁决 · 无实测证据",
+      "reason": "这一页 10 个抽查点全过，运行没有在任何一步卡住，三家的 2 / 1 / 1 都无法证伪。"
+    },
+    "COM_2025_26_F1_COMMUNICATION_FROM_COMMISSION_TO_INST_EN_V10_P1_3877708_p19/hardest_step": {
+      "verdict": "未裁决 · 无实测证据",
+      "reason": "这一页 10 个抽查点全过，运行没有在任何一步卡住，三家的 2 / 2 / 3 都无法证伪。"
+    },
+    "Digital_News-Report_2022_p26/hardest_step": {
+      "verdict": "未裁决 · 无实测证据",
+      "reason": "这一页 3 个抽查点全过，运行没有在任何一步卡住，三家的 3 / 3 / 1 都无法证伪。"
+    },
+    "Digital_News-Report_2022_p50/hardest_step": {
+      "verdict": "未裁决 · 无实测证据",
+      "reason": "这一页 4 个抽查点全过，运行没有在任何一步卡住，三家的 3 / 1 / 3 都无法证伪。"
+    },
+    "Digital_News-Report_2022_p63/hardest_step": {
+      "verdict": "3",
+      "reason": "以实测为准：4 个点只过 2 个，两个失败都是 label_unlinked，`weekly use` 只出现在正文里、没进任何表（第三步）。opus 与 gpt 报 3，都命中；gemini 报 2。"
+    },
+    "FPA-guide-to-data-visualization_p20/hardest_step": {
+      "verdict": "未裁决 · 无实测证据",
+      "reason": "这一页 10 个抽查点全过，运行没有在任何一步卡住，三家的 3 / 4 / 3 都无法证伪。"
+    },
+    "Feaco-Survey-2023-2024_p8/hardest_step": {
+      "verdict": "未裁决 · 无实测证据",
+      "reason": "这一页 4 个抽查点全过，运行没有在任何一步卡住，三家的 3 / 3 / 4 都无法证伪。"
+    },
+    "GWR-2024_Layout_E_RGB_Web_p33/hardest_step": {
+      "verdict": "未裁决 · 无实测证据",
+      "reason": "这一页 10 个抽查点全过，运行没有在任何一步卡住，三家的 3 / 1 / 3 都无法证伪。"
+    },
+    "TRS241_Web_p525/hardest_step": {
+      "verdict": "2",
+      "reason": "以实测为准：10 个点过 5 个，5 个失败里 4 个是 value_off（其中两个相对误差 53%、55%），1 个是 label_unlinked（第三步）。多数在第二步。opus 与 gemini 报 2，命中；gpt 报 1 不成立——这一页有表。"
+    },
+    "The_State_of_UK_Competition_Report_2024_p28/hardest_step": {
+      "verdict": "未裁决 · 无实测证据",
+      "reason": "这一页 10 个抽查点全过，运行没有在任何一步卡住，三家的 2 / 1 / 2 都无法证伪。"
+    },
+    "US_Professional_Services_Partner_Compensation_Survey_2024_p20/hardest_step": {
+      "verdict": "未裁决 · 无实测证据",
+      "reason": "这一页 5 个抽查点全过，运行没有在任何一步卡住，三家的 3 / 1 / 1 都无法证伪。"
+    },
+    "US_Professional_Services_Partner_Compensation_Survey_2024_p7/hardest_step": {
+      "verdict": "未裁决 · 无实测证据",
+      "reason": "这一页 5 个抽查点全过，运行没有在任何一步卡住，三家的 3 / 3 / 1 都无法证伪。"
+    },
+    "VPEG6_SIV_Information_Memorandum__June_2025__p11/hardest_step": {
+      "verdict": "3",
+      "reason": "以实测为准：5 个点全败，4 个 row_missing（`GLOBAL PRIVATE EQUITY` 这一行整张表都没有）+ 1 个 value_absent。多数在第三步。三家报 1 / 2 / 2，无一命中；opus 的 1 明确不成立——这一页产出了表。"
+    },
+    "WEF_The_Global_Public_Impact_of_GovTech_2025_p29/hardest_step": {
+      "verdict": "未裁决 · 无实测证据",
+      "reason": "这一页 4 个抽查点全过，运行没有在任何一步卡住，三家的 3 / 1 / 3 都无法证伪。"
+    },
+    "World_Inequality_Report_2026_p119/hardest_step": {
+      "verdict": "未裁决 · 无实测证据",
+      "reason": "这一页 8 个抽查点全过，运行没有在任何一步卡住，三家的 3 / 1 / 1 都无法证伪。"
+    },
+    "World_Inequality_Report_2026_p132/hardest_step": {
+      "verdict": "3",
+      "reason": "以实测为准：9 个点过 8 个，唯一的失败是 label_unlinked——`spain` 与 `p99.99-p99.999` 都写进了同一张表，只是不在这个值那一行（第三步）。三家报 2 / 1 / 2，无一命中。"
+    },
+    "World_Inequality_Report_2026_p38/hardest_step": {
+      "verdict": "未裁决 · 无实测证据",
+      "reason": "这一页 10 个抽查点全过，运行没有在任何一步卡住，三家的 3 / 1 / 3 都无法证伪。"
+    },
+    "World_Inequality_Report_2026_p99/hardest_step": {
+      "verdict": "未裁决 · 无实测证据",
+      "reason": "这一页 10 个抽查点全过，运行没有在任何一步卡住，三家的 2 / 1 / 3 都无法证伪。"
+    },
+    "deloitte-2025-global-automotive-consumer-study-january-2025_1_p20/hardest_step": {
+      "verdict": "未裁决 · 无实测证据",
+      "reason": "这一页 6 个抽查点全过，运行没有在任何一步卡住，三家的 3 / 3 / 1 都无法证伪。"
+    },
+    "deloitte-2025-global-automotive-consumer-study-january-2025_p17/hardest_step": {
+      "verdict": "未裁决 · 无实测证据",
+      "reason": "这一页 8 个抽查点全过，运行没有在任何一步卡住，三家的 3 / 3 / 1 都无法证伪。"
+    },
+    "deloitte-2025-global-automotive-consumer-study-january-2025_p24/hardest_step": {
+      "verdict": "未裁决 · 无实测证据",
+      "reason": "这一页 6 个抽查点全过，运行没有在任何一步卡住，三家的 3 / 3 / 4 都无法证伪。"
+    },
+    "employment_and_social_developments_in_europe_esde_2024_report_p40/hardest_step": {
+      "verdict": "未裁决 · 无实测证据",
+      "reason": "这一页 10 个抽查点全过，运行没有在任何一步卡住，三家的 3 / 1 / 2 都无法证伪。"
+    },
+    "investing-in-education-2025-NC0125093ENN-1_p14/hardest_step": {
+      "verdict": "未裁决 · 无实测证据",
+      "reason": "这一页 10 个抽查点全过，运行没有在任何一步卡住，三家的 2 / 2 / 1 都无法证伪。"
+    },
+    "m-trends-2025-en_p29/hardest_step": {
+      "verdict": "未裁决 · 无实测证据",
+      "reason": "这一页 10 个抽查点全过，运行没有在任何一步卡住，三家的 3 / 3 / 1 都无法证伪。"
+    },
+    "2024_healthatglance_rep_en_p77/density#f1": {
+      "verdict": "≤20（按中位数 16 个图元）",
+      "reason": "三家数出的图元个数是 16 / 16 / 16，中位数 16，落在 ≤20。三个数彼此相差不到一半，分歧是<档的边界>而不是读法：它们看的是同一张图，只是刚好被 20 / 60 / 150 / 400 这几条线切开。"
+    },
+    "2024_healthatglance_rep_en_p77/density#f2": {
+      "verdict": "21–60（按中位数 56 个图元）",
+      "reason": "三家数出的图元个数是 56 / 87 / 56，中位数 56，落在 21–60。三个数相差超过一半，取中位数所在的档；差异来自把叠在一起的图元数成一层还是两层。"
+    },
+    "Digital_News-Report_2022_p63/density#f1": {
+      "verdict": "61–150（按中位数 64 个图元）",
+      "reason": "三家数出的图元个数是 64 / 64 / 60，中位数 64，落在 61–150。三个数彼此相差不到一半，分歧是<档的边界>而不是读法：它们看的是同一张图，只是刚好被 20 / 60 / 150 / 400 这几条线切开。"
+    },
+    "Digital_News-Report_2022_p63/density#f5": {
+      "verdict": "不裁",
+      "reason": "不裁 · 切图粒度不同。三家在这一页上切出的图不是同一批：opus 的第 5 张是 8 个点的折线，gpt 的是 4 个数的 KPI 方块，gemini 的是 45 个图元的堆叠条。三个数描述的是三样东西，没有共同的标的可裁。"
+    },
+    "Digital_News-Report_2022_p63/density#f6": {
+      "verdict": "不裁",
+      "reason": "不裁 · 同上。opus 把第 6 块记成 `unreadable`（两个色块里的大字，0 个图元），gpt 记成 45 个图元的堆叠条，gemini 记成 12 个图元的表。仍然不是同一个标的。"
+    },
+    "EnergyTechnologyPerspectives2024_p53/density#f1": {
+      "verdict": "61–150（按中位数 66 个图元）",
+      "reason": "三家数出的图元个数是 66 / 56 / 66，中位数 66，落在 61–150。三个数彼此相差不到一半，分歧是<档的边界>而不是读法：它们看的是同一张图，只是刚好被 20 / 60 / 150 / 400 这几条线切开。"
+    },
+    "FPA-guide-to-data-visualization_p8/density#f1": {
+      "verdict": "≤20（按中位数 15 个图元）",
+      "reason": "三家数出的图元个数是 8 / 25 / 15，中位数 15，落在 ≤20。三个数相差超过一半，取中位数所在的档；差异来自把叠在一起的图元数成一层还是两层。"
+    },
+    "Quarterly-Sector-and-Investment-Research-Update-Q1-2025_p12/density#f1": {
+      "verdict": ">400（按中位数 407 个图元）",
+      "reason": "三家数出的图元个数是 410 / 407 / 400，中位数 407，落在 >400。三个数彼此相差不到一半，分歧是<档的边界>而不是读法：它们看的是同一张图，只是刚好被 20 / 60 / 150 / 400 这几条线切开。"
+    },
+    "Renewables2025_1_p111/density#f1": {
+      "verdict": "61–150（按中位数 66 个图元）",
+      "reason": "三家数出的图元个数是 66 / 70 / 60，中位数 66，落在 61–150。三个数彼此相差不到一半，分歧是<档的边界>而不是读法：它们看的是同一张图，只是刚好被 20 / 60 / 150 / 400 这几条线切开。"
+    },
+    "TSLA-Q4-2024-Update_p9/density#f1": {
+      "verdict": "21–60（按中位数 36 个图元）",
+      "reason": "三家数出的图元个数是 36 / 36 / 18，中位数 36，落在 21–60。三个数相差超过一半，取中位数所在的档；差异来自把叠在一起的图元数成一层还是两层。"
+    },
+    "US_Professional_Services_Partner_Compensation_Survey_2024_p20/density#f1": {
+      "verdict": "≤20（按中位数 12 个图元）",
+      "reason": "三家数出的图元个数是 12 / 24 / 12，中位数 12，落在 ≤20。三个数相差超过一半，取中位数所在的档；差异来自把叠在一起的图元数成一层还是两层。"
+    },
+    "World_Inequality_Report_2026_p24/density#f2": {
+      "verdict": "21–60（按中位数 43 个图元）",
+      "reason": "三家数出的图元个数是 65 / 43 / 37，中位数 43，落在 21–60。三个数相差超过一半，取中位数所在的档；差异来自把叠在一起的图元数成一层还是两层。"
+    },
+    "article_thebeatjun2025_p34/density#f1": {
+      "verdict": "21–60（按中位数 31 个图元）",
+      "reason": "三家数出的图元个数是 20 / 31 / 41，中位数 31，落在 21–60。三个数相差超过一半，取中位数所在的档；差异来自把叠在一起的图元数成一层还是两层。"
+    },
+    "natural-catastrophe-and-climate-report-2023_p72/density#f2": {
+      "verdict": "61–150（按中位数 68 个图元）",
+      "reason": "三家数出的图元个数是 68 / 47 / 68，中位数 68，落在 61–150。三个数彼此相差不到一半，分歧是<档的边界>而不是读法：它们看的是同一张图，只是刚好被 20 / 60 / 150 / 400 这几条线切开。"
+    },
+    "sri-sigma-natural-catastrophes-1-2025_p27/density#f1": {
+      "verdict": "61–150（按中位数 140 个图元）",
+      "reason": "三家数出的图元个数是 135 / 165 / 140，中位数 140，落在 61–150。三个数彼此相差不到一半，分歧是<档的边界>而不是读法：它们看的是同一张图，只是刚好被 20 / 60 / 150 / 400 这几条线切开。"
+    },
+    "sri-sigma-natural-catastrophes-1-2025_p27/density#f2": {
+      "verdict": "61–150（按中位数 140 个图元）",
+      "reason": "三家数出的图元个数是 140 / 140 / 165，中位数 140，落在 61–150。三个数彼此相差不到一半，分歧是<档的边界>而不是读法：它们看的是同一张图，只是刚好被 20 / 60 / 150 / 400 这几条线切开。"
+    },
+    "2024_healthatglance_rep_en_p77/printed#f1": {
+      "verdict": "不裁 · 三家的第一张图不是同一张",
+      "reason": "gemini 没把页面上那块「带图号的表格」收成一张图，于是它的第一张是 56 个图元的哑铃图（值不印），而 opus 与 gpt 的第一张是 16 个图元的表格（值全印）。两个答案说的是两样东西。这件事本身是 P10 的一条证据：`data_table_as_figure` 算不算一张图，三家没有共识。"
+    },
+    "Digital_News-Report_2022_p63/printed#f5": {
+      "verdict": "some",
+      "reason": "opus 与 gemini 的第 5 张都是同一张 45 个图元的堆叠条，都记 `some`；gpt 的第 5 张是 4 个数的 KPI 方块，是另一个标的。按同一标的上的两家一致判。"
+    },
+    "Digital_News-Report_2022_p63/printed#f6": {
+      "verdict": "不裁 · 三家的第 6 张不是同一张",
+      "reason": "opus 的是两个色块里的大字（0 个图元），gpt 的是 45 个图元的堆叠条，gemini 的是 12 个图元的表。这一页三家切出的图从第 5 张起就错开了，第 6 张无共同标的。"
+    },
+    "VPEG6_SIV_Information_Memorandum__June_2025__p11/printed#f1": {
+      "verdict": "some",
+      "reason": "三家描述的是同一张 5–6 个图元的图，只在「印了几个数」上分歧，gpt 与 gemini 都记 `some`。按同一标的上的两家一致判。"
+    },
+    "natural-catastrophe-and-climate-report-2023_p72/heading#f1": {
+      "verdict": "below",
+      "reason": "opus 给这一页两张图记了<strong>同一个</strong>标题（`Total Number of Billion-Dollar Events…`）并记在上方——同一段文字不可能是两张图各自的标题，那是这一节的章标题。它记在 `subtitle` 里的那句才是这张图自己的题，而 gpt 与 gemini 正是把那句当标题、记在下方。三家在「有图号」上一致（Figure 42），分歧只在位置。"
+    },
+    "natural-catastrophe-and-climate-report-2023_p72/heading#f2": {
+      "verdict": "below",
+      "reason": "同上，这是同一页的第二张（Figure 43）。opus 记的上方标题与第一张完全相同，是章标题不是图题。"
+    },
+    "2024_healthatglance_rep_en_p77/value_axes#f1": {
+      "verdict": "不裁 · 三家的第一张图不是同一张",
+      "reason": "与这一页的 `printed#f1` 同因：gemini 没把「带图号的表格」收成图，第一张因此错位。"
+    },
+    "9f653ca1-en_p28/value_axes#f1": {
+      "verdict": "2（左右各一条值轴）",
+      "reason": "三家读的是同一件事：这个面板上有<strong>两套值刻度</strong>，0–5 那套服务除 TUR 外的所有图元，0–50 那套只服务 TUR。opus 与 gpt 记第二套在右边，gemini 记在左边——分歧只在「哪一边」。按左右各一条判，因为两家一致而且这正是 P9 说的情形：同一个像素高度在这张图上对应两个不同的数，像素回读自检在这里没有定义。"
+    },
+    "Digital_News-Report_2022_p63/value_axes#f5": {
+      "verdict": "1",
+      "reason": "opus 与 gemini 的第 5 张是同一张堆叠条，都记「底边一条值轴」；gpt 的第 5 张是 KPI 方块，标的不同。"
+    },
+    "Digital_News-Report_2022_p63/value_axes#f6": {
+      "verdict": "不裁 · 三家的第 6 张不是同一张",
+      "reason": "与这一页的 `printed#f6` 同因。"
+    },
+    "Feaco-Survey-2023-2024_p8/value_axes#f1": {
+      "verdict": "不裁 · 三家的第一张图不是同一张",
+      "reason": "opus 与 gpt 把页面上方那块 18 个数的表格收成第一张图（没有轴），gemini 没收，于是它的第一张是下方那张 grouped_bar。错位一张，无共同标的。又一条 `data_table_as_figure` 的证据。"
+    },
+    "deloitte-2025-global-automotive-consumer-study-january-2025_p17/value_axes#f1": {
+      "verdict": "0",
+      "reason": "三家都读成 India–UK 的横向堆叠条。opus 记了一条底边值轴，但它自己在 `serves` 里写的是「no ticks drawn; stack length only」——那条轴没有画出来。gpt 与 gemini 只记了左边的类目轴。按「画出来的值轴」判为 0，这正是词表里的 `no_value_axis`。"
+    },
+    "2024_healthatglance_rep_en_p115/type#f1": {
+      "verdict": "compound",
+      "reason": "按类型表自己的定义判：`compound` 是<strong>同一个面板里出现两种以上图元形状</strong>，所以决定它的是三家自己在 `components` 里记的 `mixed_marks`，不是它们给这张图起的名字。opus 与 gpt 都在这张图上记了 `mixed_marks`（分组条上叠了短横标记），opus 还记了 `tick_marker_as_series`。分组条是一种形状，叠上去的标记是第二种，合起来是 compound。三家数出的图元数都是 102，读法一致。"
+    },
+    "2024_healthatglance_rep_en_p115/type#f3": {
+      "verdict": "compound",
+      "reason": "同一页的第三张，与 f1 同因：三家图元数都是 81，opus 与 gpt 都记了 `mixed_marks`。"
+    },
+    "2024_healthatglance_rep_en_p77/type#f1": {
+      "verdict": "不裁 · 三家的第一张图不是同一张",
+      "reason": "gemini 没把那块「带图号的表格」收成一张图（16 个图元），它的第一张是 56 个图元的哑铃图。标的不同。"
+    },
+    "2024_healthatglance_rep_en_p77/type#f2": {
+      "verdict": "other · 区间条 / 哑铃图",
+      "reason": "opus 记 `dumbbell range plot`、gpt 记 `range plot`，两家都记了 `range_connector_line`；命名差一个词，画法是同一种：每个类目两个点用线段连成一段区间。<strong>这是 P10 的一条证据</strong>——类型表里没有这一行。"
+    },
+    "2025-EIS_p39/type#f1": {
+      "verdict": "compound",
+      "reason": "按类型表自己的定义判：`compound` 是<strong>同一个面板里出现两种以上图元形状</strong>，所以决定它的是三家自己在 `components` 里记的 `mixed_marks`，不是它们给这张图起的名字。三家都记了 `mixed_marks` 与 `tick_marker_as_series`，图元数都是 84。gemini 的 `bar` 只说了横条那一层，没说叠在上面的菱形与短竖线。"
+    },
+    "9f653ca1-en_p23/type#f1": {
+      "verdict": "compound",
+      "reason": "按类型表自己的定义判：`compound` 是<strong>同一个面板里出现两种以上图元形状</strong>，所以决定它的是三家自己在 `components` 里记的 `mixed_marks`，不是它们给这张图起的名字。三家都同时记了 `stacked_bar` 与 `mixed_marks`：堆叠条上还叠了标记。"
+    },
+    "9f653ca1-en_p28/type#f1": {
+      "verdict": "compound",
+      "reason": "按类型表自己的定义判：`compound` 是<strong>同一个面板里出现两种以上图元形状</strong>，所以决定它的是三家自己在 `components` 里记的 `mixed_marks`，不是它们给这张图起的名字。三家都记了 `mixed_marks`，opus 另记 `dual_axis`。gemini 写的 `other · mixed marks` 说的就是 compound 这件事，只是没用类型表的词。"
+    },
+    "9f653ca1-en_p33/type#f1": {
+      "verdict": "compound",
+      "reason": "按类型表自己的定义判：`compound` 是<strong>同一个面板里出现两种以上图元形状</strong>，所以决定它的是三家自己在 `components` 里记的 `mixed_marks`，不是它们给这张图起的名字。三家都同时记了 `stacked_bar`、`mixed_marks` 与 `reference_line`。"
+    },
+    "CleanEnergyMarketMonitorMarch2024_p13/type#f1": {
+      "verdict": "bar",
+      "reason": "按类型表自己的定义判：`compound` 是<strong>同一个面板里出现两种以上图元形状</strong>，所以决定它的是三家自己在 `components` 里记的 `mixed_marks`，不是它们给这张图起的名字。<strong>三家一个都没记 `mixed_marks`</strong>，只记了 `horizontal_bars`，图元数都是 30。opus 与 gpt 报 compound 的理由应当是这一页有 6 个面板——但面板数是版面属性，不是图元形状，按定义不构成 compound。"
+    },
+    "Digital_News-Report_2022_p26/type#f2": {
+      "verdict": "other · 排名列表（表格型图）",
+      "reason": "opus 记 `ranked country list table` 并勾了 `data_table_as_figure`，gpt 记 `ranked lists`；两家都读成「一列排好名次的数字」而不是画出来的条。gemini 的 `bar` 同时勾了 `no_value_axis`，也就是说它承认这上面没有值轴。<strong>又一条 P10 证据。</strong>"
+    },
+    "Digital_News-Report_2022_p63/type#f1": {
+      "verdict": "stacked_bar",
+      "reason": "opus 与 gemini 都记 `stacked_bar`（图元数 64 / 60），gpt 记 `other · overlaid bars`——它自己的例子里写的是「subset and total overlap」，说的是同一种画法（一根条里两个深浅），只是读成叠放而不是堆叠。两家一致，按 stacked_bar 判。"
+    },
+    "Digital_News-Report_2022_p63/type#f5": {
+      "verdict": "stacked_bar",
+      "reason": "opus 与 gemini 的第 5 张都是同一张 45 个图元的堆叠条；gpt 的第 5 张是 4 个数的 KPI 方块，标的不同。按同一标的上的两家一致判。"
+    },
+    "Digital_News-Report_2022_p63/type#f6": {
+      "verdict": "不裁 · 三家的第 6 张不是同一张",
+      "reason": "opus 的是 0 个图元的排名文字块，gpt 的是 45 个图元的堆叠条，gemini 的是 12 个图元的表。这一页三家从第 5 张起切图就错开了。"
+    },
+    "EnergyTechnologyPerspectives2024_p48/type#f1": {
+      "verdict": "compound",
+      "reason": "按类型表自己的定义判：`compound` 是<strong>同一个面板里出现两种以上图元形状</strong>，所以决定它的是三家自己在 `components` 里记的 `mixed_marks`，不是它们给这张图起的名字。三家都同时记了 `stacked_bar`、`pct_stacked` 与 `mixed_marks`。"
+    },
+    "FPA-guide-to-data-visualization_p20/type#f3": {
+      "verdict": "compound",
+      "reason": "按类型表自己的定义判：`compound` 是<strong>同一个面板里出现两种以上图元形状</strong>，所以决定它的是三家自己在 `components` 里记的 `mixed_marks`，不是它们给这张图起的名字。opus 与 gpt 都记了 `mixed_marks` 与 `tick_marker_as_series`（条上叠了一条 3 像素宽的橙色短横）；gemini 只记了 `grouped_bar`，把那层标记当成了第二组条。三家图元数都是 16。"
+    },
+    "FPA-guide-to-data-visualization_p8/type#f1": {
+      "verdict": "other · 扇形预测带（windsock / fan chart）",
+      "reason": "opus 与 gemini 各自独立地写出 `windsock`，两家都记了 `mixed_marks` 与 `reference_line`：一条实测线接一段向外张开的灰色预测带。<strong>类型表里没有这一族</strong>——面积族画的是堆叠带，画不出以中线为轴向外张开的不确定带。这是 P10 在这一轮新添的一个族。"
+    },
+    "Feaco-Survey-2023-2024_p8/type#f1": {
+      "verdict": "不裁 · 三家的第一张图不是同一张",
+      "reason": "opus 与 gpt 把页面上方那块 18 个数的表格收成第一张图，gemini 没收，它的第一张是下方的 grouped_bar。"
+    },
+    "TSLA-Q4-2024-Update_p9/type#f1": {
+      "verdict": "other · 表格型图",
+      "reason": "三家都记 `data_table_as_figure`，分歧只在写 `data table` 还是 `table`。这是同一个答案的两种写法，不是读法分歧。<strong>P10 证据。</strong>"
+    },
+    "VPEG6_SIV_Information_Memorandum__June_2025__p11/type#f1": {
+      "verdict": "compound",
+      "reason": "按类型表自己的定义判：`compound` 是<strong>同一个面板里出现两种以上图元形状</strong>，所以决定它的是三家自己在 `components` 里记的 `mixed_marks`，不是它们给这张图起的名字。三家都记了 `mixed_marks` 与 `reference_line`，图元数 6 / 6 / 5。"
+    },
+    "World_Inequality_Report_2026_p38/type#f1": {
+      "verdict": "stacked_bar · 同时又分组",
+      "reason": "按类型表自己的定义判：`compound` 是<strong>同一个面板里出现两种以上图元形状</strong>，所以决定它的是三家自己在 `components` 里记的 `mixed_marks`，不是它们给这张图起的名字。<strong>三家一个都没记 `mixed_marks`</strong>，所以不是 compound。opus 与 gpt 同时记了 `stacked_bar`、`grouped_bar` 与 `pct_stacked`——也就是词表里的 `stacked_and_grouped`：条既并排分组、每根里又堆叠。那一项的 `ours` 是 false（两个维度分别吃掉 P 与 S，第三维无处可放），所以这一条同时是我们画不出来的一例。"
+    },
+    "ac8b3538-en_p76/type#f1": {
+      "verdict": "bar",
+      "reason": "三家在这张图上一个形状构件都没记，没有 `mixed_marks` 的证据；opus 与 gemini 都报 bar，图元数 42 / 42 / 37。"
+    },
+    "article_thebeatjun2025_p34/type#f1": {
+      "verdict": "other · 区间条（带标记）",
+      "reason": "三家分别写 `high-low range bar` / `range bar` / `range column with markers`，都记了 `mixed_marks` 与 `reference_line`：一根不从零起算的条，两端各是一个值，上面再叠一个标记。三个名字说的是同一种画法。<strong>P10 证据，而且是「一根条两个值」那一类。</strong>"
+    },
+    "b263dc5d-en_p144/type#f1": {
+      "verdict": "other · 多点区间图",
+      "reason": "三家分别写 `range plot with markers` / `multi-point range plot` / `multi-point dot plot`，图元数 81 / 81 / 78，opus 记了 `range_connector_line`。同一种画法的三个名字。<strong>P10 证据。</strong>"
+    },
+    "b263dc5d-en_p160/type#f1": {
+      "verdict": "compound",
+      "reason": "按类型表自己的定义判：`compound` 是<strong>同一个面板里出现两种以上图元形状</strong>，所以决定它的是三家自己在 `components` 里记的 `mixed_marks`，不是它们给这张图起的名字。三家都记了 `mixed_marks`，图元数都是 64。"
+    },
+    "b263dc5d-en_p95/type#f1": {
+      "verdict": "compound",
+      "reason": "按类型表自己的定义判：`compound` 是<strong>同一个面板里出现两种以上图元形状</strong>，所以决定它的是三家自己在 `components` 里记的 `mixed_marks`，不是它们给这张图起的名字。三家都记了 `mixed_marks`，图元数都是 192。"
+    },
+    "employment_and_social_developments_in_europe_esde_2024_report_p30/type#f1": {
+      "verdict": "compound",
+      "reason": "按类型表自己的定义判：`compound` 是<strong>同一个面板里出现两种以上图元形状</strong>，所以决定它的是三家自己在 `components` 里记的 `mixed_marks`，不是它们给这张图起的名字。三家都同时记了 `stacked_bar` 与 `mixed_marks`，图元数都是 384。gemini 写的 `other · mixed marks` 说的就是 compound。"
+    },
+    "employment_and_social_developments_in_europe_esde_2024_report_p34/type#f1": {
+      "verdict": "compound · 同一图号下各面板类型不同",
+      "reason": "三家说的是同一件事：这一个图号下面的几个面板不是同一种图。gemini 直接写成 `other · heterogeneous panels`，opus 与 gpt 用了 compound。词表里 `heterogeneous_panel_types` 就是这一项，`ours` 为真。"
+    },
+    "employment_and_social_developments_in_europe_esde_2024_report_p34/type#f2": {
+      "verdict": "compound",
+      "reason": "按类型表自己的定义判：`compound` 是<strong>同一个面板里出现两种以上图元形状</strong>，所以决定它的是三家自己在 `components` 里记的 `mixed_marks`，不是它们给这张图起的名字。三家都同时记了 `dual_axis` 与 `mixed_marks`，图元数都是 60。<strong>这是 P9 说的那种图</strong>：左右两套刻度加两种图元。"
+    },
+    "employment_and_social_developments_in_europe_esde_2024_report_p76/type#f2": {
+      "verdict": "compound",
+      "reason": "按类型表自己的定义判：`compound` 是<strong>同一个面板里出现两种以上图元形状</strong>，所以决定它的是三家自己在 `components` 里记的 `mixed_marks`，不是它们给这张图起的名字。三家都记了 `dual_axis` 与 `mixed_marks`，图元数都是 8。gemini 写的 `other · bar and line` 就是 compound。"
+    },
+    "pwc-semiconductor-and-beyond-2026-full-report_p17/type#f1": {
+      "verdict": "stacked_bar",
+      "reason": "按类型表自己的定义判：`compound` 是<strong>同一个面板里出现两种以上图元形状</strong>，所以决定它的是三家自己在 `components` 里记的 `mixed_marks`，不是它们给这张图起的名字。opus 与 gemini 都只记了 `stacked_bar`，没有 `mixed_marks`；只有 gpt 记了。两家一致，按 stacked_bar 判。"
+    },
+    "2024-ltra_corrected_july_2025_p27/key_roles#f2": {
+      "verdict": "series × time",
+      "reason": "<strong>时间轴的判据</strong>：等距排开的年 / 月刻度记 `time`；长度不等的区间带（`2001-09` `2011-14`）虽然等距排开，是有序类目，记 `category`（与 `timevalue_p9` 同一条）。 横轴是 2024–2034 的年份，opus 与 gpt 都记 time；gemini 记成 category。"
+    },
+    "2024_healthatglance_rep_en_p77/key_roles#f1": {
+      "verdict": "category × series",
+      "reason": "opus 与 gpt 的第一张都是那块表（gemini 错位到了哑铃图）。两家都记了行头与列头两段；opus 多记的 panel 来自表中间那条分节带（`Environmental risk factors`），那是表内的分组行，没有自己的绘图区，<strong>panel 的判据</strong>：要有自己的绘图区，而且名字要印在页面上。`label_source` 是 `not_shown` 的段进不了键——键必须逐字可复制。"
+    },
+    "2024_healthatglance_rep_en_p77/key_roles#f2": {
+      "verdict": "category × series",
+      "reason": "<strong>colour_group 的判据</strong>：只由颜色承载、既不是系列也不是类目的<strong>第三个变量</strong>。单独给某一个类目换色（`highlighted_category`）不算；图例里列出的项是 series。 opus 记的 colour_group 例子是「red dot at EU27 (aggregate)」——那是把汇总行单独标红，属于 `highlighted_category`，不是第三个变量。"
+    },
+    "2025-EIS_p37/key_roles#f1": {
+      "verdict": "category × colour_group × series",
+      "reason": "与已裁的 p41 / p47 同一份文档的同一种版式：类目是国家、颜色是四个绩效组、图例三项是系列。opus 与 gemini 都这样记；gpt 把 `Score in 2018` 记成 time——<strong>时间轴的判据</strong>：等距排开的年 / 月刻度记 `time`；长度不等的区间带（`2001-09` `2011-14`）虽然等距排开，是有序类目，记 `category`（与 `timevalue_p9` 同一条）。"
+    },
+    "2025-EIS_p39/key_roles#f1": {
+      "verdict": "category × colour_group × series",
+      "reason": "同上，仍是 EIS 的那套版式。opus 多记的 panel（`Digitalisation`）是这张图的主题标题，这一页只有一个绘图区，<strong>panel 的判据</strong>：要有自己的绘图区，而且名字要印在页面上。`label_source` 是 `not_shown` 的段进不了键——键必须逐字可复制。"
+    },
+    "2025-EIS_p64/key_roles#f1": {
+      "verdict": "series × time",
+      "reason": "gpt 与 gemini 一致。opus 多记的 panel 的 `label_source` 是 `not_shown`，它自己写的例子是「the graph on the left」——页面上没有这个名字。<strong>panel 的判据</strong>：要有自己的绘图区，而且名字要印在页面上。`label_source` 是 `not_shown` 的段进不了键——键必须逐字可复制。 <strong>这一条本身是 P2 的一个变种</strong>：图确实分了两个面板，但面板没有名字，键里想带也带不进去。"
+    },
+    "2025-EIS_p69/key_roles#f1": {
+      "verdict": "series × time",
+      "reason": "与 p64 同因：opus 记的 panel 名字是空串，`label_source` 为 `not_shown`。<strong>panel 的判据</strong>：要有自己的绘图区，而且名字要印在页面上。`label_source` 是 `not_shown` 的段进不了键——键必须逐字可复制。"
+    },
+    "9f653ca1-en_p29/key_roles#f1": {
+      "verdict": "category × panel × series",
+      "reason": "gpt 与 gemini 一致。横轴是国家代码（JPN / USA），图例项是 `January 2000` 这类时点标签——它们是并列的系列，不是时间轴上的刻度。opus 多记的 time 由此不成立。"
+    },
+    "9f653ca1-en_p33/key_roles#f1": {
+      "verdict": "category × panel × series",
+      "reason": "<strong>时间轴的判据</strong>：等距排开的年 / 月刻度记 `time`；长度不等的区间带（`2001-09` `2011-14`）虽然等距排开，是有序类目，记 `category`（与 `timevalue_p9` 同一条）。 这张图的横轴刻度是 `2001-09` `2011-14` `2026-27` 这类<strong>长度不等的区间带</strong>，按判据记 category，gemini 是对的；opus 与 gpt 记的 time 不成立。"
+    },
+    "CleanEnergyMarketMonitorMarch2024_p13/key_roles#f1": {
+      "verdict": "category × panel",
+      "reason": "gpt 与 gemini 一致：面板是国家（6 个），面板里的条是 2019 与 2023 两个离散槽位，按 <strong>时间轴的判据</strong>：等距排开的年 / 月刻度记 `time`；长度不等的区间带（`2001-09` `2011-14`）虽然等距排开，是有序类目，记 `category`（与 `timevalue_p9` 同一条）。记 category。opus 多记的 category（`Rest of world`）实际上是一个面板名。"
+    },
+    "Digital_News-Report_2022_p63/key_roles#f4": {
+      "verdict": "time",
+      "reason": "gpt 与 gemini 一致。opus 记的 panel 来自这张图自己的标题（`Change over time 2015-…`），这一张只有一个绘图区。<strong>panel 的判据</strong>：要有自己的绘图区，而且名字要印在页面上。`label_source` 是 `not_shown` 的段进不了键——键必须逐字可复制。"
+    },
+    "Digital_News-Report_2022_p63/key_roles#f5": {
+      "verdict": "category × series",
+      "reason": "opus 与 gemini 的第 5 张是同一张堆叠条，两家一致；gpt 的第 5 张是 KPI 方块，标的不同。"
+    },
+    "FPA-guide-to-data-visualization_p20/key_roles#f1": {
+      "verdict": "category × panel（图自己的小标题）",
+      "reason": "opus 与 gpt 都记了一段来自 `heading` 的 panel（`FY 14 Q2 Forecast`）。这一页并排两张图<strong>用的是同一批类目名</strong>（Salaries and Benefits…），只有小标题能把两张分开——所以这一段确实是定位所必需的。<strong>这正是 P3 与 P7 说的事</strong>：小标题必须跟着导出去，否则两张图的行会撞在一起。"
+    },
+    "FPA-guide-to-data-visualization_p20/key_roles#f2": {
+      "verdict": "category × panel（图自己的小标题）",
+      "reason": "同 f1，是并排的另一张。"
+    },
+    "FPA-guide-to-data-visualization_p5/key_roles#f1": {
+      "verdict": "series",
+      "reason": "<strong>colour_group 的判据</strong>：只由颜色承载、既不是系列也不是类目的<strong>第三个变量</strong>。单独给某一个类目换色（`highlighted_category`）不算；图例里列出的项是 series。 三段选项来自图例，按判据记 series；opus 与 gemini 都这样记，gpt 记成 category。"
+    },
+    "FPA-guide-to-data-visualization_p5/key_roles#f3": {
+      "verdict": "series",
+      "reason": "同 f1，同一页的另一张。"
+    },
+    "FPA-guide-to-data-visualization_p8/key_roles#f1": {
+      "verdict": "series × time",
+      "reason": "<strong>colour_group 的判据</strong>：只由颜色承载、既不是系列也不是类目的<strong>第三个变量</strong>。单独给某一个类目换色（`highlighted_category`）不算；图例里列出的项是 series。 opus 记的 colour_group 例子是「Scenarios」——那是这张扇形预测带的灰色区间本身，不是一个有名字的第三变量。gpt 与 gemini 都只记了 series 与 time。"
+    },
+    "Quarterly-Sector-and-Investment-Research-Update-Q1-2025_p12/key_roles#f1": {
+      "verdict": "time",
+      "reason": "gpt 与 gemini 一致。这张图只有一条线，单系列不需要一段 series 才唯一；opus 记的那一段来自 `heading`，是图的题名。"
+    },
+    "TRS241_Web_p49/key_roles#f1": {
+      "verdict": "category × series",
+      "reason": "opus 与 gpt 都记了「哪一个量」这一段（1981 年的人均能耗 / 人均 GDP），这张图两个量分别画在两根轴上，不说是哪一个就指不到一个图元；gemini 只记国家代码。opus 另记的 colour_group（收入组）在页面上有印出来的名字，但指认一个点用国家代码就够，按 <strong>colour_group 的判据</strong>：只由颜色承载、既不是系列也不是类目的<strong>第三个变量</strong>。单独给某一个类目换色（`highlighted_category`）不算；图例里列出的项是 series。 它不是定位所必需的一段。"
+    },
+    "TRS241_Web_p525/key_roles#f1": {
+      "verdict": "series × time",
+      "reason": "opus 与 gpt 一致。gemini 多记的 category 例子是 `$/lb`——那是量纲，不是键的一段。"
+    },
+    "US_Professional_Services_Partner_Compensation_Survey_2024_p20/key_roles#f1": {
+      "verdict": "category × series",
+      "reason": "opus 与 gemini 都读成一个绘图区；gpt 读成两个面板并多记一段 panel。两家一致。"
+    },
+    "WEF_The_Global_Public_Impact_of_GovTech_2025_p29/key_roles#f1": {
+      "verdict": "panel × series",
+      "reason": "opus 与 gemini 一致：两个绘图区各是一个年份（`2024` 印在面板上方）。gpt 把同一个 `2024` 记成 time——页面上没有时间轴，它是面板的名字。"
+    },
+    "ac8b3538-en_p130/key_roles#f1": {
+      "verdict": "category × panel",
+      "reason": "<strong>colour_group 的判据</strong>：只由颜色承载、既不是系列也不是类目的<strong>第三个变量</strong>。单独给某一个类目换色（`highlighted_category`）不算；图例里列出的项是 series。 opus 记的 colour_group 例子是「OECD (red bar)」——把 OECD 那一根单独标红，属于 `highlighted_category`。gpt 与 gemini 都只记了 category 与 panel。"
+    },
+    "b263dc5d-en_p144/key_roles#f1": {
+      "verdict": "category × colour_group × series",
+      "reason": "<strong>colour_group 的判据</strong>：只由颜色承载、既不是系列也不是类目的<strong>第三个变量</strong>。单独给某一个类目换色（`highlighted_category`）不算；图例里列出的项是 series。 opus 与 gemini <strong>各自独立地</strong>记了同一个第三变量：opus 写「Darker colours denote …」，gemini 写「statistically significant」，说的是同一件事——深浅表示这个差异显不显著，页面上没有任何文字把某一根条和「显著」连起来。<strong>这是 P8 在本轮最干净的一个实例。</strong>"
+    },
+    "b263dc5d-en_p181/key_roles#f1": {
+      "verdict": "category × colour_group × panel",
+      "reason": "<strong>colour_group 的判据</strong>：只由颜色承载、既不是系列也不是类目的<strong>第三个变量</strong>。单独给某一个类目换色（`highlighted_category`）不算；图例里列出的项是 series。 opus 记「dark navy fill vs pale…」，gemini 记「dark blue」，两家都指同一个只由颜色承载的分组；gpt 没记。<strong>又一条 P8 证据。</strong>"
+    },
+    "deloitte-2025-global-automotive-consumer-study-january-2025_p17/key_roles#f2": {
+      "verdict": "category",
+      "reason": "gpt 与 gemini 一致。opus 多记的一段来自 `heading`（这张图问的问题），而这一页已经按问题切成了几张图，图内只用国家一段就唯一。"
+    },
+    "deloitte-2025-global-automotive-consumer-study-january-2025_p17/key_roles#f3": {
+      "verdict": "category",
+      "reason": "同 f2。"
+    },
+    "employment_and_social_developments_in_europe_esde_2024_report_p34/key_roles#f1": {
+      "verdict": "category × panel × series",
+      "reason": "opus 与 gpt 一致。横轴是 `1st quintile` `2nd quintile` 这样的分位组，是类目；gemini 把它读成时间轴。<strong>时间轴的判据</strong>：等距排开的年 / 月刻度记 `time`；长度不等的区间带（`2001-09` `2011-14`）虽然等距排开，是有序类目，记 `category`（与 `timevalue_p9` 同一条）。"
+    },
+    "m-trends-2025-en_p32/key_roles#f1": {
+      "verdict": "series × time",
+      "reason": "<strong>时间轴的判据</strong>：等距排开的年 / 月刻度记 `time`；长度不等的区间带（`2001-09` `2011-14`）虽然等距排开，是有序类目，记 `category`（与 `timevalue_p9` 同一条）。 横轴是 Jan…May 的月份刻度，opus 与 gpt 都记 time；gemini 记成 category。"
+    },
+    "sri-sigma-natural-catastrophes-1-2025_p20/key_roles#f2": {
+      "verdict": "series × time",
+      "reason": "<strong>colour_group 的判据</strong>：只由颜色承载、既不是系列也不是类目的<strong>第三个变量</strong>。单独给某一个类目换色（`highlighted_category`）不算；图例里列出的项是 series。 gemini 把图例里的 `Underwriting profit` 记成了 colour_group——图例里列出来的项是 series。opus 与 gpt 都记 series。"
+    },
+    "wtr24_ch2_e_p3/key_roles#f1": {
+      "verdict": "series × time",
+      "reason": "<strong>colour_group 的判据</strong>：只由颜色承载、既不是系列也不是类目的<strong>第三个变量</strong>。单独给某一个类目换色（`highlighted_category`）不算；图例里列出的项是 series。 opus 记的 colour_group 是「light blue fill」，`label_source` 为 `not_shown`——页面上没有名字，<strong>panel 的判据</strong>：要有自己的绘图区，而且名字要印在页面上。`label_source` 是 `not_shown` 的段进不了键——键必须逐字可复制。"
+    }
+  },
+  "mechanisms": {
+    "_note": "失败归因的冲突裁决。形态与 passed 都由程序给，这里只裁「机制」。裁决依据是 case 里已有的解析器输出与规则本身，不是重新读图。",
+    "row_missing-15": {
+      "verdict": "key_only_in_prose",
+      "reason": "规则的四个键里有一个是图号 `Figure 3.`，它写在图题里，任何表都不会有这一格。opus 的 figure_not_transcribed 不成立（页面有表，只是另一张累计表），gpt 的 panel_name_dropped 不成立（这一页没有面板）。这一条同时是 P7 与 P3 的交点：图号被当成定位键。"
+    },
+    "unit_mismatch-28": {
+      "verdict": "value_interpolated_off_axis",
+      "reason": "[Age] 行解析出 -0.008，真值 -0.007，容差 0.1，差 12.5%，刚好越界；这一页数值不印在图上（need_estimate），是对轴内插读短了。三家给的三个机制都不对。**另记**：程序判的形态 `unit_mismatch` 在这一条上是误判——宽松标签匹配把 `Difference` 行的 -0.066 当成了被寻址的格。"
+    },
+    "value_off-42": {
+      "verdict": "value_interpolated_off_axis",
+      "reason": "Sep 2024 的 Deficit/Surplus 真值 100，解析器写 80，容差 0.1，差 20%；这一页不印数值。gemini 的 key_off_the_value_row 不成立（三个键都在，且指向的正是这一格）；gpt 的依据来自程序那一行「addressed cell holds 2025」，那是键本身是数字造成的诊断误差，不是机制。"
+    },
+    "value_off-44": {
+      "verdict": "value_interpolated_off_axis",
+      "reason": "真值 57，解析器写 56，容差 0.01——**计数量在 1% 容差下等于要求逐个数对**。相邻行是 53 与 4，不是 56，所以不是读到邻近图元。"
+    },
+    "value_off-45": {
+      "verdict": "value_interpolated_off_axis",
+      "reason": "真值 14，解析器写 13，同上，差一个。这两条一起说明 ε 必须与规则自己的容差比：整数计数的容差 1% 意味着 ε 必须为 0。"
+    },
+    "_missing_mechanism": {
+      "verdict": "闭集缺一项：`key_present_but_not_verbatim`",
+      "reason": "6 条被三家共同判为 `other` 的 case 里，4 条是同一件事——键就在表里，但字符串不逐字相同（`Fiscal Year 2025` vs 表头 `2025`；`fundraising` vs 表头拼成 `fundrasing`）。13 项机制闭集里没有这一项，`key_off_the_value_row` 说的是位置不对而不是字符串不对。另 2 条是「一个格里合写了数值与别的东西」（`28 countries, 80%`、`2 (2011, 2017)`）。这两项应作为下一轮 `MECHANISMS` 的候选。"
+    }
+  }
+}

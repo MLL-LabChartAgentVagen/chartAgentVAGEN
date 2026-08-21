@@ -1,0 +1,384 @@
+{
+  "stem": "CleanEnergyMarketMonitorMarch2024_p13",
+  "document": "CleanEnergyMarketMonitorMarch2024",
+  "tags": "untagged",
+  "model": "gpt-5.6-sol",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 120000,
+  "seconds": 95.1,
+  "usage": {
+    "input_tokens": 8840,
+    "output_tokens": 6699,
+    "cache_read_tokens": 2365
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "**画出来要什么**\n需绘制一个六面板复合柱图：五个地区面板按年份画竖柱，各用独立的 GW 刻度；“Avoided emissions”用横柱和 Mt CO₂ 刻度。所有柱内印白色数值，并分别使用横向或纵向点状网格。\n\n**定位一个值难在哪**\n印度的“12”同时出现在 2019 和 2023。定位目标值必须同时保留面板名“India”和年份，否则仅凭数值或面板无法唯一对应。\n\n**不确定的**\n页面未印图号。橙、黄、蓝三种柱色均无图例，无法确认颜色是否编码数据属性，还是仅作版式区分。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "Solar PV capacity additions and avoided emissions",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "compound",
+        "type_other": "",
+        "panels": 6,
+        "series": 1,
+        "categories": 5,
+        "marks": 30,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "GW",
+            "low": "100",
+            "high": "400",
+            "serves": "World bars"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "2019",
+            "high": "2023",
+            "serves": "World bars"
+          },
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "GW",
+            "low": "100",
+            "high": "300",
+            "serves": "China bars"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "2019",
+            "high": "2023",
+            "serves": "China bars"
+          },
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "GW",
+            "low": "20",
+            "high": "60",
+            "serves": "European Union bars"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "2019",
+            "high": "2023",
+            "serves": "European Union bars"
+          },
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "GW",
+            "low": "10",
+            "high": "40",
+            "serves": "United States bars"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "2019",
+            "high": "2023",
+            "serves": "United States bars"
+          },
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "GW",
+            "low": "5",
+            "high": "20",
+            "serves": "India bars"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "2019",
+            "high": "2023",
+            "serves": "India bars"
+          },
+          {
+            "side": "bottom",
+            "role": "value",
+            "unit_text": "Mt CO₂",
+            "low": "200",
+            "high": "600",
+            "serves": "avoided-emissions bars"
+          },
+          {
+            "side": "left",
+            "role": "category",
+            "unit_text": "",
+            "low": "China",
+            "high": "Rest of world",
+            "serves": "avoided-emissions bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "panel",
+            "label_source": "panel_title",
+            "example": "India"
+          },
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "2023"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "India",
+            "2023"
+          ],
+          "value": "12",
+          "value_source": "printed",
+          "why_hard": "India also prints 12 for 2019, so panel alone is not unique."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "horizontal_bars",
+        "figure_id": "f1",
+        "evidence": "Avoided emissions categories run vertically and bars extend right."
+      },
+      {
+        "key": "per_panel_axis_range",
+        "figure_id": "f1",
+        "evidence": "World ends at 400, China 300, EU 60, US 40, and India 20."
+      },
+      {
+        "key": "small_multiples_5plus",
+        "figure_id": "f1",
+        "evidence": "World, China, European Union, United States, and India repeat five yearly bars."
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "“Notes: ‘Avoided emissions’ refers to avoided emissions in one year from cumulative deployment since 2019 to 2023.”"
+      },
+      {
+        "key": "panel_title_per_panel",
+        "figure_id": "f1",
+        "evidence": "Six headings include “World”, “China”, “India”, and “Avoided emissions” above their panels."
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "“GW” appears beside deployment axes and “Mt CO₂” beneath the avoided-emissions axis."
+      },
+      {
+        "key": "axis_title_below_plot",
+        "figure_id": "f1",
+        "evidence": "“Mt CO₂” is centered below the avoided-emissions tick labels."
+      },
+      {
+        "key": "rotated_axis_title",
+        "figure_id": "f1",
+        "evidence": "“GW” is rotated vertically beside each of the five deployment panels."
+      },
+      {
+        "key": "value_label_inside",
+        "figure_id": "f1",
+        "evidence": "Every bar contains a bold white number, including “420” and “619”."
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "The five deployment panels draw dotted horizontal gridlines without vertical gridlines."
+      },
+      {
+        "key": "vgrid_only",
+        "figure_id": "f1",
+        "evidence": "The Avoided emissions panel draws dotted vertical gridlines without horizontal gridlines."
+      }
+    ],
+    "new_components": [
+      {
+        "name": "mixed_bar_orientations",
+        "figure_id": "f1",
+        "evidence": "Five panels use vertical time bars; Avoided emissions uses horizontal category bars.",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "name": "mixed_panel_units",
+        "figure_id": "f1",
+        "evidence": "Five panels are labelled “GW”; the Avoided emissions panel is labelled “Mt CO₂”.",
+        "affects": [
+          3,
+          4
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "420",
+        "figure_id": "f1",
+        "mark": "the World 2023 bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "World",
+          "2023"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "228",
+        "figure_id": "f1",
+        "mark": "the World 2022 bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "World",
+          "2022"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "261",
+        "figure_id": "f1",
+        "mark": "the China 2023 bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "China",
+          "2023"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "53",
+        "figure_id": "f1",
+        "mark": "the European Union 2023 bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "European Union",
+          "2023"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "32",
+        "figure_id": "f1",
+        "mark": "the United States 2023 bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "United States",
+          "2023"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "18",
+        "figure_id": "f1",
+        "mark": "the India 2022 bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "India",
+          "2022"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "12",
+        "figure_id": "f1",
+        "mark": "the India 2023 bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "India",
+          "2023"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "619",
+        "figure_id": "f1",
+        "mark": "the China avoided-emissions bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Avoided emissions",
+          "China"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "221",
+        "figure_id": "f1",
+        "mark": "the Rest of world avoided-emissions bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Avoided emissions",
+          "Rest of world"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "101",
+        "figure_id": "f1",
+        "mark": "the European Union avoided-emissions bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Avoided emissions",
+          "European Union"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      }
+    ],
+    "hardest_step": 3,
+    "hardest_step_why": "印度“12”见于2019和2023，须同时关联面板名与年份。各独立标识出来；不同的四种颜色必须保留。",
+    "examples": [
+      {
+        "gap": "P2",
+        "figure_id": "f1",
+        "quote": "World, China, European Union, United States, India, Avoided emissions",
+        "why": "六个面板名必须进入数值键，否则重复的“12”和“18”无法唯一定位。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "“GW” is vertical beside five panels; “Mt CO₂” is below the horizontal panel.",
+        "why": "同一复合图同时需要旋转轴单位、下置单位和柱内数值标签。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "Solar PV capacity additions and avoided emissions",
+        "why": "主标题独立置于整个六面板图上方，页面没有图号或副标题。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "Five panels use vertical bars; Avoided emissions uses horizontal bars.",
+        "why": "需支持同一复合图内混合柱向及不同类别轴结构。"
+      }
+    ]
+  }
+}

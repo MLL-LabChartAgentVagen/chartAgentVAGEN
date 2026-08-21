@@ -1,0 +1,330 @@
+{
+  "stem": "FPA-guide-to-data-visualization_p5",
+  "document": "FPA-guide-to-data-visualization",
+  "tags": "untagged",
+  "model": "gemini-3.1-pro-preview",
+  "control": "no_vocab",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 22.3,
+  "usage": {
+    "input_tokens": 3207,
+    "output_tokens": 3098,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n本页包含三个独立的图表，但它们共用右侧的版面。第一个是一个饼图（标有“Yes”, “No”, “Not sure”）。第二个是一个水平条形图，显示了针对某个多选题各个选项的百分比，图内数值直接写在条形外部或内部。第三个是另一个饼图，颜色与第一个有些重叠但代表不同的数据系列。需要处理以下元素：\n- 无编号图表标题的拆分与定位（均位于图表上方）。\n- 图例在图表右侧垂直排列，带颜色方块，且第一个饼图和条形图的最后一个图例项带有相同的颜色但不同图表中有不同的图例意义。\n- 条形图带有水平数值轴（0%到80%），无边框，仅保留底部X轴及刻度。X轴有单位`%`。类别标签在左侧，换行对齐。\n- 所有数值标签自带`%`号。\n\n### 定位一个值难在哪\n以第二个图表中的 `56.5` 为例：要定位这个值，需要结合标题 `What data visualization capabilities do you need that you are not getting today? (select all that apply)` 以及类别标签 `More chart types (heat chart, fractals, tree map, bubble chart, etc.)`。类别标签非常长且包含括号内的详细举例，多行显示，表格提取工具如果无法将这多行文本作为一个完整的行标题提取出来，或者与上下文断裂，就无法正确关联到 `56.5%` 这个值。\n\n### 不确定的\n三个图表在原排版中没有统一的Figure编号，提取时各自被视作独立的无编号图形。条形图中“Not sure”类别的颜色是浅蓝色，这在其他两个饼图中没有出现。图例与图表是一对一还是有部分共用（例如“Not sure”在第一个和第二个图表中虽然颜色不同，但文字相同），这里判定为每个图表拥有自己的图例或类别颜色。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "Do you require data visualization capabilities beyond standard charts and graphs?",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "pie",
+        "type_other": "",
+        "panels": 1,
+        "series": 3,
+        "categories": 1,
+        "marks": 3,
+        "values_printed": "all",
+        "axes": [],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "legend",
+            "example": "Yes"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Yes"
+          ],
+          "value": "24.0%",
+          "value_source": "printed",
+          "why_hard": "Standard pie chart, no specific difficulty."
+        }
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "",
+          "title": "What data visualization capabilities do you need that you are not getting today? (select all that apply)",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 1,
+        "categories": 5,
+        "marks": 5,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "bottom",
+            "role": "value",
+            "unit_text": "",
+            "low": "0%",
+            "high": "80%",
+            "serves": "all bars"
+          },
+          {
+            "side": "left",
+            "role": "category",
+            "unit_text": "",
+            "low": "More interactive",
+            "high": "Not sure",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Access to more data sources (internal)"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Access to more data sources (internal)"
+          ],
+          "value": "43.5%",
+          "value_source": "printed",
+          "why_hard": "Multi-line category label with parentheses."
+        }
+      },
+      {
+        "id": "f3",
+        "heading": {
+          "figure_number": "",
+          "title": "Where would you prefer to get these data visualization capabilities from?",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "pie",
+        "type_other": "",
+        "panels": 1,
+        "series": 3,
+        "categories": 1,
+        "marks": 3,
+        "values_printed": "all",
+        "axes": [],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "legend",
+            "example": "Included in performance management solution"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Included in performance management solution"
+          ],
+          "value": "15.3%",
+          "value_source": "printed",
+          "why_hard": "Multi-line legend labels."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "title_only_heading",
+        "figure_id": "f1",
+        "evidence": "heading has no figure number, subtitle or unit",
+        "affects": [
+          4
+        ]
+      },
+      {
+        "key": "legend_right",
+        "figure_id": "f1",
+        "evidence": "legend is placed to the right of the pie chart",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "data_labels_inside",
+        "figure_id": "f1",
+        "evidence": "percentages are printed inside the pie slices",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "key": "data_labels_mixed_placement",
+        "figure_id": "f2",
+        "evidence": "70.6% and 56.5% outside bars, 43.5%, 21.2% inside, 7.1% outside",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "key": "multi_line_axis_ticks",
+        "figure_id": "f2",
+        "evidence": "y-axis categories are wrapped across multiple lines",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "bar_colours_vary",
+        "figure_id": "f2",
+        "evidence": "each bar has a distinct colour without a legend explaining it",
+        "affects": []
+      },
+      {
+        "key": "multi_line_legend_text",
+        "figure_id": "f3",
+        "evidence": "legend entries wrap across up to 4 lines",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "new_components": [
+      {
+        "name": "independent_coloured_bars",
+        "figure_id": "f2",
+        "evidence": "bars coloured differently but not mapped in a legend",
+        "affects": []
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "24.0",
+        "figure_id": "f1",
+        "mark": "the orange Yes slice",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Yes"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "40.9",
+        "figure_id": "f1",
+        "mark": "the red No slice",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "No"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "70.6",
+        "figure_id": "f2",
+        "mark": "the orange More interactive bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "More interactive"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "56.5",
+        "figure_id": "f2",
+        "mark": "the red More chart types bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "More chart types (heat chart, fractals, tree map, bubble chart, etc.)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "43.5",
+        "figure_id": "f2",
+        "mark": "the dark blue Access to more data sources (internal) bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Access to more data sources (internal)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "21.2",
+        "figure_id": "f2",
+        "mark": "the grey Access to more data sources (external) bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Access to more data sources (external)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "7.1",
+        "figure_id": "f2",
+        "mark": "the light blue Not sure bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Not sure"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "15.3",
+        "figure_id": "f3",
+        "mark": "the orange Included in performance management solution slice",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Included in performance management solution"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "11.8",
+        "figure_id": "f3",
+        "mark": "the red Doesn't matter slice",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Doesn't matter"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "72.9",
+        "figure_id": "f3",
+        "mark": "the dark blue Third-party solution slice",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Third-party solution that may access my performance management data"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      }
+    ],
+    "hardest_step": 3,
+    "hardest_step_why": "图表f2的类别标签“More chart types...”和f3的图例项“Third-party solution...”含有多行极长文本和括号。Markdown解析极易将多行文本拆分导致无法精确匹配长标签，从而无法关联至数值56.5或72.9。",
+    "examples": [
+      {
+        "gap": "P6",
+        "figure_id": "f2",
+        "quote": "70.6% and 56.5% outside the bars, 43.5% and 21.2% inside the bars",
+        "why": "数值标签既有在条形外部的，也有由于空间足够而放置在内部的，目前缺少控制标签针对条形长度自适应放置维度的能力。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f2",
+        "quote": "What data visualization capabilities do you need that you are not getting today? (select all that apply)",
+        "why": "全页三个图都没有编号，仅靠一个长问句作标题。当前需增强对无编号且呈提问式的长标题的独立识别与结构化处理。"
+      }
+    ]
+  }
+}

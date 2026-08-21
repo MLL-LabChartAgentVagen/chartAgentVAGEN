@@ -1,0 +1,203 @@
+{
+  "stem": "World_Inequality_Report_2026_p25",
+  "document": "World_Inequality_Report_2026",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "no_vocab",
+  "effort": "high",
+  "dpi": 150,
+  "seconds": 13.3,
+  "usage": {
+    "input_tokens": 2287,
+    "output_tokens": 1747,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "本页包含一个简单的双折线图（Figure 17），展示了在法国和韩国，按收入十分位数划分的政治捐款占总额的百分比。生成此图表需要支持：带有刻度线和旋转标签的分类X轴、带有网格线的连续Y轴、带有形状标识的图例以及带有主副标题的居中顶部标题区域。Y轴的标题文字逆时针旋转了90度。\n\n所有数值都没有直接标注在数据点上，需要通过将数据点对照Y轴刻度来读取。由于Y轴的刻度间隔为10%，而所需提取的数值精度到了小数点后一位（如17.5, 57.0），直接从图表上精确读取这些值极其困难，极易超出容差范围。提取数值时需要组合X轴标签（如P90-P100）和图例项（如France或South Korea）作为寻址键。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 17.",
+          "title": "Without redistribution, political inequality will increase",
+          "subtitle": "Political donations by income decile, % of total",
+          "unit_text": "Percentage of total political donations by income decile",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 10,
+        "marks": 20,
+        "values_printed": "none"
+      }
+    ],
+    "components": [
+      {
+        "key": "y_axis_gridlines",
+        "figure_id": "f1",
+        "evidence": "horizontal dashed lines at 10% intervals from 0% to 60%",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "key": "x_axis_labels_rotated",
+        "figure_id": "f1",
+        "evidence": "labels P0-P10, P10-P20, etc., are rotated 45 degrees",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "x_axis_gridlines",
+        "figure_id": "f1",
+        "evidence": "vertical dashed lines starting from each tick mark",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "key": "y_axis_title",
+        "figure_id": "f1",
+        "evidence": "'Percentage of total political donations by income decile' rotated 90 degrees",
+        "affects": [
+          3,
+          4
+        ]
+      },
+      {
+        "key": "legend_below",
+        "figure_id": "f1",
+        "evidence": "Legend with 'France' and 'South Korea' is below the x-axis",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "line_markers",
+        "figure_id": "f1",
+        "evidence": "squares for South Korea, small vertical ticks for France",
+        "affects": [
+          2
+        ]
+      }
+    ],
+    "new_components": [
+      {
+        "name": "y_axis_labels_with_percent",
+        "figure_id": "f1",
+        "evidence": "y-axis ticks are labeled 0%, 10%, ... 60%",
+        "affects": [
+          1,
+          2
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "52.0",
+        "figure_id": "f1",
+        "mark": "the France point at P90-P100",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "France",
+          "P90–P100"
+        ]
+      },
+      {
+        "value": "57.0",
+        "figure_id": "f1",
+        "mark": "the South Korea point at P90-P100",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "South Korea",
+          "P90–P100"
+        ]
+      },
+      {
+        "value": "17.5",
+        "figure_id": "f1",
+        "mark": "the France point at P80-P90",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "France",
+          "P80–P90"
+        ]
+      },
+      {
+        "value": "16.5",
+        "figure_id": "f1",
+        "mark": "the South Korea point at P80-P90",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "South Korea",
+          "P80–P90"
+        ]
+      },
+      {
+        "value": "10.5",
+        "figure_id": "f1",
+        "mark": "the France point at P70-P80",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "France",
+          "P70–P80"
+        ]
+      },
+      {
+        "value": "8.2",
+        "figure_id": "f1",
+        "mark": "the South Korea point at P70-P80",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "South Korea",
+          "P70–P80"
+        ]
+      },
+      {
+        "value": "8.0",
+        "figure_id": "f1",
+        "mark": "the France point at P60-P70",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "France",
+          "P60–P70"
+        ]
+      },
+      {
+        "value": "5.8",
+        "figure_id": "f1",
+        "mark": "the South Korea point at P60-P70",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "South Korea",
+          "P60–P70"
+        ]
+      },
+      {
+        "value": "5.0",
+        "figure_id": "f1",
+        "mark": "the France point at P50-P60",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "France",
+          "P50–P60"
+        ]
+      },
+      {
+        "value": "2.8",
+        "figure_id": "f1",
+        "mark": "the South Korea point at P50-P60",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "South Korea",
+          "P50–P60"
+        ]
+      }
+    ],
+    "hardest_step": 2
+  }
+}

@@ -1,0 +1,303 @@
+{
+  "stem": "TRS241_Web_p88",
+  "document": "TRS241_Web",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "repeat",
+  "effort": "high",
+  "dpi": 150,
+  "seconds": 84.1,
+  "usage": {
+    "input_tokens": 5361,
+    "output_tokens": 10771,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "**画出来要什么**\n要绘制此页面，生成器需要支持组合图表（Compound Chart），在上方排布一组共享相同类别缩写的饼图（小型多图），并在下方绘制带双Y轴的折线图。对于饼图，需要支持在扇区外部通过引导线标注类别缩写和百分比值（如 `EI 30.7%`）。折线图需要支持双Y轴（左侧对应总量，右侧对应人均），支持在图表内部添加带有指向箭头的文本标注以显示区间复合增长率（如 `(7.97 %)`），以及支持图表内脚注（`(1) Average annual growth...`）。此外，还必须能够将图例作为说明文本嵌入到图表下方的长标题中。\n\n**定位一个值难在哪**\n以 `30.7`（1969年EI扇区占比）为例，由于饼图本身的标签仅显示了首字母缩写 `EI`，其完整的业务含义（Extractive industries）被写在整个大图底部的标题段落中。解析器需要具备跨图表区域的上下文理解能力，识别标题中的等式结构（如 `EI: Extractive industries`）并将其作为元数据关联到对应数据单元格的键值上，否则提取出的表格表头缺乏实际业务意义。\n\n**不确定的**\n底部折线图的横坐标轴刻度虽然标出了具体年份（如1969, 1974, 1979, 1985），但其1979-1985的物理间距与前后5年跨度的间距几乎一致，不确定生成器是否需要支持这种非严格线性的时间轴映射。同时，图内的区间增长率箭头起点和终点的具体锚定规则可能有一定模糊性。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "FIG.2.10.",
+          "title": "Energy and nuclear power planning study for Algeria: past and future trends in overall and per capita GDP and distribution by sector (in Algerian dinars (DA)).",
+          "subtitle": "A: Agriculture. MI: Manufacturing industries. C: Construction. E: Energy. EI: Extractive industries. S: Services (including transport).",
+          "unit_text": "(in Algerian dinars (DA))",
+          "placement": "below"
+        },
+        "type": "compound",
+        "type_other": "",
+        "panels": 5,
+        "series": 8,
+        "categories": 10,
+        "marks": 36,
+        "values_printed": "some",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "10⁹ DA 1979",
+            "low": "0",
+            "high": "700",
+            "serves": "Overall GDP line"
+          },
+          {
+            "side": "right",
+            "role": "value",
+            "unit_text": "10³ DA 1979",
+            "low": "0",
+            "high": "28",
+            "serves": "GDP per capita line"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "Years",
+            "low": "1969",
+            "high": "2015",
+            "serves": "both lines"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "panel",
+            "label_source": "panel_title",
+            "example": "1969"
+          },
+          {
+            "role": "series",
+            "label_source": "inline_label",
+            "example": "EI"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "1969",
+            "EI"
+          ],
+          "value": "30.7%",
+          "value_source": "printed",
+          "why_hard": "The series label is an abbreviation defined only in the external figure caption below the plot."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "heterogeneous_panel_types",
+        "figure_id": "f1",
+        "evidence": "top part consists of pie charts, bottom part is a line chart"
+      },
+      {
+        "key": "dual_axis",
+        "figure_id": "f1",
+        "evidence": "left axis is for Overall GDP, right axis for GDP per capita"
+      },
+      {
+        "key": "annotation_callout",
+        "figure_id": "f1",
+        "evidence": "(7.97 %) and other percentages with arrows pointing between line segments"
+      },
+      {
+        "key": "rotated_axis_title",
+        "figure_id": "f1",
+        "evidence": "Overall GDP (10⁹ DA 1979) runs vertically alongside the left axis"
+      },
+      {
+        "key": "inline_series_labels",
+        "figure_id": "f1",
+        "evidence": "abbreviations (C, MI, A) are next to pie slices; Overall GDP is next to the line"
+      },
+      {
+        "key": "value_label_outside",
+        "figure_id": "f1",
+        "evidence": "pie percentages like 30.7% are drawn outside slices connected by leader lines"
+      },
+      {
+        "key": "footnote_marker",
+        "figure_id": "f1",
+        "evidence": "(1) next to Overall GDP links to a note placed inside the bottom plot area"
+      },
+      {
+        "key": "dashed_line_series",
+        "figure_id": "f1",
+        "evidence": "GDP per capita is drawn with a dash-dot line style"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "10⁹ DA 1979 is written in the left axis title"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "legend_in_caption",
+        "figure_id": "f1",
+        "evidence": "abbreviations used in inline labels are defined only in the figure caption text",
+        "affects": [
+          3,
+          4
+        ]
+      },
+      {
+        "name": "growth_rate_arrows",
+        "figure_id": "f1",
+        "evidence": "arrows between line segments indicating growth rates like (7.97 %)",
+        "affects": [
+          1
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "30.7",
+        "figure_id": "f1",
+        "mark": "the EI slice in the 1969 pie chart",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "1969",
+          "EI",
+          "Extractive industries"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 3
+      },
+      {
+        "value": "38.8",
+        "figure_id": "f1",
+        "mark": "the S slice in the 1969 pie chart",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "1969",
+          "S",
+          "Services (including transport)"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 3
+      },
+      {
+        "value": "6.1",
+        "figure_id": "f1",
+        "mark": "the A slice in the 1979 pie chart",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "1979",
+          "A",
+          "Agriculture"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 3
+      },
+      {
+        "value": "12.3",
+        "figure_id": "f1",
+        "mark": "the C slice in the 1979 pie chart",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "1979",
+          "C",
+          "Construction"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 3
+      },
+      {
+        "value": "19.6",
+        "figure_id": "f1",
+        "mark": "the MI slice in the 2000 pie chart",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "2000",
+          "MI",
+          "Manufacturing industries"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 3
+      },
+      {
+        "value": "7.1",
+        "figure_id": "f1",
+        "mark": "the E slice in the 2000 pie chart",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "2000",
+          "E",
+          "Energy"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 3
+      },
+      {
+        "value": "20.5",
+        "figure_id": "f1",
+        "mark": "the C slice in the 2015 pie chart",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "2015",
+          "C",
+          "Construction"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 3
+      },
+      {
+        "value": "41.2",
+        "figure_id": "f1",
+        "mark": "the S slice in the 2015 pie chart",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "2015",
+          "S",
+          "Services (including transport)"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 3
+      },
+      {
+        "value": "200",
+        "figure_id": "f1",
+        "mark": "a tick label on the left y-axis",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Overall GDP (10⁹ DA 1979)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "12.5",
+        "figure_id": "f1",
+        "mark": "the MI slice in the 1979 pie chart",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "1979",
+          "MI",
+          "Manufacturing industries"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 3
+      }
+    ],
+    "hardest_step": 3,
+    "hardest_step_why": "饼图的类别标签仅使用了首字母缩写（如EI、S），其完整含义（如Extractive industries）写在图表下方的标题中，解析器很难将这种外部释义正确关联到表格列名上。",
+    "examples": [
+      {
+        "gap": "P9",
+        "figure_id": "f1",
+        "quote": "left y-axis has Overall GDP, right y-axis has Per capita GDP",
+        "why": "双轴图表需要分别记录每条线对应的坐标轴，否则表格化时无法正确还原数据的绝对量级。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "(7.97 %) with arrows pointing between line segments",
+        "why": "目前无法提取表示两点之间复合增长率的自由文本标注，需要一种结构来表达跨时间段的相对变化指标。"
+      },
+      {
+        "gap": "P3",
+        "figure_id": "f1",
+        "quote": "A: Agriculture. MI: Manufacturing industries. in the caption",
+        "why": "图例信息被嵌入在外部长标题段落中，如果不提取并关联这些缩写释义，生成的表格表头会缺乏实际业务含义。"
+      }
+    ]
+  }
+}

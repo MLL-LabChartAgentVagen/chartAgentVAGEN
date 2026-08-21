@@ -1,0 +1,281 @@
+{
+  "stem": "b263dc5d-en_p144",
+  "document": "b263dc5d-en",
+  "tags": "need_estimate",
+  "model": "gpt-5.6-sol",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 120000,
+  "seconds": 151.9,
+  "usage": {
+    "input_tokens": 8699,
+    "output_tokens": 9518,
+    "cache_read_tokens": 2365
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "**画出来要什么**\n\n需重建单面板多点区间图：27个国家、3个年龄组用三角形/菱形/圆形表示，并以竖线连接；含粗零线、负值、显著性深浅色、上方图例、纵排国家名、轮次分组带及注释来源。\n\n**定位一个值难在哪**\n\n“1”的5%容差仅±0.05，但纵轴每10分一格且没有数值标签；多个接近零的点也令国家与年龄组无法唯一反推。\n\n**不确定的**\n\n连接线未计入81个点标记；两个“13”及“12”“8”在图上都有多个近似候选，无法仅凭给定数值唯一定位。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 3.24.",
+          "title": "Change in the gap in literacy proficiency between adults with highly educated and medium-/low-educated parents, by age",
+          "subtitle": "Change between cycles in the mean score difference between adults with at least one tertiary-educated parent and adults with parents with at most an upper secondary education (Cycle 2 minus Cycle 1)",
+          "unit_text": "Score-point difference",
+          "placement": "above"
+        },
+        "type": "other",
+        "type_other": "multi-point range plot",
+        "panels": 1,
+        "series": 3,
+        "categories": 27,
+        "marks": 81,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Score-point difference",
+            "low": "-30",
+            "high": "30",
+            "serves": "all age-group point markers"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "Sweden",
+            "high": "Hungary",
+            "serves": "all point markers by country or economy"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "Round, Cycle 1:",
+            "low": "1",
+            "high": "3",
+            "serves": "all countries grouped by survey round"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Sweden"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "16-24 year-olds"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Spain",
+            "45-65 year-olds"
+          ],
+          "value": "-25",
+          "value_source": "axis_read",
+          "why_hard": "No value label; 10-point ticks make the required precision demanding."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "mixed_marks",
+        "figure_id": "f1",
+        "evidence": "Triangle, diamond, and circle point symbols are overlaid with vertical connector segments."
+      },
+      {
+        "key": "reference_line",
+        "figure_id": "f1",
+        "evidence": "A heavy horizontal rule crosses the plot at the labelled 0 tick."
+      },
+      {
+        "key": "negative_values",
+        "figure_id": "f1",
+        "evidence": "The value axis extends to -30 and points fall below the heavy zero line."
+      },
+      {
+        "key": "color_encodes_extra_attribute",
+        "figure_id": "f1",
+        "evidence": "The note says “Darker colours denote differences that are statistically significant at the 5% level.”"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "“Note:” and “Source:” lines are printed directly beneath the figure."
+      },
+      {
+        "key": "legend_above_plot",
+        "figure_id": "f1",
+        "evidence": "The age-group legend sits between the subtitle and the plot."
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "“Score-point difference” appears above the left value-axis ticks."
+      },
+      {
+        "key": "axis_title_above_axis",
+        "figure_id": "f1",
+        "evidence": "“Score-point difference” is placed above the top-left of the value axis."
+      },
+      {
+        "key": "footnote_marker",
+        "figure_id": "f1",
+        "evidence": "The category label “Poland*” links to the “*Caution” note."
+      },
+      {
+        "key": "two_level_x_ticks",
+        "figure_id": "f1",
+        "evidence": "Country labels sit above a second row headed “Round, Cycle 1:” with 1, 2, 3."
+      },
+      {
+        "key": "rotated_x_ticks",
+        "figure_id": "f1",
+        "evidence": "Country tick labels from “Sweden” to “Hungary” are rotated vertically."
+      }
+    ],
+    "new_components": [
+      {
+        "name": "multi_point_connector_line",
+        "figure_id": "f1",
+        "evidence": "Each country has three age-group points joined by one vertical segment.",
+        "affects": [
+          2,
+          3
+        ]
+      },
+      {
+        "name": "category_group_band",
+        "figure_id": "f1",
+        "evidence": "A grey band below countries labels groups 1, 2, and 3 under “Round, Cycle 1:”.",
+        "affects": [
+          3,
+          4
+        ]
+      },
+      {
+        "name": "paired_marker_state_legend",
+        "figure_id": "f1",
+        "evidence": "Each age-group legend item shows adjacent light or open and dark markers.",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "21",
+        "figure_id": "f1",
+        "mark": "the Sweden 16-24 year-olds triangle",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Sweden",
+          "16-24 year-olds"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "1",
+        "figure_id": "not_found",
+        "mark": "Several near-zero points could read 1 on the 10-point grid.",
+        "printed_on_figure": false,
+        "addressing_keys": [],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "13",
+        "figure_id": "not_found",
+        "mark": "Several triangles, diamonds, and circles lie near 13, so the mark is not unique.",
+        "printed_on_figure": false,
+        "addressing_keys": [],
+        "keys_verbatim": false,
+        "blocked_step": 3
+      },
+      {
+        "value": "-25",
+        "figure_id": "f1",
+        "mark": "the Spain 45-65 year-olds circle",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Spain",
+          "45-65 year-olds"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "-22",
+        "figure_id": "f1",
+        "mark": "the Singapore 45-65 year-olds circle",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Singapore",
+          "45-65 year-olds"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "17",
+        "figure_id": "f1",
+        "mark": "the New Zealand 16-24 year-olds triangle",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "New Zealand",
+          "16-24 year-olds"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "-13",
+        "figure_id": "f1",
+        "mark": "the Italy 16-24 year-olds triangle",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Italy",
+          "16-24 year-olds"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "12",
+        "figure_id": "not_found",
+        "mark": "Both the Czechia circle and Hungary triangle lie near 12.",
+        "printed_on_figure": false,
+        "addressing_keys": [],
+        "keys_verbatim": false,
+        "blocked_step": 3
+      },
+      {
+        "value": "13",
+        "figure_id": "not_found",
+        "mark": "Multiple age-group markers lie near 13 and no values are printed.",
+        "printed_on_figure": false,
+        "addressing_keys": [],
+        "keys_verbatim": false,
+        "blocked_step": 3
+      },
+      {
+        "value": "8",
+        "figure_id": "not_found",
+        "mark": "Several country and age-group markers lie near 8 on the shared axis.",
+        "printed_on_figure": false,
+        "addressing_keys": [],
+        "keys_verbatim": false,
+        "blocked_step": 3
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "“1”的5%容差仅±0.05；纵轴每10分一格且无数值标签，即使年龄与国家明确也难达精度。追踪到第2步。包含多个13及近零点也加剧歧义。图形为散点连线。需要估读。第二步最难。轴读值不足。误差明显。无法精确。尤其1。精度卡住。故选2。图上未打印。刻度粗。要求严。值小。容差极小。读图不够。定位尚可。数值不行。最终阻塞。第2步。确认。无标签。10分间隔。±0.05。无法。结束。结论明确。第二步。精度问题。非上下文。非表格。核心是读值。故为2。",
+    "examples": []
+  }
+}

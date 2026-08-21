@@ -1,0 +1,467 @@
+{
+  "stem": "Digital_News-Report_2022_p63",
+  "document": "Digital_News-Report_2022",
+  "tags": "untagged",
+  "model": "gemini-3.1-pro-preview",
+  "control": "no_vocab",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 27.7,
+  "usage": {
+    "input_tokens": 3149,
+    "output_tokens": 3962,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n这一页有五个独立的图表模块，包含条形图、折线图和各种强调大数字的排版。需要支持：1. 图表旁边或内部放置带数字和图标的描述性面板（如 \"CHANGING MEDIA\" 和 \"TRUST\"）。2. 水平条形图带有右对齐的内联标签（数字放在条形内部或末端，如 Top Brands 和 Brand Trust Scores）。3. 折线图，其中某些折线带有尾部数字标签和直接标注系列名称（而不是单独的图例）。4. 复杂的双列排版，一侧是图表，另一侧是相关的数据表（如 \"TOP SOCIAL MEDIA AND MESSAGING\"）。5. 在数据表中嵌入图标（如 Facebook, Twitter 等）。\n\n### 定位一个值难在哪\n定位一个值（例如 `53%`）难在系列名称直接跟在折线尾部的数字附近（如 `53%` 对应的 `TV` 在折线图上方标注为图例，但又没有明确的连接线，需要根据颜色或者靠近程度关联）。另外，在 \"SOURCES OF NEWS\" 折线图中，图例在顶部，折线尾端带有百分比，需要结合图例颜色和时间轴定位值。\n\n### 不确定的\n底部的表格中包含了社交媒体的图标（如 Facebook 的 \"f\" 图标），难以确定模型是否能准确提取图表形式并与纯文本对齐。中间的 \"9%\" 和 \"25%\" 面板虽然像图表，但实际上是强调数据的排版，是否归类为图表（或者说如何抽取其结构）不完全确定。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "WEEKLY REACH OFFLINE AND ONLINE",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "bar",
+        "type_other": "",
+        "panels": 2,
+        "series": 4,
+        "categories": 13,
+        "marks": 27,
+        "values_printed": "all",
+        "axes": [],
+        "key_parts": [
+          {
+            "role": "panel",
+            "label_source": "panel_title",
+            "example": "TV, RADIO AND PRINT"
+          },
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "BBC News (TV & radio)"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Weekly use TV, radio & print"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "TV, RADIO AND PRINT",
+            "Sky News",
+            "Weekly use TV, radio & print"
+          ],
+          "value": "15",
+          "value_source": "printed",
+          "why_hard": "No visible axis; values are printed on the bars."
+        }
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "",
+          "title": "CHANGING MEDIA",
+          "subtitle": "Audiences for traditional news sources like TV and print have fallen significantly over the last decade, with younger groups preferring to get their news online or via social media. After last year’s COVID-19 bump, overall news consumption is down across all devices.",
+          "unit_text": "",
+          "placement": "beside"
+        },
+        "type": "unreadable",
+        "type_other": "infographic text block with icons and large numbers",
+        "panels": 1,
+        "series": 1,
+        "categories": 1,
+        "marks": 2,
+        "values_printed": "all",
+        "axes": [],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "inline_label",
+            "example": "pay for ONLINE NEWS"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "listen to PODCASTS in the last month"
+          ],
+          "value": "25%",
+          "value_source": "printed",
+          "why_hard": "It is just stylized text with icons."
+        }
+      },
+      {
+        "id": "f3",
+        "heading": {
+          "figure_number": "",
+          "title": "SOURCES OF NEWS 2013–22",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 1,
+        "series": 4,
+        "categories": 10,
+        "marks": 40,
+        "values_printed": "some",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "0%",
+            "high": "100%",
+            "serves": "all lines"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "2013",
+            "high": "2022",
+            "serves": "all lines"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "TV"
+          },
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2022"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "TV",
+            "2022"
+          ],
+          "value": "53%",
+          "value_source": "printed",
+          "why_hard": "Only start and end points have printed values."
+        }
+      },
+      {
+        "id": "f4",
+        "heading": {
+          "figure_number": "",
+          "title": "DEVICES FOR NEWS 2013–22",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 1,
+        "series": 3,
+        "categories": 10,
+        "marks": 30,
+        "values_printed": "some",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "0%",
+            "high": "100%",
+            "serves": "all lines"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "2013",
+            "high": "2022",
+            "serves": "all lines"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "series",
+            "label_source": "not_shown",
+            "example": ""
+          },
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2022"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "",
+            "2022"
+          ],
+          "value": "64%",
+          "value_source": "printed",
+          "why_hard": "No legend; series are identified only by icons next to the title."
+        }
+      },
+      {
+        "id": "f5",
+        "heading": {
+          "figure_number": "",
+          "title": "OVERALL TRUST SCORE",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "other",
+        "type_other": "infographic block",
+        "panels": 1,
+        "series": 1,
+        "categories": 1,
+        "marks": 2,
+        "values_printed": "all",
+        "axes": [],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "panel_title",
+            "example": "Undue political influence"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Undue political influence"
+          ],
+          "value": "20%",
+          "value_source": "printed",
+          "why_hard": "Mix of a small sparkline and large text callouts."
+        }
+      },
+      {
+        "id": "f6",
+        "heading": {
+          "figure_number": "",
+          "title": "BRAND TRUST SCORES",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "stacked_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 3,
+        "categories": 15,
+        "marks": 45,
+        "values_printed": "some",
+        "axes": [
+          {
+            "side": "left",
+            "role": "category",
+            "unit_text": "",
+            "low": "BBC News",
+            "high": "Sun",
+            "serves": "all bars"
+          },
+          {
+            "side": "bottom",
+            "role": "value",
+            "unit_text": "",
+            "low": "0%",
+            "high": "100%",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "BBC News"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Trust"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "BBC News",
+            "Trust"
+          ],
+          "value": "55",
+          "value_source": "printed",
+          "why_hard": "Middle segment (Neither) doesn't have value printed, must be read by subtraction."
+        }
+      },
+      {
+        "id": "f7",
+        "heading": {
+          "figure_number": "",
+          "title": "TOP SOCIAL MEDIA AND MESSAGING",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "unreadable",
+        "type_other": "table with icons",
+        "panels": 2,
+        "series": 1,
+        "categories": 6,
+        "marks": 6,
+        "values_printed": "all",
+        "axes": [],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Facebook"
+          },
+          {
+            "role": "series",
+            "label_source": "heading",
+            "example": "For News"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Facebook",
+            "For News"
+          ],
+          "value": "19%",
+          "value_source": "printed",
+          "why_hard": "It's a table."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "title_with_icons",
+        "figure_id": "f4",
+        "evidence": "icons of laptop, tablet, phone appear beside title 'DEVICES FOR NEWS'",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "in_bar_labels",
+        "figure_id": "f1",
+        "evidence": "numbers like 50, 27 are printed inside the bars",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "key": "line_end_labels",
+        "figure_id": "f3",
+        "evidence": "percentages 73%, 53% are printed at the right end of lines",
+        "affects": [
+          2,
+          3
+        ]
+      },
+      {
+        "key": "sparkline_in_callout",
+        "figure_id": "f5",
+        "evidence": "small pink line chart above '34%' under OVERALL TRUST SCORE",
+        "affects": [
+          1
+        ]
+      }
+    ],
+    "new_components": [
+      {
+        "name": "icon_only_legend",
+        "figure_id": "f4",
+        "evidence": "laptop, tablet, and phone icons act as series legend without text",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "name": "text_block_as_chart_element",
+        "figure_id": "f2",
+        "evidence": "large '9%' and '25%' styled like data points",
+        "affects": [
+          1
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "50",
+        "figure_id": "f1",
+        "mark": "BBC News (TV & radio) bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "TV, RADIO AND PRINT",
+          "BBC News (TV & radio)",
+          "Weekly use TV, radio & print"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "18",
+        "figure_id": "f6",
+        "mark": "ITV News 'Don't trust' bar segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "ITV News",
+          "Don't trust"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "53%",
+        "figure_id": "f3",
+        "mark": "end of the blue TV line",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "TV",
+          "2022"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "12",
+        "figure_id": "f1",
+        "mark": "MailOnline bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "ONLINE",
+          "MailOnline",
+          "Weekly use online brands"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      }
+    ],
+    "hardest_step": 3,
+    "hardest_step_why": "在 f4 中，折线的系列没有文字图例，仅依靠标题旁边的图标。对于 f1，图例分为了两组对应不同的面板，如果无法准确提取面板名称并与对应条形关联，就会阻碍标签匹配。",
+    "examples": [
+      {
+        "gap": "P3",
+        "figure_id": "page",
+        "quote": "Multiple infographic text callouts like '9% pay for ONLINE NEWS'",
+        "why": "当前的图表生成器针对传统坐标图，不能很好地将孤立的带图标的大数据排版作为一种面板来生成和定位。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "Numbers printed directly inside the right end of the bars, e.g., '50'",
+        "why": "需要更丰富的样式维度来支持标签定位在条形末端或内部，而不是默认显示在外部或坐标轴。"
+      },
+      {
+        "gap": "P8",
+        "figure_id": "f4",
+        "quote": "Laptop, tablet, and phone icons next to 'DEVICES FOR NEWS 2013-22'",
+        "why": "图表通过纯图标而没有任何文字标签来指代折线所代表的系列，无法用传统的图例字段表达。"
+      }
+    ]
+  }
+}

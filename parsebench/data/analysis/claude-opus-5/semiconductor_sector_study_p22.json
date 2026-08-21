@@ -1,0 +1,287 @@
+{
+  "stem": "semiconductor_sector_study_p22",
+  "document": "semiconductor_sector_study",
+  "tags": "need_estimate",
+  "model": "claude-opus-5",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "seconds": 40.2,
+  "usage": {
+    "input_tokens": 13948,
+    "output_tokens": 2888,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "**画出来要什么**\n\n一张单栏堆叠柱状图：横轴是不连续年份刻度 `2007 2010 2013 2016 2017 2018 2019 2020 2021 2022 2023`（缺 2008、2009 等），每根柱由数十个同色（teal）细分段组成，段与段仅靠白色细缝区分——即“每家公司一笔融资”作为一个堆叠段，没有图例、没有数值标签。纵轴刻度 `0M`…`220M`，间隔 20M，旋转的轴标题 `Fundraisings - Amount received by the company in its latest fundraising (GBP)` 竖排在左侧。图题另起一行 `Figure 4.1 – Latest Fundraisings`，来源行在图下。\n\n**定位一个值难在哪**\n\n以 218（2023 年柱总高）为例：图上不印任何数字，只能对着 20M 一格的网格读；5% 容差约 ±11M，尚可，但 189（2020）与 218 之间的差要靠像素判断。更糟的是“2”和“0”这类小值——2007 柱几乎贴基线，段内还再分层，任何行标签只有年份，无法唯一指向某一段。\n\n**不确定的**\n\n每根柱究竟含多少个堆叠段无法数清（2023 目测 20+）；段所代表的公司名未在页面出现；`0` 是否对应 2016 年的空槽（几乎不可见）无法确认。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 4.1",
+          "title": "Latest Fundraisings",
+          "subtitle": "",
+          "unit_text": "Fundraisings - Amount received by the company in its latest fundraising (GBP)",
+          "placement": "above"
+        },
+        "type": "stacked_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 1,
+        "categories": 11,
+        "marks": 70,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Fundraisings - Amount received by the company in its latest fundraising (GBP)",
+            "low": "0M",
+            "high": "220M",
+            "serves": "all stacked bar segments"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "2007",
+            "high": "2023",
+            "serves": "the eleven year slots"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2023"
+          },
+          {
+            "role": "series",
+            "label_source": "not_shown",
+            "example": ""
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "2023",
+            ""
+          ],
+          "value": "218M",
+          "value_source": "axis_read",
+          "why_hard": "No value labels; bar is many same-coloured segments, so only the stack total is addressable."
+        }
+      },
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "none"
+        },
+        "type": "unreadable",
+        "type_other": "duplicate placeholder - ignore",
+        "panels": 1,
+        "series": 1,
+        "categories": 0,
+        "marks": 0,
+        "values_printed": "none",
+        "axes": [],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "not_shown",
+            "example": ""
+          }
+        ],
+        "worked_example": {
+          "key": [
+            ""
+          ],
+          "value": "",
+          "value_source": "not_readable",
+          "why_hard": ""
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "stacked_bar",
+        "figure_id": "f1",
+        "evidence": "each year's bar is split by thin white lines into many same-colour segments"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "faint horizontal rules at 20M intervals; no vertical rules in the plot"
+      },
+      {
+        "key": "rotated_axis_title",
+        "figure_id": "f1",
+        "evidence": "'Fundraisings - Amount received by the company in its latest fundraising (GBP)' set vertically at left"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "'(GBP)' appears only in the rotated y-axis title; ticks read '0M'...'220M'"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "'Source: Beauhurst (all latest fundraisings, 2007 - 2023)' under the plot"
+      },
+      {
+        "key": "nonstandard_time_ticks",
+        "figure_id": "f1",
+        "evidence": "axis ticks '2007 2010 2013 2016 2017 2018 2019 2020 2021 2022 2023' skip years unevenly"
+      },
+      {
+        "key": "thin_segment_label",
+        "figure_id": "f1",
+        "evidence": "segments in 2023 bar are 1-3 px tall; no label can fit inside them"
+      },
+      {
+        "key": "footnote_marker",
+        "figure_id": "page",
+        "evidence": "'fundraisings^xii' superscript roman numeral in the body paragraph"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "uniform_colour_stacked_segments",
+        "figure_id": "f1",
+        "evidence": "all stacked segments share one teal fill; only hairline gaps separate them, no legend names any",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "name": "irregular_category_axis_gaps",
+        "figure_id": "f1",
+        "evidence": "2007, 2010, 2013, 2016 are equally spaced slots though years are 3 apart, then yearly",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "name": "near_zero_bar_at_baseline",
+        "figure_id": "f1",
+        "evidence": "2016 slot shows a hairline mark at 0M; 2007 bar is ~1M tall",
+        "affects": [
+          2
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "2",
+        "figure_id": "f1",
+        "mark": "the 2007 bar total (~£2M), or one thin segment within it",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2007",
+          "Fundraisings - Amount received by the company in its latest fundraising (GBP)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "0",
+        "figure_id": "f1",
+        "mark": "the 2016 slot, a hairline at the 0M baseline",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2016",
+          "0M"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "23",
+        "figure_id": "f1",
+        "mark": "the 2017 bar total, just above 20M",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2017"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "189",
+        "figure_id": "f1",
+        "mark": "the 2020 bar total, just below 190M",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2020"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "22",
+        "figure_id": "f1",
+        "mark": "the 2021 bar total, just above 20M",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2021"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "84",
+        "figure_id": "f1",
+        "mark": "the 2022 bar total, just above 80M",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2022"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "218",
+        "figure_id": "f1",
+        "mark": "the 2023 bar total, just below 220M",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2023"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "网格每20M，无数值标签；2 与 23 的5%容差仅±0.1M与±1.2M，像素读不出；2016 的 0 更无从确认。",
+    "examples": [
+      {
+        "gap": "P1",
+        "figure_id": "f1",
+        "quote": "y ticks '0M' to '220M' every 20M; the 2007 and 2016 bars are hairlines at the baseline",
+        "why": "同一图上 218 可读到5%，而 2 与 0 完全不可读；需按每个标记给出可达精度。"
+      },
+      {
+        "gap": "P5",
+        "figure_id": "f1",
+        "quote": "the 2023 bar is divided by white hairlines into roughly twenty-plus same-colour segments",
+        "why": "当前生成器堆叠段数量远低于此；密度需成为可控变量。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "'Figure 4.1 – Latest Fundraisings' printed on its own rule-bounded line above the plot",
+        "why": "编号与标题共用一行且带横线框，单位则藏在竖排轴标题里，需拆成独立字段。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "x ticks read 2007, 2010, 2013, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023 at equal spacing",
+        "why": "缺年份被压缩成等距类别轴；需要“不连续时间轴作类别”这一构造。"
+      }
+    ]
+  }
+}

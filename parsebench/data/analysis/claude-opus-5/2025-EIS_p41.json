@@ -1,0 +1,329 @@
+{
+  "stem": "2025-EIS_p41",
+  "document": "2025-EIS",
+  "tags": "need_estimate",
+  "model": "claude-opus-5",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "seconds": 114.5,
+  "usage": {
+    "input_tokens": 13142,
+    "output_tokens": 8191,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "**画出来要什么**\n一张 28 行的水平条形图（France…Malta，含 EU），底轴 `0…200`，轴标题在图下方：`Score for dimension 2.1 in 2025 (indexed to the EU in 2018)`。每行同时叠三种记号：2025 的彩色横条、2018 的菱形、2024 的竖短线；条的填色不是系列而是绩效组（`Emerging innovators` / `Moderate innovators` / `Strong innovators` / `Innovation leaders`），`EU` 行用深蓝单独高亮。图内另有一个蓝色小标题 `Finance and support`，与编号标题 `Figure 13:` 分离；图例为图下两行四列，混排色块与点/竖线字形；底部有斜体 Note 三行。\n\n**定位一个值难在哪**\n取 `23`（Bulgaria 的 2025 条）。全图无数字标注，刻度间距 20 单位≈67 px，5% 容差只有 1.15 单位≈4 px，而 Bulgaria 的菱形几乎压在条端上，条与 2024 竖线也重叠，肉眼读数与真值可差 2–3 单位。行地址还要说明“这是条不是菱形”，而“条=2025”只写在 Note 里，图例并不给出。\n\n**不确定的**\n看不清是否有淡竖网格线，故未记 `vgrid_only`；`178`（Denmark 2024 竖线）与 `37`（Latvia 条）为按轴推读，可能错配到相邻行；`77` 也可能是 Malta 的 2018 菱形。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 13",
+          "title": "Innovation performance of the EU27 Member States in the Finance and support dimension",
+          "subtitle": "Finance and support",
+          "unit_text": "Score for dimension 2.1 in 2025 (indexed to the EU in 2018)",
+          "placement": "above"
+        },
+        "type": "compound",
+        "type_other": "",
+        "panels": 1,
+        "series": 6,
+        "categories": 28,
+        "marks": 84,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "bottom",
+            "role": "value",
+            "unit_text": "Score for dimension 2.1 in 2025 (indexed to the EU in 2018)",
+            "low": "0",
+            "high": "200",
+            "serves": "all bars, diamonds and vertical tick markers"
+          },
+          {
+            "side": "left",
+            "role": "category",
+            "unit_text": "",
+            "low": "France",
+            "high": "Malta",
+            "serves": "one row per country plus the EU row"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Bulgaria"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Score in 2018"
+          },
+          {
+            "role": "colour_group",
+            "label_source": "legend",
+            "example": "Emerging innovators"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Bulgaria",
+            "Score in 2018",
+            "Emerging innovators"
+          ],
+          "value": "≈17",
+          "value_source": "axis_read",
+          "why_hard": "Diamond sits on the bar end near x=20; 5% tolerance is under 4 pixels."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "horizontal_bars",
+        "figure_id": "f1",
+        "evidence": "countries run down the left axis, bars grow rightwards to the 0-200 scale"
+      },
+      {
+        "key": "mixed_marks",
+        "figure_id": "f1",
+        "evidence": "diamonds and short vertical strokes are overlaid on the horizontal bars in each row"
+      },
+      {
+        "key": "tick_marker_as_series",
+        "figure_id": "f1",
+        "evidence": "legend glyph '|' labelled 'Score in 2024', drawn as a vertical stroke on the same axis"
+      },
+      {
+        "key": "color_encodes_extra_attribute",
+        "figure_id": "f1",
+        "evidence": "'The colours denote each country's overall performance group based on the 2025 SII.'"
+      },
+      {
+        "key": "highlighted_category",
+        "figure_id": "f1",
+        "evidence": "the 'EU' row bar is dark navy, unlike the four legend colours"
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "two-row legend with four swatches plus diamond and bar glyphs sits under the axis title"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "'Note: All performance scores are relative to that of the EU in 2018 for each dimension.'"
+      },
+      {
+        "key": "axis_title_below_plot",
+        "figure_id": "f1",
+        "evidence": "'Score for dimension 2.1 in 2025 (indexed to the EU in 2018)' printed under the 0-200 ticks"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "ticks read bare 0, 20 ... 200; scale word only in the line below the plot"
+      },
+      {
+        "key": "rebased_index_values",
+        "figure_id": "f1",
+        "evidence": "'(indexed to the EU in 2018)' and note 'scores are relative to that of the EU in 2018'"
+      },
+      {
+        "key": "wrapped_category_labels",
+        "figure_id": "f1",
+        "evidence": "28 country names stacked down the left axis, France to Malta"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "time_encoded_by_mark_shape",
+        "figure_id": "f1",
+        "evidence": "bar=2025, diamond=2018, vertical stroke=2024 in one row; only the Note states the bar's year",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "name": "in_figure_chart_title",
+        "figure_id": "f1",
+        "evidence": "blue bold 'Finance and support' above the plot, separate from the 'Figure 13:' caption",
+        "affects": [
+          3,
+          4
+        ]
+      },
+      {
+        "name": "legend_grid_multi_row",
+        "figure_id": "f1",
+        "evidence": "legend laid out as a 2x4 grid mixing colour swatches with diamond and stroke glyphs",
+        "affects": []
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "183",
+        "figure_id": "f1",
+        "mark": "the France 2025 coloured bar (longest bar)",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "France",
+          "Score for dimension 2.1 in 2025 (indexed to the EU in 2018)",
+          "Strong innovators"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "100",
+        "figure_id": "f1",
+        "mark": "the EU row diamond (Score in 2018 = index base)",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "EU",
+          "Score in 2018"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "178",
+        "figure_id": "f1",
+        "mark": "the Denmark vertical stroke (Score in 2024), right of the bar end",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Denmark",
+          "Score in 2024"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "152",
+        "figure_id": "f1",
+        "mark": "the Sweden 2025 bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Sweden",
+          "Score for dimension 2.1 in 2025 (indexed to the EU in 2018)",
+          "Innovation leaders"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "23",
+        "figure_id": "f1",
+        "mark": "the Bulgaria 2025 bar (short bar near the axis)",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Bulgaria",
+          "Score for dimension 2.1 in 2025 (indexed to the EU in 2018)",
+          "Emerging innovators"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "37",
+        "figure_id": "f1",
+        "mark": "the Latvia 2025 bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Latvia",
+          "Score for dimension 2.1 in 2025 (indexed to the EU in 2018)",
+          "Emerging innovators"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "125",
+        "figure_id": "f1",
+        "mark": "the Spain 2025 bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Spain",
+          "Score for dimension 2.1 in 2025 (indexed to the EU in 2018)",
+          "Moderate innovators"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "105",
+        "figure_id": "f1",
+        "mark": "the Germany 2025 bar, just below the EU row",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Germany",
+          "Score for dimension 2.1 in 2025 (indexed to the EU in 2018)",
+          "Strong innovators"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "152",
+        "figure_id": "f1",
+        "mark": "the Denmark 2025 bar (same length class as Sweden)",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Denmark",
+          "Score for dimension 2.1 in 2025 (indexed to the EU in 2018)",
+          "Innovation leaders"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "77",
+        "figure_id": "f1",
+        "mark": "the Luxembourg 2025 bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Luxembourg",
+          "Score for dimension 2.1 in 2025 (indexed to the EU in 2018)",
+          "Strong innovators"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "全图无数值标注；刻度20单位≈67px，Bulgaria的23的5%容差仅1.2单位≈4px，菱形与竖线又压在条端，无法读准。",
+    "examples": [
+      {
+        "gap": "P1",
+        "figure_id": "f1",
+        "quote": "x ticks 0, 20, 40 ... 200; Bulgaria's bar ends just past 20 while France's ends near 185",
+        "why": "同一根0–200轴上，183与23的可达精度差一个量级，布尔式\"可读\"无法描述。"
+      },
+      {
+        "gap": "P8",
+        "figure_id": "f1",
+        "quote": "The colours denote each country's overall performance group based on the 2025 SII.",
+        "why": "填色携带绩效组属性，图例系列名不含它；该属性必须进入键。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "legend: diamond glyph 'Score in 2018' and vertical stroke glyph 'Score in 2024', both on the bars",
+        "why": "同一行三年用三种记号形状表示，现有管线只会画条或点，不会混排竖线记号。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "'Figure 13: ...' centred above; 'Finance and support' in blue above the plot; unit line below the plot",
+        "why": "编号标题、图内小标题、图下单位行三处分离，标题需拆成独立字段。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "Note: ... Horizontal coloured bars represent countries' performance in 2025, while diamonds and vertical bars indicate ... 2018 and 2024",
+        "why": "条的年份只在Note里说明，图例缺失；需把注释文本纳入键的来源。"
+      }
+    ]
+  }
+}

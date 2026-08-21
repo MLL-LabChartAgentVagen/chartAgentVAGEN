@@ -1,0 +1,324 @@
+{
+  "stem": "b263dc5d-en_p181",
+  "document": "b263dc5d-en",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 71.3,
+  "usage": {
+    "input_tokens": 5312,
+    "output_tokens": 10187,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n要生成此页面，图表引擎必须支持：\n1. **多面板布局 (Small Multiples)**：在一个大图表下垂直排列三个独立的子面板（A、B、C），每个面板有自己的标题横幅、不同量程的Y轴，且拥有相似的类别轴结构。\n2. **包含负值的条形图**：Y轴需能绘制非底部的0线，并支持向下生长的负值柱形。\n3. **条件格式着色**：柱子的颜色（浅蓝与深蓝）编码了未在图例中说明的额外属性，生成器需支持数据驱动的着色并接受无图例展示。\n4. **分类轴定制**：X轴标签需要支持90度垂直旋转显示；且支持单独高亮某一类别（如用粗体标签和竖向背景色带标出“OECD average”）。\n\n### 定位一个值难在哪\n以值 **2.5**（面板A中的Finland）为例，难点完全在于视觉读取精度。整个图表未标注具体数值标签，同时Y轴的主刻度间距高达4个单位（0, 4, 8...）。依靠肉眼将柱子高度与轴线对齐，根本无法满足5%以内的精度容差要求，更无法准确识别出-1.3或2.5等带小数的数值。\n\n### 不确定的\n图表中柱子分为深蓝填充与浅蓝边框两种样式，且没有任何图例说明，只能推测其代表统计学的显著性差异。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 4.17.",
+          "title": "Likelihood of over-qualification, by socio-demographic characteristics [1/2]",
+          "subtitle": "Change in likelihood of over-qualification (relative to reference category)",
+          "unit_text": "Percentage points",
+          "placement": "above"
+        },
+        "type": "bar",
+        "type_other": "",
+        "panels": 3,
+        "series": 1,
+        "categories": 32,
+        "marks": 96,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Percentage points",
+            "low": "-8",
+            "high": "4",
+            "serves": "all bars"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "Finland",
+            "high": "England (UK)",
+            "serves": "all bars"
+          },
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Percentage points",
+            "low": "0",
+            "high": "20",
+            "serves": "all bars"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "Italy",
+            "high": "Israel",
+            "serves": "all bars"
+          },
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Percentage points",
+            "low": "-8",
+            "high": "8",
+            "serves": "all bars"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "Lithuania",
+            "high": "Israel",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "panel",
+            "label_source": "panel_title",
+            "example": "A. Numeracy"
+          },
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Finland"
+          },
+          {
+            "role": "colour_group",
+            "label_source": "colour_only",
+            "example": "dark blue"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "A. Numeracy",
+            "Finland",
+            "light blue"
+          ],
+          "value": "2.5",
+          "value_source": "axis_read",
+          "why_hard": "Axis ticks are every 4 units, making reading 2.5 to 5% precision impossible."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "negative_values",
+        "figure_id": "f1",
+        "evidence": "bars for several countries drop below the 0 line in panels A and C"
+      },
+      {
+        "key": "axis_title_above_axis",
+        "figure_id": "f1",
+        "evidence": "'Percentage points' sits above the top tick on the left axis of each panel"
+      },
+      {
+        "key": "rotated_x_ticks",
+        "figure_id": "f1",
+        "evidence": "country names on the x-axis are rotated 90 degrees"
+      },
+      {
+        "key": "shaded_band",
+        "figure_id": "f1",
+        "evidence": "a light blue vertical band highlights the OECD average column"
+      },
+      {
+        "key": "per_panel_axis_range",
+        "figure_id": "f1",
+        "evidence": "panel A goes from -8 to 4, panel B from 0 to 20"
+      },
+      {
+        "key": "color_encodes_extra_attribute",
+        "figure_id": "f1",
+        "evidence": "bars are either dark or light blue, with no legend explaining the difference"
+      },
+      {
+        "key": "highlighted_category",
+        "figure_id": "f1",
+        "evidence": "OECD average label is in bold and sits on a shaded band"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "horizontal grid lines are drawn across the panels, no vertical ones"
+      },
+      {
+        "key": "footnote_marker",
+        "figure_id": "f1",
+        "evidence": "Poland* and Flemish Region (BE) carry an asterisk or bracketed note"
+      },
+      {
+        "key": "panel_title_per_panel",
+        "figure_id": "f1",
+        "evidence": "each panel has a banner title like 'A. Numeracy'"
+      },
+      {
+        "key": "small_multiples_4",
+        "figure_id": "f1",
+        "evidence": "three panels repeating the same layout for different characteristics"
+      }
+    ],
+    "new_components": [],
+    "spot_checks": [
+      {
+        "value": "2.5",
+        "figure_id": "f1",
+        "mark": "the Finland bar in panel A",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. Numeracy",
+          "Finland"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-1.3",
+        "figure_id": "f1",
+        "mark": "the United States bar in panel A",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. Numeracy",
+          "United States"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-4.9",
+        "figure_id": "f1",
+        "mark": "the England (UK) bar in panel A",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. Numeracy",
+          "England (UK)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "16.5",
+        "figure_id": "f1",
+        "mark": "the Italy bar in panel B",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "B. Years of education",
+          "Italy"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "10",
+        "figure_id": "f1",
+        "mark": "the Spain bar in panel B",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "B. Years of education",
+          "Spain"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "10",
+        "figure_id": "f1",
+        "mark": "the Flemish Region (BE) bar in panel B",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "B. Years of education",
+          "Flemish Region (BE)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "2.5",
+        "figure_id": "f1",
+        "mark": "the Israel bar in panel B",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "B. Years of education",
+          "Israel"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "6.9",
+        "figure_id": "f1",
+        "mark": "the Lithuania bar in panel C",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "C. Older workers (Ref: Younger workers)",
+          "Lithuania"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-2",
+        "figure_id": "f1",
+        "mark": "the Norway bar in panel C",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "C. Older workers (Ref: Younger workers)",
+          "Norway"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-7.6",
+        "figure_id": "f1",
+        "mark": "the Israel bar in panel C",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "C. Older workers (Ref: Younger workers)",
+          "Israel"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "图表中没有任何数据标签，Y轴刻度间距为4个单位。要在这样的刻度下读出如2.5或-1.3等数值，且误差在5%以内是不可能的。",
+    "examples": [
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "bars for England (UK) drop below the 0 line in panel A",
+        "why": "图表生成器必须支持绘制包含负值、0轴居中且能向下生长的条形图。"
+      },
+      {
+        "gap": "P8",
+        "figure_id": "f1",
+        "quote": "Finland is light blue, United States is dark blue, with no legend",
+        "why": "图表颜色可能编码了不体现在图例上的额外属性（如统计显著性），需要支持无图例条件着色并入键。"
+      },
+      {
+        "gap": "P2",
+        "figure_id": "f1",
+        "quote": "A. Numeracy and B. Years of education as panel titles",
+        "why": "需要识别并输出多面板图形的结构，将子图面板标题作为区分同类国家数据的一个核心寻址键。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "Change in likelihood of over-qualification (relative to reference category)",
+        "why": "图表标题被拆分为独立的主标题和副标题，需要引擎在生成标题组件时原生支持多级文本区块。"
+      }
+    ]
+  }
+}

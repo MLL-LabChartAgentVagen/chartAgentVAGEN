@@ -1,0 +1,265 @@
+{
+  "stem": "World_Inequality_Report_2026_p66",
+  "document": "World_Inequality_Report_2026",
+  "tags": "untagged",
+  "model": "gemini-3.1-pro-preview",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "seconds": 52.5,
+  "usage": {
+    "input_tokens": 4423,
+    "output_tokens": 7233,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "本页包含两幅图表。Figure 2.13 是一幅分组柱状图，带有放置在柱子顶部的外部数值标签（`value_label_outside`）以及多行换行的类别标签（`wrapped_category_labels`）。该图的主要难点在于如何从图像中提取出这些悬浮数值，并将其与下方的图例及X轴分类进行正确的几何对齐与关联。Figure 2.14 是一组包含两个面板的折线图，面板各自带有独立的子标题（`panel_title_per_panel`），共用底部图例（`shared_legend`）。图2.14的时间轴刻度稀疏（`sparse_time_ticks`），具有负值区间（`negative_values`）和零参考线。此外，两幅图的下方都带有带粗体引导词的解释性长段落，这在当前组件集中没有完全对应的标识。最困难的步骤是将其解析为表格（Step 1）。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 2.13.",
+          "title": "Redistribution decreases inequality within countries but with large variations",
+          "subtitle": "Top 10/bottom 50 income gaps across regions, 2025",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "grouped_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 8,
+        "marks": 16,
+        "values_printed": "all"
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "Figure 2.14.",
+          "title": "Transfers account for a larger share of redistribution than taxes",
+          "subtitle": "Reduction in top 10/bottom 50 income gaps, 1980–2025",
+          "unit_text": "(%)",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 2,
+        "series": 8,
+        "categories": 46,
+        "marks": 736,
+        "values_printed": "none"
+      }
+    ],
+    "components": [
+      {
+        "key": "multi_figure_page",
+        "figure_id": "page",
+        "evidence": "Figure 2.13 and Figure 2.14 are separate numbered figures"
+      },
+      {
+        "key": "grouped_bar",
+        "figure_id": "f1",
+        "evidence": "green and red bars drawn side by side per region"
+      },
+      {
+        "key": "value_label_outside",
+        "figure_id": "f1",
+        "evidence": "numbers like 19, 10 printed directly above the bars"
+      },
+      {
+        "key": "wrapped_category_labels",
+        "figure_id": "f1",
+        "evidence": "North America & Oceania is split across three lines"
+      },
+      {
+        "key": "rotated_axis_title",
+        "figure_id": "f1",
+        "evidence": "Top 10% average to bottom 50% average income rotated vertically"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "only horizontal dashed rules are present"
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "Before redistribution / After redistribution legend sits below categories"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "page",
+        "evidence": "Sources and series: wir2026.wid.world..."
+      },
+      {
+        "key": "panel_title_per_panel",
+        "figure_id": "f2",
+        "evidence": "Tax progressivity and Redistribution considering... over the two panels"
+      },
+      {
+        "key": "shared_legend",
+        "figure_id": "f2",
+        "evidence": "one single 8-region legend centered below both panels"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f2",
+        "evidence": "(%) included in the rotated y-axis title"
+      },
+      {
+        "key": "rotated_axis_title",
+        "figure_id": "f2",
+        "evidence": "Reduction in top 10% to bottom... ratio (%) rotated vertically"
+      },
+      {
+        "key": "negative_values",
+        "figure_id": "f2",
+        "evidence": "y-axis drops to -10 and -20"
+      },
+      {
+        "key": "reference_line",
+        "figure_id": "f2",
+        "evidence": "dashed rule across the zero line"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f2",
+        "evidence": "only horizontal dashed rules are present"
+      },
+      {
+        "key": "dense_marks_100plus",
+        "figure_id": "f2",
+        "evidence": "8 series times 46 years over 2 panels"
+      },
+      {
+        "key": "sparse_time_ticks",
+        "figure_id": "f2",
+        "evidence": "data lines wiggle yearly but x-axis ticks are every 5 years"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "interpretation_paragraph",
+        "figure_id": "page",
+        "evidence": "bold Interpretation block followed by long descriptive text under figures",
+        "affects": [
+          4
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "19",
+        "figure_id": "f1",
+        "mark": "Europe Before redistribution green bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Europe",
+          "Before redistribution",
+          "Top 10% average to bottom 50% average income"
+        ]
+      },
+      {
+        "value": "10",
+        "figure_id": "f1",
+        "mark": "Europe After redistribution red bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Europe",
+          "After redistribution",
+          "Top 10% average to bottom 50% average income"
+        ]
+      },
+      {
+        "value": "28",
+        "figure_id": "f1",
+        "mark": "East Asia After redistribution red bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "East Asia",
+          "After redistribution",
+          "Top 10% average to bottom 50% average income"
+        ]
+      },
+      {
+        "value": "18",
+        "figure_id": "f1",
+        "mark": "North America & Oceania After redistribution red bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "North America & Oceania",
+          "After redistribution",
+          "Top 10% average to bottom 50% average income"
+        ]
+      },
+      {
+        "value": "36",
+        "figure_id": "f1",
+        "mark": "Russia & Central Asia Before redistribution green bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Russia & Central Asia",
+          "Before redistribution",
+          "Top 10% average to bottom 50% average income"
+        ]
+      },
+      {
+        "value": "33",
+        "figure_id": "f1",
+        "mark": "Russia & Central Asia After redistribution red bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Russia & Central Asia",
+          "After redistribution",
+          "Top 10% average to bottom 50% average income"
+        ]
+      },
+      {
+        "value": "52",
+        "figure_id": "f1",
+        "mark": "Sub-Saharan Africa Before redistribution green bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Sub-Saharan Africa",
+          "Before redistribution",
+          "Top 10% average to bottom 50% average income"
+        ]
+      },
+      {
+        "value": "53",
+        "figure_id": "f1",
+        "mark": "Middle East & North Africa Before redistribution green bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Middle East & North Africa",
+          "Before redistribution",
+          "Top 10% average to bottom 50% average income"
+        ]
+      },
+      {
+        "value": "72",
+        "figure_id": "f1",
+        "mark": "Latin America Before redistribution green bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Latin America",
+          "Before redistribution",
+          "Top 10% average to bottom 50% average income"
+        ]
+      },
+      {
+        "value": "50",
+        "figure_id": "f1",
+        "mark": "Middle East & North Africa After redistribution red bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Middle East & North Africa",
+          "After redistribution",
+          "Top 10% average to bottom 50% average income"
+        ]
+      }
+    ],
+    "hardest_step": 1
+  }
+}

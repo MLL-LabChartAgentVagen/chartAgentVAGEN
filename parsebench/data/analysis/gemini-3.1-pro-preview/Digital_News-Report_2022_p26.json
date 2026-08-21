@@ -1,0 +1,329 @@
+{
+  "stem": "Digital_News-Report_2022_p26",
+  "document": "Digital_News-Report_2022",
+  "tags": "untagged",
+  "model": "gemini-3.1-pro-preview",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 98.4,
+  "usage": {
+    "input_tokens": 5296,
+    "output_tokens": 13671,
+    "cache_read_tokens": 2313
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n本页包含三个图表。图1是100%堆叠柱状图，包含类别轴、图例以及段内数值标签，无数值轴，且底部带有社交媒体图标。图2是一个混合列表形式的水平柱状图，使用行内标题（Twitter、Facebook）进行面板分组，类别标签自带国旗图标，数值标在柱子外侧。图3是典型的分组水平柱状图，上方有图例，左侧为多行类别标签，同样没有数值轴。整体来看，生成器需要支持无数值轴的条形图、将面板标题直接作为行内分割插入，以及在类别标签处渲染自定义图标。\n\n### 定位一个值难在哪\n以图3中的“49%”为例，图表完全省去了数值轴和网格线。虽然数值本身直接印在柱外，不需要估读，但要正确定位该值，必须将上方图例中的颜色（浅绿色代表Africa）与横向分组（Politics）关联。这种依赖“图例颜色映射+分组列表”的组合在排版紧凑时，解析器如果不能精准对齐每根柱子和对应类别的物理位置，很容易将颜色或标签分配到相邻组，导致提取错误。\n\n### 不确定的\n图2中的Twitter和Facebook到底是作为两个独立的图里面板（panels），还是仅仅作为一个数据表中的行内分组标志？此处我将其视作两个面板处理，但它极简的列表排版模糊了表格与图表的边界。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "PROPORTION WHO THINK THEY SEE TOO MUCH NEWS ON EACH NETWORK – UK",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "stacked_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 4,
+        "categories": 4,
+        "marks": 16,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "Facebook",
+            "high": "TikTok",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Too much"
+          },
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Facebook"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Too much",
+            "Facebook"
+          ],
+          "value": "21%",
+          "value_source": "printed",
+          "why_hard": ""
+        }
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "",
+          "title": "Top markets saying too much",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "bar",
+        "type_other": "",
+        "panels": 2,
+        "series": 1,
+        "categories": 6,
+        "marks": 11,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "left",
+            "role": "category",
+            "unit_text": "",
+            "low": "India",
+            "high": "Canada",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "panel",
+            "label_source": "inline_label",
+            "example": "Twitter"
+          },
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "India"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Twitter",
+            "India"
+          ],
+          "value": "23%",
+          "value_source": "printed",
+          "why_hard": ""
+        }
+      },
+      {
+        "id": "f3",
+        "heading": {
+          "figure_number": "",
+          "title": "PROPORTION WHO SAW FALSE OR MISLEADING INFORMATION ABOUT EACH TOPIC IN THE LAST WEEK – SELECTED REGIONS",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "grouped_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 5,
+        "categories": 6,
+        "marks": 30,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "left",
+            "role": "category",
+            "unit_text": "",
+            "low": "COVID-19",
+            "high": "Products (e.g. scams)",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Europe"
+          },
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "COVID-19"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Europe",
+            "COVID-19"
+          ],
+          "value": "47%",
+          "value_source": "printed",
+          "why_hard": ""
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "stacked_bar",
+        "figure_id": "f1",
+        "evidence": "stacked bars for each social network"
+      },
+      {
+        "key": "pct_stacked",
+        "figure_id": "f1",
+        "evidence": "all bars reach the same total height"
+      },
+      {
+        "key": "no_value_axis",
+        "figure_id": "f1",
+        "evidence": "no value axis is drawn on the plot"
+      },
+      {
+        "key": "no_value_axis",
+        "figure_id": "f2",
+        "evidence": "no value axis is drawn on the plot"
+      },
+      {
+        "key": "no_value_axis",
+        "figure_id": "f3",
+        "evidence": "no value axis is drawn on the plot"
+      },
+      {
+        "key": "horizontal_bars",
+        "figure_id": "f2",
+        "evidence": "bars grow to the right from the country names"
+      },
+      {
+        "key": "horizontal_bars",
+        "figure_id": "f3",
+        "evidence": "bars grow to the right from the topics"
+      },
+      {
+        "key": "grouped_bar",
+        "figure_id": "f3",
+        "evidence": "multiple bars stacked horizontally for each topic"
+      },
+      {
+        "key": "icon_category_axis",
+        "figure_id": "f1",
+        "evidence": "social media logos under the x-axis labels"
+      },
+      {
+        "key": "icon_category_axis",
+        "figure_id": "f2",
+        "evidence": "country flags sit beside the category names"
+      },
+      {
+        "key": "value_label_inside",
+        "figure_id": "f1",
+        "evidence": "percentages printed inside the coloured segments"
+      },
+      {
+        "key": "value_label_outside",
+        "figure_id": "f2",
+        "evidence": "percentages printed to the right of the bars"
+      },
+      {
+        "key": "value_label_outside",
+        "figure_id": "f3",
+        "evidence": "percentages printed to the right of the bars"
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "legend items sit below the category names"
+      },
+      {
+        "key": "legend_above_plot",
+        "figure_id": "f3",
+        "evidence": "legend sits between the title and the plot"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "base note lines under the figure"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f3",
+        "evidence": "base note lines under the figure"
+      },
+      {
+        "key": "multi_figure_page",
+        "figure_id": "page",
+        "evidence": "three separate charts on one page"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "inline_panel_headings",
+        "figure_id": "f2",
+        "evidence": "Twitter and Facebook act as headers between rows",
+        "affects": [
+          1,
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "21%",
+        "figure_id": "f1",
+        "mark": "the Too much segment for Facebook",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Too much",
+          "Facebook"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "49%",
+        "figure_id": "f3",
+        "mark": "the Africa bar for Politics",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Africa",
+          "Politics"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "9%",
+        "figure_id": "f3",
+        "mark": "the Asia bar for Immigration",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Asia",
+          "Immigration"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      }
+    ],
+    "hardest_step": 1,
+    "hardest_step_why": "图2将图表与列表混合，类别带图标且无轴线，行内标题极易导致解析器无法识别出表格结构。",
+    "examples": [
+      {
+        "gap": "P8",
+        "figure_id": "f2",
+        "quote": "Twitter bars are cyan and Facebook bars are blue",
+        "why": "面板分组属性直接通过柱子颜色进行编码，没有传统的图例或面板标题。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f2",
+        "quote": "Twitter and Facebook rows acting as inline section headers",
+        "why": "系统无法处理将面板标题直接作为行内分割插入到纵向类别列表中的排版。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "social media icons under the category names",
+        "why": "目前图表生成无法在类别轴的文本标签下方或旁边渲染特定的图标图片。"
+      }
+    ]
+  }
+}

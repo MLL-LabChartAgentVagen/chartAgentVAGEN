@@ -1,0 +1,322 @@
+{
+  "stem": "deloitte-2025-global-automotive-consumer-study-january-2025_p17",
+  "document": "deloitte-2025-global-automotive-consumer-study-january-2025",
+  "tags": "untagged",
+  "model": "gemini-3.1-pro-preview",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 70.4,
+  "usage": {
+    "input_tokens": 5329,
+    "output_tokens": 9998,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "## 画出来要什么\n页面包含三个无编号的水平条形图，第一个为百分比堆积条形图，后两个为独立排序的简单水平条形图。三个图表均没有数值轴和任何网格线，数值全部直接以标签形式印在条形内部。需要生成器支持彻底隐去坐标轴、根据数值自动内部对齐文本标签、在图表下方放置图例和详细的注释行（Note和Sample size）。\n\n## 定位一个值难在哪\n以41%（India，Very important）为例，该值完全依赖于条形段内部的文本。因没有任何数值轴作为基准，一旦解析模型未将其识别为图表或未能提取覆盖在色块上的文本，就无法得出任何数据。\n\n## 不确定的\n底部的两个水平条形图在视觉上并排且分类相同，但不共用同一个Y轴（各自按降序独立排列）。这里将它们视为两个独立的无编号图表进行处理，而不视为单个图表的两个面板。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "Importance of next vehicle to be manufactured locally",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "stacked_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 4,
+        "categories": 8,
+        "marks": 32,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "left",
+            "role": "category",
+            "unit_text": "",
+            "low": "India",
+            "high": "UK",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "India"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Very important"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "India",
+            "Very important"
+          ],
+          "value": "41%",
+          "value_source": "printed",
+          "why_hard": "No value axis is present; the value must be read directly from the printed label inside the segment."
+        }
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "",
+          "title": "Percentage of surveyed consumers who would be interested in acquiring vehicle directly from the manufacturer",
+          "subtitle": "",
+          "unit_text": "Percentage",
+          "placement": "above"
+        },
+        "type": "bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 1,
+        "categories": 8,
+        "marks": 8,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "left",
+            "role": "category",
+            "unit_text": "",
+            "low": "India",
+            "high": "Japan",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "India"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "India"
+          ],
+          "value": "76%",
+          "value_source": "printed",
+          "why_hard": "No value axis; value is purely textual inside the bar."
+        }
+      },
+      {
+        "id": "f3",
+        "heading": {
+          "figure_number": "",
+          "title": "Percentage of surveyed consumers who would be interested in purchasing insurance directly from the manufacturer",
+          "subtitle": "",
+          "unit_text": "Percentage",
+          "placement": "above"
+        },
+        "type": "bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 1,
+        "categories": 8,
+        "marks": 8,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "left",
+            "role": "category",
+            "unit_text": "",
+            "low": "India",
+            "high": "Germany",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "India"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "India"
+          ],
+          "value": "82%",
+          "value_source": "printed",
+          "why_hard": ""
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "horizontal_bars",
+        "figure_id": "page",
+        "evidence": "all bars grow horizontally from left to right"
+      },
+      {
+        "key": "stacked_bar",
+        "figure_id": "f1",
+        "evidence": "segments are stacked left to right within each category"
+      },
+      {
+        "key": "pct_stacked",
+        "figure_id": "f1",
+        "evidence": "all stacked bars sum to roughly 100% and span full width"
+      },
+      {
+        "key": "no_value_axis",
+        "figure_id": "page",
+        "evidence": "none of the three figures draws an axis line or ticks for values"
+      },
+      {
+        "key": "value_label_inside",
+        "figure_id": "page",
+        "evidence": "numbers are printed inside the bar segments in all figures"
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "the legend sits below the stacked bars"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "page",
+        "evidence": "Note: and sample size notes appear below the figures"
+      },
+      {
+        "key": "multi_figure_page",
+        "figure_id": "page",
+        "evidence": "there are three distinct unnumbered figures on the page"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f2",
+        "evidence": "the word Percentage starts the titles of f2 and f3"
+      }
+    ],
+    "new_components": [],
+    "spot_checks": [
+      {
+        "value": "41",
+        "figure_id": "f1",
+        "mark": "the India Very important segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "India",
+          "Very important"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "39",
+        "figure_id": "f1",
+        "mark": "the China Important segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "China",
+          "Important"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "27",
+        "figure_id": "f1",
+        "mark": "the Southeast Asia Somewhat important segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Southeast Asia",
+          "Somewhat important"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "28",
+        "figure_id": "f1",
+        "mark": "the US Not important segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "US",
+          "Not important"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "39",
+        "figure_id": "f1",
+        "mark": "the Rep. of Korea Important segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Rep. of Korea",
+          "Important"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "45",
+        "figure_id": "f1",
+        "mark": "the Japan Somewhat important segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Japan",
+          "Somewhat important"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "36",
+        "figure_id": "f1",
+        "mark": "the Germany Not important segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Germany",
+          "Not important"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "49",
+        "figure_id": "f1",
+        "mark": "the UK Not important segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "UK",
+          "Not important"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      }
+    ],
+    "hardest_step": 1,
+    "hardest_step_why": "页面上的三个图表均没有数值轴，所有数值以标签形式印在条形内部。解析模型容易将其视为纯插图而不输出数据表，导致步骤1失败。",
+    "examples": [
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "10% is printed inside the dark blue bar segment for India",
+        "why": "数值标签直接放置在条形图内部，缺少相关的控制维度来实现这一精确布局。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "Importance of next vehicle to be manufactured locally",
+        "why": "图表标题独立存在且没有图表编号，当前的标题处理方式需要结构化扩展以单独输出。"
+      },
+      {
+        "gap": "P3",
+        "figure_id": "page",
+        "quote": "paragraphs of text interleaved with three unnumbered charts",
+        "why": "页面包含大段正文、注释及三个独立的图表，需要能够导出完整的整页Markdown结构而不仅仅是单独的表格。"
+      }
+    ]
+  }
+}

@@ -1,0 +1,306 @@
+{
+  "stem": "pwc-semiconductor-and-beyond-2026-full-report_p18",
+  "document": "pwc-semiconductor-and-beyond-2026-full-report",
+  "tags": "untagged",
+  "model": "claude-opus-5",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "seconds": 76.8,
+  "usage": {
+    "input_tokens": 14075,
+    "output_tokens": 5699,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "**画出来要什么**\n右栏一张灰底面板图：标题 `AI accelerators in the data center` 与单位 `(Unit: $ Billion)` 同一行并排；图例在图上方，含灰色方块 `Data center semiconductors` 与橙色粗线 `Portion of AI accelerator`。柱线混合、左右双值轴：左轴 0–300（无单位字），右轴 0–100 且轴顶写 `(%)`。x 轴为 `'24`…`'30F` 七个带撇号与 F 后缀的年份。只在折线首末标 `35%`、`52%`，其余 12 个标记无数字。下方 `Source: PwC analysis`。左侧两栏正文与图共处一条横带。\n\n**定位一个值难在哪**\n`41`：它是 `'26F` 处折线的取值，折线不画点标记，必须在右轴 10 个单位一格的刻度间内插；5% 容差仅 ±2，相当于全轴 2%。同时该像素高度在左轴上还对应约 123，若表里不写清读的是哪条轴、哪种标记形状，值就无法核对。\n\n**不确定的**\n柱值全部未印，98/148/245/270 均为按 50 一格的横网格线目测；灰底究竟是整页右栏底色还是绘图区填充，无法从页面文字断定；折线是否真有 7 个数据点（只见一条平滑折线）只能推断。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "AI accelerators in the data center",
+          "subtitle": "",
+          "unit_text": "(Unit: $ Billion)",
+          "placement": "above"
+        },
+        "type": "compound",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 7,
+        "marks": 14,
+        "values_printed": "some",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "0",
+            "high": "300",
+            "serves": "all grey bars"
+          },
+          {
+            "side": "right",
+            "role": "value",
+            "unit_text": "(%)",
+            "low": "0",
+            "high": "100",
+            "serves": "only the orange line"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "'24",
+            "high": "'30F",
+            "serves": "bars and line share the category slots"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Portion of AI accelerator"
+          },
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "'26F"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Portion of AI accelerator",
+            "'26F"
+          ],
+          "value": "41",
+          "value_source": "axis_read",
+          "why_hard": "Line has no point markers; must interpolate between 10-unit right-axis ticks, and same height reads ~123 left"
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "dual_axis",
+        "figure_id": "f1",
+        "evidence": "left ticks 0..300 for bars, right ticks 0..100 headed `(%)` for the orange line"
+      },
+      {
+        "key": "mixed_marks",
+        "figure_id": "f1",
+        "evidence": "seven grey bars with one thick orange line drawn across the same plot"
+      },
+      {
+        "key": "legend_above_plot",
+        "figure_id": "f1",
+        "evidence": "`Data center semiconductors` swatch and `Portion of AI accelerator` line sit between title and plot"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "`Source: PwC analysis` in small print under the category axis"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "`(Unit: $ Billion)` beside the title; left axis shows bare 0, 50 ... 300"
+      },
+      {
+        "key": "axis_title_above_axis",
+        "figure_id": "f1",
+        "evidence": "`(%)` printed above the right axis top tick `100`"
+      },
+      {
+        "key": "value_label_outside",
+        "figure_id": "f1",
+        "evidence": "`35%` above the line start and `52%` above the line end, off the stroke"
+      },
+      {
+        "key": "nonstandard_time_ticks",
+        "figure_id": "f1",
+        "evidence": "ticks read `'24`, `'25F`, `'26F` ... `'30F`"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "faint horizontal rules run across the plot at 50-unit levels; no vertical rules"
+      },
+      {
+        "key": "panel_background",
+        "figure_id": "f1",
+        "evidence": "the figure's whole right-hand column, plot area included, is filled light grey"
+      },
+      {
+        "key": "side_text_bullets",
+        "figure_id": "page",
+        "evidence": "two columns of body text run left of the figure in the same horizontal band"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "forecast_suffix_on_time_ticks",
+        "figure_id": "f1",
+        "evidence": "`'24` actual then `'25F`...`'30F`: the F suffix marks forecast years inside the tick text",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "name": "endpoint_only_value_labels",
+        "figure_id": "f1",
+        "evidence": "only the first (`35%`) and last (`52%`) line points carry numbers; five interior points bare",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "name": "unit_inline_right_of_title",
+        "figure_id": "f1",
+        "evidence": "`(Unit: $ Billion)` set on the same baseline to the right of the bold title",
+        "affects": [
+          4
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "98",
+        "figure_id": "f1",
+        "mark": "the '24 grey bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Data center semiconductors",
+          "'24"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "148",
+        "figure_id": "f1",
+        "mark": "the '26F grey bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Data center semiconductors",
+          "'26F"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "270",
+        "figure_id": "f1",
+        "mark": "the '30F grey bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Data center semiconductors",
+          "'30F"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "180",
+        "figure_id": "f1",
+        "mark": "the '27F grey bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Data center semiconductors",
+          "'27F"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "35",
+        "figure_id": "f1",
+        "mark": "the '24 point of the orange line, labelled `35%`",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Portion of AI accelerator",
+          "'24"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "52",
+        "figure_id": "f1",
+        "mark": "the '30F point of the orange line, labelled `52%`",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Portion of AI accelerator",
+          "'30F"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "41",
+        "figure_id": "f1",
+        "mark": "the '26F position on the orange line, no marker drawn",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Portion of AI accelerator",
+          "'26F"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "47",
+        "figure_id": "f1",
+        "mark": "the '28F position on the orange line, no marker drawn",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Portion of AI accelerator",
+          "'28F"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "245",
+        "figure_id": "f1",
+        "mark": "the '29F grey bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Data center semiconductors",
+          "'29F"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "98 需 ±4.9，左轴 50 一格；41、47 在无点标记的折线上，右轴 10 一格，容差仅 ±2。",
+    "examples": [
+      {
+        "gap": "P9",
+        "figure_id": "f1",
+        "quote": "left axis 0 to 300 for the grey bars, right axis 0 to 100 headed `(%)` for the orange line",
+        "why": "同一像素高度对应两个数；表格须记录轴与标记形状，现管线只输出单值。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "`AI accelerators in the data center` in bold with `(Unit: $ Billion)` on the same line to its right",
+        "why": "标题与单位并排同行、无编号；现管线只有单一 title 字段。"
+      },
+      {
+        "gap": "P1",
+        "figure_id": "f1",
+        "quote": "seven grey bars with no printed numbers; only `35%` and `52%` appear anywhere on the plot",
+        "why": "12 个标记只能按 50 一格网格目测，需按标记给出可达精度而非布尔可读。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "category ticks read `'24`, `'25F`, `'26F`, `'27F`, `'28F`, `'29F`, `'30F`",
+        "why": "撇号缩写年加 F 预测后缀的刻度格式，现管线不生成。"
+      }
+    ]
+  }
+}

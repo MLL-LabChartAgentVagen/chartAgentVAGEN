@@ -1,0 +1,295 @@
+{
+  "stem": "wtr24_ch2_e_p3",
+  "document": "wtr24_ch2_e",
+  "tags": "need_estimate",
+  "model": "gpt-5.6-sol",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "via": "openrouter",
+  "max_tokens": 120000,
+  "seconds": 83.1,
+  "usage": {
+    "input_tokens": 8850,
+    "output_tokens": 5875,
+    "cache_read_tokens": 2365
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n需重建带蓝色横幅标题的双轴复合图：26个旋转年份、蓝色柱与青绿色折线、部分浅蓝堆叠、水平网格、下方图例，以及完整的Source和Note。\n\n### 定位一个值难在哪\n“2021 / Speed of income convergence”的-0.2须读左轴；刻度间隔为1，而5%容差仅0.01，短负柱难以达到该精度。\n\n### 不确定的\n图中没有数值标签；1998的0.0没有可见柱，无法仅凭图形排除缺失值。浅蓝部分的边界也只能近似辨认。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure B.1",
+          "title": "Positive correlation between low- and middle-income economies’ convergence speed and trade participation, 1996-2021",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "compound",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 26,
+        "marks": 53,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Speed of income convergence (percentage points)",
+            "low": "-1",
+            "high": "8",
+            "serves": "blue bars"
+          },
+          {
+            "side": "right",
+            "role": "value",
+            "unit_text": "Trade participation (100=1996)",
+            "low": "40",
+            "high": "160",
+            "serves": "turquoise line"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "1996",
+            "high": "2021",
+            "serves": "all bars and line points"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "1996"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Speed of income convergence"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "2021",
+            "Speed of income convergence"
+          ],
+          "value": "-0.2",
+          "value_source": "axis_read",
+          "why_hard": "A 1-point tick interval cannot reliably resolve the 0.01 tolerance."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "stacked_bar",
+        "figure_id": "f1",
+        "evidence": "The 2008 and 2009 bars contain dark- and light-blue stacked sections."
+      },
+      {
+        "key": "dual_axis",
+        "figure_id": "f1",
+        "evidence": "Left axis runs -1 to 8; right axis runs 40 to 160."
+      },
+      {
+        "key": "mixed_marks",
+        "figure_id": "f1",
+        "evidence": "Blue bars and a turquoise line occupy the same panel."
+      },
+      {
+        "key": "negative_values",
+        "figure_id": "f1",
+        "evidence": "The 2021 blue bar extends below the zero line."
+      },
+      {
+        "key": "color_encodes_extra_attribute",
+        "figure_id": "f1",
+        "evidence": "“The light blue fill indicates a contribution of negative growth in high-income economies.”"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "“Source:” and “Note:” lines are printed below the chart."
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "The two-item legend is centred beneath the year labels."
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "Axes read “percentage points” and “Trade participation (100=1996)”."
+      },
+      {
+        "key": "rotated_axis_title",
+        "figure_id": "f1",
+        "evidence": "Both value-axis titles run vertically along the plot sides."
+      },
+      {
+        "key": "rotated_x_ticks",
+        "figure_id": "f1",
+        "evidence": "Year labels 1996 through 2021 are rotated diagonally."
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "Horizontal rules cross the plot; no vertical grid lines are drawn."
+      }
+    ],
+    "new_components": [],
+    "spot_checks": [
+      {
+        "value": "2.7",
+        "figure_id": "f1",
+        "mark": "the 2001 Speed of income convergence bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2001",
+          "Speed of income convergence"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "100",
+        "figure_id": "f1",
+        "mark": "the 1996 Trade participation line point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "1996",
+          "Trade participation"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "0.0",
+        "figure_id": "f1",
+        "mark": "the zero-height 1998 Speed of income convergence bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "1998",
+          "Speed of income convergence"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "4.6",
+        "figure_id": "f1",
+        "mark": "the 2008 Speed of income convergence stacked bar total",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2008",
+          "Speed of income convergence"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "155",
+        "figure_id": "f1",
+        "mark": "the 2008 Trade participation line point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2008",
+          "Trade participation"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "7.7",
+        "figure_id": "f1",
+        "mark": "the 2009 Speed of income convergence stacked bar total",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2009",
+          "Speed of income convergence"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "128",
+        "figure_id": "f1",
+        "mark": "the 2014 Trade participation line point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2014",
+          "Trade participation"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "138",
+        "figure_id": "f1",
+        "mark": "the 2012 Trade participation line point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2012",
+          "Trade participation"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "-0.2",
+        "figure_id": "f1",
+        "mark": "the 2021 Speed of income convergence negative bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2021",
+          "Speed of income convergence"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "125",
+        "figure_id": "f1",
+        "mark": "the 2009 Trade participation line point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2009",
+          "Trade participation"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "“-0.2”的5%仅0.01，而左轴刻度间隔为1；负短柱无法稳定读到所需精度。 [P9] 该值还必须绑定左轴柱形而非右轴折线。 [P6] 负值与零线关系决定读数方向。 [P7] 标题横幅需拆分Figure B.1与完整题名。 [new] 浅蓝堆叠含义仅在Note中解释，图例未列出。 （若按步骤1判定，页面原图无数据表；但本页最具区分力的失败仍是步骤2，因为其余多数值可由较宽容差读出。）",
+    "examples": [
+      {
+        "gap": "P9",
+        "figure_id": "f1",
+        "quote": "Left axis runs -1 to 8; right axis runs 40 to 160, with bars and a line in one panel.",
+        "why": "同一像素高度对应两套数值，必须同时记录轴与标记形状。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "The 2021 blue bar extends below the zero line.",
+        "why": "需支持负柱、零线以及旋转刻度格式。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "Figure B.1: Positive correlation between low- and middle-income economies’ convergence speed and trade participation, 1996-2021",
+        "why": "需独立保存图号、题名及其位于图上方横幅中的位置。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "The light blue fill indicates a contribution of negative growth in high-income economies.",
+        "why": "需表现由脚注而非图例定义的局部堆叠颜色含义。"
+      }
+    ]
+  }
+}

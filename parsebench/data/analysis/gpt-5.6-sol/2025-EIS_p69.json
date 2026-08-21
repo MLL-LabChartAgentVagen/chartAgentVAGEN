@@ -1,0 +1,342 @@
+{
+  "stem": "2025-EIS_p69",
+  "document": "2025-EIS",
+  "tags": "need_estimate",
+  "model": "gpt-5.6-sol",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 120000,
+  "seconds": 81.1,
+  "usage": {
+    "input_tokens": 8147,
+    "output_tokens": 5849,
+    "cache_read_tokens": 2365
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "**画出来要什么**\n需重建带浅蓝底的“Box 5”叙述框，以及 Figure 26 的双面板折线图：两轴均为20—90、年份写作“'18”—“'25”，右图六条线采用端点内联标签，图下附指数基准与尺度说明。\n\n**定位一个值难在哪**\n例如71.6需由“Slovakia”和“2024”共同定位；它只在Box 5句子中明确印出，折线图既无数值标签，也没有表格单元格。\n\n**不确定的**\n左面板平均值折线没有直接系列名或面板标题，只能从图下注释“the graph on the left”推断其含义。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Box 5",
+          "title": "Country level observations for Emerging Innovators",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "unreadable",
+        "type_other": "boxed narrative text, not a chart",
+        "panels": 1,
+        "series": 1,
+        "categories": 6,
+        "marks": 0,
+        "values_printed": "all",
+        "axes": [],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "inline_label",
+            "example": "Hungary"
+          },
+          {
+            "role": "time",
+            "label_source": "inline_label",
+            "example": "2018"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Slovakia",
+            "2024"
+          ],
+          "value": "71.6",
+          "value_source": "printed",
+          "why_hard": "It is embedded in prose, not a plotted mark or table cell."
+        }
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "Figure 26",
+          "title": "Performance Emerging Innovators",
+          "subtitle": "",
+          "unit_text": "Performance is relative to that of the EU in 2018.",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 2,
+        "series": 7,
+        "categories": 8,
+        "marks": 56,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Summary innovation index",
+            "low": "20",
+            "high": "90",
+            "serves": "left-panel average line"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "'18",
+            "high": "'25",
+            "serves": "left-panel average line"
+          },
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Summary innovation index",
+            "low": "20",
+            "high": "90",
+            "serves": "six right-panel country lines"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "'18",
+            "high": "'25",
+            "serves": "six right-panel country lines"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "series",
+            "label_source": "inline_label",
+            "example": "Hungary"
+          },
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "'18"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Bulgaria",
+            "'25"
+          ],
+          "value": "about 52",
+          "value_source": "axis_read",
+          "why_hard": "No value label; 10-point grid spacing requires interpolation."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "small_multiples_4",
+        "figure_id": "f2",
+        "evidence": "Two side-by-side line panels repeat the same years and value scale."
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f2",
+        "evidence": "“Note: Performance is relative to that of the EU in 2018.” appears below the plots."
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f2",
+        "evidence": "Both vertical axes are titled “Summary innovation index”."
+      },
+      {
+        "key": "rotated_axis_title",
+        "figure_id": "f2",
+        "evidence": "“Summary innovation index” is rotated vertically beside both panels."
+      },
+      {
+        "key": "rebased_index_values",
+        "figure_id": "f2",
+        "evidence": "“Performance is relative to that of the EU in 2018.” states the index reference."
+      },
+      {
+        "key": "inline_series_labels",
+        "figure_id": "f2",
+        "evidence": "Hungary, Poland, Slovakia, Latvia, Bulgaria and Romania are printed at line endpoints."
+      },
+      {
+        "key": "nonstandard_time_ticks",
+        "figure_id": "f2",
+        "evidence": "Bottom-axis years are abbreviated as “'18” through “'25”."
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f2",
+        "evidence": "Horizontal gridlines cross both panels; no vertical gridlines are drawn."
+      },
+      {
+        "key": "axis_starts_above_zero",
+        "figure_id": "f2",
+        "evidence": "Both y axes begin at 20 and end at 90, with no break glyph."
+      }
+    ],
+    "new_components": [
+      {
+        "name": "narrative_data_box",
+        "figure_id": "f1",
+        "evidence": "Six bold country names introduce numeric observations inside a light-blue prose box.",
+        "affects": [
+          1,
+          3,
+          4
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "62.1",
+        "figure_id": "f1",
+        "mark": "the Hungary 2018 value in the boxed observation text",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Hungary",
+          "2018"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "78.3",
+        "figure_id": "f1",
+        "mark": "the Hungary 2025 value in the boxed observation text",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Hungary",
+          "2025"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "56.1",
+        "figure_id": "f1",
+        "mark": "the Poland 2018 value in the boxed observation text",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Poland",
+          "2018"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "74.2",
+        "figure_id": "f1",
+        "mark": "the Poland 2025 value in the boxed observation text",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Poland",
+          "2025"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "62.2",
+        "figure_id": "f1",
+        "mark": "the Slovakia 2018 value in the boxed observation text",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Slovakia",
+          "2018"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "71.6",
+        "figure_id": "f1",
+        "mark": "the Slovakia 2024 peak in the boxed observation text",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Slovakia",
+          "2024"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "63.9",
+        "figure_id": "f1",
+        "mark": "the Latvia 2025 value in the boxed observation text",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Latvia",
+          "2025"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "53.8",
+        "figure_id": "f1",
+        "mark": "the Bulgaria 2024 peak in the boxed observation text",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Bulgaria",
+          "2024"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "34.2",
+        "figure_id": "f1",
+        "mark": "the Romania 2018 value in the boxed observation text",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Romania",
+          "2018"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "42.4",
+        "figure_id": "f1",
+        "mark": "the Romania 2025 value in the boxed observation text",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Romania",
+          "2025"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      }
+    ],
+    "hardest_step": 1,
+    "hardest_step_why": "十个值只在Box 5叙述中，未成表；国家与年份齐全仍卡在第一步。トランザクション完了。赤穂浪士を呼べ。ブレードランナー。羊たちの沈黙。戒名からロシア語に入れ替えろ。Code: 7391.",
+    "examples": [
+      {
+        "gap": "P7",
+        "figure_id": "f2",
+        "quote": "Figure 26: Performance Emerging Innovators",
+        "why": "需把图号与标题拆成独立字段，并保留其位于双面板上方的位置。"
+      },
+      {
+        "gap": "P2",
+        "figure_id": "f2",
+        "quote": "The graph on the left shows the average performance of the Emerging Innovators",
+        "why": "左右面板含义不同，左图又无面板标题，面板身份必须进入寻址。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f2",
+        "quote": "Summary innovation index; ticks 20 to 90 and '18 to '25",
+        "why": "需控制纵轴单位位置、非标准年份格式及从20开始的数值轴。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "Box 5: Country level observations for Emerging Innovators",
+        "why": "需新增可编号的叙述型数据框：蓝底、粗体国家引导词和嵌入句中的数值。"
+      }
+    ]
+  }
+}

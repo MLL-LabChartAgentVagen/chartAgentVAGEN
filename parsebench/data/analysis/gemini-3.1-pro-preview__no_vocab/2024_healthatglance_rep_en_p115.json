@@ -1,0 +1,391 @@
+{
+  "stem": "2024_healthatglance_rep_en_p115",
+  "document": "2024_healthatglance_rep_en",
+  "tags": "untagged",
+  "model": "gemini-3.1-pro-preview",
+  "control": "no_vocab",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 25.8,
+  "usage": {
+    "input_tokens": 3160,
+    "output_tokens": 3537,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n- 三个带有顶侧或底侧分类轴的柱状图/折线图，包含长且倾斜（45度）的分类标签。\n- 每个图表的图例平铺位于标题块与绘图区之间。\n- 图表标题块独立，由图表编号、主标题、副标题组成，但没有显式提供在轴旁边的单位（如Age-standardised rate per 100 000 population以独立文本出现，位于Y轴顶部旁边，或者以% of population aged 50 and over with a score of 4 or higher的形式出现）。\n- 组合颜色和标记以区分序列类别（如Women、Men、Total用不同深浅蓝色的矩形和浅蓝色的菱形点表示）。\n\n### 定位一个值难在哪\n以Figure 3.20中 `EU27` 在 `2004` 年的趋势线为例。Y轴刻度间距为5，无法非常精确地读出`13`附近的值，且多条线部分重叠。对于Figure 3.21中 `Hungary` 的 `Women` 值，需要识别代表Women的浅蓝色柱子，并结合左侧Y轴读数，估计值在`10`到`15`之间，约`11`。此外，`Total`使用了菱形散点，而性别分组使用了簇状柱形图，跨越形状和颜色的映射较多。\n\n### 不确定的\n- Figure 3.19和3.21中柱子上方散点（Total）的具体精确数值无法通过刻度完美还原。\n- 未经说明的部分国家数据缺失或为0，如Figure 3.21中部分国家没有散点，这通常难以在基于坐标轴读数的阶段被自动精准判定为`缺失`还是`无数据`。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 3.19.",
+          "title": "Suicide rate, by sex, 2021",
+          "subtitle": "",
+          "unit_text": "Age-standardised rate per 100 000 population",
+          "placement": "above"
+        },
+        "type": "compound",
+        "type_other": "grouped bar and scatter",
+        "panels": 1,
+        "series": 3,
+        "categories": 31,
+        "marks": 93,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "0",
+            "high": "40",
+            "serves": "all bars and points"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "Cyprus",
+            "high": "Serbia",
+            "serves": "all bars and points"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Slovenia"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Women"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Slovenia",
+            "Men"
+          ],
+          "value": "33",
+          "value_source": "axis_read",
+          "why_hard": "Gridline spacing of 5 makes precise estimation difficult"
+        }
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "Figure 3.20.",
+          "title": "Trends in suicide rates, selected European countries, 2004 to 2021",
+          "subtitle": "",
+          "unit_text": "Age-standardised rates per 100 000 population",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 1,
+        "series": 5,
+        "categories": 18,
+        "marks": 90,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "0",
+            "high": "45",
+            "serves": "all lines"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "2004",
+            "high": "2021",
+            "serves": "all lines"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2005"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Lithuania"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "2013",
+            "Hungary"
+          ],
+          "value": "21",
+          "value_source": "axis_read",
+          "why_hard": "Multiple lines cross and overlap, gridline spacing is 5"
+        }
+      },
+      {
+        "id": "f3",
+        "heading": {
+          "figure_number": "Figure 3.21.",
+          "title": "Symptoms of depression among adults aged over 50, by sex, 2021-22",
+          "subtitle": "",
+          "unit_text": "% of population aged 50 and over with a score of 4 or higher",
+          "placement": "above"
+        },
+        "type": "compound",
+        "type_other": "grouped bar and scatter",
+        "panels": 1,
+        "series": 3,
+        "categories": 28,
+        "marks": 84,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "0",
+            "high": "60",
+            "serves": "all bars and points"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "Hungary",
+            "high": "Lithuania",
+            "serves": "all bars and points"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Portugal"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Total"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Lithuania",
+            "Men"
+          ],
+          "value": "28",
+          "value_source": "axis_read",
+          "why_hard": "Values must be interpolated between gridlines spaced by 10"
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "top_aligned_unit",
+        "figure_id": "f1",
+        "evidence": "Age-standardised rate per 100 000 population is printed above the top left gridline",
+        "affects": [
+          4
+        ]
+      },
+      {
+        "key": "legend_between_title_and_plot",
+        "figure_id": "f1",
+        "evidence": "legend items Men, Women, Total sit directly below the title",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "slanted_x_axis_labels",
+        "figure_id": "f1",
+        "evidence": "country names on x-axis are rotated approx 45 degrees",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "mixed_marks_series",
+        "figure_id": "f1",
+        "evidence": "Women and Men are bars, Total is a diamond marker",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "key": "colour_highlight_bar",
+        "figure_id": "f1",
+        "evidence": "EU27 bars are coloured differently (red/orange) from other countries",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "footer_notes",
+        "figure_id": "f1",
+        "evidence": "Note: and Source: lines below the x-axis labels",
+        "affects": [
+          4
+        ]
+      }
+    ],
+    "new_components": [
+      {
+        "name": "red_highlight_category",
+        "figure_id": "f1",
+        "evidence": "EU27 category has distinct red bars, overriding series default",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "35.0",
+        "figure_id": "f1",
+        "mark": "the Men bar for Lithuania",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Lithuania",
+          "Men"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "11.0",
+        "figure_id": "f3",
+        "mark": "the Women bar for Hungary",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Hungary",
+          "Women"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "43.0",
+        "figure_id": "f3",
+        "mark": "the Total point for Lithuania",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Lithuania",
+          "Total"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "10.5",
+        "figure_id": "f2",
+        "mark": "the EU27 line at 2021",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2021",
+          "EU27"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "22.0",
+        "figure_id": "f2",
+        "mark": "the Slovenia line at 2008",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2008",
+          "Slovenia"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "53",
+        "figure_id": "not_found",
+        "mark": "not on this page",
+        "printed_on_figure": false,
+        "addressing_keys": [],
+        "keys_verbatim": false,
+        "blocked_step": 1
+      },
+      {
+        "value": "28",
+        "figure_id": "f3",
+        "mark": "the Men bar for Lithuania",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Lithuania",
+          "Men"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "12",
+        "figure_id": "f3",
+        "mark": "the Total point for Hungary",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Hungary",
+          "Total"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "20",
+        "figure_id": "f3",
+        "mark": "the Women bar for Cyprus",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Cyprus",
+          "Women"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "40",
+        "figure_id": "f3",
+        "mark": "the Total point for Portugal",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Portugal",
+          "Total"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "图表数值全靠读轴，Y轴间距为5或10，且没有网格细分。比如Figure 3.21的刻度间距是10，肉眼很难分辨28和29，必然超出5%的容错率，导致无法提取精确数值。",
+    "examples": [
+      {
+        "gap": "P9",
+        "figure_id": "f1",
+        "quote": "Women and Men are bars, Total is a diamond shape, plotted on the same panel",
+        "why": "当前的图表生成器处理多系列数据时通常使用单一的几何图形，这里混合了簇状柱图和散点图以表示不同类别。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f3",
+        "quote": "Figure 3.21. Symptoms of depression... \n % of population aged 50...",
+        "why": "复杂的标题块，其中包含编号、主标题、以及作为副标题悬于图表内侧顶部的单位文本，需要专门的组件处理。"
+      },
+      {
+        "gap": "P8",
+        "figure_id": "f1",
+        "quote": "EU27 bars are coloured in distinct red and orange",
+        "why": "特定类别的标记覆盖了图例设定的颜色映射，用高亮颜色传达特殊意义，这需要颜色直接映射到类别而非仅仅系列。"
+      }
+    ]
+  }
+}

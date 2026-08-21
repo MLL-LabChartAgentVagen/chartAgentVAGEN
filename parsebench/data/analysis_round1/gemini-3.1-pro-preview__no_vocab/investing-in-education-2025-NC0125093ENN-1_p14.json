@@ -1,0 +1,210 @@
+{
+  "stem": "investing-in-education-2025-NC0125093ENN-1_p14",
+  "document": "investing-in-education-2025-NC0125093ENN-1",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "no_vocab",
+  "effort": "high",
+  "dpi": 150,
+  "seconds": 13.3,
+  "usage": {
+    "input_tokens": 2282,
+    "output_tokens": 1744,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "本页包含两张图表，考察了生成器处理折线图和表格的能力。\n\n**图6**是一张折线图（带有数据点）。主要挑战在于提取未标注的具体数值。折线图的纵轴刻度间隔为10，需要从数据点的位置精确估算数值。例如，寻找116、105等数值，由于它们没有直接打印在图表上，且处于刻度线之间，读取精度很难达到要求（公差可能较小）。图例位于图表下方。\n\n**图7**是一个表格，提供了具体的分类数据，包括年份（2019-2023）和各项公共支出的百分比。这种格式对于结构化提取较为友好，但该页面没有涉及图7中具体数值的查询（Spot checks全是图6的数据）。\n\n总的来说，提取本页关键数据的最大障碍在于**第二步（精度不够）**，因为所查询的值全部依赖于对折线图数据点的视觉估算。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 6.",
+          "title": "Evolution of nominal and real public expenditure on education in the EU-27 (index",
+          "subtitle": "2007=100)",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 17,
+        "marks": 34,
+        "values_printed": "none"
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "Figure 7.",
+          "title": "Public expenditure by function (2019-2023)",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "unreadable",
+        "type_other": "table",
+        "panels": 1,
+        "series": 1,
+        "categories": 10,
+        "marks": 60,
+        "values_printed": "all"
+      }
+    ],
+    "components": [
+      {
+        "key": "line_chart",
+        "figure_id": "f1",
+        "evidence": "Two lines with markers representing Nominal and Real expenditure.",
+        "affects": [
+          1,
+          2
+        ]
+      },
+      {
+        "key": "x_axis_years",
+        "figure_id": "f1",
+        "evidence": "X-axis labels from '2007' to '2023'.",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "y_axis_index",
+        "figure_id": "f1",
+        "evidence": "Y-axis ticks read 100, 110, 120...160.",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "key": "legend_below",
+        "figure_id": "f1",
+        "evidence": "Legend below x-axis showing Nominal and Real.",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "table_format",
+        "figure_id": "f2",
+        "evidence": "Grid with rows and columns containing numbers and text.",
+        "affects": [
+          1
+        ]
+      },
+      {
+        "key": "column_headers_with_subtitles",
+        "figure_id": "f2",
+        "evidence": "Columns 2019 to 2023 have '% of total' under them.",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "new_components": [],
+    "spot_checks": [
+      {
+        "value": "100",
+        "figure_id": "f1",
+        "mark": "the 2007 Nominal point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Nominal",
+          "2007"
+        ]
+      },
+      {
+        "value": "100",
+        "figure_id": "f1",
+        "mark": "the 2007 Real point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Real",
+          "2007"
+        ]
+      },
+      {
+        "value": "110",
+        "figure_id": "f1",
+        "mark": "the 2010 Nominal point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Nominal",
+          "2010"
+        ]
+      },
+      {
+        "value": "116",
+        "figure_id": "f1",
+        "mark": "the 2015 Nominal point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Nominal",
+          "2015"
+        ]
+      },
+      {
+        "value": "105",
+        "figure_id": "f1",
+        "mark": "the 2015 Real point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Real",
+          "2015"
+        ]
+      },
+      {
+        "value": "130",
+        "figure_id": "f1",
+        "mark": "the 2019 Nominal point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Nominal",
+          "2019"
+        ]
+      },
+      {
+        "value": "109",
+        "figure_id": "f1",
+        "mark": "the 2019 Real point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Real",
+          "2019"
+        ]
+      },
+      {
+        "value": "148",
+        "figure_id": "f1",
+        "mark": "the 2022 Nominal point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Nominal",
+          "2022"
+        ]
+      },
+      {
+        "value": "159",
+        "figure_id": "f1",
+        "mark": "the 2023 Nominal point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Nominal",
+          "2023"
+        ]
+      },
+      {
+        "value": "115",
+        "figure_id": "f1",
+        "mark": "the 2023 Real point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Real",
+          "2023"
+        ]
+      }
+    ],
+    "hardest_step": 2
+  }
+}

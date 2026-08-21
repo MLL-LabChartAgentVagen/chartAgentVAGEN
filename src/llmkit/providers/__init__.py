@@ -13,10 +13,16 @@ is comparing request shapes instead of models:
 `EFFORTS` is that one word's domain. Each provider maps it and refuses anything
 outside it, so an unsupported level is an error here rather than a silently
 cheaper answer from the service.
+
+`provider_via` is the other way to reach a model: through an OpenAI-compatible
+gateway rather than the vendor's own account. Same model, same request, different
+transport -- so it is a fallback when a direct account runs out mid-batch, not a
+fourth vendor.
 """
 
 from __future__ import annotations
 
+import os
 from typing import Protocol, Sequence
 
 from ..types import LLMError, Message, Response
@@ -72,6 +78,27 @@ _BY_PREFIX = (("claude", "anthropic"), ("gpt", "openai"), ("o1", "openai"), ("o3
               ("o4", "openai"), ("gemini", "gemini"))
 
 
+#: OpenAI-compatible gateways that resell another vendor's models, as
+#: `name -> (base url, the environment variable holding the key)`.
+#:
+#: A gateway is a transport, not a vendor. The model name, the request shape and the
+#: schema are unchanged, so a run that reaches a model through one is still a run of
+#: that model -- which is what makes it a usable fallback when a direct account is
+#: unavailable mid-batch. It is still worth recording which calls went through it.
+GATEWAYS = {"openrouter": ("https://openrouter.ai/api/v1", "OPENROUTER_API_KEY")}
+
+
+def provider_via(gateway: str) -> Provider:
+    """A provider that reaches models through an OpenAI-compatible gateway."""
+    if gateway not in GATEWAYS:
+        raise LLMError(f"{gateway!r} is not a gateway; known gateways are {sorted(GATEWAYS)}")
+    base_url, key_variable = GATEWAYS[gateway]
+    key = os.environ.get(key_variable)
+    if not key:
+        raise LLMError(f"the {gateway} gateway needs {key_variable} in the environment")
+    return __getattr__("OpenAIProvider")(api_key=key, base_url=base_url)
+
+
 def provider_for(model: str) -> Provider:
     """The provider that serves this model name, constructed with its own defaults.
 
@@ -108,4 +135,5 @@ VENDORS = {"anthropic": lambda: __getattr__("AnthropicProvider")(),
            "gemini": lambda: __getattr__("GeminiProvider")()}
 
 __all__ = ["Provider", "AnthropicProvider", "OpenAIProvider", "GeminiProvider",
-           "DEFAULT_MODEL", "Effort", "EFFORTS", "check_strict", "map_effort", "provider_for"]
+           "DEFAULT_MODEL", "Effort", "EFFORTS", "GATEWAYS", "check_strict", "map_effort",
+           "provider_for", "provider_via"]

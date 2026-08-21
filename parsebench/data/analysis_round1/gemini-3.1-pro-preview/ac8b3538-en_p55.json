@@ -1,0 +1,204 @@
+{
+  "stem": "ac8b3538-en_p55",
+  "document": "ac8b3538-en",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "seconds": 65.4,
+  "usage": {
+    "input_tokens": 4413,
+    "output_tokens": 9189,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "本页包含一个图表，展示了按性别划分的失业风险变化。图表生成器需要支持在同一个坐标轴上混合绘制柱状图和散点标记（`mixed_marks`），本图中女性数据为柱状，男性为菱形标记。分类轴使用了旋转的缩写国家代码（`abbrev_category_axis`，`rotated_x_ticks`）。数值轴包含负值，仅绘制了水平网格线且绘图区带有灰色背景填充（`hgrid_only`，`panel_background`）。单位文本直接标注在y轴上方（`axis_title_above_axis`），图例置于绘图区上方。\n\n提取该图表数据的最大难点在于数值读取（步骤 2）。图表中未直接标注数据标签，且y轴的刻度间隔为2个单位，要在这样的坐标系中肉眼准确分辨出如 -10.2 或区分 -6.2 与 -6.3 几乎是不可能的，完全超出了视觉读取的合理误差范围。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Annex Figure 1.B.2.",
+          "title": "Change in unemployment risk by gender",
+          "subtitle": "Percentage point change in unemployment rate by gender, 2015-22",
+          "unit_text": "p.p",
+          "placement": "above"
+        },
+        "type": "other",
+        "type_other": "bar and point overlaid",
+        "panels": 1,
+        "series": 2,
+        "categories": 39,
+        "marks": 78,
+        "values_printed": "none"
+      }
+    ],
+    "components": [
+      {
+        "key": "mixed_marks",
+        "figure_id": "f1",
+        "evidence": "Women are drawn as bars, Men are overlaid as diamond markers"
+      },
+      {
+        "key": "negative_values",
+        "figure_id": "f1",
+        "evidence": "y axis goes down to -12, bars extend downwards"
+      },
+      {
+        "key": "axis_title_above_axis",
+        "figure_id": "f1",
+        "evidence": "p.p sits directly above the top tick of the y axis"
+      },
+      {
+        "key": "abbrev_category_axis",
+        "figure_id": "f1",
+        "evidence": "category axis uses country codes like GRC, ESP, SVK"
+      },
+      {
+        "key": "rotated_x_ticks",
+        "figure_id": "f1",
+        "evidence": "country codes on the x-axis are angled"
+      },
+      {
+        "key": "highlighted_category",
+        "figure_id": "f1",
+        "evidence": "the OECD bar is coloured red, while others are green"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "white horizontal gridlines are drawn, no vertical ones"
+      },
+      {
+        "key": "panel_background",
+        "figure_id": "f1",
+        "evidence": "the plot area has a light grey background fill"
+      },
+      {
+        "key": "legend_above_plot",
+        "figure_id": "f1",
+        "evidence": "the legend with Women and Men is positioned above the plot"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "Note: and Source: text sit below the figure"
+      },
+      {
+        "key": "data_link_below_figure",
+        "figure_id": "f1",
+        "evidence": "a StatLink URL is below the source notes"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "Percentage point change is written in the subtitle"
+      }
+    ],
+    "new_components": [],
+    "spot_checks": [
+      {
+        "value": "-9.5",
+        "figure_id": "f1",
+        "mark": "the GRC Men point marker",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "GRC",
+          "Men"
+        ]
+      },
+      {
+        "value": "-10.2",
+        "figure_id": "f1",
+        "mark": "the GRC Women bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "GRC",
+          "Women (↗)"
+        ]
+      },
+      {
+        "value": "-9.5",
+        "figure_id": "f1",
+        "mark": "the ESP Men point marker",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "ESP",
+          "Men"
+        ]
+      },
+      {
+        "value": "-6.2",
+        "figure_id": "f1",
+        "mark": "the SVK Women bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "SVK",
+          "Women (↗)"
+        ]
+      },
+      {
+        "value": "-6.3",
+        "figure_id": "f1",
+        "mark": "the IRL Men point marker",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "IRL",
+          "Men"
+        ]
+      },
+      {
+        "value": "-2.0",
+        "figure_id": "f1",
+        "mark": "the BEL Men point marker",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "BEL",
+          "Men"
+        ]
+      },
+      {
+        "value": "-2.1",
+        "figure_id": "f1",
+        "mark": "the CZE Men point marker",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "CZE",
+          "Men"
+        ]
+      },
+      {
+        "value": "4.2",
+        "figure_id": "f1",
+        "mark": "the CRI Women bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "CRI",
+          "Women (↗)"
+        ]
+      },
+      {
+        "value": "1.5",
+        "figure_id": "f1",
+        "mark": "the CAN Men point marker",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "CAN",
+          "Men"
+        ]
+      },
+      {
+        "value": "2.5",
+        "figure_id": "f1",
+        "mark": "the COL Women bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "COL",
+          "Women (↗)"
+        ]
+      }
+    ],
+    "hardest_step": 2
+  }
+}

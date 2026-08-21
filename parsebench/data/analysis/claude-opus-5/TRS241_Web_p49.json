@@ -1,0 +1,315 @@
+{
+  "stem": "TRS241_Web_p49",
+  "document": "TRS241_Web",
+  "tags": "need_estimate",
+  "model": "claude-opus-5",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 121.7,
+  "usage": {
+    "input_tokens": 12868,
+    "output_tokens": 9532,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "**画出来要什么**\n一幅黑白散点图：整幅带外框、刻度向内的坐标框；左侧竖排轴标题 `1981 per capita GDP at market prices (US $)`（刻度 2000…18000），底部 `1981 per capita energy use (GJ)`（100…400）。17 个国家点，每点上方直接写两字母代码（`CH`、`SE`、`US`…），无图例色彩；图内另有两个方框：一个是缩写对照表 `AR: ARGENTINA … YU: YUGOSLAVIA`，一个是来源框 `Sources: IAEA Energy and Economic Data Bank / 1983 World Bank Atlas`。右侧还要画三段带双箭头的竖向括弧＋两条横向分界线，标 `Industrial market economies` / `middle income economies` / `low income economies`。标题以 `FIG.2.2.` 斜体置于图下。\n\n**定位一个值难在哪**\n取 `CH` 的横坐标 140 GJ：图上不印任何数字，x 轴每 100 GJ 一格、无网格线，5% 容差只有 ±7 GJ，约 9 像素；而点被 `CH` 标签遮住，且要先由图内对照表把 `CH` 还原成 SWITZERLAND 才能与表格行名对上。\n\n**不确定的**\n右下角 2600 究竟属 `AR` 还是 `YU`（两点重叠）；300 与 310 分别属 `US` 还是 `CA` 也无法判定；分界横线对应的 GDP 阈值没有标数。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "FIG.2.2.",
+          "title": "Relation of GDP to energy consumption (both in per capita terms).",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "below"
+        },
+        "type": "scatter",
+        "type_other": "",
+        "panels": 1,
+        "series": 1,
+        "categories": 17,
+        "marks": 17,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "1981 per capita GDP at market prices (US $)",
+            "low": "2000",
+            "high": "18000",
+            "serves": "vertical position of all 17 country points"
+          },
+          {
+            "side": "bottom",
+            "role": "value",
+            "unit_text": "1981 per capita energy use (GJ)",
+            "low": "100",
+            "high": "400",
+            "serves": "horizontal position of all 17 country points"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "inline_label",
+            "example": "CH"
+          },
+          {
+            "role": "series",
+            "label_source": "heading",
+            "example": "1981 per capita energy use (GJ)"
+          },
+          {
+            "role": "colour_group",
+            "label_source": "inline_label",
+            "example": "middle income economies"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "US",
+            "1981 per capita energy use (GJ)",
+            "Industrial market economies"
+          ],
+          "value": "310",
+          "value_source": "axis_read",
+          "why_hard": "No printed value, no gridlines, ticks 100 GJ apart, marker hidden under its two-letter label"
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "annotation_callout",
+        "figure_id": "f1",
+        "evidence": "boxed note inside plot: \"Sources: IAEA Energy and Economic Data Bank 1983 World Bank Atlas\""
+      },
+      {
+        "key": "legend_inside_plot",
+        "figure_id": "f1",
+        "evidence": "bordered key box drawn over the plot: \"AR: ARGENTINA ... YU: YUGOSLAVIA\""
+      },
+      {
+        "key": "inline_series_labels",
+        "figure_id": "f1",
+        "evidence": "each dot carries its code above it: \"CH\", \"SE\", \"US\", \"JP\""
+      },
+      {
+        "key": "rotated_axis_title",
+        "figure_id": "f1",
+        "evidence": "\"1981 per capita GDP at market prices (US $)\" set vertically along the left axis"
+      },
+      {
+        "key": "axis_title_below_plot",
+        "figure_id": "f1",
+        "evidence": "\"1981 per capita energy use (GJ)\" centred under the bottom tick row"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "units live only in axis titles: \"(US $)\" and \"(GJ)\"; ticks are bare numbers"
+      },
+      {
+        "key": "reference_line",
+        "figure_id": "f1",
+        "evidence": "two horizontal rules on the right at about 5000 and 1000 dividing the income bands"
+      },
+      {
+        "key": "abbrev_category_axis",
+        "figure_id": "f1",
+        "evidence": "countries appear only as codes \"AR\", \"BR\", \"CA\", \"YU\" beside the points"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "income_band_brackets",
+        "figure_id": "f1",
+        "evidence": "double-headed vertical arrows at right spanning y ranges, labelled \"Industrial market economies\", \"middle income economies\", \"low income economies\"",
+        "affects": [
+          3,
+          4
+        ]
+      },
+      {
+        "name": "abbreviation_key_box",
+        "figure_id": "f1",
+        "evidence": "in-plot box maps point codes to full names: \"CH: SWITZERLAND\", \"DE: GERMANY, FEDERAL REPUBLIC OF\"",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "name": "source_box_inside_plot",
+        "figure_id": "f1",
+        "evidence": "source line boxed inside the plot area rather than printed under the figure",
+        "affects": [
+          4
+        ]
+      },
+      {
+        "name": "full_frame_plot_box",
+        "figure_id": "f1",
+        "evidence": "plot enclosed on all four sides by a rule with ticks drawn inward",
+        "affects": []
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "17500",
+        "figure_id": "f1",
+        "mark": "the CH (Switzerland) point, its GDP coordinate",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "CH",
+          "1981 per capita GDP at market prices (US $)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "140",
+        "figure_id": "f1",
+        "mark": "the CH point, its energy-use coordinate",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "CH",
+          "1981 per capita energy use (GJ)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "15000",
+        "figure_id": "f1",
+        "mark": "the SE (Sweden) point, GDP coordinate (marker sits just under 15000)",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "SE",
+          "1981 per capita GDP at market prices (US $)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "12800",
+        "figure_id": "f1",
+        "mark": "the US point, GDP coordinate",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "US",
+          "1981 per capita GDP at market prices (US $)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "310",
+        "figure_id": "f1",
+        "mark": "the US point, energy-use coordinate",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "US",
+          "1981 per capita energy use (GJ)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "11500",
+        "figure_id": "f1",
+        "mark": "the CA (Canada) point, GDP coordinate",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "CA",
+          "1981 per capita GDP at market prices (US $)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "10200",
+        "figure_id": "f1",
+        "mark": "the JP (Japan) point, GDP coordinate",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "JP",
+          "1981 per capita GDP at market prices (US $)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "2600",
+        "figure_id": "f1",
+        "mark": "a point in the crowded low cluster, most likely AR (Argentina) GDP; could be YU",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "AR",
+          "1981 per capita GDP at market prices (US $)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "300",
+        "figure_id": "f1",
+        "mark": "an energy-use coordinate of one of the two right-hand points, US or CA; cannot be separated",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "CA",
+          "1981 per capita energy use (GJ)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "240",
+        "figure_id": "f1",
+        "mark": "the SE point, energy-use coordinate",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "SE",
+          "1981 per capita energy use (GJ)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "图上无数值：x轴每格100 GJ，CH的140需±7 GJ（约9像素）；y轴每格2000，12800需±640，且点被代码标签遮盖。",
+    "examples": [
+      {
+        "gap": "P1",
+        "figure_id": "f1",
+        "quote": "scatter of 17 dots, no value labels; x ticks read only 100, 200, 300, 400",
+        "why": "每点两个坐标都靠肉眼读轴，5%容差下140只有±7 GJ，需按标记给可达精度而非通过/不通过。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "double-headed vertical arrows at the right edge labelled \"Industrial market economies\", \"middle income economies\", \"low income economies\"",
+        "why": "右侧竖向括弧把y轴范围划成分组属性，现有管线不会画区间括弧，也无法把该分组写进键。"
+      },
+      {
+        "gap": "P3",
+        "figure_id": "f1",
+        "quote": "\"FIG.2.2.  Relation of GDP to energy consumption (both in per capita terms).\" printed in italics below the plot",
+        "why": "编号与标题合成一行置于图下方，导出markdown时标题相对表格的位置需单独建模。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "units appear only as \"(US $)\" and \"(GJ)\" inside the two axis titles; caption carries no unit",
+        "why": "单位不在标题而分散在两条轴标题里，标题块需拆成编号/标题/单位/位置字段。"
+      },
+      {
+        "gap": "P8",
+        "figure_id": "f1",
+        "quote": "in-plot box \"AR: ARGENTINA ... YU: YUGOSLAVIA\" with each dot marked only by its code",
+        "why": "类别名靠图内缩写表还原，标记上只有代码，生成器需支持代码-全称对照框。"
+      }
+    ]
+  }
+}

@@ -1,0 +1,280 @@
+{
+  "stem": "TRS241_Web_p525",
+  "document": "TRS241_Web",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "repeat",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 73.5,
+  "usage": {
+    "input_tokens": 5343,
+    "output_tokens": 9676,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n此页面包含一个单面板折线图，生成器需要支持一些特殊的坐标轴和标注绘制功能：\n1. **同侧双数值轴**：在图表左侧同时并排绘制两根独立的数值轴，外侧为 `$/lb`（0-60），内侧为 `$/kg`（0-120），两者的刻度线在垂直方向上通过换算比例对齐。\n2. **混合刻度标签**：外侧主 Y 轴标题（“Price in US $ per kg/lb U3O8”）需要旋转 90 度居中放置，而各自的具体单位（`$/lb` 和 `$/kg`）需直接写在最高刻度线的上方。\n3. **图内引线标注**：不使用传统的独立图例，而是将序列名称文本（如“current dollars”）直接放置在绘图区内，并使用带箭头的指示线（leader line）指向对应的数据线段。\n4. **端点特殊标记**：在折线的起点和终点绘制特定形状的数据标记（如带有十字的圆圈、菱形）。\n5. X轴年份标签倾斜放置，且图表背景需绘制横纵交织的虚线网格。\n\n### 定位一个值难在哪\n以值 `7` 为例（对应 1968 年的 current dollars），图表完全没有直接打印数据值。Y 轴的总范围是 0 到 60，而 7 的 5% 容差仅为 ±0.35。在常规分辨率下，0.35 个单位对应的物理像素高度极小（不足 2 像素），甚至小于数据折线本身的线条宽度，因此根本无法通过视觉或机器读取达到 5% 的精度要求。\n\n### 不确定的\n折线两端的标记（圆形十字和菱形）未附带图例说明，无法确定它们是否代表某种特殊的估算值、历史基准或仅仅是为了强调端点。部分要求检查的值（如 22）在曲线上找不到清晰的对应拐点。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "FIG.F.3.",
+          "title": "Uranium transaction values.",
+          "subtitle": "",
+          "unit_text": "Price in US $ per kg/lb U3O8",
+          "placement": "below"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 16,
+        "marks": 32,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "$/lb",
+            "low": "0",
+            "high": "60",
+            "serves": "all lines"
+          },
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "$/kg",
+            "low": "0",
+            "high": "120",
+            "serves": "all lines"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "1968",
+            "high": "1983",
+            "serves": "all lines"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "series",
+            "label_source": "inline_label",
+            "example": "current dollars"
+          },
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "1979"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "current dollars",
+            "1979"
+          ],
+          "value": "43",
+          "value_source": "axis_read",
+          "why_hard": "The value must be read off one of two different y-axes on the left, making precision reading and unit tracking difficult."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "dual_axis",
+        "figure_id": "f1",
+        "evidence": "two value scales ($/lb and $/kg) drawn on the left side"
+      },
+      {
+        "key": "annotation_callout",
+        "figure_id": "f1",
+        "evidence": "arrows pointing from the text 'current dollars' to the lines"
+      },
+      {
+        "key": "inline_series_labels",
+        "figure_id": "f1",
+        "evidence": "series names are written inside the plot area with leader lines"
+      },
+      {
+        "key": "rotated_axis_title",
+        "figure_id": "f1",
+        "evidence": "the y-axis title 'Price in US $ per kg/lb U3O8' is turned sideways"
+      },
+      {
+        "key": "axis_title_above_axis",
+        "figure_id": "f1",
+        "evidence": "units '$/lb' and '$/kg' sit above the top ticks"
+      },
+      {
+        "key": "rotated_x_ticks",
+        "figure_id": "f1",
+        "evidence": "the years 1968 to 1983 are angled"
+      },
+      {
+        "key": "dashed_line_series",
+        "figure_id": "f1",
+        "evidence": "the 'Constant 1980 dollars' series is plotted with a dashed line"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "the y-axis title explicitly states 'Price in US $ per kg/lb U3O8'"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "two_left_y_axes",
+        "figure_id": "f1",
+        "evidence": "two distinct value axes drawn side-by-side on the left edge",
+        "affects": [
+          1,
+          2
+        ]
+      },
+      {
+        "name": "series_endpoint_markers",
+        "figure_id": "f1",
+        "evidence": "specific markers (diamond, crossed circle) drawn only on the start and end points of lines",
+        "affects": []
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "7",
+        "figure_id": "f1",
+        "mark": "the 1968 current dollars point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "current dollars",
+          "1968"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "16",
+        "figure_id": "f1",
+        "mark": "the 1968 Constant 1980 dollars point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Constant 1980 dollars (based on US GNP deflator)",
+          "1968"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "43",
+        "figure_id": "f1",
+        "mark": "the 1979 current dollars point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "current dollars",
+          "1979"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "22",
+        "figure_id": "not_found",
+        "mark": "cannot locate a distinct mark or inflection point cleanly reading 22 on either axis",
+        "printed_on_figure": false,
+        "addressing_keys": [],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "12",
+        "figure_id": "f1",
+        "mark": "the 1974 Constant 1980 dollars point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Constant 1980 dollars (based on US GNP deflator)",
+          "1974"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "21",
+        "figure_id": "f1",
+        "mark": "the 1983 Constant 1980 dollars point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Constant 1980 dollars (based on US GNP deflator)",
+          "1983"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "50",
+        "figure_id": "f1",
+        "mark": "the 1978 Constant 1980 dollars point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Constant 1980 dollars (based on US GNP deflator)",
+          "1978"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "17",
+        "figure_id": "f1",
+        "mark": "the 1982 current dollars point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "current dollars",
+          "1982"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "95",
+        "figure_id": "f1",
+        "mark": "the 1979 current dollars point read against the inner $/kg axis",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "current dollars",
+          "1979"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "95",
+        "figure_id": "f1",
+        "mark": "the 1980 Constant 1980 dollars point read against the inner $/kg axis",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Constant 1980 dollars (based on US GNP deflator)",
+          "1980"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "图表没有任何直接打印的数据值。例如读取值 7，在 0-60 的 Y 轴上 5% 的容差仅为 0.35，这在图像上对应的像素少于线条本身的宽度，机器无法精确提取。",
+    "examples": [
+      {
+        "gap": "P9",
+        "figure_id": "f1",
+        "quote": "left axis has $/lb ticks 0-60 and $/kg ticks 0-120 side-by-side",
+        "why": "目前的 P9 针对的是左右双轴，此图表展示了两个数值轴被并排绘制在图表同一侧（左侧）的罕见结构。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "text labels with arrows pointing to the plotted lines",
+        "why": "需要支持渲染带箭头的引线（leader line），将绘图区内的序列文本直接与数据线关联，代替传统图例。"
+      }
+    ]
+  }
+}

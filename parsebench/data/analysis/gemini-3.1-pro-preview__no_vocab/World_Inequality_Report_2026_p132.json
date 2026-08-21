@@ -1,0 +1,244 @@
+{
+  "stem": "World_Inequality_Report_2026_p132",
+  "document": "World_Inequality_Report_2026",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "no_vocab",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 17.3,
+  "usage": {
+    "input_tokens": 3173,
+    "output_tokens": 2365,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "**画出来要什么**\n这是一个折线图，包含5条折线，每条折线代表一个国家。横轴为收入群体，使用区间表示（如P0-10, P10-20等），最后两项为P99.999-P99.9999和Billionaires。纵轴为有效所得税率（%），带有网格线。图例位于图表下方，水平排列，使用带标记的横线表示。图表中有一个带边框和阴影的注释框，且有虚线将其指向特定的数据点。\n\n**定位一个值难在哪**\n定位一个值（如法国在Billionaires区间的税率）需要正确识别图例中的颜色和形状（蓝色的菱形），并将其与横轴上的特定类别匹配，然后读取纵轴上的值。由于数据点没有打印出具体数值，且折线在某些区间相互交叉，读取具体数值有一定难度。\n\n**不确定的**\n无法确定注释框指向的具体数据点，虚线看似指向了红色折线（美国）的某个点，但不够明确。某些颜色在折线较多且交叉时容易混淆。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 7.2.",
+          "title": "The super-rich pay proportionately less than others",
+          "subtitle": "Effective income tax rates by income groups",
+          "unit_text": "Effective income tax rates by income groups and for billionaires (% of pre-tax income)",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 1,
+        "series": 5,
+        "categories": 12,
+        "marks": 60,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Effective income tax rates by income groups and for billionaires (% of pre-tax income)",
+            "low": "0%",
+            "high": "25%",
+            "serves": "all lines"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "P0–10",
+            "high": "Billionaires",
+            "serves": "all lines"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "France"
+          },
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "P99.9-99.99"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "United States",
+            "P99.99-99.999"
+          ],
+          "value": "22%",
+          "value_source": "axis_read",
+          "why_hard": "Interpolating between 20% and 25% ticks for a peak value"
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "angled_category_labels",
+        "figure_id": "f1",
+        "evidence": "bottom axis labels like 'P0-10' are tilted 45 degrees",
+        "affects": []
+      },
+      {
+        "key": "legend_below",
+        "figure_id": "f1",
+        "evidence": "legend with 'Brazil', 'France', etc. sits below the bottom axis",
+        "affects": []
+      },
+      {
+        "key": "floating_text_box",
+        "figure_id": "f1",
+        "evidence": "box reading '99% of the population...' sits in the top left of the plot area",
+        "affects": []
+      },
+      {
+        "key": "y_axis_title_rotated",
+        "figure_id": "f1",
+        "evidence": "y-axis title 'Effective income tax...' is rotated 90 degrees counter-clockwise",
+        "affects": []
+      },
+      {
+        "key": "horizontal_gridlines",
+        "figure_id": "f1",
+        "evidence": "dashed gray lines extend from each y-axis tick",
+        "affects": []
+      }
+    ],
+    "new_components": [
+      {
+        "name": "y_axis_title_two_lines",
+        "figure_id": "f1",
+        "evidence": "y-axis title is split into two lines beside each other",
+        "affects": []
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "9",
+        "figure_id": "f1",
+        "mark": "the Spain line at P60-70",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Spain",
+          "P60-70"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "18",
+        "figure_id": "f1",
+        "mark": "the United States line at P95-99",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "United States",
+          "P95-99"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "15",
+        "figure_id": "f1",
+        "mark": "the France line at P99-99.9",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "France",
+          "P99-99.9"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "16",
+        "figure_id": "f1",
+        "mark": "the Spain line at P99-99.9",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Spain",
+          "P99-99.9"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "18",
+        "figure_id": "f1",
+        "mark": "the United States line at P99-99.9",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "United States",
+          "P99-99.9"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "7",
+        "figure_id": "f1",
+        "mark": "the Brazil line at P99.9-99.99",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Brazil",
+          "P99.9-99.99"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "12.5",
+        "figure_id": "f1",
+        "mark": "the Spain line at P99.9-99.99",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Spain",
+          "P99.9-99.99"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "15",
+        "figure_id": "f1",
+        "mark": "the France line at P99.9-99.99",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "France",
+          "P99.9-99.99"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "10",
+        "figure_id": "f1",
+        "mark": "the Spain line at P99.99-99.999",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Spain",
+          "P99.99-99.999"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "图表没有任何印出的数值，只有5%间隔的刻度。要精确读取诸如12.5%（西班牙在P99.9-99.99的值）这样的数据，误差极易超过5%。",
+    "examples": [
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "Effective income tax rates by income groups and for billionaires (% of pre-tax income)",
+        "why": "当前的图表生成器无法将y轴标题拆分为并排的两列文本。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "Figure 7.2. The super-rich pay proportionately less than others\nEffective income tax rates by income groups",
+        "why": "现有的流程在处理包含图表编号、主标题和副标题的复杂标题块时存在困难，需要将标题结构化为不同字段。"
+      }
+    ]
+  }
+}

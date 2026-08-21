@@ -1,0 +1,243 @@
+{
+  "stem": "employment_and_social_developments_in_europe_esde_2024_report_p55",
+  "document": "employment_and_social_developments_in_europe_esde_2024_report",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "seconds": 74.3,
+  "usage": {
+    "input_tokens": 4439,
+    "output_tokens": 10838,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "本页面包含两幅折线图，展示性别就业与薪酬差距。难点在于所有数值完全依赖坐标轴读取，Y轴刻度间距较大（如0至35，刻度间隔5），且未提供数据表格或数值标签，导致极难满足精度要求。\n\n在结构上，图表采用水平排列的多面板设计，各自拥有独立图例、面板标题以及不同的Y轴刻度范围（如图2.9的两面板）。图2.9中的面板a包含一个双向箭头标注以突显“性别差距（Gender gap）”。此外，图表的X轴时间标签存在旋转以及间隔显示的现象（图2.8a每两年标注一次刻度，但线条显然有逐年的数据折点）。\n\n图表生成工具需要能够支持多面板独立配置（坐标轴与图例）、图内跨系列双向箭头标注、虚线线条样式以及稀疏时间轴刻度渲染。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Chart 2.8",
+          "title": "Recent declines in gender employment and pay gaps were accompanied by some convergence",
+          "subtitle": "Gender employment and pay gaps and cross-country variation (standard deviation), 2002-2022, EU-27",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 2,
+        "series": 2,
+        "categories": 21,
+        "marks": 68,
+        "values_printed": "none"
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "Chart 2.9",
+          "title": "Slow but steady rise in gender segregation in education, health and social work sectors",
+          "subtitle": "Proportion of employment in education, human health and social work activities by gender, and cross-country variation in gender gap (standard deviation), 2008-2023, EU-27",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 2,
+        "series": 2,
+        "categories": 16,
+        "marks": 48,
+        "values_printed": "none"
+      }
+    ],
+    "components": [
+      {
+        "key": "annotation_callout",
+        "figure_id": "f2",
+        "evidence": "a double-headed arrow labeled \"Gender gap\" over the lines"
+      },
+      {
+        "key": "per_panel_axis_range",
+        "figure_id": "f2",
+        "evidence": "panel a y-axis goes to 35, panel b goes to 6"
+      },
+      {
+        "key": "dashed_line_series",
+        "figure_id": "f1",
+        "evidence": "the Standard deviation series uses a dashed line"
+      },
+      {
+        "key": "multi_figure_page",
+        "figure_id": "page",
+        "evidence": "Chart 2.8 and Chart 2.9 on the same page"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "page",
+        "evidence": "Source and Note lines appear under the charts"
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "page",
+        "evidence": "legends are placed below the x-axes in both figures"
+      },
+      {
+        "key": "per_panel_legend",
+        "figure_id": "f1",
+        "evidence": "panel a and panel b each have an independent legend"
+      },
+      {
+        "key": "panel_title_per_panel",
+        "figure_id": "page",
+        "evidence": "a) and b) panel titles are written above the panels"
+      },
+      {
+        "key": "data_link_below_figure",
+        "figure_id": "page",
+        "evidence": "\"Click here to download chart.\" under each figure"
+      },
+      {
+        "key": "unit_in_series_name",
+        "figure_id": "page",
+        "evidence": "legends specify \"Gap in pp\", \"Gap in %\", \"Men (%)\""
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f2",
+        "evidence": "panel a title starts with \"% of workers\""
+      },
+      {
+        "key": "rotated_x_ticks",
+        "figure_id": "page",
+        "evidence": "x-axis year labels are rotated 45 or 90 degrees"
+      },
+      {
+        "key": "sparse_time_ticks",
+        "figure_id": "f1",
+        "evidence": "panel a ticks are biennial but the line is yearly"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "span_arrow_annotation",
+        "figure_id": "f2",
+        "evidence": "a vertical double-headed arrow spanning between two lines",
+        "affects": []
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "18.0",
+        "figure_id": "f1",
+        "mark": "the 2002 Gap in pp point in panel a",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "a) Gender employment gap",
+          "Gap in pp",
+          "2002"
+        ]
+      },
+      {
+        "value": "10.5",
+        "figure_id": "f1",
+        "mark": "the 2022 Gap in pp point in panel a",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "a) Gender employment gap",
+          "Gap in pp",
+          "2022"
+        ]
+      },
+      {
+        "value": "9.5",
+        "figure_id": "f1",
+        "mark": "the 2002 Standard deviation point in panel a",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "a) Gender employment gap",
+          "Standard deviation",
+          "2002"
+        ]
+      },
+      {
+        "value": "15.8",
+        "figure_id": "f1",
+        "mark": "the 2010 Gap in % point in panel b",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "b) Gender pay gap",
+          "Gap in %",
+          "2010"
+        ]
+      },
+      {
+        "value": "12.8",
+        "figure_id": "f1",
+        "mark": "the 2022 Gap in % point in panel b",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "b) Gender pay gap",
+          "Gap in %",
+          "2022"
+        ]
+      },
+      {
+        "value": "6.5",
+        "figure_id": "f1",
+        "mark": "the 2010 Standard deviation point in panel b",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "b) Gender pay gap",
+          "Standard deviation",
+          "2010"
+        ]
+      },
+      {
+        "value": "5.2",
+        "figure_id": "f1",
+        "mark": "the 2022 Standard deviation point in panel b",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "b) Gender pay gap",
+          "Standard deviation",
+          "2022"
+        ]
+      },
+      {
+        "value": "7.0",
+        "figure_id": "f2",
+        "mark": "the 2008 Men (%) point in panel a",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "a) % of workers in education, health and social work by gender",
+          "Men (%)",
+          "2008"
+        ]
+      },
+      {
+        "value": "26.5",
+        "figure_id": "f2",
+        "mark": "the 2008 Women (%) point in panel a",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "a) % of workers in education, health and social work by gender",
+          "Women (%)",
+          "2008"
+        ]
+      },
+      {
+        "value": "30.5",
+        "figure_id": "f2",
+        "mark": "the 2023 Women (%) point in panel a",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "a) % of workers in education, health and social work by gender",
+          "Women (%)",
+          "2023"
+        ]
+      }
+    ],
+    "hardest_step": 2
+  }
+}

@@ -1,0 +1,240 @@
+{
+  "stem": "World_Inequality_Report_2026_p66",
+  "document": "World_Inequality_Report_2026",
+  "tags": "untagged",
+  "model": "gemini-3.1-pro-preview",
+  "control": "repeat",
+  "effort": "high",
+  "dpi": 150,
+  "seconds": 52.8,
+  "usage": {
+    "input_tokens": 4423,
+    "output_tokens": 7537,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "本页包含两个图表：图2.13为分组柱状图，图2.14为双面板折线图。\n\n图表生成器需要能够处理垂直旋转的坐标轴标题、多行换行的类别标签（如图2.13的X轴），以及将数值直接标注在柱状图外部上方。图2.14要求支持多面板共享底部图例，并在每个子面板顶部添加独立的标题。该折线图包含密集的年度数据点，但X轴仅每5年显示一个刻度（稀疏时间刻度），且Y轴包含负值。\n\n由于这些图表未附带任何数据表格，提取数值主要受限于缺乏底层表格（步骤1）。数值直接印在柱状图上，若无强大的图表解析模型，难以将提取出的数值准确关联到对应的地区和图例分类。文本中加粗的内联标题（如“Interpretation.”）则需正确解析为上下文的元数据。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 2.13.",
+          "title": "Redistribution decreases inequality within countries but with large variations",
+          "subtitle": "Top 10/bottom 50 income gaps across regions, 2025",
+          "unit_text": "Top 10% average to bottom 50% average income",
+          "placement": "above"
+        },
+        "type": "grouped_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 8,
+        "marks": 16,
+        "values_printed": "all"
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "Figure 2.14.",
+          "title": "Transfers account for a larger share of redistribution than taxes",
+          "subtitle": "Reduction in top 10/bottom 50 income gaps, 1980–2025",
+          "unit_text": "Reduction in top 10% to bottom 50% income ratio (%)",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 2,
+        "series": 8,
+        "categories": 46,
+        "marks": 736,
+        "values_printed": "none"
+      }
+    ],
+    "components": [
+      {
+        "key": "grouped_bar",
+        "figure_id": "f1",
+        "evidence": "green and red bars sit side by side for each region"
+      },
+      {
+        "key": "multi_figure_page",
+        "figure_id": "page",
+        "evidence": "Figure 2.13 and Figure 2.14 are present on the same page"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "Interpretation. In North America & Oceania... Sources and series:..."
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "Before redistribution After redistribution legend sits below the axis"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "y-axis title 'Top 10% average to bottom 50% average income' fixes the scale"
+      },
+      {
+        "key": "rotated_axis_title",
+        "figure_id": "f1",
+        "evidence": "the y-axis title is printed vertically"
+      },
+      {
+        "key": "value_label_outside",
+        "figure_id": "f1",
+        "evidence": "numbers like 19, 10, 35 are printed above the bars"
+      },
+      {
+        "key": "wrapped_category_labels",
+        "figure_id": "f1",
+        "evidence": "categories like 'North America & Oceania' wrap across three lines"
+      },
+      {
+        "key": "panel_title_per_panel",
+        "figure_id": "f2",
+        "evidence": "Tax progressivity and Redistribution considering taxes and transfers"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "horizontal dashed lines mark 10, 20, etc., with no vertical grid"
+      },
+      {
+        "key": "dense_marks_100plus",
+        "figure_id": "f2",
+        "evidence": "8 series drawn over 45 years across 2 panels"
+      },
+      {
+        "key": "shared_legend",
+        "figure_id": "f2",
+        "evidence": "one single legend with 8 regions sits below both panels"
+      },
+      {
+        "key": "negative_values",
+        "figure_id": "f2",
+        "evidence": "the y-axes include -10 and -20"
+      },
+      {
+        "key": "sparse_time_ticks",
+        "figure_id": "f2",
+        "evidence": "x-axis has ticks every 5 years but data lines show annual variation"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "bold_inline_run_in_header",
+        "figure_id": "f1",
+        "evidence": "'Interpretation.' and 'Sources and series:' start the paragraph in bold",
+        "affects": [
+          4
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "19",
+        "figure_id": "f1",
+        "mark": "the Europe Before redistribution bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Europe",
+          "Before redistribution"
+        ]
+      },
+      {
+        "value": "10",
+        "figure_id": "f1",
+        "mark": "the Europe After redistribution bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Europe",
+          "After redistribution"
+        ]
+      },
+      {
+        "value": "28",
+        "figure_id": "f1",
+        "mark": "the East Asia After redistribution bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "East Asia",
+          "After redistribution"
+        ]
+      },
+      {
+        "value": "18",
+        "figure_id": "f1",
+        "mark": "the North America & Oceania After redistribution bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "North America & Oceania",
+          "After redistribution"
+        ]
+      },
+      {
+        "value": "36",
+        "figure_id": "f1",
+        "mark": "the Russia & Central Asia Before redistribution bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Russia & Central Asia",
+          "Before redistribution"
+        ]
+      },
+      {
+        "value": "33",
+        "figure_id": "f1",
+        "mark": "the Russia & Central Asia After redistribution bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Russia & Central Asia",
+          "After redistribution"
+        ]
+      },
+      {
+        "value": "52",
+        "figure_id": "f1",
+        "mark": "the Sub-Saharan Africa Before redistribution bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Sub-Saharan Africa",
+          "Before redistribution"
+        ]
+      },
+      {
+        "value": "53",
+        "figure_id": "f1",
+        "mark": "the Middle East & North Africa Before redistribution bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Middle East & North Africa",
+          "Before redistribution"
+        ]
+      },
+      {
+        "value": "72",
+        "figure_id": "f1",
+        "mark": "the Latin America Before redistribution bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Latin America",
+          "Before redistribution"
+        ]
+      },
+      {
+        "value": "50",
+        "figure_id": "f1",
+        "mark": "the Latin America After redistribution bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Latin America",
+          "After redistribution"
+        ]
+      }
+    ],
+    "hardest_step": 1
+  }
+}

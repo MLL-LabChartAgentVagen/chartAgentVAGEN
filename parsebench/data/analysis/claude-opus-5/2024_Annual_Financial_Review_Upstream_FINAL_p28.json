@@ -1,0 +1,282 @@
+{
+  "stem": "2024_Annual_Financial_Review_Upstream_FINAL_p28",
+  "document": "2024_Annual_Financial_Review_Upstream_FINAL",
+  "tags": "need_estimate",
+  "model": "claude-opus-5",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 69.6,
+  "usage": {
+    "input_tokens": 12802,
+    "output_tokens": 5135,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "**画出来要什么**\n一张双线折线图：深蓝\"all U.S. manufacturing\"与浅蓝\"energy companies\"，无图例，系列名直接以粗体彩字写在绘图区内（一个在线上方、一个在线下方）。标题分三层：页面顶部蓝色衬线句式结论\"...at 42% and 56%\"，图上方粗体图题，其下小字\"percentage\"作单位行。纵轴 0%–80%、每 10% 一条水平网格线，横轴 2015–2024 每年一刻度；无数据点标记、无数值标签。图下两行小字 Data source / Note（Note 中\"Select energy companies\"为斜体）。\n\n**定位一个值难在哪**\n以 energy companies 2019 的 55 为例：图上没有任何印出的数字，也没有点标记，只能在 50% 与 60% 网格线之间目测折点；5% 容差约 ±2.8 个百分点，需把网格间距十分之一读准。另外 56 出现两次（energy 2015 与 manufacturing 2024），行标签必须同时含系列名与年份才能唯一定位。\n\n**不确定的**\n各年是否真为逐年数据点（线段转折推断）；42/56 只在页面结论句中出现，是否算\"图上印出\"存疑；系列颜色与文字标签的对应靠位置推断，无图例可核。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "Long-term debt-to-equity ratio for select energy companies and U.S. manufacturing companies",
+          "subtitle": "",
+          "unit_text": "percentage",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 10,
+        "marks": 20,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "percentage",
+            "low": "0%",
+            "high": "80%",
+            "serves": "both lines, dark navy and light blue"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "2015",
+            "high": "2024",
+            "serves": "both lines"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "series",
+            "label_source": "inline_label",
+            "example": "energy companies"
+          },
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2019"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "energy companies",
+            "2019"
+          ],
+          "value": "55%",
+          "value_source": "axis_read",
+          "why_hard": "No printed value, no point marker; the bend sits midway between the 50% and 60% gridlines"
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "inline_series_labels",
+        "figure_id": "f1",
+        "evidence": "bold coloured text 'all U.S. manufacturing' and 'energy companies' sit inside the plot, no legend"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "faint horizontal rules at 10%..80%; no vertical rules across the panel"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "'Data source: Evaluate Energy and U.S. Census Bureau' and 'Note: Select energy companies includes 158 global oil...'"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "'percentage' printed on its own line under the bold figure title"
+      },
+      {
+        "key": "legend_inside_plot",
+        "figure_id": "f1",
+        "evidence": "both series names are drawn over the plot area itself, at 2018 and 2022 positions"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "takeaway_headline_with_values",
+        "figure_id": "page",
+        "evidence": "blue serif page headline: 'was relatively flat for the energy companies and U.S. manufacturing companies, at 42% and 56%'",
+        "affects": [
+          2,
+          4
+        ]
+      },
+      {
+        "name": "italic_defined_term_in_note",
+        "figure_id": "f1",
+        "evidence": "'Note: Select energy companies includes 158 global oil and natural gas companies.' with the term set in italics",
+        "affects": [
+          4
+        ]
+      },
+      {
+        "name": "series_label_offset_from_line",
+        "figure_id": "f1",
+        "evidence": "'energy companies' sits ~15 points below its line near 2022, not at an endpoint",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "63",
+        "figure_id": "f1",
+        "mark": "the 2015 point of the dark navy 'all U.S. manufacturing' line",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "all U.S. manufacturing",
+          "2015"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "56",
+        "figure_id": "f1",
+        "mark": "the 2015 point of the light blue 'energy companies' line",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "energy companies",
+          "2015"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "72",
+        "figure_id": "f1",
+        "mark": "the 2020 peak of the 'all U.S. manufacturing' line",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "all U.S. manufacturing",
+          "2020"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "69",
+        "figure_id": "f1",
+        "mark": "the 2020 peak of the 'energy companies' line",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "energy companies",
+          "2020"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "56",
+        "figure_id": "f1",
+        "mark": "the 2024 endpoint of the 'all U.S. manufacturing' line",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "all U.S. manufacturing",
+          "2024"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "42",
+        "figure_id": "f1",
+        "mark": "the 2024 endpoint of the 'energy companies' line",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "energy companies",
+          "2024"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "65",
+        "figure_id": "f1",
+        "mark": "the 2019 point of the 'all U.S. manufacturing' line (flat 2018-2019 stretch)",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "all U.S. manufacturing",
+          "2019"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "46",
+        "figure_id": "f1",
+        "mark": "the 2018 trough of the 'energy companies' line",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "energy companies",
+          "2018"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "55",
+        "figure_id": "f1",
+        "mark": "the 2019 point of the 'energy companies' line",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "energy companies",
+          "2019"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "43",
+        "figure_id": "f1",
+        "mark": "the 2022 point of the 'energy companies' line",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "energy companies",
+          "2022"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "全图无数值标签，网格每10%；读 energy 2019 的 55 需在 50%–60% 间插值，5% 容差仅约±2.8点。",
+    "examples": [
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "Bold title 'Long-term debt-to-equity ratio for select energy companies and U.S. manufacturing companies' with 'percentage' on the line below",
+        "why": "三层标题：页面结论句、粗体图题、独立单位行，现有流程只有单一标题字段。"
+      },
+      {
+        "gap": "P1",
+        "figure_id": "f1",
+        "quote": "y axis ticks read 0%, 10% ... 80%; no value labels or point markers anywhere on either line",
+        "why": "每个折点的可读精度不同，布尔式\"可读\"无法表达10%网格下的插值误差。"
+      },
+      {
+        "gap": "P3",
+        "figure_id": "f1",
+        "quote": "Blue serif headline above the figure: '...for the energy companies and U.S. manufacturing companies, at 42% and 56%'",
+        "why": "页面级结论句携带图中数值，需整页导出并记录标题相对表格的位置。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "'all U.S. manufacturing' in dark blue inside the plot at 2018; 'energy companies' in light blue below its line at 2022",
+        "why": "需支持无图例、彩色内联系列名并可自由定位偏移，当前只生成标准图例。"
+      }
+    ]
+  }
+}

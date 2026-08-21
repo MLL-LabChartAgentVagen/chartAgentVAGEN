@@ -96,7 +96,11 @@ class AnthropicProvider:
                                   schema=schema, extra=extra)
         kwargs, extra_body = self.split_body(body)
         started = time.monotonic()
-        message = self._client.messages.create(**kwargs, extra_body=extra_body)
+        # Streamed, then reassembled: a high-effort structured reply can run past the
+        # SDK's ceiling on a single non-streaming request, and the ceiling is a
+        # function of `max_tokens`, so it is reached before the reply is long.
+        with self._client.messages.stream(**kwargs, extra_body=extra_body) as stream:
+            message = stream.get_final_message()
         latency = time.monotonic() - started
 
         text = "".join(b.text for b in message.content if b.type == "text")

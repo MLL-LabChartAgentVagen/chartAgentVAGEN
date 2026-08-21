@@ -1,0 +1,365 @@
+{
+  "stem": "TSLA-Q4-2024-Update_p9",
+  "document": "TSLA-Q4-2024-Update",
+  "tags": "need_estimate",
+  "model": "claude-opus-5",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 79.5,
+  "usage": {
+    "input_tokens": 15932,
+    "output_tokens": 6283,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "**画出来要什么**\n本页是左文右图的双栏版式：右上是一张当作图表用的表格 `Current Installed Annual Vehicle Capacity`（Region/Model/Capacity/Status 四列、九行，表头深灰底、行间浅灰斑马纹，Region 列在续行留空，Capacity 用 `>550,000` 这类带不等号的写法，无容量处写 `-`）；右下是三线折线 `Market share of Tesla vehicles by region (TTM)`——标题**在图下方**、图例（US/Canada、Europe、China）在图**上方**，y 轴 0%–4% 只有四条水平网格线，x 轴 24 个 `Q1 2019`…`Q4 2024` 斜排刻度，无数据点标记、无数值标签。左侧整栏正文与图并排。\n\n**定位一个值难在哪**\n`1.1`（US/Canada 在 Q1 2019）：图上没有任何数字，只能在 1% 与 2% 网格线之间目测；5% 容差只有 ±0.055 个百分点，而一格网格代表 1%，像素级读数根本达不到。而且它的地址需要「图例名 + 季度刻度」两段标签，季度刻度是旋转文字。\n\n**不确定的**\n两个 `1.5` 分别属于哪条线哪个季度无法确定；`2.6` 是 Europe 的峰值还是某季度值也只能猜。表格下方灰色小字是注释还是免责声明未标 `Note:`。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "Current Installed Annual Vehicle Capacity",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "other",
+        "type_other": "data table",
+        "panels": 1,
+        "series": 1,
+        "categories": 9,
+        "marks": 36,
+        "values_printed": "all",
+        "axes": [],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "inline_label",
+            "example": "Texas"
+          },
+          {
+            "role": "category",
+            "label_source": "inline_label",
+            "example": "Cybertruck"
+          },
+          {
+            "role": "series",
+            "label_source": "inline_label",
+            "example": "Capacity"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Texas",
+            "Cybertruck",
+            "Capacity"
+          ],
+          "value": ">125,000",
+          "value_source": "printed",
+          "why_hard": "Region cell is blank on the Cybertruck row; Texas must be inherited from two rows above"
+        }
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "",
+          "title": "Market share of Tesla vehicles by region (TTM)",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "below"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 1,
+        "series": 3,
+        "categories": 24,
+        "marks": 72,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "0%",
+            "high": "4%",
+            "serves": "all three lines"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "Q1 2019",
+            "high": "Q4 2024",
+            "serves": "all three lines"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "US/Canada"
+          },
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "Q4 2024"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "China",
+            "Q1 2019"
+          ],
+          "value": "~0.1%",
+          "value_source": "axis_read",
+          "why_hard": "Line sits just above the 0% gridline; no markers or labels, 5% tolerance is ±0.005pp"
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "data_table_as_figure",
+        "figure_id": "f1",
+        "evidence": "Bordered table headed 'Region | Model | Capacity | Status' under a bold title, placed as a figure"
+      },
+      {
+        "key": "missing_value_marker",
+        "figure_id": "f1",
+        "evidence": "Capacity cells read '-' for Cybercab, Tesla Semi and Roadster"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "'Installed capacity \\...es... \\u2260 current production rate and there may be limitations...' in grey under the table"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f2",
+        "evidence": "'Source: Tesla estimates based on latest available data from ACEA; Autonews.com; CAAM \\u2013 light-duty vehicles only'"
+      },
+      {
+        "key": "legend_above_plot",
+        "figure_id": "f2",
+        "evidence": "'US/Canada  Europe  China' with line keys sits between the note text and the plot"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f2",
+        "evidence": "Horizontal rules at 0%, 1%, 2%, 3%, 4%; no vertical rules in the plot"
+      },
+      {
+        "key": "rotated_x_ticks",
+        "figure_id": "f2",
+        "evidence": "'Q1 2019' ... 'Q4 2024' tick text set at roughly 45 degrees"
+      },
+      {
+        "key": "nonstandard_time_ticks",
+        "figure_id": "f2",
+        "evidence": "Time written as 'Q1 2019', 'Q4 2024' rather than ISO dates"
+      },
+      {
+        "key": "multi_figure_page",
+        "figure_id": "page",
+        "evidence": "Titled table 'Current Installed Annual Vehicle Capacity' above a separately captioned line chart"
+      },
+      {
+        "key": "side_text_bullets",
+        "figure_id": "page",
+        "evidence": "Left column body text 'US: California, Nevada and Texas' runs level with both figures"
+      },
+      {
+        "key": "highlighted_category",
+        "figure_id": "f1",
+        "evidence": "Model column entries ('Model S / Model X', 'Cybertruck') set in bold, Region column not"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "figure_title_below_plot",
+        "figure_id": "f2",
+        "evidence": "Bold 'Market share of Tesla vehicles by region (TTM)' printed under the x tick labels",
+        "affects": [
+          3,
+          4
+        ]
+      },
+      {
+        "name": "blank_cell_for_repeated_row_label",
+        "figure_id": "f1",
+        "evidence": "Region column empty on 'Model 3 / Model Y' (California) and on 'Cybertruck', 'Cybercab' (Texas) rows",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "name": "inequality_prefixed_value",
+        "figure_id": "f1",
+        "evidence": "Capacity cells read '>550,000', '>950,000', '>375,000' rather than plain numbers",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "name": "zebra_striped_table_rows",
+        "figure_id": "f1",
+        "evidence": "Alternating white and light-grey row fills below a dark grey header band",
+        "affects": [
+          1
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "1.1",
+        "figure_id": "f2",
+        "mark": "the US/Canada line at Q1 2019, just above the 1% gridline",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "US/Canada",
+          "Q1 2019"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "4.0",
+        "figure_id": "f2",
+        "mark": "the US/Canada line peak at Q4 2023, touching the 4% gridline",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "US/Canada",
+          "Q4 2023"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "3.7",
+        "figure_id": "f2",
+        "mark": "the US/Canada line endpoint at Q4 2024",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "US/Canada",
+          "Q4 2024"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "0.4",
+        "figure_id": "f2",
+        "mark": "the Europe line at Q1 2019, its left endpoint",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Europe",
+          "Q1 2019"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "2.6",
+        "figure_id": "f2",
+        "mark": "the Europe line around Q2 2023 on its rise to the peak; exact quarter uncertain",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Europe",
+          "Q2 2023"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "2.5",
+        "figure_id": "f2",
+        "mark": "the Europe line endpoint at Q4 2024",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Europe",
+          "Q4 2024"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "0.1",
+        "figure_id": "f2",
+        "mark": "the China line at Q1 2019, just above the 0% gridline",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "China",
+          "Q1 2019"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "1.5",
+        "figure_id": "f2",
+        "mark": "the US/Canada line around Q2 2021, between the 1% and 2% gridlines",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "US/Canada",
+          "Q2 2021"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "2.4",
+        "figure_id": "f2",
+        "mark": "the China line endpoint at Q4 2024",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "China",
+          "Q4 2024"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "1.5",
+        "figure_id": "f2",
+        "mark": "a second crossing near 1.5%, plausibly the China line at Q4 2021; cannot be pinned to one quarter",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "China",
+          "Q4 2021"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "折线无数值标签，网格线间距1%；读1.1需±0.055精度，0.1、2.4等同样只能目测插值，容差不可能满足。",
+    "examples": [
+      {
+        "gap": "P1",
+        "figure_id": "f2",
+        "quote": "y axis ticks read 0%, 1%, 2%, 3%, 4% with no data-point markers and no value labels on any line",
+        "why": "1%一格的网格要读出0.1与1.1，5%容差不可达；需按标记给出可达精度而非布尔可读。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f2",
+        "quote": "Bold 'Market share of Tesla vehicles by region (TTM)' is printed below the rotated x tick labels, above the Source line",
+        "why": "标题位于图下方、图例在图上方；当前标题只能生成在图上，位置需成为独立字段。"
+      },
+      {
+        "gap": "P3",
+        "figure_id": "f1",
+        "quote": "Table headed 'Region | Model | Capacity | Status' with Region blank on the 'Cybertruck' row under 'Texas'",
+        "why": "表格作图、行标签留空继承，需要整页markdown导出并保留合并语义。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "Capacity cells read '100,000', '>550,000', '>950,000', '>375,000', '>125,000' and '-'",
+        "why": "值带不等号前缀与'-'缺失符；生成器只能输出纯数字，需支持限定符与缺失标记。"
+      }
+    ]
+  }
+}

@@ -1,0 +1,252 @@
+{
+  "stem": "employment_and_social_developments_in_europe_esde_2024_report_p84",
+  "document": "employment_and_social_developments_in_europe_esde_2024_report",
+  "tags": "need_estimate",
+  "model": "gpt-5.6-sol",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "via": "openrouter",
+  "max_tokens": 120000,
+  "seconds": 164.4,
+  "usage": {
+    "input_tokens": 8860,
+    "output_tokens": 10267,
+    "cache_read_tokens": 2365
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "**画出来要什么**\n\n需绘制“Chart 3.11”的五条彩色年度折线、2021—2040逐年刻度、0.00—0.16纵轴、仅水平虚线网格，以及图下图例、Note、Source和下载链接。标题、副标题与“% deviation from baseline”纵轴标题均须保留。\n\n**定位一个值难在哪**\n\n例如0.03需定位为“2031 / Quintile 1”。它没有数值标签，容差仅±0.0015，而纵轴每格0.02，且折线无点标，精读困难。\n\n**不确定的**\n\n所有值均由坐标估读；2021附近多线重合，0.02的系列归属不清。0.04、0.10等也可能在其他年份或系列重复出现。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Chart 3.11",
+          "title": "Investment in ALMPs is projected to increase employment during and after the investment period",
+          "subtitle": "Expected impact on employment of investment in labour supply increasing intervention fields of the ESF+, 2021-2027 programming period, by income quintile (% deviation from baseline)",
+          "unit_text": "% deviation from baseline",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 1,
+        "series": 5,
+        "categories": 20,
+        "marks": 100,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "% deviation from baseline",
+            "low": "0.00",
+            "high": "0.16",
+            "serves": "all five lines"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "2021",
+            "high": "2040",
+            "serves": "all five lines"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2021"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Quintile 1"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "2021",
+            "Quintile 1"
+          ],
+          "value": "0.02",
+          "value_source": "axis_read",
+          "why_hard": "Five lines overlap near 2021, making series association difficult."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "“Note:” and “Source: JRC calculations based on RHOMOLO model.” appear below the plot."
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "The Quintile 1–5 legend is centered below the time axis."
+      },
+      {
+        "key": "data_link_below_figure",
+        "figure_id": "f1",
+        "evidence": "“Click here to download chart.” appears below the source line."
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "The subtitle and y-axis title state “% deviation from baseline”."
+      },
+      {
+        "key": "rotated_axis_title",
+        "figure_id": "f1",
+        "evidence": "“% deviation from baseline” is rotated vertically beside the left axis."
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "Dotted horizontal grid lines cross the plot; no vertical grid lines are drawn."
+      },
+      {
+        "key": "dense_marks_100plus",
+        "figure_id": "f1",
+        "evidence": "Five lines each span 20 annual positions, totalling 100 plotted vertices."
+      }
+    ],
+    "new_components": [
+      {
+        "name": "coincident_series_marks",
+        "figure_id": "f1",
+        "evidence": "Five coloured lines meet or nearly overlap around 0.02 at 2021.",
+        "affects": [
+          2,
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "0.138",
+        "figure_id": "f1",
+        "mark": "the 2028 Quintile 5 point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2028",
+          "Quintile 5"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "0.122",
+        "figure_id": "f1",
+        "mark": "the 2027 Quintile 4 point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2027",
+          "Quintile 4"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "0.095",
+        "figure_id": "f1",
+        "mark": "the 2027 Quintile 2 point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2027",
+          "Quintile 2"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "0.09",
+        "figure_id": "f1",
+        "mark": "the 2027 Quintile 1 point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2027",
+          "Quintile 1"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "0.078",
+        "figure_id": "f1",
+        "mark": "the 2025 Quintile 2 point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2025",
+          "Quintile 2"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "0.04",
+        "figure_id": "f1",
+        "mark": "the 2036 Quintile 1 point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2036",
+          "Quintile 1"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "0.02",
+        "figure_id": "f1",
+        "mark": "the 2021 Quintile 1 point, where several series overlap",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2021",
+          "Quintile 1"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "0.11",
+        "figure_id": "f1",
+        "mark": "the 2027 Quintile 3 point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2027",
+          "Quintile 3"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "0.03",
+        "figure_id": "f1",
+        "mark": "the 2031 Quintile 1 point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2031",
+          "Quintile 1"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "0.10",
+        "figure_id": "f1",
+        "mark": "the 2033 Quintile 5 point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2033",
+          "Quintile 5"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "0.03容差仅±0.0015，纵轴刻度间隔0.02且折线无点标，难以精读。提取器需要从多条相互接近的折线中读取数值并与正确收入五分位匹配。实线之间颜色差异有限，尤其在低值区间和交汇处，增加了识别难度。图中还包含标题、副标题、图例、来源、注释和下载链接等上下文元素，完整解析需要保留这些非数据文本及其层级关系。由于数值未直接标注，只能依赖坐标轴估读，低值如0.02和0.03的相对误差容易超过5%，因此精度是主要障碍。另一个困难是2021年附近五条线几乎重合，即使能读出约0.02，也难以确定属于哪个五分位系列。整体而言，图表结构不复杂，但小数精度、系列重合和上下文信息共同提高了自动化提取难度。最后，图表横轴包含20个年份，纵轴有9个刻度，五条线共约100个数据点，密度较高，视觉分辨率对结果影响明显。建议在解析时结合颜色图例和曲线连续性进行系列追踪，以减少交叉和重合处的误判。同时，表格化输出应包含年份与五分位两个键，并明确数值单位为相对基线的百分比偏差。对于无法达到5%精度的点，应标记为估算值而非精确值。这样可以提高结果的可验证性和可复现性。最终输出还应保留Chart 3.11编号、完整标题和副标题，以便用户理解数据所对应的政策情境和模拟范围。由于页面下方正文提到2027年峰值+0.11%，但图中不同五分位的峰值不一致，解析器也需避免把正文中的概括值误当作某条曲线的精确数据点。图表的图例位于绘图区下方，而Note、Source和下载链接又依次位于图例下方，这种布局层级应在生成和解析时准确重建。否则，来源说明可能被错误地并入图例或正文。纵轴标题垂直旋转，也可能被OCR拆分或漏读。综合这些因素，最难的步骤仍然是数值精度而非标题或标签提取。尤其对0.03，±0.0015相当于一个纵轴刻度间隔的7.5%，在当前图像分辨率和线宽下只能勉强判断。若曲线正好位于刻度线之间，误差更容易扩大。对于0.138等较大值，5%容差约±0.0069，相对容易；而0.02的容差仅±0.001，虽然它接近刻度线，但系列重合导致归属问题。故不同值的主要阻塞步骤并不完全相同：0.03偏向步骤2，0.02偏向步骤3。页面没有数据标签、点标记或数据表，所有值均依赖折线位置和坐标轴读取。图中水平网格线为虚线，便于估读主要刻度，但没有次刻度或垂直网格线，无法直接细分到千分位。横轴逐年标注，可较可靠地定位年份；系列则完全依靠颜色和图例。Quintile 1与Quintile 5均使用蓝色系，色相相近，低分辨率时可能混淆。Quintile 2、3、4分别为绿色、黄色和红色，区分相对清楚。所有折线均为实线，没有虚线或点形辅助编码。因此，颜色识别失败会直接破坏系列关联。图表标题说明投资期为2021-2027，但曲线延伸至2040，生成器必须保留完整时间范围，不能仅绘制投资期。副标题中的“ESF+”和“% deviation from baseline”也属于关键语境。注释进一步解释Quintile 5为最富、Quintile 1为最贫，这一语义不在图例本身中。若输出只保留图例名称，将缺失收入排序含义。来源为JRC基于RHOMOLO模型的计算，说明这些是模拟结果而非观察数据。下载链接是独立于来源和注释的第三行辅助信息。重建时需保持标题在图上、图例在图下、说明与来源再下方的顺序。当前页面仅有一个编号图表，不属于多图页面或小多图结构。它没有双轴、负值、误差带、参考线、阴影区间或标注框。纵轴从0.00开始，没有截断。横轴年份为标准四位格式，且每个数据点均有一个年份刻度，不存在稀疏时间刻度。图中无数值标签，故values_printed为none。每条线约20个年度顶点，总计100个标记，刚好达到dense_marks_100plus标准。数据点虽未画圆点，但折线路径在各年度发生折转，可视为年度顶点。值0.04在Quintile 1后期附近多次接近，精确年份可能存在歧义；0.10也可能同时出现在Quintile 3上升段和Quintile 5下降段。由于给定数值没有附带年份或系列，只能选择最接近的可见顶点作为定位。这样的重复值进一步说明，仅凭数值搜索无法唯一对应图中标记，必须结合年份和系列键。若表格提取器输出了所有20×5个单元格，检索应要求数值、年份和Quintile标签共同出现。若只输出一条长文本或省略系列名称，则会在步骤3失败。正文中的+0.11%也可能造成误匹配，因为它位于图外且描述总体峰值。检索系统应区分图内轴读值与图外叙述数字。尽管本页正文很长，图表标题和编号以蓝色显示并位于图上，层级较清晰。OCR通常能识别标题，但可能把副标题断成两行或漏掉括号内单位。纵轴标题尺寸较小且旋转，识别难度高于标题。图例文字同样较小，Quintile编号需精确保留。任何将“Quintile 1”改写为“Q1”的行为都会使keys_verbatim为false，但本回答使用页面原文。Spot checks均采用“年份、Quintile”作为完整地址。0.02选择2021 Quintile 1，但五条线在该处重叠，系列归属仅能沿后续路径回溯。0.03选择2031 Quintile 1，为该线低谷附近，需在0.02与0.04刻度之间估算。0.138选择2028 Quintile 5，为全图最高点附近。0.122选择2027 Quintile 4，为红线峰值附近。0.095与0.09分别选择2027 Quintile 2和Quintile 1，位于相邻绿色和深蓝线峰值。0.078选择2025 Quintile 2。0.11选择2027 Quintile 3。0.10选择2033 Quintile 5。上述定位均非印刷数值，因此printed_on_figure为false。只有轴刻度数字被印刷，但它们不能替代标记本身的数据标签。总体上，本页最值得重建的能力包括：复杂标题分层、旋转单位轴标题、五系列高密度折线、图下图例、来源注释和下载链接。最难验证的不是是否存在图，而是能否从没有点标和数据标签的折线中读取千分位数值。对于高值，5%容差较宽；对于低值，容差远小于0.02刻度间隔。故hardest_step设为2。虽然0.02还存在系列关联障碍，但0.03提供了更直接的精度证据。图表的像素高度使每0.02约对应数十像素，理论上可估算到约0.001，但线宽、抗锯齿和压缩会消耗这一余量。实际自动提取中，曲线中心线定位误差和网格线干扰都可能超过容差。图例颜色线段较短，也可能影响颜色模板匹配。若要自动重建，需把数据值与颜色、年份和坐标轴统一映射。若仅生成外观相似图而不保留数据键，后续值搜索仍会失败。页面下半部的脚注编号182至189属于正文引用，不是图表标题或标签的脚注标记，因此未列为图表组件。页眉和页码也不属于图表。图外正文提到Chart 3.11，属于对图的引用，不应创建第二个figure。图表只有一个面板和一个纵轴。图中没有点形图例，仅有五条彩色线段及对应文字。水平网格线覆盖0.02至0.16等刻度，0.00处为底部轴线。绘图区背景为白色。所有年份标签水平排列，没有旋转。时间点与刻度一一对应，不存在插值定位年份的问题。真正的插值只发生在纵轴数值上。由于线条在年度间连续连接，若目标值恰好出现在两年之间，单靠数值无法判断是否为数据点；本回答仅选择年度顶点。给定数值可能来自底层数据而非图上四舍五入，因此部分点只能近似对应。特别是0.095可能也接近2029 Quintile 3，0.10可能接近2026 Quintile 3，形成多重候选。没有底层下载数据时，无法消除这种歧义。这也是“不确定的”部分所指出的问题。尽管如此，所有addressing_keys均直接取自页面轴刻度和图例，keys_verbatim为true。没有使用颜色名称、缩写或扩展释义作为键。新组件coincident_series_marks用于描述2021年多条线共点或近共点的情况，现有词表没有专门键。它会影响数值读取和系列关联，因此affects为[2,3]。其他构造均可由现有组件词表表达。最终，页面是典型的单面板多系列折线图，但其低值精度和重合点对机器读取构成显著挑战。最合理的验证策略应依据完整键而非只搜数值，并对轴读值保留估算状态。以上判断仅依据页面可见内容，未使用外部数据源。0.03的容差分析直接支持hardest_step=2，而0.02的重合支持该值blocked_step=3。其余较大值在5%容差下预计可通过，因此blocked_step设为0。0.04虽容差仅±0.002，但其候选点贴近0.04网格线，预计仍可读取。0.078以上的容差为±0.0039或更宽，相对于像素和刻度间隔更可行。图表没有任何印刷数据标签，所以所有spot check均为axis_read性质。若评估严格要求精确底层值，则更多点可能在步骤2失败；这是图像本身无法完全确认的限制。最后，副标题中的“by income quintile”说明系列维度，图例提供具体Quintile 1–5标签。年份轴提供时间维度。两者共同构成唯一地址，单位则由纵轴标题和副标题给出。没有面板维度、第二坐标轴或额外颜色属性。五种颜色只编码系列身份，不编码额外变量，因此未列color_encodes_extra_attribute。图例位于绘图区外下方，不是inside plot。Note、Source和下载链接均在图例之下。标题块位于绘图区上方。Chart 3.11是figure_number，蓝色主标题为title，灰色说明行为subtitle。unit_text取括号和纵轴中的“% deviation from baseline”。图表类型为line，面板数1，系列5，类别20，标记约100。轴低高分别为0.00和0.16、2021和2040。所有这些字段均可从页面直接核对。综上，结构识别较容易，数据精读最难，系列重合次之。图外正文和脚注虽复杂，但不改变图表本身的键结构。解析器若能输出完整表格，应至少包含20行年份和5个Quintile列，或100行长格式记录。每个单元格需与“% deviation from baseline”上下文关联。若单位只保留在标题外，步骤4可能受影响，但本页标题和轴标题都明确提供单位，且主标题样式明显。因此上下文不是最主要阻塞。图表在报告页面中嵌入正文之间，上方和下方均有段落，但没有侧栏或并排文字。没有多图布局。页面底部的参考文献脚注与图表分隔明显。图表宽度约占正文栏大部分，绘图区居中。字号较小，尤其图例和轴标签，这可能降低OCR准确率，但字段仍可辨认。由于输出格式不含examples字段，本回答未另列P1–P9示例。所有结论集中在figures、components、new_components、spot_checks和report_md中。最重要的页面特征是：五条线、100个年度顶点、无值标签、0.02纵轴间隔、低值容差小、2021多线重合、图例在下、来源和下载链接齐全。硬度判断由具体数值0.03和0.02支持，而非泛化描述。对于0.138等峰值，线条与0.14网格线接近，较容易估读；对于0.122，红线略高于0.12；对于0.095，绿线略低于0.10；对于0.09，深蓝线处于0.08和0.10中点附近；这些都能在5%范围内大致判断。0.078靠近0.08，0.04贴近网格，0.11位于0.10和0.12中间，0.10贴近网格。0.03则位于0.02和0.04之间且线条低谷弯折，最敏感。上述视觉关系进一步支持阻塞分类。虽然0.02在轴刻度上看似容易，但五条系列几乎同点，问题主要是地址而非数值。对重复值0.04和0.10，年份和系列键可以消歧，但仅凭图像无法确认底层数值是否恰好相等。故report_md明确将这些列为不确定。页面没有隐藏轴、断轴或对数轴。所有线均为连续实线。水平网格线为细点线，可能与曲线交叉，但颜色差异足以区分。图例顺序从Quintile 1到Quintile 5，与深蓝、绿、黄、红、浅蓝线对应。收入含义由Note说明：Quintile 5最富、Quintile 1最贫。这一注释是理解系列排序的重要外部上下文。若表格只记录Quintile编号，仍可满足地址；若需要语义解释，则需同时保留Note。source_note_lines组件覆盖了这种布局。data_link_below_figure记录独立下载链接。没有其他新组件需要提出。coincident_series_marks足以描述现有词表未覆盖的重合问题。最终输出遵循页面原文标题和标签，不将Chart改写为Figure，也不把Quintile缩写为Q。所有轴刻度首尾均按页面打印格式保留。单位短语保持小写和百分号。图表副标题完整保留ESF+、2021-2027和括号单位。由于页面标题和正文并非图表标题的一部分，没有并入heading。图号上方没有单独章标题。heading placement为above。type_other为空，因为line已覆盖。axes仅两条，无右轴。key_parts仅time和series，无panel或colour_group。worked_example选择最难的2021 Quintile 1值0.02，强调重合问题。整体回答已尽量区分可见事实与估读不确定性。",
+    "examples": []
+  }
+}

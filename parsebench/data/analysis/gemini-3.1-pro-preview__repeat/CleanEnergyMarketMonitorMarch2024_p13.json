@@ -1,0 +1,374 @@
+{
+  "stem": "CleanEnergyMarketMonitorMarch2024_p13",
+  "document": "CleanEnergyMarketMonitorMarch2024",
+  "tags": "untagged",
+  "model": "gemini-3.1-pro-preview",
+  "control": "repeat",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 60.7,
+  "usage": {
+    "input_tokens": 5335,
+    "output_tokens": 8574,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n\n生成此页面需要支持带有独立标题的小型多图（small multiples）布局。前五个子图为垂直柱状图，均以时间（年份）为X轴，且每个子图需要支持独立的Y轴范围（最大值分别为400、300、60、40、20）并保留水平网格线。第六个子图为水平柱状图，以地区分类为Y轴，需要仅显示垂直网格线。此外，柱状图需要支持将数值直接打印在柱体内部靠上的位置，并允许通过不同的填充颜色（深橙色、黄色、蓝色）对柱子进行视觉分组，而无需强制显示图例。\n\n### 定位一个值难在哪\n\n以定位数值“619”为例，难点在于前五个面板统一采用了“年份”作为X轴的时间序列，而第六个面板突然将方向旋转，并改用“地区”作为Y轴分类维度。若解析器强制将整个图表组（figure）解析为单一表格，很容易在对齐行列表头时发生维度错位，导致无法正确将“619”与“Avoided emissions”以及“China”关联。\n\n### 不确定的\n\n柱子颜色的变化（World为深橙色，单一国家/地区为黄色，减排量为蓝色）显然是为了在视觉上区分聚合层级和不同指标，但页面上没有任何图例或说明来明确这一映射关系，只能根据常识推测其含义。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "Solar PV capacity additions and avoided emissions",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "bar",
+        "type_other": "",
+        "panels": 6,
+        "series": 1,
+        "categories": 5,
+        "marks": 30,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "GW",
+            "low": "100",
+            "high": "400",
+            "serves": "World capacity bars"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "2019",
+            "high": "2023",
+            "serves": "World capacity bars"
+          },
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "GW",
+            "low": "100",
+            "high": "300",
+            "serves": "China capacity bars"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "2019",
+            "high": "2023",
+            "serves": "China capacity bars"
+          },
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "GW",
+            "low": "20",
+            "high": "60",
+            "serves": "European Union capacity bars"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "2019",
+            "high": "2023",
+            "serves": "European Union capacity bars"
+          },
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "GW",
+            "low": "10",
+            "high": "40",
+            "serves": "United States capacity bars"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "2019",
+            "high": "2023",
+            "serves": "United States capacity bars"
+          },
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "GW",
+            "low": "5",
+            "high": "20",
+            "serves": "India capacity bars"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "2019",
+            "high": "2023",
+            "serves": "India capacity bars"
+          },
+          {
+            "side": "left",
+            "role": "category",
+            "unit_text": "",
+            "low": "China",
+            "high": "Rest of world",
+            "serves": "Avoided emissions bars"
+          },
+          {
+            "side": "bottom",
+            "role": "value",
+            "unit_text": "Mt CO2",
+            "low": "200",
+            "high": "600",
+            "serves": "Avoided emissions bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "panel",
+            "label_source": "panel_title",
+            "example": "World"
+          },
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2023"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "World",
+            "2023"
+          ],
+          "value": "420",
+          "value_source": "printed",
+          "why_hard": ""
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "small_multiples_5plus",
+        "figure_id": "f1",
+        "evidence": "6 panels sharing the main figure title"
+      },
+      {
+        "key": "panel_title_per_panel",
+        "figure_id": "f1",
+        "evidence": "titles like 'World', 'China' centered above each panel"
+      },
+      {
+        "key": "axis_title_above_axis",
+        "figure_id": "f1",
+        "evidence": "'GW' is set above the top left tick on panels 1-5"
+      },
+      {
+        "key": "axis_title_below_plot",
+        "figure_id": "f1",
+        "evidence": "'Mt CO2' is written below the bottom axis on panel 6"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "panels 1-5 only have horizontal dotted lines"
+      },
+      {
+        "key": "vgrid_only",
+        "figure_id": "f1",
+        "evidence": "panel 6 only has vertical dotted lines"
+      },
+      {
+        "key": "value_label_inside",
+        "figure_id": "f1",
+        "evidence": "values like 420 and 261 are written inside the bars"
+      },
+      {
+        "key": "horizontal_bars",
+        "figure_id": "f1",
+        "evidence": "the Avoided emissions panel uses horizontal bars"
+      },
+      {
+        "key": "heterogeneous_panel_types",
+        "figure_id": "f1",
+        "evidence": "5 panels are vertical bars, 1 is a horizontal bar chart"
+      },
+      {
+        "key": "per_panel_axis_range",
+        "figure_id": "f1",
+        "evidence": "y-axis scales vary: max 400, 300, 60, 40, 20"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "'Notes: Avoided emissions refers to...' at the bottom"
+      },
+      {
+        "key": "color_encodes_extra_attribute",
+        "figure_id": "f1",
+        "evidence": "World is dark orange, regions yellow, emissions blue, with no legend"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "heterogeneous_panel_orientations",
+        "figure_id": "f1",
+        "evidence": "vertical column charts mixed with a horizontal bar chart",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "420",
+        "figure_id": "f1",
+        "mark": "the 2023 World bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "World",
+          "2023"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "228",
+        "figure_id": "f1",
+        "mark": "the 2022 World bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "World",
+          "2022"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "261",
+        "figure_id": "f1",
+        "mark": "the 2023 China bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "China",
+          "2023"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "53",
+        "figure_id": "f1",
+        "mark": "the 2023 European Union bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "European Union",
+          "2023"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "32",
+        "figure_id": "f1",
+        "mark": "the 2023 United States bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "United States",
+          "2023"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "18",
+        "figure_id": "f1",
+        "mark": "the 2022 India bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "India",
+          "2022"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "12",
+        "figure_id": "f1",
+        "mark": "the 2019 India bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "India",
+          "2019"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "619",
+        "figure_id": "f1",
+        "mark": "the China Avoided emissions bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Avoided emissions",
+          "China"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "221",
+        "figure_id": "f1",
+        "mark": "the Rest of world Avoided emissions bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Avoided emissions",
+          "Rest of world"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "101",
+        "figure_id": "f1",
+        "mark": "the European Union Avoided emissions bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Avoided emissions",
+          "European Union"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      }
+    ],
+    "hardest_step": 3,
+    "hardest_step_why": "第六个面板将前五个面板的时间维度（X轴）切换为了地区分类维度（Y轴），且图表方向改变，解析器容易在统一表格中对齐标签时发生错位，导致无法正确关联“619”与“China”。",
+    "examples": [
+      {
+        "gap": "P2",
+        "figure_id": "f1",
+        "quote": "Titles 'World', 'China', 'European Union' sit above panels",
+        "why": "必须将子图的标题提取并作为数据的寻址键（主键）之一，才能区分六个面板中的不同年份和不同国家/地区。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "Value 420 printed directly inside the top of the bar",
+        "why": "需要精确控制数值标签显示在柱体内部靠上的位置，且其字体颜色与柱体填充颜色及背景形成正确对比适配。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "Avoided emissions panel has horizontal bars and categories on Y-axis",
+        "why": "现有的管线无法在同一个小型多图（small multiples）组内，将垂直柱状图与水平柱状图混合生成并匹配不同的坐标系维度。"
+      }
+    ]
+  }
+}

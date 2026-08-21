@@ -1,0 +1,360 @@
+{
+  "stem": "deloitte-2025-global-automotive-consumer-study-january-2025_p17",
+  "document": "deloitte-2025-global-automotive-consumer-study-january-2025",
+  "tags": "untagged",
+  "model": "gemini-3.1-pro-preview",
+  "control": "repeat",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 69.4,
+  "usage": {
+    "input_tokens": 5329,
+    "output_tokens": 9684,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "## 画出来要什么\n\n页面包含三个水平条形图：顶部（f1）是一个100%堆叠条形图，底部（f2和f3）是两个并排的简单水平条形图。三个图表均没有绘制数值轴（x轴）和网格线，所有数值直接以百分比形式印在条形块内部。顶部图表具有位于底部的图例，并通过颜色区分四个系列。图表上方带有长篇的段落式标题或背景描述，底部附有详细的样本量（n=...）和调查问题备注文本。\n\n## 定位一个值难在哪\n\n以“41”为例，它印在f1中“India”行的“Very important”颜色段内。由于完全没有数值轴、刻度和网格线，且数字分散在不同宽度的颜色块中，没有任何外在的表格网格线辅助，解析器如果不能正确识别颜色图例和对应行的物理位置，极易将其提取为无结构的离散文本，从而在步骤1（无法生成表格）失败。\n\n## 不确定的\n\n底部两个图表上方共享了一段描述性段落。由于它们各自对应不同的调查问题（Q61和Q60），拥有各自独立的分类排序和子标题，我将它们处理为两个独立的单面板图表，而不是一个拥有共享标题的图表的两个面板。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "As global trade policies shift, encouraging a more regional approach to vehicle manufacturing footprints and supply chains, consumer sentiment differs among respondents when it comes to whether local manufacturing is an important criteria for choosing a vehicle.",
+          "subtitle": "Importance of next vehicle to be manufactured locally",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "stacked_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 4,
+        "categories": 8,
+        "marks": 32,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "left",
+            "role": "category",
+            "unit_text": "",
+            "low": "India",
+            "high": "UK",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "India"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Not important"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "India",
+            "Very important"
+          ],
+          "value": "41%",
+          "value_source": "printed",
+          "why_hard": "No grid or value axis exists to enforce structure, making it purely graphical."
+        }
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "",
+          "title": "Percentage of surveyed consumers who would be interested in acquiring vehicle directly from the manufacturer",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 1,
+        "categories": 8,
+        "marks": 8,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "left",
+            "role": "category",
+            "unit_text": "",
+            "low": "India",
+            "high": "Japan",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "India"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "India"
+          ],
+          "value": "76%",
+          "value_source": "printed",
+          "why_hard": ""
+        }
+      },
+      {
+        "id": "f3",
+        "heading": {
+          "figure_number": "",
+          "title": "Percentage of surveyed consumers who would be interested in purchasing insurance directly from the manufacturer",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 1,
+        "categories": 8,
+        "marks": 8,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "left",
+            "role": "category",
+            "unit_text": "",
+            "low": "India",
+            "high": "Germany",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "India"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "India"
+          ],
+          "value": "82%",
+          "value_source": "printed",
+          "why_hard": ""
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "horizontal_bars",
+        "figure_id": "f1",
+        "evidence": "categories sit on the left axis and bars grow to the right"
+      },
+      {
+        "key": "pct_stacked",
+        "figure_id": "f1",
+        "evidence": "every stacked bar reaches the same full width"
+      },
+      {
+        "key": "no_value_axis",
+        "figure_id": "f1",
+        "evidence": "there is no x-axis drawn, neither line nor ticks"
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "legend sits below the stacked bars"
+      },
+      {
+        "key": "value_label_inside",
+        "figure_id": "f1",
+        "evidence": "percentage numbers are printed inside the coloured segments"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "Note: Percentages may not add up... printed below the legend"
+      },
+      {
+        "key": "horizontal_bars",
+        "figure_id": "f2",
+        "evidence": "bars grow to the right from a left category axis"
+      },
+      {
+        "key": "no_value_axis",
+        "figure_id": "f2",
+        "evidence": "no x-axis drawn"
+      },
+      {
+        "key": "value_label_inside",
+        "figure_id": "f2",
+        "evidence": "numbers are printed inside the right ends of the bars"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f2",
+        "evidence": "Percentage of surveyed consumers is in the title"
+      },
+      {
+        "key": "horizontal_bars",
+        "figure_id": "f3",
+        "evidence": "bars grow horizontally to the right"
+      },
+      {
+        "key": "no_value_axis",
+        "figure_id": "f3",
+        "evidence": "no x-axis drawn"
+      },
+      {
+        "key": "value_label_inside",
+        "figure_id": "f3",
+        "evidence": "numbers are printed inside the bars"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f3",
+        "evidence": "Percentage of surveyed consumers is in the title"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f2",
+        "evidence": "Q61, Q60 and Sample size notes printed below both f2 and f3"
+      },
+      {
+        "key": "multi_figure_page",
+        "figure_id": "page",
+        "evidence": "three separate charts with distinct datasets on one page"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "shared_prose_context_above_figures",
+        "figure_id": "page",
+        "evidence": "a paragraph of text introduces the two independent figures below it",
+        "affects": [
+          4
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "41",
+        "figure_id": "f1",
+        "mark": "the India Very important segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "India",
+          "Very important"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "39",
+        "figure_id": "f1",
+        "mark": "the China Important segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "China",
+          "Important"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "27",
+        "figure_id": "f1",
+        "mark": "the Southeast Asia Somewhat important segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Southeast Asia",
+          "Somewhat important"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "28",
+        "figure_id": "f1",
+        "mark": "the US Not important segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "US",
+          "Not important"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "39",
+        "figure_id": "f1",
+        "mark": "the Rep. of Korea Important segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Rep. of Korea",
+          "Important"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "45",
+        "figure_id": "f1",
+        "mark": "the Japan Somewhat important segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Japan",
+          "Somewhat important"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "36",
+        "figure_id": "f1",
+        "mark": "the Germany Not important segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Germany",
+          "Not important"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "49",
+        "figure_id": "f1",
+        "mark": "the UK Not important segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "UK",
+          "Not important"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      }
+    ],
+    "hardest_step": 1,
+    "hardest_step_why": "图表没有任何数值轴和网格线，41%等数值仅作为文本印在无边框的色块中。解析器容易将其视为离散文本而非表格结构，从而无法在步骤1生成完整的Markdown表格。",
+    "examples": [
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "As global trade policies shift, encouraging a more regional approach to vehicle...",
+        "why": "图表主标题是一个长达三行的完整段落描述，且与副标题样式倒置（副标题为彩色短句），当前管线可能将其误认为正文。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "page",
+        "quote": "As some original equipment manufacturers (OEMs) continue to explore the potential for...",
+        "why": "多个独立的图表上方共享了一段背景描述文本，这种跨图表层级的上下文信息目前在管线中没有专门的字段来捕获。"
+      }
+    ]
+  }
+}

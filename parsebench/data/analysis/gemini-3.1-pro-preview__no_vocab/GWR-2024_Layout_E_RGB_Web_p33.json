@@ -1,0 +1,293 @@
+{
+  "stem": "GWR-2024_Layout_E_RGB_Web_p33",
+  "document": "GWR-2024_Layout_E_RGB_Web",
+  "tags": "untagged",
+  "model": "gemini-3.1-pro-preview",
+  "control": "no_vocab",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 54.3,
+  "usage": {
+    "input_tokens": 3191,
+    "output_tokens": 7507,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n需要支持生成分组柱状图，并在X轴上将时间类别（2006–24）标签倾斜45度显示。每个时间点包含三个系列的柱子。数值标签需要支持垂直排布，且位置必须能够根据数值正负及柱子高度自适应分布在零线上方或下方。Y轴需要完整的负数轴支持，以及明显的水平零基准线，同时Y轴标题（Change (%)）需垂直放置在轴线外侧。图例应放置在整个图表下方。图表主标题需要支持换行，并在前面带有红色的三角形作为强调符，同时下方带有独立的单位说明文字，图表尾部还需要附带Notes和Source文本块。\n\n### 定位一个值难在哪\n定位如“-2.8”（2022年G20 advanced economies的数值）非常困难。因为在2022年这一组中，三个数据（-0.8、-2.8、1.8）非常密集，而且这些负值的文本被垂直打印在零线下方极狭小的空间内。VLM在解析时极易将“-2.8”和“-0.8”与图例对应的红蓝颜色相互混淆或错位关联，从而导致读取出错。\n\n### 不确定的\n不确定各个分组内柱子之间的微小缝隙比例是多少，且部分年份较高数值的文本略有重叠，不确定模型能否完美将紧凑的垂直字符OCR准确无误而不丢符号。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 3.2.",
+          "title": "Annual average real monthly wage growth in the G20 countries, 2006–24",
+          "subtitle": "",
+          "unit_text": "(percentage)",
+          "placement": "above"
+        },
+        "type": "grouped_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 3,
+        "categories": 19,
+        "marks": 57,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Change (%)",
+            "low": "-4",
+            "high": "10",
+            "serves": "all bars"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "2006",
+            "high": "2024",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2006"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "G20 advanced economies"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "2022",
+            "G20 advanced economies"
+          ],
+          "value": "-2.8",
+          "value_source": "printed",
+          "why_hard": "Negative value labels are squeezed vertically below the zero line, close to neighboring bars."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "grouped_bar_chart",
+        "figure_id": "f1",
+        "evidence": "three bars are clustered together for each year on the x axis",
+        "affects": [
+          1,
+          3
+        ]
+      },
+      {
+        "key": "rotated_x_axis_labels",
+        "figure_id": "f1",
+        "evidence": "the years 2006 to 2024 are rotated 45 degrees",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "legend_below_chart",
+        "figure_id": "f1",
+        "evidence": "the legend with three color boxes sits below the x axis",
+        "affects": [
+          3,
+          4
+        ]
+      },
+      {
+        "key": "y_axis_title",
+        "figure_id": "f1",
+        "evidence": "the y axis reads \"Change (%)\" vertically on the left",
+        "affects": [
+          4
+        ]
+      },
+      {
+        "key": "horizontal_gridlines",
+        "figure_id": "f1",
+        "evidence": "white horizontal lines run across the plot background at every tick",
+        "affects": []
+      },
+      {
+        "key": "negative_value_axis",
+        "figure_id": "f1",
+        "evidence": "the y axis extends down to -4 with bars dropping below zero",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "key": "figure_notes_source",
+        "figure_id": "f1",
+        "evidence": "Notes and Source text blocks are placed at the bottom",
+        "affects": [
+          4
+        ]
+      }
+    ],
+    "new_components": [
+      {
+        "name": "vertical_data_labels",
+        "figure_id": "f1",
+        "evidence": "bar values like 2.9 are printed vertically inside or outside the bars",
+        "affects": [
+          2,
+          3
+        ]
+      },
+      {
+        "name": "title_bullet_icon",
+        "figure_id": "f1",
+        "evidence": "a red triangle bullet icon precedes Figure 3.2. in the title",
+        "affects": [
+          4
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "2.9",
+        "figure_id": "f1",
+        "mark": "the 2006 G20 bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "2006",
+          "G20"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "8.6",
+        "figure_id": "f1",
+        "mark": "the 2007 G20 emerging countries bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "2007",
+          "G20 emerging countries"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "-1.1",
+        "figure_id": "f1",
+        "mark": "the 2008 G20 advanced economies bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "2008",
+          "G20 advanced economies"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "2.7",
+        "figure_id": "f1",
+        "mark": "the 2010 G20 bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "2010",
+          "G20"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "6.4",
+        "figure_id": "f1",
+        "mark": "the 2012 G20 emerging countries bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "2012",
+          "G20 emerging countries"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "4.3",
+        "figure_id": "f1",
+        "mark": "the 2021 G20 emerging countries bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "2021",
+          "G20 emerging countries"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "-0.8",
+        "figure_id": "f1",
+        "mark": "the 2022 G20 bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "2022",
+          "G20"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "-2.8",
+        "figure_id": "f1",
+        "mark": "the 2022 G20 advanced economies bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "2022",
+          "G20 advanced economies"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "6.0",
+        "figure_id": "f1",
+        "mark": "the 2023 G20 emerging countries bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "2023",
+          "G20 emerging countries"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "0.9",
+        "figure_id": "f1",
+        "mark": "the 2024 G20 advanced economies bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "2024",
+          "G20 advanced economies"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      }
+    ],
+    "hardest_step": 3,
+    "hardest_step_why": "2022年的三个负值（-0.8, -2.8, 1.8）密集排列且垂直打印，间距极小，VLM很容易在提取时将数值与错误的图例系列关联，导致步骤3失败。",
+    "examples": [
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "values are written vertically above or below the bars, such as -2.8 below the zero line in 2022",
+        "why": "生成器需要支持数值标签的垂直排布，并根据正负值和柱体高度自动灵活调整标签在图表中的渲染位置。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "a red triangle precedes Figure 3.2., and (percentage) is on a new line below the title",
+        "why": "标题模块需要结构化字段支持，以兼容带有特殊符号的图号、主标题以及位于独立行的单位说明文字。"
+      }
+    ]
+  }
+}

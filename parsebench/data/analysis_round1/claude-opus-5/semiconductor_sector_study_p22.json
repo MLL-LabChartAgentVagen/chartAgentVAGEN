@@ -1,0 +1,168 @@
+{
+  "stem": "semiconductor_sector_study_p22",
+  "document": "semiconductor_sector_study",
+  "tags": "need_estimate",
+  "model": "claude-opus-5",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "seconds": 43.6,
+  "usage": {
+    "input_tokens": 10624,
+    "output_tokens": 3261,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "本页只有一张图：Figure 4.1 – Latest Fundraisings，为逐年堆叠柱状图。生成器需要能画：细密无图例的堆叠段（每段是一家公司的单笔募资，2023 柱内可见十余条极薄分隔）、纵向旋转的轴标题「Fundraisings - Amount received by the company in its latest fundraising (GBP)」、仅横向网格、以及带缺口的年份类别轴（2007、2010、2013、2016、2017、2018…，中间年份整段缺失）。取值困难在于：图上不印任何数字，刻度间距 20M，2013 的约 2M、2016 的约 0 只能贴着基线目测；柱总额还须把若干堆叠段相加。定位标签也弱——除年份与轴标题外没有系列名，无法区分「某年某公司」与「某年合计」。不确定：22 与 23 分别属于 2017 与 2021 柱，二者高度接近，可能对调。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 4.1",
+          "title": "Latest Fundraisings",
+          "subtitle": "",
+          "unit_text": "Fundraisings - Amount received by the company in its latest fundraising (GBP)",
+          "placement": "above"
+        },
+        "type": "stacked_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 1,
+        "categories": 11,
+        "marks": 44,
+        "values_printed": "none"
+      }
+    ],
+    "components": [
+      {
+        "key": "stacked_bar",
+        "figure_id": "f1",
+        "evidence": "each year's teal bar is split by thin white rules into individual fundraising segments"
+      },
+      {
+        "key": "rotated_axis_title",
+        "figure_id": "f1",
+        "evidence": "vertical text left of axis: 'Fundraisings - Amount received by the company in its latest fundraising (GBP)'"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "ticks read '0M','20M'...'220M'; only '(GBP)' in the rotated axis title gives the currency"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "faint horizontal rules at 20M intervals across the panel, no vertical rules"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "'Source: Beauhurst (all latest fundraisings, 2007 - 2023)' printed under the plot"
+      },
+      {
+        "key": "thin_segment_label",
+        "figure_id": "f1",
+        "evidence": "2023 and 2022 bars contain sub-1M slivers too thin to carry any label"
+      },
+      {
+        "key": "footnote_marker",
+        "figure_id": "page",
+        "evidence": "body text 'fundraisings^xii' carries a superscript roman-numeral note marker"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "gapped_year_category_axis",
+        "figure_id": "f1",
+        "evidence": "x ticks jump 2007, 2010, 2013, 2016, 2017, 2018 — intervening years omitted as slots",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "name": "unlabelled_stack_segments",
+        "figure_id": "f1",
+        "evidence": "stack segments are individual companies but no legend or label identifies any of them",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "2",
+        "figure_id": "f1",
+        "mark": "the 2013 bar total, a low bar just above the baseline (~2M)",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2013",
+          "Fundraisings - Amount received by the company in its latest fundraising (GBP)",
+          "Figure 4.1 – Latest Fundraisings"
+        ]
+      },
+      {
+        "value": "0",
+        "figure_id": "f1",
+        "mark": "the 2016 slot, a flat near-zero mark on the baseline",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2016",
+          "Fundraisings - Amount received by the company in its latest fundraising (GBP)",
+          "Figure 4.1 – Latest Fundraisings"
+        ]
+      },
+      {
+        "value": "23",
+        "figure_id": "f1",
+        "mark": "the 2017 bar total, top just above the 20M gridline",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2017",
+          "Fundraisings - Amount received by the company in its latest fundraising (GBP)"
+        ]
+      },
+      {
+        "value": "189",
+        "figure_id": "f1",
+        "mark": "the 2020 bar total, top between 180M and 200M gridlines",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2020",
+          "Fundraisings - Amount received by the company in its latest fundraising (GBP)"
+        ]
+      },
+      {
+        "value": "22",
+        "figure_id": "f1",
+        "mark": "the 2021 bar total, top just above the 20M gridline",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2021",
+          "Fundraisings - Amount received by the company in its latest fundraising (GBP)"
+        ]
+      },
+      {
+        "value": "84",
+        "figure_id": "f1",
+        "mark": "the 2022 bar total, top just above the 80M gridline",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2022",
+          "Fundraisings - Amount received by the company in its latest fundraising (GBP)"
+        ]
+      },
+      {
+        "value": "218",
+        "figure_id": "f1",
+        "mark": "the 2023 bar total, tallest bar just below the 220M gridline",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2023",
+          "Fundraisings - Amount received by the company in its latest fundraising (GBP)"
+        ]
+      }
+    ],
+    "hardest_step": 2
+  }
+}

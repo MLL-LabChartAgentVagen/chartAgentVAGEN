@@ -1,0 +1,277 @@
+{
+  "stem": "pwc-semiconductor-and-beyond-2026-full-report_p17",
+  "document": "pwc-semiconductor-and-beyond-2026-full-report",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "no_vocab",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 49.3,
+  "usage": {
+    "input_tokens": 3185,
+    "output_tokens": 6785,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n\n这是一个堆叠柱状图，带有特定的视觉修饰。生成器需要能够绘制：\n1.  **无边框绘图区**：y轴和x轴都没有实线轴，只有y轴刻度延伸出的水平网格线。\n2.  **特殊的轴标签**：x轴标签包含年份缩写（如 `'19`）以及预测年份后缀（如 `'25F`）。\n3.  **标题与单位**：主标题同行包含单位 `(Unit: GW)`。\n4.  **趋势阴影区**：在特定年份（从 `'22` 到 `'30F`）的柱子之间，绘制连接上下两个系列堆叠段顶部的两层半透明阴影（灰色和橙色），用于强调增长趋势。\n5.  **图内文本标注**：在绘图区的中心空白区域，没有指向线的自由浮动多行文本段落。\n\n### 定位一个值难在哪\n\n以2022年的AI-driven demand（目标值11）为例。这个值作为一个堆叠段放置在基础段之上，且**没有任何数据标签**打印在柱子上。y轴的刻度间距高达20，要在这个刻度上将一个堆叠段的高度精确读出11（误差容忍度5%即±0.55），在视觉上是完全不可能的，只能依靠表格或原始数据。\n\n### 不确定的\n\n19年AI-driven demand的值极小（目标值为1），在图上只是非常微弱的一条橙色细线，如果不是已知数据，几乎会被忽略或认为是图形误差。图表内的说明文本并没有明确的对齐或锚点规则，只能猜测其大致居中于阴影区域之上。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "Global data center power consumption",
+          "subtitle": "",
+          "unit_text": "(Unit: GW)",
+          "placement": "above"
+        },
+        "type": "stacked_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 12,
+        "marks": 24,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "0",
+            "high": "180",
+            "serves": "all bars"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "'19",
+            "high": "'30F",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "'22"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "AI-driven demand"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "'22",
+            "AI-driven demand"
+          ],
+          "value": "11",
+          "value_source": "axis_read",
+          "why_hard": "Values are not printed and the y-axis grid lines are 20 units apart, making exact visual reading impossible."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "inline_unit_text",
+        "figure_id": "f1",
+        "evidence": "\"(Unit: GW)\" is printed right next to the title",
+        "affects": [
+          2,
+          4
+        ]
+      },
+      {
+        "key": "abbreviated_time_labels",
+        "figure_id": "f1",
+        "evidence": "x-axis labels use apostrophe like '19, '20",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "forecast_label_suffix",
+        "figure_id": "f1",
+        "evidence": "x-axis labels append 'F' for forecast years like '25F'",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "horizontal_grid_no_axis_lines",
+        "figure_id": "f1",
+        "evidence": "grey lines from y-axis ticks across plot, but no solid x or y axis lines",
+        "affects": []
+      },
+      {
+        "key": "legend_top_right",
+        "figure_id": "f1",
+        "evidence": "legend sits at the top right, level with the unit text",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "new_components": [
+      {
+        "name": "interval_trend_shading",
+        "figure_id": "f1",
+        "evidence": "shaded areas connect the tops of bars only from '22 to '30F",
+        "affects": []
+      },
+      {
+        "name": "floating_plot_text_annotation",
+        "figure_id": "f1",
+        "evidence": "\"Rising AI data center...\" text block inside the plot area with no leader lines",
+        "affects": []
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "22",
+        "figure_id": "f1",
+        "mark": "the '19 Conventional demand segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "'19",
+          "Conventional demand"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "1",
+        "figure_id": "f1",
+        "mark": "the '19 AI-driven demand segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "'19",
+          "AI-driven demand"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "46",
+        "figure_id": "f1",
+        "mark": "the '22 Conventional demand segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "'22",
+          "Conventional demand"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "11",
+        "figure_id": "f1",
+        "mark": "the '22 AI-driven demand segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "'22",
+          "AI-driven demand"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "62",
+        "figure_id": "f1",
+        "mark": "the '25F Conventional demand segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "'25F",
+          "Conventional demand"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "33",
+        "figure_id": "f1",
+        "mark": "the '25F AI-driven demand segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "'25F",
+          "AI-driven demand"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "80",
+        "figure_id": "f1",
+        "mark": "the '28F Conventional demand segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "'28F",
+          "Conventional demand"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "62",
+        "figure_id": "f1",
+        "mark": "the '28F AI-driven demand segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "'28F",
+          "AI-driven demand"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "96",
+        "figure_id": "f1",
+        "mark": "the '30F Conventional demand segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "'30F",
+          "Conventional demand"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "68",
+        "figure_id": "f1",
+        "mark": "the '30F AI-driven demand segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "'30F",
+          "AI-driven demand"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "图表没有任何数据标签，y轴刻度间距为20。以11为例，在刻度0和20之间，悬空在常规需求柱之上，肉眼绝不可能将其精确提取到5%的误差范围内。",
+    "examples": [
+      {
+        "gap": "P1",
+        "figure_id": "f1",
+        "quote": "y-axis ticks are 0, 20... 180 and bars have no printed values",
+        "why": "图表刻度太粗且无标签导致数值无法精确读取，需要支持将此类图表判定为数值不可精确提取，而非强制估计。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "orange and grey shaded areas connecting bars from '22 to '30F",
+        "why": "当前图表生成无法实现在特定年份区间内，绘制连接各系列柱段顶部的趋势阴影面。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "Global data center power consumption (Unit: GW)",
+        "why": "单位文本直接紧跟在主标题所在行，需要生成器有独立的标题属性结构来控制单位的排版和位置。"
+      }
+    ]
+  }
+}

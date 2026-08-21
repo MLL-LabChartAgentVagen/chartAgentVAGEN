@@ -1,0 +1,274 @@
+{
+  "stem": "World_Inequality_Report_2026_p106",
+  "document": "World_Inequality_Report_2026",
+  "tags": "need_estimate",
+  "model": "gpt-5.6-sol",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 120000,
+  "seconds": 96.6,
+  "usage": {
+    "input_tokens": 8837,
+    "output_tokens": 6773,
+    "cache_read_tokens": 2365
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n两幅并列折线面板、各自标题与图例；14条年度序列共用−6%至3%的视觉尺度，并绘制负值、0%参考线、双向虚线网格及下方解释和来源段落。标题须拆分为编号、主标题、副标题和单位。\n\n### 定位一个值难在哪\n例如0.8：纵轴相邻刻度相差1个百分点，而5%容差仅±0.04；折线无点标、无数值标签，且年份仅每十年标一次，无法唯一可靠定位。\n\n### 不确定的\n线条顶点数按1970–2025逐年数据估算；给定七个数均未印在图中，多个年份和序列可能经过相同数值，因此未猜测其地址。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 5.2.",
+          "title": "Rich countries receive 1% of their GDP from the rest of the world due to financial privilege",
+          "subtitle": "Excess yield (assets–liabilities) as % of group GDP, 1970–2025",
+          "unit_text": "% of group GDP",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 2,
+        "series": 14,
+        "categories": 56,
+        "marks": 784,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "(% of group GDP), MER",
+            "low": "-6%",
+            "high": "3%",
+            "serves": "five income-group lines in the left panel"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "1980",
+            "high": "2020",
+            "serves": "five income-group lines in the left panel"
+          },
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "%",
+            "low": "-6%",
+            "high": "3%",
+            "serves": "nine region lines in the right panel"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "1980",
+            "high": "2020",
+            "serves": "nine region lines in the right panel"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "panel",
+            "label_source": "panel_title",
+            "example": "By world region"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Europe"
+          },
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2010"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "By world region",
+            "Europe",
+            "2010"
+          ],
+          "value": "about 1.2%",
+          "value_source": "axis_read",
+          "why_hard": "Annual point among nine crossing lines; decade ticks and 1-point grid limit precision."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "reference_line",
+        "figure_id": "f1",
+        "evidence": "A darker dotted horizontal rule crosses 0% in both panels."
+      },
+      {
+        "key": "negative_values",
+        "figure_id": "f1",
+        "evidence": "Both value axes extend from “-6%” through 0% to “3%”."
+      },
+      {
+        "key": "small_multiples_4",
+        "figure_id": "f1",
+        "evidence": "Two adjacent line-chart panels repeat the same time and percentage structure."
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "Both colour legends sit beneath their respective plotting areas."
+      },
+      {
+        "key": "per_panel_legend",
+        "figure_id": "f1",
+        "evidence": "Income-group labels appear below the left panel; region labels below the right."
+      },
+      {
+        "key": "panel_title_per_panel",
+        "figure_id": "f1",
+        "evidence": "“By income group” and “By world region” are printed above the panels."
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "The paragraph below the legends includes “Interpretation.” and “Sources and series:”."
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "The subtitle says “as % of group GDP”; the left axis repeats “(% of group GDP), MER”."
+      },
+      {
+        "key": "rotated_axis_title",
+        "figure_id": "f1",
+        "evidence": "“Excess yield (% of group GDP), MER” runs vertically beside the left panel."
+      },
+      {
+        "key": "sparse_time_ticks",
+        "figure_id": "f1",
+        "evidence": "Annual lines cover “1970–2025”, but visible ticks are only 1980, 1990, 2000, 2010, 2020."
+      },
+      {
+        "key": "dense_marks_100plus",
+        "figure_id": "f1",
+        "evidence": "Fourteen annual lines span 1970–2025 across two panels, approximately 784 vertices."
+      }
+    ],
+    "new_components": [
+      {
+        "name": "unequal_series_sets_by_panel",
+        "figure_id": "f1",
+        "evidence": "The left panel has five legend entries; the right panel has nine different entries.",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "name": "interpretation_caption_block",
+        "figure_id": "f1",
+        "evidence": "A substantial paragraph beginning “Interpretation.” sits between the legends and body text.",
+        "affects": [
+          4
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "0.8",
+        "figure_id": "not_found",
+        "mark": "No unique mark: the value is unprinted and multiple line-year positions may read 0.8.",
+        "printed_on_figure": false,
+        "addressing_keys": [],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "-1.5",
+        "figure_id": "not_found",
+        "mark": "No unique mark: several series cross approximately -1.5 without point labels.",
+        "printed_on_figure": false,
+        "addressing_keys": [],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "-2",
+        "figure_id": "not_found",
+        "mark": "No unique mark: many lines meet or cross the -2% gridline at different years.",
+        "printed_on_figure": false,
+        "addressing_keys": [],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "2.1",
+        "figure_id": "not_found",
+        "mark": "No unique mark: the value is not printed and lies between 2% and 3% ticks.",
+        "printed_on_figure": false,
+        "addressing_keys": [],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "-3.2",
+        "figure_id": "not_found",
+        "mark": "No unique mark: multiple negative series pass near -3.2 between annual positions.",
+        "printed_on_figure": false,
+        "addressing_keys": [],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "1.3",
+        "figure_id": "not_found",
+        "mark": "No unique mark: several positive lines pass near 1.3 without labelled points.",
+        "printed_on_figure": false,
+        "addressing_keys": [],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "-3.5",
+        "figure_id": "not_found",
+        "mark": "No unique mark: several regional lines pass near -3.5 at different years.",
+        "printed_on_figure": false,
+        "addressing_keys": [],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "如0.8容差仅±0.04，但纵轴每格1个百分点且无点标或数值标签，无法可靠读准。c year around 1.3.",
+    "examples": [
+      {
+        "gap": "P2",
+        "figure_id": "f1",
+        "quote": "“By income group” and “By world region” title two adjacent panels.",
+        "why": "同一数值必须同时带面板、系列和年份，面板维度不可省略。"
+      },
+      {
+        "gap": "P5",
+        "figure_id": "f1",
+        "quote": "Fourteen annual lines span 1970–2025 across two panels.",
+        "why": "约784个年度顶点超过常见密度上限，且右面板有九线交叉。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "Both axes run from “-6%” to “3%” with a darker 0% rule.",
+        "why": "需控制百分比刻度、负值范围、零线和无数值标签的样式。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "“Figure 5.2.” precedes the title; “Excess yield … 1970–2025” is a separate line.",
+        "why": "编号、主标题、副标题、单位及上置位置必须分别生成。"
+      },
+      {
+        "gap": "P3",
+        "figure_id": "f1",
+        "quote": "“Interpretation.” and “Sources and series:” appear below both legends.",
+        "why": "整页导出须保留图后解释、来源与随后双栏正文的相对位置。"
+      }
+    ]
+  }
+}

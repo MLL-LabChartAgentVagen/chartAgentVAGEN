@@ -1,0 +1,216 @@
+{
+  "stem": "article_thebeatjun2025_p12",
+  "document": "article_thebeatjun2025",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "no_vocab",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 72.3,
+  "usage": {
+    "input_tokens": 3135,
+    "output_tokens": 10067,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n- 带有类别标签的水平分类轴（如“EUR High Yield”）。\n- 纵向数值轴，刻度标签带有百分号（0%到9%）。\n- 堆叠柱状图，包含三个按图例类别着色的数据系列。\n- 图表底部的水平图例，带有对应颜色的方块和系列名称。\n- 在每个堆叠柱的顶部居中显示该柱的总计百分比数值。\n- 加粗的主标题和斜体的副标题位于图表正上方。\n- 图表下方包含左对齐的来源与免责声明文本区。\n\n### 定位一个值难在哪\n以 `3.3%`（EM Hard Currency 的 Option-Adjusted Spread）为例：该图表仅在堆叠柱顶部标明了整柱的总和（7.9%），并未标出内部各段的具体数值。要获取这段灰色区域的值，读者必须分别在纵轴上估读出它的起始点（约4.6%）和终点（约7.9%）进行相减。由于纵轴刻度间距为1%，依靠肉眼估读绝无可能确保计算结果的误差在5%以内。\n\n### 不确定的\n给定的测试值 `2.5%` 在图表中标注和肉眼估读中均无法明确找到；部分基础利率段（如EUR IG Corp约2.3%），其具体读数完全依赖对图表纵轴比例的主观判断，无法获得精确的确认。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "European HY Credit Offers the Highest Yield on USD-Hedged Basis",
+          "subtitle": "Yield decomposition across major credit asset classes",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "stacked_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 3,
+        "categories": 5,
+        "marks": 12,
+        "values_printed": "some",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "0%",
+            "high": "9%",
+            "serves": "all segments"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "EUR High Yield",
+            "high": "USD IG Corp",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "EUR High Yield"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Base Rate"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "EM Hard Currency",
+            "Option-Adjusted Spread (OAS)"
+          ],
+          "value": "3.3%",
+          "value_source": "axis_read",
+          "why_hard": "Segment value is not printed; reading endpoints off the y-axis requires subtraction and is imprecise."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "stacked_bar",
+        "figure_id": "f1",
+        "evidence": "vertical bars composed of up to three coloured segments",
+        "affects": [
+          2,
+          3
+        ]
+      },
+      {
+        "key": "value_axis_left",
+        "figure_id": "f1",
+        "evidence": "the y axis reads 0%, 1% up to 9%",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "key": "category_axis_bottom",
+        "figure_id": "f1",
+        "evidence": "the x axis lists the five asset class names",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "legend_below",
+        "figure_id": "f1",
+        "evidence": "three coloured squares and their labels below the chart",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "data_labels_top",
+        "figure_id": "f1",
+        "evidence": "total values like 8.1% printed directly above each bar",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "key": "heading_block",
+        "figure_id": "f1",
+        "evidence": "the bold title and italic subtitle above the plot",
+        "affects": [
+          4
+        ]
+      },
+      {
+        "key": "source_note",
+        "figure_id": "page",
+        "evidence": "Source: Bloomberg, MSIM... at the bottom of the page",
+        "affects": [
+          4
+        ]
+      }
+    ],
+    "new_components": [
+      {
+        "name": "stacked_bar_totals",
+        "figure_id": "f1",
+        "evidence": "total percentage values centered exactly above each stacked bar",
+        "affects": [
+          2
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "2.5%",
+        "figure_id": "not_found",
+        "mark": "value is not clearly identifiable on the figure",
+        "printed_on_figure": false,
+        "addressing_keys": [],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "3.3%",
+        "figure_id": "f1",
+        "mark": "the EM Hard Currency Option-Adjusted Spread segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "EM Hard Currency",
+          "Option-Adjusted Spread (OAS)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "4.4%",
+        "figure_id": "f1",
+        "mark": "the USD High Yield Base Rate segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "USD High Yield",
+          "Base Rate"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "2.3%",
+        "figure_id": "f1",
+        "mark": "the EUR IG Corp Base Rate segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "EUR IG Corp",
+          "Base Rate"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "4.5%",
+        "figure_id": "f1",
+        "mark": "the USD IG Corp Base Rate segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "USD IG Corp",
+          "Base Rate"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "图表仅在堆叠柱顶部标出了总和数值，所有单段数据（如3.3%或4.4%）均未直接标出。在刻度间距为1%的轴上依靠肉眼估算段落长度，根本无法保证满足5%的容差精度。",
+    "examples": [
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "8.1% printed directly above the EUR High Yield bar",
+        "why": "在堆叠柱状图的顶部标出了全部系列的加总总和，当前生成管线可能无法直接绘制游离于独立系列之外的总计标签。"
+      }
+    ]
+  }
+}

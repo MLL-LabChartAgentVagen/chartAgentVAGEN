@@ -1,0 +1,255 @@
+{
+  "stem": "EnergyTechnologyPerspectives2024_p53",
+  "document": "EnergyTechnologyPerspectives2024",
+  "tags": "3d_chart+need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "repeat",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 98.8,
+  "usage": {
+    "input_tokens": 5329,
+    "output_tokens": 13276,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n生成此页面需要支持绘制百分比堆叠柱状图（`pct_stacked`），且无直接数据标注，完全依赖左侧带“%”符号的刻度（0%~100%）。X轴需要具备双层类别刻度（`two_level_x_ticks`），外层分组标签（“Technology manufacturing”与“Fossil fuel supply”）带有跨度横线及垂直分割线。此外，在底部图例与附注信息下方，存在加粗的蓝色总结性文本（Takeaway text）及下划线，这要求生成器不仅能输出独立图表，还要能处理带有图表解读句的图文混排版式。\n\n### 定位一个值难在哪\n以“欧盟在电动汽车和电池（EV and battery）领域的占比（20%）”为例：该数值对应的蓝色矩形属于堆叠柱的中间悬空段。由于图表没有任何内联数据标签，读者必须在间隔为20%的粗略水平网格线上，分别肉眼估测其下边界（约73%）和上边界（约93%）并进行减法。这种估算极难将误差严格控制在5%的容忍度以内。\n\n### 不确定的\n部分极小的堆叠段（如North America在部分能源中的表现）高度小于2%，在视觉上几乎呈一条细线，其确切数值和颜色归属在没有数据表的情况下只能靠猜测。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 1.14",
+          "title": "Energy employment in selected energy technologies by region, 2022",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "stacked_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 6,
+        "categories": 11,
+        "marks": 66,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "0%",
+            "high": "100%",
+            "serves": "all bars"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "EV and battery",
+            "high": "Oil",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Solar PV"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "China"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "EV and battery",
+            "European Union"
+          ],
+          "value": "20",
+          "value_source": "axis_read",
+          "why_hard": "It is a middle floating segment requiring subtraction of roughly estimated bounds (93% - 73%)."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "pct_stacked",
+        "figure_id": "f1",
+        "evidence": "the bars all reach a uniform 100% top edge"
+      },
+      {
+        "key": "two_level_x_ticks",
+        "figure_id": "f1",
+        "evidence": "a secondary grouping row with spans below the technology categories"
+      },
+      {
+        "key": "wrapped_category_labels",
+        "figure_id": "f1",
+        "evidence": "category names like EV and battery wrap onto two lines"
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "the legend sits horizontally beneath the x axis grouping"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "Note and Source text lines sit at the bottom left"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "grey horizontal lines at 20% intervals, no vertical grid lines"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "highlighted_takeaway_text",
+        "figure_id": "f1",
+        "evidence": "bold blue text summarizing the chart positioned below the source",
+        "affects": [
+          4
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "73",
+        "figure_id": "f1",
+        "mark": "the China segment in EV and battery",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "EV and battery",
+          "China"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "91",
+        "figure_id": "f1",
+        "mark": "the China segment in Battery storage",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Battery storage",
+          "China"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "82",
+        "figure_id": "f1",
+        "mark": "the China segment in Solar PV",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Solar PV",
+          "China"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "19",
+        "figure_id": "f1",
+        "mark": "the China segment in Hydro",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Hydro",
+          "China"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "38",
+        "figure_id": "f1",
+        "mark": "the Rest of World segment in Hydro",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Hydro",
+          "Rest of World"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "37",
+        "figure_id": "f1",
+        "mark": "the Rest of World segment in Oil",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Oil",
+          "Rest of World"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "20",
+        "figure_id": "f1",
+        "mark": "the European Union segment in EV and battery",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "EV and battery",
+          "European Union"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "40",
+        "figure_id": "not_found",
+        "mark": "in body text under 1.2 Trade, not on a figure",
+        "printed_on_figure": false,
+        "addressing_keys": [],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "54",
+        "figure_id": "f1",
+        "mark": "the China segment in Wind",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Wind",
+          "China"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "25",
+        "figure_id": "f1",
+        "mark": "the Other Asia Pacific segment in Nuclear",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Nuclear",
+          "Other Asia Pacific"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "全图为百分比堆叠图且无数字标注，如需获取欧盟在EV and battery的20%，需在20%间隔的网格上分别估算73%和93%边界再相减，极难达到5%的读取精度。",
+    "examples": [
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "the y axis ticks 0%, 20% ... 100% with no separate unit text",
+        "why": "图表的百分比符号直接附着在每个刻度标签上，而非作为独立的单位短语存在，目前管道格式控制可能不够灵活。"
+      },
+      {
+        "gap": "P3",
+        "figure_id": "f1",
+        "quote": "Most manufacturing jobs... are located in China, in contrast to those...",
+        "why": "图表附注区域下方带有图表解读性质的高亮加粗总结文本，这超越了单一图表的渲染范畴，属于复杂的文档级排版。"
+      }
+    ]
+  }
+}

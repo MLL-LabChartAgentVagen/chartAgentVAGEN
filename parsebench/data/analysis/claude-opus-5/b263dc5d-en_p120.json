@@ -1,0 +1,348 @@
+{
+  "stem": "b263dc5d-en_p120",
+  "document": "b263dc5d-en",
+  "tags": "need_estimate",
+  "model": "claude-opus-5",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "seconds": 104.3,
+  "usage": {
+    "input_tokens": 13831,
+    "output_tokens": 8172,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "**画出来要什么**\n\n一张 25 类别的单面板混合图：浅/深蓝柱（Unadjusted）与空心/实心菱形（Adjusted）叠在同一个 -20 至 40（每 5 一格）的左值轴上，只有横向网格线；零线加粗，柱可向下伸至 -17。类别名 90° 竖排（含 \"Flemish Region (BE)\"、\"Poland*\"，两个次国家实体用蓝绿色字区分）。图例在图上方以「空心+实心」成对字形表示显著性（\"Darker colours denote differences that are statistically significant at the 5% level\"）。绘图区有米色竖带分隔，轴下另有一条灰色分组横幅 \"Round, Cycle 1:\" 分为 1/2/3。标题四段拆开，单位 \"Score-point difference\" 单独置于顶端刻度之上。\n\n**定位一个值难在哪**\n\n以 -8 为例：它是 Israel 的实心菱形（Adjusted），与同一位置 Israel 的浅色柱（约 -2）重叠。一行表要写「Israel + Adjusted + 显著（深色）」三层键；图上无任何数字，刻度间距 5 分，凭肉眼读到 ±0.4（-8 的 5%）不可能。\n\n**不确定的**\n\n34 究竟是 Japan 的柱（像素读约 33）还是别的量；15 归 New Zealand Adjusted 还是 Finland Unadjusted 无法断定；米色竖带是否只作 Round 分隔、深浅蓝的具体归属，也只能按注释推断。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 3.8.",
+          "title": "Change in the gap in literacy proficiency between highly and low-educated adults",
+          "subtitle": "Adjusted and unadjusted change between cycles in the average score difference between adults with tertiary education and adults with below upper secondary education (Cycle 2 minus Cycle 1); 25-65 year-olds",
+          "unit_text": "Score-point difference",
+          "placement": "above"
+        },
+        "type": "compound",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 25,
+        "marks": 50,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Score-point difference",
+            "low": "-20",
+            "high": "40",
+            "serves": "all bars and all diamond markers"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "Japan",
+            "high": "Hungary",
+            "serves": "country/economy slots for bars and diamonds"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Poland*"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Unadjusted"
+          },
+          {
+            "role": "colour_group",
+            "label_source": "colour_only",
+            "example": "Darker colours denote differences that are statistically significant at the 5% level"
+          },
+          {
+            "role": "panel",
+            "label_source": "inline_label",
+            "example": "Round, Cycle 1:"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Poland*",
+            "Unadjusted",
+            "statistically significant at the 5% level",
+            "1"
+          ],
+          "value": "-17",
+          "value_source": "axis_read",
+          "why_hard": "Bar hangs below zero, top ends between -15 and -20 ticks; no printed number; significance only by shade."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "mixed_marks",
+        "figure_id": "f1",
+        "evidence": "Blue bars with open/filled diamond markers overlaid at each country position"
+      },
+      {
+        "key": "negative_values",
+        "figure_id": "f1",
+        "evidence": "Axis runs to -20; Poland*, Sweden, Israel bars extend below the zero line"
+      },
+      {
+        "key": "reference_line",
+        "figure_id": "f1",
+        "evidence": "Heavy horizontal rule drawn at 0 across the whole plot"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "Horizontal rules at every 5 points, no vertical grid lines"
+      },
+      {
+        "key": "rotated_x_ticks",
+        "figure_id": "f1",
+        "evidence": "Country names set vertically: 'Japan', 'Flemish Region (BE)', 'Hungary'"
+      },
+      {
+        "key": "color_encodes_extra_attribute",
+        "figure_id": "f1",
+        "evidence": "'Darker colours denote differences that are statistically significant at the 5% level.'"
+      },
+      {
+        "key": "shaded_band",
+        "figure_id": "f1",
+        "evidence": "Beige vertical bands in the plot between Poland* / New Zealand and near Israel"
+      },
+      {
+        "key": "two_level_x_ticks",
+        "figure_id": "f1",
+        "evidence": "Grey banner under country ticks labelled 'Round, Cycle 1:' split into segments 1, 2, 3"
+      },
+      {
+        "key": "legend_above_plot",
+        "figure_id": "f1",
+        "evidence": "'Unadjusted ... Adjusted' with paired glyphs sits above the top axis line"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "'Note: Does not include adults...' and 'Source: OECD (2018[4]; 2015[5]; 2012[6])...'"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "'Score-point difference' printed over the axis; ticks are bare numbers 40...-20"
+      },
+      {
+        "key": "axis_title_above_axis",
+        "figure_id": "f1",
+        "evidence": "'Score-point difference' set above the '40' tick, not alongside the axis"
+      },
+      {
+        "key": "footnote_marker",
+        "figure_id": "f1",
+        "evidence": "Category tick reads 'Poland*'; note says '*Caution is required in interpreting results'"
+      },
+      {
+        "key": "highlighted_category",
+        "figure_id": "f1",
+        "evidence": "'England (UK)' and 'Flemish Region (BE)' tick labels printed in teal, others black"
+      },
+      {
+        "key": "total_row_below_axis",
+        "figure_id": "f1",
+        "evidence": "Row '1 | 2 | 3' printed in a grey bar below the category labels"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "axis_group_band_below_plot",
+        "figure_id": "f1",
+        "evidence": "Grey banner with row title 'Round, Cycle 1:' spanning category groups 1, 2, 3 under the ticks",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "name": "paired_glyph_legend_for_significance",
+        "figure_id": "f1",
+        "evidence": "Legend shows two swatches per entry (open+filled) before 'Unadjusted' and 'Adjusted'",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "name": "sort_order_stated_in_note",
+        "figure_id": "f1",
+        "evidence": "'Countries and economies are ranked in descending order of the unadjusted change in the gap.'",
+        "affects": [
+          4
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "34",
+        "figure_id": "f1",
+        "mark": "the Japan Unadjusted bar (leftmost, tallest bar)",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Japan",
+          "Unadjusted"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "35",
+        "figure_id": "f1",
+        "mark": "the Japan Adjusted filled diamond, just above the bar top",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Japan",
+          "Adjusted"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "29",
+        "figure_id": "f1",
+        "mark": "the Austria Unadjusted bar (second slot)",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Austria",
+          "Unadjusted"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "19",
+        "figure_id": "f1",
+        "mark": "the Estonia Unadjusted bar (fifth slot)",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Estonia",
+          "Unadjusted"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-4",
+        "figure_id": "f1",
+        "mark": "the Korea Adjusted open diamond, below the zero line",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Korea",
+          "Adjusted"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-17",
+        "figure_id": "f1",
+        "mark": "the Poland* Unadjusted bar hanging below zero",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Poland*",
+          "Unadjusted"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "25",
+        "figure_id": "f1",
+        "mark": "the New Zealand Unadjusted bar, first slot after the beige band",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "New Zealand",
+          "Unadjusted"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "15",
+        "figure_id": "f1",
+        "mark": "the New Zealand Adjusted filled diamond, mid-height on that bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "New Zealand",
+          "Adjusted"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-8",
+        "figure_id": "f1",
+        "mark": "the Israel Adjusted filled diamond below zero, under the short Israel bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Israel",
+          "Adjusted"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "13",
+        "figure_id": "f1",
+        "mark": "the Hungary Unadjusted bar (rightmost slot)",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Hungary",
+          "Unadjusted"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "图上无任何数字，刻度每5分；13 的5%仅±0.65，-4、-8 的容差不足0.5，柱与菱形重叠，肉眼读数必超差。",
+    "examples": [
+      {
+        "gap": "P9",
+        "figure_id": "f1",
+        "quote": "Blue bars and open/filled diamond markers plotted at the same country position against one -20 to 40 axis",
+        "why": "同一格里柱与菱形两种标记共存，值必须记下读自哪种形状，现有管线只出单一标记族。"
+      },
+      {
+        "gap": "P8",
+        "figure_id": "f1",
+        "quote": "\"Darker colours denote differences that are statistically significant at the 5% level.\"",
+        "why": "深浅色承载显著性这一图例未写的属性，必须进入键，否则无法区分同一国同一系列。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "\"Figure 3.8.\" title, then subtitle line, then \"Score-point difference\" printed above the top tick",
+        "why": "编号、标题、副标题与单位分三处摆放，单位置于顶端刻度上方，现有标题只是一行字符串。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "Grey banner below the category labels: \"Round, Cycle 1:\" followed by segments labelled 1, 2 and 3",
+        "why": "轴下带行标题的分组横幅是第二层类别键；需新增“轴外分组带”构件才能生成与寻址。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "Ticks 40, 35 ... 0 ... -20 with a heavy zero rule; bars run both up and down",
+        "why": "负值、加粗零线与90°竖排国名同时出现，当前样式维度不控制零线与刻度方向。"
+      }
+    ]
+  }
+}

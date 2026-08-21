@@ -1,0 +1,304 @@
+{
+  "stem": "ac8b3538-en_p55",
+  "document": "ac8b3538-en",
+  "tags": "need_estimate",
+  "model": "gpt-5.6-sol",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 109.4,
+  "usage": {
+    "input_tokens": 8719,
+    "output_tokens": 7985,
+    "cache_read_tokens": 8716
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "**画出来要什么**\n\n单面板复合图：39个国家代码，每类同时绘制深绿女性柱和亮绿男性菱形点；零线横贯灰色网格区，OECD女性柱另用橙色突出。标题、说明、副标题、上方灰带图例、注释、来源及StatLink均需保留。\n\n**定位一个值难在哪**\n\n例如“NZL—Men”的-2.1没有数值标签，只能对照纵轴读取。纵轴每2 p.p.一格，而5%容差仅约0.1，精度明显不足。\n\n**不确定的**\n\n所有小数均未印在图上；-6.2与-6.3等相近值的国家归属只能结合栅格位置和给定清单判断。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Annex Figure 1.B.2.",
+          "title": "Change in unemployment risk by gender",
+          "subtitle": "Percentage point change in unemployment rate by gender, 2015-22",
+          "unit_text": "p.p",
+          "placement": "above"
+        },
+        "type": "compound",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 39,
+        "marks": 78,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "p.p",
+            "low": "-12",
+            "high": "6",
+            "serves": "all bars and diamond markers"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "GRC",
+            "high": "CRI",
+            "serves": "all bars and diamond markers"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "GRC"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Women (↗)"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "NZL",
+            "Men"
+          ],
+          "value": "-2.1",
+          "value_source": "axis_read",
+          "why_hard": "Two-point tick spacing greatly exceeds the value's 5% tolerance."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "mixed_marks",
+        "figure_id": "f1",
+        "evidence": "Dark-green bars and bright-green diamond markers share each country slot."
+      },
+      {
+        "key": "reference_line",
+        "figure_id": "f1",
+        "evidence": "A heavy horizontal black rule crosses the plot at 0."
+      },
+      {
+        "key": "negative_values",
+        "figure_id": "f1",
+        "evidence": "Most bars and diamonds fall below the centred 0 line."
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "“Note: OECD…” and “Source: OECD calculations…” appear below the plot."
+      },
+      {
+        "key": "legend_above_plot",
+        "figure_id": "f1",
+        "evidence": "“Women (↗)” and “Men” appear in a band above the plot."
+      },
+      {
+        "key": "data_link_below_figure",
+        "figure_id": "f1",
+        "evidence": "“StatLink” and “https://stat.link/46w2xu” are printed below the source."
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "Subtitle reads “Percentage point change in unemployment rate by gender, 2015-22”."
+      },
+      {
+        "key": "axis_title_above_axis",
+        "figure_id": "f1",
+        "evidence": "“p.p” is printed above the left value-axis ticks."
+      },
+      {
+        "key": "rotated_x_ticks",
+        "figure_id": "f1",
+        "evidence": "Country labels from “GRC” to “CRI” are diagonally rotated."
+      },
+      {
+        "key": "abbrev_category_axis",
+        "figure_id": "f1",
+        "evidence": "The category axis uses codes including “GRC”, “OECD”, and “CRI”."
+      },
+      {
+        "key": "panel_background",
+        "figure_id": "f1",
+        "evidence": "The plot area has a light-grey fill with white grid lines."
+      },
+      {
+        "key": "highlighted_category",
+        "figure_id": "f1",
+        "evidence": "The “OECD” women bar is orange while other women bars are dark green."
+      }
+    ],
+    "new_components": [
+      {
+        "name": "legend_background_band",
+        "figure_id": "f1",
+        "evidence": "The legend occupies a full-width light-grey band above the plot.",
+        "affects": []
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "-9.5",
+        "figure_id": "f1",
+        "mark": "the GRC Women (↗) bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "GRC",
+          "Women (↗)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-10.2",
+        "figure_id": "f1",
+        "mark": "the GRC Men diamond marker",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "GRC",
+          "Men"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-9.5",
+        "figure_id": "f1",
+        "mark": "the ESP Men diamond marker",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "ESP",
+          "Men"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-6.2",
+        "figure_id": "f1",
+        "mark": "the SVK Women (↗) bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "SVK",
+          "Women (↗)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-6.3",
+        "figure_id": "f1",
+        "mark": "the PRT Women (↗) bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "PRT",
+          "Women (↗)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-2.0",
+        "figure_id": "f1",
+        "mark": "the NZL Women (↗) bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "NZL",
+          "Women (↗)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-2.1",
+        "figure_id": "f1",
+        "mark": "the NZL Men diamond marker",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "NZL",
+          "Men"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "4.2",
+        "figure_id": "f1",
+        "mark": "the CRI Women (↗) bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "CRI",
+          "Women (↗)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "1.5",
+        "figure_id": "f1",
+        "mark": "the CRI Men diamond marker",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "CRI",
+          "Men"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "2.5",
+        "figure_id": "f1",
+        "mark": "the COL Women (↗) bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "COL",
+          "Women (↗)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "纵轴每2 p.p.一格；-2.0的5%仅0.1，远小于刻度间距，轴读值最易卡在步骤2。近。零线横贯灰色网格区，OECD女性柱另用橙色突出。标题、说明、副标题、上方灰带图例、注释、来源及StatLink均需保留。\n\n**定位一个值难在哪**\n\n例如“NZL—Men”的-2.1没有数值标签，只能对照纵轴读取。纵轴每2 p.p.一格，而5%容差仅约0.1，精度明显不足。\n\n**不确定的**\n\n所有小数均未印在图上；-6.2与-6.3等相近值的国家归属只能结合栅格位置和给定清单判断。",
+    "examples": [
+      {
+        "gap": "P9",
+        "figure_id": "f1",
+        "quote": "Dark-green bars and bright-green diamond markers share each country slot.",
+        "why": "同一面板需生成柱与独立点标记，并让取值记录包含标记形状。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "“p.p” is printed above ticks from -12 to 6; a black zero line crosses the plot.",
+        "why": "需控制单位位置、负值范围及加粗零线，而非仅绘制默认纵轴。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "Annex Figure 1.B.2. Change in unemployment risk by gender",
+        "why": "图号、主标题、副标题、单位及其位于图上方的关系必须分别重建。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "Country labels from “GRC” to “CRI” are diagonally rotated.",
+        "why": "39个缩写类目要求可控的倾斜刻度格式，避免标签重叠。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "The legend occupies a full-width light-grey band above the plot.",
+        "why": "需要新增可设背景和通栏宽度的图例容器样式。"
+      }
+    ]
+  }
+}

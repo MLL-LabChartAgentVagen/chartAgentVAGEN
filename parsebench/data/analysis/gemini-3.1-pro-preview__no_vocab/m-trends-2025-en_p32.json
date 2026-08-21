@@ -1,0 +1,259 @@
+{
+  "stem": "m-trends-2025-en_p32",
+  "document": "m-trends-2025-en",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "no_vocab",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 20.2,
+  "usage": {
+    "input_tokens": 3190,
+    "output_tokens": 2382,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n这是一个由多组并排柱状图（Grouped Bar Chart）组成的图表，展现了2024年逐月LockBit和RANSOMHUB在DLS列表上的计数情况。生成器需要支持：横轴为时间（月份），纵轴为数值（数量），并且能够处理双系列的并排柱状布局。图例位于右上角，图表标题“LockBit vs. RANSOMHUB DLS Listings, 2024”位于图表左上方。此外，Y轴的单位（Count of DLS Listings）沿着Y轴竖直排布，需要生成器支持这种轴标题布局。\n\n### 定位一个值难在哪\n以“LockBit在5月份的数值（约175）”为例，定位该值的难点在于数值并未直接标注在柱子上，需要读者根据Y轴的刻度（0, 50, 100, 150, 200）进行目测估算。虽然最高点的柱子明显超过150，但精确到具体数值（如175）仍有一定的主观性，5%的容错率（即误差在±8.75以内）在此刻度间距下是可以接受的，但这取决于表格提取工具对未标注数值的估算精度。\n\n### 不确定的\n无。所有元素均清晰可读，包括刻度、图例、类别标签及标题。未直接标注的数值可以通过Y轴刻度合理估算。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "LockBit vs. RANSOMHUB DLS Listings, 2024",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "grouped_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 12,
+        "marks": 24,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Count of DLS Listings",
+            "low": "0",
+            "high": "200",
+            "serves": "all bars"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "Jan",
+            "high": "Dec",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "May"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "LockBit"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "May",
+            "LockBit"
+          ],
+          "value": "175",
+          "value_source": "axis_read",
+          "why_hard": "values are not printed and must be read off the y-axis (scale 0-200, ticks every 50)"
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "grouped_bar",
+        "figure_id": "f1",
+        "evidence": "two bars per month, black and blue, placed side by side",
+        "affects": [
+          1
+        ]
+      },
+      {
+        "key": "y_axis_title_rotated",
+        "figure_id": "f1",
+        "evidence": "the text 'Count of DLS Listings' is rotated 90 degrees along the left y-axis",
+        "affects": [
+          4
+        ]
+      },
+      {
+        "key": "legend_top_right",
+        "figure_id": "f1",
+        "evidence": "legend with black square 'LockBit' and blue square 'RANSOMHUB' is in the top right, inside the plot area",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "horizontal_grid_lines",
+        "figure_id": "f1",
+        "evidence": "thin grey lines across the plot at 0, 50, 100, 150, 200",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "key": "x_axis_categorical_time",
+        "figure_id": "f1",
+        "evidence": "months 'Jan', 'Feb', ..., 'Dec' placed under the zero line",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "new_components": [],
+    "spot_checks": [
+      {
+        "value": "60",
+        "figure_id": "f1",
+        "mark": "the black bar for Jan",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Jan",
+          "LockBit"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "10",
+        "figure_id": "f1",
+        "mark": "the blue bar for Jan",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Jan",
+          "RANSOMHUB"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "100",
+        "figure_id": "f1",
+        "mark": "the black bar for Feb",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Feb",
+          "LockBit"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "55",
+        "figure_id": "f1",
+        "mark": "the black bar for March",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "March",
+          "LockBit"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "175",
+        "figure_id": "f1",
+        "mark": "the black bar for May",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "May",
+          "LockBit"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "35",
+        "figure_id": "f1",
+        "mark": "the blue bar for June",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "June",
+          "RANSOMHUB"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "68",
+        "figure_id": "f1",
+        "mark": "the blue bar for Aug",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Aug",
+          "RANSOMHUB"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "82",
+        "figure_id": "f1",
+        "mark": "the blue bar for Oct",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Oct",
+          "RANSOMHUB"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "98",
+        "figure_id": "f1",
+        "mark": "the blue bar for Nov",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Nov",
+          "RANSOMHUB"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "55",
+        "figure_id": "f1",
+        "mark": "the blue bar for Dec",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Dec",
+          "RANSOMHUB"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "数值未直接标出，需通过Y轴刻度读取。Y轴刻度间距为50，如“68”（Aug/RANSOMHUB）和“82”（Oct/RANSOMHUB）等非整数值很难目测到5%以内的精度，可能导致提取的数值超出容差。",
+    "examples": [
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "Count of DLS Listings",
+        "why": "图表的纵轴单位文字是垂直排布的，目前流水线在Y轴单位位置及文字方向（旋转）的支持上可能需要扩展，以匹配这类常见排版。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "LockBit vs. RANSOMHUB DLS Listings, 2024",
+        "why": "标题紧贴在无边框图表的正上方，没有明确的图表编号，这种将标题直接作为图表整体头部（heading block）一部分的设计需要P7的结构化标题支持。"
+      }
+    ]
+  }
+}

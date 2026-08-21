@@ -1,0 +1,194 @@
+{
+  "stem": "2025-EIS_p47",
+  "document": "2025-EIS",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "no_vocab",
+  "effort": "high",
+  "dpi": 150,
+  "seconds": 91.2,
+  "usage": {
+    "input_tokens": 2279,
+    "output_tokens": 12644,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "此页面包含一个水平复合条形图（Figure 16），展示了欧盟各国的创新表现。图表由彩色水平条形（代表2025年得分）、菱形点（2018年得分）和垂直线（2024年得分）叠加组合而成。\n\n解析此图表的最大难点在于**数值读取精度**。X轴的网格线间距为20（0, 20, 40... 220），且所有标记均未直接标注数值，依赖视觉估算很难准确提取出如173、179等精确值，通常会超出解析工具的容差范围。此外，图表中未能找到与数值185对应的明确标记（推测可能是比利时的2024年垂直线，但在图中缺失或不可见），这也是提取时的异常情况。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 16:",
+          "title": "Innovation performance of the EU27 Member States in the Innovators dimension",
+          "subtitle": "Innovators",
+          "unit_text": "Score for dimension 3.1 in 2025 (indexed to the EU in 2018)",
+          "placement": "above"
+        },
+        "type": "bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 6,
+        "categories": 28,
+        "marks": 83,
+        "values_printed": "none"
+      }
+    ],
+    "components": [
+      {
+        "key": "categorical_y_axis",
+        "figure_id": "f1",
+        "evidence": "country names like Greece and Belgium aligned on the left",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "continuous_x_axis",
+        "figure_id": "f1",
+        "evidence": "ticks 0, 20, 40 ... 220 at the bottom",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "key": "color_legend",
+        "figure_id": "f1",
+        "evidence": "colored squares mapped to innovator categories",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "marker_legend",
+        "figure_id": "f1",
+        "evidence": "diamond and vertical bar mapped to 2018 and 2024 scores",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "axis_title",
+        "figure_id": "f1",
+        "evidence": "the text below the x-axis describing the score",
+        "affects": [
+          1,
+          4
+        ]
+      },
+      {
+        "key": "chart_note",
+        "figure_id": "f1",
+        "evidence": "italicized text starting with 'Note:' below the legends",
+        "affects": [
+          4
+        ]
+      }
+    ],
+    "new_components": [
+      {
+        "name": "composite_mark_overlay",
+        "figure_id": "f1",
+        "evidence": "diamonds and vertical lines drawn directly over the horizontal bars",
+        "affects": [
+          2,
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "209",
+        "figure_id": "f1",
+        "mark": "the Greece bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Greece"
+        ]
+      },
+      {
+        "value": "150",
+        "figure_id": "f1",
+        "mark": "the Croatia Score in 2024 vertical mark",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Croatia",
+          "Score in 2024"
+        ]
+      },
+      {
+        "value": "185",
+        "figure_id": "not_found",
+        "mark": "no visible mark matches 185; possibly missing Belgium 2024 mark",
+        "printed_on_figure": false,
+        "addressing_keys": []
+      },
+      {
+        "value": "8",
+        "figure_id": "f1",
+        "mark": "the Romania bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Romania"
+        ]
+      },
+      {
+        "value": "105",
+        "figure_id": "f1",
+        "mark": "the EU bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "EU"
+        ]
+      },
+      {
+        "value": "179",
+        "figure_id": "f1",
+        "mark": "the Belgium bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Belgium"
+        ]
+      },
+      {
+        "value": "195",
+        "figure_id": "f1",
+        "mark": "the Cyprus Score in 2024 vertical mark",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Cyprus",
+          "Score in 2024"
+        ]
+      },
+      {
+        "value": "166",
+        "figure_id": "f1",
+        "mark": "the Czechia Score in 2024 vertical mark",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Czechia",
+          "Score in 2024"
+        ]
+      },
+      {
+        "value": "173",
+        "figure_id": "f1",
+        "mark": "the Italy bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Italy"
+        ]
+      },
+      {
+        "value": "37",
+        "figure_id": "f1",
+        "mark": "the Bulgaria bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Bulgaria"
+        ]
+      }
+    ],
+    "hardest_step": 2
+  }
+}

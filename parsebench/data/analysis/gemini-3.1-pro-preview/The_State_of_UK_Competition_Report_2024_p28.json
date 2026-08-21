@@ -1,0 +1,271 @@
+{
+  "stem": "The_State_of_UK_Competition_Report_2024_p28",
+  "document": "The_State_of_UK_Competition_Report_2024",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 82.3,
+  "usage": {
+    "input_tokens": 5349,
+    "output_tokens": 11478,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n此页面包含一个单面板折线图。要生成此类图表，渲染器需要具备以下能力：\n1. **多重折线样式控制**：支持对单条折线独立设置颜色、粗细和虚实线型（如图中粗黄虚线、粗深蓝实线、细浅蓝虚线共存）。\n2. **行内序列标签**：支持省略独立图例块，将系列名称直接标注在对应折线的末端右侧。\n3. **背景阴影带标注**：支持在绘图区特定的 x 轴范围内绘制垂直阴影带，并在其上方直接显示说明文本（如“Great Financial Crisis”）。\n4. **稀疏时间刻度**：能够按年绘制数据点，但自定义 x 轴刻度标签的显示频率（如每 4 年显示一次）。\n5. **特定标题布局**：y 轴单位/标题放置在顶部刻度正上方，图表标题和较长的副标题段落位于图表正上方。\n\n### 定位一个值难在哪\n以 1997 年 Bottom 5% 对应的数值 `0.58` 为例，主要难点在于该图表完全依赖轴刻度读数（无数据标签）。纵轴的刻度间隔高达 0.5，且缺乏垂直网格线辅助定位。对于 `0.58`，其 5% 的容差仅约为 0.029，在如此宽的刻度间距中，肉眼极难将其与 `0.6` 或其他相近值精确区分，无法满足严格的精度要求。\n\n### 不确定的\n折线图内部的转折点显示数据是逐年记录的，但仅部分年份在 x 轴上标出，需通过平移推算未标出的年份位置。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 10:",
+          "title": "Markups have risen more at the top of the distribution than elsewhere",
+          "subtitle": "Evolution of average markups in different quantiles of the markup distribution. Data from Annual Respondents Database X (ARDx) 1997-2020 and Annual Business Survey (ABS) 2021. GB only",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 1,
+        "series": 7,
+        "categories": 25,
+        "marks": 175,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Markup",
+            "low": ".5",
+            "high": "2.5",
+            "serves": "all lines"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "Year",
+            "low": "1997",
+            "high": "2021",
+            "serves": "all lines"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "series",
+            "label_source": "inline_label",
+            "example": "Top 5%"
+          },
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "1997"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Top 5%",
+            "2017"
+          ],
+          "value": "2.1",
+          "value_source": "axis_read",
+          "why_hard": "Y-axis tick interval is 0.5 without minor gridlines, making reading an exact 2.1 very difficult."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "inline_series_labels",
+        "figure_id": "f1",
+        "evidence": "series names like Top 5% and Mean are written directly beside the right ends of the lines"
+      },
+      {
+        "key": "axis_title_above_axis",
+        "figure_id": "f1",
+        "evidence": "the word Markup sits directly above the y-axis rather than alongside it"
+      },
+      {
+        "key": "dashed_line_series",
+        "figure_id": "f1",
+        "evidence": "six of the seven series are drawn as dashed lines"
+      },
+      {
+        "key": "shaded_band",
+        "figure_id": "f1",
+        "evidence": "two gray vertical bands cover specific time ranges in the background"
+      },
+      {
+        "key": "annotation_callout",
+        "figure_id": "f1",
+        "evidence": "text labels Great Financial Crisis and Covid-19 Pandemic sit inside the shaded bands"
+      },
+      {
+        "key": "sparse_time_ticks",
+        "figure_id": "f1",
+        "evidence": "ticks are printed every 4 years but line bends show annual data points"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "horizontal dashed grid lines are present, but there are no vertical ones"
+      },
+      {
+        "key": "dense_marks_100plus",
+        "figure_id": "f1",
+        "evidence": "7 series across 25 years yields about 175 data points"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "Markups are calculated... note sits in small print below the x-axis"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "variable_line_thickness",
+        "figure_id": "f1",
+        "evidence": "the Top 5% and Mean lines are drawn noticeably thicker than the others",
+        "affects": []
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "1.85",
+        "figure_id": "f1",
+        "mark": "the Top 5% line in 2001",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Top 5%",
+          "2001"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "0.58",
+        "figure_id": "f1",
+        "mark": "the Bottom 5% line in 1997",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Bottom 5%",
+          "1997"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "1.12",
+        "figure_id": "f1",
+        "mark": "the Mean line in 2009",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Mean",
+          "2009"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "1.52",
+        "figure_id": "f1",
+        "mark": "the Top 10% line in 2005",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Top 10%",
+          "2005"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "1.50",
+        "figure_id": "f1",
+        "mark": "the Top 10% line in 2009",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Top 10%",
+          "2009"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "1.08",
+        "figure_id": "f1",
+        "mark": "the Median line in 2009",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Median",
+          "2009"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "1.30",
+        "figure_id": "f1",
+        "mark": "the Top 25% line in 2009",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Top 25%",
+          "2009"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "0.82",
+        "figure_id": "f1",
+        "mark": "the Bottom 25% line in 2009",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Bottom 25%",
+          "2009"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "2.10",
+        "figure_id": "f1",
+        "mark": "the Top 5% line in 2017",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Top 5%",
+          "2017"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "0.60",
+        "figure_id": "f1",
+        "mark": "the Bottom 5% line in 2009",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Bottom 5%",
+          "2009"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "该图无数据标签，纵轴刻度间距高达0.5。例如“0.58”的5%容差仅约0.029，在没有密集垂直网格线辅助下，肉眼很难在图上将其与0.6等邻近值精确区分开。",
+    "examples": [
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "gray vertical bands labeled Great Financial Crisis and Covid-19 Pandemic",
+        "why": "渲染器缺乏在绘图区背景层添加跨越特定x轴区间的垂直阴影带并在其上方写入文本的特定标注功能。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "series names like Top 5%, Top 10% are printed directly at the right ends of their lines",
+        "why": "渲染器目前只能生成独立区块的图例，不支持将系列名称作为行内标签直接放置并对齐在折线末端。"
+      }
+    ]
+  }
+}

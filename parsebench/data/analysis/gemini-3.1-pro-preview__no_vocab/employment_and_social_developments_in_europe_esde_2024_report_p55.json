@@ -1,0 +1,387 @@
+{
+  "stem": "employment_and_social_developments_in_europe_esde_2024_report_p55",
+  "document": "employment_and_social_developments_in_europe_esde_2024_report",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "no_vocab",
+  "effort": "high",
+  "dpi": 150,
+  "seconds": 67.8,
+  "usage": {
+    "input_tokens": 3194,
+    "output_tokens": 8967,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n页面包含两个双面板的折线图。需要支持：图表带有主标题和副标题，居中置于两个面板上方；每个面板有独立的子标题（如 `a) Gender employment gap`）；图例分散放置在各自对应的面板下方；X轴标签可以倾斜显示（45度或90度）；同一图表的不同面板可以有不同的X轴范围（如图2.8的2002-2022与2010-2022）；一条折线可以带有数据点标记（如图2.9面板b），而其他折线平滑；支持在两条折线之间绘制带有红色双向箭头和居中文本（`Gender gap`）的注释（如图2.9a）。\n\n### 定位一个值难在哪\n以图2.8a中2022年 `Gap in pp` 的值 `10.5` 为例。首先，读者必须指定所在的面板（`a) Gender employment gap`）、系列（`Gap in pp`）和年份（`2022`）才能唯一定位。其次，数值并未标注在图表上，必须通过折线端点对照左侧Y轴（刻度间隔为2）来估算。由于缺乏水平网格线，判断一个位于10和12之间的点是10.5、10.2还是10.8存在极大的视觉误差，难以满足5%的读取容差。\n\n### 不确定的\n图2.9面板b没有独立的图例，其折线代表的系列名称只能从其子标题和主图表的副标题中推断（标准差）。图2.8中关于由于修订导致的数据断点（脚注提及）在折线绘制上并未表现为明显的物理断开，仅为连续线条。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Chart 2.8",
+          "title": "Recent declines in gender employment and pay gaps were accompanied by some convergence",
+          "subtitle": "Gender employment and pay gaps and cross-country variation (standard deviation), 2002-2022, EU-27",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 2,
+        "series": 2,
+        "categories": 21,
+        "marks": 68,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "0",
+            "high": "20",
+            "serves": "all lines in panel a"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "2002",
+            "high": "2022",
+            "serves": "all lines in panel a"
+          },
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "0",
+            "high": "20",
+            "serves": "all lines in panel b"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "2010",
+            "high": "2022",
+            "serves": "all lines in panel b"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "panel",
+            "label_source": "panel_title",
+            "example": "a) Gender employment gap"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Gap in pp"
+          },
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2002"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "a) Gender employment gap",
+            "Gap in pp",
+            "2002"
+          ],
+          "value": "18.0",
+          "value_source": "axis_read",
+          "why_hard": "The value is unprinted and must be visually read against an axis with tick intervals of 2, without gridlines."
+        }
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "Chart 2.9",
+          "title": "Slow but steady rise in gender segregation in education, health and social work sectors",
+          "subtitle": "Proportion of employment in education, human health and social work activities by gender, and cross-country variation in gender gap (standard deviation), 2008-2023, EU-27",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 2,
+        "series": 2,
+        "categories": 16,
+        "marks": 48,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "0",
+            "high": "35",
+            "serves": "all lines in panel a"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "2008",
+            "high": "2023",
+            "serves": "all lines in panel a"
+          },
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "0",
+            "high": "6",
+            "serves": "the line in panel b"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "2008",
+            "high": "2023",
+            "serves": "the line in panel b"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "panel",
+            "label_source": "panel_title",
+            "example": "a) % of workers in education, health and social work by gender"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Men (%)"
+          },
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2008"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "a) % of workers in education, health and social work by gender",
+            "Men (%)",
+            "2008"
+          ],
+          "value": "7.0",
+          "value_source": "axis_read",
+          "why_hard": "No values are printed, and the 7.0 point must be estimated between ticks 5 and 10 on the y-axis."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "side_by_side_panels",
+        "figure_id": "f1",
+        "evidence": "two plots placed horizontally adjacent with distinct titles",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "panel_title",
+        "figure_id": "f1",
+        "evidence": "'a) Gender employment gap' sits above the left plot",
+        "affects": [
+          3,
+          4
+        ]
+      },
+      {
+        "key": "rotated_x_axis_labels",
+        "figure_id": "f1",
+        "evidence": "the years '2002, 2004...' are tilted diagonally",
+        "affects": [
+          2,
+          3
+        ]
+      },
+      {
+        "key": "legend_below_panel",
+        "figure_id": "f1",
+        "evidence": "a specific legend sits directly below each panel's x-axis",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "dashed_line_series",
+        "figure_id": "f1",
+        "evidence": "the 'Standard deviation' series uses a dashed stroke",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "line_with_markers",
+        "figure_id": "f2",
+        "evidence": "the line in panel b uses circular points on vertices",
+        "affects": [
+          2,
+          3
+        ]
+      }
+    ],
+    "new_components": [
+      {
+        "name": "annotation_arrow_between_series",
+        "figure_id": "f2",
+        "evidence": "red double-headed arrow labeled 'Gender gap' between two lines",
+        "affects": [
+          4
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "18.0",
+        "figure_id": "f1",
+        "mark": "the 2002 Gap in pp point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "a) Gender employment gap",
+          "Gap in pp",
+          "2002"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "10.5",
+        "figure_id": "f1",
+        "mark": "the 2022 Gap in pp point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "a) Gender employment gap",
+          "Gap in pp",
+          "2022"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "9.5",
+        "figure_id": "f1",
+        "mark": "the 2002 Standard deviation point in panel a",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "a) Gender employment gap",
+          "Standard deviation",
+          "2002"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "15.8",
+        "figure_id": "f1",
+        "mark": "the 2010 Gap in % point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "b) Gender pay gap",
+          "Gap in %",
+          "2010"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "12.8",
+        "figure_id": "f1",
+        "mark": "the 2022 Gap in % point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "b) Gender pay gap",
+          "Gap in %",
+          "2022"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "6.5",
+        "figure_id": "f1",
+        "mark": "the 2010 Standard deviation point in panel b",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "b) Gender pay gap",
+          "Standard deviation",
+          "2010"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "5.2",
+        "figure_id": "f2",
+        "mark": "the 2008 point in panel b",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "b) Cross-country variation in gender gap",
+          "2008"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "7.0",
+        "figure_id": "f2",
+        "mark": "the 2008 Men (%) point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "a) % of workers in education, health and social work by gender",
+          "Men (%)",
+          "2008"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "26.5",
+        "figure_id": "f2",
+        "mark": "the 2008 Women (%) point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "a) % of workers in education, health and social work by gender",
+          "Women (%)",
+          "2008"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "30.5",
+        "figure_id": "f2",
+        "mark": "the 2023 Women (%) point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "a) % of workers in education, health and social work by gender",
+          "Women (%)",
+          "2023"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "所有测试值均未在图表上直接标注。由于折线图缺乏水平网格线，且Y轴刻度间隔偏大（如间隔为2或5），读取如 10.5 这样的数值极难控制在5%的误差容限内。",
+    "examples": [
+      {
+        "gap": "P2",
+        "figure_id": "f1",
+        "quote": "panels explicitly labelled 'a) Gender employment gap' and 'b) Gender pay gap'",
+        "why": "图表包含多个面板，面板标题作为定位具体数值的必要维度（panel_key），目前的生成器流水线尚未系统性支持将面板级维度作为寻址键输出。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f2",
+        "quote": "red double-headed arrow labeled 'Gender gap' drawn between the Men and Women lines",
+        "why": "当前的图表生成器无法在折线图的两条动态序列线之间，生成跨越空间、带有文本标注的双向箭头注释，用于强调特定差距。"
+      }
+    ]
+  }
+}

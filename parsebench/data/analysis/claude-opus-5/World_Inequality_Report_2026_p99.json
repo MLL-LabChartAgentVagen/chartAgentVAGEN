@@ -1,0 +1,446 @@
+{
+  "stem": "World_Inequality_Report_2026_p99",
+  "document": "World_Inequality_Report_2026",
+  "tags": "untagged",
+  "model": "claude-opus-5",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 52.4,
+  "usage": {
+    "input_tokens": 13977,
+    "output_tokens": 4285,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "**画出来要什么**\n\n两幅独立编号图共页。图4.10 是三条时间序列折线（High income / Low & middle income / World），2000–2025，y 轴 80%–105%、水平虚线网格，另有一条红色虚线参考线并在图内标注 \"Gender parity\"；y 轴标题竖排且分两行 \"Female high school enrollment (as % of male high school enrollment)\"；标题分成绿色编号+黑色标题行，再加一行加粗副标题 \"Female high school enrollment as a share of male enrollment, 2000–2025\"；图例在图下方。图4.11 是 8 组分组柱（Men/Women），每根柱顶印数值，y 轴 0%–14% 每 1% 一档，轴标题竖排 \"Return to an additional year of schooling (%)\"，类别标签换行（\"Sub–Sah. Africa\"、\"Europe / U.S.\"）。两图下均有 **Interpretation.** 与 **Sources and series:** 段。\n\n**定位一个值难在哪**\n\n101：图上没印，只能在图4.10 中读红线 2025 端点，网格每 5%，101% 与 100% 参考线仅差约 1/5 格；且它在正文里写作 \"the ratio reached 101%\"，表格若从曲线取值需同时给出 \"High income\" 与 \"2025\"，而 x 轴刻度每 5 年，2025 恰是末刻度。\n\n**不确定的**\n\n折线实际逐年点数（按 26 点估计）；85 是否指 2000 年 Low & middle income 起点（图上读约 84.7%），无印值，存疑。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 4.10.",
+          "title": "The high school enrollment gender gap has decreased in the last 25 years",
+          "subtitle": "Female high school enrollment as a share of male enrollment, 2000–2025",
+          "unit_text": "Female high school enrollment (as % of male high school  enrollment)",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 1,
+        "series": 3,
+        "categories": 26,
+        "marks": 78,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Female high school enrollment (as % of male high school  enrollment)",
+            "low": "80%",
+            "high": "105%",
+            "serves": "all three lines"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "2000",
+            "high": "2025",
+            "serves": "all three lines"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Low & middle income"
+          },
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2000"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "High income",
+            "2025"
+          ],
+          "value": "101%",
+          "value_source": "axis_read",
+          "why_hard": "No printed value; gridlines every 5%, red line sits ~1% above the parity rule at panel edge."
+        }
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "Figure 4.11.",
+          "title": "Education alone cannot fully close the gap",
+          "subtitle": "Returns to schooling by gender, 2019",
+          "unit_text": "Return to an additional year of schooling  (%)",
+          "placement": "above"
+        },
+        "type": "grouped_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 8,
+        "marks": 16,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Return to an additional year of schooling  (%)",
+            "low": "0%",
+            "high": "14%",
+            "serves": "all bars"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "MENA",
+            "high": "Europe / U.S.",
+            "serves": "the eight region slots"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Sub–Sah. Africa"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Women"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Sub–Sah. Africa",
+            "Women"
+          ],
+          "value": "9.7%",
+          "value_source": "printed",
+          "why_hard": "Category label is an abbreviation wrapped over two lines; value label sits above a neighbouring taller bar."
+        }
+      },
+      {
+        "id": "f3",
+        "heading": {
+          "figure_number": "",
+          "title": "",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "none"
+        },
+        "type": "unreadable",
+        "type_other": "interpretation paragraph under each figure, body text not a figure",
+        "panels": 1,
+        "series": 1,
+        "categories": 0,
+        "marks": 0,
+        "values_printed": "none",
+        "axes": [],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "not_shown",
+            "example": "Interpretation."
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Interpretation."
+          ],
+          "value": "",
+          "value_source": "not_readable",
+          "why_hard": "It is prose, not a chart."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "multi_figure_page",
+        "figure_id": "page",
+        "evidence": "\"Figure 4.10.\" and \"Figure 4.11.\" each with their own title and Interpretation block"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "page",
+        "evidence": "\"Sources and series: wir2026.wid.world/methodology.\" and \"Sources and series: Gethin (2024).\""
+      },
+      {
+        "key": "reference_line",
+        "figure_id": "f1",
+        "evidence": "red dashed horizontal rule at 100% labelled \"Gender parity\""
+      },
+      {
+        "key": "annotation_callout",
+        "figure_id": "f1",
+        "evidence": "red text \"Gender parity\" drawn inside the plot just under the dashed rule"
+      },
+      {
+        "key": "dashed_line_series",
+        "figure_id": "f1",
+        "evidence": "the parity rule is dashed while the three data lines are solid"
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "\"High income — Low & middle income — World\" row sits under the plot"
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f2",
+        "evidence": "\"Men  Women\" swatch row sits below the category axis"
+      },
+      {
+        "key": "axis_starts_above_zero",
+        "figure_id": "f1",
+        "evidence": "left axis lowest tick reads \"80%\", top \"105%\""
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "dashed horizontal rules at 85%, 90%, 95%, 100%; only faint verticals at year ticks"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f2",
+        "evidence": "horizontal dotted rules at every 1% across the panel"
+      },
+      {
+        "key": "rotated_axis_title",
+        "figure_id": "f1",
+        "evidence": "\"Female high school enrollment (as % of male high school  enrollment)\" set vertically"
+      },
+      {
+        "key": "rotated_axis_title",
+        "figure_id": "f2",
+        "evidence": "\"Return to an additional year of schooling  (%)\" set vertically beside the axis"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f2",
+        "evidence": "axis title carries \"(%)\"; ticks read \"0%\" to \"14%\""
+      },
+      {
+        "key": "grouped_bar",
+        "figure_id": "f2",
+        "evidence": "a red and a green bar side by side in each of eight region slots"
+      },
+      {
+        "key": "value_label_outside",
+        "figure_id": "f2",
+        "evidence": "\"4.2%\", \"12.1%\" printed above the bar tops"
+      },
+      {
+        "key": "wrapped_category_labels",
+        "figure_id": "f2",
+        "evidence": "\"Sub–Sah. Africa\", \"Latin America\", \"Europe / U.S.\" wrap onto two lines"
+      },
+      {
+        "key": "abbrev_category_axis",
+        "figure_id": "f2",
+        "evidence": "\"MENA\" and \"Sub–Sah. Africa\" written as codes/abbreviations"
+      },
+      {
+        "key": "sparse_time_ticks",
+        "figure_id": "f1",
+        "evidence": "ticks 2000, 2005, 2010, 2015, 2020, 2025 while the lines bend yearly"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "interpretation_paragraph_block",
+        "figure_id": "page",
+        "evidence": "\"Interpretation. This figure shows the evolution of the gender gap...\" bold lead-in under each figure",
+        "affects": [
+          4
+        ]
+      },
+      {
+        "name": "numbered_title_two_colour",
+        "figure_id": "page",
+        "evidence": "\"Figure 4.10.\" in green bold, title text in black bold on the same line",
+        "affects": [
+          3,
+          4
+        ]
+      },
+      {
+        "name": "bold_subtitle_above_plot",
+        "figure_id": "f1",
+        "evidence": "bold line \"Female high school enrollment as a share of male enrollment, 2000–2025\" between title and plot",
+        "affects": [
+          4
+        ]
+      },
+      {
+        "name": "value_in_caption_text",
+        "figure_id": "f1",
+        "evidence": "\"in high–income countries, the ratio reached 101%\" printed only in the Interpretation prose",
+        "affects": [
+          1,
+          2,
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "85",
+        "figure_id": "f1",
+        "mark": "the Low & middle income line at 2000 (reads ~84.7%); 85% is also a left-axis tick label",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Low & middle income",
+          "2000"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "101",
+        "figure_id": "f1",
+        "mark": "the High income line at 2025, just above the 100% parity rule",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "High income",
+          "2025"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "4.2",
+        "figure_id": "f2",
+        "mark": "the MENA Men bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "MENA",
+          "Men"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "6.3",
+        "figure_id": "f2",
+        "mark": "the MENA Women bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "MENA",
+          "Women"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "8.3",
+        "figure_id": "f2",
+        "mark": "the China Men bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "China",
+          "Men"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "10.5",
+        "figure_id": "f2",
+        "mark": "the China Women bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "China",
+          "Women"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "7.6",
+        "figure_id": "f2",
+        "mark": "the World Men bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "World",
+          "Men"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "9.9",
+        "figure_id": "f2",
+        "mark": "the World Women bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "World",
+          "Women"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "10",
+        "figure_id": "f2",
+        "mark": "the Europe / U.S. Men bar, labelled \"10%\"",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Europe / U.S.",
+          "Men"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "12.1",
+        "figure_id": "f2",
+        "mark": "the Europe / U.S. Women bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Europe / U.S.",
+          "Women"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "图4.10 无印值：101 与 100% 参考线仅差1%，网格间距5%，5%容差下难分；85 端点实读约84.7。",
+    "examples": [
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "\"Figure 4.10.\" green, then title, then bold \"Female high school enrollment as a share of male enrollment, 2000–2025\" above the plot",
+        "why": "编号、标题、加粗副标题三层堆叠且双色，现管线只有单一 title 字段。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f2",
+        "quote": "Bar tops carry \"4.2%\", \"6.3%\" ... \"12.1%\"; ticks read \"0%\", \"1%\" ... \"14%\"",
+        "why": "每根柱外置带百分号标签，同时轴刻度也带 %，标签位置与刻度格式需可控。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "red dashed rule with in-plot red text \"Gender parity\" at the 100% level",
+        "why": "参考线自带图内文字注记且不进图例；需要参考线+注记作为独立可生成元素。"
+      },
+      {
+        "gap": "P3",
+        "figure_id": "page",
+        "quote": "\"Interpretation. This figure shows the evolution of the gender gap in high school enrollment from 2000 to 2025\"",
+        "why": "整页两图各带加粗引导的解释段，导出需保留段落与表格的相对位置。"
+      }
+    ]
+  }
+}

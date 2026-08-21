@@ -1,0 +1,339 @@
+{
+  "stem": "r_qt1212e_p9",
+  "document": "r_qt1212e",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 101.3,
+  "usage": {
+    "input_tokens": 5329,
+    "output_tokens": 14576,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n要生成此页面，图表生成器必须支持**多面板异构图表**，左侧面板为折线图，右侧面板为混合了柱状图和散点图的双轴图。它还需要支持**独立的面板图例**，并且能够在图例项中注入布局说明（如 `Lhs:` 和 `Rhs:`）。\n此外，生成器必须允许将单面板的唯一纵轴放置在图表右侧（如左侧面板），并支持非标准的年份缩写刻度和稀疏的时间轴刻度（如右侧面板每三年一个刻度）。样式上，绘图区需要支持浅灰色背景填充，并叠加上下贯穿的白色网格线。\n\n### 定位一个值难在哪\n以左侧图表03年的值 `51` 为例，要定位该值需要关联面板标题和图例项。其难点在于**容差读取**。左侧纵轴的刻度间隔为10（30到60），且没有次级网格线。该点位于50略偏上的位置，在没有数据标签且缺少精细刻度的情况下，很难以5%的置信度准确读出 `51`，极易被误读为50或52。\n\n### 不确定的\n在右侧面板中，虽然时间轴刻度每三年标注一次（80, 83...），但数据条实际上是按年绘制的。对于没有刻度标签的年份（如03年的 `0.33`），读者必须通过插值推断出对应的年份类别，不确定在自动化解析时能否准确还原这些未打印的时间标签。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Graph 6",
+          "title": "Reinsurance market developments",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "compound",
+        "type_other": "",
+        "panels": 2,
+        "series": 3,
+        "categories": 32,
+        "marks": 48,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "right",
+            "role": "value",
+            "unit_text": "Per cent",
+            "low": "30",
+            "high": "60",
+            "serves": "Top 10 market share"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "00",
+            "high": "11",
+            "serves": "Top 10 market share"
+          },
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Per cent of premiums",
+            "low": "0.0",
+            "high": "0.4",
+            "serves": "Market share of failed companies"
+          },
+          {
+            "side": "right",
+            "role": "value",
+            "unit_text": "Number of companies",
+            "low": "0",
+            "high": "4",
+            "serves": "Number of failures"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "80",
+            "high": "10",
+            "serves": "Market share of failed companies, Number of failures"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "panel",
+            "label_source": "panel_title",
+            "example": "Failures of reinsurance companies"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Number of failures3"
+          },
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "92"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Reinsurance market concentration",
+            "Top 10 market share1",
+            "03"
+          ],
+          "value": "51",
+          "value_source": "axis_read",
+          "why_hard": "No minor grid lines exist between 50 and 60, making it very hard to confidently estimate 51."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "mixed_marks",
+        "figure_id": "f1",
+        "evidence": "bars and red dots overlaid in the right panel"
+      },
+      {
+        "key": "dual_axis",
+        "figure_id": "f1",
+        "evidence": "left axis 0.0-0.4, right axis 0-4 on the right panel"
+      },
+      {
+        "key": "right_side_y_axis",
+        "figure_id": "f1",
+        "evidence": "left panel y-axis with 30 to 60 is on its right edge"
+      },
+      {
+        "key": "axis_starts_above_zero",
+        "figure_id": "f1",
+        "evidence": "left panel value axis starts at 30"
+      },
+      {
+        "key": "per_panel_legend",
+        "figure_id": "f1",
+        "evidence": "legends are placed independently under their respective panels"
+      },
+      {
+        "key": "panel_background",
+        "figure_id": "f1",
+        "evidence": "plot area has a light grey background fill"
+      },
+      {
+        "key": "sparse_time_ticks",
+        "figure_id": "f1",
+        "evidence": "ticks every 3 years on right panel but data is yearly"
+      },
+      {
+        "key": "axis_title_above_axis",
+        "figure_id": "f1",
+        "evidence": "unit texts like Per cent are above the top tick of axes"
+      },
+      {
+        "key": "heterogeneous_panel_types",
+        "figure_id": "f1",
+        "evidence": "left panel is a line chart, right panel is mixed"
+      },
+      {
+        "key": "nonstandard_time_ticks",
+        "figure_id": "f1",
+        "evidence": "years are written as two digits like 00, 01, 80"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "Sources and footnote lines printed below the figure"
+      },
+      {
+        "key": "footnote_marker",
+        "figure_id": "f1",
+        "evidence": "superscript 1, 2, 3 in the legend entries and panel title"
+      },
+      {
+        "key": "per_panel_axis_range",
+        "figure_id": "f1",
+        "evidence": "left panel y-axis is 30-60, right panel left y-axis is 0.0-0.4"
+      },
+      {
+        "key": "panel_title_per_panel",
+        "figure_id": "f1",
+        "evidence": "each panel carries its own specific title above it"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "units like Per cent are stated above the axes"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "axis_assignment_in_legend",
+        "figure_id": "f1",
+        "evidence": "legend entries prefix series names with Lhs: and Rhs:",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "51",
+        "figure_id": "f1",
+        "mark": "the Top 10 market share point at 03",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Reinsurance market concentration",
+          "Top 10 market share1",
+          "03"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "48",
+        "figure_id": "f1",
+        "mark": "the Top 10 market share point at 07",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Reinsurance market concentration",
+          "Top 10 market share1",
+          "07"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "53",
+        "figure_id": "not_found",
+        "mark": "no point on the line chart reaches 53",
+        "printed_on_figure": false,
+        "addressing_keys": [],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      },
+      {
+        "value": "42",
+        "figure_id": "f1",
+        "mark": "the Top 10 market share point at 01",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Reinsurance market concentration",
+          "Top 10 market share1",
+          "01"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "43",
+        "figure_id": "f1",
+        "mark": "the Top 10 market share point at 06",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Reinsurance market concentration",
+          "Top 10 market share1",
+          "06"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "0.1",
+        "figure_id": "f1",
+        "mark": "the Market share of failed companies point at 92",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Failures of reinsurance companies",
+          "Market share of failed companies2",
+          "92"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "3",
+        "figure_id": "f1",
+        "mark": "the Number of failures bar at 92",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Failures of reinsurance companies",
+          "Number of failures3",
+          "92"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "0",
+        "figure_id": "f1",
+        "mark": "the Number of failures bar at 80",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Failures of reinsurance companies",
+          "Number of failures3",
+          "80"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "0.33",
+        "figure_id": "f1",
+        "mark": "the Market share of failed companies point at 03",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Failures of reinsurance companies",
+          "Market share of failed companies2",
+          "03"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 3
+      },
+      {
+        "value": "1",
+        "figure_id": "f1",
+        "mark": "the Number of failures bar at 96",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Failures of reinsurance companies",
+          "Number of failures3",
+          "96"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 3
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "图表中大部分测试值（如51, 48, 0.33）必须从连续的纵轴上估算，而坐标轴缺少细分网格线，无法满足5%的读取容差要求。",
+    "examples": [
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "legend prefixes Lhs: and Rhs: to indicate axis assignment",
+        "why": "图例项直接带有“Lhs:”和“Rhs:”前缀以指示对应坐标轴，目前的图表生成器无法在图例名称中注入此类布局级别的说明文本。"
+      },
+      {
+        "gap": "P9",
+        "figure_id": "f1",
+        "quote": "bars and red dots overlaid on dual axes in the right panel",
+        "why": "右侧子图在双轴上混合使用了柱状图和散点图，记录一个值时必须指定它是从哪个轴和哪种标记形状中读取的。"
+      }
+    ]
+  }
+}

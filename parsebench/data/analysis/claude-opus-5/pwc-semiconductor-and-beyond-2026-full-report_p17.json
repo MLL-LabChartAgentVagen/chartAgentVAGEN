@@ -1,0 +1,300 @@
+{
+  "stem": "pwc-semiconductor-and-beyond-2026-full-report_p17",
+  "document": "pwc-semiconductor-and-beyond-2026-full-report",
+  "tags": "need_estimate",
+  "model": "claude-opus-5",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 63.8,
+  "usage": {
+    "input_tokens": 14080,
+    "output_tokens": 4903,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "**画出来要什么**\n\n一张两段堆叠柱：12 个时间槽（`'19` 到 `'30F`），灰色 `Conventional demand` 在下、橙色 `AI-driven demand` 在上，共 24 个分段，柱上不印数字。左轴 `0`–`180`，每 20 一格，只有横向网格线；单位不在轴上，而写在标题右侧同一行的 `(Unit: GW)`。图例在标题行右端、绘图区之上。绘图区内部还有一段加粗说明文字 `Rising AI data center power consumption signals growing AI compute demand and chipset needs`。柱顶之间另铺了一条淡橙色的包络填充带（不是数据系列，也没有图例）。整页右半为浅灰底，左半是与图并排的正文栏，底部 `Source: IEA, PwC analysis`。\n\n**定位一个值难在哪**\n\n`'19` 的 `AI-driven demand` 约为 1 GW：刻度间距 20 GW，这段橙色只有一两个像素高，5% 容差意味着 ±0.05 GW，肉眼与轴对读根本不可能；且柱上无任何数值标签。相比之下 `'28F` 的 62 与 `'25F` 的 62 同值不同系列，行必须同时带时间刻度与图例名两个标签才能唯一定位。\n\n**不确定的**\n\n淡橙包络带是总量面积还是纯装饰，无法判断；`F` 是否代表 forecast 页面上没有说明；灰橙两段的精确分界（如 `'30F` 的 96）只能凭网格线估读。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "Global data center power consumption",
+          "subtitle": "",
+          "unit_text": "(Unit: GW)",
+          "placement": "above"
+        },
+        "type": "stacked_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 12,
+        "marks": 24,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "0",
+            "high": "180",
+            "serves": "all stacked bar segments, both series"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "'19",
+            "high": "'30F",
+            "serves": "the twelve bar slots"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "'25F"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Conventional demand"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "'19",
+            "AI-driven demand"
+          ],
+          "value": "~1",
+          "value_source": "axis_read",
+          "why_hard": "Segment is one or two pixels tall; ticks every 20 GW; no printed label"
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "stacked_bar",
+        "figure_id": "f1",
+        "evidence": "grey segment below, orange segment above in each bar; bar length is the total"
+      },
+      {
+        "key": "annotation_callout",
+        "figure_id": "f1",
+        "evidence": "bold text over the plot: 'Rising AI data center power consumption signals growing AI compute demand and chipset needs'"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "'Source: IEA, PwC analysis' in small print under the plot"
+      },
+      {
+        "key": "legend_above_plot",
+        "figure_id": "f1",
+        "evidence": "'AI-driven demand' / 'Conventional demand' swatches at top right, above the plot area"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "'(Unit: GW)' set beside the title; the left axis shows bare 0, 20 ... 180"
+      },
+      {
+        "key": "nonstandard_time_ticks",
+        "figure_id": "f1",
+        "evidence": "ticks read \"'19\", \"'20\" ... \"'25F\", \"'30F\""
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "faint horizontal rules at 20, 40 ... 180; no vertical rules"
+      },
+      {
+        "key": "panel_background",
+        "figure_id": "f1",
+        "evidence": "the whole right half including the plot area carries a light grey tint"
+      },
+      {
+        "key": "side_text_bullets",
+        "figure_id": "page",
+        "evidence": "three body paragraphs in a left column level with the chart on the right half"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "total_envelope_area_behind_bars",
+        "figure_id": "f1",
+        "evidence": "pale orange fill spans between successive bar tops, behind the bars, with no legend entry",
+        "affects": [
+          1,
+          3
+        ]
+      },
+      {
+        "name": "forecast_suffix_in_tick_label",
+        "figure_id": "f1",
+        "evidence": "ticks '25F ... '30F carry an F suffix to mark forecast years instead of a shaded band",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "22",
+        "figure_id": "f1",
+        "mark": "the '19 Conventional demand segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "'19",
+          "Conventional demand"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "1",
+        "figure_id": "f1",
+        "mark": "the '19 AI-driven demand segment (sliver above 22)",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "'19",
+          "AI-driven demand"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "46",
+        "figure_id": "f1",
+        "mark": "the '22 Conventional demand segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "'22",
+          "Conventional demand"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "11",
+        "figure_id": "f1",
+        "mark": "the '22 AI-driven demand segment (46 to 57)",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "'22",
+          "AI-driven demand"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "62",
+        "figure_id": "f1",
+        "mark": "the '25F Conventional demand segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "'25F",
+          "Conventional demand"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "33",
+        "figure_id": "f1",
+        "mark": "the '25F AI-driven demand segment (62 to 95)",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "'25F",
+          "AI-driven demand"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "80",
+        "figure_id": "f1",
+        "mark": "the '28F Conventional demand segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "'28F",
+          "Conventional demand"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "62",
+        "figure_id": "f1",
+        "mark": "the '28F AI-driven demand segment (80 to 142)",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "'28F",
+          "AI-driven demand"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "96",
+        "figure_id": "f1",
+        "mark": "the '30F Conventional demand segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "'30F",
+          "Conventional demand"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "68",
+        "figure_id": "f1",
+        "mark": "the '30F AI-driven demand segment (96 to 164)",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "'30F",
+          "AI-driven demand"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "刻度每20GW且柱上无数字；'19 的 AI-driven demand 仅约1GW，5%容差±0.05，估读必失；62 还需两标签区分年份。",
+    "examples": [
+      {
+        "gap": "P1",
+        "figure_id": "f1",
+        "quote": "the '19 bar: a grey block to about 22 with an orange sliver on top, y ticks 0, 20 ... 180",
+        "why": "同一图内 1 GW 与 96 GW 共存，可读精度须按分段计算，不能整图一刀切。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "Global data center power consumption  (Unit: GW)",
+        "why": "单位以括号形式与标题同行右置，标题需拆成标题+单位+位置三个字段。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "a pale orange fill spanning between the tops of successive bars, drawn behind the grey and orange stacks",
+        "why": "柱顶包络填充带既非系列也无图例，生成器需支持非数据装饰层，并说明其不进键。"
+      },
+      {
+        "gap": "P3",
+        "figure_id": "f1",
+        "quote": "Bold text inside the plot: 'Rising AI data center power consumption signals growing AI compute demand and chipset needs'",
+        "why": "绘图区内的加粗注释与左栏正文都属页面级文本，导出需记录其相对表格的位置。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "x ticks read '19, '20 ... '25F, '26F ... '30F",
+        "why": "撇号缩写年加 F 后缀的刻度格式，现有刻度格式维度无法生成。"
+      }
+    ]
+  }
+}

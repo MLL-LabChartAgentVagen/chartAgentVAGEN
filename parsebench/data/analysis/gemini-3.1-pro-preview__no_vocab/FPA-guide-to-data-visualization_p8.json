@@ -1,0 +1,256 @@
+{
+  "stem": "FPA-guide-to-data-visualization_p8",
+  "document": "FPA-guide-to-data-visualization",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "no_vocab",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 72.3,
+  "usage": {
+    "input_tokens": 3198,
+    "output_tokens": 9645,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n需要生成器支持绘制组合图表（折线图结合面积图）。其中面积图（Scenarios）作为背景阴影，且只覆盖x轴的部分区间（1月至5月）。需要能够绘制完全水平的参考折线（Budget和Prior Year）。x轴的分类标签需要支持多行文本，且能够仅为首个刻度（Jan）添加表示年份的第二行标签（14）。图例水平单行排列在主标题与绘图区之间。y轴的单位（$m）需能放置于y轴刻度线的最上方。\n\n### 定位一个值难在哪\n以 `212` (March Forecast) 为例。该值在图表中没有任何打印的数值标签，完全依赖读者通过y轴的网格线（200与220，间距20）进行视觉插值读取。深蓝色的Forecast线条在三月份的位置略高于两者的中点（210），因此推断为212。由于线段具有斜率且没有辅助定位的标记点，精确定位极难，很容易超出5%的容差范围。\n\n### 不确定的\n图例中“Scenarios”前面有两个不同深浅的灰色方块（中间用逗号隔开），对应图表中表现为带有上下渐变效果的阴影区域，但不确定这具体代表的是统计学上的不同置信区间分布，还是简单的最高/最低预测范围。此外，不确定Budget和Prior Year这两条直线是否在原始数据中就是绝对恒定不变的，还是因为图表y轴的截断范围（100-220）导致微小波动无法在视觉上呈现。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "Western Europe Net Sales Windsock",
+          "subtitle": "",
+          "unit_text": "$m",
+          "placement": "above"
+        },
+        "type": "compound",
+        "type_other": "line and area",
+        "panels": 1,
+        "series": 4,
+        "categories": 12,
+        "marks": 30,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "$m",
+            "low": "100",
+            "high": "220",
+            "serves": "all lines and area"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "Jan 14",
+            "high": "Dec",
+            "serves": "all lines and area"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Forecast"
+          },
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "Jan 14"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Forecast",
+            "May"
+          ],
+          "value": "200",
+          "value_source": "axis_read",
+          "why_hard": "No values are printed, requiring precise visual interpolation against a y-axis with intervals of 20."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "legend_between_title_and_plot",
+        "figure_id": "f1",
+        "evidence": "the legend sits below the title and above the plot area",
+        "affects": []
+      },
+      {
+        "key": "y_axis_unit_at_top",
+        "figure_id": "f1",
+        "evidence": "$m is placed directly above the top of the y-axis line",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "key": "horizontal_reference_lines",
+        "figure_id": "f1",
+        "evidence": "Budget and Prior Year are drawn as perfectly flat lines across all months",
+        "affects": []
+      }
+    ],
+    "new_components": [
+      {
+        "name": "first_tick_year_label",
+        "figure_id": "f1",
+        "evidence": "only the first x-axis tick (Jan) has a year (14) printed below it",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "name": "partial_shaded_area",
+        "figure_id": "f1",
+        "evidence": "the grey Scenarios background area spans only a partial x-axis range (Jan to May)",
+        "affects": [
+          1
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "218",
+        "figure_id": "f1",
+        "mark": "the Jan Budget line",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Budget",
+          "Jan 14"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "218",
+        "figure_id": "f1",
+        "mark": "the Feb Budget line",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Budget",
+          "Feb"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "166",
+        "figure_id": "f1",
+        "mark": "the Jan Prior Year line",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Prior Year",
+          "Jan 14"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "166",
+        "figure_id": "f1",
+        "mark": "the Feb Prior Year line",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Prior Year",
+          "Feb"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "166",
+        "figure_id": "f1",
+        "mark": "the Mar Prior Year line",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Prior Year",
+          "Mar"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "218",
+        "figure_id": "f1",
+        "mark": "the Jan Forecast line",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Forecast",
+          "Jan 14"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "216",
+        "figure_id": "f1",
+        "mark": "the Feb Forecast line",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Forecast",
+          "Feb"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "212",
+        "figure_id": "f1",
+        "mark": "the Mar Forecast line",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Forecast",
+          "Mar"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "210",
+        "figure_id": "f1",
+        "mark": "the Apr Forecast line",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Forecast",
+          "Apr"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "200",
+        "figure_id": "f1",
+        "mark": "the May Forecast line",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Forecast",
+          "May"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      }
+    ],
+    "hardest_step": 1,
+    "hardest_step_why": "图表没有任何数据标签，y轴刻度间距为20。要求从折线中提取如216、212这样精确的值，通常会导致模型直接放弃生成表格，卡在第一步。",
+    "examples": [
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "the Jan tick on the x-axis has 14 printed on a second line below it",
+        "why": "生成器无法单独为x轴第一个刻度添加表示年份的第二行文本，而不影响其他月份刻度。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "the Scenarios grey area only spanning from Jan to May behind the lines",
+        "why": "流水线目前无法在折线图背景中绘制只覆盖部分时间轴区间的阴影区域。"
+      }
+    ]
+  }
+}

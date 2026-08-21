@@ -1,0 +1,203 @@
+{
+  "stem": "Feaco-Survey-2023-2024_p8",
+  "document": "Feaco-Survey-2023-2024",
+  "tags": "untagged",
+  "model": "gemini-3.1-pro-preview",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 67.5,
+  "usage": {
+    "input_tokens": 5312,
+    "output_tokens": 9245,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n要绘制此页面，生成器需要具备以下能力：\n1. **带背景的图表容器**：图表的标题、图例和绘图区均放置在一个完整的浅灰色背景面板中，而不是仅有绘图区带有底色。\n2. **分组水平条形图**：支持类别轴在左侧、数值轴在下方的水平条形图结构，同时每个类别内包含三个代表不同年份的条形，并呈垂直分组排列。\n3. **负值处理与标签放置**：数值轴需要能向左侧跨越零点（延伸至-10.0%），且针对负值条形，其数据标签需能够正确渲染在其条形的左端外部（如-11.5%）。\n4. **垂直网格线**：只绘制穿过面板的垂直网格线，无水平网格线。\n5. **独立表格排版**：页面同时包含具有复杂表头、单元格高亮及底部长文注释的数据表格。\n\n### 定位一个值难在哪\n以 `-11.5%` 为例：该值在页面正文、图表和表格中均有出现，且均清晰印出。然而最大的解析难点在于（Step 4），由于表格缺乏紧贴的专属标题，主标题被一段长正文隔开，模型可能难以将页面最上方的主标题确认为下方表格或图表的全局上下文。\n\n### 不确定的\n无法确定页面上方正文段落是作为整个报告的引言，还是应被视为表格特有的补充说明文本。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "MC turnover trend by Service Lines (European panel 2021-23)",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "grouped_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 3,
+        "categories": 6,
+        "marks": 18,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "bottom",
+            "role": "value",
+            "unit_text": "",
+            "low": "-10.0%",
+            "high": "35.0%",
+            "serves": "all bars"
+          },
+          {
+            "side": "left",
+            "role": "category",
+            "unit_text": "",
+            "low": "Sales & Marketing",
+            "high": "People & Change",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Sales & Marketing"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "2023"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Sales & Marketing",
+            "2023"
+          ],
+          "value": "20.7%",
+          "value_source": "printed",
+          "why_hard": ""
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "grouped_bar",
+        "figure_id": "f1",
+        "evidence": "three bars grouped together per service line"
+      },
+      {
+        "key": "horizontal_bars",
+        "figure_id": "f1",
+        "evidence": "categories on the left, bars grow to the right"
+      },
+      {
+        "key": "negative_values",
+        "figure_id": "f1",
+        "evidence": "the -11.5% bar extends to the left of the zero line"
+      },
+      {
+        "key": "vgrid_only",
+        "figure_id": "f1",
+        "evidence": "vertical grid lines across the panel, no horizontal ones"
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "legend with years sits below the plot area"
+      },
+      {
+        "key": "value_label_outside",
+        "figure_id": "f1",
+        "evidence": "numbers are printed at the ends of the bars"
+      },
+      {
+        "key": "panel_background",
+        "figure_id": "f1",
+        "evidence": "the entire chart area sits on a light grey background"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "page",
+        "evidence": "Source and note text with asterisks under the table"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "table_and_chart_redundancy",
+        "figure_id": "page",
+        "evidence": "the same data is presented in a table and a chart",
+        "affects": [
+          3,
+          4
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "20.7%",
+        "figure_id": "f1",
+        "mark": "the Sales & Marketing 2023 bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Sales & Marketing",
+          "2023"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "10.6%",
+        "figure_id": "f1",
+        "mark": "the Technology 2022 bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Technology",
+          "2022"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "22.0%",
+        "figure_id": "f1",
+        "mark": "the Strategy 2022 bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Strategy",
+          "2022"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "-11.5%",
+        "figure_id": "f1",
+        "mark": "the People & Change 2023 bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "People & Change",
+          "2023"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      }
+    ],
+    "hardest_step": 4,
+    "hardest_step_why": "表格和图表都没有紧贴的专属独立标题，页面的主标题位于一段解释性正文的上方，这使得提取出的上下文容易出现断层，导致孤立的表格丢失标题关联。",
+    "examples": [
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "the -11.5% label sits to the left of its bar",
+        "why": "图表生成器需支持负向条形图，并能够自动将负值的标签正确排布在条形的左侧外侧。"
+      },
+      {
+        "gap": "P3",
+        "figure_id": "page",
+        "quote": "the main page title is separated from the table by body text",
+        "why": "整页Markdown提取必须能跨越正文段落，将页面顶部的标题正确关联到下方的数据表上。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "the heading and chart share a grey background panel",
+        "why": "图表的标题和绘图区在一个带底色的统一容器中，生成器需要能将标题包含进背景层，而不仅是对绘图区填充底色。"
+      }
+    ]
+  }
+}

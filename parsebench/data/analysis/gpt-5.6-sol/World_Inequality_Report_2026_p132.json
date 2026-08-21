@@ -1,0 +1,245 @@
+{
+  "stem": "World_Inequality_Report_2026_p132",
+  "document": "World_Inequality_Report_2026",
+  "tags": "need_estimate",
+  "model": "gpt-5.6-sol",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "via": "openrouter",
+  "max_tokens": 120000,
+  "seconds": 114.8,
+  "usage": {
+    "input_tokens": 8837,
+    "output_tokens": 8340,
+    "cache_read_tokens": 2365
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "**画出来要什么**：单面板五系列折线图；顶部拆分图号、主标题和副标题；左侧纵排百分比轴，底部16个倾斜分位组标签。线条带不同点形，图内有灰色“99%”区间及方框说明，图例、解读和来源置于图下。\n\n**定位一个值难在哪**：如 United States 的 P90–95 为12.5，必须同时匹配倾斜类别与下方图例；数值未印出，只能在10%和15%网格线之间估读。\n\n**不确定的**：若干点和线可能重叠，约73个点为目测；给定的重复值18和15无法仅凭数值唯一反推指定点。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 7.2.",
+          "title": "The super-rich pay proportionately less than others",
+          "subtitle": "Effective income tax rates by income groups",
+          "unit_text": "% of pre-tax income",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 1,
+        "series": 5,
+        "categories": 16,
+        "marks": 73,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "% of pre-tax income",
+            "low": "0%",
+            "high": "25%",
+            "serves": "all five country lines"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "P0–10",
+            "high": "Billionaires",
+            "serves": "all plotted points"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "P90–95"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "United States"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "P90–95",
+            "United States"
+          ],
+          "value": "12.5",
+          "value_source": "axis_read",
+          "why_hard": "The number is unprinted, midway between 5-point ticks, and requires matching the red line to its legend."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "annotation_callout",
+        "figure_id": "f1",
+        "evidence": "Boxed note inside plot reads “99% of the population are located in the shaded area.”"
+      },
+      {
+        "key": "shaded_band",
+        "figure_id": "f1",
+        "evidence": "A grey vertical band spans P0–10 through P95–99."
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "The Brazil-to-United States legend is centred below the rotated category labels."
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "“Interpretation.” and “Sources and series:” introduce text directly beneath the legend."
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "The vertical axis title ends “(% of pre-tax income)”."
+      },
+      {
+        "key": "rotated_axis_title",
+        "figure_id": "f1",
+        "evidence": "The effective-income-tax axis title runs vertically along the left side."
+      },
+      {
+        "key": "rotated_x_ticks",
+        "figure_id": "f1",
+        "evidence": "Labels from “P0–10” through “Billionaires” are angled diagonally."
+      }
+    ],
+    "new_components": [
+      {
+        "name": "marker_shape_encodes_series",
+        "figure_id": "f1",
+        "evidence": "Country lines use square, diamond, triangle, circle and hexagonal point markers, repeated in the legend.",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "name": "two_dimensional_grid",
+        "figure_id": "f1",
+        "evidence": "Dashed horizontal and vertical gridlines cross the plot.",
+        "affects": []
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "9",
+        "figure_id": "f1",
+        "mark": "the United States P70–80 point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "P70–80",
+          "United States"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "18",
+        "figure_id": "f1",
+        "mark": "the United States P99–99.9 point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "P99–99.9",
+          "United States"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "15",
+        "figure_id": "f1",
+        "mark": "the Netherlands P60–70 point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "P60–70",
+          "Netherlands"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "16",
+        "figure_id": "f1",
+        "mark": "the Netherlands P70–80 point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "P70–80",
+          "Netherlands"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "18",
+        "figure_id": "f1",
+        "mark": "the Netherlands P80–90 point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "P80–90",
+          "Netherlands"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "7",
+        "figure_id": "f1",
+        "mark": "the Brazil P90–95 point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "P90–95",
+          "Brazil"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "12.5",
+        "figure_id": "f1",
+        "mark": "the United States P90–95 point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "P90–95",
+          "United States"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "15",
+        "figure_id": "f1",
+        "mark": "the Spain P95–99 point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "P95–99",
+          "Spain"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      },
+      {
+        "value": "10",
+        "figure_id": "f1",
+        "mark": "the Brazil P95–99 point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "P95–99",
+          "Brazil"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 1
+      }
+    ],
+    "hardest_step": 1,
+    "hardest_step_why": "九个值都无表且未印数；如12.5须联结“P90–95”和“United States”，故先卡步骤1。 anticipated by the figure.",
+    "examples": []
+  }
+}

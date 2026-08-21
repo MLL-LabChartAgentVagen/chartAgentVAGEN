@@ -1,0 +1,392 @@
+{
+  "stem": "Visa-Fiscal-2025-Annual-Report_p10",
+  "document": "Visa-Fiscal-2025-Annual-Report",
+  "tags": "untagged",
+  "model": "claude-opus-5",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 87.8,
+  "usage": {
+    "input_tokens": 14288,
+    "output_tokens": 7059,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "**画出来要什么**\n\n两张无编号的百分比堆叠柱图，各自坐在浅灰卡片里：标题加粗置顶（`Share of Visa ecommerce transactions by checkout type`、`Tokenized share of Visa ecommerce transactions`），7 个年份 2019–2025，每柱两段合计 100%，无数值轴、无网格、无基线刻度，所有数值以白色粗体印在色块内（上段贴顶、下段贴底）。系列名不是常规图例，而是绘图区左侧的两行文字，下方各画一条对应颜色的短横线（`Card-on-file & \"button\" checkout` / `Manual entry guest checkout`）。图下有斜体 Note 两三行，正文分栏在图侧并行，正文里带上标脚注 ⁹ ¹⁰。\n\n**定位一个值难在哪**\n\n`74%`：它同时是 f1 2022 年的 Card-on-file 段和 f2 2022 年的 Non-tokenized 段。要唯一定位必须凑齐「哪张图的标题 + 2022 + 系列名」三层；而系列名只由左侧带色下划线的文字给出，没有图例框，解析器很容易把它丢成孤立文本行，行列标签便对不上格。\n\n**不确定的**\n\n灰底是整张卡片还是仅绘图区无法分辨；系列文字算图例还是内联标注只能凭下划线色块判断；两图均无 Figure 编号，是否在别处编号看不到。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "Share of Visa ecommerce transactions by checkout type",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "stacked_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 7,
+        "marks": 14,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "2019",
+            "high": "2025",
+            "serves": "all stacked bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2022"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Manual entry guest checkout"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "2023",
+            "Manual entry guest checkout"
+          ],
+          "value": "24%",
+          "value_source": "printed",
+          "why_hard": "No value axis or baseline ticks; only the printed label gives the number, series named in side column."
+        }
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "",
+          "title": "Tokenized share of Visa ecommerce transactions",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "stacked_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 7,
+        "marks": 14,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "2019",
+            "high": "2025",
+            "serves": "all stacked bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2019"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Tokenized transactions"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "2019",
+            "Tokenized transactions"
+          ],
+          "value": "4%",
+          "value_source": "printed",
+          "why_hard": "Segment is a sliver; the 4% label sits in a very thin dark band at the bar foot."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "stacked_bar",
+        "figure_id": "f1",
+        "evidence": "each year bar has a dark blue lower segment and light blue upper segment"
+      },
+      {
+        "key": "stacked_bar",
+        "figure_id": "f2",
+        "evidence": "each 2019-2025 bar split into Tokenized and Non-tokenized segments"
+      },
+      {
+        "key": "pct_stacked",
+        "figure_id": "f1",
+        "evidence": "all seven bars equal height; 56%+44%, 84%+16% each sum to 100"
+      },
+      {
+        "key": "pct_stacked",
+        "figure_id": "f2",
+        "evidence": "96%+4% ... 46%+54%, every bar drawn to the same top"
+      },
+      {
+        "key": "no_value_axis",
+        "figure_id": "f1",
+        "evidence": "no ticks, no baseline numbers; only printed percentages on segments"
+      },
+      {
+        "key": "no_value_axis",
+        "figure_id": "f2",
+        "evidence": "left side carries only series names, no value ticks"
+      },
+      {
+        "key": "value_label_inside",
+        "figure_id": "f1",
+        "evidence": "\"56%\" white bold at top of light segment, \"44%\" inside dark segment"
+      },
+      {
+        "key": "value_label_inside",
+        "figure_id": "f2",
+        "evidence": "\"96%\" and \"4%\" printed within the two segments of the 2019 bar"
+      },
+      {
+        "key": "legend_beside_plot",
+        "figure_id": "f1",
+        "evidence": "series names in a left column level with the plot, each with coloured underline"
+      },
+      {
+        "key": "legend_beside_plot",
+        "figure_id": "f2",
+        "evidence": "\"Non-tokenized transactions\" / \"Tokenized transactions\" stacked left of the bars"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "\"Note: Reflects Visa processed transactions, among card-not-present approved transactions.\" italic below plot"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f2",
+        "evidence": "\"Note: Reflects Visa processed transactions... Excludes Russia, China and Visa Direct in Peru.\""
+      },
+      {
+        "key": "multi_figure_page",
+        "figure_id": "page",
+        "evidence": "two separately titled charts with their own Note lines on one page"
+      },
+      {
+        "key": "panel_background",
+        "figure_id": "f1",
+        "evidence": "the whole chart area sits on a light grey tinted card, bars drawn over it"
+      },
+      {
+        "key": "panel_background",
+        "figure_id": "f2",
+        "evidence": "grey tint behind the plot area and note, white page around it"
+      },
+      {
+        "key": "side_text_bullets",
+        "figure_id": "page",
+        "evidence": "body column \"Farewell, guest checkout ...\" runs left of f1; text column right of f2"
+      },
+      {
+        "key": "footnote_marker",
+        "figure_id": "page",
+        "evidence": "\"Visa ecommerce transactions.⁹\" and footnotes \"⁹ Among Visa processed card-not-present transactions.\""
+      }
+    ],
+    "new_components": [
+      {
+        "name": "legend_underline_swatch",
+        "figure_id": "f1",
+        "evidence": "series names carry a short coloured rule underneath instead of a square swatch",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "name": "figure_card_background",
+        "figure_id": "f2",
+        "evidence": "title, plot and note all enclosed in one grey rounded card block",
+        "affects": [
+          4
+        ]
+      },
+      {
+        "name": "unnumbered_titled_figure",
+        "figure_id": "page",
+        "evidence": "both charts have bold titles but no \"Figure n\" label anywhere",
+        "affects": [
+          3,
+          4
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "56%",
+        "figure_id": "f1",
+        "mark": "the 2019 Card-on-file & \"button\" checkout segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Share of Visa ecommerce transactions by checkout type",
+          "2019",
+          "Card-on-file & \"button\" checkout"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "16%",
+        "figure_id": "f1",
+        "mark": "the 2025 Manual entry guest checkout segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Share of Visa ecommerce transactions by checkout type",
+          "2025",
+          "Manual entry guest checkout"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "74%",
+        "figure_id": "f1",
+        "mark": "the 2022 Card-on-file & \"button\" checkout segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Share of Visa ecommerce transactions by checkout type",
+          "2022",
+          "Card-on-file & \"button\" checkout"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "24%",
+        "figure_id": "f1",
+        "mark": "the 2023 Manual entry guest checkout segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Share of Visa ecommerce transactions by checkout type",
+          "2023",
+          "Manual entry guest checkout"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "81%",
+        "figure_id": "f1",
+        "mark": "the 2024 Card-on-file & \"button\" checkout segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Share of Visa ecommerce transactions by checkout type",
+          "2024",
+          "Card-on-file & \"button\" checkout"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "4%",
+        "figure_id": "f2",
+        "mark": "the 2019 Tokenized transactions segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Tokenized share of Visa ecommerce transactions",
+          "2019",
+          "Tokenized transactions"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "54%",
+        "figure_id": "f2",
+        "mark": "the 2025 Tokenized transactions segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Tokenized share of Visa ecommerce transactions",
+          "2025",
+          "Tokenized transactions"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "74%",
+        "figure_id": "f2",
+        "mark": "the 2022 Non-tokenized transactions segment (same number also appears on f1)",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Tokenized share of Visa ecommerce transactions",
+          "2022",
+          "Non-tokenized transactions"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "93%",
+        "figure_id": "f2",
+        "mark": "the 2020 Non-tokenized transactions segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Tokenized share of Visa ecommerce transactions",
+          "2020",
+          "Non-tokenized transactions"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "36%",
+        "figure_id": "f2",
+        "mark": "the 2023 Tokenized transactions segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Tokenized share of Visa ecommerce transactions",
+          "2023",
+          "Tokenized transactions"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      }
+    ],
+    "hardest_step": 3,
+    "hardest_step_why": "数值全印无需读轴；但 74% 在两图 2022 年都出现，系列名只在左侧带色下划线文字里，行列标签易脱钩。",
+    "examples": [
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "Bold title \"Share of Visa ecommerce transactions by checkout type\" sits inside a grey card, with no figure number",
+        "why": "标题无编号、含引号与&，且与注释同在灰底卡片内，需把标题块当独立字段并记录位置。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f2",
+        "quote": "\"96%\" printed at the top of the light segment, \"4%\" at the foot of a very thin dark segment",
+        "why": "两系列标签一贴顶一贴底且无数值轴，标签位置与薄段处理需可控。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "\"Card-on-file & \\\"button\\\" checkout\" and \"Manual entry guest checkout\" in a left column, each over a coloured rule",
+        "why": "图例为绘图区左侧文字+彩色下划线，非色块图例；需新增图例样式与位置维度。"
+      },
+      {
+        "gap": "P3",
+        "figure_id": "page",
+        "quote": "Two untitled-by-number charts, each with its own italic Note, with body text columns running beside both",
+        "why": "整页需导出两图各自的标题与注释，并保留正文分栏与图的相对位置。"
+      }
+    ]
+  }
+}

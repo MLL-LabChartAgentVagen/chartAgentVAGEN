@@ -1,0 +1,259 @@
+{
+  "stem": "TRS241_Web_p88",
+  "document": "TRS241_Web",
+  "tags": "need_estimate",
+  "model": "claude-opus-5",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "seconds": 58.6,
+  "usage": {
+    "input_tokens": 9522,
+    "output_tokens": 4896,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "本页只有一个编号图 FIG.2.10，但由两种形态拼合：上方四个手绘剖面线饼图（1969/1979/2000/2015，各6个扇区，标签以引出箭头置于圆外，如“EI 30.7%”“S 38.8%”），下方一个双纵轴折线图（左“Overall GDP (10⁹ DA 1979)”、右“Per capita GDP (10³ DA 1979)”），实线与点划线区分两条序列，序列名直接写在线旁，并有带箭头的区段年均增长率批注“(7.97 %)”“(4.85 %)”及脚注“(1)”。生成器需能画：无图例的多面板异构图、饼图外置引线标签、双轴、点划线、区段跨度箭头注记。取值困难在于：饼图数值只靠两字母代码（A/MI/C/E/EI/S）+ 顶部年份定位，12.5% 在 1979 的 MI 与 2000 的 EI 中重复出现，必须年份+代码联合寻址；折线无数值标注，200 只是左轴刻度。不确定：图例说明行（A: Agriculture…）应算标题续行还是脚注；x 轴 1979→1985 间隔为6年却等距。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "FIG.2.10.",
+          "title": "Energy and nuclear power planning study for Algeria:  past and future trends in overall and per capita GDP and distribution by sector (in Algerian dinars (DA)).",
+          "subtitle": "A: Agriculture.  MI: Manufacturing industries.  C: Construction. E: Energy.  EI: Extractive industries.  S: Services (including transport).",
+          "unit_text": "(in Algerian dinars (DA))",
+          "placement": "below"
+        },
+        "type": "compound",
+        "type_other": "",
+        "panels": 5,
+        "series": 6,
+        "categories": 6,
+        "marks": 45,
+        "values_printed": "some"
+      }
+    ],
+    "components": [
+      {
+        "key": "dual_axis",
+        "figure_id": "f1",
+        "evidence": "left axis 'Overall GDP (10\\u2079 DA 1979)' 0-700, right axis 'Per capita GDP (10\\u00b3 DA 1979)' 0-28"
+      },
+      {
+        "key": "heterogeneous_panel_types",
+        "figure_id": "f1",
+        "evidence": "one caption FIG.2.10 covers four pie charts above and one line chart below"
+      },
+      {
+        "key": "small_multiples_4",
+        "figure_id": "f1",
+        "evidence": "four same-format sector pies titled 1969, 1979, 2000, 2015 in a row"
+      },
+      {
+        "key": "panel_title_per_panel",
+        "figure_id": "f1",
+        "evidence": "'1969', '1979', '2000', '2015' printed above each pie"
+      },
+      {
+        "key": "value_label_outside",
+        "figure_id": "f1",
+        "evidence": "'EI 30.7%', 'S 38.8%' etc. set outside each pie on leader arrows"
+      },
+      {
+        "key": "annotation_callout",
+        "figure_id": "f1",
+        "evidence": "'(7.97 %)', '(7.3 %)', '(6.7 %)', '(6.2 %)', '(4.85 %)' on arrows over the plot"
+      },
+      {
+        "key": "footnote_marker",
+        "figure_id": "f1",
+        "evidence": "'Overall GDP (1)' superscript with note '(1) Average annual growth rate of overall GDP compared to 1979 (in brackets).'"
+      },
+      {
+        "key": "inline_series_labels",
+        "figure_id": "f1",
+        "evidence": "'Overall GDP' and 'GDP per capita' written beside their lines, no legend"
+      },
+      {
+        "key": "dashed_line_series",
+        "figure_id": "f1",
+        "evidence": "GDP per capita drawn dash-dot, Overall GDP solid"
+      },
+      {
+        "key": "rotated_axis_title",
+        "figure_id": "f1",
+        "evidence": "'Overall GDP (10\\u2079 DA 1979)' and 'Per capita GDP (10\\u00b3 DA 1979)' set vertically"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "axis titles carry '(10\\u2079 DA 1979)' and '(10\\u00b3 DA 1979)'; ticks are bare 0-700"
+      },
+      {
+        "key": "legend_inside_plot",
+        "figure_id": "f1",
+        "evidence": "note line '(1) Average annual growth rate...' and series names drawn inside the frame"
+      },
+      {
+        "key": "nonstandard_time_ticks",
+        "figure_id": "f1",
+        "evidence": "x ticks 1969, 1974, 1979, 1985, 1990 ... equally spaced though intervals differ"
+      },
+      {
+        "key": "mixed_marks",
+        "figure_id": "f1",
+        "evidence": "filled dot and open diamond point markers overlaid on the two lines"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "segment_growth_rate_annotation",
+        "figure_id": "f1",
+        "evidence": "double-headed arrows along the line carrying bracketed CAGR values '(7.97 %)', '(4.85 %)'",
+        "affects": [
+          3,
+          4
+        ]
+      },
+      {
+        "name": "uneven_intervals_equal_spacing",
+        "figure_id": "f1",
+        "evidence": "1979 to 1985 is six years but drawn the same width as five-year gaps",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "name": "hatch_fill_encodes_series",
+        "figure_id": "f1",
+        "evidence": "pie slices distinguished by hatching patterns (cross-hatch, diagonal, dots), no colour or legend",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "name": "pie_area_scales_with_total",
+        "figure_id": "f1",
+        "evidence": "the four pies grow in diameter from 1969 to 2015, encoding total GDP",
+        "affects": [
+          2,
+          4
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "30.7",
+        "figure_id": "f1",
+        "mark": "the 1969 pie, EI slice label '30.7%'",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "1969",
+          "EI",
+          "EI: Extractive industries"
+        ]
+      },
+      {
+        "value": "38.8",
+        "figure_id": "f1",
+        "mark": "the 1969 pie, S slice label '38.8%'",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "1969",
+          "S",
+          "S: Services (including transport)"
+        ]
+      },
+      {
+        "value": "6.1",
+        "figure_id": "f1",
+        "mark": "the 1979 pie, A slice label '6.1%'",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "1979",
+          "A",
+          "A: Agriculture"
+        ]
+      },
+      {
+        "value": "12.3",
+        "figure_id": "f1",
+        "mark": "the 1979 pie, C slice label '12.3%'",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "1979",
+          "C",
+          "C: Construction"
+        ]
+      },
+      {
+        "value": "19.6",
+        "figure_id": "f1",
+        "mark": "the 2000 pie, MI slice label '19.6%'",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "2000",
+          "MI",
+          "MI: Manufacturing industries"
+        ]
+      },
+      {
+        "value": "7.1",
+        "figure_id": "f1",
+        "mark": "the 2000 pie, E slice label '7.1%'",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "2000",
+          "E",
+          "E: Energy"
+        ]
+      },
+      {
+        "value": "20.5",
+        "figure_id": "f1",
+        "mark": "the 2015 pie, C slice label '20.5%'",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "2015",
+          "C",
+          "C: Construction"
+        ]
+      },
+      {
+        "value": "41.2",
+        "figure_id": "f1",
+        "mark": "the 2015 pie, S slice label '41.2%'",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "2015",
+          "S",
+          "S: Services (including transport)"
+        ]
+      },
+      {
+        "value": "200",
+        "figure_id": "f1",
+        "mark": "a tick label on the left value axis of the line panel, not a data mark",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Overall GDP (10\\u2079 DA 1979)",
+          "200"
+        ]
+      },
+      {
+        "value": "12.5",
+        "figure_id": "f1",
+        "mark": "ambiguous: the 1979 pie MI slice '12.5%' and the 2000 pie EI slice '12.5%' both read 12.5",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "1979",
+          "MI",
+          "2000",
+          "EI"
+        ]
+      }
+    ],
+    "hardest_step": 3
+  }
+}

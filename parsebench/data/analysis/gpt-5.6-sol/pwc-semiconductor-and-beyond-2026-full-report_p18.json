@@ -1,0 +1,282 @@
+{
+  "stem": "pwc-semiconductor-and-beyond-2026-full-report_p18",
+  "document": "pwc-semiconductor-and-beyond-2026-full-report",
+  "tags": "untagged",
+  "model": "gpt-5.6-sol",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 88.5,
+  "usage": {
+    "input_tokens": 8982,
+    "output_tokens": 5620,
+    "cache_read_tokens": 8979
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "**画出来要什么**\n\n单面板柱线复合图：7根灰柱对应左侧十亿美元轴，橙线对应右侧百分比轴；图例在上方，右轴单位置于轴顶，仅端点标出“35%”“52%”。图旁并排两栏正文，底部有来源。\n\n**定位一个值难在哪**\n\n“’26F / Portion of AI accelerator / 41”须使用右轴；每格10个百分点，而5%容差仅±2.05，且41未直接印出，需要插值。\n\n**不确定的**\n\n橙线没有可见点标记；按7个年份各含一个折点计数。柱值均按给定目标与轴位置配对。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "AI accelerators in the data center",
+          "subtitle": "",
+          "unit_text": "(Unit: $ Billion)",
+          "placement": "above"
+        },
+        "type": "compound",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 7,
+        "marks": 14,
+        "values_printed": "some",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "0",
+            "high": "300",
+            "serves": "gray Data center semiconductors bars"
+          },
+          {
+            "side": "right",
+            "role": "value",
+            "unit_text": "(%)",
+            "low": "0",
+            "high": "100",
+            "serves": "orange Portion of AI accelerator line"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "’24",
+            "high": "’30F",
+            "serves": "all bars and line values"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "’24"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Data center semiconductors"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "’26F",
+            "Portion of AI accelerator"
+          ],
+          "value": "41",
+          "value_source": "axis_read",
+          "why_hard": "The line uses the right axis; 10-point ticks require interpolation."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "dual_axis",
+        "figure_id": "f1",
+        "evidence": "Left ticks run 0–300; right ticks run 0–100 with “(%)”."
+      },
+      {
+        "key": "mixed_marks",
+        "figure_id": "f1",
+        "evidence": "Gray vertical bars and an orange line occupy the same panel."
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "“Source: PwC analysis” appears below the plot."
+      },
+      {
+        "key": "legend_above_plot",
+        "figure_id": "f1",
+        "evidence": "The two-item legend sits between the heading and plot."
+      },
+      {
+        "key": "side_text_bullets",
+        "figure_id": "f1",
+        "evidence": "Two prose columns beginning “As AI applications…” run beside the figure."
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "The heading includes “(Unit: $ Billion)”; the right axis shows “(%)”."
+      },
+      {
+        "key": "axis_title_above_axis",
+        "figure_id": "f1",
+        "evidence": "“(%)” is printed above the right-side 100 tick."
+      },
+      {
+        "key": "value_label_outside",
+        "figure_id": "f1",
+        "evidence": "“35%” and “52%” sit above the orange line."
+      },
+      {
+        "key": "nonstandard_time_ticks",
+        "figure_id": "f1",
+        "evidence": "Time ticks use “’24”, then forecast labels such as “’25F” and “’30F”."
+      },
+      {
+        "key": "panel_background",
+        "figure_id": "f1",
+        "evidence": "The plot area has a light-gray fill rather than white."
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "Only horizontal rules cross the plot; no vertical grid lines are drawn."
+      }
+    ],
+    "new_components": [],
+    "spot_checks": [
+      {
+        "value": "98",
+        "figure_id": "f1",
+        "mark": "the ’24 Data center semiconductors bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "’24",
+          "Data center semiconductors"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "148",
+        "figure_id": "f1",
+        "mark": "the ’26F Data center semiconductors bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "’26F",
+          "Data center semiconductors"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "270",
+        "figure_id": "f1",
+        "mark": "the ’30F Data center semiconductors bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "’30F",
+          "Data center semiconductors"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "180",
+        "figure_id": "f1",
+        "mark": "the ’27F Data center semiconductors bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "’27F",
+          "Data center semiconductors"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "35",
+        "figure_id": "f1",
+        "mark": "the ’24 Portion of AI accelerator line value",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "’24",
+          "Portion of AI accelerator"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "52",
+        "figure_id": "f1",
+        "mark": "the ’30F Portion of AI accelerator line value",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "’30F",
+          "Portion of AI accelerator"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "41",
+        "figure_id": "f1",
+        "mark": "the ’26F Portion of AI accelerator line value",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "’26F",
+          "Portion of AI accelerator"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "47",
+        "figure_id": "f1",
+        "mark": "the ’28F Portion of AI accelerator line value",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "’28F",
+          "Portion of AI accelerator"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "245",
+        "figure_id": "f1",
+        "mark": "the ’29F Data center semiconductors bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "’29F",
+          "Data center semiconductors"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "41与47未标注，右轴每10个百分点一格；5%容差仅±2.05、±2.35，插值最难。引。",
+    "examples": [
+      {
+        "gap": "P9",
+        "figure_id": "f1",
+        "quote": "Gray bars use the left 0–300 axis; the orange line uses the right 0–100 (%) axis.",
+        "why": "同一面板需同时记录柱、线的形状及各自数值轴。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "AI accelerators in the data center (Unit: $ Billion)",
+        "why": "标题与单位同排但应拆成独立字段，并保留其位于图上方。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "“35%” and “52%” are printed above the orange line; “(%)” sits above the right axis.",
+        "why": "需重建外置数值标签、年份格式及轴顶单位位置。"
+      },
+      {
+        "gap": "P3",
+        "figure_id": "f1",
+        "quote": "Two columns of running prose sit left of the figure; “Source: PwC analysis” is below it.",
+        "why": "整页导出必须保留正文、图和来源的相对位置。"
+      }
+    ]
+  }
+}

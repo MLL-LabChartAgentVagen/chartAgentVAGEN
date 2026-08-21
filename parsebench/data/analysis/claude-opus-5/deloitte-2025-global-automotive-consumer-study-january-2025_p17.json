@@ -1,0 +1,438 @@
+{
+  "stem": "deloitte-2025-global-automotive-consumer-study-january-2025_p17",
+  "document": "deloitte-2025-global-automotive-consumer-study-january-2025",
+  "tags": "untagged",
+  "model": "claude-opus-5",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 52.3,
+  "usage": {
+    "input_tokens": 13832,
+    "output_tokens": 4038,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "## 画出来要什么\n\n三个图共处一页：顶部是 100% 横向堆叠条（8 个市场 × 4 个等级，32 段，段内白色/深色数值标签，图例在下方一行）；下方左右两个独立的单系列横向条形图，各带两行小标题（第二行加粗），条内右端印百分比，无数值轴、无网格、无刻度。还要能画：分组标题（绿色小标题「Importance of next vehicle to be manufactured locally」）、上方加粗导语段、图下 Note/Q31/Sample size 三行小字，以及两图共用一段问卷脚注。\n\n## 定位一个值难在哪\n\n「45%」是 Japan 行 Somewhat important 段。它没有图号、没有标题层级可用，行标签来自 y 轴刻度「Japan」，系列名只在底部图例「Somewhat important」，还需图上方绿色标题限定主题；同一页另一处 39% 出现两次（China、Rep. of Korea 的 Important），只靠数值搜索会撞车。\n\n## 不确定的\n\n三图都无编号，标题层级（导语粗体 vs 绿色小标题 vs 灰色两行小标题）谁属于哪张图只能靠版式推断；底部两图是否算一个双面板图不确定；条形是否有隐藏的 0–100 轴看不到。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "Importance of next vehicle to be manufactured locally",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "stacked_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 4,
+        "categories": 8,
+        "marks": 32,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "left",
+            "role": "category",
+            "unit_text": "",
+            "low": "India",
+            "high": "UK",
+            "serves": "all stacked bars, one row per market"
+          },
+          {
+            "side": "bottom",
+            "role": "value",
+            "unit_text": "",
+            "low": "",
+            "high": "",
+            "serves": "no ticks drawn; stack length only"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Japan"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Somewhat important"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Rep. of Korea",
+            "Important"
+          ],
+          "value": "39%",
+          "value_source": "printed",
+          "why_hard": "39% also appears for China Important; row label abbreviated 'Rep. of Korea'; no figure number to scope it"
+        }
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "",
+          "title": "Percentage of surveyed consumers who would be interested in acquiring",
+          "subtitle": "vehicle directly from the manufacturer",
+          "unit_text": "Percentage",
+          "placement": "above"
+        },
+        "type": "bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 1,
+        "categories": 8,
+        "marks": 8,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "left",
+            "role": "category",
+            "unit_text": "",
+            "low": "India",
+            "high": "Japan",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Southeast Asia"
+          },
+          {
+            "role": "series",
+            "label_source": "heading",
+            "example": "vehicle directly from the manufacturer"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "US",
+            "vehicle directly from the manufacturer"
+          ],
+          "value": "46%",
+          "value_source": "printed",
+          "why_hard": "46% printed twice (Rep. of Korea and US); series named only by two-line grey heading above plot"
+        }
+      },
+      {
+        "id": "f3",
+        "heading": {
+          "figure_number": "",
+          "title": "Percentage of surveyed consumers who would be interested",
+          "subtitle": "in purchasing insurance directly from the manufacturer",
+          "unit_text": "Percentage",
+          "placement": "above"
+        },
+        "type": "bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 1,
+        "categories": 8,
+        "marks": 8,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "left",
+            "role": "category",
+            "unit_text": "",
+            "low": "India",
+            "high": "Germany",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Rep. of Korea"
+          },
+          {
+            "role": "series",
+            "label_source": "heading",
+            "example": "insurance directly from the manufacturer"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "UK",
+            "insurance directly from the manufacturer"
+          ],
+          "value": "42%",
+          "value_source": "printed",
+          "why_hard": "row order differs from the left chart, so UK sits fifth here and sixth there"
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "stacked_bar",
+        "figure_id": "f1",
+        "evidence": "each market row split into four coloured segments totalling the full bar"
+      },
+      {
+        "key": "pct_stacked",
+        "figure_id": "f1",
+        "evidence": "every row reaches the same right edge; segments read 10%+19%+31%+41%"
+      },
+      {
+        "key": "horizontal_bars",
+        "figure_id": "f1",
+        "evidence": "markets on the y axis, bars grow rightwards from a left baseline"
+      },
+      {
+        "key": "horizontal_bars",
+        "figure_id": "f2",
+        "evidence": "India, China... on y axis, teal bars grow right to 76%"
+      },
+      {
+        "key": "horizontal_bars",
+        "figure_id": "f3",
+        "evidence": "India, China... on y axis, green bars grow right to 82%"
+      },
+      {
+        "key": "no_value_axis",
+        "figure_id": "f1",
+        "evidence": "no ticks or numbers under the bars, only the printed segment percentages"
+      },
+      {
+        "key": "no_value_axis",
+        "figure_id": "f2",
+        "evidence": "only a vertical baseline at left; no numeric ticks anywhere"
+      },
+      {
+        "key": "no_value_axis",
+        "figure_id": "f3",
+        "evidence": "only a vertical baseline at left; no numeric ticks anywhere"
+      },
+      {
+        "key": "value_label_inside",
+        "figure_id": "f1",
+        "evidence": "'10%' '19%' '31%' '41%' printed inside the India segments"
+      },
+      {
+        "key": "value_label_inside",
+        "figure_id": "f2",
+        "evidence": "'76%' printed at the right end inside the India bar"
+      },
+      {
+        "key": "value_label_inside",
+        "figure_id": "f3",
+        "evidence": "'82%' printed inside the India bar"
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "'Not important / Somewhat important / Important / Very important' row under the plot"
+      },
+      {
+        "key": "multi_figure_page",
+        "figure_id": "page",
+        "evidence": "three separate unnumbered charts with their own headings and their own question footnotes"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "'Note: Percentages may not add up to 100 due to rounding.' plus Q31 and sample size"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "page",
+        "evidence": "'Q61...' 'Q60...' 'Sample size: n = 939 [China]; 1,306 [Germany]...' under the lower charts"
+      },
+      {
+        "key": "abbrev_category_axis",
+        "figure_id": "f1",
+        "evidence": "'US', 'UK', 'Rep. of Korea' used as category labels"
+      },
+      {
+        "key": "abbrev_category_axis",
+        "figure_id": "f2",
+        "evidence": "'US', 'UK', 'Rep. of Korea' on the y axis"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f2",
+        "evidence": "'Percentage of surveyed consumers who would be interested in acquiring' above the plot"
+      },
+      {
+        "key": "side_text_bullets",
+        "figure_id": "page",
+        "evidence": "bold lead paragraphs 'As global trade policies shift...' sit directly above each chart block"
+      },
+      {
+        "key": "panel_title_per_panel",
+        "figure_id": "page",
+        "evidence": "lower charts each carry a two-line grey heading with bolded second line above themselves"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "paired_independent_charts_side_by_side",
+        "figure_id": "page",
+        "evidence": "two same-format bar charts side by side, different row order, sharing one footnote block",
+        "affects": [
+          3,
+          4
+        ]
+      },
+      {
+        "name": "bold_phrase_in_chart_subtitle",
+        "figure_id": "f3",
+        "evidence": "'insurance directly from the manufacturer' bolded inside an otherwise regular grey heading line",
+        "affects": [
+          3,
+          4
+        ]
+      },
+      {
+        "name": "question_id_caption",
+        "figure_id": "page",
+        "evidence": "'Q31.', 'Q61.', 'Q60.' prefix the survey wording under the charts",
+        "affects": [
+          4
+        ]
+      },
+      {
+        "name": "category_order_differs_between_panels",
+        "figure_id": "page",
+        "evidence": "left chart ends India...Japan; right chart ends India...Germany, UK above US",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "41",
+        "figure_id": "f1",
+        "mark": "the India 'Very important' segment (rightmost, dark green)",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "India",
+          "Very important"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "39",
+        "figure_id": "f1",
+        "mark": "the China 'Important' segment (third, light teal); Rep. of Korea also reads 39%",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "China",
+          "Important"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "27",
+        "figure_id": "f1",
+        "mark": "the Southeast Asia 'Somewhat important' segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Southeast Asia",
+          "Somewhat important"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "28",
+        "figure_id": "f1",
+        "mark": "the US 'Not important' segment (leftmost, dark teal)",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "US",
+          "Not important"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "39",
+        "figure_id": "f1",
+        "mark": "the Rep. of Korea 'Important' segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Rep. of Korea",
+          "Important"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "45",
+        "figure_id": "f1",
+        "mark": "the Japan 'Somewhat important' segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Japan",
+          "Somewhat important"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "36",
+        "figure_id": "f1",
+        "mark": "the Germany 'Not important' segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Germany",
+          "Not important"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "49",
+        "figure_id": "f1",
+        "mark": "the UK 'Not important' segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "UK",
+          "Not important"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      }
+    ],
+    "hardest_step": 3,
+    "hardest_step_why": "39% 在 China 与 Rep. of Korea 的 Important 段重复出现，图无编号，需行标签＋图例名两级才能唯一定位。",
+    "examples": [
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "Green heading 'Importance of next vehicle to be manufactured locally' above the plot, no figure number anywhere on the page",
+        "why": "三张图均无编号，标题为独立彩色小标题层；当前流水线以图号为主键，无法表达此结构。"
+      },
+      {
+        "gap": "P3",
+        "figure_id": "page",
+        "quote": "Bold lead paragraph 'As global trade policies shift...' immediately above the green heading and the chart",
+        "why": "导语粗体段落与图共处一页并决定语义上下文，需整页 markdown 导出与标题位置记录。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "'10%' printed in white inside the narrow dark segment; '8%' inside the shortest UK segment",
+        "why": "窄段内白字标签、无任何数值轴的百分百堆叠，标签放置与刻度缺省风格未被参数化。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "page",
+        "quote": "Two bar charts side by side, left ordered India...Japan, right ordered India...Germany, each ranked by its own values",
+        "why": "并列两张各自排序的独立图共享一段脚注；需要「多图共页且行序不同」的生成能力。"
+      }
+    ]
+  }
+}

@@ -1,0 +1,242 @@
+{
+  "stem": "Digital_News-Report_2022_p26",
+  "document": "Digital_News-Report_2022",
+  "tags": "untagged",
+  "model": "gemini-3.1-pro-preview",
+  "control": "no_vocab",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 75.5,
+  "usage": {
+    "input_tokens": 3145,
+    "output_tokens": 10146,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n- **堆叠柱状图与分组柱状图**：支持垂直堆叠和水平簇状分组的数据展示。\n- **图例文本与位置**：支持将图例灵活放置于图表上方或下方。\n- **数据标签直接标注**：能够在柱段内部（居中）或水平条形末端直接绘制百分比数值。\n- **图文混排的分类轴标签**：X轴不仅要有文本（如Facebook），还需要支持嵌入对应的图形Logo图标。\n- **背景参考底纹**：支持在数据条形背后绘制贯穿全宽的灰色参考底色条。\n\n### 定位一个值难在哪\n以右图中的“49%”为例，该值没有显式的刻度轴可读。要精准定位它，提取系统需要同时从左侧的分类提取“Politics”，并解析上方图例的颜色映射找到“Africa”。这种依赖颜色图例与簇状条形跨区域匹配的结构，在机器视觉中极易发生行列关联的错位。\n\n### 不确定的\n- 主图（图1）右侧的“Top markets saying too much”模块，应该被视为一个独立的表格数据块，还是图表的一个文本附属区域。\n- 右图背后浅灰色的长条背景是仅作为视觉装饰，还是代表了100%基准的定量容器。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "PROPORTION WHO THINK THEY SEE TOO MUCH NEWS ON EACH NETWORK – UK",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "stacked_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 4,
+        "categories": 4,
+        "marks": 16,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "Facebook",
+            "high": "TikTok",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Facebook"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Too much"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Facebook",
+            "Too much"
+          ],
+          "value": "21%",
+          "value_source": "printed",
+          "why_hard": "Values are printed directly inside narrow colored segments without guide lines."
+        }
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "",
+          "title": "PROPORTION WHO SAW FALSE OR MISLEADING INFORMATION ABOUT EACH TOPIC IN THE LAST WEEK – SELECTED REGIONS",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "grouped_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 5,
+        "categories": 6,
+        "marks": 30,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "left",
+            "role": "category",
+            "unit_text": "",
+            "low": "COVID-19",
+            "high": "Products (e.g. scams)",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "COVID-19"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Europe"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "COVID-19",
+            "Europe"
+          ],
+          "value": "47%",
+          "value_source": "printed",
+          "why_hard": "Requires accurate color mapping from the legend to unlabelled clustered bars."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "legend_below",
+        "figure_id": "f1",
+        "evidence": "the legend Too much, About right is placed below the bars",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "legend_above",
+        "figure_id": "f2",
+        "evidence": "the legend Europe, North America is placed above the chart",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "inline_bar_labels",
+        "figure_id": "f1",
+        "evidence": "21% and 55% are printed centrally inside the stacked segments",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "key": "end_bar_labels",
+        "figure_id": "f2",
+        "evidence": "47% is printed directly outside the end of the bar",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "key": "icon_axis_labels",
+        "figure_id": "f1",
+        "evidence": "social media logos are used alongside text on x-axis",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "background_reference_bars",
+        "figure_id": "f2",
+        "evidence": "grey bars span the full width behind the data bars",
+        "affects": []
+      }
+    ],
+    "new_components": [
+      {
+        "name": "icon_axis_labels",
+        "figure_id": "f1",
+        "evidence": "x-axis ticks combine text and SVG logos",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "name": "background_reference_bars",
+        "figure_id": "f2",
+        "evidence": "full-width grey bars form a background track for values",
+        "affects": []
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "21%",
+        "figure_id": "f1",
+        "mark": "the top teal segment on the Facebook bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Facebook",
+          "Too much"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "49%",
+        "figure_id": "f2",
+        "mark": "the green bar in the Politics group",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Politics",
+          "Africa"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "9%",
+        "figure_id": "f2",
+        "mark": "the magenta bar in the Immigration group",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Immigration",
+          "Asia"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      }
+    ],
+    "hardest_step": 3,
+    "hardest_step_why": "右图49%无显式纵轴，需解析顶部图例颜色并匹配左侧分类标签。依靠颜色与簇状条形的跨区域关联定位，视觉解析中极易发生行列标签关联错位。",
+    "examples": [
+      {
+        "gap": "P6",
+        "figure_id": "f2",
+        "quote": "47% and 53% placed at the outer end of horizontal bars",
+        "why": "数值标签直接跟随在水平条形的末端外侧，生成器需要扩充样式维度以支持灵活的数据标签摆放控制。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "Facebook and Twitter logos shown beneath the x-axis text",
+        "why": "分类轴标签采用文本与Logo图标混排的方式，目前的图表生成管线无法原生支持向坐标轴插入图标元素。"
+      },
+      {
+        "gap": "P3",
+        "figure_id": "page",
+        "quote": "Top markets saying too much table sitting beside the first chart",
+        "why": "主图右侧并排嵌入了一个由图标和数据组成的独立小表格，这种紧凑的图表与表格并排排版难以在Markdown中精确还原。"
+      }
+    ]
+  }
+}

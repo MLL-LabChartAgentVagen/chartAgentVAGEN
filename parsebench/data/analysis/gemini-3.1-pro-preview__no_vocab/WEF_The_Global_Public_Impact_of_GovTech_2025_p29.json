@@ -1,0 +1,162 @@
+{
+  "stem": "WEF_The_Global_Public_Impact_of_GovTech_2025_p29",
+  "document": "WEF_The_Global_Public_Impact_of_GovTech_2025",
+  "tags": "untagged",
+  "model": "gemini-3.1-pro-preview",
+  "control": "no_vocab",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 31.3,
+  "usage": {
+    "input_tokens": 3151,
+    "output_tokens": 3861,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "**画出来要什么**\n生成器需要能够绘制环形图（Donut chart），支持多面板（Panels）并排布局，并在环形中心放置文本（如年份）。图例需放置在图表底部，并使用彩色圆点指示序列。数值需要直接标注在对应的彩色扇区上。此外，还需要支持在两个并排的环形图边缘之间绘制连接虚线，以形成视觉上的整体对比或漏斗效果。标题和单位需要位于图表正上方。\n\n**定位一个值难在哪**\n以数值“670”为例，定位它需要提取两个维度的键：一是代表序列的图例“Public sector”，二是位于该环形图中心的文本“2024”。难点在于，中心文本并非标准的坐标轴标签或面板标题，解析器必须具备将这种特殊位置的内嵌文本识别为应用于该环上所有扇区共享类别的能力，否则会导致标签关联失败。\n\n**不确定的**\n连接两个环形图的虚线是精确连接上下边缘的切线，还是有特定数据含义的连接，从图形上看更像是指示整体支出规模扩大的视觉辅助线。环形的内外径比例也是估计的。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "FIGURE 5",
+          "title": "IT spending in various sectors (in $ billions in 2024 and 2034) with an estimate growth rate of 8% per annum",
+          "subtitle": "",
+          "unit_text": "in $ billions",
+          "placement": "above"
+        },
+        "type": "donut",
+        "type_other": "",
+        "panels": 2,
+        "series": 4,
+        "categories": 1,
+        "marks": 8,
+        "values_printed": "all",
+        "axes": [],
+        "key_parts": [
+          {
+            "role": "panel",
+            "label_source": "inline_label",
+            "example": "2024"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Public sector"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "2034",
+            "Education"
+          ],
+          "value": "$220",
+          "value_source": "printed",
+          "why_hard": "The panel label '2034' is placed in the center of the donut, which is an unconventional position for a category key."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "donut_chart_with_center_text",
+        "figure_id": "f1",
+        "evidence": "2024 and 2034 are written in the empty center of the rings",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "values_on_segments",
+        "figure_id": "f1",
+        "evidence": "$670, $90, etc. are written directly on the colored slices",
+        "affects": [
+          2,
+          3
+        ]
+      },
+      {
+        "key": "bottom_horizontal_legend",
+        "figure_id": "f1",
+        "evidence": "the legend with colored circles is at the bottom of the page",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "new_components": [
+      {
+        "name": "inter_panel_connector_lines",
+        "figure_id": "f1",
+        "evidence": "dashed lines connect the top and bottom of the two donuts",
+        "affects": []
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "670",
+        "figure_id": "f1",
+        "mark": "the 2024 Public sector green segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "2024",
+          "Public sector"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "220",
+        "figure_id": "f1",
+        "mark": "the 2034 Education yellow segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "2034",
+          "Education"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "170",
+        "figure_id": "f1",
+        "mark": "the 2034 Healthcare and life science orange segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "2034",
+          "Healthcare and life science"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "40",
+        "figure_id": "f1",
+        "mark": "the 2024 Transport cyan segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "2024",
+          "Transport"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      }
+    ],
+    "hardest_step": 3,
+    "hardest_step_why": "以670为例，解析器必须能将环形图中心的孤立文本“2024”识别为面板维度，并与下方图例“Public sector”组合，否则无法在表格中建立准确的行列映射关系。",
+    "examples": [
+      {
+        "gap": "P2",
+        "figure_id": "f1",
+        "quote": "2024 and 2034 are written in the center of the two donuts",
+        "why": "生成器需要支持将每个面板中心的文本（如2024）作为一个维度键（panel_key）纳入表格结构，从而正确区分两个面板的数据。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "dashed lines connecting the top and bottom of the two donuts",
+        "why": "当前流程不支持在多面板图表中绘制跨越面板的辅助线（如这里的连接虚线），以展示整体规模的扩大或时间演变。"
+      }
+    ]
+  }
+}

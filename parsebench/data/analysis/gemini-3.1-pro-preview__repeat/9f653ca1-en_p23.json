@@ -1,0 +1,262 @@
+{
+  "stem": "9f653ca1-en_p23",
+  "document": "9f653ca1-en",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "repeat",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 79.2,
+  "usage": {
+    "input_tokens": 5297,
+    "output_tokens": 10791,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "**画出来要什么**：这页包含一个复杂的混合图表（Figure 1.8），需要绘制包含正负双向延伸的堆叠柱状图，并在同一类别上叠加散点标记（黑色三角形）。y轴上方独立标注了单位“%”。x轴密集排列了53个旋转90度的三字母国家代码。图例悬浮于图表内部右上角，图表下方带有长篇注释、来源以及StatLink链接。 **定位一个值难在哪**：以数值34为例（推测为IND的Effective rate）。由于图表完全没有提供任何数据标签，且y轴跨度从-20到40，刻度间距高达10，依赖长距离视觉对齐从密集的图表中精确读出34这样的数值是根本不可能满足5%容差要求的。 **不确定的**：提供测试的数值（如25, 34, -11）均未在页面上直接标注，只能靠视觉估算推测其对应哪些国家的特定系列；图例中色块的排列顺序与柱子实际的堆叠顺序不完全一致。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 1.8.",
+          "title": "Estimated US effective tariff rates",
+          "subtitle": "",
+          "unit_text": "%",
+          "placement": "above"
+        },
+        "type": "stacked_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 4,
+        "categories": 53,
+        "marks": 212,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "%",
+            "low": "-20",
+            "high": "40",
+            "serves": "all bars and triangles"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "IND",
+            "high": "SVN",
+            "serves": "all bars and triangles"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "IND"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Effective rate"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "IND",
+            "Effective rate"
+          ],
+          "value": "34",
+          "value_source": "axis_read",
+          "why_hard": "No printed labels and reading against an axis with intervals of 10 makes exact reading impossible."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "stacked_bar",
+        "figure_id": "f1",
+        "evidence": "red and blue segments stacked above zero"
+      },
+      {
+        "key": "mixed_marks",
+        "figure_id": "f1",
+        "evidence": "stacked bars and black triangles plotted on the same categories"
+      },
+      {
+        "key": "negative_values",
+        "figure_id": "f1",
+        "evidence": "green bars extend below zero to -20"
+      },
+      {
+        "key": "abbrev_category_axis",
+        "figure_id": "f1",
+        "evidence": "x-axis ticks are 3-letter country codes like IND"
+      },
+      {
+        "key": "rotated_x_ticks",
+        "figure_id": "f1",
+        "evidence": "x-axis labels are rotated 90 degrees"
+      },
+      {
+        "key": "legend_inside_plot",
+        "figure_id": "f1",
+        "evidence": "legend is placed inside the top right of the chart area"
+      },
+      {
+        "key": "axis_title_above_axis",
+        "figure_id": "f1",
+        "evidence": "% symbol is printed above the top y-axis tick"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "Note: Estimates based... Source: United States... lines below plot"
+      },
+      {
+        "key": "data_link_below_figure",
+        "figure_id": "f1",
+        "evidence": "StatLink https://stat.link/qxnj8w below the source line"
+      },
+      {
+        "key": "dense_marks_100plus",
+        "figure_id": "f1",
+        "evidence": "53 categories with up to 4 series marks each"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "horizontal grid lines, no vertical ones"
+      }
+    ],
+    "new_components": [],
+    "spot_checks": [
+      {
+        "value": "25",
+        "figure_id": "f1",
+        "mark": "possibly the Change due to new tariff rates segment for IND",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "IND",
+          "Change due to new tariff rates"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "34",
+        "figure_id": "f1",
+        "mark": "possibly the Effective rate triangle for IND",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "IND",
+          "Effective rate"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "21",
+        "figure_id": "f1",
+        "mark": "possibly the Change due to new tariff rates segment for BRA",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "BRA",
+          "Change due to new tariff rates"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "23",
+        "figure_id": "f1",
+        "mark": "possibly the Change due to new tariff rates segment for LUX",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "LUX",
+          "Change due to new tariff rates"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "0",
+        "figure_id": "f1",
+        "mark": "possibly the Change due to compliance estimates segment for IND",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "IND",
+          "Change due to compliance estimates"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-10",
+        "figure_id": "f1",
+        "mark": "possibly the Change due to compliance estimates segment for CAN",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "CAN",
+          "Change due to compliance estimates"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-11",
+        "figure_id": "f1",
+        "mark": "possibly the Change due to compliance estimates segment for MEX",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "MEX",
+          "Change due to compliance estimates"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "5",
+        "figure_id": "f1",
+        "mark": "possibly the Effective rate triangle for CAN",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "CAN",
+          "Effective rate"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-10",
+        "figure_id": "f1",
+        "mark": "possibly the Change due to compliance estimates segment for BEL",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "BEL",
+          "Change due to compliance estimates"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "图表无数据标签且y轴刻度间距达10，从密集的堆叠柱中仅靠视觉对齐估算如34或-11等数值根本无法达到5%的精度容差要求。",
+    "examples": [
+      {
+        "gap": "P9",
+        "figure_id": "f1",
+        "quote": "stacked bars overlaid with a black triangle marker in the same panel",
+        "why": "模型需支持在同一类别上同时绘制并准确记录堆叠柱形和散点标记的值，这超出了基础单一图表类型的范围。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "y-axis extends to -20 and green bars grow downwards from zero",
+        "why": "模型需支持包含负值段的坐标轴以及从零基线向下绘制的柱状图逻辑，这与默认的全部正值绘制逻辑不同。"
+      }
+    ]
+  }
+}

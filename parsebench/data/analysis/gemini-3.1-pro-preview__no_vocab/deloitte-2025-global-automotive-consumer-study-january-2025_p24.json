@@ -1,0 +1,284 @@
+{
+  "stem": "deloitte-2025-global-automotive-consumer-study-january-2025_p24",
+  "document": "deloitte-2025-global-automotive-consumer-study-january-2025",
+  "tags": "untagged",
+  "model": "gemini-3.1-pro-preview",
+  "control": "no_vocab",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 20.8,
+  "usage": {
+    "input_tokens": 3174,
+    "output_tokens": 2710,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "**画出来要什么**\n\n本页包含两幅图表：一幅是水平的100%堆叠条形图，另一幅是垂直的简单条形图。这两幅图都要求生成器能够控制标题、副标题的位置（居上且左对齐）以及颜色的分配。\n\n对于图1（Frequency of driving personal vehicle），生成器需要能够绘制水平堆叠条形图，图例位于底部，数值直接打印在分段上。难点在于极小分段（如2%、3%）的数值标签不仅可以居中显示，还能调整字体大小或位置以适应极窄的空间。此外，类别轴（纵轴）没有轴线，只有标签，这需要支持隐藏坐标轴线条的设置。\n\n对于图2（Willingness to give up vehicle ownership...），是一个柱状图。数值直接写在柱子顶部的内部。图表没有数值轴，没有类别轴线，只有底部的类别标签，要求支持高度定制化的网格线和轴线显示设置。\n\n**定位一个值难在哪**\n\n以图1中的“3%”为例，它出现在“India”这行的深蓝色段旁边的小段，或者是US那行的浅蓝色段。由于图1是100%堆叠条形图，某个具体的值（如51%）需要通过国家（如India）和频率类别（如Every day）两个维度来定位。问题是有些分段太小（如2%），标签没有完全显示在色块内部，或者多个色块靠得很近，可能导致在表格转换时，对应关系不如在页面上直接查看直观，但在有明确图例和类别轴的情况下，寻址结构（行：国家，列：频率）是完整的。困难在于，对于未打印数值的微小片段，从图上直接读取具体百分比是不可能的。\n\n**不确定的**\n\n图1最右侧极小片段（没有数字）的具体数值。只能通过100%减去其他部分来推算，或者从视觉上判断为1%到2%左右。无法直接读取。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "Half of surveyed consumers in India, Southeast Asia, and the United States say they drive their vehicle every day—roughly twice the number of consumers in Japan and South Korea who say the same, perhaps reflecting a difference in the quality and/or availability of mass transit across markets.",
+          "subtitle": "Frequency of driving personal vehicle",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "stacked_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 5,
+        "categories": 7,
+        "marks": 35,
+        "values_printed": "some",
+        "axes": [
+          {
+            "side": "left",
+            "role": "category",
+            "unit_text": "",
+            "low": "India",
+            "high": "Japan",
+            "serves": "all bars"
+          },
+          {
+            "side": "bottom",
+            "role": "value",
+            "unit_text": "",
+            "low": "",
+            "high": "",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "India"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Every day"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "India",
+            "Every day"
+          ],
+          "value": "51%",
+          "value_source": "printed",
+          "why_hard": "No value axis is drawn to read unprinted segments against."
+        }
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "",
+          "title": "Even though surveyed consumers in India drive a lot, many younger consumers there would be willing to give up vehicle ownership in favor of a MaaS solution. In contrast, only 1 in 3 younger consumers in Germany would be willing to do the same.",
+          "subtitle": "Willingness to give up vehicle ownership in favor of MaaS (% somewhat willing/willing/very willing) – 18- to 34-year-old respondents",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 1,
+        "categories": 7,
+        "marks": 7,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "India",
+            "high": "Germany",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "India"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "India"
+          ],
+          "value": "70%",
+          "value_source": "printed",
+          "why_hard": ""
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "title_long_paragraph",
+        "figure_id": "f1",
+        "evidence": "Title is a multi-line paragraph explaining the chart",
+        "affects": [
+          4
+        ]
+      },
+      {
+        "key": "subtitle_colored",
+        "figure_id": "f1",
+        "evidence": "Subtitle text is green",
+        "affects": []
+      },
+      {
+        "key": "horizontal_stacked_bar",
+        "figure_id": "f1",
+        "evidence": "Bars are horizontal, split into 5 segments",
+        "affects": [
+          1
+        ]
+      },
+      {
+        "key": "value_labels_inside_marks",
+        "figure_id": "f1",
+        "evidence": "Percentages like 51% are written inside the bar segments",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "key": "no_value_axis",
+        "figure_id": "f1",
+        "evidence": "There is no x-axis at the bottom to read lengths against",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "key": "legend_bottom",
+        "figure_id": "f1",
+        "evidence": "Legend is placed below the chart",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "notes_below",
+        "figure_id": "f1",
+        "evidence": "Note: Percentages may not add up... below legend",
+        "affects": [
+          4
+        ]
+      },
+      {
+        "key": "value_labels_top_inside",
+        "figure_id": "f2",
+        "evidence": "70%, 54% are written inside the top of the vertical bars",
+        "affects": [
+          2
+        ]
+      }
+    ],
+    "new_components": [
+      {
+        "name": "omitted_tiny_labels",
+        "figure_id": "f1",
+        "evidence": "The rightmost small segments have no printed numbers",
+        "affects": [
+          2
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "51%",
+        "figure_id": "f1",
+        "mark": "India, Every day segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "India",
+          "Every day"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "23%",
+        "figure_id": "f1",
+        "mark": "Southeast Asia, 3-4 times per week segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Southeast Asia",
+          "3-4 times per week"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "11%",
+        "figure_id": "f1",
+        "mark": "India, 1-2 times per week segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "India",
+          "1-2 times per week"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "12%",
+        "figure_id": "f1",
+        "mark": "UK, Once every few months segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "UK",
+          "Once every few months"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "25%",
+        "figure_id": "f1",
+        "mark": "South Korea, Every day segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "South Korea",
+          "Every day"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "32%",
+        "figure_id": "f1",
+        "mark": "Japan, Once every few months segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Japan",
+          "Once every few months"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "图1没有数值轴，没有标注的微小片段（如最右侧的浅绿段）无法被精确读取，超过了5%容差。但抽查的数值都已标出，因此不影响通过测试，但对于图表的整体恢复，缺失的数据是读取瓶颈。",
+    "examples": [
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "Half of surveyed consumers in India... perhaps reflecting a difference in the quality and/or availability of mass transit across markets.",
+        "why": "标题不再是简短的短语，而是一个解释性段落，并且副标题充当了传统意义上的图表标题，需要支持更复杂的标题结构字段。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "3% 5%, inside the small bar segments for India",
+        "why": "为了适应极窄的分段，标签紧凑排列，甚至部分未标注。需要更精细的数值标签放置策略。"
+      }
+    ]
+  }
+}

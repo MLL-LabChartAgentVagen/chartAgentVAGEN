@@ -1,0 +1,388 @@
+{
+  "stem": "Quarterly-Sector-and-Investment-Research-Update-Q1-2025_p12",
+  "document": "Quarterly-Sector-and-Investment-Research-Update-Q1-2025",
+  "tags": "need_estimate",
+  "model": "claude-opus-5",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 54.5,
+  "usage": {
+    "input_tokens": 14092,
+    "output_tokens": 4070,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "**画出来要什么**\n\n两幅并列、各自带小标题与副标题的图。左图:1990–2024 月度折线(约 410 点),纵轴 0–250、旋转纵轴标题 “Price-to-book valuation spreads”,x 轴年份旋转 90°、且刻度稀疏不均(1990、1992、1994、1995…),外加两条几乎不可见的浅灰竖向渐变带。右图:四根绿色柱,含负值与零线,y 轴 -3%–5%,类别标签两行折行(“Rates Rising/ Spreads Rising”),仅第三根柱印有 “4%” 且其背后有一块灰色渐变高亮块。页脚是加粗+正文混排的来源注。\n\n**定位一个值难在哪**\n\n“-2.3%”:它没有印在图上,只能靠 1% 一格的刻度目测,-2.3 与 -2.4 之间的差已接近 5% 容差;寻址还必须用完整折行标签 “Rates Rising/Spreads Rising”,而页面上它被换行成两行,表格里往往写成一行,导致标签对不上。\n\n**不确定的**\n\n左图两块浅灰竖带的含义无任何图例说明(疑似 2016–2017、2022–2024 高亮期),我只能按颜色命名;折线点数按月频估算;右图第三根柱背后的灰块究竟是高亮还是阴影带无法确认。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "Valuation spreads are wide",
+          "subtitle": "Financials Price-to-Book Valuation Spreads",
+          "unit_text": "Price-to-book valuation spreads",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 1,
+        "series": 1,
+        "categories": 410,
+        "marks": 410,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Price-to-book valuation spreads",
+            "low": "0",
+            "high": "250",
+            "serves": "the blue line"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "1990",
+            "high": "2024",
+            "serves": "the blue line"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2008"
+          },
+          {
+            "role": "series",
+            "label_source": "heading",
+            "example": "Financials Price-to-Book Valuation Spreads"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "1990",
+            "Financials Price-to-Book Valuation Spreads"
+          ],
+          "value": "150",
+          "value_source": "axis_read",
+          "why_hard": "Line starts at left edge; ticks every 50, so a 5% read needs sub-tick interpolation."
+        }
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "",
+          "title": "Financials have benefited from falling rates and credit spreads",
+          "subtitle": "NTM Average Relative Performance when Credit Spreads (HYOAS) or Rates (1-Yr Yield) Are Rising or Falling, 1980–Present",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 1,
+        "categories": 4,
+        "marks": 4,
+        "values_printed": "some",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "-3%",
+            "high": "5%",
+            "serves": "all four green bars"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "Rates Rising/ Spreads Rising",
+            "high": "Rates Falling/ Spreads Rising",
+            "serves": "all four green bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Rates Falling/ Spreads Falling"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Rates Rising/ Spreads Falling"
+          ],
+          "value": "0.5%",
+          "value_source": "axis_read",
+          "why_hard": "Short bar between 0% and 1% ticks; no printed label, 5% tolerance is 0.025pp."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "multi_figure_page",
+        "figure_id": "page",
+        "evidence": "Two captioned charts side by side: 'Valuation spreads are wide' and 'Financials have benefited from falling rates...'"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "page",
+        "evidence": "'Sources: Haver Analytics, FactSet, Fidelity Investments, as of 11/30/24. LEFT: Valuation spread: ...'"
+      },
+      {
+        "key": "rotated_axis_title",
+        "figure_id": "f1",
+        "evidence": "'Price-to-book valuation spreads' set vertically along the left axis"
+      },
+      {
+        "key": "rotated_x_ticks",
+        "figure_id": "f1",
+        "evidence": "Year labels 1990, 1992 ... 2024 turned 90 degrees under the axis"
+      },
+      {
+        "key": "sparse_time_ticks",
+        "figure_id": "f1",
+        "evidence": "Monthly data but ticks read 1990, 1992, 1994, 1995, 1997, 1998, 2000 — uneven gaps"
+      },
+      {
+        "key": "dense_marks_100plus",
+        "figure_id": "f1",
+        "evidence": "Monthly line from December 1990 to October 2024, roughly 410 plotted points"
+      },
+      {
+        "key": "shaded_band",
+        "figure_id": "f1",
+        "evidence": "Two pale grey vertical bands over roughly 2016–2017 and 2022–2024 behind the line"
+      },
+      {
+        "key": "negative_values",
+        "figure_id": "f2",
+        "evidence": "Three bars drop below the 0% line; axis runs to -3%"
+      },
+      {
+        "key": "reference_line",
+        "figure_id": "f2",
+        "evidence": "A horizontal rule drawn at 0% across the plot with bars on both sides"
+      },
+      {
+        "key": "value_label_inside",
+        "figure_id": "f2",
+        "evidence": "'4%' printed in bold above the third bar inside the grey highlight block"
+      },
+      {
+        "key": "wrapped_category_labels",
+        "figure_id": "f2",
+        "evidence": "'Rates Rising/ Spreads Rising' wraps onto two lines under each bar"
+      },
+      {
+        "key": "highlighted_category",
+        "figure_id": "f2",
+        "evidence": "Third bar sits on a grey shaded column and alone carries the printed '4%'"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "Bare axis numbers 0..250; scale word only in 'Price-to-book valuation spreads'"
+      },
+      {
+        "key": "side_text_bullets",
+        "figure_id": "page",
+        "evidence": "Deck-style grey standfirst paragraph above both charts referencing '(left)' and '(right)'"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "gradient_fill_band",
+        "figure_id": "f1",
+        "evidence": "Grey bands fade from solid at top to white at the baseline, not a flat tint",
+        "affects": [
+          4
+        ]
+      },
+      {
+        "name": "unlabelled_shaded_region",
+        "figure_id": "f1",
+        "evidence": "Two grey vertical bands with no legend, note or annotation naming what they mark",
+        "affects": [
+          3,
+          4
+        ]
+      },
+      {
+        "name": "slash_compound_category_label",
+        "figure_id": "f2",
+        "evidence": "Category names combine two conditions with a slash: 'Rates Falling/ Spreads Falling'",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "name": "left_right_figure_reference_in_prose",
+        "figure_id": "page",
+        "evidence": "Standfirst says 'near recessionary levels (left)' and 'historically (right)' to address the two charts",
+        "affects": [
+          4
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "4%",
+        "figure_id": "f2",
+        "mark": "the third bar, Rates Falling/Spreads Falling",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Rates Falling/ Spreads Falling",
+          "NTM Average Relative Performance when Credit Spreads (HYOAS) or Rates (1-Yr Yield) Are Rising or Falling, 1980–Present"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "-2.3%",
+        "figure_id": "f2",
+        "mark": "the first bar, Rates Rising/Spreads Rising",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Rates Rising/ Spreads Rising"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "0.5%",
+        "figure_id": "f2",
+        "mark": "the second bar, Rates Rising/Spreads Falling",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Rates Rising/ Spreads Falling"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-1.9%",
+        "figure_id": "f2",
+        "mark": "the fourth bar, Rates Falling/Spreads Rising",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Rates Falling/ Spreads Rising"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "150",
+        "figure_id": "f1",
+        "mark": "the line's starting value at the far left, around 1990",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "1990",
+          "Price-to-book valuation spreads"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "90",
+        "figure_id": "f1",
+        "mark": "the line around 1991-1992, just under the 100 level",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "1992",
+          "Price-to-book valuation spreads"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "30",
+        "figure_id": "f1",
+        "mark": "the trough of the line in the mid-1990s / around 2005",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "1997",
+          "Price-to-book valuation spreads"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "75",
+        "figure_id": "f1",
+        "mark": "the line at the right end, around 2024",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2024",
+          "Price-to-book valuation spreads"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "60",
+        "figure_id": "f1",
+        "mark": "the line around 2011-2012 or 2022, near the 60 level",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2011",
+          "Price-to-book valuation spreads"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "60",
+        "figure_id": "f1",
+        "mark": "a second point at the same level, e.g. around 2022",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2022",
+          "Price-to-book valuation spreads"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "左图刻度间距50、月度点密集,读“90”“60”误差远超5%;右图除4%外三值全靠1%格目测。",
+    "examples": [
+      {
+        "gap": "P1",
+        "figure_id": "f1",
+        "quote": "y axis ticks read 0, 50, 100, 150, 200, 250 with a monthly line from 1990 to 2024",
+        "why": "约410个月度点、刻度间距50,单点可达精度远低于布尔式“可读”,需按标记给出精度。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f2",
+        "quote": "Only the third bar carries a printed label '4%'; three bars extend below the 0% rule to -3%",
+        "why": "标签只印在一根柱上、其余靠轴读,加上零线双向柱,当前生成器无此混合标注与负值风格。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f2",
+        "quote": "'Financials have benefited from falling rates and credit spreads' then 'NTM Average Relative Performance when Credit Spreads (HYOAS) or Rates...'",
+        "why": "无编号、粗体小标题加长副标题两层结构,标题需拆成独立字段而非单行字符串。"
+      },
+      {
+        "gap": "P8",
+        "figure_id": "f2",
+        "quote": "A grey gradient column sits behind the third bar only, aligned with the printed '4%'",
+        "why": "灰色高亮块编码“最佳组合”这一图例未含的属性,须进入键。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "Two pale grey vertical gradient bands, roughly 2016–2017 and 2022–2024, with no legend or note",
+        "why": "需要能生成无图例说明的渐变竖带,并让评测知道该区域无法命名。"
+      }
+    ]
+  }
+}

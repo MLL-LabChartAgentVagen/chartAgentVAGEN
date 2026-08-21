@@ -1,0 +1,224 @@
+{
+  "stem": "ac8b3538-en_p55",
+  "document": "ac8b3538-en",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "repeat",
+  "effort": "high",
+  "dpi": 150,
+  "seconds": 91.0,
+  "usage": {
+    "input_tokens": 4413,
+    "output_tokens": 12720,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "这是一个反映不同国家失业率性别差异的图表，其核心特征是**混合标记（Mixed Marks）**：每个国家类目下，女性数据以条形图（Bar）呈现，男性数据则以菱形散点（Point）叠加在相应位置，同时“OECD”均值被高亮为红色以示区别。\n\n**提取难点**：\n本页最严重的障碍在于**无法在容差范围内精确读取数值（步骤2）**。图中没有任何直接标注的数据标签，所有数值均需要对照Y轴刻度估算。由于Y轴主刻度间距较大（步长为2.0），而待提取的目标数据精确到了小数点后一位（如-10.2, -6.3, 4.2），即要求达到0.1的推算精度。在没有任何辅助细分网格线的情况下，仅凭视觉比例或像素计算难以在2.0的区间内准确辨识出5%的细微差异，极易超出评测的容差限制。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Annex Figure 1.B.2.",
+          "title": "Change in unemployment risk by gender",
+          "subtitle": "Percentage point change in unemployment rate by gender, 2015-22",
+          "unit_text": "p.p",
+          "placement": "above"
+        },
+        "type": "bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 39,
+        "marks": 78,
+        "values_printed": "none"
+      }
+    ],
+    "components": [
+      {
+        "key": "mixed_marks",
+        "figure_id": "f1",
+        "evidence": "Women as bars and Men as diamond points in the same panel"
+      },
+      {
+        "key": "reference_line",
+        "figure_id": "f1",
+        "evidence": "the zero line is drawn as a solid black horizontal line"
+      },
+      {
+        "key": "negative_values",
+        "figure_id": "f1",
+        "evidence": "the y-axis extends down to -12 and bars drop below zero"
+      },
+      {
+        "key": "axis_title_above_axis",
+        "figure_id": "f1",
+        "evidence": "the unit 'p.p' is placed directly above the y-axis top tick"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "the subtitle specifies 'Percentage point change' and axis says 'p.p'"
+      },
+      {
+        "key": "abbrev_category_axis",
+        "figure_id": "f1",
+        "evidence": "x-axis labels are 3-letter country codes like GRC and ESP"
+      },
+      {
+        "key": "rotated_x_ticks",
+        "figure_id": "f1",
+        "evidence": "the country codes on the x-axis are rotated diagonally"
+      },
+      {
+        "key": "legend_above_plot",
+        "figure_id": "f1",
+        "evidence": "the legend sits between the subtitle and the plot area"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "paragraphs starting with 'Note:' and 'Source:' sit below the chart"
+      },
+      {
+        "key": "data_link_below_figure",
+        "figure_id": "f1",
+        "evidence": "a StatLink URL is provided below the source notes"
+      },
+      {
+        "key": "highlighted_category",
+        "figure_id": "f1",
+        "evidence": "the bar for 'OECD' is coloured red instead of green"
+      },
+      {
+        "key": "panel_background",
+        "figure_id": "f1",
+        "evidence": "the plot area has a light grey background fill"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "white horizontal grid lines are present, with no vertical ones"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "symbol_in_series_label",
+        "figure_id": "f1",
+        "evidence": "the legend label 'Women (↗)' includes an arrow symbol",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "name": "legend_background_bar",
+        "figure_id": "f1",
+        "evidence": "the legend has a light grey background spanning the chart width",
+        "affects": []
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "-9.5",
+        "figure_id": "f1",
+        "mark": "the GRC Men point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Men",
+          "GRC"
+        ]
+      },
+      {
+        "value": "-10.2",
+        "figure_id": "f1",
+        "mark": "the GRC Women bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Women (↗)",
+          "GRC"
+        ]
+      },
+      {
+        "value": "-9.5",
+        "figure_id": "f1",
+        "mark": "the ESP Women bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Women (↗)",
+          "ESP"
+        ]
+      },
+      {
+        "value": "-6.2",
+        "figure_id": "f1",
+        "mark": "the PRT Women bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Women (↗)",
+          "PRT"
+        ]
+      },
+      {
+        "value": "-6.3",
+        "figure_id": "f1",
+        "mark": "the IRL Men point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Men",
+          "IRL"
+        ]
+      },
+      {
+        "value": "-2.0",
+        "figure_id": "f1",
+        "mark": "the CZE Men point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Men",
+          "CZE"
+        ]
+      },
+      {
+        "value": "-2.1",
+        "figure_id": "f1",
+        "mark": "the LVA Men point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Men",
+          "LVA"
+        ]
+      },
+      {
+        "value": "4.2",
+        "figure_id": "f1",
+        "mark": "the CRI Women bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Women (↗)",
+          "CRI"
+        ]
+      },
+      {
+        "value": "1.5",
+        "figure_id": "f1",
+        "mark": "the CRI Men point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Men",
+          "CRI"
+        ]
+      },
+      {
+        "value": "2.5",
+        "figure_id": "f1",
+        "mark": "the COL Women bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Women (↗)",
+          "COL"
+        ]
+      }
+    ],
+    "hardest_step": 2
+  }
+}

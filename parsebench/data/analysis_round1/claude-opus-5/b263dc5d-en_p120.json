@@ -1,0 +1,255 @@
+{
+  "stem": "b263dc5d-en_p120",
+  "document": "b263dc5d-en",
+  "tags": "need_estimate",
+  "model": "claude-opus-5",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "seconds": 64.3,
+  "usage": {
+    "input_tokens": 10507,
+    "output_tokens": 5394,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "本页只有一张图 Figure 3.8：25 个国家的垂直条形（Unadjusted）叠加菱形标记（Adjusted），即 mixed_marks。生成器需能：条形+点标记共轴、零线两侧的正负值（轴自 40 到 -20，步长 5）、同一图例项用深/浅两个色块表示 5% 显著性、90° 旋转的国名刻度、轴上方的单位行 \"Score-point difference\"、以及横轴下方一条灰色分组带 \"Round, Cycle 1:\" 标 1/2/3，并配两条淡色竖向底纹带。取值困难在于图上无任何数值标签，刻度间隔 5 分，读数须靠像素插值；且每个数值需要三重定位：国名 + Unadjusted/Adjusted + （隐含的）显著性色深。不确定处：Japan 条形究竟为 31 还是 34；25 归 New Zealand 还是 France，15 归 Finland 还是 New Zealand 的菱形，均存在邻近候选。England (UK)、Flemish Region (BE) 标签着色原因也不确定（可能为链接）。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 3.8.",
+          "title": "Change in the gap in literacy proficiency between highly and low-educated adults",
+          "subtitle": "Adjusted and unadjusted change between cycles in the average score difference between adults with tertiary education and adults with below upper secondary education (Cycle 2 minus Cycle 1); 25-65 year-olds",
+          "unit_text": "Score-point difference",
+          "placement": "above"
+        },
+        "type": "compound",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 25,
+        "marks": 50,
+        "values_printed": "none"
+      }
+    ],
+    "components": [
+      {
+        "key": "mixed_marks",
+        "figure_id": "f1",
+        "evidence": "vertical bars for \"Unadjusted\" with diamond markers for \"Adjusted\" overlaid in the same panel"
+      },
+      {
+        "key": "negative_values",
+        "figure_id": "f1",
+        "evidence": "bars below the zero line for Spain, Slovak Republic, Sweden, Poland*, Israel; axis to -20"
+      },
+      {
+        "key": "reference_line",
+        "figure_id": "f1",
+        "evidence": "a thick horizontal rule drawn at 0 across the whole plot"
+      },
+      {
+        "key": "color_encodes_extra_attribute",
+        "figure_id": "f1",
+        "evidence": "\"Darker colours denote differences that are statistically significant at the 5% level.\""
+      },
+      {
+        "key": "shaded_band",
+        "figure_id": "f1",
+        "evidence": "two pale beige vertical bands behind New Zealand-Lithuania and behind Israel"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "horizontal rules at every 5 points, no vertical grid lines"
+      },
+      {
+        "key": "rotated_x_ticks",
+        "figure_id": "f1",
+        "evidence": "country names \"Japan\", \"Austria\", \"Flemish Region (BE)\" set vertically at 90 degrees"
+      },
+      {
+        "key": "legend_above_plot",
+        "figure_id": "f1",
+        "evidence": "\"Unadjusted   Adjusted\" swatch row sits above the top of the axis frame"
+      },
+      {
+        "key": "axis_title_above_axis",
+        "figure_id": "f1",
+        "evidence": "\"Score-point difference\" printed above the 40 tick at the top left"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "value axis reads 40, 35 ... -20 bare; scale word only in \"Score-point difference\""
+      },
+      {
+        "key": "footnote_marker",
+        "figure_id": "f1",
+        "evidence": "category label \"Poland*\" and \"*Caution is required in interpreting results\" in the note"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "\"Note: Does not include adults who in Cycle 2...\"; \"Source: OECD (2018[4]; 2015[5]; 2012[6])...\""
+      },
+      {
+        "key": "total_row_below_axis",
+        "figure_id": "f1",
+        "evidence": "grey band under the country labels: \"Round, Cycle 1:\" then segments marked 1, 2, 3"
+      },
+      {
+        "key": "highlighted_category",
+        "figure_id": "f1",
+        "evidence": "tick labels \"England (UK)\" and \"Flemish Region (BE)\" printed in colour, others in black"
+      },
+      {
+        "key": "wrapped_category_labels",
+        "figure_id": "f1",
+        "evidence": "25 long country names stacked vertically along the category axis"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "dual_swatch_legend_entry",
+        "figure_id": "f1",
+        "evidence": "legend shows two squares before \"Unadjusted\" and two diamonds before \"Adjusted\" (light = not significant)",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "name": "category_group_band_below_axis",
+        "figure_id": "f1",
+        "evidence": "\"Round, Cycle 1:\" grey band spanning country groups labelled 1, 2, 3 under the axis",
+        "affects": [
+          3,
+          4
+        ]
+      },
+      {
+        "name": "hollow_vs_filled_marker_significance",
+        "figure_id": "f1",
+        "evidence": "Adjusted diamonds drawn either open (Czechia, Korea) or filled (Austria, Denmark)",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "34",
+        "figure_id": "f1",
+        "mark": "the Japan Unadjusted bar, tallest bar at the left",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Japan",
+          "Unadjusted",
+          "Score-point difference"
+        ]
+      },
+      {
+        "value": "35",
+        "figure_id": "f1",
+        "mark": "the Japan Adjusted diamond, sitting at the 35 gridline",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Japan",
+          "Adjusted",
+          "Score-point difference"
+        ]
+      },
+      {
+        "value": "29",
+        "figure_id": "f1",
+        "mark": "the Austria Unadjusted bar, second from left",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Austria",
+          "Unadjusted",
+          "Score-point difference"
+        ]
+      },
+      {
+        "value": "19",
+        "figure_id": "f1",
+        "mark": "the Estonia Unadjusted bar, just below 20",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Estonia",
+          "Unadjusted",
+          "Score-point difference"
+        ]
+      },
+      {
+        "value": "-4",
+        "figure_id": "f1",
+        "mark": "the Korea Adjusted diamond, open diamond below the zero line",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Korea",
+          "Adjusted",
+          "Score-point difference"
+        ]
+      },
+      {
+        "value": "-17",
+        "figure_id": "f1",
+        "mark": "the Poland* Adjusted diamond, lowest marker on the chart",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Poland*",
+          "Adjusted",
+          "Score-point difference"
+        ]
+      },
+      {
+        "value": "25",
+        "figure_id": "f1",
+        "mark": "the New Zealand Unadjusted bar inside the shaded Round 2 band",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "New Zealand",
+          "Unadjusted",
+          "Score-point difference"
+        ]
+      },
+      {
+        "value": "15",
+        "figure_id": "f1",
+        "mark": "the New Zealand Adjusted diamond at about 14-15; Finland's bar is a near neighbour",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "New Zealand",
+          "Adjusted",
+          "Score-point difference"
+        ]
+      },
+      {
+        "value": "-8",
+        "figure_id": "f1",
+        "mark": "the Israel Adjusted diamond, filled marker below -5",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Israel",
+          "Adjusted",
+          "Score-point difference"
+        ]
+      },
+      {
+        "value": "13",
+        "figure_id": "f1",
+        "mark": "the Hungary Unadjusted bar, rightmost bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Hungary",
+          "Unadjusted",
+          "Score-point difference"
+        ]
+      }
+    ],
+    "hardest_step": 2
+  }
+}

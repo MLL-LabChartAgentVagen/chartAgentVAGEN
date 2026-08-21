@@ -1,0 +1,290 @@
+{
+  "stem": "World_Inequality_Report_2026_p132",
+  "document": "World_Inequality_Report_2026",
+  "tags": "need_estimate",
+  "model": "claude-opus-5",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 85.5,
+  "usage": {
+    "input_tokens": 13960,
+    "output_tokens": 6477,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "**画出来要什么**\n一张单面板多线图：5 条带点标记的折线（Brazil / France / Netherlands / Spain / United States），x 轴 16 个不等宽的分位组（`P0–10` … `P99.999–P99.9999`、`Billionaires`），标签整体旋转约 45°；y 轴 `0%`–`25%`，只有水平虚网格；旋转的长轴标题 `Effective income tax rates by income groups and for billionaires (% of pre–tax income)`。还要能画：从 `P0–10` 到 `P95–99` 的灰色底纹带，带内一个带边框的说明框 `99% of the population are located in the shaded area.`；图号+标题一行、再单独一行加粗副标题 `Effective income tax rates by income groups`；图下居中图例与两段小字注（`Interpretation.` / `Sources and series:`）。\n\n**定位一个值难在哪**\n以 10（Brazil 在 `P95–99` 的峰值≈10.1）为例：图上无任何数字，网格每 5%，5% 容差只有 ±0.5，即约网格间距的 1/10；绿线此处正压在灰底纹边缘，且需同时给出系列名与分位标签两个键才能唯一定位。\n\n**不确定的**\n各线起点不同（Netherlands 似从 `P10–20`、Spain 似从 `P20–30` 开始），点数与总标记数为估算；红线峰值落在哪一个分位格无法确定；给定的 18、15 各出现两次，无法判断分别属于哪条线。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 7.2.",
+          "title": "The super-rich pay proportionately less than others",
+          "subtitle": "Effective income tax rates by income groups",
+          "unit_text": "(% of pre–tax income)",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 1,
+        "series": 5,
+        "categories": 16,
+        "marks": 77,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Effective income tax rates by income groups and for billionaires (% of pre–tax income)",
+            "low": "0%",
+            "high": "25%",
+            "serves": "all five lines and their point markers"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "P0–10",
+            "high": "Billionaires",
+            "serves": "all five lines, one slot per percentile group"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Netherlands"
+          },
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "P99.9–99.99"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Brazil",
+            "P95–99"
+          ],
+          "value": "≈10%",
+          "value_source": "axis_read",
+          "why_hard": "No printed value; gridlines every 5%, green marker sits on shaded-band edge, lines overlap nearby"
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "shaded_band",
+        "figure_id": "f1",
+        "evidence": "grey tinted vertical band spanning P0–10 through P95–99 behind the lines"
+      },
+      {
+        "key": "annotation_callout",
+        "figure_id": "f1",
+        "evidence": "boxed note inside plot: \"99% of the population are located in the shaded area.\""
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "row \"Brazil France Netherlands Spain United States\" centred under the plot"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "\"Interpretation. This figure shows...\" and \"Sources and series: Artola et al. (2022)...\" below plot"
+      },
+      {
+        "key": "rotated_x_ticks",
+        "figure_id": "f1",
+        "evidence": "P0–10 … Billionaires set at roughly 45 degrees under the axis"
+      },
+      {
+        "key": "rotated_axis_title",
+        "figure_id": "f1",
+        "evidence": "vertical text \"Effective income tax rates by income groups and for billionaires (% of pre–tax income)\""
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "\"(% of pre–tax income)\" written in the rotated left-axis title"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "dashed horizontal rules at 5%, 10%, 15%, 20%, 25%; no vertical rules"
+      },
+      {
+        "key": "abbrev_category_axis",
+        "figure_id": "f1",
+        "evidence": "axis reads P0–10, P10–20 …; note says \"P0–10 denotes the bottom 10%\""
+      }
+    ],
+    "new_components": [
+      {
+        "name": "unequal_width_category_bins",
+        "figure_id": "f1",
+        "evidence": "deciles P0–10…P70–80 then P90–95, P99–99.9, P99.999–P99.9999, Billionaires in equal-width slots",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "name": "bold_lead_in_note_paragraph",
+        "figure_id": "f1",
+        "evidence": "note paragraph opens with bold run-in labels \"Interpretation.\" and \"Sources and series:\"",
+        "affects": [
+          4
+        ]
+      },
+      {
+        "name": "series_start_at_different_categories",
+        "figure_id": "f1",
+        "evidence": "Netherlands line begins at P10–20 and Spain at P20–30; earlier slots have no marker",
+        "affects": [
+          1,
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "9",
+        "figure_id": "f1",
+        "mark": "the United States point at the Billionaires slot (red line endpoint, ~9.3%)",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "United States",
+          "Billionaires"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "18",
+        "figure_id": "f1",
+        "mark": "a red United States point on the rise past P95–99 (or Netherlands at P80–90); slot ambiguous",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "United States",
+          "P99–99.9"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "15",
+        "figure_id": "f1",
+        "mark": "the France point at P95–99 (dark blue, ~15%)",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "France",
+          "P95–99"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "16",
+        "figure_id": "f1",
+        "mark": "the France point at P99.9–99.99 (dark blue peak, ~16.5%)",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "France",
+          "P99.9–99.99"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "18",
+        "figure_id": "f1",
+        "mark": "the Netherlands point near P80–90 (orange, ~19%) — second occurrence, cannot be separated from the first",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Netherlands",
+          "P80–90"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "7",
+        "figure_id": "f1",
+        "mark": "the France point at P40–50 (dark blue, ~6.8%) or Brazil at P95–99",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "France",
+          "P40–50"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "12.5",
+        "figure_id": "f1",
+        "mark": "the Spain point at P99.99–P99.999 (light blue, ~12.4%)",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Spain",
+          "P99.99–P99.999"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "15",
+        "figure_id": "f1",
+        "mark": "the Spain point at P95–99 (light blue, ~15.5%)",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Spain",
+          "P95–99"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "10",
+        "figure_id": "f1",
+        "mark": "the Brazil peak at P95–99 (green, ~10.1%)",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Brazil",
+          "P95–99"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "全图无数字，网格每5%；读9%需±0.45%精度，约网格1/11；且18、15各出现两次，线条在P95–99处交叠难分。",
+    "examples": [
+      {
+        "gap": "P1",
+        "figure_id": "f1",
+        "quote": "y axis ticks read 0%, 5%, 10%, 15%, 20%, 25%; no value labels on any of the ~77 line markers",
+        "why": "5%容差对应±0.45个百分点，仅网格间距1/11，逐点可达精度必须按标记记录而非布尔判定。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "\"Figure 7.2. The super-rich pay proportionately less than others\" then a separate bold line \"Effective income tax rates by income groups\"",
+        "why": "图号、标题、副标题、单位分处三行且单位在旋转轴标题里，现有流水线无法拆成独立字段。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "grey band from P0–10 to P95–99 with boxed text inside: \"99% of the population are located in the shaded area.\"",
+        "why": "需支持按类别范围着色的底纹并在其内放置指向该底纹的边框注释框；当前无此组合。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "x ticks: P0–10, P10–20 … P90–95, P95–99, P99–99.9, P99.9–99.99, P99.99–P99.999, P99.999–P99.9999, Billionaires",
+        "why": "类别宽度在语义上从十分位细化到十万分位再到一个非分位类，需要不等宽分箱轴生成能力。"
+      }
+    ]
+  }
+}

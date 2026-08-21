@@ -1,0 +1,309 @@
+{
+  "stem": "wtr24_ch2_e_p14",
+  "document": "wtr24_ch2_e",
+  "tags": "need_estimate",
+  "model": "claude-opus-5",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "seconds": 87.8,
+  "usage": {
+    "input_tokens": 13968,
+    "output_tokens": 6624,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "## 画出来要什么\n一张双轴组合图:29 个年度柱(浅蓝实心)叠加一条折线,柱读左轴「Number of low- and middle-income economies' SPS and TBT concerns」(0–80,刻度间隔 20),折线读右轴「Share of low- and middle-income economies' SPS and TBT concerns  addressed to high-income economies」(0%–100%,间隔 25%)。两条轴标题都竖排且折成两行;x 轴 1995–2023 年逐年、约 45° 旋转;图例在图下方一行两项,方块代表柱、短横线代表折线;标题写在蓝色实心横幅里,分两行;下方 Source/Note 两行小字。全图无任何数值标注,只有横向浅网格线。\n\n## 定位一个值难在哪\n以 40%(2014 年折线点)为例:必须先判定它属于右轴而非左轴——同一像素高度在左轴上是 32 件。右轴只有 0%/25%/50%/75%/100% 五个刻度,5% 容差即 ±2 个百分点,约 6 像素,而折线未标点、未标值。定位它还需「2014」+「Share of concerns addressed to high-income economies」两个标签,而后者只出现在图例里。\n\n## 不确定的\n折线各点的精确值全靠像素估读,2002、2016、2020 的低点区分度低;右轴标题中疑似双空格无法确认;标题横幅内是否另有单位文字看不清;网格线极浅,是否画到 80 一线不确定。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure B.6",
+          "title": "Growing number of concerns about SPS and TBT measures raised by low- and",
+          "subtitle": "middle-income members, 1995-2023",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "compound",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 29,
+        "marks": 58,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Number of low- and middle-income economies' SPS and TBT concerns",
+            "low": "0",
+            "high": "80",
+            "serves": "all blue bars"
+          },
+          {
+            "side": "right",
+            "role": "value",
+            "unit_text": "Share of low- and middle-income economies' SPS and TBT concerns  addressed to high-income economies",
+            "low": "0%",
+            "high": "100%",
+            "serves": "only the light-blue line"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "1995",
+            "high": "2023",
+            "serves": "bars and line points alike"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2014"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Share of concerns addressed to high-income economies"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "2014",
+            "Share of concerns addressed to high-income economies"
+          ],
+          "value": "40%",
+          "value_source": "axis_read",
+          "why_hard": "Right axis ticks every 25%, no point markers or labels; same height means 32 on left axis"
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "dual_axis",
+        "figure_id": "f1",
+        "evidence": "left axis 0-80 counts, right axis 0%-100% share, both titled vertically"
+      },
+      {
+        "key": "mixed_marks",
+        "figure_id": "f1",
+        "evidence": "blue bars per year with a light-blue line drawn over them in the same panel"
+      },
+      {
+        "key": "rotated_axis_title",
+        "figure_id": "f1",
+        "evidence": "\"Number of low- and middle-income economies' SPS and TBT concerns\" set vertically along the left axis"
+      },
+      {
+        "key": "rotated_x_ticks",
+        "figure_id": "f1",
+        "evidence": "year labels 1995 ... 2023 turned about 45 degrees under the axis"
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "one legend row under the plot: square marker plus line marker with two names"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "\"Source: Authors' calculations, based on WTO data...\" and \"Note: The figure displays the evolution...\""
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "bare ticks 0/20/40/60/80; the word \"Number of\" appears only in the axis title"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "faint horizontal rules at 20, 40, 60, 80 across the plot; no vertical rules"
+      },
+      {
+        "key": "footnote_marker",
+        "figure_id": "page",
+        "evidence": "body text carries superscripts \"since 2014.12\", \"applied tariffs13\", \"high-income economies.14\""
+      }
+    ],
+    "new_components": [
+      {
+        "name": "title_in_filled_banner",
+        "figure_id": "f1",
+        "evidence": "\"Figure B.6: Growing number of concerns about SPS and TBT measures...\" white text in a blue filled bar above plot",
+        "affects": [
+          3,
+          4
+        ]
+      },
+      {
+        "name": "multiline_rotated_axis_title",
+        "figure_id": "f1",
+        "evidence": "left axis title wraps onto two stacked vertical lines: \"...economies' SPS\" / \"and TBT concerns\"",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "name": "legend_marker_shape_matches_mark",
+        "figure_id": "f1",
+        "evidence": "legend uses a small square for the bar series and a short line for the line series",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "1",
+        "figure_id": "f1",
+        "mark": "the 1995 bar, a sliver just above the baseline",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "1995",
+          "Concerns raised by at least one low- or middle-income economy"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "100%",
+        "figure_id": "f1",
+        "mark": "the 1995 line point, at the top of the plot level with the 100% tick",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "1995",
+          "Share of concerns addressed to high-income economies"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "31",
+        "figure_id": "f1",
+        "mark": "the 2002 bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2002",
+          "Concerns raised by at least one low- or middle-income economy"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "35%",
+        "figure_id": "f1",
+        "mark": "the 2002 line point, the sharp dip below the 2001 peak",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2002",
+          "Share of concerns addressed to high-income economies"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "46",
+        "figure_id": "f1",
+        "mark": "the 2014 bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2014",
+          "Concerns raised by at least one low- or middle-income economy"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "40%",
+        "figure_id": "f1",
+        "mark": "the 2014 line point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2014",
+          "Share of concerns addressed to high-income economies"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "66",
+        "figure_id": "f1",
+        "mark": "the 2020 bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2020",
+          "Concerns raised by at least one low- or middle-income economy"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "30%",
+        "figure_id": "f1",
+        "mark": "the 2020 line point, the trough between 2019 and the 2022 peak",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2020",
+          "Share of concerns addressed to high-income economies"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "64",
+        "figure_id": "f1",
+        "mark": "the 2022 bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2022",
+          "Concerns raised by at least one low- or middle-income economy"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "70%",
+        "figure_id": "f1",
+        "mark": "the 2022 line point, the late peak near the 75% tick",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2022",
+          "Share of concerns addressed to high-income economies"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "全图无数值;右轴仅0/25/50/75/100%五档,35%的5%容差约±1.75个百分点,折线无标记,且同高度在左轴另有读数。",
+    "examples": [
+      {
+        "gap": "P9",
+        "figure_id": "f1",
+        "quote": "left axis 0 to 80 \"Number of ... concerns\"; right axis 0% to 100% \"Share of ... addressed to high-income economies\"; bars plus line",
+        "why": "同一面板双轴且柱线混合,值必须记录读自哪条轴、哪种标记,现管线无此字段。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "\"Figure B.6: Growing number of concerns about SPS and TBT measures raised by low- and middle-income members, 1995-2023\" in a blue banner",
+        "why": "编号、两行标题与年份范围写在实心横幅内,现管线不能拆分标题字段与横幅位置。"
+      },
+      {
+        "gap": "P1",
+        "figure_id": "f1",
+        "quote": "the 1995 bar is a sliver about one unit tall against ticks at 0, 20, 40, 60, 80",
+        "why": "同图内1与66的可达精度差异极大,需按标记给精度而非一刀切可读判定。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "right axis ticks read \"0%\", \"25%\", \"50%\", \"75%\", \"100%\" while left ticks read bare \"0\" ... \"80\"",
+        "why": "一图内两轴刻度格式与单位位置不同,现管线不能同页混排百分号与裸数。"
+      }
+    ]
+  }
+}

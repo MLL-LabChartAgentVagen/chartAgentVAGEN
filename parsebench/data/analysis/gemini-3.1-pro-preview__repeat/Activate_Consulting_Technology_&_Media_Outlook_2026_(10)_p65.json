@@ -1,0 +1,259 @@
+{
+  "stem": "Activate_Consulting_Technology_&_Media_Outlook_2026_(10)_p65",
+  "document": "Activate_Consulting_Technology_&_Media_Outlook_2026_(10)",
+  "tags": "untagged",
+  "model": "gemini-3.1-pro-preview",
+  "control": "repeat",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 18.9,
+  "usage": {
+    "input_tokens": 5296,
+    "output_tokens": 2378,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n这是一个由三组柱状图构成的图形。需要在X轴显示三个类别，每个类别下有三个并排的柱子，分别代表三个游戏平台。图例以图标和文字的形式放在图表左侧，垂直排列。所有柱子的数值标签直接写在柱子上方，由于没有数值轴（Y轴），这些标签是读取数值的唯一途径。特别的是，最左侧第一组柱子上方画有一个椭圆形圈，将这三个数值标签圈在一起。\n\n### 定位一个值难在哪\n以最左侧绿色柱子的 `89%` 为例。要定位这个值，需要结合类别轴标签 `SUPER GAMERS²` 和通过图表左侧的图例得出的系列名 `PC`。图例的形式（图标加文字放置在图表外侧特定位置）对解析工具提取系列标识有一定挑战。另外，“SUPER GAMERS²” 中的上标可能在解析时带来不确定性。\n\n### 不确定的\n图表标题写在页面顶部的蓝色带状区域中，不确定这是否算作图表的标题还是整个页面的标题区块。最左侧第一组柱子上的绿色圆圈是手绘风格还是标准化标注，这在生成的抽象模型中很难定义清楚。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "Super Gamers play video games across all platforms, while Avid and Casual Gamers primarily use mobile",
+          "subtitle": "SHARE OF GAMERS¹ USING EACH PLATFORM FOR GAMING IN THE LAST 12 MONTHS, U.S., 2025, % GAMERS¹ BY SEGMENT",
+          "unit_text": "% GAMERS¹",
+          "placement": "above"
+        },
+        "type": "grouped_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 3,
+        "categories": 3,
+        "marks": 9,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "none",
+            "role": "value",
+            "unit_text": "",
+            "low": "",
+            "high": "",
+            "serves": ""
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "SUPER GAMERS²",
+            "high": "CASUAL GAMERS⁴",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "SUPER GAMERS²"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "MOBILE"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "SUPER GAMERS²",
+            "MOBILE"
+          ],
+          "value": "93%",
+          "value_source": "printed",
+          "why_hard": "Legend is on the left as a separate block with icons, potentially harder to parse."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "grouped_bar",
+        "figure_id": "f1",
+        "evidence": "3 categories, each containing 3 side-by-side bars"
+      },
+      {
+        "key": "no_value_axis",
+        "figure_id": "f1",
+        "evidence": "no vertical y-axis, only data labels above bars"
+      },
+      {
+        "key": "legend_beside_plot",
+        "figure_id": "f1",
+        "evidence": "legend with MOBILE, CONSOLE, PC is drawn to the left of the plot"
+      },
+      {
+        "key": "value_label_outside",
+        "figure_id": "f1",
+        "evidence": "percentages like 93%, 82% are printed above the bars"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "Notes 1-4 and Sources are printed below the figure"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "subtitle contains '% GAMERS¹'"
+      },
+      {
+        "key": "footnote_marker",
+        "figure_id": "f1",
+        "evidence": "superscripts like ¹, ², ³, ⁴ in subtitles and axis labels"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "hand_drawn_annotation",
+        "figure_id": "f1",
+        "evidence": "a green circle surrounds the three percentage labels in the first category",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "name": "icon_in_legend",
+        "figure_id": "f1",
+        "evidence": "legend items on the left contain pictograms next to the text",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "93",
+        "figure_id": "f1",
+        "mark": "first bar in SUPER GAMERS²",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "SUPER GAMERS²",
+          "MOBILE"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "82",
+        "figure_id": "f1",
+        "mark": "second bar in SUPER GAMERS²",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "SUPER GAMERS²",
+          "CONSOLE"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "89",
+        "figure_id": "f1",
+        "mark": "third bar in SUPER GAMERS²",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "SUPER GAMERS²",
+          "PC"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "89",
+        "figure_id": "f1",
+        "mark": "first bar in AVID GAMERS³",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "AVID GAMERS³",
+          "MOBILE"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "56",
+        "figure_id": "f1",
+        "mark": "second bar in AVID GAMERS³",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "AVID GAMERS³",
+          "CONSOLE"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "70",
+        "figure_id": "f1",
+        "mark": "third bar in AVID GAMERS³",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "AVID GAMERS³",
+          "PC"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "87",
+        "figure_id": "f1",
+        "mark": "first bar in CASUAL GAMERS⁴",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "CASUAL GAMERS⁴",
+          "MOBILE"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "34",
+        "figure_id": "f1",
+        "mark": "second bar in CASUAL GAMERS⁴",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "CASUAL GAMERS⁴",
+          "CONSOLE"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "24",
+        "figure_id": "f1",
+        "mark": "third bar in CASUAL GAMERS⁴",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "CASUAL GAMERS⁴",
+          "PC"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      }
+    ],
+    "hardest_step": 3,
+    "hardest_step_why": "该图表没有纵向数值轴，图例被放在左侧独立的一栏并带有图标。解析器可能难以将这种不寻常位置的图例提取出来并和相应的颜色绑定，导致标签关联（Step 3）失败。",
+    "examples": [
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "Legend block on the far left with MOBILE, CONSOLE, PC vertically arranged.",
+        "why": "当前的图例位置模型通常支持上方、下方或图表内部，侧边的垂直独立图例布局可能需要新的支持。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "A hand-drawn style green circle around the 93%, 82%, 89% labels.",
+        "why": "当前生成器不支持手绘风格的自由形状标注，需要在系统中引入图形标注和高亮圈注的组件。"
+      }
+    ]
+  }
+}

@@ -1,0 +1,191 @@
+{
+  "stem": "timevalue_p9",
+  "document": "timevalue",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "no_vocab",
+  "effort": "high",
+  "dpi": 150,
+  "seconds": 12.9,
+  "usage": {
+    "input_tokens": 2288,
+    "output_tokens": 1550,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "这张页面包含一个折线图（Line Chart），展示了在不同持有期内三种投资（股票、国债、短期国库券）的未来价值。图表生成器需要能够绘制带有数据标记（如正方形、三角形、十字叉形）的折线、自定义的网格线（主网格线为深色实线，次网格线为浅色细线或虚线模式），并在图表右侧放置图例。\n\n难点在于大部分数据点需要从y轴（0到4500，间距为500，有许多细密的次级网格线）读取，误差容忍度较小。由于x轴的类别标签（1, 5, 10, 20, 30, 40）不是等距的，读取精确数值有一定挑战。所有目标数值均未直接标注在图上。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "Holding Period and Value",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 1,
+        "series": 3,
+        "categories": 6,
+        "marks": 18,
+        "values_printed": "none"
+      }
+    ],
+    "components": [
+      {
+        "key": "y_axis_title",
+        "figure_id": "f1",
+        "evidence": "\"Future value of $100 investment\" placed vertically along the y axis",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "x_axis_title",
+        "figure_id": "f1",
+        "evidence": "\"Holding period (in years)\" below the x axis",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "legend_right",
+        "figure_id": "f1",
+        "evidence": "Legend with \"Stocks ($)\", etc. sits to the right of the plot area",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "line_markers",
+        "figure_id": "f1",
+        "evidence": "Squares, triangles, and crosses indicate data points on the lines",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "key": "major_and_minor_gridlines",
+        "figure_id": "f1",
+        "evidence": "Dark solid lines for major y ticks, light thin lines between them",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "key": "non_equidistant_x_axis",
+        "figure_id": "f1",
+        "evidence": "x axis categories are 1, 5, 10, 20, 30, 40, drawn evenly spaced instead of numerically scaled",
+        "affects": [
+          2
+        ]
+      }
+    ],
+    "new_components": [
+      {
+        "name": "y_axis_tick_marks_outside",
+        "figure_id": "f1",
+        "evidence": "Ticks protrude to the left of the y axis line",
+        "affects": [
+          2
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "3850",
+        "figure_id": "f1",
+        "mark": "Stocks line at year 40",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Stocks ($)",
+          "40"
+        ]
+      },
+      {
+        "value": "1550",
+        "figure_id": "f1",
+        "mark": "Stocks line at year 30",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Stocks ($)",
+          "30"
+        ]
+      },
+      {
+        "value": "620",
+        "figure_id": "f1",
+        "mark": "Stocks line at year 20",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Stocks ($)",
+          "20"
+        ]
+      },
+      {
+        "value": "240",
+        "figure_id": "f1",
+        "mark": "Stocks line at year 10",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Stocks ($)",
+          "10"
+        ]
+      },
+      {
+        "value": "700",
+        "figure_id": "f1",
+        "mark": "Treasury Bonds line at year 40",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Treasury Bonds ($)",
+          "40"
+        ]
+      },
+      {
+        "value": "420",
+        "figure_id": "f1",
+        "mark": "Treasury Bonds line at year 30",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Treasury Bonds ($)",
+          "30"
+        ]
+      },
+      {
+        "value": "250",
+        "figure_id": "f1",
+        "mark": "Treasury Bonds line at year 20",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Treasury Bonds ($)",
+          "20"
+        ]
+      },
+      {
+        "value": "420",
+        "figure_id": "f1",
+        "mark": "Treasury Bills line at year 40",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Treasury Bills ($)",
+          "40"
+        ]
+      },
+      {
+        "value": "280",
+        "figure_id": "f1",
+        "mark": "Treasury Bills line at year 30",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Treasury Bills ($)",
+          "30"
+        ]
+      }
+    ],
+    "hardest_step": 2
+  }
+}

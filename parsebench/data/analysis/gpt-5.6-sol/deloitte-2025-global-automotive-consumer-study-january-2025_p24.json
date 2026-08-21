@@ -1,0 +1,301 @@
+{
+  "stem": "deloitte-2025-global-automotive-consumer-study-january-2025_p24",
+  "document": "deloitte-2025-global-automotive-consumer-study-january-2025",
+  "tags": "untagged",
+  "model": "gpt-5.6-sol",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "via": "openrouter",
+  "max_tokens": 120000,
+  "seconds": 89.0,
+  "usage": {
+    "input_tokens": 8747,
+    "output_tokens": 5903,
+    "cache_read_tokens": 2365
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "**画出来要什么**\n\n页面含两个无编号图：八国六系列的横向百分比堆叠条，图例在下；以及八国单系列柱图。两图均无数值刻度，数值直接置于色块或柱内；标题上方另有粗体结论，图下有问题、样本量和注释。\n\n**定位一个值难在哪**\n\n如 23% 要同时用“Southeast Asia”和“3-4 times per week”定位；图中另有 23%。11% 也重复出现，所以数字本身不足，但所需标签均明示。\n\n**不确定的**\n\n两图均无图号；第一图没有标出 100% 的轴，只能凭等长堆叠及百分号判断为百分比堆叠。重复值的实例按阅读顺序取首次出现。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "Frequency of driving personal vehicle",
+          "subtitle": "",
+          "unit_text": "%",
+          "placement": "above"
+        },
+        "type": "stacked_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 6,
+        "categories": 8,
+        "marks": 48,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "left",
+            "role": "category",
+            "unit_text": "",
+            "low": "India",
+            "high": "Japan",
+            "serves": "all horizontal stacks"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "India"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Every day"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Japan",
+            "Once a month"
+          ],
+          "value": "2%",
+          "value_source": "printed",
+          "why_hard": "The 2% segment is very narrow, although its value is printed."
+        }
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "",
+          "title": "Willingness to give up vehicle ownership in favor of MaaS (% somewhat willing/willing/very willing) – 18- to 34-year-old respondents",
+          "subtitle": "",
+          "unit_text": "% somewhat willing/willing/very willing",
+          "placement": "above"
+        },
+        "type": "bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 1,
+        "categories": 8,
+        "marks": 8,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "India",
+            "high": "Germany",
+            "serves": "all vertical bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Rep. of Korea"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Rep. of Korea"
+          ],
+          "value": "37%",
+          "value_source": "printed",
+          "why_hard": "The category is abbreviated; the value itself is printed."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "multi_figure_page",
+        "figure_id": "page",
+        "evidence": "Two independent titled plots appear, each with its own question and sample-size lines."
+      },
+      {
+        "key": "stacked_bar",
+        "figure_id": "f1",
+        "evidence": "Each country has one horizontal bar divided into six coloured segments."
+      },
+      {
+        "key": "pct_stacked",
+        "figure_id": "f1",
+        "evidence": "All eight stacks have equal full widths and their segment labels are percentages."
+      },
+      {
+        "key": "horizontal_bars",
+        "figure_id": "f1",
+        "evidence": "Country labels sit left of bars that extend horizontally to the right."
+      },
+      {
+        "key": "no_value_axis",
+        "figure_id": "f1",
+        "evidence": "No percentage ticks are drawn; values such as “51%” are printed inside segments."
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "The six-item legend begins with “Every day” directly below the stacked bars."
+      },
+      {
+        "key": "value_label_inside",
+        "figure_id": "f1",
+        "evidence": "Every percentage, including “2%” and “3%”, is printed inside its coloured segment."
+      },
+      {
+        "key": "thin_segment_label",
+        "figure_id": "f1",
+        "evidence": "Labels “2%” and “3%” are compressed into very narrow stacked segments."
+      },
+      {
+        "key": "abbrev_category_axis",
+        "figure_id": "f1",
+        "evidence": "The category axis uses the abbreviations “US” and “UK”."
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "Below the plot are “Note: Percentages may not add up to 100 due to rounding.” and sample sizes."
+      },
+      {
+        "key": "no_value_axis",
+        "figure_id": "f2",
+        "evidence": "Only a bottom baseline is drawn; bar values are available solely from printed labels."
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f2",
+        "evidence": "The title contains “(% somewhat willing/willing/very willing)”."
+      },
+      {
+        "key": "value_label_inside",
+        "figure_id": "f2",
+        "evidence": "White labels from “70%” through “35%” appear inside the bars."
+      },
+      {
+        "key": "abbrev_category_axis",
+        "figure_id": "f2",
+        "evidence": "The axis includes “US”, “UK”, and “Rep. of Korea”."
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f2",
+        "evidence": "The lines below begin “Q63.” and “Sample size: n = 261 [China]”."
+      }
+    ],
+    "new_components": [
+      {
+        "name": "unit_in_value_labels",
+        "figure_id": "f1",
+        "evidence": "Every segment label carries a percent sign, including “51%” and “25%”.",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "name": "unit_in_value_labels",
+        "figure_id": "f2",
+        "evidence": "Every bar label carries a percent sign, including “70%” and “35%”.",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "name": "takeaway_text_above_figure",
+        "figure_id": "f1",
+        "evidence": "A bold paragraph above begins “Half of surveyed consumers in India, Southeast Asia, and the United States”.",
+        "affects": [
+          4
+        ]
+      },
+      {
+        "name": "takeaway_text_above_figure",
+        "figure_id": "f2",
+        "evidence": "A bold paragraph above begins “Even though surveyed consumers in India drive a lot”.",
+        "affects": [
+          4
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "51%",
+        "figure_id": "f1",
+        "mark": "the India Every day segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "India",
+          "Every day"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "23%",
+        "figure_id": "f1",
+        "mark": "the first 23% in reading order, the Southeast Asia 3-4 times per week segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Southeast Asia",
+          "3-4 times per week"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "11%",
+        "figure_id": "f1",
+        "mark": "the first 11% in reading order, the India 1-2 times per week segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "India",
+          "1-2 times per week"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "12%",
+        "figure_id": "f1",
+        "mark": "the UK Once every few months segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "UK",
+          "Once every few months"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "25%",
+        "figure_id": "f1",
+        "mark": "the first 25% in reading order, the India 3-4 times per week segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "India",
+          "3-4 times per week"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "32%",
+        "figure_id": "f1",
+        "mark": "the Japan Once every few months segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Japan",
+          "Once every few months"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      }
+    ],
+    "hardest_step": 3,
+    "hardest_step_why": "23%和11%重复出现，须同时关联国家轴标签与图例系列；单凭数字不能唯一定位。地方性标签则明确。真值均直接印出。必要时可表格输出。精度不是瓶颈。上下文标题醒目。故最难是标签关联。最终判断为步骤3。该结论基于本页重复数字与双重键。并非泛泛而谈。虽每值可定位，但解析器必须同时保留国家和频率。比如23%首次对应Southeast Asia和3-4 times per week。若只抓一个标签就会与South Korea的23%混淆。11%更在India、Southeast Asia、US、China重复。每项都需两键。图例在下方，国家在左侧，空间分离增加关联难度。所有数值皆印在段内，无需估读刻度。5%容差不构成问题。标题为绿色粗体，外部上下文也清楚。因此步骤3最可能阻塞。与步骤1相比，图可直接转成表。与步骤2相比，标签给出精确百分数。与步骤4相比，结论及图题均显著。综合而言，重复值和分离标签是核心。故选3。此理由特指23%和11%。不涉及第二图。第二图仅需国家一个键，较容易。第一图六系列使映射更复杂。图例名称完整且逐项可见。若输出表格，应将国家和频率都作为键。此处仅说明困难，不提出流程建议。最终答案：3。",
+    "examples": []
+  }
+}

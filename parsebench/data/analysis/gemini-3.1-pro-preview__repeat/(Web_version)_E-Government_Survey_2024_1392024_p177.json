@@ -1,0 +1,178 @@
+{
+  "stem": "(Web_version)_E-Government_Survey_2024_1392024_p177",
+  "document": "(Web_version)_E-Government_Survey_2024_1392024",
+  "tags": "untagged",
+  "model": "gemini-3.1-pro-preview",
+  "control": "repeat",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 55.0,
+  "usage": {
+    "input_tokens": 5319,
+    "output_tokens": 7283,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n本页包含一个带有标题的横向分组柱状图。生成器需要支持横向图表布局（`horizontal_bars`）以及分组柱体渲染（`grouped_bar`）。类别标签绘制在左侧，由于文本较长，需要预留足够的左侧边距。数值直接打印在对应柱体的外部右侧（`value_label_outside`）。图表不设水平网格线，仅使用对齐底部百分比刻度轴的垂直网格线（`vgrid_only`），图例居中放置于整个图表区域的正下方（`legend_below_plot`）。\n\n### 定位一个值难在哪\n以“37%”为例，该值对应横轴上的“Open government data sharing”和年份图例“2024”。定位该值的难度较低，因为所有数值都直接打印在图上且没有拥挤重叠。如果解析失败，最可能是由于横向分组柱状图导致类别标签与对应的图例数据系列在建立行列映射时发生倒置或错位关联（步骤 3）。\n\n### 不确定的\n所有的图表结构、标签文本和数值都非常清晰，没有由于分辨率或遮挡带来的不确定性。图表标题下方贯穿的蓝色粗线条在此被视为装饰元素而非轴线或框线。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 4.15",
+          "title": "LOSI indicators as a proxy for progress towards smart city development",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "grouped_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 4,
+        "marks": 8,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "left",
+            "role": "category",
+            "unit_text": "",
+            "low": "Actual or intended use of emergent technologies",
+            "high": "Existence of smart city initiatives",
+            "serves": "all bars"
+          },
+          {
+            "side": "bottom",
+            "role": "value",
+            "unit_text": "",
+            "low": "0%",
+            "high": "60%",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Open government data sharing"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "2024"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Open government data sharing",
+            "2024"
+          ],
+          "value": "37%",
+          "value_source": "printed",
+          "why_hard": ""
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "grouped_bar",
+        "figure_id": "f1",
+        "evidence": "two bars (2022 and 2024) are grouped side by side for each category"
+      },
+      {
+        "key": "horizontal_bars",
+        "figure_id": "f1",
+        "evidence": "categories sit on the left axis and bars grow horizontally to the right"
+      },
+      {
+        "key": "value_label_outside",
+        "figure_id": "f1",
+        "evidence": "percentage values are printed immediately to the right of each bar's outer edge"
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "the legend showing 2022 and 2024 sits at the bottom below the x-axis"
+      },
+      {
+        "key": "vgrid_only",
+        "figure_id": "f1",
+        "evidence": "vertical grid lines align with x-axis ticks, with no horizontal grid lines present"
+      }
+    ],
+    "new_components": [],
+    "spot_checks": [
+      {
+        "value": "30%",
+        "figure_id": "f1",
+        "mark": "the 2022 bar for Actual or intended use of emergent technologies",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Actual or intended use of emergent technologies",
+          "2022"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "33%",
+        "figure_id": "f1",
+        "mark": "the 2024 bar for Actual or intended use of emergent technologies",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Actual or intended use of emergent technologies",
+          "2024"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "31%",
+        "figure_id": "f1",
+        "mark": "the 2022 bar for Open government data policy online",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Open government data policy online",
+          "2022"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "37%",
+        "figure_id": "f1",
+        "mark": "the 2024 bar for Open government data sharing",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Open government data sharing",
+          "2024"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "49%",
+        "figure_id": "f1",
+        "mark": "the 2024 bar for Existence of smart city initiatives",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Existence of smart city initiatives",
+          "2024"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      }
+    ],
+    "hardest_step": 3,
+    "hardest_step_why": "图表为横向排列，数值清晰印在图上，但由于类别文字长且图例在下方，可能导致解析器在构建行列与数值的对应关系时混淆。",
+    "examples": [
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "percentage numbers such as 30% are placed immediately to the right of the bars",
+        "why": "当前的图表生成器可能难以精确控制外部数值标签与横向柱状图末端的间距而导致越界或遮挡。"
+      }
+    ]
+  }
+}

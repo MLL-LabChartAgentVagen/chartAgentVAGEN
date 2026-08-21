@@ -1,0 +1,277 @@
+{
+  "stem": "pwc-semiconductor-and-beyond-2026-full-report_p17",
+  "document": "pwc-semiconductor-and-beyond-2026-full-report",
+  "tags": "need_estimate",
+  "model": "gpt-5.6-sol",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "via": "openrouter",
+  "max_tokens": 120000,
+  "seconds": 76.3,
+  "usage": {
+    "input_tokens": 8987,
+    "output_tokens": 4935,
+    "cache_read_tokens": 2365
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "**画出来要什么**\n\n需重建左右分栏整页：左侧标题与正文，右侧为灰底复合图。图中有12期两段堆叠柱、连接相邻柱段边界的浅桃色带、顶部图例、水平网格、图内粗体说明及来源行；标题、单位分开存放。\n\n**定位一个值难在哪**\n\n“’19 / AI-driven demand / 1”虽由时间刻度和图例唯一定位，但橙色段仅为20 GW刻度间距的1/20；5%容差只有0.05 GW，无法可靠轴读。\n\n**不确定的**\n\n浅桃色带未单列于图例，无法确认它是重复编码AI需求的数据标记还是装饰性连接；因此总标记数按24个柱段加1条色带估为25。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "Global data center power consumption",
+          "subtitle": "",
+          "unit_text": "(Unit: GW)",
+          "placement": "above"
+        },
+        "type": "compound",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 12,
+        "marks": 25,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "0",
+            "high": "180",
+            "serves": "stacked bars and pale filled band"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "’19",
+            "high": "’30F",
+            "serves": "all bars and the filled band"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "’19"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "AI-driven demand"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "’19",
+            "AI-driven demand"
+          ],
+          "value": "1",
+          "value_source": "axis_read",
+          "why_hard": "The 1 GW segment is one-twentieth of the 20 GW tick interval."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "stacked_bar",
+        "figure_id": "f1",
+        "evidence": "Each year has a grey “Conventional demand” base topped by orange “AI-driven demand”."
+      },
+      {
+        "key": "mixed_marks",
+        "figure_id": "f1",
+        "evidence": "Stacked bars are overlaid on a pale peach filled band connecting years."
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "“Source: IEA, PwC analysis” appears below the plot."
+      },
+      {
+        "key": "legend_above_plot",
+        "figure_id": "f1",
+        "evidence": "The two-item legend sits above the plot at upper right."
+      },
+      {
+        "key": "side_text_bullets",
+        "figure_id": "f1",
+        "evidence": "Three prose paragraphs run in a left column beside the chart."
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "The heading includes “(Unit: GW)” beside the title."
+      },
+      {
+        "key": "nonstandard_time_ticks",
+        "figure_id": "f1",
+        "evidence": "“’19” through “’24” and “’25F” through “’30F” label the time axis."
+      },
+      {
+        "key": "panel_background",
+        "figure_id": "f1",
+        "evidence": "The plot and surrounding chart panel have a light grey fill."
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "Horizontal grid lines cross the plot; no vertical grid lines are drawn."
+      }
+    ],
+    "new_components": [
+      {
+        "name": "area_connector_between_stacks",
+        "figure_id": "f1",
+        "evidence": "A pale peach band connects segment bases and totals between adjacent stacked bars.",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "name": "unboxed_plot_annotation",
+        "figure_id": "f1",
+        "evidence": "Bold multiline explanatory text is placed over the plot without a box, arrow, or leader.",
+        "affects": [
+          4
+        ]
+      },
+      {
+        "name": "page_section_title",
+        "figure_id": "page",
+        "evidence": "“Faster, bigger, smarter data centers” heads the prose-and-chart page.",
+        "affects": [
+          4
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "22",
+        "figure_id": "f1",
+        "mark": "the ’19 Conventional demand segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "’19",
+          "Conventional demand"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "1",
+        "figure_id": "f1",
+        "mark": "the ’19 AI-driven demand segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "’19",
+          "AI-driven demand"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "46",
+        "figure_id": "f1",
+        "mark": "the ’22 Conventional demand segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "’22",
+          "Conventional demand"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "11",
+        "figure_id": "f1",
+        "mark": "the ’22 AI-driven demand segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "’22",
+          "AI-driven demand"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "62",
+        "figure_id": "f1",
+        "mark": "the ’25F Conventional demand segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "’25F",
+          "Conventional demand"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "33",
+        "figure_id": "f1",
+        "mark": "the ’25F AI-driven demand segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "’25F",
+          "AI-driven demand"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "80",
+        "figure_id": "f1",
+        "mark": "the ’28F Conventional demand segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "’28F",
+          "Conventional demand"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "62",
+        "figure_id": "f1",
+        "mark": "the ’28F AI-driven demand segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "’28F",
+          "AI-driven demand"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "96",
+        "figure_id": "f1",
+        "mark": "the ’30F Conventional demand segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "’30F",
+          "Conventional demand"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "68",
+        "figure_id": "f1",
+        "mark": "the ’30F AI-driven demand segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "’30F",
+          "AI-driven demand"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "值1仅为20 GW刻度间距的1/20，5%容差仅0.05 GW，读数精度最难。核。",
+    "examples": []
+  }
+}

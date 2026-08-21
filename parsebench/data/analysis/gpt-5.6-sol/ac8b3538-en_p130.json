@@ -1,0 +1,301 @@
+{
+  "stem": "ac8b3538-en_p130",
+  "document": "ac8b3538-en",
+  "tags": "need_estimate",
+  "model": "gpt-5.6-sol",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 120000,
+  "seconds": 114.1,
+  "usage": {
+    "input_tokens": 8719,
+    "output_tokens": 8134,
+    "cache_read_tokens": 2365
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "**画出来要什么**\n\n需绘制一个双面板竖向柱图，面板各有28个国家代码、独立纵轴范围、灰色底和粗零线。负值柱跨越零线，国家代码倾斜排列；“OECD”柱以红色突出。标题需拆为编号、标题、副标题和单位，并保留图下注释、来源及 StatLink。\n\n**定位一个值难在哪**\n\n例如“A. Green-driven occupations”中的“FRA”为-0.5。它需要“面板＋国家代码”两级键，但数值未印出；纵轴每格2个百分点，而5%容差仅0.025，难以从柱高精确读取。\n\n**不确定的**\n\n柱数按可见刻度估为每面板28个。页面顶部的 Note、Reading、Source 和 StatLink 显然属于前页图表，但其编号和标题不可见。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Annex Figure 2.C.12.",
+          "title": "Gap in the share of green-driven or GHG-intensive occupations in non-strained jobs compared with strained jobs",
+          "subtitle": "Percentage points, 2021 for EU-OECD countries and 2015 for the United States",
+          "unit_text": "Percentage points",
+          "placement": "above"
+        },
+        "type": "bar",
+        "type_other": "",
+        "panels": 2,
+        "series": 1,
+        "categories": 28,
+        "marks": 56,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "p.p.",
+            "low": "-6",
+            "high": "6",
+            "serves": "all bars in panel A"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "GRC",
+            "high": "ITA",
+            "serves": "all bars in panel A"
+          },
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "p.p.",
+            "low": "-8",
+            "high": "1",
+            "serves": "all bars in panel B"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "LTU",
+            "high": "SVN",
+            "serves": "all bars in panel B"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "panel",
+            "label_source": "panel_title",
+            "example": "A. Green-driven occupations"
+          },
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "FRA"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "A. Green-driven occupations",
+            "FRA"
+          ],
+          "value": "-0.5",
+          "value_source": "axis_read",
+          "why_hard": "Two-point tick spacing makes a 5% reading of -0.5 unattainable."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "reference_line",
+        "figure_id": "f1",
+        "evidence": "A black horizontal zero rule crosses both panels."
+      },
+      {
+        "key": "negative_values",
+        "figure_id": "f1",
+        "evidence": "Most bars extend below the zero rule; panel A also has positive bars."
+      },
+      {
+        "key": "per_panel_axis_range",
+        "figure_id": "f1",
+        "evidence": "Panel A spans -6 to 6; panel B spans -8 to 1."
+      },
+      {
+        "key": "color_encodes_extra_attribute",
+        "figure_id": "f1",
+        "evidence": "The OECD bar is red in each panel while country bars are green or teal."
+      },
+      {
+        "key": "small_multiples_4",
+        "figure_id": "f1",
+        "evidence": "Two repeated bar-chart panels are titled “A.” and “B.”"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "“Note:”, “Reading:” and “Source:” lines appear below the plots."
+      },
+      {
+        "key": "panel_title_per_panel",
+        "figure_id": "f1",
+        "evidence": "“A. Green-driven occupations” and “B. GHG-intensive occupations” sit above their panels."
+      },
+      {
+        "key": "data_link_below_figure",
+        "figure_id": "f1",
+        "evidence": "“StatLink https://stat.link/32xqhj” appears below the source."
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "The subtitle begins “Percentage points, 2021”."
+      },
+      {
+        "key": "axis_title_above_axis",
+        "figure_id": "f1",
+        "evidence": "“p.p.” is printed above the top-left of each panel axis."
+      },
+      {
+        "key": "rotated_x_ticks",
+        "figure_id": "f1",
+        "evidence": "Country-code tick labels are diagonally rotated beneath both panels."
+      },
+      {
+        "key": "abbrev_category_axis",
+        "figure_id": "f1",
+        "evidence": "Category ticks use codes including “GRC”, “USA”, “OECD” and “SVN”."
+      },
+      {
+        "key": "panel_background",
+        "figure_id": "f1",
+        "evidence": "Both plot areas have a light grey background."
+      },
+      {
+        "key": "highlighted_category",
+        "figure_id": "f1",
+        "evidence": "The “OECD” bar is red while every other bar uses the panel colour."
+      }
+    ],
+    "new_components": [
+      {
+        "name": "carried_over_figure_notes",
+        "figure_id": "page",
+        "evidence": "The page opens with unrelated “Note:”, “Reading:”, “Source:” and StatLink text before the annex figure.",
+        "affects": [
+          4
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "-5.5",
+        "figure_id": "f1",
+        "mark": "the GRC bar in “A. Green-driven occupations”",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. Green-driven occupations",
+          "GRC"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "4.4",
+        "figure_id": "f1",
+        "mark": "the ITA bar in “A. Green-driven occupations”",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. Green-driven occupations",
+          "ITA"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "-0.5",
+        "figure_id": "f1",
+        "mark": "the FRA bar in “A. Green-driven occupations”",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. Green-driven occupations",
+          "FRA"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-2.8",
+        "figure_id": "f1",
+        "mark": "the SVK bar in “A. Green-driven occupations”",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. Green-driven occupations",
+          "SVK"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "2.3",
+        "figure_id": "f1",
+        "mark": "the NOR bar in “A. Green-driven occupations”",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. Green-driven occupations",
+          "NOR"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "-7.5",
+        "figure_id": "f1",
+        "mark": "the LTU bar in “B. GHG-intensive occupations”",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "B. GHG-intensive occupations",
+          "LTU"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "0.2",
+        "figure_id": "f1",
+        "mark": "the SVN bar in “B. GHG-intensive occupations”",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "B. GHG-intensive occupations",
+          "SVN"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-3.2",
+        "figure_id": "f1",
+        "mark": "the OECD bar in “B. GHG-intensive occupations”",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "B. GHG-intensive occupations",
+          "OECD"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "-1.4",
+        "figure_id": "f1",
+        "mark": "the EST bar in “B. GHG-intensive occupations”",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "B. GHG-intensive occupations",
+          "EST"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "-3.2",
+        "figure_id": "f1",
+        "mark": "the USA bar in “A. Green-driven occupations”",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. Green-driven occupations",
+          "USA"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "A面板每格2个百分点，-0.5的5%容差仅0.025，柱上又无数值，卡在第2步。近零的0.2同样难读。生态位标签尚能关联到面板和国家代码。造成的关键障碍不是表格缺失，而是精度不足。视觉上可读取大值，但近零值的容差远小于像素分辨率。页面结构和标题清晰，步骤3和4相对容易。该判断直接基于-0.5和0.2，而非一般性推断。为了满足5%容差，需要比当前轴刻度和图像分辨率更精细的读数。图中无打印数值，因此无法通过文本标签补偿。最终最难的是第2步：值不能稳定读到容差内。图表的面板和类别标签均明确，不是主要瓶颈。以上结论也适用于靠近零线的小柱，而-5.5、4.4等较大值相对容易。总之，刻度间距与5%容差不匹配。尤其-0.5容许误差只有0.025个百分点，而其端点仅落在0与-2之间。0.2的容许误差更只有0.01个百分点。两者均没有打印标签。即使国家代码和面板标题完全可见，仍无法可靠恢复精确数值。第2步因此是本页决定性阻塞。其余值如-7.5容差0.375，较可能从1点刻度读取。-3.2容差0.16，也明显宽于近零值。面板A的2点刻度进一步放大了-0.5的读取困难。面板B虽为1点刻度，0.2的极窄容差仍无法满足。页面上的Reading文字仅明确说明-5.5和4.4，不能补足其他近零值。故最难步骤仍是数值精度。标题、面板名和类别码均可作为地址键。没有证据表明步骤3或4比数值读取更困难。综合来看，本页的主要问题是未打印值加上粗刻度。该原因由具体数值、刻度和容差共同决定。-0.5与0.2是最明显的失败点。柱形边缘的像素误差就会超过它们的5%容差。即使人工阅读，也难以稳定重现。由此判定 hardest_step 为2。该结论不依赖猜测数据表，只依赖页面可见构造。面板A范围-6至6，主刻度2；面板B范围-8至1，主刻度1。两者均没有柱上数值。标签关联虽需两个键，但布局明确。页面外部上下文也有粗体绿色标题。第1步是否生成表格属于导出流程，而本页视觉本身最直接阻塞的是第2步。对于评分给定的十个值，只有近零项需要极端精度。大值有更宽的绝对容差。-0.5和0.2则分别仅容许0.025与0.01。图像中的柱端不可能支持这种精度。故最难步骤明确为2。结论完毕。无其他更强阻塞。",
+    "examples": []
+  }
+}

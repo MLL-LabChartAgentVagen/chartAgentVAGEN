@@ -1,0 +1,352 @@
+{
+  "stem": "ac8b3538-en_p93",
+  "document": "ac8b3538-en",
+  "tags": "3d_chart+need_estimate",
+  "model": "claude-opus-5",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 67.4,
+  "usage": {
+    "input_tokens": 13839,
+    "output_tokens": 5523,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "## 画出来要什么\n一个编号图 `Figure 2.8`，标题下另有一整行副标题说明单位（\"Gap in percentage points…\"），两个并列面板，各带自己的面板标题 `A. Green-driven occupations` / `B. GHG-intensive occupations`。每个面板：浅灰底色、只有横向网格、纵轴刻度 `15 10 5 0 -5 -10`，单位符号 `p.p.` 放在最高刻度之上；11 根可正可负的单色柱，零线为实线基准；横轴是两层刻度——旋转 90° 的 `Women`…`High` 内层，外层用分隔线分成 `Gender` `Age` `Occupation` `Education`。图下有 Note/Reading/Source 三段小字与 `StatLink https://stat.link/y5167t`。柱上无任何数字。\n\n## 定位一个值难在哪\n以 `2.5` 为例：它是 B 面板 `Gender` 组 `Men` 柱。要唯一定位需四段标签：面板 `B. GHG-intensive occupations`、外层 `Gender`、内层 `Men`，还要说明轴是 `p.p.`；而 A 面板同样有 `Men`。值未印出，刻度间距 5 p.p.，5% 容差仅 ±0.125 p.p.，靠像素读数几乎不可能。\n\n## 不确定的\n`-8` 与 `-9` 谁属 A 面板 `Women`、谁属 `Low-skill`，两柱高度接近，只能靠 Reading 行\"9 percentage points lower\"推断；`-4` 归 A 面板 `High` 还是 B 面板 `High` 也无法完全确定。网格线是白色细线还是底色分带，分辨率下不易断定。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 2.8",
+          "title": "Workers in green-driven and GHG-intensive occupations tend to have similar characteristics",
+          "subtitle": "Gap in percentage points between the share of green-driven (respectively GHG-intensive occupations) in each characteristic and the share in the whole economy",
+          "unit_text": "p.p.",
+          "placement": "above"
+        },
+        "type": "bar",
+        "type_other": "",
+        "panels": 2,
+        "series": 1,
+        "categories": 11,
+        "marks": 22,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "p.p.",
+            "low": "15",
+            "high": "-10",
+            "serves": "all bars in Panel A"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "Women",
+            "high": "High",
+            "serves": "Panel A category slots, two-level ticks"
+          },
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "p.p.",
+            "low": "15",
+            "high": "-10",
+            "serves": "all bars in Panel B"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "Women",
+            "high": "High",
+            "serves": "Panel B category slots, two-level ticks"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "panel",
+            "label_source": "panel_title",
+            "example": "A. Green-driven occupations"
+          },
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Occupation"
+          },
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Medium-skill"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "A. Green-driven occupations",
+            "Occupation",
+            "Medium-skill"
+          ],
+          "value": "13",
+          "value_source": "axis_read",
+          "why_hard": "No printed value; bar top falls between the 10 and 15 ticks, 5 p.p. apart."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "negative_values",
+        "figure_id": "f1",
+        "evidence": "axis runs 15 to -10; bars for Women, Low-skill, High-skill fall below the zero line"
+      },
+      {
+        "key": "reference_line",
+        "figure_id": "f1",
+        "evidence": "a solid black rule at 0 crosses each panel, bars grow up and down from it"
+      },
+      {
+        "key": "small_multiples_4",
+        "figure_id": "f1",
+        "evidence": "two panels, same 11 categories and same p.p. axis, side by side"
+      },
+      {
+        "key": "panel_title_per_panel",
+        "figure_id": "f1",
+        "evidence": "'A. Green-driven occupations' and 'B. GHG-intensive occupations' set above each panel"
+      },
+      {
+        "key": "two_level_x_ticks",
+        "figure_id": "f1",
+        "evidence": "inner ticks Women...High, outer row Gender | Age | Occupation | Education with separators"
+      },
+      {
+        "key": "rotated_x_ticks",
+        "figure_id": "f1",
+        "evidence": "category names Women, Men, Medium-skill set vertically, turned 90 degrees"
+      },
+      {
+        "key": "axis_title_above_axis",
+        "figure_id": "f1",
+        "evidence": "'p.p.' printed above the top tick '15' on each panel"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "subtitle 'Gap in percentage points between the share of green-driven...'"
+      },
+      {
+        "key": "panel_background",
+        "figure_id": "f1",
+        "evidence": "both plot areas carry a light grey fill instead of white"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "horizontal rules at 15, 10, 5, -5, -10; no vertical grid lines"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "'Note: The figure reports gaps...', 'Reading: ...', 'Source: Secretariat's estimates based on version 24.1 of the O*NET database'"
+      },
+      {
+        "key": "data_link_below_figure",
+        "figure_id": "f1",
+        "evidence": "'StatLink' logo with 'https://stat.link/y5167t' below the note block"
+      },
+      {
+        "key": "no_value_axis",
+        "figure_id": "f1",
+        "evidence": ""
+      }
+    ],
+    "new_components": [
+      {
+        "name": "panel_local_value_axis_repeated",
+        "figure_id": "f1",
+        "evidence": "each of the two panels draws its own identical 'p.p.' axis 15..-10 rather than sharing one",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "name": "reading_sentence_in_note",
+        "figure_id": "f1",
+        "evidence": "'Reading: The share of women employed in green-driven occupations is 9 percentage points lower...'",
+        "affects": [
+          2,
+          4
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "-9",
+        "figure_id": "f1",
+        "mark": "the Women bar in Panel A (Gender group)",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. Green-driven occupations",
+          "Gender",
+          "Women"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "8",
+        "figure_id": "f1",
+        "mark": "the Men bar in Panel A (Gender group)",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. Green-driven occupations",
+          "Gender",
+          "Men"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "13",
+        "figure_id": "f1",
+        "mark": "the Medium-skill bar in Panel A (Occupation group)",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. Green-driven occupations",
+          "Occupation",
+          "Medium-skill"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-4",
+        "figure_id": "f1",
+        "mark": "the High bar in Panel A (Education group)",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. Green-driven occupations",
+          "Education",
+          "High"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-3",
+        "figure_id": "f1",
+        "mark": "the Women bar in Panel B (Gender group)",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "B. GHG-intensive occupations",
+          "Gender",
+          "Women"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "2.5",
+        "figure_id": "f1",
+        "mark": "the Men bar in Panel B (Gender group)",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "B. GHG-intensive occupations",
+          "Gender",
+          "Men"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "4",
+        "figure_id": "f1",
+        "mark": "the Medium-skill bar in Panel B (Occupation group)",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "B. GHG-intensive occupations",
+          "Occupation",
+          "Medium-skill"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-4.5",
+        "figure_id": "f1",
+        "mark": "the High-skill bar in Panel B (Occupation group)",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "B. GHG-intensive occupations",
+          "Occupation",
+          "High-skill"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "5.2",
+        "figure_id": "f1",
+        "mark": "the Low bar in Panel B (Education group)",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "B. GHG-intensive occupations",
+          "Education",
+          "Low"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-8",
+        "figure_id": "f1",
+        "mark": "the Low-skill bar in Panel A (Occupation group)",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. Green-driven occupations",
+          "Occupation",
+          "Low-skill"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "柱上无数字，刻度每5 p.p.；2.5 的5%容差仅±0.125，且 -9 与 -8 两柱高度几乎相同，无法区分。",
+    "examples": [
+      {
+        "gap": "P2",
+        "figure_id": "f1",
+        "quote": "'A. Green-driven occupations' and 'B. GHG-intensive occupations' head two panels sharing the same 11 category names",
+        "why": "两面板类目完全同名，面板名必须进入键，否则 Men 有两个值无法区分。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "axis ticks 15, 10, 5, 0, -5, -10 with a solid zero rule; bars grow up and down; 'p.p.' sits above 15",
+        "why": "负值双向柱、零线基准、单位符号置于顶刻度之上，现有样式维度无法组合生成。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "'Figure 2.8. Workers in green-driven and GHG-intensive occupations tend to have similar characteristics' then a separate unit sentence line",
+        "why": "编号、标题、单位副标题三段分离，需作为独立字段而非一行标题。"
+      },
+      {
+        "gap": "P1",
+        "figure_id": "f1",
+        "quote": "no number is printed on any of the 22 bars; only 'Reading: ... is 9 percentage points lower' in the note",
+        "why": "值只能按像素读，需按每个柱给出可达精度，而非可读/不可读的开关。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "inner rotated ticks Women...High with an outer row 'Gender | Age | Occupation | Education' separated by short rules",
+        "why": "需支持两层类目轴与分隔线，键含外层分组标签，当前只生成单层类目。"
+      }
+    ]
+  }
+}

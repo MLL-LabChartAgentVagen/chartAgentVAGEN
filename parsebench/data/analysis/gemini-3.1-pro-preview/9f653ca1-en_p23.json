@@ -1,0 +1,268 @@
+{
+  "stem": "9f653ca1-en_p23",
+  "document": "9f653ca1-en",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 81.4,
+  "usage": {
+    "input_tokens": 5297,
+    "output_tokens": 10646,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n绘制此页面需要生成一个高密度的混合图表（堆叠柱状图+散点标记）。X轴需容纳超过50个类别标签，且进行90度旋转。图表要支持正负跨度堆叠，即部分堆叠系列（绿柱）向下延伸至零线以下，而其他系列（红蓝柱）在零线上方累积。此外，还需支持在柱体对应的净值位置叠加独立的散点（黑三角标记）以表示综合有效费率。图例需放置在主标题与图表区之间，单位符号“%”需精准定位在Y轴最高刻度的正上方。\n\n### 定位一个值难在哪\n以 `-11` (MEX, Change due to compliance estimates) 为例，最大的困难在于**步骤2（数值读取精度）**。图表由于容纳了超过200个标记而极为拥挤，且Y轴的刻度间距较大（10为一档）。像 `-11` 这样轻微偏离 -10 刻度线的负向数值完全依赖视觉插值估算，在没有直接数值标签的情况下，解析器几乎不可能将其准确提取并保证在5%的误差容限内。\n\n### 不确定的\n黑三角标记（Effective rate）在图表绘制时，是一个包含在数据集中的独立数据系列，还是图表工具前端基于其余三个柱状系列的数值加减动态渲染出的总计标记？这一点仅看页面无法完全确定。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 1.8.",
+          "title": "Estimated US effective tariff rates",
+          "subtitle": "",
+          "unit_text": "%",
+          "placement": "above"
+        },
+        "type": "stacked_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 4,
+        "categories": 53,
+        "marks": 212,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "%",
+            "low": "-20",
+            "high": "40",
+            "serves": "all bars and markers"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "IND",
+            "high": "SVN",
+            "serves": "all bars and markers"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "MEX"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Effective rate"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "MEX",
+            "Change due to compliance estimates"
+          ],
+          "value": "-11",
+          "value_source": "axis_read",
+          "why_hard": "Must be visually interpolated downwards from zero against a coarse axis on an extremely dense chart."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "stacked_bar",
+        "figure_id": "f1",
+        "evidence": "red and green bars are stacked onto the blue base bars"
+      },
+      {
+        "key": "mixed_marks",
+        "figure_id": "f1",
+        "evidence": "black triangle markers (scatter) overlaid on the stacked bars"
+      },
+      {
+        "key": "negative_values",
+        "figure_id": "f1",
+        "evidence": "y-axis goes down to -20, green bars fall below the zero line"
+      },
+      {
+        "key": "axis_title_above_axis",
+        "figure_id": "f1",
+        "evidence": "the '%' unit symbol is placed directly above the top left tick of the y-axis"
+      },
+      {
+        "key": "abbrev_category_axis",
+        "figure_id": "f1",
+        "evidence": "x-axis uses country abbreviations like IND, BRA, LUX"
+      },
+      {
+        "key": "rotated_x_ticks",
+        "figure_id": "f1",
+        "evidence": "category labels on the x-axis are rotated 90 degrees vertically"
+      },
+      {
+        "key": "dense_marks_100plus",
+        "figure_id": "f1",
+        "evidence": "53 categories with up to 4 series yields over 200 marks"
+      },
+      {
+        "key": "legend_above_plot",
+        "figure_id": "f1",
+        "evidence": "legend sits below the figure title and above the main chart area"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "horizontal grid lines are present across the panel, no vertical ones"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "Note: and Source: lines printed under the chart axis"
+      },
+      {
+        "key": "data_link_below_figure",
+        "figure_id": "f1",
+        "evidence": "StatLink URL is provided at the bottom right under the source"
+      }
+    ],
+    "new_components": [],
+    "spot_checks": [
+      {
+        "value": "25",
+        "figure_id": "f1",
+        "mark": "BRA Calculated rate as of June 2025 projections segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "BRA",
+          "Calculated rate as of June 2025 projections"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "34",
+        "figure_id": "f1",
+        "mark": "IND Effective rate marker",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "IND",
+          "Effective rate"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "21",
+        "figure_id": "f1",
+        "mark": "CHN Effective rate marker",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "CHN",
+          "Effective rate"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "23",
+        "figure_id": "f1",
+        "mark": "IDN Calculated rate as of June 2025 projections segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "IDN",
+          "Calculated rate as of June 2025 projections"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "0",
+        "figure_id": "f1",
+        "mark": "IDN Change due to new tariff rates segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "IDN",
+          "Change due to new tariff rates"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-10",
+        "figure_id": "f1",
+        "mark": "CHN Change due to compliance estimates segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "CHN",
+          "Change due to compliance estimates"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-11",
+        "figure_id": "f1",
+        "mark": "MEX Change due to compliance estimates segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "MEX",
+          "Change due to compliance estimates"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "5",
+        "figure_id": "f1",
+        "mark": "CAN Effective rate marker",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "CAN",
+          "Effective rate"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-10",
+        "figure_id": "f1",
+        "mark": "CAN Change due to compliance estimates segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "CAN",
+          "Change due to compliance estimates"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "图表极度拥挤且未标注数值，Y轴间隔高达10。诸如 -11 这样的细微差异全靠视觉主观估算，难以满足5%的解析精度要求。",
+    "examples": [
+      {
+        "gap": "P9",
+        "figure_id": "f1",
+        "quote": "Effective rate markers (triangles) overlaid directly onto the stacked bars",
+        "why": "生成器需要在同一面版内支持堆叠柱状图与散点标记的混合渲染，并统一在图例中呈现。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "Green segments dropping below the 0 line while other components stack upwards",
+        "why": "需支持在同一个分类柱体中，部分堆叠块能够跨越零线向负值区域延伸。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "The bare unit symbol '%' placed perfectly above the highest y-axis tick",
+        "why": "需要精确控制单位文本作为一个独立元素，悬浮并对齐在Y轴正上方。"
+      }
+    ]
+  }
+}

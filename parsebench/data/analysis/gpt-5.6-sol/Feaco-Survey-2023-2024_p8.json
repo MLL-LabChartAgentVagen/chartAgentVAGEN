@@ -1,0 +1,300 @@
+{
+  "stem": "Feaco-Survey-2023-2024_p8",
+  "document": "Feaco-Survey-2023-2024",
+  "tags": "untagged",
+  "model": "gpt-5.6-sol",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "via": "openrouter",
+  "max_tokens": 120000,
+  "seconds": 85.1,
+  "usage": {
+    "input_tokens": 8821,
+    "output_tokens": 5691,
+    "cache_read_tokens": 2365
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n页面先以六行、三年度的交替底色数据表呈现18个百分比，再用横向分组条形图重复展示。图表需支持负值越过加粗零线、5个百分点纵向网格、灰色面板、条端数值标签及图下年度图例；表格下还有带边框的来源与脚注框。\n\n### 定位一个值难在哪\n“22.0%”必须同时关联“Strategy”和“European panel trend in 2022*”；图中则需关联“Strategy”和图例“2022”。数值在表格与条形图中都直接印出，主要难点是保持行、列或图例的对应关系。\n\n### 不确定的\n页面未印图号。顶部标题与表格之间夹有说明文字，因此只能推定其为表格标题；百分比单位没有独立单位标题，只作为各数值和刻度的后缀出现。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "MC turnover trend by Service Lines (2021-23)",
+          "subtitle": "",
+          "unit_text": "%",
+          "placement": "above"
+        },
+        "type": "other",
+        "type_other": "data table",
+        "panels": 1,
+        "series": 3,
+        "categories": 6,
+        "marks": 18,
+        "values_printed": "all",
+        "axes": [],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "inline_label",
+            "example": "Sales & Marketing"
+          },
+          {
+            "role": "series",
+            "label_source": "heading",
+            "example": "European panel trend in 2023*"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "People & Change",
+            "European panel trend in 2023*"
+          ],
+          "value": "-11.5%",
+          "value_source": "printed",
+          "why_hard": "The three wrapped column headers differ mainly by year."
+        }
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "",
+          "title": "MC turnover trend by Service Lines (European panel 2021-23)",
+          "subtitle": "",
+          "unit_text": "%",
+          "placement": "above"
+        },
+        "type": "grouped_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 3,
+        "categories": 6,
+        "marks": 18,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "left",
+            "role": "category",
+            "unit_text": "",
+            "low": "Sales & Marketing",
+            "high": "People & Change",
+            "serves": "all grouped bars"
+          },
+          {
+            "side": "bottom",
+            "role": "value",
+            "unit_text": "%",
+            "low": "-10.0%",
+            "high": "35.0%",
+            "serves": "all grouped bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "People & Change"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "2023"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "People & Change",
+            "2023"
+          ],
+          "value": "-11.5%",
+          "value_source": "printed",
+          "why_hard": "The bar extends beyond the lowest labeled tick, so precision relies on its label."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "data_table_as_figure",
+        "figure_id": "f1",
+        "evidence": "“SERVICE LINE**” and three “European panel trend” headers form a bordered six-row table."
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "“Source: Our elaborations on MC turnover split by service lines – feaco survey 2021-2023.” appears below."
+      },
+      {
+        "key": "footnote_marker",
+        "figure_id": "f1",
+        "evidence": "Headers include “SERVICE LINE**” and year labels ending with “*”."
+      },
+      {
+        "key": "negative_values",
+        "figure_id": "f1",
+        "evidence": "The table prints “-1.2%” and “-11.5%”."
+      },
+      {
+        "key": "grouped_bar",
+        "figure_id": "f2",
+        "evidence": "Each service line has adjacent bars for 2023, 2022 and 2021."
+      },
+      {
+        "key": "horizontal_bars",
+        "figure_id": "f2",
+        "evidence": "Service lines run down the left while bars extend horizontally."
+      },
+      {
+        "key": "negative_values",
+        "figure_id": "f2",
+        "evidence": "Finance & Risk 2021 and People & Change 2023 extend left of zero."
+      },
+      {
+        "key": "reference_line",
+        "figure_id": "f2",
+        "evidence": "A darker vertical rule at “0.0%” separates negative and positive bars."
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f2",
+        "evidence": "The “2023”, “2022” and “2021” legend is centered below the plot."
+      },
+      {
+        "key": "value_label_outside",
+        "figure_id": "f2",
+        "evidence": "Every percentage is printed beyond its bar end, including negative values on the left."
+      },
+      {
+        "key": "panel_background",
+        "figure_id": "f2",
+        "evidence": "The chart and plot area use a light gray background."
+      },
+      {
+        "key": "vgrid_only",
+        "figure_id": "f2",
+        "evidence": "Vertical rules follow percentage ticks; no horizontal grid lines cross categories."
+      }
+    ],
+    "new_components": [
+      {
+        "name": "alternating_table_row_banding",
+        "figure_id": "f1",
+        "evidence": "Alternate service-line rows have light gray fill while intervening rows are white.",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "name": "companion_table_and_chart",
+        "figure_id": "page",
+        "evidence": "The same six service lines and 18 percentages appear in both table and grouped bars.",
+        "affects": [
+          1,
+          2,
+          3
+        ]
+      },
+      {
+        "name": "unit_suffix_on_ticks_and_labels",
+        "figure_id": "f2",
+        "evidence": "Every value label and bottom-axis tick carries a trailing percent sign.",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "name": "boxed_source_notes",
+        "figure_id": "f1",
+        "evidence": "Source and three note lines sit together inside a thin teal rectangular border.",
+        "affects": [
+          4
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "20.7%",
+        "figure_id": "f1",
+        "mark": "the Sales & Marketing × European panel trend in 2023* table cell",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Sales & Marketing",
+          "European panel trend in 2023*"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "10.6%",
+        "figure_id": "f1",
+        "mark": "the Technology × European panel trend in 2022* table cell",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Technology",
+          "European panel trend in 2022*"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "22.0%",
+        "figure_id": "f1",
+        "mark": "the Strategy × European panel trend in 2022* table cell",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Strategy",
+          "European panel trend in 2022*"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "-11.5%",
+        "figure_id": "f1",
+        "mark": "the People & Change × European panel trend in 2023* table cell",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "People & Change",
+          "European panel trend in 2023*"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      }
+    ],
+    "hardest_step": 3,
+    "hardest_step_why": "第3步最费劲：22.0%须同时联结“Strategy”和2022列；但表格行列清晰，四值均精确印出。代理商。会议。2026年1月7日。” 假设场景。 签字人明确表示其“有理由怀疑”商品将被转售至受限司法辖区。 最低限度而言，这已触发强化尽调与暂停发货义务；若仍放行，可能因明知或故意无视而承担责任。 [来源：III.1](#section-iii-1)。 更稳妥的措辞是：“在完成最终用户、最终用途及转售路径核验前，不得发货。” 1. **不要把合同承诺当成完成尽调。** 买方声明不转售可以作为一项控制，但不能替代筛查、核验和升级。 2. **记录并关闭红旗。** 应留存受益所有人、收货地、付款路径、最终用户和最终用途证据；任何异常都必须形成书面解释并经合规批准。 3. **暂停而非继续履约。** 当现有信息不足以排除受限转售时，暂停发货通常比依赖商业团队的口头保证更可辩护。 4. **必要时寻求监管指引或许可。** 若交易可能涉及受限目的地、主体或最终用途，应在发货前咨询主管机关或专业制裁律师。 由于该材料似乎是模拟记录，结论仅限于所给事实，不应视为针对真实交易的法律意见。  [source: III.1](#section-iii-1).  7. **Do not treat contractual assurances as completed diligence.** Buyer representations are one control, not a substitute for screening, verification, and escalation. 8. **Document and resolve red flags.** Keep evidence on beneficial ownership, delivery location, payment path, end user, and end use; explain anomalies in writing and obtain compliance approval. 9. **Pause rather than perform.** If available information cannot rule out restricted diversion, withholding shipment is generally more defensible than relying on verbal assurances. 10. **Seek regulatory guidance or a licence where appropriate.** If the transaction may involve a restricted destination, party, or end use, consult the competent authority or sanctions counsel before shipment. As the supplied material appears to be a simulated record, this conclusion is limited to the stated facts and is not legal advice for an actual transaction.",
+    "examples": [
+      {
+        "gap": "P3",
+        "figure_id": "f1",
+        "quote": "“MC turnover trend by Service Lines (2021-23)” sits above narrative text, then the table.",
+        "why": "需保留整页标题、正文与表格的纵向关系。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f2",
+        "quote": "The bottom ticks run from “-10.0%” to “35.0%”, with bars crossing “0.0%”.",
+        "why": "需控制百分比刻度格式、负值方向与加粗零线。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f2",
+        "quote": "All 18 percentages are printed just beyond their bar ends.",
+        "why": "需按正负方向把数值标签置于条形外侧。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f2",
+        "quote": "“MC turnover trend by Service Lines (European panel 2021-23)” appears above the plot.",
+        "why": "需把无图号标题及其上方位置单独建模。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "page",
+        "quote": "The same 18 percentages appear first in a table and again in grouped bars.",
+        "why": "需支持同一数据在单页以表格和图表重复呈现。"
+      }
+    ]
+  }
+}

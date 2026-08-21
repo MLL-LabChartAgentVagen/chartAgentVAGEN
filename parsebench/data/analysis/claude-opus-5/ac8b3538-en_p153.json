@@ -1,0 +1,383 @@
+{
+  "stem": "ac8b3538-en_p153",
+  "document": "ac8b3538-en",
+  "tags": "3d_chart+need_estimate",
+  "model": "claude-opus-5",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 112.8,
+  "usage": {
+    "input_tokens": 13841,
+    "output_tokens": 8458,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "**画出来要什么**\n\n一张编号图 `Figure 3.7`,标题下另有两行说明(含 \"in percentage (Panel A and B)\" 与 \"in percentage points (Panel C)\"),三块并列小图 A/B/C,各有自己的面板标题与自己的纵轴量程(-70 / -60 / -10)。全部为**向下堆叠**的负值柱:零线在顶部,三段(Wages / Employment / Days worked)向下累加。图例为灰底横条,置于三面板之上共享。轴单位只写一个 `%`,放在最高刻度之上;类别轴混排 `Average` 与 `1`–`6`,标签旋转约 45°。下方有 Note、Source 与 StatLink 链接。\n\n**定位一个值难在哪**\n\n以 `-6` 为例:它只能是某个面板 `Average` 柱里 Days worked 那一段的长度。图上不印数字,A 面板刻度间距为 10 个百分点,一段 6 的长度约 15 px;要读到 5%(±0.3)不可能。且该地址需要三个标签(面板名 + 图例名 + `Average`),缺一就会落到 B 面板同名同色的另一段上。\n\n**不确定的**\n\n面板底色是否为浅灰填充、是否有横向网格线,分辨率下不能确定;Panel C 中 `0.5` 这一正值在 0 到 -10 的轴上看不到对应可见色块,无法定位;各段边界只能目测,故所有数值均为轴读估计。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 3.7",
+          "title": "Differences in earnings losses reflect larger wage losses, fewer days worked as well as longer spells out of work",
+          "subtitle": "Contribution of daily wages, days worked and employment to overall earnings losses after job loss in high- and low-emission industries in percentage (Panel A and B) and the difference in earnings losses between high- and low-emission industries in percentage points (Panel C), average across countries",
+          "unit_text": "%",
+          "placement": "above"
+        },
+        "type": "stacked_bar",
+        "type_other": "",
+        "panels": 3,
+        "series": 3,
+        "categories": 7,
+        "marks": 63,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "%",
+            "low": "0",
+            "high": "-70",
+            "serves": "all stacked segments in Panel A only"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "Average",
+            "high": "6",
+            "serves": "the seven bars of Panel A"
+          },
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "%",
+            "low": "0",
+            "high": "-60",
+            "serves": "all stacked segments in Panel B only"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "Average",
+            "high": "6",
+            "serves": "the seven bars of Panel B"
+          },
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "%",
+            "low": "0",
+            "high": "-10",
+            "serves": "all stacked segments in Panel C only"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "Average",
+            "high": "6",
+            "serves": "the seven bars of Panel C"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "panel",
+            "label_source": "panel_title",
+            "example": "A. High-emission industries"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Wages"
+          },
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Average"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "B. Low-emission industries",
+            "Days worked",
+            "1"
+          ],
+          "value": "about -31 (segment running from roughly -21 to -52)",
+          "value_source": "axis_read",
+          "why_hard": "Segment length must be differenced between two unlabelled boundaries on a 10-point tick grid, no printed value."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "stacked_bar",
+        "figure_id": "f1",
+        "evidence": "each bar has three colour segments (Wages, Employment, Days worked) stacked to the bar total"
+      },
+      {
+        "key": "negative_values",
+        "figure_id": "f1",
+        "evidence": "zero line at the top; ticks read 0, -10, -20 ... -70 and bars hang downward"
+      },
+      {
+        "key": "shared_legend",
+        "figure_id": "f1",
+        "evidence": "one grey legend strip 'Wages / Employment / Days worked' above all three panels"
+      },
+      {
+        "key": "legend_above_plot",
+        "figure_id": "f1",
+        "evidence": "legend strip sits between the subtitle and the panel titles"
+      },
+      {
+        "key": "small_multiples_4",
+        "figure_id": "f1",
+        "evidence": "three panels A, B, C of the same stacked-bar chart side by side"
+      },
+      {
+        "key": "panel_title_per_panel",
+        "figure_id": "f1",
+        "evidence": "'A. High-emission industries', 'B. Low-emission industries', 'C. Difference' above each panel"
+      },
+      {
+        "key": "per_panel_axis_range",
+        "figure_id": "f1",
+        "evidence": "A ends at -70, B at -60, C at -10 with 1-unit steps"
+      },
+      {
+        "key": "rotated_x_ticks",
+        "figure_id": "f1",
+        "evidence": "'Average', '1' ... '6' set at roughly 45 degrees under each panel"
+      },
+      {
+        "key": "nonstandard_time_ticks",
+        "figure_id": "f1",
+        "evidence": "years since displacement written as bare '1','2','3','4','5','6'"
+      },
+      {
+        "key": "axis_title_above_axis",
+        "figure_id": "f1",
+        "evidence": "'%' printed above the 0 tick on each of the three left axes"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "subtitle: 'in percentage (Panel A and B) ... in percentage points (Panel C)'"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "page",
+        "evidence": "'Note: Average across countries...' and 'Source: National linked employer employee data, see Annex Table 3.B.1'"
+      },
+      {
+        "key": "data_link_below_figure",
+        "figure_id": "page",
+        "evidence": "'StatLink' logo with 'https://stat.link/8izqk2' under the note lines"
+      },
+      {
+        "key": "panel_background",
+        "figure_id": "f1",
+        "evidence": "plot area of each panel carries a light grey tint behind the bars"
+      },
+      {
+        "key": "footnote_marker",
+        "figure_id": "page",
+        "evidence": "superscript 7 after 'decomposing earnings losses).' in the body text"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "unit_differs_across_panels",
+        "figure_id": "f1",
+        "evidence": "subtitle says percentage for A and B but percentage points for C; all three axes only print '%'",
+        "affects": [
+          2,
+          3
+        ]
+      },
+      {
+        "name": "derived_difference_panel",
+        "figure_id": "f1",
+        "evidence": "'C. Difference' plots A minus B on a tenfold finer axis (0 to -10)",
+        "affects": [
+          3,
+          4
+        ]
+      },
+      {
+        "name": "mixed_aggregate_and_index_category_axis",
+        "figure_id": "f1",
+        "evidence": "category axis runs 'Average' then 1-6 years since job loss, with no axis title",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "-8",
+        "figure_id": "f1",
+        "mark": "the Wages (dark green) segment of the 'Average' bar in Panel A",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. High-emission industries",
+          "Wages",
+          "Average"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-25",
+        "figure_id": "f1",
+        "mark": "the Employment (pale green) segment of the 'Average' bar in Panel A",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. High-emission industries",
+          "Employment",
+          "Average"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-6",
+        "figure_id": "f1",
+        "mark": "the Days worked (bright green) segment of the 'Average' bar in Panel A",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. High-emission industries",
+          "Days worked",
+          "Average"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-18",
+        "figure_id": "f1",
+        "mark": "the Employment segment of the 'Average' bar in Panel B",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "B. Low-emission industries",
+          "Employment",
+          "Average"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-25",
+        "figure_id": "f1",
+        "mark": "second occurrence: plausibly the Employment segment of bar '1' in Panel A or the total of bar '6' in Panel A; cannot be separated",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. High-emission industries",
+          "Employment",
+          "1"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-6",
+        "figure_id": "f1",
+        "mark": "second occurrence: the Days worked segment of the 'Average' bar in Panel B",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "B. Low-emission industries",
+          "Days worked",
+          "Average"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-2",
+        "figure_id": "f1",
+        "mark": "the Wages segment of the 'Average' bar in Panel C",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "C. Difference",
+          "Wages",
+          "Average"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-1",
+        "figure_id": "f1",
+        "mark": "the Employment segment of the 'Average' bar in Panel C",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "C. Difference",
+          "Employment",
+          "Average"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-1.8",
+        "figure_id": "f1",
+        "mark": "a sub-unit segment in Panel C, probably Wages or Days worked in one of bars 3-6; the 1-point tick grid cannot resolve which",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "C. Difference",
+          "Days worked",
+          "4"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "0.5",
+        "figure_id": "not_found",
+        "mark": "no positive mark is drawn anywhere; Panel C's axis runs 0 to -10 and every segment hangs below zero",
+        "printed_on_figure": false,
+        "addressing_keys": [],
+        "keys_verbatim": false,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "三段堆叠无数字,A面板刻度10个点;读-6段误差远超±0.3;C面板-1.8在1点格上更不可读。",
+    "examples": [
+      {
+        "gap": "P1",
+        "figure_id": "f1",
+        "quote": "Panel C left axis ticks 0, -1, -2 ... -10 with three stacked segments per bar and no printed numbers",
+        "why": "同页内A面板刻度10、C面板刻度1,可达精度按段长而异,布尔式\"可读\"判定失效。"
+      },
+      {
+        "gap": "P2",
+        "figure_id": "f1",
+        "quote": "'A. High-emission industries', 'B. Low-emission industries', 'C. Difference' each with the same ticks Average, 1...6",
+        "why": "同色同名段在三面板重复出现,不把面板名纳入键就无法唯一定位一个值。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "zero line at the top of each panel; ticks descend 0, -10, -20 ... -70 and every bar hangs below it",
+        "why": "全负堆叠、零线在顶、轴单位'%'置于最高刻度上方,当前生成器不产出这种零线与单位摆位。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "'Figure 3.7. Differences in earnings losses...' then a separate three-line subtitle ending 'in percentage points (Panel C), average across countries'",
+        "why": "编号、标题、长副标题与单位短语分层,且单位随面板变化,标题需拆成独立字段。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "Panel C is captioned 'C. Difference' and is A minus B, on an axis one tenth the range",
+        "why": "需新增\"派生差值面板\"及面板间单位不一致(percentage vs percentage points)的描述能力。"
+      }
+    ]
+  }
+}

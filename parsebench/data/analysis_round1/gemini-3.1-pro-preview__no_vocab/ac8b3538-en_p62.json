@@ -1,0 +1,213 @@
+{
+  "stem": "ac8b3538-en_p62",
+  "document": "ac8b3538-en",
+  "tags": "3d_chart+need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "no_vocab",
+  "effort": "high",
+  "dpi": 150,
+  "seconds": 48.4,
+  "usage": {
+    "input_tokens": 2244,
+    "output_tokens": 6323,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "这是一个包含15个面板的小型多重图（Small Multiples），展示了多个国家的“名义最低工资”与“实际最低工资”随时间变化的阶梯折线图（Step Line Chart）。\n图表生成器需要支持网格状的面板布局、统一的图例、带有白色网格线的灰色背景、0基准线的加粗黑线显示、倾斜的X轴标签以及正交的阶梯状折线绘制。\n数据提取的主要难点在于：所有的数值均未在图表上直接标出，且各面板的Y轴刻度间距较大（例如200、20或15）。像17、42、9这样的精确数值无法通过视觉估算达到所需的误差容忍度（Hardest Step 2）。此外，整个图表没有总标题或Y轴单位，这使得脱离上下文理解数据较为困难。我不确定这些基数是否代表某个指数（如100=某一年）。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "none"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 15,
+        "series": 2,
+        "categories": 11,
+        "marks": 330,
+        "values_printed": "none"
+      }
+    ],
+    "components": [
+      {
+        "key": "common_legend",
+        "figure_id": "page",
+        "evidence": "legend sits centered above all 15 panels",
+        "affects": [
+          3,
+          4
+        ]
+      },
+      {
+        "key": "panel_title",
+        "figure_id": "f1",
+        "evidence": "country names like 'Japan' sit above each panel",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "zero_baseline",
+        "figure_id": "f1",
+        "evidence": "a solid black line marks y=0 in every panel",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "key": "angled_labels",
+        "figure_id": "f1",
+        "evidence": "x-axis time labels are rotated diagonally",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "new_components": [
+      {
+        "name": "step_line",
+        "figure_id": "f1",
+        "evidence": "the series lines are drawn as orthogonal steps",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "name": "small_multiples",
+        "figure_id": "page",
+        "evidence": "15 identically formatted panels arranged in a grid",
+        "affects": [
+          1,
+          3
+        ]
+      },
+      {
+        "name": "grey_background_white_grid",
+        "figure_id": "f1",
+        "evidence": "plot area is shaded light grey with white gridlines",
+        "affects": [
+          2
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "10",
+        "figure_id": "f1",
+        "mark": "Japan Nominal minimum wage step at May-23",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Japan",
+          "Nominal minimum wage",
+          "May-23"
+        ]
+      },
+      {
+        "value": "17",
+        "figure_id": "f1",
+        "mark": "Netherlands Real minimum wage step at May-24",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Netherlands",
+          "Real minimum wage",
+          "May-24"
+        ]
+      },
+      {
+        "value": "16",
+        "figure_id": "f1",
+        "mark": "Lithuania Real minimum wage step at May-24",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Lithuania",
+          "Real minimum wage",
+          "May-24"
+        ]
+      },
+      {
+        "value": "90",
+        "figure_id": "f1",
+        "mark": "Poland Nominal minimum wage step at May-24",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Poland",
+          "Nominal minimum wage",
+          "May-24"
+        ]
+      },
+      {
+        "value": "42",
+        "figure_id": "f1",
+        "mark": "Netherlands Nominal minimum wage step at May-24",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Netherlands",
+          "Nominal minimum wage",
+          "May-24"
+        ]
+      },
+      {
+        "value": "35",
+        "figure_id": "f1",
+        "mark": "Slovenia Nominal minimum wage step at May-23",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Slovenia",
+          "Nominal minimum wage",
+          "May-23"
+        ]
+      },
+      {
+        "value": "38",
+        "figure_id": "f1",
+        "mark": "Portugal Nominal minimum wage step at May-24",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Portugal",
+          "Nominal minimum wage",
+          "May-24"
+        ]
+      },
+      {
+        "value": "9",
+        "figure_id": "f1",
+        "mark": "Japan Real minimum wage step at May-24",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Japan",
+          "Real minimum wage",
+          "May-24"
+        ]
+      },
+      {
+        "value": "700",
+        "figure_id": "f1",
+        "mark": "Türkiye Nominal minimum wage step at May-24",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Türkiye",
+          "Nominal minimum wage",
+          "May-24"
+        ]
+      },
+      {
+        "value": "12",
+        "figure_id": "f1",
+        "mark": "United Kingdom Real minimum wage step at May-24",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "United Kingdom",
+          "Real minimum wage",
+          "May-24"
+        ]
+      }
+    ],
+    "hardest_step": 2
+  }
+}

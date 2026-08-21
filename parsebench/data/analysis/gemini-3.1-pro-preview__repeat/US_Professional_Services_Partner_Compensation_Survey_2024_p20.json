@@ -1,0 +1,249 @@
+{
+  "stem": "US_Professional_Services_Partner_Compensation_Survey_2024_p20",
+  "document": "US_Professional_Services_Partner_Compensation_Survey_2024",
+  "tags": "untagged",
+  "model": "gemini-3.1-pro-preview",
+  "control": "repeat",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 98.9,
+  "usage": {
+    "input_tokens": 5314,
+    "output_tokens": 13921,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "画出来要什么：需要支持100%堆叠条形图（pct_stacked）且图表方向为横向。需支持隐藏全部数值轴（no_value_axis），并将数值标签直接绘制在分段内部。图表需支持独立的主副标题和图例，且页面整体需要支持左侧大段正文、右侧多图表的侧边栏并排排版。定位一个值难在哪：以定位“34”为例，其分类标签“Management/advisory consulting”在图中换行显示。由于图表完全没有坐标轴线，解析器若未将换行文本正确拼接为一个键值，极易导致该值失去行关联。不确定的：分类标签中的范围连接符（如“$1.00bn–$5.00bn”）视觉上像是 en-dash，在文本解析时可能存在短横线等特殊字符的识别差异。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "Key external factors influencing outlook (%)",
+          "subtitle": "Key external factors influencing outlook for current fiscal year, by firm type",
+          "unit_text": "%",
+          "placement": "above"
+        },
+        "type": "stacked_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 3,
+        "categories": 4,
+        "marks": 12,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "left",
+            "role": "category",
+            "unit_text": "",
+            "low": "Strategy consulting",
+            "high": "Other",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Strategy consulting"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Pessimistic"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Management/ advisory consulting",
+            "Optimistic"
+          ],
+          "value": "46",
+          "value_source": "printed",
+          "why_hard": "The category label wraps onto two lines which may break parsing."
+        }
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "",
+          "title": "Key external factors influencing outlook for current fiscal year, by firm revenue",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "stacked_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 3,
+        "categories": 4,
+        "marks": 12,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "left",
+            "role": "category",
+            "unit_text": "",
+            "low": "Less than $1.00bn",
+            "high": "More than $20.00bn",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Less than $1.00bn"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Neutral"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "$1.00bn–$5.00bn",
+            "Optimistic"
+          ],
+          "value": "83",
+          "value_source": "printed",
+          "why_hard": "The en-dash in the category label might cause exact match failures."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "pct_stacked",
+        "figure_id": "f1",
+        "evidence": "bars reach the same total length and values sum to 100"
+      },
+      {
+        "key": "horizontal_bars",
+        "figure_id": "f1",
+        "evidence": "the bars grow to the right from the left category axis"
+      },
+      {
+        "key": "no_value_axis",
+        "figure_id": "f1",
+        "evidence": "no value axis line or ticks are drawn on either chart"
+      },
+      {
+        "key": "value_label_inside",
+        "figure_id": "f1",
+        "evidence": "the numbers are printed directly inside the coloured bar segments"
+      },
+      {
+        "key": "side_text_bullets",
+        "figure_id": "page",
+        "evidence": "a column of body text runs alongside the left of both figures"
+      },
+      {
+        "key": "multi_figure_page",
+        "figure_id": "page",
+        "evidence": "two separate charts with their own independent headings and notes"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "Note and Source lines appear below each of the two plots"
+      },
+      {
+        "key": "legend_above_plot",
+        "figure_id": "f1",
+        "evidence": "the legend sits between the subtitle and the plot area"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "the main title of the page ends with a (%) unit"
+      },
+      {
+        "key": "wrapped_category_labels",
+        "figure_id": "f1",
+        "evidence": "Management/ advisory consulting wraps onto two lines on the axis"
+      }
+    ],
+    "new_components": [],
+    "spot_checks": [
+      {
+        "value": "34",
+        "figure_id": "f1",
+        "mark": "the Management/advisory consulting Pessimistic segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Management/ advisory consulting",
+          "Pessimistic"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 0
+      },
+      {
+        "value": "28",
+        "figure_id": "f1",
+        "mark": "the Technology/IT consulting Optimistic segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Technology/IT consulting",
+          "Optimistic"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "83",
+        "figure_id": "f2",
+        "mark": "the $1.00bn–$5.00bn Optimistic segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "$1.00bn–$5.00bn",
+          "Optimistic"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "38",
+        "figure_id": "f2",
+        "mark": "the More than $20.00bn Neutral segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "More than $20.00bn",
+          "Neutral"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "31",
+        "figure_id": "f2",
+        "mark": "the $5.01bn–$20.00bn Pessimistic segment",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "$5.01bn–$20.00bn",
+          "Pessimistic"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      }
+    ],
+    "hardest_step": 1,
+    "hardest_step_why": "图表无数值轴且与左侧正文并排排版。解析器易将整页按行读取，导致无法将色块与内部数值正确重建为表格，出现结构丢失。",
+    "examples": [
+      {
+        "gap": "P3",
+        "figure_id": "page",
+        "quote": "By firm type, technology and IT firms...",
+        "why": "现有的生成管线通常假设图表占据整页宽度，需要支持将大段正文与多个独立图表左右并列布局。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "numbers 23, 36, 41 sit inside the coloured bar segments",
+        "why": "需要支持将数值标签居中放置在条形图分段内部，并支持完全隐藏数值坐标轴的轴线和所有刻度标签。"
+      }
+    ]
+  }
+}

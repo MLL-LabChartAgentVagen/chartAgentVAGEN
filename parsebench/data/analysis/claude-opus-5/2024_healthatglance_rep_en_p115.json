@@ -1,0 +1,526 @@
+{
+  "stem": "2024_healthatglance_rep_en_p115",
+  "document": "2024_healthatglance_rep_en",
+  "tags": "untagged",
+  "model": "claude-opus-5",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 117.3,
+  "usage": {
+    "input_tokens": 13838,
+    "output_tokens": 9935,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "## 画出来要什么\n三幅独立编号图共处一页:两幅「分组柱+菱形合计标记」(Figure 3.19、3.21)和一幅五条折线的时间序列(Figure 3.20)。生成器要能:图例置于灰色横带内、位于标题与绘图区之间;单位句(`Age-standardised rate per 100 000 population`、`% of population aged 50 and over with a score of 4 or higher`)单独一行压在最高刻度之上;国名 45° 斜排,并把 `EU27`/`EU26` 聚合项染成红色;3.19 在 Slovenia 与 Türkiye 之间留一个空槽把非欧盟国家分组;标签带脚注号 `United Kingdom1`;图下 Note/Source 与 StatLink 链接各一行。3.19 单图 34 类 × 3 系列 ≈ 102 个标记。\n\n## 定位一个值难在哪\n`10.5` 是 Figure 3.20 中 EU27 红线 2021 年的点:图上无数字,纵轴刻度间隔 5,而 5% 容差只有 ±0.53,约为一格的十分之一;还须先由图例(而非线旁标签)认出红线是 `EU27`,再在 18 个年份刻度中定位 2021。\n\n## 不确定的\n所有数值均未印在图上,`11.0`、`22.0`、`28`、`12`、`20`、`40` 只能靠像素高度猜归属,可能落在相邻国家上;3.19 与 3.21 绘图区是否有浅灰底纹、菱形究竟属 Women 还是 Total 系列的叠放次序,均不能确证。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 3.19.",
+          "title": "Suicide rate, by sex, 2021",
+          "subtitle": "",
+          "unit_text": "Age-standardised rate per 100 000 population",
+          "placement": "above"
+        },
+        "type": "grouped_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 3,
+        "categories": 34,
+        "marks": 102,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Age-standardised rate per 100 000 population",
+            "low": "0",
+            "high": "40",
+            "serves": "all Women and Men bars and the Total diamonds"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "Cyprus",
+            "high": "Serbia",
+            "serves": "all bars, one slot per country"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Lithuania"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Men"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Lithuania",
+            "Men"
+          ],
+          "value": "35.0",
+          "value_source": "axis_read",
+          "why_hard": "No printed number; gridlines every 5; neighbouring Slovenia bar of 33 looks nearly identical"
+        }
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "Figure 3.20.",
+          "title": "Trends in suicide rates, selected European countries, 2004 to 2021",
+          "subtitle": "",
+          "unit_text": "Age-standardised rates per 100 000 population",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 1,
+        "series": 5,
+        "categories": 18,
+        "marks": 90,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Age-standardised rates per 100 000 population",
+            "low": "0",
+            "high": "45",
+            "serves": "all five country lines"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "2004",
+            "high": "2021",
+            "serves": "all five lines, one tick per year"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "EU27"
+          },
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2021"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "EU27",
+            "2021"
+          ],
+          "value": "10.5",
+          "value_source": "axis_read",
+          "why_hard": "Ticks every 5 units; 5% of 10.5 is 0.5, a tenth of one gridline gap"
+        }
+      },
+      {
+        "id": "f3",
+        "heading": {
+          "figure_number": "Figure 3.21.",
+          "title": "Symptoms of depression among adults aged over 50, by sex, 2021-22",
+          "subtitle": "",
+          "unit_text": "% of population aged 50 and over with a score of 4 or higher",
+          "placement": "above"
+        },
+        "type": "grouped_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 3,
+        "categories": 27,
+        "marks": 81,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "% of population aged 50 and over with a score of 4 or higher",
+            "low": "0",
+            "high": "60",
+            "serves": "all Men and Women bars and the Total diamonds"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "Hungary",
+            "high": "Lithuania",
+            "serves": "all bars, one slot per country"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Portugal"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Women"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Portugal",
+            "Women"
+          ],
+          "value": "53",
+          "value_source": "axis_read",
+          "why_hard": "Gridlines every 10; 5% tolerance is 2.6, a quarter of one gap, no printed label"
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "grouped_bar",
+        "figure_id": "f1",
+        "evidence": "two bars, cyan Women and blue Men, side by side in each country slot"
+      },
+      {
+        "key": "grouped_bar",
+        "figure_id": "f3",
+        "evidence": "blue Men bar and cyan Women bar paired in each country slot"
+      },
+      {
+        "key": "mixed_marks",
+        "figure_id": "f1",
+        "evidence": "pale diamond markers for 'Total' sit over the paired bars in each slot"
+      },
+      {
+        "key": "mixed_marks",
+        "figure_id": "f3",
+        "evidence": "'Total' diamonds overlaid on the Men/Women bar pairs"
+      },
+      {
+        "key": "tick_marker_as_series",
+        "figure_id": "f1",
+        "evidence": "legend entry 'Total' is a diamond glyph placed at the category position, same axis as bars"
+      },
+      {
+        "key": "highlighted_category",
+        "figure_id": "f1",
+        "evidence": "the EU27 bars are drawn red/pink while all country bars are blue and cyan"
+      },
+      {
+        "key": "highlighted_category",
+        "figure_id": "f3",
+        "evidence": "the EU26 bars are drawn red/orange among blue and cyan country bars"
+      },
+      {
+        "key": "highlighted_category",
+        "figure_id": "f2",
+        "evidence": "EU27 line is red, the four country lines are shades of blue"
+      },
+      {
+        "key": "legend_above_plot",
+        "figure_id": "f1",
+        "evidence": "'Women  Men  Total' row in a grey band between title and plot"
+      },
+      {
+        "key": "legend_above_plot",
+        "figure_id": "f2",
+        "evidence": "'Cyprus EU27 Slovenia Hungary Lithuania' row in a grey band above the plot"
+      },
+      {
+        "key": "legend_above_plot",
+        "figure_id": "f3",
+        "evidence": "'Men  Women  Total' row in a grey band above the plot"
+      },
+      {
+        "key": "rotated_x_ticks",
+        "figure_id": "f1",
+        "evidence": "country names such as 'Slovak Republic' set at about 45 degrees"
+      },
+      {
+        "key": "rotated_x_ticks",
+        "figure_id": "f3",
+        "evidence": "country names such as 'Luxembourg' set at about 45 degrees"
+      },
+      {
+        "key": "abbrev_category_axis",
+        "figure_id": "f1",
+        "evidence": "'EU27' printed as a category tick among full country names"
+      },
+      {
+        "key": "abbrev_category_axis",
+        "figure_id": "f3",
+        "evidence": "'EU26' printed as a category tick among full country names"
+      },
+      {
+        "key": "footnote_marker",
+        "figure_id": "f1",
+        "evidence": "tick reads 'United Kingdom1'; note says '1. The data for the United Kingdom relate to 2020'"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "'Age-standardised rate per 100 000 population' above axis of bare 0-40 ticks"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f3",
+        "evidence": "'% of population aged 50 and over with a score of 4 or higher' over bare 0-60 ticks"
+      },
+      {
+        "key": "axis_title_above_axis",
+        "figure_id": "f2",
+        "evidence": "'Age-standardised rates per 100 000 population' sits above the top tick '45'"
+      },
+      {
+        "key": "axis_title_above_axis",
+        "figure_id": "f1",
+        "evidence": "unit line printed above the '40' tick, not alongside the axis"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "faint horizontal rules at 5,10...40; no vertical rules in the plot"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f2",
+        "evidence": "horizontal rules at each 5-unit tick, no vertical gridlines"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f3",
+        "evidence": "horizontal rules at 10,20...60 only"
+      },
+      {
+        "key": "panel_background",
+        "figure_id": "f2",
+        "evidence": "plot area behind the five lines carries a light grey tint"
+      },
+      {
+        "key": "dense_marks_100plus",
+        "figure_id": "f1",
+        "evidence": "34 country slots times two bars plus a diamond, about 102 marks"
+      },
+      {
+        "key": "multi_figure_page",
+        "figure_id": "page",
+        "evidence": "Figures 3.19, 3.20 and 3.21 each with own number, note and source"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "page",
+        "evidence": "'Note: The EU average is weighted...' and 'Source: Eurostat (hlth_cd_asdr2).' under each figure"
+      },
+      {
+        "key": "data_link_below_figure",
+        "figure_id": "page",
+        "evidence": "'StatLink' logo with 'https://stat.link/x8j1n2' under Figure 3.19"
+      },
+      {
+        "key": "wrapped_category_labels",
+        "figure_id": "f1",
+        "evidence": "34 rotated country names stacked along one axis, e.g. 'Slovak Republic'"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "category_axis_group_gap",
+        "figure_id": "f1",
+        "evidence": "an empty slot between 'Slovenia' and 'Türkiye' separates EU members from non-EU countries",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "name": "legend_band_background",
+        "figure_id": "page",
+        "evidence": "each legend row sits inside a full-width light grey band above the plot",
+        "affects": []
+      },
+      {
+        "name": "categories_sorted_by_series_value",
+        "figure_id": "f3",
+        "evidence": "countries ordered ascending by the Total diamond, Hungary lowest to Lithuania highest",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "name": "unit_line_as_separate_text_row",
+        "figure_id": "f3",
+        "evidence": "'% of population aged 50 and over with a score of 4 or higher' is a free text line, not an axis title",
+        "affects": [
+          4
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "35.0",
+        "figure_id": "f1",
+        "mark": "the Lithuania Men bar, tallest blue bar in the chart",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Lithuania",
+          "Men",
+          "Age-standardised rate per 100 000 population"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "11.0",
+        "figure_id": "f1",
+        "mark": "a Total diamond around the EU27 / Netherlands slots; cannot be pinned to one country",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "EU27",
+          "Total"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "43.0",
+        "figure_id": "f2",
+        "mark": "the Lithuania line at its 2004 start, top left of the plot",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Lithuania",
+          "2004"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "10.5",
+        "figure_id": "f2",
+        "mark": "the red EU27 line at 2021, right end",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "EU27",
+          "2021"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "22.0",
+        "figure_id": "f2",
+        "mark": "the Slovenia line near 2009-2011, mid plot",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Slovenia",
+          "2009"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "53",
+        "figure_id": "f3",
+        "mark": "the Portugal Women bar, tallest cyan bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Portugal",
+          "Women"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "28",
+        "figure_id": "f3",
+        "mark": "a Women bar in the Latvia / Bulgaria / Denmark range; not separable by eye",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Latvia",
+          "Women"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "12",
+        "figure_id": "f3",
+        "mark": "the Cyprus Men bar, second slot from the left",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Cyprus",
+          "Men"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "20",
+        "figure_id": "f3",
+        "mark": "the Portugal Men bar, or one of several Men bars near the 20 gridline",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Portugal",
+          "Men"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "40",
+        "figure_id": "f3",
+        "mark": "the Romania Women bar, just below the 40 gridline",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Romania",
+          "Women"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "三图均无数字标签;3.20 刻度间隔 5,EU27 的 10.5 容差仅 ±0.53;3.21 间隔 10,28 的容差 ±1.4。",
+    "examples": [
+      {
+        "gap": "P9",
+        "figure_id": "f1",
+        "quote": "legend reads 'Women   Men   Total', Total drawn as pale diamonds sitting on top of each bar pair",
+        "why": "同一面板混合柱与点标记,取值必须记录标记形状,现管线只输出柱高。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f3",
+        "quote": "'Figure 3.21. Symptoms of depression among adults aged over 50, by sex, 2021-22' then '% of population aged 50 and over with a score of 4 or higher'",
+        "why": "编号、标题、单位句分行且单位压在顶刻度上方,现管线只有单一标题字段。"
+      },
+      {
+        "gap": "P5",
+        "figure_id": "f1",
+        "quote": "34 country slots from 'Cyprus' to 'Serbia', each with two bars and one diamond",
+        "why": "单图逾百标记且标签 45° 斜排,超出当前密度上限。"
+      },
+      {
+        "gap": "P8",
+        "figure_id": "f1",
+        "quote": "the 'EU27' bars are red while every country bar is blue or cyan; same in Figure 3.20's red EU27 line",
+        "why": "红色表示聚合口径,图例中无对应项,该属性需进入键。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "a blank category slot separates 'Slovenia' from 'Türkiye' on the x axis",
+        "why": "类别轴需支持空槽分组(欧盟/非欧盟),当前无此结构,应新增分组间隔字段。"
+      }
+    ]
+  }
+}

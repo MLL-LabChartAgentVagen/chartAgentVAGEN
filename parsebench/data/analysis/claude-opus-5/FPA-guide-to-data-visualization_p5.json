@@ -1,0 +1,372 @@
+{
+  "stem": "FPA-guide-to-data-visualization_p5",
+  "document": "FPA-guide-to-data-visualization",
+  "tags": "untagged",
+  "model": "claude-opus-5",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 45.2,
+  "usage": {
+    "input_tokens": 13862,
+    "output_tokens": 3541,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "## 画出来要什么\n三个独立无编号图并列在右栏,与左栏正文共用一条横向版面带:两个饼图(3 类扇区、值标签写在扇区内、图例竖排在饼右侧,其中一条图例文字换行成五行)和一个水平条形图(5 类,值标签在条外右侧,x 轴 0%–80%,类别标签右对齐且多行换行)。标题为两到三行粗体问句,置于图上方,无图号、无单位短语。最下方一行 `Source: BPM Partners 2014 BPM Pulse Survey` 服务于整块。条形图第四条用深灰,与第三条深蓝几乎同族,只靠色差区分。\n\n## 定位一个值难在哪\n`21.2%` 只需一个标签 `Access to more data sources (external)`,但该标签在页面上被拆成三行,且与上一条 `Access to more data sources (internal)` 只差括号里一个词;解析器若丢掉换行或括号,就会与 43.5% 混淆。数值本身已印出,读数无风险。\n\n## 不确定的\n条形图是否有竖网格线(仅见轴线);第一个饼图的图例 `Yes/No/Not sure` 与扇区对应靠颜色推断;三图是否属于同一编号图组无法判断。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "Do you require data visualization capabilities beyond standard charts and graphs?",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "pie",
+        "type_other": "",
+        "panels": 1,
+        "series": 3,
+        "categories": 3,
+        "marks": 3,
+        "values_printed": "all",
+        "axes": [],
+        "key_parts": [
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Not sure"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Yes"
+          ],
+          "value": "24.0%",
+          "value_source": "printed",
+          "why_hard": "Legend sits beside the pie; slice-to-name link is colour only, orange slice unlabelled by text."
+        }
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "",
+          "title": "What data visualization capabilities do you need that you are not getting today? (select all that apply)",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 1,
+        "categories": 5,
+        "marks": 5,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "bottom",
+            "role": "value",
+            "unit_text": "",
+            "low": "0%",
+            "high": "80%",
+            "serves": "all horizontal bars"
+          },
+          {
+            "side": "left",
+            "role": "category",
+            "unit_text": "",
+            "low": "More interactive",
+            "high": "Not sure",
+            "serves": "all horizontal bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Access to more data sources (external)"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Access to more data sources (external)"
+          ],
+          "value": "21.2%",
+          "value_source": "printed",
+          "why_hard": "Label wraps to three lines and differs from the bar above only by `(external)` vs `(internal)`."
+        }
+      },
+      {
+        "id": "f3",
+        "heading": {
+          "figure_number": "",
+          "title": "Where would you prefer to get these data visualization capabilities from?",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "pie",
+        "type_other": "",
+        "panels": 1,
+        "series": 3,
+        "categories": 3,
+        "marks": 3,
+        "values_printed": "all",
+        "axes": [],
+        "key_parts": [
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Third-party solution that may access my performance management data"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Included in performance management solution"
+          ],
+          "value": "15.3%",
+          "value_source": "printed",
+          "why_hard": "Legend entry wraps over four lines beside the pie; slice matched to it by colour only."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "multi_figure_page",
+        "figure_id": "page",
+        "evidence": "Three separately titled question charts stacked in the right column of one page"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "page",
+        "evidence": "`Source: BPM Partners 2014 BPM Pulse Survey` in italics below the third chart"
+      },
+      {
+        "key": "side_text_bullets",
+        "figure_id": "page",
+        "evidence": "Body prose column `The trend toward greater use of visualization...` runs beside all three figures"
+      },
+      {
+        "key": "horizontal_bars",
+        "figure_id": "f2",
+        "evidence": "Categories on the left, bars grow rightwards to the 0%-80% axis"
+      },
+      {
+        "key": "legend_beside_plot",
+        "figure_id": "f1",
+        "evidence": "`Yes / No / Not sure` swatches in a column to the right of the pie"
+      },
+      {
+        "key": "legend_beside_plot",
+        "figure_id": "f3",
+        "evidence": "Three swatch entries stacked in a column right of the pie"
+      },
+      {
+        "key": "value_label_inside",
+        "figure_id": "f1",
+        "evidence": "`24.0%`, `40.9%`, `35.1%` printed white inside the slices"
+      },
+      {
+        "key": "value_label_inside",
+        "figure_id": "f3",
+        "evidence": "`15.3%`, `11.8%`, `72.9%` printed inside the slices"
+      },
+      {
+        "key": "value_label_outside",
+        "figure_id": "f2",
+        "evidence": "`70.6%`, `56.5%`, `7.1%` printed to the right of each bar end"
+      },
+      {
+        "key": "wrapped_category_labels",
+        "figure_id": "f2",
+        "evidence": "`More chart types (heat chart, fractals, tree map, bubble chart, etc.)` wraps onto four lines"
+      },
+      {
+        "key": "no_value_axis",
+        "figure_id": "f1",
+        "evidence": "Pie draws no ticks; numbers readable only from the printed slice labels"
+      },
+      {
+        "key": "color_encodes_extra_attribute",
+        "figure_id": "f2",
+        "evidence": "Single-series bars coloured orange, red, navy, grey, cyan with no legend explaining the colours"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "legend_entry_multiline_wrap",
+        "figure_id": "f3",
+        "evidence": "`Third-party solution that may access my performance management data` set over five lines in the side legend",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "name": "question_text_as_title",
+        "figure_id": "page",
+        "evidence": "Every title is a survey question ending in `?`, e.g. `(select all that apply)`",
+        "affects": [
+          3,
+          4
+        ]
+      },
+      {
+        "name": "shared_source_line_for_multiple_figures",
+        "figure_id": "page",
+        "evidence": "One `Source:` line under the last chart appears to cover all three figures",
+        "affects": [
+          4
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "24.0",
+        "figure_id": "f1",
+        "mark": "the orange slice of the first pie",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Do you require data visualization capabilities beyond standard charts and graphs?",
+          "Yes"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "40.9",
+        "figure_id": "f1",
+        "mark": "the red slice of the first pie",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Do you require data visualization capabilities beyond standard charts and graphs?",
+          "No"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "70.6",
+        "figure_id": "f2",
+        "mark": "the top bar, More interactive",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "More interactive"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "56.5",
+        "figure_id": "f2",
+        "mark": "the second bar, More chart types",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "More chart types (heat chart, fractals, tree map, bubble chart, etc.)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "43.5",
+        "figure_id": "f2",
+        "mark": "the third bar, internal data sources",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Access to more data sources (internal)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "21.2",
+        "figure_id": "f2",
+        "mark": "the fourth bar, external data sources",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Access to more data sources (external)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "7.1",
+        "figure_id": "f2",
+        "mark": "the bottom bar, Not sure",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Not sure"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "15.3",
+        "figure_id": "f3",
+        "mark": "the orange slice of the third pie",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Where would you prefer to get these data visualization capabilities from?",
+          "Included in performance management solution"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "11.8",
+        "figure_id": "f3",
+        "mark": "the red slice of the third pie",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Where would you prefer to get these data visualization capabilities from?",
+          "Doesn't matter"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "72.9",
+        "figure_id": "f3",
+        "mark": "the navy slice of the third pie",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Where would you prefer to get these data visualization capabilities from?",
+          "Third-party solution that may access my performance management data"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      }
+    ],
+    "hardest_step": 3,
+    "hardest_step_why": "值全印出,读数无碍;但 `Not sure` 同时出现在饼图图例和条形图类别,7.1 与 35.1 需图标题才能区分。",
+    "examples": [
+      {
+        "gap": "P7",
+        "figure_id": "f2",
+        "quote": "What data visualization capabilities do you need that you are not getting today? (select all that apply)",
+        "why": "标题是三行换行的问句,无图号无单位,现有流水线只出单行标题字段。"
+      },
+      {
+        "gap": "P3",
+        "figure_id": "page",
+        "quote": "Source: BPM Partners 2014 BPM Pulse Survey printed once, below the third chart only",
+        "why": "一行来源覆盖三个无编号图,整页导出时无法把它绑到正确的表。"
+      },
+      {
+        "gap": "P8",
+        "figure_id": "f2",
+        "quote": "Five single-series bars drawn orange, red, navy, dark grey, cyan with no legend",
+        "why": "单系列条却逐条换色,颜色不承载变量也无图例,现有生成器不产这种配色。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f3",
+        "quote": "Legend text `Third-party solution that may access my performance management data` wraps over five lines beside the pie",
+        "why": "需要图例条目自动多行换行并保持与扇区对应;当前只支持单行图例。"
+      }
+    ]
+  }
+}

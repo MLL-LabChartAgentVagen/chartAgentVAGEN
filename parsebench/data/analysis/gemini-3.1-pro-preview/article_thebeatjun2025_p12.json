@@ -1,0 +1,194 @@
+{
+  "stem": "article_thebeatjun2025_p12",
+  "document": "article_thebeatjun2025",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 71.5,
+  "usage": {
+    "input_tokens": 5286,
+    "output_tokens": 9091,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "**画出来要什么**\n需要绘制一个无边框的堆叠柱状图。X轴为离散的分类类别，Y轴没有垂直实线，仅通过水平网格线标示刻度，刻度标签带有百分号（如 `9%`）。图例位于X轴下方。图表中的堆叠柱不在各分段内部标注数值，而是统一在每根柱子的顶端上方标注该柱的总和数值。底部需附带数据来源等小字注释。\n\n**定位一个值难在哪**\n以 EUR IG Corp 的 Base Rate 分段（对应值为 2.3%）为例。该数值未在图表中直接印出，必须通过观察它在Y轴上对应的高度来读取。然而Y轴刻度线间距高达 1%，凭肉眼和像素估算的难度极大，极易导致读取误差超过 5% 的容忍限度。\n\n**不确定的**\n由于缺乏具体分段的数值标注，所有非贴底的分段（如 Option-Adjusted Spread 所在的中间层）的上下边界都需要同时依靠视觉估算，其精确数值具有很强的不确定性，只能根据总和及其他已知成分进行近似推算。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "European HY Credit Offers the Highest Yield on USD-Hedged Basis",
+          "subtitle": "Yield decomposition across major credit asset classes",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "stacked_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 3,
+        "categories": 5,
+        "marks": 12,
+        "values_printed": "some",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "0%",
+            "high": "9%",
+            "serves": "all bars"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "EUR High Yield",
+            "high": "USD IG Corp",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "EUR High Yield"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Base Rate"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "EUR High Yield",
+            "Base Rate"
+          ],
+          "value": "2.0%",
+          "value_source": "axis_read",
+          "why_hard": "Segment not labelled; reading a roughly 2% segment against a 9% axis introduces >5% error."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "stacked_bar",
+        "figure_id": "f1",
+        "evidence": "bars are composed of up to three coloured segments"
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "the three-item legend sits below the x-axis"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "horizontal grid lines at each percent, no vertical rules"
+      },
+      {
+        "key": "value_label_outside",
+        "figure_id": "f1",
+        "evidence": "total values are printed above the top of each bar"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "page",
+        "evidence": "Source: Bloomberg... printed at the bottom of the page"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "stacked_bar_total_label_only",
+        "figure_id": "f1",
+        "evidence": "only the total stack heights are printed above bars",
+        "affects": [
+          2,
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "2.5%",
+        "figure_id": "f1",
+        "mark": "the EUR IG Corp EURUSD 3m Hedging Income segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "EUR IG Corp",
+          "EURUSD 3m Hedging Income"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "3.3%",
+        "figure_id": "f1",
+        "mark": "the EM Hard Currency Option-Adjusted Spread (OAS) segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "EM Hard Currency",
+          "Option-Adjusted Spread (OAS)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "4.4%",
+        "figure_id": "f1",
+        "mark": "the USD High Yield Base Rate segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "USD High Yield",
+          "Base Rate"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "2.3%",
+        "figure_id": "f1",
+        "mark": "the EUR IG Corp Base Rate segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "EUR IG Corp",
+          "Base Rate"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "4.5%",
+        "figure_id": "f1",
+        "mark": "the USD IG Corp Base Rate segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "USD IG Corp",
+          "Base Rate"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "图表未直接标注各堆叠段数值（如2.3%）。Y轴间隔为1%，凭像素高度估算这类小值，相对误差极易超过5%容忍度（即0.115%）。",
+    "examples": [
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "European HY Credit Offers the Highest Yield on USD-Hedged Basis",
+        "why": "图表缺少常规的 Figure 编号，且包含主副标题，模型必须能将这类格式识别为合法的图表标题块并解构。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "8.1% printed above the EUR High Yield stacked bar, segments unlabelled",
+        "why": "模型需支持在堆叠柱状图中，仅在柱顶展示整体加总值，而不在各堆叠层中标注分段数据的特殊标签呈现方式。"
+      }
+    ]
+  }
+}

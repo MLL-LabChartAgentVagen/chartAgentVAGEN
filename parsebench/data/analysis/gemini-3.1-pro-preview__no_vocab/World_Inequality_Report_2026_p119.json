@@ -1,0 +1,242 @@
+{
+  "stem": "World_Inequality_Report_2026_p119",
+  "document": "World_Inequality_Report_2026",
+  "tags": "untagged",
+  "model": "gemini-3.1-pro-preview",
+  "control": "no_vocab",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 45.5,
+  "usage": {
+    "input_tokens": 3167,
+    "output_tokens": 6082,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n生成此页面需要支持多级且样式混合的标题结构（主标题带编号且左对齐，副标题居中）。图表本身是一个标准的分组柱状图（Grouped Bar Chart），包含两组数据系列和四个分类标签。需要支持在Y轴绘制旋转90度的标题文本，在X轴下方居中绘制带有正方形颜色图例的标记。最重要的是，需要支持在每个柱子上方直接绘制带百分号的数据标签，以及水平的虚线网格线。\n\n### 定位一个值难在哪\n定位页面上的值没有任何难度。以“10”为例，该值直接以“10%”的形式印在“Bottom 50%”分类下的绿色柱子上方，且图例明确标注绿色代表“Consumption”。视觉和文本对应关系极度清晰，无需复杂的轴刻度读取或对齐推算，也不依赖外部上下文。\n\n### 不确定的\nX轴上的分类“Top 1%”在逻辑上是“Top 10%”的子集，但在图表中它们被并列作为互斥分类展示。图表生成器或数据提取模型可能会在逻辑层面产生困惑，但在纯视觉识别和数据提取层面没有任何阻碍。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 6.2.",
+          "title": "Emissions are highly concentrated among the rich, especially when looking at ownership",
+          "subtitle": "Emissions shares by groups",
+          "unit_text": "Share in total emissions",
+          "placement": "above"
+        },
+        "type": "grouped_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 4,
+        "marks": 8,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Share in total emissions",
+            "low": "0%",
+            "high": "90%",
+            "serves": "all bars"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "Bottom 50%",
+            "high": "Top 1%",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Bottom 50%"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Consumption"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Bottom 50%",
+            "Consumption"
+          ],
+          "value": "10%",
+          "value_source": "printed",
+          "why_hard": ""
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "data_labels",
+        "figure_id": "f1",
+        "evidence": "numbers like 10%, 43% are printed directly above the bars",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "key": "y_axis_title_rotated",
+        "figure_id": "f1",
+        "evidence": "'Share in total emissions' is rotated 90 degrees along the y-axis",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "horizontal_gridlines_dashed",
+        "figure_id": "f1",
+        "evidence": "dashed lines extend horizontally from the y-axis ticks",
+        "affects": []
+      },
+      {
+        "key": "legend_below_axis",
+        "figure_id": "f1",
+        "evidence": "the legend with green and red squares is placed below the x-axis labels",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "figure_title_bold",
+        "figure_id": "f1",
+        "evidence": "the main title text is in bold",
+        "affects": [
+          4
+        ]
+      }
+    ],
+    "new_components": [
+      {
+        "name": "interpretation_text_block",
+        "figure_id": "f1",
+        "evidence": "the paragraph starting with 'Interpretation.' below the chart legend",
+        "affects": [
+          4
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "10",
+        "figure_id": "f1",
+        "mark": "the green bar in the Bottom 50% category",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Bottom 50%",
+          "Consumption"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "3",
+        "figure_id": "f1",
+        "mark": "the red bar in the Bottom 50% category",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Bottom 50%",
+          "Private ownership"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "43",
+        "figure_id": "f1",
+        "mark": "the green bar in the Middle 40% category",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Middle 40%",
+          "Consumption"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "20",
+        "figure_id": "f1",
+        "mark": "the red bar in the Middle 40% category",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Middle 40%",
+          "Private ownership"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "47",
+        "figure_id": "f1",
+        "mark": "the green bar in the Top 10% category",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Top 10%",
+          "Consumption"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "77",
+        "figure_id": "f1",
+        "mark": "the red bar in the Top 10% category",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Top 10%",
+          "Private ownership"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "15",
+        "figure_id": "f1",
+        "mark": "the green bar in the Top 1% category",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Top 1%",
+          "Consumption"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "41",
+        "figure_id": "f1",
+        "mark": "the red bar in the Top 1% category",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Top 1%",
+          "Private ownership"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      }
+    ],
+    "hardest_step": 1,
+    "hardest_step_why": "图中所有测试值（如10、77）均直接以百分比形式印在柱子上方，图例和X轴标签极度清晰，若测试失败只能是因为模型未能将结果格式化为表格。",
+    "examples": [
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "Figure 6.2. Emissions are highly concentrated among the rich... Emissions shares by groups",
+        "why": "图表标题区由左对齐的带编号主标题和居中的副标题组成，需要独立字段支持复杂的标题布局和多级结构。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "10% printed directly above the green bar for Bottom 50%",
+        "why": "数值直接标注在柱状图顶部，生成管线需要支持数据标签的位置控制（如置于上方）及格式化（如附加百分号）。"
+      }
+    ]
+  }
+}

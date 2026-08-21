@@ -1,0 +1,291 @@
+{
+  "stem": "World_Inequality_Report_2026_p38",
+  "document": "World_Inequality_Report_2026",
+  "tags": "untagged",
+  "model": "gemini-3.1-pro-preview",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 76.9,
+  "usage": {
+    "input_tokens": 5327,
+    "output_tokens": 10825,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "## 画出来要什么\n生成器需要支持并排绘制两个具有相同y轴刻度但分别拥有独立坐标系的百分比堆叠柱状图（`pct_stacked`），且能够为每个面板添加独立的标题（`panel_title_per_panel`）。图例需放置在图表底部统一区域（`shared_legend`），且允许某个面板复用另一组图例定义的颜色。y轴标题需支持垂直旋转显示（`rotated_axis_title`），数据标签需直接居中打印在对应颜色的堆叠段内（`value_label_inside`）。\n\n## 定位一个值难在哪\n以右侧面板的“33”为例，其地址键需要包含面板名“More detail on the top 10%”、分类名“Income”和图例名“Next 9%”。难点在于全图图例虽然合并放在底部，但位置上分成了两组；解析器必须通过颜色匹配将“Bottom 50%”等左侧图例项与右侧面板中的对应色块正确绑定，并在表格中引入面板维度，否则无法区分两侧同名的Income分类段。\n\n## 不确定的\n右侧面板底部的蓝绿段（8%和38%）对应的图例放置在左下方，读者能通过颜色自然关联，不确定解析器能否同样基于颜色进行跨区段的全局映射，或者会因为图例在视觉上更靠近左面板而忽略对右侧底色块的识别。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 1.3.",
+          "title": "Income and wealth shares are distributed very unequally",
+          "subtitle": "Global income and wealth inequality, 2025",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "stacked_bar",
+        "type_other": "",
+        "panels": 2,
+        "series": 5,
+        "categories": 2,
+        "marks": 14,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Share of global income or wealth",
+            "low": "0%",
+            "high": "100%",
+            "serves": "left panel bars"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "Income",
+            "high": "Wealth",
+            "serves": "left panel bars"
+          },
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Share of global income or wealth",
+            "low": "0%",
+            "high": "100%",
+            "serves": "right panel bars"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "Income",
+            "high": "Wealth",
+            "serves": "right panel bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "panel",
+            "label_source": "panel_title",
+            "example": "By broad groups"
+          },
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Income"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Top 10%"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "More detail on the top 10%",
+            "Income",
+            "Next 9%"
+          ],
+          "value": "33%",
+          "value_source": "printed",
+          "why_hard": "Requires linking a legend item to a specific panel when the legend is split into two visual groups."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "pct_stacked",
+        "figure_id": "f1",
+        "evidence": "bars are stacked and their segments sum to 100%"
+      },
+      {
+        "key": "rotated_axis_title",
+        "figure_id": "f1",
+        "evidence": "Share of global income or wealth is vertical along the y-axis"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "horizontal dotted lines across plot, no vertical lines"
+      },
+      {
+        "key": "panel_title_per_panel",
+        "figure_id": "f1",
+        "evidence": "By broad groups and More detail on the top 10% sit above their respective panels"
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "legend items sit beneath the two panels"
+      },
+      {
+        "key": "value_label_inside",
+        "figure_id": "f1",
+        "evidence": "numbers like 8%, 38% are inside the coloured segments"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "Interpretation. and Sources and series: text below the figure"
+      },
+      {
+        "key": "shared_legend",
+        "figure_id": "f1",
+        "evidence": "the bottom legend governs colors for both panels"
+      }
+    ],
+    "new_components": [],
+    "spot_checks": [
+      {
+        "value": "8",
+        "figure_id": "f1",
+        "mark": "Bottom 50% segment in left panel Income bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "By broad groups",
+          "Income",
+          "Bottom 50%"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "38",
+        "figure_id": "f1",
+        "mark": "Middle 40% segment in left panel Income bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "By broad groups",
+          "Income",
+          "Middle 40%"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "53",
+        "figure_id": "f1",
+        "mark": "Top 10% segment in left panel Income bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "By broad groups",
+          "Income",
+          "Top 10%"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "2",
+        "figure_id": "f1",
+        "mark": "Bottom 50% segment in left panel Wealth bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "By broad groups",
+          "Wealth",
+          "Bottom 50%"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "23",
+        "figure_id": "f1",
+        "mark": "Middle 40% segment in left panel Wealth bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "By broad groups",
+          "Wealth",
+          "Middle 40%"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "75",
+        "figure_id": "f1",
+        "mark": "Top 10% segment in left panel Wealth bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "By broad groups",
+          "Wealth",
+          "Top 10%"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "33",
+        "figure_id": "f1",
+        "mark": "Next 9% segment in right panel Income bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "More detail on the top 10%",
+          "Income",
+          "Next 9%"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "20",
+        "figure_id": "f1",
+        "mark": "Top 1% segment in right panel Income bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "More detail on the top 10%",
+          "Income",
+          "Top 1%"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "38",
+        "figure_id": "f1",
+        "mark": "Next 9% segment in right panel Wealth bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "More detail on the top 10%",
+          "Wealth",
+          "Next 9%"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "37",
+        "figure_id": "f1",
+        "mark": "Top 1% segment in right panel Wealth bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "More detail on the top 10%",
+          "Wealth",
+          "Top 1%"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      }
+    ],
+    "hardest_step": 3,
+    "hardest_step_why": "图例在视觉上分为左右两部分，解析器需要跨越整个底部区域，将左侧图例中的“Bottom 50%”通过颜色正确映射到右侧面板的底层数据段（如8和2），否则地址键会缺失或错误。",
+    "examples": [
+      {
+        "gap": "P2",
+        "figure_id": "f1",
+        "quote": "By broad groups and More detail on the top 10% sit above separate panels",
+        "why": "页面包含两个共享坐标系但数据细分不同的面板，如果无法在键值中引入面板维度，左右同名分类（Income/Wealth）的数值在生成表格时会发生冲突覆盖。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "Figure 1.3. Income and wealth shares are distributed very unequally",
+        "why": "图表包含编号、主标题和副标题，需要将它们作为独立字段提取以保持上下文信息的完整性，避免其与局部的面板标题混淆。"
+      }
+    ]
+  }
+}

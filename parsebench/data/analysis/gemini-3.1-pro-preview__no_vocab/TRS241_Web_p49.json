@@ -1,0 +1,268 @@
+{
+  "stem": "TRS241_Web_p49",
+  "document": "TRS241_Web",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "no_vocab",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 73.1,
+  "usage": {
+    "input_tokens": 3214,
+    "output_tokens": 10423,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n绘制此页需要支持带有数据点内联标签（国家两字母代码）的散点图。y轴（人均GDP）和x轴（人均能源使用）无网格线。右侧需要有表示y轴连续数值区间的分类指示线及文本（如高、中、低收入经济体）。图表内部需支持自定义布局的数据源说明框和图例表格（映射两字母代码到完整国家名称）。\n\n### 定位一个值难在哪\n以 `300`（IN的y值）为例。由于散点图缺乏网格线，且y轴的第一个可见标度刻度为 `2000`，在长达2000的区间内估算 `300` 极度依赖视觉比例。该值的5%容差仅为 `15`，在视觉上只占极小的像素距离，无论是人工肉眼还是模型读取，都几乎无法精确到这一严苛误差范围内，必然导致读取失败。\n\n### 不确定的\n大部分数据点都远离坐标轴且缺乏网格线参考，读数包含极大的估测成分。此外，右侧三种经济体分类的具体数值分界线并未在图中明确标出，属于模糊的视觉指引。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "FIG.2.2.",
+          "title": "Relation of GDP to energy consumption (both in per capita terms).",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "below"
+        },
+        "type": "scatter",
+        "type_other": "",
+        "panels": 1,
+        "series": 1,
+        "categories": 1,
+        "marks": 17,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "bottom",
+            "role": "value",
+            "unit_text": "1981 per capita energy use (GJ)",
+            "low": "100",
+            "high": "400",
+            "serves": "all points"
+          },
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "1981 per capita GDP at market prices (US $)",
+            "low": "2000",
+            "high": "18000",
+            "serves": "all points"
+          },
+          {
+            "side": "right",
+            "role": "category",
+            "unit_text": "",
+            "low": "low income economies",
+            "high": "Industrial market economies",
+            "serves": "indicates economic groups"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "inline_label",
+            "example": "CH"
+          },
+          {
+            "role": "series",
+            "label_source": "not_shown",
+            "example": "1981 per capita GDP at market prices (US $)"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "CH",
+            "1981 per capita GDP at market prices (US $)"
+          ],
+          "value": "17500",
+          "value_source": "axis_read",
+          "why_hard": "Point is far from the y-axis without gridlines, hard to read accurately to 5%."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "scatter_plot",
+        "figure_id": "f1",
+        "evidence": "points representing countries plotted on x and y axes",
+        "affects": [
+          1,
+          2
+        ]
+      },
+      {
+        "key": "inline_data_labels",
+        "figure_id": "f1",
+        "evidence": "2-letter country codes like 'CH' and 'SE' next to each dot",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "internal_legend_table",
+        "figure_id": "f1",
+        "evidence": "box mapping codes to full country names placed inside the plot",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "internal_source_box",
+        "figure_id": "f1",
+        "evidence": "Sources box located at top right inside the plot area",
+        "affects": []
+      }
+    ],
+    "new_components": [
+      {
+        "name": "categorical_range_brackets_on_value_axis",
+        "figure_id": "f1",
+        "evidence": "right side text and arrows grouping continuous y-values into income categories",
+        "affects": [
+          2,
+          4
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "17500",
+        "figure_id": "f1",
+        "mark": "CH dot y-value",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "CH",
+          "1981 per capita GDP at market prices (US $)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "140",
+        "figure_id": "f1",
+        "mark": "CH dot x-value",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "CH",
+          "1981 per capita energy use (GJ)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "15000",
+        "figure_id": "f1",
+        "mark": "SE dot y-value",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "SE",
+          "1981 per capita GDP at market prices (US $)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "12800",
+        "figure_id": "f1",
+        "mark": "US dot y-value",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "US",
+          "1981 per capita GDP at market prices (US $)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "310",
+        "figure_id": "f1",
+        "mark": "US dot x-value",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "US",
+          "1981 per capita energy use (GJ)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "11500",
+        "figure_id": "f1",
+        "mark": "CA dot y-value",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "CA",
+          "1981 per capita GDP at market prices (US $)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "10200",
+        "figure_id": "f1",
+        "mark": "JP dot y-value",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "JP",
+          "1981 per capita GDP at market prices (US $)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "2600",
+        "figure_id": "f1",
+        "mark": "AR dot y-value",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "AR",
+          "1981 per capita GDP at market prices (US $)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "300",
+        "figure_id": "f1",
+        "mark": "IN dot y-value",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "IN",
+          "1981 per capita GDP at market prices (US $)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "240",
+        "figure_id": "f1",
+        "mark": "SE dot x-value",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "SE",
+          "1981 per capita energy use (GJ)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "散点图无网格线且y轴刻度间距达2000。读取IN的y值300时，5%容差仅为15，在如此大的未标记区间内根本无法精确估算，必然导致读数越界。",
+    "examples": [
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "Industrial market economies, middle income economies, low income economies",
+        "why": "需要支持在绘图区外侧绘制将连续数值轴划分为多个宏观分类区间的指示线与分组文本标签。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "AR: ARGENTINA, BR: BRAZIL...",
+        "why": "图例以双列文本映射表格的形式直接嵌入在绘图数据区域内部，当前管道不支持此类自定义的内置图例排版。"
+      }
+    ]
+  }
+}

@@ -1,0 +1,198 @@
+{
+  "stem": "pwc-semiconductor-and-beyond-2026-full-report_p18",
+  "document": "pwc-semiconductor-and-beyond-2026-full-report",
+  "tags": "untagged",
+  "model": "gemini-3.1-pro-preview",
+  "control": "no_vocab",
+  "effort": "high",
+  "dpi": 150,
+  "seconds": 13.2,
+  "usage": {
+    "input_tokens": 2279,
+    "output_tokens": 1690,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "这张页面包含一个组合图表（柱状图和折线图），展示了数据中心半导体市场的相关数据。\n\n**图表构建需求：**\n图表生成器需要支持双Y轴（主Y轴为绝对数值，次Y轴为百分比）。它还需要能够绘制预测年份（带有'F'后缀，如'25F'）。此外，图表还包含部分数据标签显示（仅在折线图的首尾点显示数值）。\n\n**数据提取难点：**\n数据提取的主要难点在于柱状图和折线图的大部分数据点没有直接标注数值，需要通过读取刻度来估算。由于Y轴刻度间距较大（左侧间距50，右侧间距10），读取具体数值（如98、148等）将具有较大的误差。折线的首尾点标注了35%和52%，但中间点只能估算。没有明确的表格供提取数据。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "AI accelerators in the data center",
+          "subtitle": "",
+          "unit_text": "(Unit: $ Billion)",
+          "placement": "above"
+        },
+        "type": "compound",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 7,
+        "marks": 14,
+        "values_printed": "some"
+      }
+    ],
+    "components": [
+      {
+        "key": "dual_y_axis",
+        "figure_id": "f1",
+        "evidence": "left y-axis for bar chart (0-300), right y-axis for line chart (0-100%)",
+        "affects": [
+          2,
+          3
+        ]
+      },
+      {
+        "key": "legend_above_plot",
+        "figure_id": "f1",
+        "evidence": "legend with 'Data center semiconductors' and 'Portion of AI accelerator' sits above the grid",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "forecast_x_axis_labels",
+        "figure_id": "f1",
+        "evidence": "x-axis labels from '25F to '30F have 'F' indicating forecast",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "values_printed_on_ends_only",
+        "figure_id": "f1",
+        "evidence": "the line chart has '35%' on the first point and '52%' on the last, others empty",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "key": "y_axis_unit_in_title_block",
+        "figure_id": "f1",
+        "evidence": "'(Unit: $ Billion)' is placed next to the title",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "secondary_y_axis_unit",
+        "figure_id": "f1",
+        "evidence": "'(%)' is placed above the right y-axis",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "grid_lines_horizontal",
+        "figure_id": "f1",
+        "evidence": "faint horizontal lines corresponding to the left y-axis ticks",
+        "affects": []
+      }
+    ],
+    "new_components": [
+      {
+        "name": "forecast_suffix_in_ticks",
+        "figure_id": "f1",
+        "evidence": "years like '25F, '26F on the x-axis have an 'F' suffix",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "98",
+        "figure_id": "f1",
+        "mark": "the '24 Data center semiconductors bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "'24",
+          "Data center semiconductors"
+        ]
+      },
+      {
+        "value": "148",
+        "figure_id": "f1",
+        "mark": "the '26F Data center semiconductors bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "'26F",
+          "Data center semiconductors"
+        ]
+      },
+      {
+        "value": "270",
+        "figure_id": "f1",
+        "mark": "the '30F Data center semiconductors bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "'30F",
+          "Data center semiconductors"
+        ]
+      },
+      {
+        "value": "180",
+        "figure_id": "f1",
+        "mark": "the '27F Data center semiconductors bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "'27F",
+          "Data center semiconductors"
+        ]
+      },
+      {
+        "value": "35",
+        "figure_id": "f1",
+        "mark": "the '24 Portion of AI accelerator line point",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "'24",
+          "Portion of AI accelerator"
+        ]
+      },
+      {
+        "value": "52",
+        "figure_id": "f1",
+        "mark": "the '30F Portion of AI accelerator line point",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "'30F",
+          "Portion of AI accelerator"
+        ]
+      },
+      {
+        "value": "41",
+        "figure_id": "f1",
+        "mark": "the '26F Portion of AI accelerator line point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "'26F",
+          "Portion of AI accelerator"
+        ]
+      },
+      {
+        "value": "47",
+        "figure_id": "f1",
+        "mark": "the '28F Portion of AI accelerator line point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "'28F",
+          "Portion of AI accelerator"
+        ]
+      },
+      {
+        "value": "245",
+        "figure_id": "f1",
+        "mark": "the '29F Data center semiconductors bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "'29F",
+          "Data center semiconductors"
+        ]
+      }
+    ],
+    "hardest_step": 2
+  }
+}

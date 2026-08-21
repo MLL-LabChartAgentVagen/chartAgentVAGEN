@@ -1,0 +1,273 @@
+{
+  "stem": "wtr24_ch2_e_p14",
+  "document": "wtr24_ch2_e",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "no_vocab",
+  "effort": "high",
+  "dpi": 150,
+  "seconds": 58.5,
+  "usage": {
+    "input_tokens": 3183,
+    "output_tokens": 7414,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "**画出来要什么** 本页需要支持双Y轴复合图表，柱形图与折线图混合绘制。左侧Y轴表示数量，右侧表示百分比，两侧Y轴标题均需垂直旋转90度。X轴年份标签需倾斜显示。图表上方有一个带蓝色背景的独立标题区块，图例放置在X轴下方。 **定位一个值难在哪** 以数值31为例，它对应2002年的柱形图。由于没有数据标签，必须通过左侧Y轴读取。左轴刻度间距为20，条形图顶部位于20和40之间，难以在5%（即4）的容差内精确估读出31。 **不确定的** 图形较小且未标注数值，折线图的精确位置很难直接用肉眼确认，部分数据点只能大致推测出其落点范围。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure B.6:",
+          "title": "Growing number of concerns about SPS and TBT measures raised by low- and middle-income members, 1995-2023",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "compound",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 29,
+        "marks": 58,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Number of low- and middle-income economies' SPS and TBT concerns",
+            "low": "0",
+            "high": "80",
+            "serves": "the bars"
+          },
+          {
+            "side": "right",
+            "role": "value",
+            "unit_text": "Share of low- and middle-income economies' SPS and TBT concerns addressed to high-income economies",
+            "low": "0%",
+            "high": "100%",
+            "serves": "the line"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "1995",
+            "high": "2023",
+            "serves": "all marks"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "1995"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Concerns raised by at least one low- or middle-income economy"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "2002",
+            "Concerns raised by at least one low- or middle-income economy"
+          ],
+          "value": "31",
+          "value_source": "axis_read",
+          "why_hard": "The value must be interpolated between tick marks 20 and 40 on the left axis, making a 5% tolerance challenging."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "dual_y_axis",
+        "figure_id": "f1",
+        "evidence": "left axis reads 0 to 80, right axis reads 0% to 100%",
+        "affects": [
+          2,
+          3
+        ]
+      },
+      {
+        "key": "mixed_marks",
+        "figure_id": "f1",
+        "evidence": "blue bars for volume and a light blue line for shares",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "key": "slanted_x_axis_labels",
+        "figure_id": "f1",
+        "evidence": "year ticks like 1995 are rotated 45 degrees",
+        "affects": []
+      },
+      {
+        "key": "highlighted_heading_block",
+        "figure_id": "f1",
+        "evidence": "the figure heading has white text on a blue rectangular background",
+        "affects": [
+          4
+        ]
+      },
+      {
+        "key": "rotated_y_axis_title",
+        "figure_id": "f1",
+        "evidence": "both y-axis titles are rotated 90 degrees along the sides",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "the two legend items sit side-by-side underneath the x-axis",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "new_components": [],
+    "spot_checks": [
+      {
+        "value": "1",
+        "figure_id": "f1",
+        "mark": "the 1995 bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "1995",
+          "Concerns raised by at least one low- or middle-income economy"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "100%",
+        "figure_id": "f1",
+        "mark": "the 1995 line point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "1995",
+          "Share of concerns addressed to high-income economies"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "31",
+        "figure_id": "f1",
+        "mark": "the 2002 bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2002",
+          "Concerns raised by at least one low- or middle-income economy"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "35%",
+        "figure_id": "f1",
+        "mark": "the 2002 line point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2002",
+          "Share of concerns addressed to high-income economies"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "46",
+        "figure_id": "f1",
+        "mark": "the 2014 bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2014",
+          "Concerns raised by at least one low- or middle-income economy"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "40%",
+        "figure_id": "f1",
+        "mark": "the 2014 line point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2014",
+          "Share of concerns addressed to high-income economies"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "66",
+        "figure_id": "f1",
+        "mark": "the 2020 bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2020",
+          "Concerns raised by at least one low- or middle-income economy"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "30%",
+        "figure_id": "f1",
+        "mark": "the 2020 line point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2020",
+          "Share of concerns addressed to high-income economies"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "64",
+        "figure_id": "f1",
+        "mark": "the 2022 bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2022",
+          "Concerns raised by at least one low- or middle-income economy"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "70%",
+        "figure_id": "f1",
+        "mark": "the 2022 line point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2022",
+          "Share of concerns addressed to high-income economies"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "图表没有直接标注数据标签，左侧Y轴刻度间距为20，对于未对齐网格线的数值（如31或46），肉眼极难满足5%（即容差为4）的精确估读要求。",
+    "examples": [
+      {
+        "gap": "P9",
+        "figure_id": "f1",
+        "quote": "left y-axis from 0 to 80 for bars and right y-axis from 0% to 100% for the line",
+        "why": "当前的图表生成流水线需要能够支持双值轴以及针对不同数据系列混合绘制柱状图和折线图。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "white text on a blue rectangular background box for the figure heading",
+        "why": "图表标题被格式化为一个带有特定背景颜色和排版的独立区块，需要增强对标题组件样式的支持。"
+      }
+    ]
+  }
+}

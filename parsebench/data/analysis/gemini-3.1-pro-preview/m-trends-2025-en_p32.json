@@ -1,0 +1,244 @@
+{
+  "stem": "m-trends-2025-en_p32",
+  "document": "m-trends-2025-en",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 48.4,
+  "usage": {
+    "input_tokens": 5341,
+    "output_tokens": 6788,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n本页需要生成一个簇状柱形图（Grouped Bar Chart）。需要支持：图例放置在绘图区内部右上角，直接覆盖在绘图区域上方；仅绘制水平网格线（以50为间隔）；左侧Y轴携带旋转90度的轴标题“Count of DLS Listings”；X轴为按月份排列的类别标签。此外，页面整体布局在左侧带有一列与主图文内容平行的蓝色补充说明文本，需要相应的多列图文混排版式支持。\n\n### 定位一个值难在哪\n主要的困难在于从图表读取精确的非整十数值。以11月的“RANSOMHUB”柱子为例，其预期值为98，但图表上并未标注具体数字。Y轴的刻度间距高达50，该柱子的顶端在视觉上仅略低于100的网格线，要通过视觉估算将其读取并满足5%的容差（对于较小数值如10，其5%仅为0.5）是极其困难且不可靠的。这必然导致在数值提取的第二步（容差校验）失败。\n\n### 不确定的\n大部分未对齐水平网格线的柱形数值（如35、68、82、98等），单纯依据坐标轴只能获得模糊区间，难以在没有参照数据的情况下得出精确值。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "LockBit vs. RANSOMHUB DLS Listings, 2024",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "grouped_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 12,
+        "marks": 24,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Count of DLS Listings",
+            "low": "0",
+            "high": "200",
+            "serves": "all bars"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "Jan",
+            "high": "Dec",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "LockBit"
+          },
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Jan"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "RANSOMHUB",
+            "Nov"
+          ],
+          "value": "98",
+          "value_source": "axis_read",
+          "why_hard": "it requires estimating 98 against a 100 gridline on a 50-unit spacing axis"
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "grouped_bar",
+        "figure_id": "f1",
+        "evidence": "two bars per month category drawn side by side"
+      },
+      {
+        "key": "legend_inside_plot",
+        "figure_id": "f1",
+        "evidence": "the LockBit / RANSOMHUB legend sits in the top right over the grid"
+      },
+      {
+        "key": "rotated_axis_title",
+        "figure_id": "f1",
+        "evidence": "the y axis title Count of DLS Listings is turned 90 degrees"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "horizontal grid lines at 50 unit intervals, no vertical ones"
+      },
+      {
+        "key": "side_text_bullets",
+        "figure_id": "page",
+        "evidence": "a narrow column of blue text runs to the left of the main block"
+      }
+    ],
+    "new_components": [],
+    "spot_checks": [
+      {
+        "value": "60",
+        "figure_id": "f1",
+        "mark": "the Jan LockBit bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "LockBit",
+          "Jan"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "10",
+        "figure_id": "f1",
+        "mark": "the Jan RANSOMHUB bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "RANSOMHUB",
+          "Jan"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "100",
+        "figure_id": "f1",
+        "mark": "the Feb LockBit bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "LockBit",
+          "Feb"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "55",
+        "figure_id": "f1",
+        "mark": "the March LockBit bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "LockBit",
+          "March"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "175",
+        "figure_id": "f1",
+        "mark": "the May LockBit bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "LockBit",
+          "May"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "35",
+        "figure_id": "f1",
+        "mark": "the June RANSOMHUB bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "RANSOMHUB",
+          "June"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "68",
+        "figure_id": "f1",
+        "mark": "the Aug RANSOMHUB bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "RANSOMHUB",
+          "Aug"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "82",
+        "figure_id": "f1",
+        "mark": "the Oct RANSOMHUB bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "RANSOMHUB",
+          "Oct"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "98",
+        "figure_id": "f1",
+        "mark": "the Nov RANSOMHUB bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "RANSOMHUB",
+          "Nov"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "55",
+        "figure_id": "f1",
+        "mark": "the Dec RANSOMHUB bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "RANSOMHUB",
+          "Dec"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "图表数值未标注且纵坐标间距为50，像11月的RANSOMHUB值为98，或者1月的10，要在5%的极小容差范围内从图形高度肉眼精准读取是不可能的，会直接导致提取失败。",
+    "examples": [
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "Count of DLS Listings",
+        "why": "图表的Y轴标题垂直旋转了90度，目前的图表生成管线缺乏针对轴标题旋转样式的支持与控制。"
+      },
+      {
+        "gap": "P3",
+        "figure_id": "page",
+        "quote": "Data leak sites (DLS) are websites that publish stolen data...",
+        "why": "页面采用了左侧窄栏独立放置背景提示文本，与右侧主文及图表并排的非通栏布局，Markdown全局导出难以完美还原这种分列结构。"
+      }
+    ]
+  }
+}

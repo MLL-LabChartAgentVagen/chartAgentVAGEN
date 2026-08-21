@@ -1,0 +1,330 @@
+{
+  "stem": "b263dc5d-en_p160",
+  "document": "b263dc5d-en",
+  "tags": "need_estimate",
+  "model": "claude-opus-5",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 94.9,
+  "usage": {
+    "input_tokens": 13828,
+    "output_tokens": 7638,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "**画出来要什么**\n\n一张单面板复合图：32 个国家/经济体的竖条（Years of education）上再叠一层菱形点（Numeracy），同轴读数。标题需拆成四层：编号「Figure 4.5.」、蓝色粗体标题、副标题「Effect of a one-standard-deviation increase on hourly wages」、以及贴在顶刻度 40 上方的单位「% change」。还要能画：类别轴 90° 旋转的长国名、只有横向网格、OECD average 处一条淡蓝竖向色带且轴标签加粗、England (UK) 与 Flemish Region (BE) 的轴标签用蓝色区分、菱形按显著性分深浅两种填色（图例里同一个系列名配两个菱形字形）、以及三段 Note/斜体排序说明/Source。\n\n**定位一个值难在哪**\n\n以「3」为例：它对应 Spain 的 Numeracy 浅色菱形，图上无任何数字，网格 5 个单位一档，5% 容差只有 ±0.15，必须在 0–5 档内目测插值。地址还要三段：类别 Spain、系列 Numeracy、以及只能靠填色深浅判断的显著性，而这一属性在图例里没有名字。\n\n**不确定的**\n\n菱形深/浅色的判定在多处（Israel、Italy）几乎不可分；Chile 的菱形与 England 的条形都接近 15，给定值「15」归属只能猜；条顶像素与刻度对齐存在半格误差。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 4.5.",
+          "title": "Relationship between education, numeracy and wages",
+          "subtitle": "Effect of a one-standard-deviation increase on hourly wages",
+          "unit_text": "% change",
+          "placement": "above"
+        },
+        "type": "compound",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 32,
+        "marks": 64,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "% change",
+            "low": "0",
+            "high": "40",
+            "serves": "all bars and all Numeracy diamonds"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "Chile",
+            "high": "Slovak Republic",
+            "serves": "the 32 country/economy slots"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "OECD average"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Numeracy"
+          },
+          {
+            "role": "colour_group",
+            "label_source": "colour_only",
+            "example": "Darker colours denote differences that are statistically significant at the 5% level"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Spain",
+            "Numeracy",
+            "Darker colours denote differences that are statistically significant at the 5% level"
+          ],
+          "value": "≈3.4",
+          "value_source": "axis_read",
+          "why_hard": "pale diamond between the 0 and 5 gridlines; 5% tolerance ±0.17; significance only from fill shade"
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "mixed_marks",
+        "figure_id": "f1",
+        "evidence": "grey bars with orange/dark diamond markers overlaid at the same category positions"
+      },
+      {
+        "key": "color_encodes_extra_attribute",
+        "figure_id": "f1",
+        "evidence": "\"Darker colours denote differences that are statistically significant at the 5% level\""
+      },
+      {
+        "key": "shaded_band",
+        "figure_id": "f1",
+        "evidence": "pale blue vertical band drawn behind the OECD average column, full plot height"
+      },
+      {
+        "key": "highlighted_category",
+        "figure_id": "f1",
+        "evidence": "the tick label \"OECD average\" is set in bold and sits in the tinted column"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "horizontal rules at 5, 10, 15 ... 35; no vertical grid lines"
+      },
+      {
+        "key": "rotated_x_ticks",
+        "figure_id": "f1",
+        "evidence": "country names such as \"Slovak Republic\" set vertically under the axis"
+      },
+      {
+        "key": "legend_above_plot",
+        "figure_id": "f1",
+        "evidence": "\"Years of education ◇◆ Numeracy\" row sits above the top gridline, outside the plot"
+      },
+      {
+        "key": "axis_title_above_axis",
+        "figure_id": "f1",
+        "evidence": "\"% change\" printed above the top tick \"40\", not alongside the axis"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "axis ticks read 0..40 bare; only \"% change\" fixes the scale"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "\"Note: Employed adults aged 25-65...\" and \"Source: Table A.4.8 (L, N, A) in Annex A.\""
+      },
+      {
+        "key": "footnote_marker",
+        "figure_id": "f1",
+        "evidence": "tick label \"Poland*\" with \"*Caution is required in interpreting results...\" in the note"
+      },
+      {
+        "key": "wrapped_category_labels",
+        "figure_id": "f1",
+        "evidence": "32 long names such as \"Flemish Region (BE)\" stacked vertically down the category axis"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "tick_label_colour_encodes_group",
+        "figure_id": "f1",
+        "evidence": "\"England (UK)\" and \"Flemish Region (BE)\" tick labels printed in blue, all others black",
+        "affects": [
+          3,
+          4
+        ]
+      },
+      {
+        "name": "dual_glyph_legend_entry",
+        "figure_id": "f1",
+        "evidence": "one legend name \"Numeracy\" preceded by two diamond glyphs, hollow and filled",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "name": "sort_order_note",
+        "figure_id": "f1",
+        "evidence": "italic line: \"Countries and economies are ranked in descending order of the percentage effect...in numeracy proficiency\"",
+        "affects": [
+          4
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "30",
+        "figure_id": "f1",
+        "mark": "the Chile Years of education bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Chile",
+          "Years of education"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "15",
+        "figure_id": "f1",
+        "mark": "the Chile Numeracy diamond (~15.2); could also be read as the England (UK) or Canada bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Chile",
+          "Numeracy"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "36",
+        "figure_id": "f1",
+        "mark": "the Singapore Years of education bar (~35.8, tallest)",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Singapore",
+          "Years of education"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "13",
+        "figure_id": "f1",
+        "mark": "the France Numeracy diamond (~12.8), the highest diamond after Chile",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "France",
+          "Numeracy"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "15",
+        "figure_id": "f1",
+        "mark": "the Canada Years of education bar (~15.2), same reading as Slovak Republic",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Canada",
+          "Years of education"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "16",
+        "figure_id": "f1",
+        "mark": "the OECD average Years of education bar (~16.3), inside the tinted column",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "OECD average",
+          "Years of education"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "9",
+        "figure_id": "f1",
+        "mark": "the France Years of education bar (~9.8), shortest bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "France",
+          "Years of education"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "21",
+        "figure_id": "f1",
+        "mark": "the United States Years of education bar (~21.3)",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "United States",
+          "Years of education"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "22",
+        "figure_id": "f1",
+        "mark": "the Hungary Years of education bar (~22.2); Korea reads the same height",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Hungary",
+          "Years of education"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "3",
+        "figure_id": "f1",
+        "mark": "the Spain Numeracy diamond (~3.4), pale fill near the baseline",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "Spain",
+          "Numeracy",
+          "Darker colours denote differences that are statistically significant at the 5% level"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "全图无数字标注，网格每5单位；读「3」（Spain 菱形）容差仅±0.15，「16」OECD average 条也需格内插值。",
+    "examples": [
+      {
+        "gap": "P8",
+        "figure_id": "f1",
+        "quote": "\"Darker colours denote differences that are statistically significant at the 5% level.\"",
+        "why": "图例只给系列名，显著性靠菱形深浅编码，必须作为第三个键进入表格地址。"
+      },
+      {
+        "gap": "P9",
+        "figure_id": "f1",
+        "quote": "grey bars with orange diamonds overlaid at each of 32 country slots, one shared 0-40 axis",
+        "why": "同一类别槽两种标记形状共用一轴，取值须记录读自条形还是菱形。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "\"Figure 4.5. Relationship between education, numeracy and wages\" / \"Effect of a one-standard-deviation increase on hourly wages\" / \"% change\"",
+        "why": "编号、标题、副标题与位于顶刻度上方的单位是四段独立文本，需分字段生成。"
+      },
+      {
+        "gap": "P1",
+        "figure_id": "f1",
+        "quote": "y axis ticks 0, 5, 10, 15, 20, 25, 30, 35, 40 with no printed value labels on any mark",
+        "why": "接近0的浅色菱形与30以上高条可读精度差一个量级，不能用统一布尔阈值。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "tick labels \"England (UK)\" and \"Flemish Region (BE)\" printed in blue; \"OECD average\" in bold inside a pale blue band",
+        "why": "轴标签的颜色/粗体本身编码实体类型与聚合行，需要轴标签样式作为可控属性。"
+      }
+    ]
+  }
+}

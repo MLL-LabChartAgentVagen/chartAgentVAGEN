@@ -1,0 +1,326 @@
+{
+  "stem": "m-trends-2025-en_p29",
+  "document": "m-trends-2025-en",
+  "tags": "untagged",
+  "model": "gpt-5.6-sol",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "via": "openrouter",
+  "max_tokens": 120000,
+  "seconds": 101.1,
+  "usage": {
+    "input_tokens": 8762,
+    "output_tokens": 6516,
+    "cache_read_tokens": 2365
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "**画出来要什么**\n\n页面含两个无编号图：8块比例树图与6柱纵向条形图。需支持块内类别及百分比、随块缩放的文字、柱内数值、纵排单位轴题、仅横向网格线、交错及换行的横轴标签，并让正文栏与图并排。\n\n**定位一个值难在哪**\n\n柱图的“10”出现于“RANSOMHUB”和“REDBIKE (Akira)”，必须依靠横轴类别区分；后者换行且标签上下交错。数值本身均直接印出，无需按刻度估读。\n\n**不确定的**\n\n两图均无图号、图例、来源或注释行。树图蓝色深浅是否编码数值未明示；首组被抽查的10按面积排序判断为“Backdoor”，但“Utility”也印有10%。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "Observed Malware Families by Category, 2024",
+          "subtitle": "Ransomware-Related",
+          "unit_text": "%",
+          "placement": "above"
+        },
+        "type": "treemap",
+        "type_other": "",
+        "panels": 1,
+        "series": 1,
+        "categories": 8,
+        "marks": 8,
+        "values_printed": "all",
+        "axes": [],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "inline_label",
+            "example": "Ransomware"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Tunneler"
+          ],
+          "value": "7%",
+          "value_source": "printed",
+          "why_hard": "The small tile uses a tiny label beside several adjacent tiles."
+        }
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "",
+          "title": "Most Frequently Seen Malware, 2024",
+          "subtitle": "Ransomware-Related",
+          "unit_text": "% of intrusions",
+          "placement": "above"
+        },
+        "type": "bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 1,
+        "categories": 6,
+        "marks": 6,
+        "values_printed": "all",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "% of intrusions",
+            "low": "0",
+            "high": "15",
+            "serves": "all bars"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "BEACON",
+            "high": "SYSTEMBC",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "BEACON"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "REDBIKE (Akira)"
+          ],
+          "value": "10%",
+          "value_source": "printed",
+          "why_hard": "Its wrapped label sits among category labels staggered across two rows."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "multi_figure_page",
+        "figure_id": "page",
+        "evidence": "Two separately titled graphics show malware categories and frequently seen malware."
+      },
+      {
+        "key": "side_text_bullets",
+        "figure_id": "f1",
+        "evidence": "A body-text column beginning “Compared to the overall metrics” runs beside the treemap."
+      },
+      {
+        "key": "side_text_bullets",
+        "figure_id": "f2",
+        "evidence": "A body-text column beginning “Compared to global metrics” runs beside the bar chart."
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f2",
+        "evidence": "The left value-axis title reads “% of intrusions”."
+      },
+      {
+        "key": "rotated_axis_title",
+        "figure_id": "f2",
+        "evidence": "“% of intrusions” is rotated vertically beside the left axis."
+      },
+      {
+        "key": "value_label_inside",
+        "figure_id": "f1",
+        "evidence": "Every percentage, including “34%” and “7%”, is printed inside its treemap tile."
+      },
+      {
+        "key": "value_label_inside",
+        "figure_id": "f2",
+        "evidence": "All six percentages are printed in white inside the blue bars."
+      },
+      {
+        "key": "wrapped_category_labels",
+        "figure_id": "f1",
+        "evidence": "“Credential Stealer” wraps onto two lines inside its tile."
+      },
+      {
+        "key": "wrapped_category_labels",
+        "figure_id": "f2",
+        "evidence": "“REDBIKE (Akira)” is split over two lines below its bar."
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f2",
+        "evidence": "Horizontal rules cross the plot at value ticks; no vertical grid lines are drawn."
+      }
+    ],
+    "new_components": [
+      {
+        "name": "unit_in_value_labels",
+        "figure_id": "f1",
+        "evidence": "Each printed treemap number is followed by a “%” inside its tile.",
+        "affects": [
+          2,
+          4
+        ]
+      },
+      {
+        "name": "unit_in_value_labels",
+        "figure_id": "f2",
+        "evidence": "Each white number inside a bar includes a percent sign.",
+        "affects": [
+          2,
+          4
+        ]
+      },
+      {
+        "name": "staggered_x_ticks",
+        "figure_id": "f2",
+        "evidence": "Category labels alternate between two vertical rows beneath the baseline.",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "34",
+        "figure_id": "f1",
+        "mark": "the Ransomware tile",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Ransomware"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "16",
+        "figure_id": "f1",
+        "mark": "the Other tile",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Other"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "12",
+        "figure_id": "f1",
+        "mark": "the Credential Stealer tile",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Credential Stealer"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "10",
+        "figure_id": "f1",
+        "mark": "the Backdoor tile",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "Backdoor"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "15",
+        "figure_id": "f2",
+        "mark": "the BEACON bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "BEACON"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "10",
+        "figure_id": "f2",
+        "mark": "the RANSOMHUB bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "RANSOMHUB"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "10",
+        "figure_id": "f2",
+        "mark": "the REDBIKE (Akira) bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "REDBIKE (Akira)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "9",
+        "figure_id": "f2",
+        "mark": "the BASTA bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "BASTA"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "9",
+        "figure_id": "f2",
+        "mark": "the LOCKBIT bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "LOCKBIT"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "7",
+        "figure_id": "f2",
+        "mark": "the SYSTEMBC bar",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "SYSTEMBC"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      }
+    ],
+    "hardest_step": 3,
+    "hardest_step_why": "两图数值均印出；但10和9重复，REDBIKE (Akira)又换行，最难把标签与单元格关联。 Evaluator note: Since f1 includes two 10% values, mapping the single spot-check 10 to Backdoor is a judgement based on apparent ordering, so this case is genuinely ambiguous from the image alone.",
+    "examples": [
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "“Observed Malware Families by Category, 2024” above “Ransomware-Related”, both above the treemap.",
+        "why": "需分别保存标题、副标题、单位及其位于图上方的位置。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f2",
+        "quote": "White labels “15%”, “10%”, “10%”, “9%”, “9%”, and “7%” sit inside the bars.",
+        "why": "需控制数值标签位于柱内，并保留百分号格式。"
+      },
+      {
+        "gap": "P3",
+        "figure_id": "f1",
+        "quote": "A prose column beginning “Compared to the overall metrics” sits to the right of the treemap.",
+        "why": "需导出整页结构，保留图与并排正文的相对位置。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f2",
+        "quote": "BEACON, REDBIKE (Akira), and LOCKBIT sit on one row; alternating labels sit lower.",
+        "why": "需新增交错横轴标签布局，并处理其中的两行标签。"
+      }
+    ]
+  }
+}

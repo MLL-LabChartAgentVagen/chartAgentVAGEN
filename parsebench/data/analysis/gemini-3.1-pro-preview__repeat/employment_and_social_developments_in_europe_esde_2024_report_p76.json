@@ -1,0 +1,330 @@
+{
+  "stem": "employment_and_social_developments_in_europe_esde_2024_report_p76",
+  "document": "employment_and_social_developments_in_europe_esde_2024_report",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "repeat",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 85.3,
+  "usage": {
+    "input_tokens": 5341,
+    "output_tokens": 11921,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n\n生成器需要支持非100%堆叠的柱状图绘制（各柱体高度不足100%），并支持图例和对应的颜色映射。同时需要支持双Y轴的混合图表（同一面板内包含柱状图与折线图），并能在图例中以文字明确指出对应坐标轴（如“left axis”和“right axis”）。此外，还需要支持图表外部复杂的标题区块（包含编号、主副标题）以及注记（Note、Source）和超链接文本（Click here to download chart）的排版布局。\n\n### 定位一个值难在哪\n\n以图3.4中2012年的“Tertiary”支出比例（抽查值17.5）为例，这是一个悬浮在柱体最上方的堆叠数据段。由于Y轴的网格线间距宽达20%，且没有任何数据标签，读数时需要先估算出顶部和底部的位置再相减。5%的误差容限对于17.5来说仅为0.875，在0-100%的宽泛视觉跨度下，肉眼提取这个高度并控制在如此小的绝对误差范围内几乎是不可能完成的。\n\n### 不确定的\n\n抽查值列表最后的 `1` 无法在当前页面的图表数据或正文中找到任何可靠的直接对应项。这可能是图3.5注记中“USD 1 000”的数字部分，也可能是转换率或其他页面的残留数据。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Chart 3.4",
+          "title": "School education receives the largest share of public expenditure on education",
+          "subtitle": "Weighted average EU share of government expenditure on education, by education level, 2012-2022",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "stacked_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 3,
+        "categories": 11,
+        "marks": 33,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "0%",
+            "high": "100%",
+            "serves": "all bars"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "2012",
+            "high": "2022",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "2012"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Pre-primary and primary"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "2012",
+            "Tertiary"
+          ],
+          "value": "17.5",
+          "value_source": "axis_read",
+          "why_hard": "It is a floating stacked segment evaluated against a Y-axis with 20% intervals, making precise visual subtraction highly inaccurate."
+        }
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "Chart 3.5",
+          "title": "Basic skills and efficiency of cumulative expenditure on education per student decreased post-COVID-19 pandemic",
+          "subtitle": "Average EU PISA score across reading, mathematics and science, and PISA EU efficiency score, 2012-2022",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "compound",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 4,
+        "marks": 8,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "",
+            "low": "470",
+            "high": "500",
+            "serves": "only the blue bars"
+          },
+          {
+            "side": "right",
+            "role": "value",
+            "unit_text": "",
+            "low": "0",
+            "high": "9",
+            "serves": "only the green line"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "2012",
+            "high": "2022",
+            "serves": "all marks"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "2012"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "PISA average score (left axis)"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "2012",
+            "PISA efficiency score (right axis)"
+          ],
+          "value": "7",
+          "value_source": "axis_read",
+          "why_hard": "Visual estimation of a point on the secondary axis with sparse gridlines is prone to absolute error."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "stacked_bar",
+        "figure_id": "f1",
+        "evidence": "the bars are divided into blue, green, and yellow stacked segments"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "page",
+        "evidence": "both charts feature horizontal dashed grid lines and no vertical ones"
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "page",
+        "evidence": "the legends for both charts are positioned horizontally below the plot areas"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "page",
+        "evidence": "lines starting with 'Note:' and 'Source:' sit beneath both figures"
+      },
+      {
+        "key": "data_link_below_figure",
+        "figure_id": "page",
+        "evidence": "'Click here to download chart.' is printed below the source notes on both figures"
+      },
+      {
+        "key": "mixed_marks",
+        "figure_id": "f2",
+        "evidence": "the chart contains both vertical blue bars and a solid green line"
+      },
+      {
+        "key": "dual_axis",
+        "figure_id": "f2",
+        "evidence": "there is a left axis for scores (470-500) and a right axis for efficiency (0-9)"
+      },
+      {
+        "key": "axis_starts_above_zero",
+        "figure_id": "f2",
+        "evidence": "the lowest tick on the left value axis is 470, not zero"
+      },
+      {
+        "key": "multi_figure_page",
+        "figure_id": "page",
+        "evidence": "the page contains two separately numbered and captioned figures, Chart 3.4 and Chart 3.5"
+      },
+      {
+        "key": "footnote_marker",
+        "figure_id": "page",
+        "evidence": "the body text contains a superscript '(157)' linking to a footnote at the bottom"
+      }
+    ],
+    "new_components": [],
+    "spot_checks": [
+      {
+        "value": "31.5",
+        "figure_id": "f1",
+        "mark": "the 2012 Pre-primary and primary segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2012",
+          "Pre-primary and primary"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "39.0",
+        "figure_id": "f1",
+        "mark": "the 2012 Secondary segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2012",
+          "Secondary"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "17.5",
+        "figure_id": "f1",
+        "mark": "the 2012 Tertiary segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2012",
+          "Tertiary"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "34.0",
+        "figure_id": "f1",
+        "mark": "the 2022 Pre-primary and primary segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2022",
+          "Pre-primary and primary"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "37.0",
+        "figure_id": "f1",
+        "mark": "the 2022 Secondary segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2022",
+          "Secondary"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "17.0",
+        "figure_id": "f1",
+        "mark": "the 2022 Tertiary segment",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2022",
+          "Tertiary"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "492",
+        "figure_id": "f2",
+        "mark": "the 2012 PISA average score bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2012",
+          "PISA average score (left axis)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "474",
+        "figure_id": "f2",
+        "mark": "the 2022 PISA average score bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2022",
+          "PISA average score (left axis)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "7",
+        "figure_id": "f2",
+        "mark": "the 2012 PISA efficiency score point",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2012",
+          "PISA efficiency score (right axis)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "1",
+        "figure_id": "not_found",
+        "mark": "cannot locate this value reliably on either chart or text",
+        "printed_on_figure": false,
+        "addressing_keys": [],
+        "keys_verbatim": false,
+        "blocked_step": 0
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "图3.4中诸如17.5的悬浮堆叠段只能对照左侧20%间隔的粗略Y轴进行双向估读再相减。段处于较高位置且无水平基线辅助，5%的容差范围极小，这使肉眼识别必定受阻。",
+    "examples": [
+      {
+        "gap": "P9",
+        "figure_id": "f2",
+        "quote": "legend specifies 'PISA average score (left axis)' for bars and 'PISA efficiency score (right axis)' for the line",
+        "why": "图表同时融合了柱状图和折线图两种标记样式，并且依赖双Y轴进行独立的数值映射，目前的渲染管线不支持这种多轴多标记复合结构。"
+      },
+      {
+        "gap": "P1",
+        "figure_id": "f1",
+        "quote": "Tertiary segment values such as 17.5 in 2012",
+        "why": "堆叠柱状图中处于中高部的悬空分段受制于极宽的轴刻度，很难保持固定的提取精度，暴露了当前简单二元判定难以处理可变相对误差的缺陷。"
+      }
+    ]
+  }
+}

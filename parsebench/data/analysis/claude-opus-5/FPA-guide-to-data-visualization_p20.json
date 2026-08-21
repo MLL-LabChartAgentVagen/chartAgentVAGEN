@@ -1,0 +1,414 @@
+{
+  "stem": "FPA-guide-to-data-visualization_p20",
+  "document": "FPA-guide-to-data-visualization",
+  "tags": "untagged",
+  "model": "claude-opus-5",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 93.6,
+  "usage": {
+    "input_tokens": 13846,
+    "output_tokens": 7699,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "## 画出来要什么\n本页要能画三件事：两张结构完全相同的饼图（8个扇区、全部带引线的\"类别+百分比\"外标签，标题行把名称与总额并排写成 `FY 14 Q2 Forecast  Total: $750,000`），以及一张\"改造后\"的水平条形图——刻度轴 `0% 10% … 70%` 画在图顶部、类别名在左侧且换行（`Depreciation, Interest and Maintenance`），深蓝条为 `FY14 Jan Actual`，橙色短竖线（不是条）为 `FY14 Q2 Forecast`，图例挤在绘图区右下角。左侧还有一整栏浅青底的正文，与三图共用同一横向版面。\n\n## 定位一个值难在哪\n`9`：它在 f1 是 `Contracts and Professional Fees 9%`，在 f2 却是 `Depreciation, Interest and Maintenance 9%`。两饼类别名逐字相同，只有标题 `FY 14 Q2 Forecast` / `FY 14 Jan Actual` 能区分，一行表若丢掉图标题，就无法只指向其中一个。f3 里同一个 9% 又以无数字的条长出现。\n\n## 不确定的\nf3 橙色刻度线的精确位置：无数值标签、刻度间距10%约45像素，7%与8%读不到5%容差；图例究竟算在绘图区内还是下方也只能按位置判断。饼图 `Total: $387,000k` 中的 `k` 是否笔误，无从核实。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "",
+          "title": "FY 14 Q2 Forecast  Total: $750,000",
+          "subtitle": "",
+          "unit_text": "Total: $750,000",
+          "placement": "above"
+        },
+        "type": "pie",
+        "type_other": "",
+        "panels": 1,
+        "series": 1,
+        "categories": 8,
+        "marks": 8,
+        "values_printed": "all",
+        "axes": [],
+        "key_parts": [
+          {
+            "role": "panel",
+            "label_source": "heading",
+            "example": "FY 14 Q2 Forecast  Total: $750,000"
+          },
+          {
+            "role": "category",
+            "label_source": "inline_label",
+            "example": "Contracts and Professional Fees"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "FY 14 Q2 Forecast  Total: $750,000",
+            "Travel and Business Entertainment"
+          ],
+          "value": "2%",
+          "value_source": "printed",
+          "why_hard": "Sliver slice; three neighbouring slices all read 2%, leader lines cross above the pie"
+        }
+      },
+      {
+        "id": "f2",
+        "heading": {
+          "figure_number": "",
+          "title": "FY 14 Jan Actual  Total: $387,000k",
+          "subtitle": "",
+          "unit_text": "Total: $387,000k",
+          "placement": "above"
+        },
+        "type": "pie",
+        "type_other": "",
+        "panels": 1,
+        "series": 1,
+        "categories": 8,
+        "marks": 8,
+        "values_printed": "all",
+        "axes": [],
+        "key_parts": [
+          {
+            "role": "panel",
+            "label_source": "heading",
+            "example": "FY 14 Jan Actual  Total: $387,000k"
+          },
+          {
+            "role": "category",
+            "label_source": "inline_label",
+            "example": "Office Expenses and Other Costs*"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "FY 14 Jan Actual  Total: $387,000k",
+            "Computer Services"
+          ],
+          "value": "2.7%",
+          "value_source": "printed",
+          "why_hard": "2.7% slice is a few pixels wide; label sits far above with a long leader line"
+        }
+      },
+      {
+        "id": "f3",
+        "heading": {
+          "figure_number": "",
+          "title": "Data graphed after applying data visualization rules:",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 8,
+        "marks": 16,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "top",
+            "role": "value",
+            "unit_text": "",
+            "low": "0%",
+            "high": "70%",
+            "serves": "all navy bars and all orange forecast tick markers"
+          },
+          {
+            "side": "left",
+            "role": "category",
+            "unit_text": "",
+            "low": "Salaries and Benefits",
+            "high": "Editing/Publishing",
+            "serves": "the eight expense rows"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "Conference, Meetings and Exhibits"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "FY14 Q2 Forecast"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "Office Expenses and Other Costs*",
+            "FY14 Q2 Forecast"
+          ],
+          "value": "~7%",
+          "value_source": "axis_read",
+          "why_hard": "Series is a 3-px orange tick, no labels; 10% tick spacing makes 5% tolerance on 7% unreachable"
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "multi_figure_page",
+        "figure_id": "page",
+        "evidence": "Three separately titled charts: two pies plus 'Data graphed after applying data visualization rules:'"
+      },
+      {
+        "key": "side_text_bullets",
+        "figure_id": "page",
+        "evidence": "Tinted left column 'Pie charts' with bulleted prose runs level with all three figures"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f2",
+        "evidence": "'*Other costs category includes marketing and promotions costs.' in small print under the second pie"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f3",
+        "evidence": "Same note line repeated in small print directly below the bar chart"
+      },
+      {
+        "key": "footnote_marker",
+        "figure_id": "f1",
+        "evidence": "Slice label reads 'Office Expenses and Other Costs*' with an asterisk"
+      },
+      {
+        "key": "value_label_outside",
+        "figure_id": "f1",
+        "evidence": "Every percentage sits outside the circle on a leader line, e.g. 'Salaries and Benefits 61%'"
+      },
+      {
+        "key": "value_label_outside",
+        "figure_id": "f2",
+        "evidence": "'Contracts and Professional Fees 10.1%' printed outside the pie on a leader line"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "Title line carries 'Total: $750,000', the only thing fixing what the percentages are of"
+      },
+      {
+        "key": "horizontal_bars",
+        "figure_id": "f3",
+        "evidence": "Category names on the left, navy bars grow rightwards to the 0%-70% scale"
+      },
+      {
+        "key": "tick_marker_as_series",
+        "figure_id": "f3",
+        "evidence": "Orange short vertical dashes at each row, legended 'FY14 Q2 Forecast', on the bars' axis"
+      },
+      {
+        "key": "mixed_marks",
+        "figure_id": "f3",
+        "evidence": "Navy bars and orange tick glyphs share one panel and one scale"
+      },
+      {
+        "key": "legend_inside_plot",
+        "figure_id": "f3",
+        "evidence": "'FY14 Jan Actual  FY14 Q2 Forecast' sits in the plot area right of the Editing/Publishing row"
+      },
+      {
+        "key": "wrapped_category_labels",
+        "figure_id": "f3",
+        "evidence": "'Depreciation, Interest / and Maintenance' and 'Travel and Business / Entertainment' wrap to two lines"
+      },
+      {
+        "key": "no_value_axis",
+        "figure_id": "f1",
+        "evidence": "Pie has no scale at all; the 61%, 9%, 7% are readable only as printed labels"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "value_axis_on_top",
+        "figure_id": "f3",
+        "evidence": "'0% 10% 20% 30% 40% 50% 60% 70%' printed above the first bar row, not below the plot",
+        "affects": [
+          2,
+          3
+        ]
+      },
+      {
+        "name": "before_after_redesign_pair",
+        "figure_id": "page",
+        "evidence": "Same eight expense shares drawn as two pies, then re-drawn as one bar chart with the same categories",
+        "affects": [
+          1,
+          3
+        ]
+      },
+      {
+        "name": "pie_leader_line_labels",
+        "figure_id": "f1",
+        "evidence": "Category name and percentage stacked at the end of a leader line pointing to each slice",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "name": "total_in_title_line",
+        "figure_id": "f2",
+        "evidence": "'FY 14 Jan Actual  Total: $387,000k' puts the whole-of-pie total inside the title line",
+        "affects": [
+          4
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "61",
+        "figure_id": "f1",
+        "mark": "the Salaries and Benefits slice of the Q2 Forecast pie",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "FY 14 Q2 Forecast  Total: $750,000",
+          "Salaries and Benefits"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "60.3",
+        "figure_id": "f2",
+        "mark": "the Salaries and Benefits slice of the Jan Actual pie",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "FY 14 Jan Actual  Total: $387,000k",
+          "Salaries and Benefits"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "9",
+        "figure_id": "f1",
+        "mark": "the Contracts and Professional Fees slice of the Q2 Forecast pie",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "FY 14 Q2 Forecast  Total: $750,000",
+          "Contracts and Professional Fees"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "10.1",
+        "figure_id": "f2",
+        "mark": "the Contracts and Professional Fees slice of the Jan Actual pie",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "FY 14 Jan Actual  Total: $387,000k",
+          "Contracts and Professional Fees"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "10",
+        "figure_id": "f1",
+        "mark": "the Depreciation, Interest and Maintenance slice of the Q2 Forecast pie",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "FY 14 Q2 Forecast  Total: $750,000",
+          "Depreciation, Interest and Maintenance"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "9",
+        "figure_id": "f2",
+        "mark": "the Depreciation, Interest and Maintenance slice of the Jan Actual pie",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "FY 14 Jan Actual  Total: $387,000k",
+          "Depreciation, Interest and Maintenance"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "7",
+        "figure_id": "f1",
+        "mark": "the Office Expenses and Other Costs* slice of the Q2 Forecast pie",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "FY 14 Q2 Forecast  Total: $750,000",
+          "Office Expenses and Other Costs*"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "8",
+        "figure_id": "f2",
+        "mark": "the Office Expenses and Other Costs* slice of the Jan Actual pie",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "FY 14 Jan Actual  Total: $387,000k",
+          "Office Expenses and Other Costs*"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "7",
+        "figure_id": "f1",
+        "mark": "the Conference, Meetings and Exhibits slice of the Q2 Forecast pie",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "FY 14 Q2 Forecast  Total: $750,000",
+          "Conference, Meetings and Exhibits"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 3
+      },
+      {
+        "value": "5",
+        "figure_id": "f2",
+        "mark": "the Conference, Meetings and Exhibits slice of the Jan Actual pie",
+        "printed_on_figure": true,
+        "addressing_keys": [
+          "FY 14 Jan Actual  Total: $387,000k",
+          "Conference, Meetings and Exhibits"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      }
+    ],
+    "hardest_step": 3,
+    "hardest_step_why": "两饼类别名完全相同：9% 与 7% 各出现两次，必须靠 `FY 14 Q2 Forecast` / `FY 14 Jan Actual` 标题区分，解析常丢标题。",
+    "examples": [
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "FY 14 Q2 Forecast  Total: $750,000",
+        "why": "标题行把图名与总额并排；单位/总额不在轴上而在标题内，现管线无此标题字段结构。"
+      },
+      {
+        "gap": "P9",
+        "figure_id": "f3",
+        "quote": "navy bars with a short orange vertical tick per row; legend 'FY14 Jan Actual   FY14 Q2 Forecast'",
+        "why": "同一坐标上两种标记形状，取值须记录读自条还是橙色刻度线，现无法生成。"
+      },
+      {
+        "gap": "P3",
+        "figure_id": "page",
+        "quote": "Two pies with identical slice labels, then 'Data graphed after applying data visualization rules:' below them",
+        "why": "同页三图共享类别名，导出需把各自标题挂到表上方，否则 9% 无法归属。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f3",
+        "quote": "0%  10%  20%  30%  40%  50%  60%  70% printed above the top bar row",
+        "why": "数值轴画在图顶部（横条图上轴），现有键只覆盖右侧轴；需新增轴位置维度。"
+      }
+    ]
+  }
+}

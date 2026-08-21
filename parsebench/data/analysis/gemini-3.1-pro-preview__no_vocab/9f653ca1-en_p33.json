@@ -1,0 +1,276 @@
+{
+  "stem": "9f653ca1-en_p33",
+  "document": "9f653ca1-en",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "no_vocab",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 68.6,
+  "usage": {
+    "input_tokens": 3143,
+    "output_tokens": 9538,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n需要支持双面板并排布局（Panel A与Panel B），每个面板独立包含主、副标题，底部分类X轴和各自独立单位（% pts 与 % of nominal World GDP）的数值Y轴。需要支持堆叠柱状图与散点图（三角形标记）的混合渲染（即复合图表）。需要在两个面板正上方提供一个全局共享的图例，且该图例需同时支持颜色映射（对应柱体分段）和形状映射（对应三角形）。图B还需要支持明显的水平零刻度基准线，以及跨越零轴前后的负值堆叠绘制。\n\n### 定位一个值难在哪\n以图A中2026-27期的“South-East Asian economies”为例，目标值约为0.6。定位该值不仅需要跨面板关联图例，最难的是由于图表为堆叠柱状且无数据标签，读取该值必须分别估算其上下边界的Y轴坐标并作差。在Y轴刻度间距为1（总高为5）的情况下，肉眼完全无法将0.6的差值精确读取到5%（即±0.03）的容差范围内。\n\n### 不确定的\n三角形标记（World, %）在图B（经常账户余额）中的确切业务含义并不直观，仅能通过下方文字注释推断可能是国家间数据加总后的统计误差（未归零的部分），这在解读数据逻辑时容易产生不确定性。此外，某些极薄的堆叠分段（如India）数值极小，仅凭像素高度极难确认其确切大小或是否存在四舍五入的失真。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 1.18.",
+          "title": "Trade patterns are evolving with emerging markets becoming a key driver of growth",
+          "subtitle": "",
+          "unit_text": "",
+          "placement": "above"
+        },
+        "type": "compound",
+        "type_other": "",
+        "panels": 2,
+        "series": 8,
+        "categories": 5,
+        "marks": 80,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "% pts",
+            "low": "0",
+            "high": "5",
+            "serves": "all marks in Panel A"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "2001-09",
+            "high": "2026-27",
+            "serves": "all marks in Panel A"
+          },
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "% of nominal World GDP",
+            "low": "-1.5",
+            "high": "1.5",
+            "serves": "all marks in Panel B"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "2001-09",
+            "high": "2026-27",
+            "serves": "all marks in Panel B"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "panel",
+            "label_source": "panel_title",
+            "example": "A. Contributions to global trade growth"
+          },
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "2001-09"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "South-East Asian economies"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "A. Contributions to global trade growth",
+            "2026-27",
+            "South-East Asian economies"
+          ],
+          "value": "0.6",
+          "value_source": "axis_read",
+          "why_hard": "Requires subtracting the Y-coordinate of the segment's bottom from its top against a tick spacing of 1."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "shared_legend_above",
+        "figure_id": "f1",
+        "evidence": "a single legend sits above both panels mapping colors and shapes",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "panel_title",
+        "figure_id": "f1",
+        "evidence": "each panel has a title like 'A. Contributions...'",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "panel_subtitle",
+        "figure_id": "f1",
+        "evidence": "Panel A has 'Averages of annual growth' beneath its title",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "mixed_marks",
+        "figure_id": "f1",
+        "evidence": "stacked bars and a triangle marker plotted together",
+        "affects": [
+          2,
+          3
+        ]
+      },
+      {
+        "key": "horizontal_zero_line",
+        "figure_id": "f1",
+        "evidence": "thick black line at Y=0 in Panel B",
+        "affects": [
+          2
+        ]
+      },
+      {
+        "key": "independent_panel_units",
+        "figure_id": "f1",
+        "evidence": "each panel has its own Y-axis unit text above the top tick",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "new_components": [
+      {
+        "name": "shared_legend_mixed_marks",
+        "figure_id": "f1",
+        "evidence": "legend maps both colors for bars and a shape for a marker",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "4.5",
+        "figure_id": "f1",
+        "mark": "the 2001-09 World, % triangle in Panel A",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. Contributions to global trade growth",
+          "2001-09",
+          "World, %"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "0.6",
+        "figure_id": "f1",
+        "mark": "the 2026-27 South-East Asian economies bar segment in Panel A",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. Contributions to global trade growth",
+          "2026-27",
+          "South-East Asian economies"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "0.4",
+        "figure_id": "f1",
+        "mark": "the 2001-09 Other advanced economies bar segment in Panel B",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "B. Contributions to global current account balance",
+          "2001-09",
+          "Other advanced economies"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "0.9",
+        "figure_id": "f1",
+        "mark": "the 2015-19 Europe bar segment in Panel B",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "B. Contributions to global current account balance",
+          "2015-19",
+          "Europe"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "0.4",
+        "figure_id": "f1",
+        "mark": "the 2015-19 China bar segment in Panel B",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "B. Contributions to global current account balance",
+          "2015-19",
+          "China"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "0.7",
+        "figure_id": "f1",
+        "mark": "the 2022-25 North America bar segment in Panel A",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "A. Contributions to global trade growth",
+          "2022-25",
+          "North America"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-0.1",
+        "figure_id": "f1",
+        "mark": "the 2022-25 World, % triangle in Panel B",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "B. Contributions to global current account balance",
+          "2022-25",
+          "World, %"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "该图为堆叠柱状图且无数据标签，Y轴刻度间距较大（图A间距为1，图B为0.5），要通过肉眼高度差将0.6或0.4等值读取到5%（0.03或0.02）容差内是不可能的。",
+    "examples": [
+      {
+        "gap": "P2",
+        "figure_id": "f1",
+        "quote": "A. Contributions to global trade growth and B. Contributions to global current account balance",
+        "why": "图表的不同面板拥有各自独立的标题、单位和数据含义，必须将面板名称提取并加入键值才能准确定位和区分数据点。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "Figure 1.18. Trade patterns are evolving with emerging markets becoming a key driver of growth",
+        "why": "图表的主标题和编号格式十分规范，需要作为一个独立且结构化的字段被单独提取，以保留文档的原始层级。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "A shared legend for 'World, %' triangle and colored regions placed above both panels",
+        "why": "当前的生成框架可能难以完美处理跨多面板共享的图例，尤其是该图例中混合了柱体的颜色映射与散点（标记）的形状映射。"
+      }
+    ]
+  }
+}

@@ -1,0 +1,212 @@
+{
+  "stem": "semiconductor_sector_study_p22",
+  "document": "semiconductor_sector_study",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "seconds": 92.3,
+  "usage": {
+    "input_tokens": 5314,
+    "output_tokens": 11546,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "### 画出来要什么\n\n生成器需要绘制一个柱形图，其X轴为分类的时间轴（跳过了没有数据的年份，但刻度间距保持一致）。特别地，图中的柱子需要被纯白色的水平细线切割成多个堆积的小段，且这些小段没有对应的图例。Y轴需要旋转轴标题，并在刻度数字后附加“M”作为单位后缀。\n\n### 定位一个值难在哪\n\n以2023年的值 `218` 为例，这个值是整根柱子的总高度。由于柱子被切分成大量无标签的小分段，一个标准的图表解析器很可能会试图提取各个小分段的值，而不会在最终表格中输出总和。如果没有总和列，这个目标值在表格中将完全缺失。\n\n### 不确定的\n\nX轴跳过了某些年份（如2008、2009），不确定这在生成时是作为完全连续的时间轴处理但去掉了无数据点，还是纯粹将其视为一系列分类标签。此外，2022和2023年柱子中极薄的分段数量难以精确清点。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Figure 4.1",
+          "title": "Latest Fundraisings",
+          "subtitle": "",
+          "unit_text": "GBP",
+          "placement": "above"
+        },
+        "type": "stacked_bar",
+        "type_other": "",
+        "panels": 1,
+        "series": 1,
+        "categories": 11,
+        "marks": 30,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "Fundraisings - Amount received by the company in its latest fundraising (GBP)",
+            "low": "0M",
+            "high": "220M",
+            "serves": "all bars"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "2007",
+            "high": "2023",
+            "serves": "all bars"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2023"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "2023"
+          ],
+          "value": "218",
+          "value_source": "axis_read",
+          "why_hard": "The value is the total height of a heavily segmented bar, requiring aggregation."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "stacked_bar",
+        "figure_id": "f1",
+        "evidence": "bars are sliced into multiple horizontal segments"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "the y axis title contains (GBP)"
+      },
+      {
+        "key": "rotated_axis_title",
+        "figure_id": "f1",
+        "evidence": "the y axis title is set vertically"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "Source: Beauhurst... printed below the chart"
+      },
+      {
+        "key": "hgrid_only",
+        "figure_id": "f1",
+        "evidence": "horizontal grid lines only across the plot"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "unlabelled_stacked_segments",
+        "figure_id": "f1",
+        "evidence": "bars are sliced into segments without a legend",
+        "affects": [
+          1,
+          2
+        ]
+      },
+      {
+        "name": "unit_suffix_on_ticks",
+        "figure_id": "f1",
+        "evidence": "Y-axis ticks have 'M' appended",
+        "affects": [
+          2
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "2",
+        "figure_id": "f1",
+        "mark": "the total height of the 2007 bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2007"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "0",
+        "figure_id": "f1",
+        "mark": "the empty space above the 2010 tick",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2010"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "23",
+        "figure_id": "f1",
+        "mark": "the total height of the 2017 bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2017"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "189",
+        "figure_id": "f1",
+        "mark": "the total height of the 2020 bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2020"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "22",
+        "figure_id": "f1",
+        "mark": "the total height of the 2021 bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2021"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "84",
+        "figure_id": "f1",
+        "mark": "the total height of the 2022 bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2022"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 0
+      },
+      {
+        "value": "218",
+        "figure_id": "f1",
+        "mark": "the total height of the 2023 bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2023"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "考察的值（如218、189）是整根柱子的总高度。由于柱子被切分为无标签的小分段，解析器容易只提取分段值而遗漏总和，导致该值在表格中无法被找到。",
+    "examples": [
+      {
+        "gap": "P1",
+        "figure_id": "f1",
+        "quote": "segments within the 2023 bar",
+        "why": "这些细小的未命名堆叠段极薄且无数值标签，管线很难在没有标签的情况下达到极高的视觉读取精度来提取各个分段。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "thin white lines slicing the teal bars",
+        "why": "这里的堆叠不代表分类维度，而是构成总和的各个实体实例。当前管线缺乏将条形切分为无名实例来表示密度的机制。"
+      }
+    ]
+  }
+}

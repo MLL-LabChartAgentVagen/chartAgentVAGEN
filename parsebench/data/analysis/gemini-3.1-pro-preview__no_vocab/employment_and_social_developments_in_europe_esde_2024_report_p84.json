@@ -1,0 +1,248 @@
+{
+  "stem": "employment_and_social_developments_in_europe_esde_2024_report_p84",
+  "document": "employment_and_social_developments_in_europe_esde_2024_report",
+  "tags": "need_estimate",
+  "model": "gemini-3.1-pro-preview",
+  "control": "no_vocab",
+  "effort": "high",
+  "dpi": 150,
+  "max_tokens": 64000,
+  "seconds": 47.2,
+  "usage": {
+    "input_tokens": 3202,
+    "output_tokens": 6660,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "## 画出来要什么\n\n要生成这个页面，图表生成器需要能够绘制带有5条不同颜色实线的折线图（且数据点无标记点）。图表只包含水平的虚线网格线，无垂直网格线。X轴代表时间（年份，2021至2040，每年一个刻度），Y轴代表数值，其标题旋转90度显示在左侧。图例需要水平排列在图表正下方。此外，图表具有一个由编号（Chart 3.11）、主标题和副标题（副标题中包含单位信息）组成的复合标题区，放置在绘图区上方；绘图区下方还有两行说明文本（Note和Source）以及一个链接。\n\n## 定位一个值难在哪\n\n以 `0.138` 为例，定位该值需要用到X轴的时间标签 `2027` 和图例中的类别标签 `Quintile 5`。最大的难点在于数值读取：所有的数值都没有直接标注在图表中，必须通过将浅蓝色折线的顶点映射到Y轴上来估算。Y轴的刻度间距为 `0.02`（0.12 到 0.14），而需要读取的数值是小数点后三位的 `0.138`，这完全超出了肉眼能够估算到5%误差范围内的极限，必然会在读取数值这一步受阻。\n\n## 不确定的\n\n对于给定的 `0.11` 这个数值，在图表中并没有任何一条线在2027年达到此值。阅读正文后发现，它是文本中提到的整体达到峰值的水平（\"reaching a peak of +0.11% in 2027\"），图表并未将其作为单独的线条画出，因此将其标记为在图表中无法找到。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Chart 3.11",
+          "title": "Investment in ALMPs is projected to increase employment during and after the investment period",
+          "subtitle": "Expected impact on employment of investment in labour supply increasing intervention fields of the ESF+, 2021-2027 programming period, by income quintile (% deviation from baseline)",
+          "unit_text": "(% deviation from baseline)",
+          "placement": "above"
+        },
+        "type": "line",
+        "type_other": "",
+        "panels": 1,
+        "series": 5,
+        "categories": 20,
+        "marks": 100,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "% deviation from baseline",
+            "low": "0.00",
+            "high": "0.16",
+            "serves": "all lines"
+          },
+          {
+            "side": "bottom",
+            "role": "time",
+            "unit_text": "",
+            "low": "2021",
+            "high": "2040",
+            "serves": "all lines"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "time",
+            "label_source": "axis_tick",
+            "example": "2027"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Quintile 5"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "2027",
+            "Quintile 5"
+          ],
+          "value": "0.138",
+          "value_source": "axis_read",
+          "why_hard": "The y-axis increments by 0.02, making it impossible to read 0.138 visually within a 5% tolerance."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "y_axis_title",
+        "figure_id": "f1",
+        "evidence": "the y axis carries the rotated text '% deviation from baseline'",
+        "affects": [
+          4
+        ]
+      },
+      {
+        "key": "horizontal_dashed_gridlines",
+        "figure_id": "f1",
+        "evidence": "thin dashed lines extend horizontally from every y-axis tick",
+        "affects": []
+      },
+      {
+        "key": "legend_below_plot",
+        "figure_id": "f1",
+        "evidence": "the legend with 5 quintile entries sits horizontally below the x axis",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "key": "lines_without_markers",
+        "figure_id": "f1",
+        "evidence": "the time series lines are smooth without drawn dots at data points",
+        "affects": [
+          2
+        ]
+      }
+    ],
+    "new_components": [],
+    "spot_checks": [
+      {
+        "value": "0.138",
+        "figure_id": "f1",
+        "mark": "the Quintile 5 line at 2027",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2027",
+          "Quintile 5"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "0.122",
+        "figure_id": "f1",
+        "mark": "the Quintile 4 line at 2027",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2027",
+          "Quintile 4"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "0.095",
+        "figure_id": "f1",
+        "mark": "the Quintile 3 line at 2027",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2027",
+          "Quintile 3"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "0.09",
+        "figure_id": "f1",
+        "mark": "the Quintile 2 line at 2027",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2027",
+          "Quintile 2"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "0.078",
+        "figure_id": "f1",
+        "mark": "the Quintile 1 line at 2027",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2027",
+          "Quintile 1"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "0.04",
+        "figure_id": "f1",
+        "mark": "the Quintile 1 line at 2035",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2035",
+          "Quintile 1"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "0.02",
+        "figure_id": "f1",
+        "mark": "the Quintile 1 line at 2022",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2022",
+          "Quintile 1"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "0.11",
+        "figure_id": "not_found",
+        "mark": "not on chart; mentioned in body text as an overall peak",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2027"
+        ],
+        "keys_verbatim": false,
+        "blocked_step": 1
+      },
+      {
+        "value": "0.03",
+        "figure_id": "f1",
+        "mark": "the Quintile 1 line at 2030",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2030",
+          "Quintile 1"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "0.10",
+        "figure_id": "f1",
+        "mark": "the Quintile 5 line at 2025",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "2025",
+          "Quintile 5"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "图表没有任何直接印在图上的数值，所有给定目标值（如0.138）都需要通过刻度间距为0.02的Y轴估算，这在视觉上无法达到5%的允许误差要求。",
+    "examples": [
+      {
+        "gap": "P1",
+        "figure_id": "f1",
+        "quote": "the y-axis ticks read 0.00, 0.02, 0.04 up to 0.16",
+        "why": "坐标轴的物理分辨率限制了读取精度。依靠间距为0.02的刻度线，无法将未标注数值的高精度数据（如0.138）准确读取并写入表格。"
+      },
+      {
+        "gap": "P7",
+        "figure_id": "f1",
+        "quote": "Chart 3.11 Investment in ALMPs... Expected impact... (% deviation from baseline)",
+        "why": "当前的结构无法将包含图表编号、主标题以及带单位长段副标题的组合作为一个完整的独立字段导出并重构在图表上方。"
+      }
+    ]
+  }
+}

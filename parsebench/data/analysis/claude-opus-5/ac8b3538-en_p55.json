@@ -1,0 +1,321 @@
+{
+  "stem": "ac8b3538-en_p55",
+  "document": "ac8b3538-en",
+  "tags": "need_estimate",
+  "model": "claude-opus-5",
+  "control": "",
+  "effort": "high",
+  "dpi": 150,
+  "seconds": 90.9,
+  "usage": {
+    "input_tokens": 13855,
+    "output_tokens": 7294,
+    "cache_read_tokens": 0
+  },
+  "retried_on_empty": false,
+  "answer": {
+    "report_md": "**画出来要什么**\n单面板组合图：39 个类别槽（GRC…CRI，含内嵌的 OECD 平均），每槽一根深绿柱（Women）加一个绿色菱形点（Men），共约 78 个标记；柱可正可负，零线穿过图中；绘图区为浅灰底色；图例位于标题与绘图区之间的灰条内，序列名带排序箭头「Women (↗)」；纵轴刻度 6 到 -12、步长 2，单位「p.p」写在最高刻度之上；横轴为约 45° 旋转的三字母国家代码；红色单柱把 OECD 标为聚合值；图下有 Note/Source 与 StatLink 链接。\n\n**定位一个值难在哪**\n以 -2.0（OECD 的 Women 柱，红色）为例：图上不印数字，刻度间距 2 p.p，而 5% 容差只有 0.1 p.p；同时 OECD 柱与相邻 FIN、ITA 的柱几乎同高，仅靠颜色区分聚合行；一行还要同时携带「OECD」与「Women (↗)」两个标签，箭头字符是否被解析器保留也不确定。\n\n**不确定的**\n绘图区是否有网格线看不清；-9.5 出现两次，我按 ESP 的柱与菱形分配，也可能是 GRC 柱；-6.2/-6.3、2.5 的国家归属为按位置推测（SVK、IRL、COL）。",
+    "figures": [
+      {
+        "id": "f1",
+        "heading": {
+          "figure_number": "Annex Figure 1.B.2.",
+          "title": "Change in unemployment risk by gender",
+          "subtitle": "Percentage point change in unemployment rate by gender, 2015-22",
+          "unit_text": "p.p",
+          "placement": "above"
+        },
+        "type": "compound",
+        "type_other": "",
+        "panels": 1,
+        "series": 2,
+        "categories": 39,
+        "marks": 78,
+        "values_printed": "none",
+        "axes": [
+          {
+            "side": "left",
+            "role": "value",
+            "unit_text": "p.p",
+            "low": "6",
+            "high": "-12",
+            "serves": "all Women bars and all Men diamonds"
+          },
+          {
+            "side": "bottom",
+            "role": "category",
+            "unit_text": "",
+            "low": "GRC",
+            "high": "CRI",
+            "serves": "all 39 country/aggregate slots"
+          }
+        ],
+        "key_parts": [
+          {
+            "role": "category",
+            "label_source": "axis_tick",
+            "example": "OECD"
+          },
+          {
+            "role": "series",
+            "label_source": "legend",
+            "example": "Women (\\u2197)"
+          }
+        ],
+        "worked_example": {
+          "key": [
+            "OECD",
+            "Women (\\u2197)"
+          ],
+          "value": "about -2.1",
+          "value_source": "axis_read",
+          "why_hard": "No printed value; ticks every 2 p.p; red OECD bar sits among near-identical neighbouring bars."
+        }
+      }
+    ],
+    "components": [
+      {
+        "key": "mixed_marks",
+        "figure_id": "f1",
+        "evidence": "dark green bars for Women plus green diamond markers for Men in the same panel"
+      },
+      {
+        "key": "negative_values",
+        "figure_id": "f1",
+        "evidence": "axis reads 6 down to -12; most bars hang below the drawn 0 line"
+      },
+      {
+        "key": "highlighted_category",
+        "figure_id": "f1",
+        "evidence": "the OECD bar is red while every other bar is dark green"
+      },
+      {
+        "key": "legend_above_plot",
+        "figure_id": "f1",
+        "evidence": "grey band with 'Women (\\u2197)' and 'Men' sits between subtitle and plot area"
+      },
+      {
+        "key": "source_note_lines",
+        "figure_id": "f1",
+        "evidence": "'Note: OECD is the unweighted average...' and 'Source: OECD calculations based on...'"
+      },
+      {
+        "key": "data_link_below_figure",
+        "figure_id": "f1",
+        "evidence": "'StatLink' logo with 'https://stat.link/46w2xu' under the note lines"
+      },
+      {
+        "key": "rotated_x_ticks",
+        "figure_id": "f1",
+        "evidence": "'GRC', 'ESP', 'SVK' ... 'CRI' set at roughly 45 degrees under the axis"
+      },
+      {
+        "key": "abbrev_category_axis",
+        "figure_id": "f1",
+        "evidence": "category ticks are three-letter codes: GRC, ESP, SVK, NLD, OECD, CRI"
+      },
+      {
+        "key": "axis_title_above_axis",
+        "figure_id": "f1",
+        "evidence": "'p.p' printed above the top tick '6' at the left axis"
+      },
+      {
+        "key": "unit_in_axis_or_title",
+        "figure_id": "f1",
+        "evidence": "'Percentage point change in unemployment rate by gender, 2015-22' under the title"
+      },
+      {
+        "key": "panel_background",
+        "figure_id": "f1",
+        "evidence": "the plot area carries a light grey fill from 6 down to -12"
+      },
+      {
+        "key": "tick_marker_as_series",
+        "figure_id": "f1",
+        "evidence": "'Men' drawn only as a small diamond at each country position, on the bars' axis"
+      }
+    ],
+    "new_components": [
+      {
+        "name": "sort_direction_marker_in_legend",
+        "figure_id": "f1",
+        "evidence": "legend entry reads 'Women (\\u2197)', the arrow marking the series the countries are sorted by",
+        "affects": [
+          3
+        ]
+      },
+      {
+        "name": "unit_abbreviation_defined_in_note",
+        "figure_id": "f1",
+        "evidence": "'p.p: percentage point.' in the Note expands the bare 'p.p' printed on the axis",
+        "affects": [
+          4
+        ]
+      },
+      {
+        "name": "aggregate_row_inside_category_axis",
+        "figure_id": "f1",
+        "evidence": "'OECD' sits between FIN and ITA on the country axis, not at either end",
+        "affects": [
+          3
+        ]
+      }
+    ],
+    "spot_checks": [
+      {
+        "value": "-9.5",
+        "figure_id": "f1",
+        "mark": "the ESP Women bar (second slot from left)",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "ESP",
+          "Women (\\u2197)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-10.2",
+        "figure_id": "f1",
+        "mark": "the GRC Men diamond, just below the -10 tick",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "GRC",
+          "Men"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-9.5",
+        "figure_id": "f1",
+        "mark": "the ESP Men diamond, sitting near the foot of the ESP bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "ESP",
+          "Men"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-6.2",
+        "figure_id": "f1",
+        "mark": "the SVK Women bar (third slot)",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "SVK",
+          "Women (\\u2197)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-6.3",
+        "figure_id": "f1",
+        "mark": "the IRL Men diamond, between the -6 and -8 region",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "IRL",
+          "Men"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-2.0",
+        "figure_id": "f1",
+        "mark": "the red OECD Women bar",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "OECD",
+          "Women (\\u2197)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "-2.1",
+        "figure_id": "f1",
+        "mark": "the OECD Men diamond, just below the red bar's foot",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "OECD",
+          "Men"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "4.2",
+        "figure_id": "f1",
+        "mark": "the CRI Women bar, the tallest positive bar at the right edge",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "CRI",
+          "Women (\\u2197)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "1.5",
+        "figure_id": "f1",
+        "mark": "the CRI Men diamond, near the +1.5 level",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "CRI",
+          "Men"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      },
+      {
+        "value": "2.5",
+        "figure_id": "f1",
+        "mark": "the COL Women bar, second from the right",
+        "printed_on_figure": false,
+        "addressing_keys": [
+          "COL",
+          "Women (\\u2197)"
+        ],
+        "keys_verbatim": true,
+        "blocked_step": 2
+      }
+    ],
+    "hardest_step": 2,
+    "hardest_step_why": "无数值标注，刻度间隔2 p.p；-2.0与-2.1的5%容差仅0.1 p.p，OECD柱与邻柱像素几乎无差。",
+    "examples": [
+      {
+        "gap": "P1",
+        "figure_id": "f1",
+        "quote": "y axis ticks 6, 4, 2, 0, -2 ... -12; no number printed on any of the 78 marks",
+        "why": "每个标记的可读精度不同：4.2可近似读出，-2.0/-2.1无法达到0.1 p.p容差。"
+      },
+      {
+        "gap": "P8",
+        "figure_id": "f1",
+        "quote": "the OECD bar is drawn red; all 38 country bars are dark green; legend names only 'Women (\\u2197)' and 'Men'",
+        "why": "颜色单独编码「聚合平均」这一属性，图例不含它，需进入键。"
+      },
+      {
+        "gap": "P6",
+        "figure_id": "f1",
+        "quote": "bars hang downward from a drawn zero line; 'p.p' set above the top tick '6'",
+        "why": "负值向下加零线、单位置于顶刻度上方，这些样式维度目前不可控。"
+      },
+      {
+        "gap": "P9",
+        "figure_id": "f1",
+        "quote": "green diamonds for 'Men' overlaid at each country slot on the same axis as the 'Women (\\u2197)' bars",
+        "why": "同轴双标记形状，取值必须记录读自柱还是菱形。"
+      },
+      {
+        "gap": "new",
+        "figure_id": "f1",
+        "quote": "legend text 'Women (\\u2197)' \\u2014 the arrow marks the series the 39 country slots are sorted by",
+        "why": "图例内含排序标记，需在序列名中生成非文字符号并保持逐字一致。"
+      }
+    ]
+  }
+}
