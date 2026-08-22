@@ -10,7 +10,7 @@
 |---|---|
 | [storyline/parsebench_chart/](storyline/parsebench_chart/) | 方案规格。流水线的唯一定义处，五个阶段文档共用一份贯穿示例 |
 | [storyline/parsebench_chart/chart_types.md](storyline/parsebench_chart/chart_types.md) | 能画哪些图、每种图要满足什么条件才能画 |
-| [IMPL_PLAN.md](IMPL_PLAN.md) | 实现计划：系统骨架、目录结构、数据接口、todo checklist |
+| [plan/](plan/) | 实现计划，两份，都按流水线的顺序排：[PLAN.md](plan/PLAN.md) 给 coding agent（一步一节，缺口就地嵌进它落的那一步，每节末尾是该步的施工清单）· [plan.html](plan/plan.html) 给人看的图解版（总览 ＋ 每步一页） |
 | [parsebench/](parsebench/) | ParseBench 对齐：Charts 维度的 review、评测指标拆解、chart 分片数据与统计、待改清单 |
 | [src/chartgen/](src/chartgen/) | 流水线本体 |
 | [src/llmkit/](src/llmkit/) | 与本项目无关的 LLM 调用层：调用 · 结构化输出 · 缓存 · 去重 · 批量。Anthropic / OpenAI / Gemini 三家同一个调用面，写模型名就换家。可单独复用 |
@@ -19,7 +19,7 @@
 | `data/generated/` | 运行产物（不进版本库） |
 | [slides/](slides/) | 讲稿 |
 
-**代码一律用英文**（注释、docstring、异常文本、提示词）。中文只出现在 `storyline/`、`README.md`、`IMPL_PLAN.md` 这几份文档里。
+**代码一律用英文**（注释、docstring、异常文本、提示词）。中文只出现在 `storyline/`、`README.md`、`plan/` 这几份文档里。
 
 ## 流水线
 
@@ -75,14 +75,14 @@ ParseBench 的评测指标拆解、数据统计与据此得出的待改清单在
 
 ## 状态
 
-规格已定稿。实现进行中，进度见 [IMPL_PLAN.md](IMPL_PLAN.md) 的 checklist：
+规格已定稿。实现进行中，进度见 [plan/PLAN.md](plan/PLAN.md) 各节末尾的 checklist（139 项，已完成 13）：
 
 - 骨架、六份数据接口、图表条件表、公共几何与像素反算、产物可读视图 — 已落地
 - **01 数据** 全段已落地：领域池、四个声明方法、表达式、生成引擎、三类校验、那一次 LLM 调用与四类回喂
 - 03 的 bar 边画边记 — 已落地
 - 02 选图 / 03 其余类型 / 04 记录 / 05 输出 — 未开始
 
-ParseBench 对齐已完成基准与数据侧的调研，得出六项改进 P1–P6（[parsebench/](parsebench/)）；它们落在 IMPL_PLAN 的 H 组，尚未开工。
+ParseBench 对齐已完成基准与数据侧的调研：100 页样本 × 三个模型，加上 568 页失败运行，得出十条改进 P1–P10（[parsebench/reports/INDEX.md](parsebench/reports/INDEX.md)）。落地方式逐条写在 [plan/PLAN.md](plan/PLAN.md) §4，一般化形式在 §5，施工项就地嵌在 §6 的清单里，尚未开工。
 
 ## 历史
 

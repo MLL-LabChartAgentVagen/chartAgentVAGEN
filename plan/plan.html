@@ -1,0 +1,2742 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<title>图表数据生成流水线 · 实现计划</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>:root{
+  --ground:#F6F7F9; --surface:#FFFFFF; --raised:#EDF0F4;
+  --ink:#151A21; --muted:#5A6472; --line:#DFE4EA;
+  --gap:#A93E26; --gap-soft:#A93E2614; --have:#2E6A55; --have-soft:#2E6A5512;
+  --key:#2F5DA8; --key-soft:#2F5DA814;
+  --s1:#3B6EA8; --s2:#C4703B; --s3:#2E8B6E; --s1d:#254B77; --s1l:#9DBBDA;
+  --shadow:0 1px 2px rgba(21,26,33,.05), 0 8px 24px -16px rgba(21,26,33,.25);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#0E1216; --surface:#161C23; --raised:#1E2630;
+    --ink:#E7EBF0; --muted:#98A3B1; --line:#28313B;
+    --gap:#E4795A; --gap-soft:#E4795A1C; --have:#68BC9A; --have-soft:#68BC9A16;
+    --key:#7FA8E8; --key-soft:#7FA8E81C;
+    --s1:#6294CE; --s2:#DB9260; --s3:#5FB294; --s1d:#3E6D9E; --s1l:#2C4763;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -16px rgba(0,0,0,.7);
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#0E1216; --surface:#161C23; --raised:#1E2630;
+  --ink:#E7EBF0; --muted:#98A3B1; --line:#28313B;
+  --gap:#E4795A; --gap-soft:#E4795A1C; --have:#68BC9A; --have-soft:#68BC9A16;
+  --key:#7FA8E8; --key-soft:#7FA8E81C;
+  --s1:#6294CE; --s2:#DB9260; --s3:#5FB294; --s1d:#3E6D9E; --s1l:#2C4763;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -16px rgba(0,0,0,.7);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ground);color:var(--ink);
+  font-family:"IBM Plex Sans",-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;
+  font-size:15px;line-height:1.75;-webkit-font-smoothing:antialiased}
+code,pre{font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace}
+code{font-size:.88em;background:var(--raised);padding:.1em .35em;border-radius:3px}
+a{color:var(--key)}
+h1,h2,h3,h4{line-height:1.3;margin:0}
+strong{font-weight:600}
+
+.masthead{background:var(--surface);border-bottom:1px solid var(--line)}
+.masthead .inner{max-width:1080px;margin:0 auto;padding:34px 24px 26px;
+  display:flex;flex-wrap:wrap;gap:24px;align-items:flex-end;justify-content:space-between}
+.masthead h1{font-size:27px;letter-spacing:-.01em}
+.masthead p{margin:8px 0 0;color:var(--muted);max-width:58ch}
+.facts{display:flex;gap:26px;flex-wrap:wrap}
+.fact b{display:block;font-size:24px;font-variant-numeric:tabular-nums}
+.fact span{font-size:12px;color:var(--muted)}
+
+main{max-width:1080px;margin:0 auto;padding:0 24px 90px}
+.band{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;
+  padding-bottom:9px;border-bottom:2px solid var(--ink);margin:48px 0 16px;
+  scroll-margin-top:16px}
+.band h2{font-size:19px}
+.band span{font-size:13px;color:var(--muted)}
+
+table{width:100%;border-collapse:collapse;font-size:14px;background:var(--surface);
+  border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.scroll{overflow-x:auto;margin-bottom:12px}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{background:var(--raised);font-weight:600;font-size:12.5px;white-space:nowrap}
+tr:last-child td{border-bottom:none}
+td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
+
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;
+  box-shadow:var(--shadow);margin-top:20px;overflow:hidden;scroll-margin-top:16px}
+.card>header{display:flex;flex-wrap:wrap;gap:10px;align-items:baseline;
+  padding:14px 18px;border-bottom:1px solid var(--line);background:var(--raised)}
+.card>header h3{font-size:16.5px}
+.card>header .id{font-family:"IBM Plex Mono",monospace;font-size:12px;font-weight:500;
+  background:var(--key-soft);color:var(--key);padding:2px 7px;border-radius:4px}
+.card>header .size{margin-left:auto;font-size:12px;color:var(--muted)}
+.body{padding:16px 18px}
+.body>p{margin:0 0 12px}
+.body>p:last-child{margin-bottom:0}
+
+figure.draw{margin:0 0 15px;padding:14px 16px 10px;background:var(--raised);
+  border:1px solid var(--line);border-radius:8px}
+figure.draw svg{width:100%;height:auto;display:block;
+  font-family:"IBM Plex Sans",-apple-system,sans-serif}
+figure.draw figcaption{font-size:12.5px;color:var(--muted);line-height:1.6;margin-top:9px;
+  border-top:1px dashed var(--line);padding-top:8px}
+figure.draw figcaption b{color:var(--ink);font-weight:600}
+
+svg .plot{fill:none;stroke:var(--line);stroke-width:1}
+svg .gl{stroke:var(--line);stroke-width:1}
+svg .gld{stroke:var(--line);stroke-width:1;stroke-dasharray:2 3}
+svg .lb{fill:var(--muted);font-size:9px}
+svg .lbb{fill:var(--ink);font-size:9.5px;font-weight:600}
+svg .cal{fill:var(--gap);font-size:9.5px;font-weight:600}
+svg .calm{fill:var(--have);font-size:9.5px;font-weight:600}
+svg .lead{stroke:var(--gap);stroke-width:1;stroke-dasharray:3 2;fill:none}
+svg .b1{fill:var(--s1)} svg .b2{fill:var(--s2)} svg .b3{fill:var(--s3)}
+svg .bd{fill:var(--s1d)} svg .bl{fill:var(--s1l)}
+svg .ln{fill:none;stroke:var(--s2);stroke-width:1.8}
+
+.diff{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:0 0 14px}
+@media(max-width:820px){.diff{grid-template-columns:1fr}}
+.diff>div{border:1px solid var(--line);border-radius:8px;overflow:hidden;min-width:0}
+.diff h4{font-size:12px;padding:6px 12px;letter-spacing:.04em}
+.now h4{background:var(--gap-soft);color:var(--gap)}
+.next h4{background:var(--have-soft);color:var(--have)}
+.diff pre{margin:0;padding:11px 12px;font-size:12.4px;line-height:1.65;
+  overflow-x:auto;background:var(--surface);white-space:pre}
+pre i{font-style:normal;color:var(--muted)}
+pre b{font-weight:500;background:var(--have-soft);border-radius:2px;padding:0 2px}
+pre s{text-decoration:none;background:var(--gap-soft);border-radius:2px;padding:0 2px}
+
+.files{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px;padding-top:12px;
+  border-top:1px dashed var(--line)}
+.files em{font-style:normal;font-size:12px;color:var(--muted);margin-right:4px;align-self:center}
+.files code{background:var(--raised);border:1px solid var(--line);font-size:11.5px}
+
+ol.steps{list-style:none;padding:0;margin:0;counter-reset:s}
+ol.steps li{counter-increment:s;background:var(--surface);border:1px solid var(--line);
+  border-radius:8px;padding:12px 16px 12px 52px;position:relative;margin-top:10px}
+ol.steps li::before{content:counter(s);position:absolute;left:16px;top:12px;
+  width:22px;height:22px;border-radius:50%;background:var(--ink);color:var(--ground);
+  font-size:12px;display:grid;place-items:center;font-variant-numeric:tabular-nums}
+ol.steps b{margin-right:8px}
+ol.steps span{color:var(--muted);font-size:13.5px}
+
+pre.tree{background:var(--surface);border:1px solid var(--line);border-radius:8px;
+  padding:14px 16px;overflow-x:auto;font-size:12.6px;line-height:1.7;margin:0}
+pre.tree b{background:none;color:var(--have)}
+
+p.note{font-size:13.5px;color:var(--muted);background:var(--raised);
+  border-radius:6px;padding:10px 14px;margin:14px 0 0}
+p.note b{color:var(--ink)}
+.nums{font-variant-numeric:tabular-nums}
+
+nav.tabs{position:sticky;top:0;z-index:20;background:var(--ground);
+  border-bottom:1px solid var(--line);display:flex;gap:2px;padding:0 24px;
+  max-width:1080px;margin:0 auto;overflow-x:auto}
+nav.tabs button{background:none;border:0;border-bottom:2px solid transparent;
+  color:var(--muted);font:inherit;font-size:14.5px;padding:12px 14px 10px;
+  cursor:pointer;white-space:nowrap}
+nav.tabs button:hover{color:var(--ink)}
+nav.tabs button[aria-selected="true"]{color:var(--ink);font-weight:600;
+  border-bottom-color:var(--ink)}
+nav.tabs button span{display:block;font-size:11.5px;font-weight:400;color:var(--muted)}
+section.tab[hidden]{display:none}
+section.tab > .band:first-child{margin-top:24px}
+.pg{display:inline-block;font-family:"IBM Plex Mono",monospace;font-size:10.5px;
+  line-height:1.5;background:var(--gap-soft);color:var(--gap);border:1px solid var(--gap);
+  border-radius:3px;padding:0 4px;margin-left:5px;vertical-align:2px;white-space:nowrap;
+  text-decoration:none;font-weight:400}
+a.pg:hover{background:var(--gap);color:var(--ground)}
+.pg.x{background:var(--key-soft);color:var(--key);border-color:var(--key)}
+a.pg.x:hover{background:var(--key);color:var(--ground)}
+.pg.n{background:var(--have-soft);color:var(--have);border-color:var(--have)}
+pre.tree .pg{margin-left:8px;vertical-align:0}
+.grp .chips{margin-top:9px;line-height:2.1}
+.grp .chips .pg:first-child{margin-left:0}
+.key{background:var(--raised);border:1px solid var(--line);border-radius:8px;
+  padding:12px 16px;margin:16px 0 0;font-size:13.5px;color:var(--muted);line-height:2.1}
+.key b{color:var(--ink)}
+.bar{display:flex;height:12px;border-radius:6px;overflow:hidden;background:var(--raised);
+  border:1px solid var(--line);margin:6px 0 0}
+.bar i{display:block}
+.bar .d{background:var(--have)} .bar .c{background:var(--s2)} .bar .t{background:var(--line)}
+.legend{display:flex;gap:18px;font-size:12.5px;color:var(--muted);margin-top:10px;flex-wrap:wrap}
+.legend b{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px}
+.grp{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;margin-top:4px}
+.grp>div{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:12px 14px}
+.grp h4{font-size:14px;margin-bottom:4px}
+.grp p{margin:4px 0 0;font-size:13px;color:var(--muted);line-height:1.6}
+.grp .cnt{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+.tag{display:inline-block;font-family:"IBM Plex Mono",monospace;font-size:11px;
+  background:var(--gap-soft);color:var(--gap);border-radius:3px;padding:1px 5px;margin:2px 3px 0 0}
+.tag.g{background:var(--key-soft);color:var(--key)}
+</style>
+</head>
+<body>
+<header class="masthead"><div class="inner"><div><h1>图表数据生成流水线 · 实现计划</h1>
+<p>按<strong>流水线的顺序</strong>排：第一页是整条流水线怎么串起来的，后面每一页讲其中的一步。
+<strong>ParseBench 上量出来的十条缺口，各自就地嵌在它该落的那一步里</strong>，用带颜色的角标标出来，点角标能跳到那一条的正文。<br>
+全篇用同一个贯穿示例：急诊科等待时间，3 家医院 × 4 个科室 × 3 个分诊等级 × 182 天 ＝ 900 行。coding agent 用的那一份是 <a href="PLAN.md">PLAN.md</a>。</p></div>
+<div class="facts"><div class="fact"><b>5</b><span>个阶段</span></div><div class="fact"><b>2</b><span>次 LLM 调用</span></div><div class="fact"><b>143</b><span>个施工项</span></div><div class="fact"><b>13</b><span>已完成</span></div></div></div></header>
+<nav class="tabs"><button type="button" data-tab="over" aria-selected="true">总览<span>五步怎么串起来</span></button><button type="button" data-tab="base" aria-selected="false">共享层<span>接口 · 条件表 · 公共模块</span></button><button type="button" data-tab="s01" aria-selected="false">01 数据<span>写场景与数据</span></button><button type="button" data-tab="s02" aria-selected="false">02 选图<span>选图 · 组合 · 标题</span></button><button type="button" data-tab="s03" aria-selected="false">03 渲染<span>边画边记</span></button><button type="button" data-tab="s04" aria-selected="false">04 记录<span>可读判定与自检</span></button><button type="button" data-tab="s05" aria-selected="false">05 输出<span>训练目标与奖励</span></button><button type="button" data-tab="end" aria-selected="false">收口<span>顺序 · 风险 · 验收</span></button></nav>
+<main>
+<section class="tab" id="tab-over">
+<p class="note"><b>这一页讲整条流水线本身。</b>后面每一页是流水线的一步，再后面一页是收口（顺序、风险、验收）。<strong>「共享层」那一页不是一步</strong>，是五步共用的地基，排在最前面是因为接口不定死后面没法写。</p>
+
+<div class="band"><h2>一条数据走完全程</h2><span>输出单位是「键 · 值 · 区域」</span></div>
+
+<figure class="draw">
+  <svg viewBox="0 0 900 260" role="img" aria-label="五个阶段的数据流">
+    <!-- stage boxes -->
+    <g>
+      <rect x="10" y="40" width="150" height="52" rx="6" fill="var(--surface)" stroke="var(--s1)" stroke-width="1.6"/>
+      <text class="lbb" x="85" y="61" text-anchor="middle">01 data</text>
+      <text class="lb"  x="85" y="76" text-anchor="middle">领域池 → 事实表</text>
+      <rect x="178" y="40" width="150" height="52" rx="6" fill="var(--surface)" stroke="var(--line)"/>
+      <text class="lbb" x="253" y="61" text-anchor="middle">02 figure</text>
+      <text class="lb"  x="253" y="76" text-anchor="middle">选图 ＋ 写标题</text>
+      <rect x="346" y="40" width="150" height="52" rx="6" fill="var(--surface)" stroke="var(--line)"/>
+      <text class="lbb" x="421" y="61" text-anchor="middle">03 render</text>
+      <text class="lb"  x="421" y="76" text-anchor="middle">边画边记</text>
+      <rect x="514" y="40" width="150" height="52" rx="6" fill="var(--surface)" stroke="var(--line)"/>
+      <text class="lbb" x="589" y="61" text-anchor="middle">04 record</text>
+      <text class="lb"  x="589" y="76" text-anchor="middle">三层拼接 ＋ 自检</text>
+      <rect x="682" y="40" width="150" height="52" rx="6" fill="var(--surface)" stroke="var(--line)"/>
+      <text class="lbb" x="757" y="61" text-anchor="middle">05 output</text>
+      <text class="lb"  x="757" y="76" text-anchor="middle">训练目标</text>
+    </g>
+    <!-- LLM badge -->
+    <rect x="16" y="12" width="138" height="18" rx="9" fill="var(--gap-soft)" stroke="var(--gap)"/>
+    <text class="cal" x="85" y="25" text-anchor="middle">调用①　写数据</text>
+    <rect x="184" y="12" width="138" height="18" rx="9" fill="var(--gap-soft)" stroke="var(--gap)"/>
+    <text class="cal" x="253" y="25" text-anchor="middle">调用②　图选定后写字</text>
+    <!-- arrows + interface labels -->
+    <g stroke="var(--muted)" stroke-width="1.2" fill="none">
+      <path d="M160,66 L176,66"/><path d="M328,66 L344,66"/>
+      <path d="M496,66 L512,66"/><path d="M664,66 L680,66"/>
+      <path d="M832,66 L860,66"/>
+    </g>
+    <text class="lb" x="169" y="108" text-anchor="middle">FactTable</text>
+    <text class="lb" x="169" y="119" text-anchor="middle">TableSchema</text>
+    <text class="lb" x="337" y="108" text-anchor="middle">FigureSpec</text>
+    <text class="lb" x="505" y="108" text-anchor="middle">RenderOutput</text>
+    <text class="lb" x="673" y="108" text-anchor="middle">Record</text>
+    <text class="lb" x="866" y="70">八类文件</text>
+    <!-- worked example chain -->
+    <line class="gld" x1="10" y1="140" x2="890" y2="140"/>
+    <text class="lbb" x="10" y="158">贯穿示例</text>
+    <text class="lb" x="85" y="180" text-anchor="middle">900 行就诊记录</text>
+    <text class="lb" x="85" y="193" text-anchor="middle">wait_minutes · cost</text>
+    <text class="lb" x="85" y="206" text-anchor="middle">satisfaction</text>
+    <text class="lb" x="253" y="180" text-anchor="middle">bar，x＝hospital</text>
+    <text class="lb" x="253" y="193" text-anchor="middle">y＝AVG(wait)</text>
+    <text class="lb" x="253" y="206" text-anchor="middle">标题「各院平均候诊时长」</text>
+    <text class="lb" x="421" y="180" text-anchor="middle">绘图区 [96,60,860,520]</text>
+    <text class="lb" x="421" y="193" text-anchor="middle">值域 [0,60] ↔ 像素 [520,60]</text>
+    <text class="lb" x="421" y="206" text-anchor="middle">Mercy 的条 [168,196,278,520]</text>
+    <text class="lb" x="589" y="180" text-anchor="middle">rows＝372</text>
+    <text class="lb" x="589" y="193" text-anchor="middle">readable＝true</text>
+    <text class="lb" x="589" y="206" text-anchor="middle">三项自检通过</text>
+    <text class="lb" x="757" y="180" text-anchor="middle">带位置的表 · 抽查集</text>
+    <text class="lb" x="757" y="193" text-anchor="middle">定位 · 读值 · 下钻</text>
+    <text class="lb" x="757" y="206" text-anchor="middle">页面元素 · 图例绑定</text>
+    <!-- output unit -->
+    <rect x="300" y="224" width="300" height="26" rx="13" fill="var(--key-soft)" stroke="var(--key)"/>
+    <text class="lbb" x="450" y="241" text-anchor="middle" fill="var(--key)">
+      输出单位 ＝ ("Mercy General", 42.3, [168,196,278,520])</text>
+  </svg>
+  <figcaption><b>两次调用都不产出任何数值。</b>①写场景、生成脚本与意图；
+    ②在图已经选定之后，给这一批图写标题与列的散文名。选图、投影、组版、渲染、记录、导出全部是程序。<br>
+    <b>每个阶段是一个函数</b>：<code>阶段(上游产物, 种子, 配置) -> 下游产物</code>。
+    同样的输入必得同样的输出，产物按内容哈希落盘，任何阶段可以单独重跑，
+    也可以拿 <code>tests/samples/</code> 的样例文件单独开发。</figcaption>
+</figure>
+
+<div class="scroll"><table>
+  <thead><tr><th>阶段</th><th>输入 → 输出</th><th>LLM</th></tr></thead>
+  <tbody>
+    <tr><td><code>01 data</code></td><td>领域池 → FactTable ＋ TableSchema（含场景与意图绑定）</td>
+        <td><strong>1 次</strong>：写场景、生成脚本与意图绑定。解析、判族、执行、结构检查全是程序</td></tr>
+    <tr><td><code>02 figure</code></td><td>FactTable ＋ TableSchema → FigureSpec</td><td><strong>1 次</strong>：选完图之后写标题与列的散文名。选图本身全是程序</td></tr>
+    <tr><td><code>03 render</code></td><td>FigureSpec ＋ StyleVector → RenderOutput</td><td>0</td></tr>
+    <tr><td><code>04 record</code></td><td>RenderOutput → Record</td><td>0</td></tr>
+    <tr><td><code>05 output</code></td><td>Record → 训练目标文件</td><td>0</td></tr>
+  </tbody>
+</table></div>
+
+<div class="band"><h2>十条缺口分别落在哪一步</h2><span>点角标跳到那一条的正文</span></div>
+
+<div class="scroll"><table>
+  <thead><tr><th>缺什么</th><th>报告编号</th><th>正文在哪一页</th><th>还要动到哪一步</th><th>动到的文件</th></tr></thead>
+  <tbody>
+    <tr><td class="n"><a class="pg" href="#P9" title="点开跳到那一条">▸记住对着哪条轴</a></td><td class="n">P9</td>
+        <td><b>共享层</b></td><td>03 写字段 · 04 反算取轴</td><td><code>record.py</code> <code>charts.py</code> <code>readback.py</code></td></tr>
+    <tr><td class="n"><a class="pg" href="#P1" title="点开跳到那一条">▸读数容差可传入</a></td><td class="n">P1</td>
+        <td><b>共享层</b></td><td>04 与 05 的三个调用点</td><td><code>channels.py</code></td></tr>
+    <tr><td class="n"><a class="pg" href="#P10" title="点开跳到那一条">▸类型表加三行</a></td><td class="n">P10</td>
+        <td><b>共享层</b></td><td>03 绘制分支 · 05 表格型图没有值轴</td><td><code>charts.py</code> <code>rect.py</code> <code>point.py</code> <code>page.py</code></td></tr>
+    <tr><td class="n"><a class="pg" href="#P5" title="点开跳到那一条">▸密度可以指定</a></td><td class="n">P5</td>
+        <td><b>共享层</b></td><td>01 行数下界 · 03 标签批量量取</td><td><code>charts.py</code> <code>rect.py</code></td></tr>
+    <tr><td class="n"><a class="pg" href="#P4" title="点开跳到那一条">▸图表配比可换</a></td><td class="n">P4</td>
+        <td><b>02 选图</b></td><td>—</td><td><code>sampling.py</code> <span class="pg n">新</span></td></tr>
+    <tr><td class="n"><a class="pg" href="#compound" title="点开跳到那一条">▸组合图改成规则</a></td>
+        <td class="n">核实出来的，报告里没编号</td>
+        <td><b>02 选图</b></td><td>接口改两处 · 03 叠加绘制</td><td><code>charts.py</code> <code>figure.py</code> <code>panel.py</code></td></tr>
+    <tr><td class="n"><a class="pg" href="#title" title="点开跳到那一条">▸图选定之后写标题</a></td>
+        <td class="n">不是缺口，是补齐</td>
+        <td><b>02 选图</b></td><td>规格要改「只调一次」那条不变式</td><td><code>title.py</code> <span class="pg n">新</span></td></tr>
+    <tr><td class="n"><a class="pg" href="#P7" title="点开跳到那一条">▸标题块进记录</a></td><td class="n">P7</td>
+        <td><b>03 渲染</b></td><td>接口加一个类</td><td><code>figure.py</code> <code>record.py</code> <code>page.py</code></td></tr>
+    <tr><td class="n"><a class="pg" href="#P6" title="点开跳到那一条">▸画法补齐</a></td><td class="n">P6</td>
+        <td><b>03 渲染</b></td><td>接口加两个维度</td><td><code>style.py</code> <code>draw/*</code></td></tr>
+    <tr><td class="n"><a class="pg" href="#P2" title="点开跳到那一条">▸面板名进键</a></td><td class="n">P2</td>
+        <td><b>05 输出</b></td><td>—</td><td><code>export.py</code></td></tr>
+    <tr><td class="n"><a class="pg" href="#P8" title="点开跳到那一条">▸颜色分组进键</a></td><td class="n">P8</td>
+        <td><b>05 输出</b></td><td>接口加一个字段</td><td><code>figure.py</code> <code>export.py</code></td></tr>
+    <tr><td class="n"><a class="pg" href="#P3" title="点开跳到那一条">▸一页多图分得开</a></td><td class="n">P3</td>
+        <td><b>05 输出</b></td><td>02 的同页豁免</td><td><code>export.py</code> <code>admit.py</code></td></tr>
+  </tbody>
+</table></div>
+<p class="note"><b>接口只动三个文件</b>　<code>record.py</code> · <code>figure.py</code> · <code>style.py</code>，一次抬
+  <code>SCHEMA_VERSION</code> 2 → 3。<b>净增两个文件</b>　<code>s02_figure/sampling.py</code> 与
+  <code>s02_figure/title.py</code>。证据在
+  <a href="../parsebench/reports/INDEX.md">ParseBench 报告</a>（图示版
+  <a href="../parsebench/reports/view.html">view.html</a>）。</p>
+
+<p class="key"><b>角标怎么读</b>　每个角标写的是<strong>这条缺口要改什么</strong>，鼠标停上去能看到它在 ParseBench 报告里的编号。
+　<a class="pgNone" href="#P9" title="ParseBench 缺口 P9 · 点开跳到那一条">▸记住对着哪条轴</a> 是十条缺口之一；
+　<a class="pg x" href="#keysrc" title="一般化写法 · 点开跳到那一条">▸键的每段记来源</a> 是那一条抬一层之后的一般化写法；
+　<span class="pg n">新</span> 是净增的文件。<br>
+<b>没有角标的地方，是流水线本来就这么设计的</b>——ParseBench 是覆盖度的第一个对照集，不是这些设计的来源。</p>
+
+<div class="band"><h2>五条一般化分别落在哪一步</h2><span>把「补上实测缺的那几项」抬成流水线的一个可扫维度</span></div>
+
+<div class="scroll"><table>
+  <thead><tr><th>一般化之后叫什么</th><th>原来的写法</th><th>抬一层之后</th><th>白得的覆盖</th><th>正文在</th></tr></thead>
+  <tbody>
+    <tr><td><a class="pg x" href="#keysrc" title="点开跳到那一条">▸键的每段记来源</a></td>
+        <td>P8：颜色可以承载键的一段<br>P2：面板名进键</td>
+        <td><strong>键的每一段记下角色与来源</strong>
+            （<code>axis_tick</code> / <code>legend</code> / <code>panel_title</code> /
+             <code>inline_label</code> / <code>heading</code> / <code>colour_only</code> /
+             <code>mark_shape</code> / <code>hatch</code> / <code>not_shown</code>）</td>
+        <td>P2、P8 成为同一张表的两行；另外三格是新的——
+            <span class="nums"><code>inline_label</code> 72 次</span>（名字直接标在图元旁）、
+            <span class="nums"><code>heading</code> 28 次</span>（名字只在标题里）、
+            <span class="nums"><code>not_shown</code> 7 次</span>（图上不可复原，应排除出值目标）</td>
+        <td><b>02 选图</b></td></tr>
+    <tr><td><a class="pg x" href="#textblk" title="点开跳到那一条">▸图外文本一等对象</a></td>
+        <td>P7：标题拆成五个字段</td>
+        <td><strong>图外文本是一等对象</strong>
+            <code>TextBlock(role, scope, placement, text)</code>，八个 role</td>
+        <td>吸收报告里标成「不进清单」的<strong>来源行 / 注释行</strong>
+            （<span class="nums">三家一致 17 页，这批页面里最常见的构造</span>），
+            以及轴标题、图例标题</td>
+        <td><b>03 渲染</b></td></tr>
+    <tr><td><a class="pg x" href="#styledom" title="点开跳到那一条">▸风格取值域表</a></td>
+        <td>P6：照实测清单补 30 项</td>
+        <td><strong>风格向量是一张声明式取值域表</strong>，
+            每维带取值域 / 默认 / 绘制分支 / 是否影响可读性</td>
+        <td>「还缺哪些画法」变成一句集合差；对照集可替换，清单不会过期</td>
+        <td><b>共享层</b></td></tr>
+    <tr><td><a class="pg x" href="#grid" title="点开跳到那一条">▸类型表按乘积</a></td>
+        <td>P10：加三行（这 100 页里出现过的）</td>
+        <td><strong>类型表由「投影形态 × 图元形状」的乘积定义</strong>，
+            缺口靠枚举乘积找</td>
+        <td>13 个类型只占 20 格里的 7 格。乘积自己预测出 P10 的第一行，
+            另外三格这 100 页一张没抽到：误差棒 / 区间点图、甘特 / 时间条、二维分箱热力</td>
+        <td><b>共享层</b></td></tr>
+    <tr><td><a class="pg x" href="#gran" title="点开跳到那一条">▸导出粒度是参数</a></td>
+        <td>P3：加一个整页 markdown 导出函数</td>
+        <td><strong>导出粒度是一个参数</strong>（一图一表 / 一页一份 / 一批一份）</td>
+        <td>与 <code>key_scope</code> 同一类东西——对外产物的形状是导出参数，不是记录结构</td>
+        <td><b>05 输出</b></td></tr>
+  </tbody>
+</table></div>
+
+<div class="band"><h2>视觉出处：三条改动合起来是一件事</h2><span>这一轮的可防守轴，不是第十一条缺口</span></div>
+
+<p>输出单位是「键 · 值 · 区域」。<b>这一轮改完之后，每一个原子都能回答一句话：你是从图上哪里、通过哪一种编码被读出来的。</b></p>
+<div class="scroll"><table>
+  <thead><tr><th>原子</th><th>出处字段</th><th>从哪几条来</th></tr></thead>
+  <tbody>
+    <tr><td><b>值</b></td>
+        <td><code>value_axis</code>（对着哪条轴）＋ <code>mark_shape</code>（按哪种形状换算）＋ 可读判据的容差</td>
+        <td><a class="pgNone" href="#P9">▸记住对着哪条轴</a> <a class="pgNone" href="#P1">▸读数容差可传入</a></td></tr>
+    <tr><td><b>键的每一段</b></td>
+        <td><code>KeySource</code>：轴刻度 / 图例 / 面板标题 / 图元旁标注 / 标题里 / 只有颜色 / 记号形状 / 填充纹理 / 没写</td>
+        <td><a class="pg x" href="#keysrc">▸键的每段记来源</a>（吸收面板名进键 ＋ 颜色分组进键）</td></tr>
+    <tr><td><b>图外的每一段文字</b></td>
+        <td><code>TextBlock.role</code>：图号 / 主标题 / 副标题 / 单位 / 来源行 / 注释行 / 轴标题 / 图例标题</td>
+        <td><a class="pg x" href="#textblk">▸图外文本一等对象</a>（标题块进记录抬一层）</td></tr>
+    <tr><td><b>区域</b></td><td>边画边记——框在画的那一刻就写下来了</td><td>流水线本来就有</td></tr>
+  </tbody>
+</table></div>
+<p class="note"><b>急诊科例子上的一整句</b>　<code>("Mercy General", "Surgery")</code> 这一段里，
+  <code>Mercy General</code> 读自面板标题、<code>Surgery</code> 读自横轴刻度；
+  值 <code>42.3</code> 是拿矩形的上边对着左边那条值轴量出来的，容差 0.13 分钟；
+  框是 <code>[168,196,278,520]</code>；单位 <code>minutes</code> 只写在副标题里。</p>
+<p class="note"><b>要不要跟某一条缺口合并：不合并。</b>它不是第十一条缺口，是这十条里三条各出三分之一拼出来的<strong>那条轴</strong>。
+  合进任何一条，另外两条就会看起来像零碎的字段改动。三条各自的正文仍在它们落的那一步。<br>
+  <b>它换来什么</b>　真实图表的标注只能事后猜「这个数是从哪读出来的」，我们的记录在画的那一刻就写下来了。
+  于是多出一类别人给不出的训练目标——「这一段名字是从哪读到的」「这个数是对着哪条轴量出来的」。
+  而<strong>寻址类错误占解析器失败的 <span class="nums">72.2%</span></strong>。</p>
+
+<div class="band"><h2>多图有四层，前三层在主线</h2><span>一个绘图区里两个视图 / 一张图多个绘图区 / 一页多张图 / 跨图一致</span></div>
+
+<div class="scroll"><table>
+  <thead><tr><th>层</th><th>是什么</th><th>落在</th><th>状态</th></tr></thead>
+  <tbody>
+    <tr><td>一个绘图区里两个视图</td><td><b>组合图</b></td><td><a href="#compound">02 选图</a>的组合规则</td><td>本轮做</td></tr>
+    <tr><td>一张图里多个绘图区</td><td><b>多面板图</b>，五种关系</td><td>02 选图的 <code>panel.py</code></td><td>本轮做</td></tr>
+    <tr><td>一页里多张图</td><td><b>一页多图</b></td><td>规格已有；03 的 <code>page.py</code> ＋ <a href="#gran">导出粒度</a></td><td>本轮做</td></tr>
+    <tr><td>多张图之间答案要一致</td><td><b>跨图一致性样本</b></td><td>扩展与消融那一组的一个导出函数</td><td><b>有意不做主线</b></td></tr>
+  </tbody>
+</table></div>
+<p class="note"><b>第四层为什么有意留在导出函数里</b>　跨图一致性这条轴 <span class="nums">2026</span> 年的工作已经占了；
+  我们的可防守轴是出处。记录里该留的都留着——<code>key</code>、聚合值、每组行数、依赖图——
+  随时能加那个导出函数，<strong>不用重跑流水线</strong>。</p>
+
+<div class="band"><h2>目录结构</h2><span>绿色是新增，其余是改或写</span></div>
+<pre class="tree">src/chartgen/
+├── interfaces/
+│   ├── record.py        改  Mark.{value_axis, mark_shape} · Element.text · Heading 类别<a class="pgNone" href="#P9" title="ParseBench 缺口 P9 · 点开跳到那一条">▸记住对着哪条轴</a><a class="pgNone" href="#P7" title="ParseBench 缺口 P7 · 点开跳到那一条">▸标题块进记录</a>
+│   │                        Panel.chart_types 元组<a class="pgNone" href="#P9" title="ParseBench 缺口 P9 · 点开跳到那一条">▸记住对着哪条轴</a>
+│   ├── figure.py        改  TitleBlock · FigureSpec.title · PanelSpec.title<a class="pgNone" href="#P7" title="ParseBench 缺口 P7 · 点开跳到那一条">▸标题块进记录</a><a class="pg x" href="#textblk" title="一般化写法 · 点开跳到那一条">▸图外文本一等对象</a>
+│   │                        Binding.colour_group · PanelSpec.views 元组 · Layout "overlay"<a class="pgNone" href="#P8" title="ParseBench 缺口 P8 · 点开跳到那一条">▸颜色分组进键</a><a class="pgNone" href="#compound" title="读码核实出来的，报告里没有编号 · 点开跳到那一条">▸组合图改成规则</a><a class="pg x" href="#keysrc" title="一般化写法 · 点开跳到那一条">▸键的每段记来源</a>
+│   └── style.py         改  七组维度扩取值域 · series_marks · dual_axis<a class="pgNone" href="#P6" title="ParseBench 缺口 P6 · 点开跳到那一条">▸画法补齐</a><a class="pg x" href="#styledom" title="一般化写法 · 点开跳到那一条">▸风格取值域表</a>
+├── registry/
+│   ├── charts.py        改  三行新类型 · mark/channel 元组 · <b>删掉 compound 那一行</b><a class="pgNone" href="#P10" title="ParseBench 缺口 P10 · 点开跳到那一条">▸类型表加三行</a><a class="pgNone" href="#P9" title="ParseBench 缺口 P9 · 点开跳到那一条">▸记住对着哪条轴</a><a class="pgNone" href="#compound" title="读码核实出来的，报告里没有编号 · 点开跳到那一条">▸组合图改成规则</a><a class="pg x" href="#grid" title="一般化写法 · 点开跳到那一条">▸类型表按乘积</a>
+│   │                        DENSITY_BANDS<a class="pgNone" href="#P5" title="ParseBench 缺口 P5 · 点开跳到那一条">▸密度可以指定</a>
+│   └── channels.py      改  readable / tolerance 各加一个 tolerance 参数<a class="pgNone" href="#P1" title="ParseBench 缺口 P1 · 点开跳到那一条">▸读数容差可传入</a>
+├── common/readback.py   改  按 value_axis 取轴 · ink_fraction 按面板底色判<a class="pgNone" href="#P9" title="ParseBench 缺口 P9 · 点开跳到那一条">▸记住对着哪条轴</a><a class="pgNone" href="#P6" title="ParseBench 缺口 P6 · 点开跳到那一条">▸画法补齐</a>
+├── s02_figure/
+│   ├── <b>sampling.py      新  ← 唯一的新文件</b><a class="pgNone" href="#P4" title="ParseBench 缺口 P4 · 点开跳到那一条">▸图表配比可换</a>
+│   ├── project.py       写  一个面板可能要投影不止一次<a class="pgNone" href="#compound" title="读码核实出来的，报告里没有编号 · 点开跳到那一条">▸组合图改成规则</a>
+│   ├── admit.py         写  冗余判据 ＋ 同页豁免<a class="pgNone" href="#P3" title="ParseBench 缺口 P3 · 点开跳到那一条">▸一页多图分得开</a>
+│   ├── panel.py         写  五种多面板关系 ＋ <b>一条同面板叠加规则</b><a class="pgNone" href="#compound" title="读码核实出来的，报告里没有编号 · 点开跳到那一条">▸组合图改成规则</a>
+│   └── compose.py       写
+├── s03_render/
+│   ├── style.py         改  采样新取值
+│   ├── page.py          写  页面合成 · 标题块 · 一页多图<a class="pgNone" href="#P7" title="ParseBench 缺口 P7 · 点开跳到那一条">▸标题块进记录</a><a class="pgNone" href="#P10" title="ParseBench 缺口 P10 · 点开跳到那一条">▸类型表加三行</a><a class="pg x" href="#textblk" title="一般化写法 · 点开跳到那一条">▸图外文本一等对象</a>
+│   ├── degrade.py       写
+│   └── draw/
+│       ├── rect.py      改  区间条分支 · 横向条 · 标签批量量取<a class="pgNone" href="#P10" title="ParseBench 缺口 P10 · 点开跳到那一条">▸类型表加三行</a><a class="pgNone" href="#P6" title="ParseBench 缺口 P6 · 点开跳到那一条">▸画法补齐</a><a class="pgNone" href="#P5" title="ParseBench 缺口 P5 · 点开跳到那一条">▸密度可以指定</a>
+│       ├── point.py     写  含 windsock 带状分支 · 叠加记号<a class="pgNone" href="#P10" title="ParseBench 缺口 P10 · 点开跳到那一条">▸类型表加三行</a><a class="pgNone" href="#P6" title="ParseBench 缺口 P6 · 点开跳到那一条">▸画法补齐</a>
+│       └── {sector,cell,boxlike}.py   写
+├── s04_record/{merge,readable,selfcheck}.py    写
+└── s05_output/
+    ├── export.py        写  key_scope · 整页 markdown · 页面元素按 page_id 合并<a class="pgNone" href="#P2" title="ParseBench 缺口 P2 · 点开跳到那一条">▸面板名进键</a><a class="pgNone" href="#P8" title="ParseBench 缺口 P8 · 点开跳到那一条">▸颜色分组进键</a><a class="pgNone" href="#P3" title="ParseBench 缺口 P3 · 点开跳到那一条">▸一页多图分得开</a><a class="pg x" href="#gran" title="一般化写法 · 点开跳到那一条">▸导出粒度是参数</a>
+    └── verify.py        写</pre>
+
+<div class="band"><h2>运行方式</h2><span>可复现、可续跑、失败不中断</span></div>
+
+<div class="scroll"><table>
+  <thead><tr><th></th><th>怎么做</th></tr></thead>
+  <tbody>
+    <tr><td><b>种子</b></td>
+        <td>一个根种子，按 <code>(scenario_id, 阶段名, 序号)</code> 派生子种子。
+            <strong>任何阶段不读全局随机状态。</strong></td></tr>
+    <tr><td><b>缓存</b></td>
+        <td>每个阶段的产物按输入的内容哈希落盘，命中直接返回。
+            改 03 不会触发 01–02 重跑——这同时就是断点续跑</td></tr>
+    <tr><td><b>产物布局</b></td>
+        <td><code>data/generated/&lt;run_id&gt;/&lt;scenario_id&gt;/</code> 下按阶段分文件，
+            图像与记录同名不同后缀</td></tr>
+    <tr><td><b>可读视图</b></td>
+        <td>写 schema 的同时写一份 <code>schema.md</code>：层级树、数值列依赖、意图指向三张 Mermaid 图，
+            加可画族与最密叉积。<strong>不用另跑命令才能看懂一次运行产出了什么</strong></td></tr>
+    <tr><td><b>失败处理</b></td>
+        <td>任何阶段失败只丢弃当前场景并写一条带原因的记录，不中断批次。
+            跑完输出各阶段通过率——<strong>这是流水线健康度的主要观测量</strong></td></tr>
+  </tbody>
+</table></div>
+</section>
+<section class="tab" id="tab-base" hidden>
+<div class="band"><h2>共享层：五步的地基，不是其中一步</h2><span>接口 · 图表条件表 · 公共模块</span></div>
+
+<p class="note"><b>这一页不是流水线的一步</b>，是五步共用的地基：六份数据接口、图表条件表、公共模块。
+它排在最前面，是因为<strong>接口不定死，后面五步没法并行开发，也没法只写一遍</strong>。<br>
+十条缺口里有四条的本体落在这里——<a class="pgNone" href="#P9">▸记住对着哪条轴</a>
+<a class="pgNone" href="#P1">▸读数容差可传入</a>
+<a class="pgNone" href="#P10">▸类型表加三行</a>
+<a class="pgNone" href="#P5">▸密度可以指定</a>；另外几条在这里只占几个字段，正文在它们各自的那一步。</p>
+
+<div class="band"><h2>六份数据接口</h2><span>在写任何阶段代码之前定死</span></div>
+
+<p>接口定死之后，五个阶段可以并行开发：每个人只需要上游的样例文件。
+   <strong>改接口要同时改样例文件并升 <code>schema_version</code></strong>，让旧产物在读取时报错，而不是静默算错。</p>
+
+<div class="scroll"><table>
+  <thead><tr><th>接口</th><th>从 → 到</th><th>装什么</th></tr></thead>
+  <tbody>
+    <tr><td><b>FactTable</b></td><td>01 → 02</td><td>行级事件表，一行一次就诊，落盘为 parquet</td></tr>
+    <tr><td><b>TableSchema</b></td><td>01 → 02</td>
+        <td>场景标题与背景 · 维度组与层级链 · 列清单（类型 / 所属组 / 父列 / 基数 / ordered；数值列另含单位与可加性）· 依赖图 · <strong>意图绑定</strong> · 总行数</td></tr>
+    <tr><td><b>ViewSpec</b></td><td>02 内部</td>
+        <td>图表类型 · 列绑定 · 聚合 · 行过滤 · 求值结果 · 每组行数 · 逐行形态的抽样索引</td></tr>
+    <tr><td><b>FigureSpec</b></td><td>02 → 03</td>
+        <td>面板列表 · 版面 · 共享关系（含共享图例时的系列列）· 多面板的关系类型 · 来源</td></tr>
+    <tr><td><b>StyleVector</b></td><td>03 内部</td><td>七组风格维度；随记录一起存，供消融按维度分组</td></tr>
+    <tr><td><b>RenderOutput</b></td><td>03 → 04</td>
+        <td>图像路径与尺寸 · L0 元素 · L1 面板 / 轴 / 图元 / 图例 · 施加过的退化变换</td></tr>
+    <tr><td><b>Record</b></td><td>04 → 05</td><td>RenderOutput 拼上 L2 行数与逐图元的 <code>readable</code></td></tr>
+  </tbody>
+</table></div>
+
+<p class="note"><b>三条约定</b>　<strong>键是有序字符串元组</strong>
+  （<code>("Mercy General", "Surgery")</code>，三层记录靠 <code>(figure_id, panel_id, key)</code> 对齐）·
+  <strong>框只有一种写法</strong>（像素、原点左上、<code>[x0,y0,x1,y1]</code>，与图像宽高一起存）·
+  <strong>每个接口对象带 <code>schema_version</code></strong>。
+  <br><br><b>场景散文与意图绑定是 TableSchema 的字段</b>，与列声明在同一次调用里产出，
+  不占单独的跨阶段产物。</p>
+
+<div class="band"><h2>落在这里的第一条：图元要记住自己是怎么被读出来的</h2></div>
+
+<article class="card" id="P9">
+  <header><span class="id">缺口 P9</span><h3>图元要记住自己是对着哪条轴、什么形状读出来的</h3>
+    <span class="size">2 字段 ＋ 2 字段改元组</span></header>
+  <div class="body">
+    <p><strong>先说清楚这一条和「键」没有关系。</strong>定位用的键是 <code>Mark.key</code>，
+       <strong>代码里早就有了</strong>；<a href="#P2">P2</a> 与 <a href="#P8">P8</a> 也不改它，
+       只改导出时把它拼多长。这一条加的是两个<strong>读法</strong>字段——
+       同一块像素要换算回一个数，得先知道<strong>照着哪条轴、按哪种形状</strong>换算。</p>
+
+    <figure class="draw">
+      <svg viewBox="0 0 420 205" role="img" aria-label="同一个面板里矩形与点各对一条纵轴">
+        <text class="lbb" x="4" y="12">一个面板，两个视图：bar(hospital × AVG wait) ＋ line(hospital × SUM cost)</text>
+        <line class="gl" x1="58" y1="152" x2="350" y2="152"/>
+        <line class="gld" x1="58" y1="110.7" x2="350" y2="110.7"/>
+        <line class="gld" x1="58" y1="69.3" x2="350" y2="69.3"/>
+        <line class="gld" x1="58" y1="28" x2="350" y2="28"/>
+        <line class="gl" x1="58" y1="28" x2="58" y2="152"/>
+        <line class="gl" x1="350" y1="28" x2="350" y2="152"/>
+        <text class="lb" x="52" y="155" text-anchor="end">0</text>
+        <text class="lb" x="52" y="113.7" text-anchor="end">20</text>
+        <text class="lb" x="52" y="72.3" text-anchor="end">40</text>
+        <text class="lb" x="52" y="31" text-anchor="end">60</text>
+        <text class="lb" x="52" y="20" text-anchor="end">分钟</text>
+        <text class="lb" x="356" y="155">0</text>
+        <text class="lb" x="356" y="113.7">60</text>
+        <text class="lb" x="356" y="72.3">120</text>
+        <text class="lb" x="356" y="31">180</text>
+        <text class="lb" x="356" y="20">美元</text>
+        <rect class="b1" x="82"  y="64.6" width="46" height="87.4"/>
+        <rect class="b1" x="167" y="78.0" width="46" height="74.0"/>
+        <rect class="b1" x="252" y="93.9" width="46" height="58.1"/>
+        <polyline class="ln" points="105,64.5 190,85.9 275,101.0"/>
+        <circle cx="105" cy="64.5" r="3.2" fill="var(--s2)"/>
+        <circle cx="190" cy="85.9" r="3.2" fill="var(--s2)"/>
+        <circle cx="275" cy="101" r="3.2" fill="var(--s2)"/>
+        <line class="lead" x1="58" y1="64.55" x2="350" y2="64.55"/>
+        <text class="cal" x="120" y="60">对左轴读 42.3 分钟</text>
+        <text class="cal" x="290" y="60" text-anchor="end">对右轴读 127 美元</text>
+        <text class="cal" x="204" y="176" text-anchor="middle">同一个像素高度 → 两个不同的值</text>
+        <text class="lb" x="105" y="165" text-anchor="middle">Mercy General</text>
+        <text class="lb" x="190" y="165" text-anchor="middle">St. Luke's</text>
+        <text class="lb" x="275" y="165" text-anchor="middle">Riverside</text>
+        <rect class="b1" x="58" y="190" width="12" height="8"/>
+        <text class="lb" x="74" y="197">AVG wait（矩形 · 长度 · 左轴）</text>
+        <line class="ln" x1="224" y1="194" x2="240" y2="194"/>
+        <circle cx="232" cy="194" r="3" fill="var(--s2)"/>
+        <text class="lb" x="246" y="197">SUM cost（点 · 位置 · 右轴）</text>
+      </svg>
+      <figcaption><b>两个视图落在同一个绘图区。</b>矩形对左轴、点对右轴，
+        同一个 y 像素在两条轴上换算出两个值。记录里如果只写「这个图形画在这块像素上，值是 42.3」，
+        <strong>反读这个操作本身就没有定义</strong>——而反读正是自检②与强化学习奖励要做的事。</figcaption>
+    </figure>
+
+    <div class="diff">
+      <div class="now"><h4>现在的 Mark</h4><pre>Mark(mark_id="m7", panel_id="p1",
+     key=("Mercy General",),   <i># 键，已经有了</i>
+     values={"value": 42.3},
+     box=[168, 196, 278, 520],
+     channel="length")
+
+<i># 少两样：
+#   哪条轴 —— 没有
+#   什么形状 —— 只能去查
+#     Panel.chart_type，而这个面板
+#     有两个视图，查不出</i></pre></div>
+      <div class="next"><h4>改完的 Mark</h4><pre>Mark(mark_id="m7", panel_id="p1",
+     key=("Mercy General",),   <i># 一个字都不动</i>
+     values={"value": 42.3},
+     box=[168, 196, 278, 520],
+     channel="length",
+     <b>value_axis="y"</b>,        <i># Panel.axes 里的哪一条</i>
+     <b>mark_shape="rect"</b>)     <i># 矩形？点？带状？</i></pre></div>
+    </div>
+
+    <div class="scroll"><table>
+      <thead><tr><th>字段</th><th>什么时候是新信息</th><th>为什么不能现查</th></tr></thead>
+      <tbody>
+        <tr><td><code>value_axis</code></td>
+            <td>一个面板有两条值轴时</td>
+            <td>单轴面板上它恒为 <code>"y"</code>；双轴面板上它是唯一的区分</td></tr>
+        <tr><td><code>mark_shape</code></td>
+            <td>一个面板有两种图元时——<a href="#compound">组合图</a>，
+                或者 <a href="#P6">P6</a> 的「每个系列一种记号」</td>
+            <td>今天靠 <code>CHARTS[panel.chart_type].mark</code> 查，
+                一个面板不止一个视图之后这个查法失效。
+                <strong>记录必须自足</strong>：导出器只读 <code>Record</code>，
+                不该回去翻 FigureSpec</td></tr>
+      </tbody>
+    </table></div>
+
+    <p class="note"><b>顺带修掉一处规格与代码不一致</b>　<code>chart_types.md</code> 写着组合图的图元是
+      「矩形 ＋ 点」、画法是「长度 ＋ 位置」，而 <code>charts.py</code> 里那一行只能填一个
+      （<code>mark="rect", channel="length"</code>）。<code>mark</code> / <code>channel</code>
+      改成元组就对上了。
+      <br><span class="nums">实测：混合图元的页面 29 页（三家里至少两家说有），
+      其中 8 页是双轴，22 页是同一条轴上换记号。</span></p>
+    <div class="files"><em>落在</em><code>interfaces/record.py</code><code>registry/charts.py</code><code>common/readback.py</code></div>
+  </div>
+</article>
+
+<div class="band"><h2>第二条：读数容差从写死变成参数</h2></div>
+
+<article class="card" id="P1">
+  <header><span class="id">缺口 P1</span><h3>可读判据的容差，从写死变成参数</h3>
+    <span class="size">2 个函数签名，不加字段</span></header>
+  <div class="body">
+    <figure class="draw">
+      <svg viewBox="0 0 420 190" role="img" aria-label="ε 恒定、容差随值缩放">
+        <text class="lbb" x="4" y="12">bar(hospital × SUM visits)，横条，图上不印数值</text>
+        <line class="gld" x1="118" y1="26" x2="118" y2="112"/>
+        <line class="gld" x1="145.4" y1="26" x2="145.4" y2="112"/>
+        <line class="gld" x1="172.8" y1="26" x2="172.8" y2="112"/>
+        <line class="gld" x1="200.2" y1="26" x2="200.2" y2="112"/>
+        <line class="gld" x1="227.6" y1="26" x2="227.6" y2="112"/>
+        <line class="gld" x1="255" y1="26" x2="255" y2="112"/>
+        <line class="gld" x1="282.4" y1="26" x2="282.4" y2="112"/>
+        <line class="gld" x1="309.8" y1="26" x2="309.8" y2="112"/>
+        <line class="gld" x1="337.2" y1="26" x2="337.2" y2="112"/>
+        <line class="gld" x1="364.6" y1="26" x2="364.6" y2="112"/>
+        <line class="gl"  x1="392" y1="26" x2="392" y2="112"/>
+        <line class="gl"  x1="118" y1="112" x2="392" y2="112"/>
+        <text class="lb" x="118" y="123" text-anchor="middle">0</text>
+        <text class="lb" x="172.8" y="123" text-anchor="middle">40</text>
+        <text class="lb" x="227.6" y="123" text-anchor="middle">80</text>
+        <text class="lb" x="282.4" y="123" text-anchor="middle">120</text>
+        <text class="lb" x="337.2" y="123" text-anchor="middle">160</text>
+        <text class="lb" x="392" y="123" text-anchor="middle">200</text>
+        <text class="lb" x="255" y="136" text-anchor="middle">年就诊量（千人次）· 每 20 一格</text>
+        <rect class="b1" x="118" y="36" width="250.7" height="22"/>
+        <rect class="b1" x="118" y="72" width="31.5" height="22"/>
+        <text class="lb" x="112" y="51" text-anchor="end">Mercy General</text>
+        <text class="lb" x="112" y="87" text-anchor="end">Riverside</text>
+        <rect x="356.2" y="33" width="25" height="28" fill="none"
+              stroke="var(--have)" stroke-width="1.3"/>
+        <text class="calm" x="388" y="31">容差 ±9.15</text>
+        <line x1="365.3" y1="61" x2="372.2" y2="61" stroke="var(--ink)" stroke-width="2.6"/>
+        <text class="lb" x="376" y="64">ε</text>
+        <rect x="147.9" y="69" width="3.2" height="28" fill="none"
+              stroke="var(--gap)" stroke-width="1.3"/>
+        <text class="cal" x="158" y="67">容差 ±1.15</text>
+        <line x1="146.1" y1="97" x2="153" y2="97" stroke="var(--ink)" stroke-width="2.6"/>
+        <text class="lb" x="157" y="100">ε</text>
+        <text class="calm" x="4" y="158">183 · 容差比 ε 宽 → 留在值目标</text>
+        <text class="cal"  x="4" y="174">23 · 容差比 ε 窄 → 退出值目标，仍留在区域目标</text>
+        <text class="lb" x="416" y="158" text-anchor="end">ε ＝ 值域跨度 ÷ 像素跨度</text>
+        <text class="lb" x="416" y="174" text-anchor="end">图上不印数值时按刻度估读，ε ≈ 5</text>
+      </svg>
+      <figcaption><b>ε 对整张图是一个常数</b>——由值轴量程和绘图区像素跨度定，与这根条多长无关。
+        变的是<strong>题目允许的误差</strong>：基准按值的百分比给容差，5% 在 183 上是 ±9.15，
+        在 23 上只有 ±1.15。<strong>ε 恒定、容差随值缩放，两者一比，大值过得去、小值过不去。</strong></figcaption>
+    </figure>
+
+    <div class="diff">
+      <div class="now"><h4>现在</h4><pre>readable("length", labeled=False,
+         value=183, axis=ax)   <i># → True</i>
+readable("length", labeled=False,
+         value=23,  axis=ax)   <i># → True</i>
+
+<i># 两根条拿到同一个是非答案。
+# 1% 是</i> <s>写死在函数里</s> <i>的常数，
+# 自检和奖励没有阈值可用。</i></pre></div>
+      <div class="next"><h4>改完</h4><pre><b>ε = value_per_pixel(*ax)</b>  <i># 现算</i>
+
+readable(..., value=183, axis=ax,
+         <b>tolerance=0.05</b>)  <i># 9.15 &gt; ε → True</i>
+readable(..., value=23,  axis=ax,
+         <b>tolerance=0.05</b>)  <i># 1.15 &lt; ε → False</i>
+
+<i># 不新增字段：ε 的两个输入
+# 已经在 Panel.axes 里了。</i></pre></div>
+    </div>
+
+    <div class="scroll"><table>
+      <thead><tr><th>谁在调</th><th>传什么容差</th><th>为什么不能换成别的</th></tr></thead>
+      <tbody>
+        <tr><td>抽查标注集 <code>export.py</code></td><td>基准口径：印了 0，估读 1%</td>
+            <td>它是要跟 ParseBench 对齐的那一份</td></tr>
+        <tr><td>回读自检 <code>selfcheck.py</code></td><td>ε</td>
+            <td>手里没有标准答案，只能跟像素反读的值比</td></tr>
+        <tr><td>RL 奖励 <code>verify.py</code></td><td>ε，同一份实现</td><td>同上</td></tr>
+      </tbody>
+    </table></div>
+
+    <p class="note"><b>为什么不能「把容差统一放宽了事」</b>　判分那一件放宽确实可以，
+      代价是印着 183 的图上模型写 180 也判成对。<strong>另一件放宽解决不了</strong>：
+      自检和奖励手里没有标准答案，那个比较必须有一个阈值，而全局放宽等于随手挑了一个。
+      <br><span class="nums">实测：图上印数字的抽查点正确率 99.0%（204 个），
+      一个都不印的 79.6%（652 个）。</span></p>
+    <div class="files"><em>落在</em><code>registry/channels.py</code></div>
+  </div>
+</article>
+
+<div class="band"><h2>第三条：图表类型表加三行</h2></div>
+
+<article class="card" id="P10">
+  <header><span class="id">缺口 P10</span><h3>类型表加三行</h3><span class="size">3 行 ＋ 2 个绘制分支</span></header>
+  <div class="body">
+    <figure class="draw">
+      <svg viewBox="0 0 420 150" role="img" aria-label="三族我们一种都画不出来的图">
+        <text class="lbb" x="66" y="14" text-anchor="middle">区间条 / 哑铃</text>
+        <line class="gl" x1="14" y1="112" x2="122" y2="112"/>
+        <rect x="34" y="34" width="46" height="8" fill="var(--s3)"/>
+        <circle cx="34" cy="38" r="4" fill="var(--s1)"/><circle cx="80" cy="38" r="4" fill="var(--s2)"/>
+        <rect x="48" y="58" width="58" height="8" fill="var(--s3)"/>
+        <circle cx="48" cy="62" r="4" fill="var(--s1)"/><circle cx="106" cy="62" r="4" fill="var(--s2)"/>
+        <rect x="26" y="82" width="38" height="8" fill="var(--s3)"/>
+        <circle cx="26" cy="86" r="4" fill="var(--s1)"/><circle cx="64" cy="86" r="4" fill="var(--s2)"/>
+        <text class="cal" x="66" y="130" text-anchor="middle">一根条两个值，不从零起算</text>
+
+        <text class="lbb" x="210" y="14" text-anchor="middle">表格型图</text>
+        <rect x="152" y="22" width="116" height="13" fill="var(--s1)"/>
+        <text x="157" y="32" fill="#fff" font-size="7.5">Figure 7 · Wait by department</text>
+        <rect class="plot" x="152" y="35" width="116" height="72"/>
+        <line class="gl" x1="152" y1="53" x2="268" y2="53"/>
+        <line class="gl" x1="152" y1="71" x2="268" y2="71"/>
+        <line class="gl" x1="152" y1="89" x2="268" y2="89"/>
+        <line class="gl" x1="214" y1="35" x2="214" y2="107"/>
+        <text class="lb" x="157" y="48">Trauma</text><text class="lb" x="219" y="48">51.2</text>
+        <text class="lb" x="157" y="66">Internal</text><text class="lb" x="219" y="66">38.4</text>
+        <text class="lb" x="157" y="84">Surgery</text><text class="lb" x="219" y="84">44.7</text>
+        <text class="lb" x="157" y="102">Pediatrics</text><text class="lb" x="219" y="102">29.0</text>
+        <text class="cal" x="210" y="130" text-anchor="middle">有图号有标题，没有值轴，容差 0</text>
+
+        <text class="lbb" x="352" y="14" text-anchor="middle">扇形预测带</text>
+        <line class="gl" x1="296" y1="112" x2="408" y2="112"/>
+        <path d="M352,64 L380,44 L408,30 L408,86 L380,74 Z" fill="var(--s2)" opacity=".2"/>
+        <path d="M352,64 L380,52 L408,44 L408,76 L380,68 Z" fill="var(--s2)" opacity=".3"/>
+        <polyline class="ln" points="296,88 324,72 352,64"/>
+        <polyline points="352,64 380,60 408,58" fill="none" stroke="var(--s2)"
+                  stroke-width="1.6" stroke-dasharray="3 2"/>
+        <line class="gld" x1="352" y1="26" x2="352" y2="112"/>
+        <text class="cal" x="352" y="130" text-anchor="middle">实测线接一段向外张开的区间</text>
+      </svg>
+      <figcaption><b>这三族我们一种都画不出来</b>——类型表里没有这一行，配比再怎么调也调不出来。
+        <span class="nums">实测提到：区间条一族 11 次 · 表格型图 14 次 · 扇形预测带 2 次。</span></figcaption>
+    </figure>
+
+    <div class="scroll"><table>
+      <thead><tr><th>新行</th><th>归族</th><th>投影形态 / 值字典</th><th>画在哪</th></tr></thead>
+      <tbody>
+        <tr><td><b>区间条 / 哑铃</b><br>
+                <span style="color:var(--muted);font-size:12.5px">浮动条、bullet 都是这一族</span></td>
+            <td><code>distribution</code></td>
+            <td><code>grouped_fivenum</code> · <code>("min","max")</code><br>
+                <span style="color:var(--muted);font-size:12.5px">复用 box 那一路，不新造聚合</span></td>
+            <td><code>rect.py</code> 加不从零起算的分支</td></tr>
+        <tr><td><b>表格型图</b></td><td><code>None</code>（唯一例外）</td>
+            <td>新通道 <code>"printed"</code>，天然可读、容差 0</td>
+            <td><code>page.py</code> 直接排版</td></tr>
+        <tr><td><b>扇形预测带</b>（windsock）</td><td><code>trend</code></td>
+            <td>带状图元——<strong>不能塞进 <code>point</code></strong>，
+                <code>lo</code>/<code>hi</code> 会落在点的框外</td>
+            <td><code>point.py</code> 加带状分支</td></tr>
+      </tbody>
+    </table></div>
+
+    <p><strong>记录结构本来就装得下「一根条两个值」。</strong>
+       <code>Mark.values</code> 是一个字典，箱线图已经在一个图元里填五个数
+       （<code>min q1 median q3 max</code>）。要加的只是「这个形状允许哪几个键」。</p>
+    <p><strong>带状图元还有一个下游用处</strong>：<a href="#compound">组合图</a>里
+       「一条实测线 ＋ 一条区间带」这种叠加，要等这一行把带状形状引进来才画得出。</p>
+    <p class="note"><b>这一条明确没列全，也是十条里最不全的一条。</b>
+      一族图只要在这 100 页里没出现就进不了清单。报告页上常见、我们也确实没有、
+      但这一轮一张没抽到的还有：地图 / 分级填色图、仪表盘、雷达图、桑基图、甘特图、
+      人口金字塔、斜坡图。其中<strong>地图不是「没证据」</strong>——上一轮 192 页里报过 3 张。
+      再扩样这条要重开。</p>
+    <div class="files"><em>落在</em><code>registry/charts.py</code><code>draw/rect.py</code><code>draw/point.py</code><code>s03_render/page.py</code></div>
+  </div>
+</article>
+
+<div class="band" id="grid"><h2>这三行只是「这 100 页里出现过、我们没有」的那几种</h2><span>一般化写法：类型表由乘积定义</span></div>
+
+<figure class="draw">
+  <svg viewBox="0 0 900 210" role="img" aria-label="投影形态乘图元形状的覆盖网格">
+    <text class="lbb" x="16" y="18">「类型表按乘积」那一条的网格：13 个类型占 20 格里的 7 格</text>
+    <!-- header -->
+    <text class="lb" x="300" y="42" text-anchor="middle">rect</text>
+    <text class="lb" x="420" y="42" text-anchor="middle">point</text>
+    <text class="lb" x="540" y="42" text-anchor="middle">sector</text>
+    <text class="lb" x="660" y="42" text-anchor="middle">cell</text>
+    <text class="lb" x="780" y="42" text-anchor="middle">boxlike</text>
+    <!-- rows -->
+    <g>
+      <text class="lb" x="230" y="70" text-anchor="end">grouped_scalar</text>
+      <rect x="244" y="54" width="112" height="24" rx="3" fill="var(--have-soft)" stroke="var(--have)"/>
+      <text class="lb" x="300" y="70" text-anchor="middle">bar 族 · waterfall</text>
+      <rect x="364" y="54" width="112" height="24" rx="3" fill="var(--have-soft)" stroke="var(--have)"/>
+      <text class="lb" x="420" y="70" text-anchor="middle">line · area</text>
+      <rect x="484" y="54" width="112" height="24" rx="3" fill="var(--have-soft)" stroke="var(--have)"/>
+      <text class="lb" x="540" y="70" text-anchor="middle">pie</text>
+      <rect x="604" y="54" width="112" height="24" rx="3" fill="var(--have-soft)" stroke="var(--have)"/>
+      <text class="lb" x="660" y="70" text-anchor="middle">heatmap</text>
+      <rect x="724" y="54" width="112" height="24" rx="3" fill="none" stroke="var(--line)" stroke-dasharray="3 2"/>
+      <text class="lb" x="780" y="70" text-anchor="middle">—</text>
+
+      <text class="lb" x="230" y="102" text-anchor="end">grouped_fivenum</text>
+      <rect x="244" y="86" width="112" height="24" rx="3" fill="var(--gap-soft)" stroke="var(--gap)"/>
+      <text class="cal" x="300" y="102" text-anchor="middle">区间条 / 哑铃</text>
+      <rect x="364" y="86" width="112" height="24" rx="3" fill="var(--gap-soft)" stroke="var(--gap)"/>
+      <text class="cal" x="420" y="102" text-anchor="middle">误差棒 / 区间点</text>
+      <rect x="484" y="86" width="112" height="24" rx="3" fill="none" stroke="var(--line)" stroke-dasharray="3 2"/>
+      <text class="lb" x="540" y="102" text-anchor="middle">—</text>
+      <rect x="604" y="86" width="112" height="24" rx="3" fill="none" stroke="var(--line)" stroke-dasharray="3 2"/>
+      <text class="lb" x="660" y="102" text-anchor="middle">—</text>
+      <rect x="724" y="86" width="112" height="24" rx="3" fill="var(--have-soft)" stroke="var(--have)"/>
+      <text class="lb" x="780" y="102" text-anchor="middle">box</text>
+
+      <text class="lb" x="230" y="134" text-anchor="end">binned_count</text>
+      <rect x="244" y="118" width="112" height="24" rx="3" fill="var(--have-soft)" stroke="var(--have)"/>
+      <text class="lb" x="300" y="134" text-anchor="middle">histogram</text>
+      <rect x="364" y="118" width="112" height="24" rx="3" fill="none" stroke="var(--line)" stroke-dasharray="3 2"/>
+      <text class="lb" x="420" y="134" text-anchor="middle">—</text>
+      <rect x="484" y="118" width="112" height="24" rx="3" fill="none" stroke="var(--line)" stroke-dasharray="3 2"/>
+      <text class="lb" x="540" y="134" text-anchor="middle">—</text>
+      <rect x="604" y="118" width="112" height="24" rx="3" fill="var(--gap-soft)" stroke="var(--gap)"/>
+      <text class="cal" x="660" y="134" text-anchor="middle">二维分箱热力</text>
+      <rect x="724" y="118" width="112" height="24" rx="3" fill="none" stroke="var(--line)" stroke-dasharray="3 2"/>
+      <text class="lb" x="780" y="134" text-anchor="middle">—</text>
+
+      <text class="lb" x="230" y="166" text-anchor="end">per_row</text>
+      <rect x="244" y="150" width="112" height="24" rx="3" fill="var(--gap-soft)" stroke="var(--gap)"/>
+      <text class="cal" x="300" y="166" text-anchor="middle">甘特 / 时间条</text>
+      <rect x="364" y="150" width="112" height="24" rx="3" fill="var(--have-soft)" stroke="var(--have)"/>
+      <text class="lb" x="420" y="166" text-anchor="middle">scatter</text>
+      <rect x="484" y="150" width="112" height="24" rx="3" fill="none" stroke="var(--line)" stroke-dasharray="3 2"/>
+      <text class="lb" x="540" y="166" text-anchor="middle">—</text>
+      <rect x="604" y="150" width="112" height="24" rx="3" fill="none" stroke="var(--line)" stroke-dasharray="3 2"/>
+      <text class="lb" x="660" y="166" text-anchor="middle">—</text>
+      <rect x="724" y="150" width="112" height="24" rx="3" fill="none" stroke="var(--line)" stroke-dasharray="3 2"/>
+      <text class="lb" x="780" y="166" text-anchor="middle">—</text>
+    </g>
+    <rect x="16" y="184" width="10" height="10" fill="var(--have-soft)" stroke="var(--have)"/>
+    <text class="lb" x="32" y="193">已有类型</text>
+    <rect x="104" y="184" width="10" height="10" fill="var(--gap-soft)" stroke="var(--gap)"/>
+    <text class="lb" x="120" y="193">乘积预测出来的候选，其中只有「区间条」被这 100 页抽到过</text>
+    <rect x="560" y="184" width="10" height="10" fill="none" stroke="var(--line)" stroke-dasharray="3 2"/>
+    <text class="lb" x="576" y="193">这一格没有意义，要在 chart_types.md 写明为什么空着</text>
+  </svg>
+  <figcaption><b>「缺哪几种图」从「等页面出现」变成「枚举乘积，逐格给结论」。</b>
+    加第六种图元形状（带状）就是多一列，四格候选一次性冒出来。</figcaption>
+</figure>
+
+<div class="band"><h2>第四条：图元密度可以指定</h2></div>
+
+<article class="card" id="P5">
+  <header><span class="id">缺口 P5</span><h3>基数上界随密度档</h3><span class="size">常量 → 查表</span></header>
+  <div class="body">
+    <figure class="draw">
+      <svg viewBox="0 0 420 148" role="img" aria-label="稀疏与稠密两档的对比">
+        <text class="lbb" x="100" y="14" text-anchor="middle">我们现在生成的：≤20 个图元</text>
+        <rect class="plot" x="14" y="22" width="172" height="82"/>
+        <rect class="b1" x="30"  y="48" width="24" height="56"/>
+        <rect class="b1" x="64"  y="60" width="24" height="44"/>
+        <rect class="b1" x="98"  y="40" width="24" height="64"/>
+        <rect class="b1" x="132" y="70" width="24" height="34"/>
+        <text class="calm" x="100" y="120" text-anchor="middle">抽查点正确率 91.9%（247 个）</text>
+        <text class="lb" x="100" y="136" text-anchor="middle">bar 的基数上界写死在 30</text>
+
+        <text class="lbb" x="320" y="14" text-anchor="middle">真实报告页上的：&gt;400 个图元</text>
+        <rect class="plot" x="234" y="22" width="172" height="82"/>
+        <g fill="var(--s1)">
+          <rect x="238" y="60" width="3" height="44"/><rect x="243" y="52" width="3" height="52"/>
+          <rect x="248" y="66" width="3" height="38"/><rect x="253" y="44" width="3" height="60"/>
+          <rect x="258" y="58" width="3" height="46"/><rect x="263" y="70" width="3" height="34"/>
+          <rect x="268" y="50" width="3" height="54"/><rect x="273" y="62" width="3" height="42"/>
+          <rect x="278" y="40" width="3" height="64"/><rect x="283" y="56" width="3" height="48"/>
+          <rect x="288" y="68" width="3" height="36"/><rect x="293" y="46" width="3" height="58"/>
+          <rect x="298" y="60" width="3" height="44"/><rect x="303" y="72" width="3" height="32"/>
+          <rect x="308" y="54" width="3" height="50"/><rect x="313" y="42" width="3" height="62"/>
+          <rect x="318" y="64" width="3" height="40"/><rect x="323" y="58" width="3" height="46"/>
+          <rect x="328" y="48" width="3" height="56"/><rect x="333" y="66" width="3" height="38"/>
+          <rect x="338" y="52" width="3" height="52"/><rect x="343" y="70" width="3" height="34"/>
+          <rect x="348" y="44" width="3" height="60"/><rect x="353" y="62" width="3" height="42"/>
+          <rect x="358" y="56" width="3" height="48"/><rect x="363" y="68" width="3" height="36"/>
+          <rect x="368" y="46" width="3" height="58"/><rect x="373" y="60" width="3" height="44"/>
+          <rect x="378" y="50" width="3" height="54"/><rect x="383" y="64" width="3" height="40"/>
+          <rect x="388" y="54" width="3" height="50"/><rect x="393" y="72" width="3" height="32"/>
+          <rect x="398" y="58" width="3" height="46"/>
+        </g>
+        <text class="cal" x="320" y="120" text-anchor="middle">抽查点正确率 69.8%（43 个）</text>
+        <text class="lb" x="320" y="136" text-anchor="middle">最密的一页：15 面板 × 61 时间点 × 2 线 ≈ 1830</text>
+      </svg>
+      <figcaption><b>两端的 95% 区间不重叠。</b>我们生成的图全挤在左边这一端，
+        中间那几档很少碰到，最密那一档一张都没有——所以「密度 → 能读到多准 → 表现」
+        这条链在同一批数据里测不出来。</figcaption>
+    </figure>
+
+    <div class="diff">
+      <div class="now"><h4>现在</h4><pre><i># charts.py 里是常量</i>
+bar      card=<s>(3, 30)</s>
+heatmap  card=<s>(6, 100)</s>
+line     points=<s>(5, None)</s>
+
+<i># 密度不是一个能指定的量，
+# 是「生成时碰运气落在哪」。</i></pre></div>
+      <div class="next"><h4>改完</h4><pre><b>DENSITY_BANDS</b> = {
+  "≤20":      ..., "21–60":   ...,
+  "61–150":   ..., "151–400": ...,
+  "&gt;400":     ...,
+}
+<i># card / points / n_marks 三个界
+# 随档取值，档位另给行数下界。</i></pre></div>
+    </div>
+
+    <p><strong>档位要给行数下界。</strong> 事实表行数不够就降档并记日志——
+       不要靠放宽 <code>min_rows_per_cell</code> 来凑，那会让每格只有 1 行的图混进来而结构检查查不出。</p>
+    <p class="note"><b>两件必须先做的事</b>
+      ① <code>rect.py::_write_label</code> 现在每写一个标签调一次全图重绘，
+      &gt;400 图元是数百次重绘，跑不动，先改成批量量取。
+      ② <code>chart_types.md</code> 要写明<strong>每档的预期可读率</strong>——
+      高密度档大批图元掉出值目标是设计后果。</p>
+    <div class="files"><em>落在</em><code>registry/charts.py</code><code>draw/rect.py</code></div>
+  </div>
+</article>
+
+<div class="band" id="styledom"><h2>风格向量是一张声明式取值域表</h2><span>一般化写法：「画法补齐」抬一层</span></div>
+
+<p>P6 的写法是「照实测清单补 30 项」。<strong>清单会过期，原则不会</strong>：
+任何不改变答案的视觉决定，都必须是一个<strong>带取值域的可采样维度</strong>。<br>
+改法是 <code>STYLE_DOMAINS: dict[str, StyleDim]</code>，每维四个字段——取值域 · 默认 · 绘制分支 · <strong>是否影响可读性</strong>。
+配一条元测试：每个声明的取值都有绘制分支（否则记录会写下一件没发生的事）；标了「不影响可读性」的维度，在自检③下答案逐位不变。<br>
+这样「还缺哪些画法」是一句 <code>set(vocabulary) - set(STYLE_DOMAINS)</code>，不是一次人工比对；
+今天的对照集是 ParseBench 的 65 项词表，<strong>换一份词表只换一个文件</strong>。
+取值域里具体填什么、每个取值配哪个绘制分支，在 <a href="#P6">03 渲染那一页</a>。</p>
+
+<div class="diff">
+  <div class="next"><h4>取值域表里的一行长什么样</h4><pre>STYLE_DOMAINS["value_labels"] = StyleDim(
+  domain   = ("none", "all", "some",
+              "outside", "outside_leader"),
+  default  = "none",
+  draws    = "draw/rect.py::_write_label",
+  <b>readable = True</b>,   <i># 印了数值 ⇒ 容差降到 0</i>
+)</pre></div>
+  <div class="next"><h4>不改答案的那一类</h4><pre>STYLE_DOMAINS["panel_bg"] = StyleDim(
+  domain   = ("white", "tint", "grid_band"),
+  default  = "white",
+  draws    = "draw/canvas.py::_panel",
+  <b>readable = False</b>,  <i># 自检③下答案逐位不变</i>
+)</pre></div>
+</div>
+<p class="note"><b>元测试查的就是最后那一栏。</b>标了不影响可读性的维度，换一档之后自检③读出来的键 → 值必须<strong>逐位相同</strong>；
+  声明了却没有绘制分支的取值一律报错——否则记录里会写下一件没发生的事。</p>
+
+<div class="band"><h2>在这里只占几个字段的那几条</h2><span>正文在它们各自的那一步，这里先把接口一次改完</span></div>
+
+<div class="scroll"><table>
+  <thead><tr><th>缺口</th><th>在这里加什么</th><th>正文在</th></tr></thead>
+  <tbody>
+    <tr><td><a class="pgNone" href="#P7">▸标题块进记录</a></td>
+        <td><code>figure.py</code> 加 <code>TextBlock</code> 类；<code>record.Element</code> 加 <code>text</code></td><td>03 渲染</td></tr>
+    <tr><td><a class="pgNone" href="#P8">▸颜色分组进键</a></td>
+        <td><code>figure.Binding</code> 加 <code>colour_group</code></td><td>05 输出</td></tr>
+    <tr><td><a class="pg x" href="#keysrc">▸键的每段记来源</a></td>
+        <td><code>figure.Binding</code> 的每个分组列带一个 <code>KeySource</code></td><td>02 选图</td></tr>
+    <tr><td><a class="pgNone" href="#compound">▸组合图改成规则</a></td>
+        <td><code>PanelSpec.views</code> 改成元组；<code>Layout</code> 加 <code>"overlay"</code></td><td>02 选图</td></tr>
+    <tr><td><a class="pgNone" href="#P6">▸画法补齐</a></td>
+        <td><code>style.py</code> 加 <code>series_marks</code> 与 <code>dual_axis</code> 两维</td><td>03 渲染</td></tr>
+  </tbody>
+</table></div>
+
+<div class="band"><h2>接口二次定版</h2><span>02–05 全部的前置，一次做完</span></div>
+
+<figure class="draw">
+  <svg viewBox="0 0 900 250" role="img" aria-label="接口二次定版的内容与四条硬依赖">
+    <!-- three interface files -->
+    <rect x="16" y="26" width="200" height="120" rx="6" fill="var(--surface)" stroke="var(--s1)" stroke-width="1.5"/>
+    <text class="lbb" x="28" y="44">interfaces/record.py</text>
+    <text class="lb" x="28" y="62">Mark.value_axis · mark_shape</text>
+    <text class="lb" x="28" y="78">Panel.chart_types 元组</text>
+    <text class="lb" x="28" y="94">Element.text</text>
+    <text class="cal" x="28" y="116">A6.1 – A6.3</text>
+    <text class="lb" x="28" y="134">记住对着哪条轴 · 标题块进记录</text>
+
+    <rect x="232" y="26" width="216" height="120" rx="6" fill="var(--surface)" stroke="var(--s1)" stroke-width="1.5"/>
+    <text class="lbb" x="244" y="44">interfaces/figure.py</text>
+    <text class="lb" x="244" y="62">TextBlock（八个 role）</text>
+    <text class="lb" x="244" y="78">Binding 的 KeySource（九个来源）</text>
+    <text class="lb" x="244" y="94">PanelSpec.views 元组 · Layout overlay</text>
+    <text class="cal" x="244" y="116">A6.4 – A6.6</text>
+    <text class="lb" x="244" y="134">标题块 · 两段键 · 键的来源 · 组合图</text>
+
+    <rect x="464" y="26" width="184" height="120" rx="6" fill="var(--surface)" stroke="var(--s1)" stroke-width="1.5"/>
+    <text class="lbb" x="476" y="44">interfaces/style.py</text>
+    <text class="lb" x="476" y="62">STYLE_DOMAINS 取值域表</text>
+    <text class="lb" x="476" y="78">series_marks</text>
+    <text class="lb" x="476" y="94">dual_axis</text>
+    <text class="cal" x="476" y="116">A6.7 – A6.8</text>
+    <text class="lb" x="476" y="134">画法补齐 · 取值域表</text>
+
+    <rect x="664" y="26" width="220" height="120" rx="6" fill="var(--surface)" stroke="var(--s3)" stroke-width="1.5"/>
+    <text class="lbb" x="676" y="44">registry/</text>
+    <text class="lb" x="676" y="62">mark / channel 改元组 · 删 compound</text>
+    <text class="lb" x="676" y="78">加三行类型 · DENSITY_BANDS</text>
+    <text class="lb" x="676" y="94">channels 的 tolerance 参数 · 覆盖网格</text>
+    <text class="cal" x="676" y="116">A6.9 – A6.14</text>
+    <text class="lb" x="676" y="134">类型表 · 密度档 · 容差 · 组合图</text>
+
+    <!-- converge -->
+    <g stroke="var(--muted)" stroke-width="1.2" fill="none">
+      <path d="M116,146 L116,166 L450,166 L450,182"/>
+      <path d="M340,146 L340,166"/><path d="M556,146 L556,166"/><path d="M774,146 L774,166"/>
+    </g>
+    <rect x="290" y="182" width="320" height="34" rx="6" fill="var(--key-soft)" stroke="var(--key)" stroke-width="1.4"/>
+    <text class="lbb" x="450" y="203" text-anchor="middle" fill="var(--key)">
+      A6.15　SCHEMA_VERSION 2 → 3，重生成 tests/samples/</text>
+    <text class="cal" x="450" y="236" text-anchor="middle">
+      分两次改接口 ＝ 把 C–F 写两遍。全部改完再动 C。</text>
+  </svg>
+  <figcaption><b>接口只动三个文件。</b>其余改动都落在还没写的文件上——
+    <code>s02_figure/</code> 整个、<code>s04_record/</code> 整个、<code>s05_output/</code> 整个、
+    <code>draw/</code> 里除 <code>rect.py</code> 外的四种图元。它们是「写的时候带上」。</figcaption>
+</figure>
+
+<div class="scroll"><table>
+  <thead><tr><th>A6 内部的硬依赖</th><th>为什么</th></tr></thead>
+  <tbody>
+    <tr><td>A6.1–A6.2 <span class="tag">记住对着哪条轴</span> 在 A6.13 <span class="tag">读数容差可传入</span> 之前</td>
+        <td>现算 ε 要先知道这个图元对着哪条轴</td></tr>
+    <tr><td>A6.4 <span class="tag">标题块进记录</span> 在 A6.5 <span class="tag">面板名进键</span> 之前</td>
+        <td>面板名取自面板自己的文本块</td></tr>
+    <tr><td>A6.11 <span class="tag">类型表加三行</span> 在 A6.12 <span class="tag">密度可以指定</span> 与 C5 <span class="tag">图表配比可换</span> 之前</td>
+        <td>类型名单定死，档位与权重才不会一写就过期</td></tr>
+    <tr><td>A6.7–A6.8 <span class="tag">画法补齐</span> 在 A6.13 <span class="tag">读数容差可传入</span> 之后</td>
+        <td>它加的取值（对数轴、零线、横向条）直接改可读判据</td></tr>
+  </tbody>
+</table></div>
+
+<p class="note"><b>A6.16 有两处必须提前</b>　<code>ink_fraction</code> 要赶在「面板底色」那一维之前——
+  它按白底判「框里有没有东西」，加底色后会<strong>静默失效</strong>（自检恒过、偏移的框照样写盘）。
+  <code>rect.py::_write_label</code> 要赶在密度档打开之前——现在每个标签一次全图重绘，
+  &gt;400 图元跑不动。</p>
+
+<div class="band"><h2>这一组的进度</h2></div>
+
+<div class="grp">
+<div><h4>A · 骨架与数据接口</h4><div class="chips"><a class="pgNone" href="#P9" title="ParseBench 缺口 P9 · 点开跳到那一条">▸记住对着哪条轴</a><a class="pgNone" href="#P1" title="ParseBench 缺口 P1 · 点开跳到那一条">▸读数容差可传入</a><a class="pgNone" href="#P7" title="ParseBench 缺口 P7 · 点开跳到那一条">▸标题块进记录</a><a class="pgNone" href="#P2" title="ParseBench 缺口 P2 · 点开跳到那一条">▸面板名进键</a><a class="pgNone" href="#P8" title="ParseBench 缺口 P8 · 点开跳到那一条">▸颜色分组进键</a><a class="pgNone" href="#P10" title="ParseBench 缺口 P10 · 点开跳到那一条">▸类型表加三行</a><a class="pgNone" href="#P5" title="ParseBench 缺口 P5 · 点开跳到那一条">▸密度可以指定</a><a class="pgNone" href="#P6" title="ParseBench 缺口 P6 · 点开跳到那一条">▸画法补齐</a><a class="pgNone" href="#compound" title="读码核实出来的，报告里没有编号 · 点开跳到那一条">▸组合图改成规则</a></div>
+    <div class="bar"><i class="d" style="width:24%"></i><i class="c" style="width:71%"></i><i class="t" style="width:5%"></i></div>
+    <p class="cnt">5 已完成 · 16 待做（15 是改动）</p>
+    <p><strong>A6 接口二次定版是全局前置。</strong>抬一次 <code>SCHEMA_VERSION</code> 2 → 3，
+       C–F 一遍按新接口写。</p></div>
+</div>
+<div class="legend">
+  <span><b class="d" style="background:var(--have)"></b>已完成</span>
+  <span><b class="c" style="background:var(--s2)"></b>待做，且是十条改动落进来的项</span>
+  <span><b class="t" style="background:var(--line)"></b>待做，主线实现</span>
+</div>
+</section>
+<section class="tab" id="tab-s01" hidden>
+<div class="band"><h2>01 数据：领域池 → 事实表 ＋ 表结构</h2><span>唯一一次「写数据」的 LLM 调用</span></div>
+
+<p class="note"><b>领域池 → FactTable ＋ TableSchema。</b>
+一次 LLM 调用产出三段：场景散文、生成脚本、已经绑定到列的意图。解析、判族、执行、结构检查全是程序。<br>
+<b>这一步整段已经落地</b>，七项里六项完成。十条缺口没有一条以 01 为主体。</p>
+
+<figure class="draw">
+  <svg viewBox="0 0 900 196" role="img" aria-label="01 数据这一步跑完手上有什么">
+    <rect x="8" y="46" width="112" height="100" rx="6" fill="var(--surface)" stroke="var(--line)"/>
+    <text class="lbb" x="64" y="66" text-anchor="middle">领域池</text>
+    <rect x="17" y="76" width="94" height="16" rx="3" fill="var(--raised)"/><text class="lb" x="64" y="87" text-anchor="middle">急诊科等待时间</text>
+    <rect x="17" y="96" width="94" height="16" rx="3" fill="var(--raised)"/><text class="lb" x="64" y="107" text-anchor="middle">电网日负荷</text>
+    <rect x="17" y="116" width="94" height="16" rx="3" fill="var(--raised)"/><text class="lb" x="64" y="127" text-anchor="middle">港口吞吐</text>
+    <g stroke="var(--muted)" stroke-width="1.2" fill="none"><path d="M120,96 L146,96"/><path d="M272,96 L298,96"/></g>
+    <rect x="146" y="46" width="126" height="100" rx="6" fill="var(--gap-soft)" stroke="var(--gap)"/>
+    <text class="cal" x="209" y="70" text-anchor="middle">调用①</text>
+    <text class="lb" x="209" y="88" text-anchor="middle">一次调用写三段</text>
+    <text class="lb" x="209" y="103" text-anchor="middle">场景散文</text>
+    <text class="lb" x="209" y="117" text-anchor="middle">声明脚本</text>
+    <text class="lb" x="209" y="131" text-anchor="middle">三条意图</text>
+    <rect x="298" y="14" width="268" height="168" rx="6" fill="var(--surface)" stroke="var(--s1)" stroke-width="1.4"/>
+    <text class="lbb" x="310" y="32">TableSchema</text>
+    <text class="lb" x="310" y="50">hospital(3) → department(4)</text>
+    <text class="lb" x="310" y="64">severity(3, ordinal) · visit_date 182 天</text>
+    <line class="gld" x1="310" y1="72" x2="554" y2="72"/>
+    <text class="lb" x="310" y="87">wait_minutes　minutes　可加</text>
+    <text class="lb" x="310" y="101">cost　　　　　USD　　　可加</text>
+    <text class="lb" x="310" y="115">satisfaction　points　　不可加</text>
+    <line class="gld" x1="310" y1="123" x2="554" y2="123"/>
+    <text class="lb" x="310" y="138">依赖图　wait_minutes → cost</text>
+    <text class="lb" x="310" y="152">意图①比较　②趋势　③关系</text>
+    <text class="calm" x="310" y="170">三条意图各自绑好了列、聚合与族</text>
+    <rect x="582" y="14" width="310" height="168" rx="6" fill="var(--surface)" stroke="var(--s1)" stroke-width="1.4"/>
+    <text class="lbb" x="594" y="32">FactTable　900 行，一行一次就诊</text>
+    <line class="gl" x1="594" y1="56" x2="880" y2="56"/>
+    <g class="lb">
+      <text x="594" y="50">visit_id</text><text x="654" y="50">hospital</text><text x="736" y="50">department</text><text x="818" y="50">wait</text><text x="856" y="50">sat</text>
+      <text x="594" y="74">v_00001</text><text x="654" y="74">Mercy Gen.</text><text x="736" y="74">Surgery</text><text x="818" y="74">61.4</text><text x="856" y="74">3.1</text>
+      <text x="594" y="92">v_00002</text><text x="654" y="92">St. Luke's</text><text x="736" y="92">Cardiology</text><text x="818" y="92">28.7</text><text x="856" y="92">4.2</text>
+      <text x="594" y="110">v_00003</text><text x="654" y="110">Riverside</text><text x="736" y="110">Pediatrics</text><text x="818" y="110">19.2</text><text x="856" y="110">4.6</text>
+      <text x="594" y="128">…</text>
+    </g>
+    <text class="lb" x="594" y="154">一行 ＝ 一次事件。<tspan class="lbb">这一步不做任何聚合</tspan>——</text>
+    <text class="lb" x="594" y="168">聚合只发生在 02 的投影里，那里还有三种形态根本不聚合。</text>
+  </svg>
+  <figcaption><b>这一步跑完，下游只认这两样。</b>场景散文与三条意图是 TableSchema 的字段，不占单独的产物；
+    <code>900 行</code>、<code>42.3 / 35.8 / 28.1</code> 这几个数在后面每一页都会再出现。</figcaption>
+</figure>
+
+<article class="card">
+  <header><span class="id">设计决定</span><h3>第一次调用：写三段，不拆成两次</h3></header>
+  <div class="body">
+    <figure class="draw">
+      <svg viewBox="0 0 900 178" role="img" aria-label="一次调用输出三段，各有独立校验">
+        <rect x="16" y="52" width="120" height="56" rx="6" fill="var(--gap-soft)" stroke="var(--gap)" stroke-width="1.4"/>
+        <text class="cal" x="76" y="76" text-anchor="middle">一次 LLM 调用</text>
+        <text class="lb"  x="76" y="92" text-anchor="middle">领域池给一个子领域</text>
+        <g stroke="var(--muted)" stroke-width="1.2" fill="none">
+          <path d="M136,80 L168,80 L168,32 L200,32"/>
+          <path d="M136,80 L200,80"/>
+          <path d="M136,80 L168,80 L168,128 L200,128"/>
+        </g>
+        <rect x="200" y="18" width="180" height="28" rx="5" fill="var(--surface)" stroke="var(--line)"/>
+        <text class="lbb" x="212" y="36">① 场景散文</text>
+        <rect x="200" y="66" width="180" height="28" rx="5" fill="var(--surface)" stroke="var(--line)"/>
+        <text class="lbb" x="212" y="84">② 声明脚本</text>
+        <rect x="200" y="114" width="180" height="28" rx="5" fill="var(--surface)" stroke="var(--line)"/>
+        <text class="lbb" x="212" y="132">③ 意图 ＋ 列绑定</text>
+        <g stroke="var(--muted)" stroke-width="1.2" fill="none">
+          <path d="M380,32 L412,32"/><path d="M380,80 L412,80"/><path d="M380,128 L412,128"/>
+        </g>
+        <text class="lb" x="418" y="36">场景去重（比对标题）</text>
+        <text class="lb" x="418" y="84">隔离执行 ＋ 结构检查四项 ＋ 逐族判非空</text>
+        <text class="lb" x="418" y="132">列存在 · 聚合对该测度合法 · 族在六个里</text>
+        <path d="M700,146 L700,160 L100,160 L100,116" stroke="var(--gap)" stroke-width="1.2"
+              fill="none" stroke-dasharray="3 2"/>
+        <text class="cal" x="400" y="174" text-anchor="middle">哪一段不过就带具体原因回喂哪一段，上限三次</text>
+      </svg>
+      <figcaption><b>脚本就是场景的形式化写法。</b>拆成两次调用会在中间放一层有损的 JSON——
+        层级、有序性、单位、可加性在自然语言里都不显式——而且下游没有回到上游的反馈通路。
+        <strong>列和意图一起写出来，所以意图绑定是构造成立的，不是推断出来的。</strong></figcaption>
+    </figure>
+    <p class="note"><b>对着的坑</b>　单次调用负担过重，某一段质量下降。
+      对策是<strong>三段各有独立校验</strong>，回喂只针对出问题的那一段。</p>
+    <p class="note"><b>第二次调用：给选出来的图写标题</b>　一个场景 8 张图，而这里只写 3 条意图。
+      标题块要求每张图都有标题——要是 3 张用意图写、5 张拼模板，语料里就有
+      <strong>两种一眼看得出的标题腔调</strong>，模型会学到「模板腔 ＝ 这一类图」，
+      这是我们自己造出来的假信号。模板标题（<code>Average wait time by hospital</code>）
+      还<strong>从坐标轴就能猜出来</strong>，「单位只写在标题里」这个点就废了。
+      <br>所以：<strong>02 选完图之后，把这一批图的 schema 一次交给 LLM，每张图回一个标题</strong>，
+      不分意图图和其余的图。一个场景一次、输入不含任何数据值、输出只有文字、
+      校验拒绝含数字、按内容哈希缓存。<strong>它不判可行性、不选图、不产生任何值 / 键 / 框。</strong>
+      细节在 <a href="PLAN.md">PLAN.md 的「标题从哪来」</a>。</p>
+  </div>
+</article>
+
+<div class="scroll"><table>
+  <thead><tr><th>另外两条设计决定</th><th>说明</th></tr></thead>
+  <tbody>
+    <tr><td><b>可行性在声明期就判完</b></td>
+        <td>结构条件与语义条件只依赖列声明：<code>dim</code> 的取值表给出基数，<code>time</code> 的起止与频率给出点数，
+            <code>additive</code> 与 <code>ordered</code> 是声明字段。
+            <strong>01 只问每个族是不是非空，从不展开组合</strong>；只有方差 / 相异值 / 实际单元格数要看真实数据</td></tr>
+    <tr><td><b>原子粒度</b></td>
+        <td>一行事实表 ＝ 一次事件。<strong>聚合只发生在 02 的投影里</strong>，而且那里有三种形态根本不聚合</td></tr>
+  </tbody>
+</table></div>
+
+<div class="band"><h2>落在这一步的缺口：只有一条</h2></div>
+
+<p class="note"><b>唯一要动的一条</b>　<a class="pgNone" href="#P5" title="ParseBench 缺口 P5 · 点开跳到那一条">▸密度可以指定</a>
+的下游：<strong>密度档给出行数下界，事实表要跟得上</strong>。
+不做这条，高密度档一开，<code>_allocate</code> 会把长尾压成 1 行，而结构检查查不出来。
+<strong>不要改用放宽 <code>min_rows_per_cell</code> 的办法</strong>——那是在放弃每个单元格的最小样本量。</p>
+
+<div class="band"><h2>这一组的进度</h2></div>
+
+<div class="grp">
+<div><h4>B · 01 数据</h4><div class="chips"><a class="pgNone" href="#P5" title="ParseBench 缺口 P5 · 点开跳到那一条">▸密度可以指定</a></div>
+    <div class="bar"><i class="d" style="width:86%"></i><i class="c" style="width:14%"></i></div>
+    <p class="cnt">6 已完成 · 1 待做（1 是改动）</p>
+    <p>全段已落地。只剩「事实表行数下界随密度档」一项。</p></div>
+</div>
+<div class="legend">
+  <span><b class="d" style="background:var(--have)"></b>已完成</span>
+  <span><b class="c" style="background:var(--s2)"></b>待做，且是十条改动落进来的项</span>
+  <span><b class="t" style="background:var(--line)"></b>待做，主线实现</span>
+</div>
+</section>
+<section class="tab" id="tab-s02" hidden>
+<div class="band"><h2>02 选图：事实表 ＋ 表结构 → 图表规格</h2><span>选哪几张图、每张画什么、叫什么名字</span></div>
+
+<p class="note"><b>FactTable ＋ TableSchema → FigureSpec。</b>
+这一步决定这个场景出哪几张图、每张图画什么，然后在图定下来之后，给这一批图写标题。<br>
+<b>整组未开工，41 项待做，是四十多项里最大的一块。</b>两个净增的文件都在这里。</p>
+
+<figure class="draw">
+  <svg viewBox="0 0 900 268" role="img" aria-label="02 在急诊科例子上产出 8 张图">
+    <rect x="8" y="30" width="150" height="150" rx="6" fill="var(--surface)" stroke="var(--line)"/>
+    <text class="lbb" x="83" y="50" text-anchor="middle">TableSchema</text>
+    <text class="lb" x="18" y="70">4 个维度列</text><text class="lb" x="18" y="86">3 个数值列</text>
+    <text class="lb" x="18" y="102">3 条意图绑定</text>
+    <line class="gld" x1="18" y1="112" x2="148" y2="112"/>
+    <text class="lb" x="18" y="130">FactTable 900 行</text>
+    <text class="lb" x="18" y="152">逐条投影、逐条判</text><text class="lb" x="18" y="166">进出，不枚举候选</text>
+    <g stroke="var(--muted)" stroke-width="1.2" fill="none"><path d="M158,105 L186,105"/></g>
+    <g>
+      <rect x="186" y="30" width="180" height="44" rx="5" fill="var(--have-soft)" stroke="var(--have)"/>
+      <text class="calm" x="196" y="48">构造　意图图 3 张</text><text class="lb" x="196" y="64">绑定固定了列与族，没有随机数</text>
+      <rect x="186" y="83" width="180" height="44" rx="5" fill="var(--have-soft)" stroke="var(--have)"/>
+      <text class="calm" x="196" y="101">推导　多面板图 2 张</text><text class="lb" x="196" y="117">以已通过的图当锚点，关系算出来</text>
+      <rect x="186" y="136" width="180" height="44" rx="5" fill="var(--gap-soft)" stroke="var(--gap)"/>
+      <text class="cal" x="196" y="154">采样　轮转图 3 张</text><text class="lb" x="196" y="170">唯一要随机数的一路，抽了再判</text>
+    </g>
+    <g stroke="var(--muted)" stroke-width="1.2" fill="none"><path d="M366,105 L394,105"/></g>
+    <g class="lb">
+      <rect x="394" y="26" width="256" height="158" rx="6" fill="var(--surface)" stroke="var(--s1)" stroke-width="1.4"/>
+      <text class="lbb" x="404" y="44">这一批 8 张图</text>
+      <text x="404" y="62">① bar　　hospital × AVG(wait)　←意图①</text>
+      <text x="404" y="77">② line　 visit_date × AVG(wait)　←意图②</text>
+      <text x="404" y="92">③ scatter wait × satisfaction　　←意图③</text>
+      <text x="404" y="107">④ 2 面板　以①为锚点，每院一个面板</text>
+      <text x="404" y="122">⑤ 2 面板　以②为锚点，上 / 下半年</text>
+      <text x="404" y="137">⑥ pie　　department 占比</text>
+      <text x="404" y="152">⑦ box　　hospital × wait 的五数</text>
+      <text x="404" y="167">⑧ heatmap hospital × department</text>
+    </g>
+    <g stroke="var(--muted)" stroke-width="1.2" fill="none"><path d="M650,105 L678,105"/></g>
+    <rect x="678" y="26" width="214" height="158" rx="6" fill="var(--gap-soft)" stroke="var(--gap)"/>
+    <text class="cal" x="688" y="44">调用②　图选定之后写字</text>
+    <text class="lb" x="688" y="64">8 张图的 schema 一次交上去</text>
+    <text class="lb" x="688" y="79">（类型 / 列 / 聚合 / 单位，<tspan class="lbb">没有数据值</tspan>）</text>
+    <line class="gld" x1="688" y1="88" x2="882" y2="88"/>
+    <text class="lb" x="688" y="104">回来 8 个标题 ＋ 每列的散文名</text>
+    <text class="lb" x="688" y="122">图① Emergency department wait</text>
+    <text class="lb" x="688" y="136">　　 times by hospital</text>
+    <text class="lb" x="688" y="152">wait_minutes → "Average wait"</text>
+    <text class="lb" x="688" y="168">severity → "Triage level"</text>
+    <line class="gld" x1="8" y1="200" x2="892" y2="200"/>
+    <text class="lbb" x="8" y="220">冗余判据在这里挡掉了什么</text>
+    <text class="lb" x="8" y="238">轮转时抽到 <tspan class="lbb">bar(hospital × AVG(cost))</tspan>——键集合与①相同（三家医院），图元形状也相同（矩形）⇒ 拒。</text>
+    <text class="lb" x="8" y="254">抽到 <tspan class="lbb">bar(department × AVG(wait))</tspan> 就收下：键集合不同（四个科室）。判据只看这一对，没有阈值要调。</text>
+  </svg>
+  <figcaption><b>三条产出路径，只有最下面那条要随机数。</b>名字说的是「这张图怎么被选中的」，不是它的重要性——
+    不要读成「主图 / 补充图」。</figcaption>
+</figure>
+
+<article class="card">
+  <header><span class="id">设计决定</span><h3>三类图，三种产出方式，只有一种要随机数</h3></header>
+  <div class="body">
+    <figure class="draw">
+      <svg viewBox="0 0 900 200" role="img" aria-label="意图图构造、多面板推导、轮转图采样">
+        <!-- intent -->
+        <text class="lbb" x="16" y="20">意图图 · 构造</text>
+        <rect x="16" y="30" width="264" height="88" rx="6" fill="var(--surface)" stroke="var(--s3)" stroke-width="1.4"/>
+        <text class="lb" x="30" y="50">绑定给了列、聚合、族</text>
+        <text class="lb" x="30" y="66">条件表给了类型</text>
+        <text class="lb" x="30" y="82">确定顺序断平手</text>
+        <text class="calm" x="30" y="104">没有随机数。它的价值是 caption——</text>
+        <text class="calm" x="30" y="116">只有意图图的说明里有图上读不到的信息</text>
+        <!-- panel -->
+        <text class="lbb" x="310" y="20">多面板图 · 推导</text>
+        <rect x="310" y="30" width="264" height="88" rx="6" fill="var(--surface)" stroke="var(--s3)" stroke-width="1.4"/>
+        <text class="lb" x="324" y="50">锚点必须是已被单独收下的图</text>
+        <text class="lb" x="324" y="66">第二个面板按关系规则算出来</text>
+        <text class="lb" x="324" y="82">五种关系：切面 · 下钻 · 时间 · 双指标 · 整体部分</text>
+        <text class="calm" x="324" y="104">没有随机数。共享视图 ⇒ 白得一份配对样本</text>
+        <!-- rotation -->
+        <text class="lbb" x="604" y="20">轮转图 · 采样加拒绝</text>
+        <rect x="604" y="30" width="280" height="88" rx="6" fill="var(--surface)" stroke="var(--s2)" stroke-width="1.4"/>
+        <text class="lb" x="618" y="50">逐族抽 (类型, 列, 聚合)</text>
+        <text class="lb" x="618" y="66">校验 → 投影 → 收或重抽，至多 T 次</text>
+        <text class="lb" x="618" y="82">先补批次里还没有的族</text>
+        <text class="cal" x="618" y="104">全流水线唯一读随机数的地方</text>
+        <!-- no enumeration -->
+        <rect x="16" y="136" width="868" height="52" rx="6" fill="var(--gap-soft)" stroke="var(--gap)" stroke-dasharray="4 3"/>
+        <text class="cal" x="30" y="156">不枚举候选清单。</text>
+        <text class="lb"  x="140" y="156">枚举要把几百到几千条候选全算出来、每条投影一遍才知道通不通过，</text>
+        <text class="lb"  x="30" y="174">而一个场景只出十来张图。改成：01 只判族非空，02 逐条构造或采样、逐条投影、逐条判进出。</text>
+      </svg>
+      <figcaption><b>名字描述的是「这张图怎么被选中的」，不是它的重要性。</b>
+        不要重新引入「主图 / 补充图」这种读法——那正是让人误解的地方。</figcaption>
+    </figure>
+  </div>
+</article>
+
+<article class="card">
+  <header><span class="id">设计决定</span><h3>多样性由判据管，不由数量管<a class="pgNone" href="#P3" title="ParseBench 缺口 P3 · 点开跳到那一条">▸一页多图分得开</a></h3></header>
+  <div class="body">
+    <figure class="draw">
+      <svg viewBox="0 0 900 176" role="img" aria-label="键集合与图元形状的冗余判据">
+        <text class="lbb" x="16" y="18">批次里已经有：<tspan font-weight="400">bar(hospital × AVG wait)</tspan></text>
+        <!-- accepted / rejected rows -->
+        <g>
+          <rect x="16" y="30" width="868" height="30" rx="5" fill="var(--gap-soft)" stroke="var(--gap)"/>
+          <text class="cal" x="30" y="49">拒</text>
+          <text class="lb"  x="56" y="49">bar(hospital × SUM cost)</text>
+          <text class="lb"  x="270" y="49">键相同 {Mercy, St. Luke's, Riverside}，图元也相同（矩形）</text>
+          <text class="cal" x="874" y="49" text-anchor="end">三个条、同样的标签，只有高度不同</text>
+
+          <rect x="16" y="66" width="868" height="30" rx="5" fill="var(--have-soft)" stroke="var(--have)"/>
+          <text class="calm" x="30" y="85">收</text>
+          <text class="lb"   x="56" y="85">pie(hospital × SUM wait)</text>
+          <text class="lb"   x="270" y="85">键相同，<tspan font-weight="600">图元不同（扇形）</tspan></text>
+          <text class="calm" x="874" y="85" text-anchor="end">值字典与可读性通道都不一样</text>
+
+          <rect x="16" y="102" width="868" height="30" rx="5" fill="var(--have-soft)" stroke="var(--have)"/>
+          <text class="calm" x="30" y="121">收</text>
+          <text class="lb"   x="56" y="121">box(department × wait)</text>
+          <text class="lb"   x="270" y="121"><tspan font-weight="600">键不同</tspan>（四个科室）</text>
+          <text class="calm" x="874" y="121" text-anchor="end">五数一个图元，另一种形状</text>
+        </g>
+        <text class="lb" x="16" y="152">判据取这一对，是因为训练目标的单位是「键 · 值 · 区域」：</text>
+        <text class="lb" x="16" y="168">键集合决定图上出现哪些实体，图元形状决定框长什么样、值字典有几个键、值能不能从像素读出。</text>
+      </svg>
+      <figcaption><b><code>K_max</code>（默认 12）只是渲染与存储的预算。</b>
+        拿数量当多样性的代理挡不住「八张图全是 <code>bar(hospital × …)</code>」——数量照样满足。
+        <strong>多面板图不受这条管</strong>：它的价值是版面形态，键重复正是版面配对样本的来源。</figcaption>
+    </figure>
+  </div>
+</article>
+
+<div class="band"><h2>投影永远是一条 SELECT，四种形态</h2></div>
+
+<div class="scroll"><table>
+  <thead><tr><th>投影形态</th><th>用在</th><th>特点</th></tr></thead>
+  <tbody>
+    <tr><td><b>分组标量</b></td><td>bar 族 · line · area · pie · heatmap · waterfall · funnel</td><td>一组一个数</td></tr>
+    <tr><td><b>分组五数</b></td><td>box（<strong>区间条复用这一路</strong>）</td><td>一组五个数，不新造聚合</td></tr>
+    <tr><td><b>分箱计数</b></td><td>histogram</td><td>先定箱边再计数，<code>rows</code> ＝ <code>count</code></td></tr>
+    <tr><td><b>逐行不分组</b></td><td>scatter</td><td>要按种子确定性下采样到点数上限；L2 退化成每个图元 1 行</td></tr>
+  </tbody>
+</table></div>
+<p class="note"><b>四条路径，不按图表类型分支。</b>聚合集合跟着形态走——<code>FIVE_NUM</code> / <code>BIN_COUNT</code> /
+  <code>NONE</code> 不是 SUM/AVG/COUNT。四者要分开，是因为<strong>值字典大小、能用哪些数据条件、L2 有没有用</strong>，三件事都不同。<br>
+  <b>行过滤只在 <code>panel.py</code> 里出现</b>：它只服务「时间对照」一种关系，是配对时从锚点现场切出来的，不是 ViewSpec 的一个采样维度。</p>
+
+<pre class="tree">分组标量　　SELECT hospital, AVG(wait_minutes), COUNT(*) FROM t GROUP BY hospital
+　　　　　　→ 3 个图元　("Mercy General",) {"value": 42.3}　rows=372
+分组五数　　SELECT department, 五数(wait_minutes)　　　　　 FROM t GROUP BY department
+　　　　　　→ 4 个图元　("Surgery",) {"min":8,"q1":22,"med":35,"q3":51,"max":97}　rows=210
+分箱计数　　先定 12 个箱边，再 SELECT bin, COUNT(*)　　　　FROM t GROUP BY bin
+　　　　　　→ 12 个图元　("30–35",) {"count":88,"bin_lo":30,"bin_hi":35}　rows=88
+逐行不分组　SELECT wait_minutes, satisfaction　　　　　　　FROM t　（不 GROUP BY）
+　　　　　　→ 900 行超过点数上限 400，按种子确定性抽 400 个图元
+　　　　　　　("row_00317",) {"x":38.0,"y":3.4}　rows=1</pre>
+<p class="note"><b>这就是为什么必须按形态分支，而不是按图表类型分支。</b>
+  值字典从 1 个键到 5 个键不等；<code>rows</code> 的含义从「这一组有几行」变成「这一箱有几个」再变成恒等于 1；
+  能用的数据条件也各不相同。<code>draw/rect.py</code> 同时服务 bar 族、histogram、waterfall、funnel、区间条——
+  差别只在值字典里填哪几个键。</p>
+
+<div class="band"><h2>落在这一步的第一条：图表配比可换</h2></div>
+
+<article class="card" id="P4">
+  <header><span class="id">缺口 P4</span><h3>族采样权重可换</h3><span class="size">唯一的新文件</span></header>
+  <div class="body">
+    <figure class="draw">
+      <svg viewBox="0 0 420 128" role="img" aria-label="两套权重预设">
+        <text class="lb" x="4" y="27">uniform（默认）</text>
+        <rect x="100" y="16" width="52" height="16" fill="var(--s1)"/>
+        <rect x="152" y="16" width="52" height="16" fill="var(--s2)"/>
+        <rect x="204" y="16" width="52" height="16" fill="var(--s3)"/>
+        <rect x="256" y="16" width="52" height="16" fill="var(--s1d)"/>
+        <rect x="308" y="16" width="52" height="16" fill="var(--s1l)"/>
+        <rect x="360" y="16" width="52" height="16" fill="var(--muted)"/>
+        <text class="lb" x="4" y="61">parsebench（实测配比）</text>
+        <rect x="100" y="50" width="94" height="16" fill="var(--s1)"/>
+        <rect x="194" y="50" width="72" height="16" fill="var(--s2)"/>
+        <rect x="266" y="50" width="58" height="16" fill="var(--s3)"/>
+        <rect x="324" y="50" width="42" height="16" fill="var(--s1d)"/>
+        <rect x="366" y="50" width="30" height="16" fill="var(--s1l)"/>
+        <rect x="396" y="50" width="16" height="16" fill="var(--muted)"/>
+        <rect x="100" y="80" width="10" height="8" fill="var(--s1)"/><text class="lb" x="114" y="88">比较</text>
+        <rect x="152" y="80" width="10" height="8" fill="var(--s2)"/><text class="lb" x="166" y="88">趋势</text>
+        <rect x="204" y="80" width="10" height="8" fill="var(--s3)"/><text class="lb" x="218" y="88">构成</text>
+        <rect x="256" y="80" width="10" height="8" fill="var(--s1d)"/><text class="lb" x="270" y="88">关系</text>
+        <rect x="308" y="80" width="10" height="8" fill="var(--s1l)"/><text class="lb" x="322" y="88">分布</text>
+        <rect x="360" y="80" width="10" height="8" fill="var(--muted)"/><text class="lb" x="374" y="88">流程</text>
+        <text class="cal" x="4" y="114">换的是一个函数，不是流水线：一个 flag 选预设，预设本身只返回一个权重向量。</text>
+      </svg>
+      <figcaption><b>要做的不是「照 ParseBench 的配比生成」</b>——那是把流水线绑死在一把尺子上，
+        正好是我们要避免的。要做的是把「各族占多少」从写死的等概率抽取里拿出来，
+        变成一个可以换的分布。</figcaption>
+    </figure>
+
+    <div class="diff">
+      <div class="now"><h4>现在</h4><pre><i># 轮转图：先补批次里还没有的族，
+# 补齐之后</i> <s>等概率</s> <i>轮着抽。
+# 想换配比只能改代码。</i></pre></div>
+      <div class="next"><h4>改完</h4><pre><i># 新文件 s02_figure/sampling.py</i>
+<b>weights("uniform")</b>    <i># 默认，与现在逐位等价</i>
+<b>weights("parsebench")</b> <i># 实测配比</i>
+<b>weights(path)</b>         <i># 自定义权重文件</i></pre></div>
+    </div>
+
+    <div class="scroll"><table>
+      <thead><tr><th>约束</th><th>为什么</th></tr></thead>
+      <tbody>
+        <tr><td>权重作用在<strong>抽取顺序</strong>上，不是配额</td>
+            <td>规格明写「出几张图是采样结果」；配额还会把空族的预算浪费掉，默认档产出的图反而变少</td></tr>
+        <tr><td><code>uniform</code> 必须与现有规则<strong>逐位等价</strong></td>
+            <td>否则默认行为悄悄变了，之前所有消融数字的基线都漂移</td></tr>
+        <tr><td>权重<strong>按名键入</strong>，随产物落盘</td>
+            <td>按下标写，<a href="#P10">P10</a> 加完行之后会静默错位</td></tr>
+        <tr><td><strong>不回流到 01</strong> 的可行性检查</td>
+            <td>否则两档的事实表不是同一份数据，消融就不是对照</td></tr>
+      </tbody>
+    </table></div>
+
+    <p class="note"><b>这一条的证据本身不硬，报告里写的是「证据不足」。</b>
+      三家在图表类型上的一致率是全部指标里最低的，但把分歧逐条裁完之后
+      <strong>23 条判成同一个答案：组合图</strong>——分歧来自命名习惯
+      （有人只说了条那一层，没说叠在上面的菱形），不是看到的东西不同。
+      所以这一条要的是「配比可换」这个能力，不是某一组具体的数。</p>
+    <div class="files"><em>落在</em><code>s02_figure/sampling.py</code>（新）</div>
+  </div>
+</article>
+
+<div class="band" id="compound"><h2>第二条：组合图从类型表的一行，改成一条组合规则</h2>
+  <span>不占编号，但它是这一轮唯一一处结构改动</span></div>
+
+<p><strong>现在的写法把组合图当成了一种图表类型</strong>——<code>charts.py</code> 里有一行
+   <code>compound</code>，写死了「恰好一个分组列、恰好两个测度、一个系列、矩形 ＋ 点、两条纵轴」。
+   这一行有两个问题。</p>
+
+<div class="scroll"><table>
+  <thead><tr><th>问题</th><th>核实</th></tr></thead>
+  <tbody>
+    <tr><td><strong>它今天根本选不出来</strong></td>
+        <td>那一行写着 <code>family=None</code>，而轮转图按族抽、<code>in_family()</code> 按
+            <code>family</code> 过滤——<code>compound</code> 永远不落在任何一族里。
+            <strong>它是一行谁也够不着的死行。</strong></td></tr>
+    <tr><td><strong>它写死的那一对是任意的</strong></td>
+        <td>规格自己已经把它当成组合结果了：<code>02_figure.md §4.1</code> 的
+            「双指标」关系写的是「同面板双轴 compound，<strong>或</strong>并排共享 x 轴」——
+            同一条关系，落在一个绘图区里叫 compound，落在两个绘图区里叫多面板图。
+            那它就不是一种类型，是一种<strong>版面</strong>。</td></tr>
+  </tbody>
+</table></div>
+
+<p style="margin-top:14px"><strong>改法：把它挪到多面板图旁边，用同一种机制。</strong>
+   多面板图是「两个视图，两个绘图区，共享轴或图例」；组合图是「两个视图，<strong>一个</strong>绘图区，
+   共享 x 轴」。规则一样，落点不同。</p>
+
+<figure class="draw">
+  <svg viewBox="0 0 420 176" role="img" aria-label="底图与叠加的组合">
+    <text class="lbb" x="4" y="12">同一条规则，换底图换叠加就是不同的组合图</text>
+    <text class="lb" x="66" y="30" text-anchor="middle">bar ＋ line</text>
+    <rect class="plot" x="14" y="36" width="104" height="62"/>
+    <rect class="b1" x="26" y="62" width="20" height="36"/>
+    <rect class="b1" x="56" y="70" width="20" height="28"/>
+    <rect class="b1" x="86" y="78" width="20" height="20"/>
+    <polyline class="ln" points="36,56 66,66 96,60"/>
+    <circle cx="36" cy="56" r="2.6" fill="var(--s2)"/>
+    <circle cx="66" cy="66" r="2.6" fill="var(--s2)"/>
+    <circle cx="96" cy="60" r="2.6" fill="var(--s2)"/>
+
+    <text class="lb" x="210" y="30" text-anchor="middle">stacked_bar ＋ 三角记号</text>
+    <rect class="plot" x="158" y="36" width="104" height="62"/>
+    <rect class="b1" x="170" y="72" width="20" height="26"/>
+    <rect class="bl" x="170" y="56" width="20" height="16"/>
+    <rect class="b1" x="200" y="78" width="20" height="20"/>
+    <rect class="bl" x="200" y="64" width="20" height="14"/>
+    <rect class="b1" x="230" y="68" width="20" height="30"/>
+    <rect class="bl" x="230" y="52" width="20" height="16"/>
+    <path d="M180,44 l5,8 -10,0 z" fill="var(--s2)"/>
+    <path d="M210,54 l5,8 -10,0 z" fill="var(--s2)"/>
+    <path d="M240,42 l5,8 -10,0 z" fill="var(--s2)"/>
+
+    <text class="lb" x="354" y="30" text-anchor="middle">区间条 ＋ 圆点</text>
+    <rect class="plot" x="302" y="36" width="104" height="62"/>
+    <rect x="316" y="48" width="46" height="8" fill="var(--s3)"/>
+    <circle cx="340" cy="52" r="3.4" fill="var(--s2)"/>
+    <rect x="330" y="64" width="56" height="8" fill="var(--s3)"/>
+    <circle cx="366" cy="68" r="3.4" fill="var(--s2)"/>
+    <rect x="310" y="80" width="38" height="8" fill="var(--s3)"/>
+    <circle cx="322" cy="84" r="3.4" fill="var(--s2)"/>
+
+    <text class="lb" x="4" y="120">底图（图元是矩形 / 带状）：bar · grouped_bar · stacked_bar · area · waterfall · 区间条</text>
+    <text class="lb" x="4" y="134">叠加（图元是点 / 带状）：line · scatter · 扇形预测带</text>
+    <text class="calm" x="4" y="152">合法条件 ＝ 各视图各自过自己那一行 ∧ 分组键相同 ∧ 图元形状不同</text>
+    <text class="calm" x="4" y="168">轴 ＝ 同量纲一条，异量纲两条</text>
+  </svg>
+  <figcaption><b>零新行，反而删掉一行。</b>能画出来的组合是「底图 × 叠加」的乘积，
+    而不是一行写死一对。上面三张今天一张都画不出来，改完之后都是同一条规则的结果。</figcaption>
+</figure>
+
+<div class="diff">
+  <div class="now"><h4>现在：类型表的一行</h4><pre><i># registry/charts.py</i>
+_t(name="compound", <s>family=None</s>,
+   shape="grouped_scalar",
+   <s>mark="rect"</s>, <s>channel="length"</s>,
+   n_group=(1,1), <s>n_measure=(2,2)</s>,
+   <s>series=(1,1)</s>, card=(3,30))
+
+<i># PanelSpec 只装得下一个视图</i>
+class PanelSpec:
+    panel_id: str
+    <s>view: ViewSpec</s></pre></div>
+  <div class="next"><h4>改完：一条组合规则</h4><pre><i># charts.py 里那一行删掉</i>
+
+<i># interfaces/figure.py</i>
+Layout = Literal["single", "side_by_side",
+                 "grid", <b>"overlay"</b>]
+
+class PanelSpec:
+    panel_id: str
+    <b>views: tuple[ViewSpec, ...]</b>
+    <i># 长度 1 是普通面板
+    # 长度 ≥2 是组合图</i>
+
+<i># s02_figure/panel.py 多一条规则，
+# 和五种多面板关系并列</i></pre></div>
+</div>
+
+<div class="scroll"><table>
+  <thead><tr><th>要动的</th><th>为什么这样就够</th></tr></thead>
+  <tbody>
+    <tr><td><code>PanelSpec.view</code> → <code>views</code> 元组</td>
+        <td>一个绘图区装几个视图，就是组合图与普通面板的全部差别。长度 1 的元组就是今天的行为</td></tr>
+    <tr><td><code>Layout</code> 的 <code>"dual_axis"</code> → <code>"overlay"</code></td>
+        <td>叠加不一定双轴——<span class="nums">实测 59 个组合图里 39 个只有一条值轴</span>。
+            轴数由量纲决定，不该写进版面名</td></tr>
+    <tr><td><code>Panel.chart_type</code> → <code>chart_types</code> 元组</td>
+        <td>一个面板画了两种图，单值装不下</td></tr>
+    <tr><td><a href="#P9">P9</a> 是它的前提</td>
+        <td>没有 <code>mark_shape</code> / <code>value_axis</code>，一个面板里的两批图元分不开</td></tr>
+    <tr><td>冗余判据不用改</td>
+        <td>判据是「键集合 ＋ 图元形状」；组合图的形状集合是 <code>{rect, point}</code>，
+            与普通条形的 <code>{rect}</code> 天然不同</td></tr>
+    <tr><td>01 的 LLM 契约不用改</td>
+        <td><code>compound</code> 本来就 <code>family=None</code>，从来没进过覆盖度检查</td></tr>
+  </tbody>
+</table></div>
+
+<p class="note"><b>实测对得上。</b>三家在这 100 页上标出
+  <span class="nums">59 个组合图（30 页）</span>，叠加形态证据 79 条：
+  点 / 菱形 / 三角 54 · 折线 29 · 短竖线 9 · <strong>底层是堆叠条 14</strong> · 带状 7。
+  写死那一行只覆盖「bar ＋ line ＋ 双轴」一种；改成组合规则之后，
+  <strong>除了带状（要等 <a href="#P10">P10</a> 把带状图元引进来）之外全都能画</strong>。
+  <br><br><b>顺带说明一件容易误会的事</b>　「折线叠在条上」和「菱形叠在条上」
+  <strong>在我们的形状分类里是同一种组合</strong>——<code>line</code> 与 <code>scatter</code>
+  都写着 <code>mark="point"</code>。点之间连不连线、画成什么记号，是
+  <a href="#P6">P6</a> 的 <code>series_marks</code>，不是两种图。</p>
+
+<div class="band"><h2>谁跟谁叠：三条语义</h2><span>不是一种搭配，是「两个视图共用一个绘图区」的三种理由</span></div>
+<div class="scroll"><table>
+  <thead><tr><th></th><th>两个视图的关系</th><th>急诊科例子</th><th>前提</th></tr></thead>
+  <tbody>
+    <tr><td><b>语义一<br>两个测度</b></td><td>同一批键，两个不同的数值列</td>
+        <td>各科室的<strong>就诊量</strong>（条）＋<strong>平均等待</strong>（线）</td><td>现在就能做</td></tr>
+    <tr><td><b>语义二<br>同一测度的两次切片</b></td><td>同一批键、同一列，两个行过滤或两个聚合</td>
+        <td>各科室<strong>上半年</strong>（条）＋<strong>下半年</strong>（点）<br>各科室<strong>平均</strong>（条）＋<strong>九十分位</strong>（点）</td>
+        <td>行过滤从「时间对照」那条关系借现成的</td></tr>
+    <tr><td><b>语义三<br>值加它的区间</b></td><td>同一批键、同一列，一次分组标量 ＋ 一次分组五数</td>
+        <td>各科室<strong>平均等待</strong>（条）＋<strong>最短–最长</strong>（带）</td>
+        <td>要等 <a href="#P10">类型表加三行</a>把带状图元引进来</td></tr>
+  </tbody>
+</table></div>
+<p class="note"><b>只写语义一，就把 <code>compound</code> 那一行的毛病换个地方犯了</b>——还是写死一种搭配。
+  三条语义覆盖实测里的三类：<span class="nums">79 条</span>叠加形态证据里，点 / 菱形 / 三角 <span class="nums">54 条</span>大多是语义一或二，
+  带状 <span class="nums">7 条</span>是语义三。<br>
+  <b>三条都从锚点推导，都不需要随机数</b>——组合图和多面板图一样是「推导」出来的那一类，
+  <strong>不动「只有轮转图要随机数」这条</strong>。</p>
+
+<div class="band"><h2>语义一怎么选第二列</h2><span>确定顺序，没有随机数</span></div>
+<p>锚点固定了分组键 <code>K</code>、第一测度 <code>m1</code>、聚合 <code>a1</code>。
+   第二测度 <code>m2</code> 从表结构的数值列里选，<b>按下面的顺序取第一个可用的</b>：</p>
+<div class="scroll"><table>
+  <thead><tr><th>顺位</th><th>挑什么</th><th>为什么排在这</th><th>急诊科例子</th></tr></thead>
+  <tbody>
+    <tr><td><b>1</b></td><td><strong>依赖图上与 <code>m1</code> 有边</strong>的列</td>
+        <td>「一个量和它的派生量」是报告里最常见的双指标</td><td><code>cost</code> 由 <code>wait_minutes</code> 算出来</td></tr>
+    <tr><td><b>2</b></td><td><strong>可加性与 <code>m1</code> 不同</strong>的列</td>
+        <td>可加的量当底图（矩形，从零起算），不可加的率或评分当叠加（点 / 线）——就是「总量 ＋ 比率」那种最常见的报告图</td>
+        <td>就诊量（可加）＋ 满意度（不可加）</td></tr>
+    <tr><td><b>3</b></td><td><strong>量纲与 <code>m1</code> 不同</strong>的列</td>
+        <td>不同量纲才需要第二条轴；同量纲的一对更适合 <code>grouped_bar</code>，本来也会被冗余判据挡掉一部分</td>
+        <td>minutes ＋ USD</td></tr>
+    <tr><td><b>4</b></td><td>列清单里的下一个</td><td>兜底</td><td>—</td></tr>
+  </tbody>
+</table></div>
+<p class="note"><b>聚合不用挑</b>　由 <code>m2</code> 的可加性定：可加 → SUM，不可加 → AVG，与规格里数值列的聚合规则同一条。<br>
+  <b>谁当底图</b>　可加、从零起算的那个（矩形）。两个都可加就按列清单顺序取前一个。<br>
+  <b>一个都选不出来就不出组合图</b>，记原因，不降级成别的形态。</p>
+
+<div class="band"><h2>轴数由量纲定，不由版面名定</h2><span>这就是把 <code>"dual_axis"</code> 改名成 <code>"overlay"</code> 的原因</span></div>
+<div class="scroll"><table>
+  <thead><tr><th>情形</th><th>几条值轴</th><th></th></tr></thead>
+  <tbody>
+    <tr><td>同量纲</td><td><b>一条</b></td><td>实测 <span class="nums">59 个组合图里 39 个</span>只有一条值轴</td></tr>
+    <tr><td>异量纲</td><td><b>两条</b></td><td>强制，不由风格决定</td></tr>
+    <tr><td><b>同量纲、但两个值域比 &gt; 20 倍</b></td><td><b>也给两条</b></td>
+        <td>不给第二条轴，叠加那条线会压成贴着轴的一条直线，值读不出来，<strong>自检②会把整张图丢掉</strong></td></tr>
+  </tbody>
+</table></div>
+<p class="note">同量纲且值域相当时，一条还是两条由<a href="#P6">画法补齐</a>那一维采样决定——那才是风格该管的部分。</p>
+
+<div class="band"><h2>乘积：底图 × 叠加</h2><span>写死那一行只覆盖 16 格里的 1 格</span></div>
+<p><b>合法条件 ＝ 各视图各自过自己那一行　∧　分组键相同　∧　图元形状不同。</b>第三项把格子筛掉一批：</p>
+<div class="scroll"><table>
+  <thead><tr><th>底图</th><th>它的图元</th><th>能配的叠加</th><th>格数</th></tr></thead>
+  <tbody>
+    <tr><td><code>bar</code> · <code>grouped_bar</code> · <code>stacked_bar</code> · <code>waterfall</code> · 区间条</td>
+        <td>矩形</td><td><code>line</code> · <code>scatter</code> · windsock</td><td>5 × 3 ＝ <b>15</b></td></tr>
+    <tr><td><code>area</code></td><td>点</td>
+        <td>只有 windsock（<code>line</code> / <code>scatter</code> 也是点，形状相同不合法）</td><td><b>1</b></td></tr>
+  </tbody>
+</table></div>
+<p class="note"><b>合计 16 格。</b>其中含 windsock 的 6 格要等带状图元，所以<strong>现在能画 10 格，
+  <a href="#P10">类型表加三行</a>落地后 16 格</strong>——写死那一行只有 1 格。<br>
+  <b><code>area</code> 那一格容易看错</b>　<code>line</code> · <code>area</code> · <code>scatter</code> 三个都写着
+  <code>mark="point"</code>，所以「折线叠在面积图上」在我们的形状分类里是两个相同形状叠在一起，不合法，也确实分不开——
+  两批图元的框重合，<code>mark_shape</code> 也一样，记录里没法把它们分开。</p>
+
+<div class="band"><h2>第三条：键的每一段记下角色与来源</h2><span>一般化写法：吸收面板名进键与颜色分组进键</span></div>
+
+<figure class="draw">
+  <svg viewBox="0 0 900 258" role="img" aria-label="一张图上的四段键，四个出处">
+    <text class="lb" x="8" y="16">急诊科那张两面板图：面板标题写医院，横轴刻度写科室，图例写分诊等级，其中一根条旁边还直接印了数。</text>
+    <rect x="8" y="26" width="500" height="168" rx="6" fill="var(--surface)" stroke="var(--line)"/>
+    <rect x="24" y="36" width="112" height="15" rx="3" fill="var(--key-soft)" stroke="var(--key)"/>
+    <text class="lbb" x="80" y="47" text-anchor="middle" fill="var(--key)">Mercy General</text>
+    <rect x="250" y="36" width="112" height="15" rx="3" fill="var(--key-soft)" stroke="var(--key)"/>
+    <text class="lbb" x="306" y="47" text-anchor="middle" fill="var(--key)">St. Luke's</text>
+    <g class="plot"><rect x="24" y="58" width="204" height="98"/><rect x="250" y="58" width="204" height="98"/></g>
+    <g><rect x="40" y="86" width="20" height="70" class="b1"/><rect x="62" y="104" width="20" height="52" class="bl"/>
+       <rect x="106" y="98" width="20" height="58" class="b1"/><rect x="128" y="118" width="20" height="38" class="bl"/>
+       <rect x="172" y="112" width="20" height="44" class="b1"/><rect x="194" y="128" width="20" height="28" class="bl"/>
+       <rect x="266" y="100" width="20" height="56" class="b1"/><rect x="288" y="116" width="20" height="40" class="bl"/>
+       <rect x="332" y="110" width="20" height="46" class="b1"/><rect x="354" y="124" width="20" height="32" class="bl"/>
+       <rect x="398" y="122" width="20" height="34" class="b1"/><rect x="420" y="134" width="20" height="22" class="bl"/></g>
+    <text class="cal" x="52" y="82" text-anchor="middle">61.4</text>
+    <path class="lead" d="M52,84 L52,86"/>
+    <g class="lb" fill="var(--s3)">
+      <text x="61" y="168" text-anchor="middle">Surgery</text><text x="127" y="168" text-anchor="middle">Cardiology</text><text x="193" y="168" text-anchor="middle">Pediatrics</text>
+      <text x="287" y="168" text-anchor="middle">Surgery</text><text x="353" y="168" text-anchor="middle">Cardiology</text><text x="419" y="168" text-anchor="middle">Pediatrics</text>
+    </g>
+    <rect x="24" y="176" width="120" height="14" rx="3" fill="var(--s2)" opacity="0.13"/>
+    <rect x="30" y="180" width="7" height="7" class="b1"/><text class="lb" x="42" y="187" fill="var(--s2)">Severe</text>
+    <rect x="86" y="180" width="7" height="7" class="bl"/><text class="lb" x="98" y="187" fill="var(--s2)">Moderate</text>
+    <rect x="524" y="26" width="368" height="168" rx="6" fill="var(--raised)" stroke="var(--line)"/>
+    <text class="lbb" x="536" y="46">同一张图，四段键，四个来源</text>
+    <g class="lb">
+      <text x="536" y="68"><tspan fill="var(--key)">■</tspan> hospital　　 → 面板标题　　KeySource = panel_title</text>
+      <text x="536" y="86"><tspan fill="var(--s3)">■</tspan> department　→ 横轴刻度　　KeySource = axis_tick</text>
+      <text x="536" y="104"><tspan fill="var(--s2)">■</tspan> severity　　 → 图例　　　　KeySource = legend</text>
+      <text x="536" y="122"><tspan fill="var(--gap)">■</tspan> 那个 61.4　　→ 图元旁标注　KeySource = inline_label</text>
+    </g>
+    <line class="gld" x1="536" y1="132" x2="880" y2="132"/>
+    <g class="lb">
+      <text x="536" y="150">key　　 = ("Mercy General", "Surgery", "Severe")</text>
+      <text x="536" y="166">key_src = (<tspan class="cal">"panel_title"</tspan>, <tspan class="cal">"axis_tick"</tspan>, <tspan class="cal">"legend"</tspan>)</text>
+      <text x="536" y="182">values　= {"value": 61.4}　box = [412,118,448,306]</text>
+    </g>
+    <line class="gld" x1="8" y1="206" x2="892" y2="206"/>
+    <text class="lb" x="8" y="224"><tspan class="lbb">为什么必须逐段记，而不是整条记一个来源</tspan>——模型要找出 <tspan class="lbb">Mercy General</tspan> 得去看面板标题，要找出 <tspan class="lbb">Surgery</tspan> 得去看横轴刻度。记「这张图的键来自哪」答不出这两个问题里的任何一个。</text>
+    <text class="lb" x="8" y="244"><tspan class="lbb">同一份数据换个画法，来源就变了</tspan>：把两面板拆成一张图、医院进图例，<tspan class="lbb">Mercy General</tspan> 的来源就从面板标题变成图例；改成一页两图、医院只写在标题里，就变成「标题里」。键没变，出处变了。</text>
+  </svg>
+  <figcaption><b>这一栏是「视觉出处」这条轴上属于键的那三分之一。</b>
+    另外两份：值的出处（对着哪条轴、按哪种形状量）、图外文字的出处（这段字是标题还是来源行）。</figcaption>
+</figure>
+
+<article class="card" id="keysrc">
+  <header><span class="id">一般化</span><h3>键的每一段，记下它的角色和它是从哪读到的</h3>
+    <span class="size">吸收 面板名进键 ＋ 颜色分组进键</span></header>
+  <p><code>Mark.key</code> 现在是一个有序字符串元组，<strong>没有角色、没有来源</strong>。
+     而 ParseBench 的分析契约里每一段键都带「角色 ＋ 来源」——这一轮 100 页量到 <span class="nums">924 段</span>：</p>
+  <div class="scroll"><table>
+    <thead><tr><th>角色 ＼ 来源</th><th>轴刻度</th><th>图例</th><th>面板标题</th><th>图元旁直接标注</th><th>图的标题里</th><th>只有颜色</th><th>页面上没写</th></tr></thead>
+    <tbody>
+      <tr><td><code>category</code> 类目</td><td><b>224</b></td><td></td><td></td><td>30</td><td></td><td></td><td></td></tr>
+      <tr><td><code>time</code> 时间</td><td><b>178</b></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+      <tr><td><code>series</code> 系列</td><td></td><td><b>298</b></td><td></td><td>28</td><td>12</td><td></td><td>3</td></tr>
+      <tr><td><code>panel</code> 面板</td><td></td><td></td><td><b>84</b></td><td>8</td><td>14</td><td></td><td></td></tr>
+      <tr><td><code>colour_group</code> 颜色分组</td><td></td><td>13</td><td></td><td></td><td></td><td><b>12</b></td><td></td></tr>
+    </tbody>
+  </table></div>
+  <p><b><a href="#P2">面板名进键</a>与<a href="#P8">颜色分组进键</a>是这张表里的两格</b>——<code>panel</code> 那一行、
+     <code>colour_group</code> 那一行。把它们各写成一条特例，就永远拿不到另外三格：</p>
+  <ul>
+    <li><b>图元旁直接标注 72 次</b>　名字直接标在图元旁边，不在轴上也不在图例里。今天我们一个都画不出来</li>
+    <li><b>只写在图的标题里 28 次</b>　「Figure 3 · Mercy General」</li>
+    <li><b>页面上根本没写 7 次</b>　键不可从图上复原——这类点应当<strong>主动排除出值目标</strong></li>
+  </ul>
+  <p><b>改法</b>　<code>Binding</code> 的分组列各带一个 <code>KeySource</code>（轴刻度 / 图例 / 面板标题 / 图元旁标注 /
+     标题里 / 只有颜色 / 记号形状 / 填充纹理 / 没写）。<strong>02 按规则给每个分组列定这个值</strong>，
+     03 按来源决定这段名字画在哪，04 把「没写」的键排除出值目标，05 多出一类训练目标。</p>
+  <p class="note"><b>这一条直接落在我们的可防守轴上</b>：不只是「键 · 值 · 区域」有出处，<strong>键的每一段各有出处</strong>。
+     它同时给出一类新的训练目标——「这一段名字是从哪读到的」，
+     而这正是解析器失败的大头（<span class="nums">寻址类错误占 72.2%</span>）。</p>
+</article>
+
+<div class="band"><h2>第四条：图选定之后，给这一批图写标题</h2></div>
+
+<article class="card" id="title">
+  <header><span class="id">补齐</span><h3>标题从哪来：该加的第二次 LLM 调用</h3><span class="size">新文件 <code>title.py</code></span></header>
+  <p><b>一条规则：02 选完图之后，把这一批图的 schema 一次交给 LLM，每张图回一个标题。</b>不分意图图和其余的图。</p>
+  <p><b>为什么不分</b>　意图那个区分是 <strong>caption</strong> 的事，不是标题的事。
+     caption 是训练目标里的一段文字，讲图上读不出来的信息，所以意图图有意图可用、别的图没有。
+     标题块是<strong>画在图上的字</strong>，每张图都得有。两件事，两条规则，不该互相牵连。</p>
+  <p><b>为什么不能拼模板</b>　一个场景 8 张图，01 只写 3 条意图。
+     要是 3 张用意图写标题、5 张拼模板，语料里就有<strong>两种一眼看得出的标题腔调</strong>，
+     模型会学到「模板腔 ＝ 这一类图」——这是我们自己造出来的假信号。
+     而且模板标题（<code>Average wait time by hospital</code>）<strong>从坐标轴就能猜出来</strong>，
+     <a href="#P7">标题块进记录</a>想立的点是「单位只写在标题里」，标题一可猜，这个点就废了。</p>
+  <div class="scroll"><table>
+    <tbody>
+      <tr><td><b>什么时候</b></td><td>02 选完图之后、03 开画之前</td></tr>
+      <tr><td><b>调几次</b></td><td><strong>一个场景一次</strong>，8 张图批在同一次调用里。不是一张图一次</td></tr>
+      <tr><td><b>给它什么</b></td><td>场景散文 ＋ 每张图的（类型、列、聚合、单位、面板名、关系）。<strong>不给任何数据值</strong></td></tr>
+      <tr><td><b>它回什么</b></td><td>每张图的主标题 / 副标题 / 单位，外加<strong>每列的散文名</strong>——轴标题和图例也要用，不然轴上写的是 <code>wait_minutes</code></td></tr>
+      <tr><td><b>校验</b></td><td><strong>不许含数字</strong>（年份与单位除外）。标题画出来就是真值，一句「等待时间大幅下降」会污染后面导出的问答对</td></tr>
+      <tr><td><b>缓存</b></td><td>按内容哈希，与 01 同一套 ⇒ 同一份输入必得同一批标题</td></tr>
+      <tr><td><b>拿不到模型时</b></td><td>退回模板。<strong>这是给离线开发和端到端测试的兜底，不是一个可选档</strong></td></tr>
+    </tbody>
+  </table></div>
+  <p class="note"><b>代价：整条流水线从一次调用变成两次。</b>这是规格里白纸黑字的一条不变式，要一起改。<br>
+    <b>但改的只是「几次调用」。</b>那条更深的约束没动——第二次调用<strong>不判可行性、不选图、不产生任何值 / 键 / 框</strong>，
+    它的输出全部落在画出来的文字里。</p>
+</article>
+
+<div class="diff">
+  <div class="now"><h4>给它什么（一个数据值都没有）</h4><pre><i># 场景散文</i>
+「三家社区医院的急诊科，2024 年上半年…」
+
+<i># 8 张图的 sub-schema，逐条</i>
+图1  bar   x=hospital
+           y=AVG(wait_minutes)  单位 minutes
+           来源=意图「比较各院等待」
+图4  两面板 overlay  panel=hospital
+           x=department
+           y1=COUNT  y2=AVG(wait_minutes)
+…（共 8 条）</pre></div>
+  <div class="next"><h4>它回什么</h4><pre>图1  主标题 <b>Emergency department wait
+      times by hospital</b>
+     副标题 Average per visit, Jan–Jun 2024
+     单位　 minutes
+
+图4  主标题 <b>Visit volume and average wait,
+      by department</b>
+     副标题 Each panel is one hospital
+
+<i># 每列的散文名，轴与图例都要用</i>
+wait_minutes → "Average wait"
+satisfaction → "Patient satisfaction"
+severity　　 → "Triage level"</pre></div>
+</div>
+<p class="note"><b>列的散文名是必须要的那一半。</b>没有它，轴上写的是 <code>wait_minutes</code>、图例里写的是 <code>severity</code>。
+  而这两处的字<strong>同时是键的来源</strong>（<a href="#keysrc">轴刻度与图例</a>），
+  所以它们是不是人话，直接决定这张图的键能不能被逐字复制出来。<br>
+  <b>校验拦掉的是这种</b>　<code>Wait times fell sharply after triage reform</code>——画出来就成了图上的真值，
+  而数据里并没有这回事。规则是<strong>不许含数字</strong>（年份与单位除外）＋ 只许命名画了什么，不许陈述结论。</p>
+
+<p class="note"><b>还有一条落在这一步</b>　<a class="pgNone" href="#P3" title="ParseBench 缺口 P3 · 点开跳到那一条">▸一页多图分得开</a>
+的主体在 05 输出，但它有一条落在 <code>admit.py</code>：<strong>同一页、且标题块不同的多张图，要给冗余判据开豁免</strong>。
+不做这条，<code>FPA-guide-to-data-visualization_p20</code> 那种形态——并排两张图共用同一批类目名，只有各自的小标题能把它们分开——会被我们自己的准入检查拒掉。
+<code>02_figure.md §3.2</code> 现在的豁免条文按面板数写，要改成按来源写。</p>
+
+<div class="band"><h2>这一组的进度</h2></div>
+
+<div class="grp">
+<div><h4>C · 02 选图</h4><div class="chips"><a class="pgNone" href="#P3" title="ParseBench 缺口 P3 · 点开跳到那一条">▸一页多图分得开</a><a class="pgNone" href="#P4" title="ParseBench 缺口 P4 · 点开跳到那一条">▸图表配比可换</a><a class="pgNone" href="#P10" title="ParseBench 缺口 P10 · 点开跳到那一条">▸类型表加三行</a><a class="pgNone" href="#compound" title="读码核实出来的，报告里没有编号 · 点开跳到那一条">▸组合图改成规则</a></div>
+    <div class="bar"><i class="c" style="width:15%"></i><i class="t" style="width:85%"></i></div>
+    <p class="cnt">0 已完成 · 46 待做（10 是改动）</p>
+    <p>整组未开工。两个净增的文件都在这里：<code>sampling.py</code> 与 <code>title.py</code>。那条同面板叠加规则也在这一组。</p></div>
+</div>
+<div class="legend">
+  <span><b class="d" style="background:var(--have)"></b>已完成</span>
+  <span><b class="c" style="background:var(--s2)"></b>待做，且是十条改动落进来的项</span>
+  <span><b class="t" style="background:var(--line)"></b>待做，主线实现</span>
+</div>
+</section>
+<section class="tab" id="tab-s03" hidden>
+<div class="band"><h2>03 渲染：图表规格 ＋ 风格向量 → 图像与两层记录</h2><span>画一笔，记一笔</span></div>
+
+<p class="note"><b>FigureSpec ＋ StyleVector → RenderOutput。</b>
+画图，同时把每个部件的框、键、值记下来。<br>
+<b>改动最密的一组</b>：33 项里 14 项是十条改动落进来的。四种图元形状要写，风格向量要按取值域表补齐，页面合成整个是新的。</p>
+
+<figure class="draw">
+  <svg viewBox="0 0 900 236" role="img" aria-label="画第一根条的那一刻记下来的是什么">
+    <rect x="8" y="14" width="430" height="212" rx="6" fill="var(--surface)" stroke="var(--line)"/>
+    <text class="lbb" x="20" y="32">画布 900 × 600 · dpi 100 —— 三项写死，画完不许动</text>
+    <rect x="66" y="52" width="340" height="140" class="plot" stroke-dasharray="0"/>
+    <text class="lb" x="66" y="46">绘图区 [96, 60, 860, 520]</text>
+    <line class="gl" x1="66" y1="192" x2="406" y2="192"/>
+    <g class="lb"><text x="60" y="196" text-anchor="end">0</text><text x="60" y="126" text-anchor="end">30</text><text x="60" y="56" text-anchor="end">60</text></g>
+    <text class="lb" x="30" y="126" text-anchor="middle" transform="rotate(-90 30 126)">Average wait</text>
+    <rect x="92" y="93" width="52" height="99" class="b1"/>
+    <rect x="184" y="109" width="52" height="83" class="bl"/>
+    <rect x="276" y="126" width="52" height="66" class="bl"/>
+    <g class="lb"><text x="118" y="206" text-anchor="middle">Mercy General</text><text x="210" y="206" text-anchor="middle">St. Luke's</text><text x="302" y="206" text-anchor="middle">Riverside</text></g>
+    <path class="lead" d="M144,93 L172,80"/>
+    <text class="cal" x="176" y="78">这一根 ＝ 42.3，框 [168,196,278,520]</text>
+    <text class="lb" x="20" y="222">y 值域 [0, 60] ↔ 像素域 [520, 60]　⇒　每像素 0.13 分钟</text>
+    <rect x="454" y="14" width="438" height="212" rx="6" fill="var(--raised)" stroke="var(--line)"/>
+    <text class="lbb" x="466" y="32">画这一笔的同一行，写下这些</text>
+    <g class="lb">
+      <text x="466" y="54">Panel(panel_id="p0", rect=[96,60,860,520],</text>
+      <text x="466" y="69">　　　axes=[Axis(role="y", vmin=0, vmax=60,</text>
+      <text x="466" y="84">　　　　　　　　　pmin=520, pmax=60)],</text>
+      <text x="466" y="99">　　　chart_types=("bar",))</text>
+      <text x="466" y="120">Mark(key=("Mercy General",),</text>
+      <text x="466" y="135">　　 values={"value": 42.3},</text>
+      <text x="466" y="150">　　 box=[168, 196, 278, 520],</text>
+      <text x="466" y="165">　　 <tspan class="cal">value_axis="y"</tspan>, <tspan class="cal">mark_shape="rect"</tspan>)</text>
+      <text x="466" y="186">Element(role="title", box=[96,24,540,44],</text>
+      <text x="466" y="201">　　　　<tspan class="cal">text="Emergency department wait…"</tspan>)</text>
+    </g>
+    <text class="lb" x="466" y="220">橙色那三处是这一轮新加的字段。</text>
+  </svg>
+  <figcaption><b>为什么框和值必须此刻一起写。</b>只有画这一笔的时候，<code>42.3</code> 与
+    <code>[168,196,278,520]</code> 两者同时在手。画完再回头解析图像，就得靠猜——
+    而<b>布局参数一旦不冻结</b>，自动布局会在画完之后挪动绘图区，把已经记下的每一个框静默作废。</figcaption>
+</figure>
+
+<article class="card">
+  <header><span class="id">设计决定</span><h3>画和记不分开</h3></header>
+  <div class="body">
+    <figure class="draw">
+      <svg viewBox="0 0 900 190" role="img" aria-label="边画边记与画完再标注的对比">
+        <!-- ours -->
+        <text class="calm" x="16" y="18">我们：画每个图元的那一行同时写记录</text>
+        <rect x="16" y="26" width="420" height="70" rx="6" fill="var(--surface)" stroke="var(--have)" stroke-width="1.4"/>
+        <rect class="b1" x="40" y="44" width="30" height="42"/>
+        <rect x="36" y="40" width="38" height="50" fill="none" stroke="var(--have)" stroke-dasharray="3 2"/>
+        <text class="lb" x="86" y="52">框　[168,196,278,520]　用绘图库自己的坐标变换</text>
+        <text class="lb" x="86" y="68">键　("Mercy General",)</text>
+        <text class="lb" x="86" y="84">值　{"value": 42.3}　—— 这一刻三者同时在手</text>
+        <!-- theirs -->
+        <text class="cal" x="470" y="18">画完再回去标注</text>
+        <rect x="470" y="26" width="414" height="70" rx="6" fill="var(--surface)" stroke="var(--gap)" stroke-width="1.4"
+              stroke-dasharray="4 3"/>
+        <rect class="b1" x="494" y="44" width="30" height="42"/>
+        <text class="lb" x="540" y="52">框　要从像素里找回来 —— 找错了不报错</text>
+        <text class="lb" x="540" y="68">值　要反推 —— 轴一变就系统性偏</text>
+        <text class="cal" x="540" y="84">真值就成了另一个模型的输出</text>
+        <!-- frozen layout -->
+        <rect x="16" y="112" width="868" height="60" rx="6" fill="var(--key-soft)" stroke="var(--key)"/>
+        <text class="lbb" x="30" y="132" fill="var(--key)">配套的硬约束：布局参数冻结</text>
+        <text class="lb" x="30" y="150">图像尺寸、dpi、绘图区矩形三项写死。自动布局会在画完之后挪动绘图区，</text>
+        <text class="lb" x="30" y="166">把已经记下的每一个框<tspan font-weight="600">静默作废</tspan>——不报错，只是全错。</text>
+      </svg>
+      <figcaption><b>真值只在画的那一刻存在。</b>这条决定了整个记录层的形状，
+        也是「不要回去重渲染修一张图」这条禁令的来源——
+        换一个风格向量重渲是<strong>一件产品</strong>（风格配对样本），不是一次重试。</figcaption>
+    </figure>
+  </div>
+</article>
+
+<article class="card">
+  <header><span class="id">设计决定</span><h3>按图元形状分文件，视觉变体归风格向量<a class="pgNone" href="#P10" title="ParseBench 缺口 P10 · 点开跳到那一条">▸类型表加三行</a><a class="pgNone" href="#P6" title="ParseBench 缺口 P6 · 点开跳到那一条">▸画法补齐</a><a class="pgNone" href="#compound" title="读码核实出来的，报告里没有编号 · 点开跳到那一条">▸组合图改成规则</a><a class="pg x" href="#grid" title="一般化写法 · 点开跳到那一条">▸类型表按乘积</a></h3></header>
+  <div class="body">
+    <figure class="draw">
+      <svg viewBox="0 0 900 150" role="img" aria-label="13 种类型 5 种图元形状">
+        <text class="lbb" x="16" y="18">13 种类型　→　5 种图元形状　→　5 个绘制文件</text>
+        <g>
+          <rect x="16" y="30" width="300" height="26" rx="4" fill="var(--s1)" opacity=".18" stroke="var(--s1)"/>
+          <text class="lbb" x="26" y="48">rect</text>
+          <text class="lb" x="76" y="48">bar · grouped_bar · stacked_bar · histogram · waterfall · funnel</text>
+          <rect x="16" y="62" width="300" height="26" rx="4" fill="var(--s2)" opacity=".18" stroke="var(--s2)"/>
+          <text class="lbb" x="26" y="80">point</text>
+          <text class="lb" x="76" y="80">line · area · scatter</text>
+          <rect x="16" y="94" width="140" height="26" rx="4" fill="var(--s3)" opacity=".18" stroke="var(--s3)"/>
+          <text class="lbb" x="26" y="112">sector</text><text class="lb" x="76" y="112">pie</text>
+          <rect x="162" y="94" width="70" height="26" rx="4" fill="var(--s3)" opacity=".18" stroke="var(--s3)"/>
+          <text class="lbb" x="170" y="112">cell</text><text class="lb" x="200" y="112">heatmap</text>
+          <rect x="238" y="94" width="78" height="26" rx="4" fill="var(--s3)" opacity=".18" stroke="var(--s3)"/>
+          <text class="lbb" x="246" y="112">boxlike</text><text class="lb" x="292" y="112">box</text>
+        </g>
+        <line class="gld" x1="336" y1="26" x2="336" y2="126"/>
+        <text class="lbb" x="356" y="40">不占类型表一行的：</text>
+        <text class="lb" x="356" y="58">四类条件、图元形状、值字典逐项相同的两个「类型」——</text>
+        <text class="lb" x="356" y="74">实心饼与中空饼——在条件表里只占一行，差别是风格向量的一个取值。</text>
+        <text class="cal" x="356" y="98">例外，风格改不动的一条：</text>
+        <text class="lb" x="356" y="114">共享图例要求各面板共用同一个系列列。这是 FigureSpec 的硬约束。</text>
+        <text class="lb" x="356" y="130">不满足就退化成每面板一个图例，多面板图的主要价值消失。</text>
+      </svg>
+      <figcaption><b>新增一个图表类型 ＝ 条件表加一行 ＋ 一个绘制分支。</b>
+        01、02、04、05 一行代码都不改——这是「图表条件表是唯一定义处」这条的直接后果。</figcaption>
+    </figure>
+  </div>
+</article>
+
+<div class="band"><h2>落在这一步的第一条：标题块成为记录里的对象</h2></div>
+
+<article class="card" id="P7">
+  <header><span class="id">缺口 P7</span><h3>标题块成为记录里的对象</h3>
+    <span class="size">1 类 ＋ 3 字段</span></header>
+  <div class="body">
+    <figure class="draw">
+      <svg viewBox="0 0 420 200" role="img" aria-label="标题块在绘图区之外，拆成五个字段">
+        <rect x="18" y="14" width="252" height="50" fill="none"
+              stroke="var(--gap)" stroke-width="1.2" stroke-dasharray="4 3"/>
+        <rect x="18" y="14" width="5" height="50" fill="var(--s1)"/>
+        <text class="lbb" x="32" y="31">Figure 3</text>
+        <text class="lbb" x="84" y="31">Average wait time by hospital</text>
+        <text class="lb"  x="32" y="46">Emergency department, Q1 2024</text>
+        <text class="lb"  x="32" y="59">Minutes</text>
+        <rect class="plot" x="18" y="76" width="252" height="94"/>
+        <rect class="b1" x="52"  y="104" width="42" height="66"/>
+        <rect class="b1" x="122" y="114" width="42" height="56"/>
+        <rect class="b1" x="192" y="126" width="42" height="44"/>
+        <text class="lb" x="73"  y="182" text-anchor="middle">Mercy</text>
+        <text class="lb" x="143" y="182" text-anchor="middle">St. Luke's</text>
+        <text class="lb" x="213" y="182" text-anchor="middle">Riverside</text>
+        <rect x="286" y="18" width="9" height="9" fill="var(--gap)"/>
+        <text class="lb" x="301" y="26">number ＝ "Figure 3"</text>
+        <rect x="286" y="38" width="9" height="9" fill="var(--gap)"/>
+        <text class="lb" x="301" y="46">main ＝ "Average wait…"</text>
+        <rect x="286" y="58" width="9" height="9" fill="var(--gap)"/>
+        <text class="lb" x="301" y="66">subtitle ＝ "Emergency…"</text>
+        <rect x="286" y="78" width="9" height="9" fill="var(--gap)"/>
+        <text class="lb" x="301" y="86">unit ＝ "Minutes"</text>
+        <rect x="286" y="98" width="9" height="9" fill="var(--gap)"/>
+        <text class="lb" x="301" y="106">placement ＝ "above"</text>
+        <rect x="286" y="118" width="9" height="9" fill="var(--s1)"/>
+        <text class="lb" x="301" y="126">scope ＝ "figure" ｜ "panel"</text>
+        <line class="lead" x1="270" y1="39" x2="284" y2="39"/>
+        <line class="gld" x1="272" y1="76" x2="284" y2="76"/>
+        <line class="gld" x1="272" y1="170" x2="284" y2="170"/>
+        <line x1="278" y1="76" x2="278" y2="170" stroke="var(--muted)" stroke-width="1"/>
+        <text class="lb" x="288" y="150">绘图区矩形不随标题伸缩：</text>
+        <text class="lb" x="288" y="162">标题块占固定高度，</text>
+        <text class="lb" x="288" y="174">有没有标题都留着</text>
+      </svg>
+      <figcaption><b>标题块在绘图区外面，而且是有结构的。</b>
+        <code>Figure 3</code> 是图号，后面是主标题，下面是副标题，
+        而<strong>单位常常只写在标题里</strong>。我们的记录里一样都没有——
+        <code>Element</code> 只有一个框和一个类别，连画出来的那串字都没存。</figcaption>
+    </figure>
+
+    <div class="diff">
+      <div class="now"><h4>现在</h4><pre>FigureSpec(figure_id="f3",
+           panels=(...), layout="single")
+<i># 没有标题这回事</i>
+
+Element(box=[96, 24, 860, 52],
+        category="Text")
+<i># 框有了，</i><s>画的是什么字不知道</s></pre></div>
+      <div class="next"><h4>改完</h4><pre>FigureSpec(..., <b>title=TitleBlock(</b>
+  <b>number</b>="Figure 3",
+  <b>main</b>="Average wait time by hospital",
+  <b>subtitle</b>="Emergency department, Q1 2024",
+  <b>unit</b>="Minutes", <b>placement</b>="above",
+  <b>scope</b>="figure"))
+
+Element(box=[96, 24, 860, 52],
+        category=<b>"Heading"</b>,
+        <b>text</b>="Figure 3 Average wait time…")</pre></div>
+    </div>
+
+    <p><code>scope</code> 是这一条吃掉 <a href="#P2">P2</a> 一半的地方：<code>"figure"</code>
+       时它是整张图的标题，<code>"panel"</code> 时它就是面板上方那个小标题。
+       <strong>面板名不是一个新概念，是标题块的一个作用域。</strong></p>
+    <p class="note"><b>一条必须一起做的事</b>　标题块<strong>占固定高度，有没有标题都留着</strong>——
+      布局参数冻结是我们的不变式，绘图区不能随标题伸缩。代价是绘图区整体下移，
+      急诊科例子里那条贯穿五份文档的数字链（<code>[96,60,860,520]</code>、
+      <code>[168,196,278,520]</code>）要<strong>一次重算</strong>。</p>
+    <div class="files"><em>落在</em><code>interfaces/figure.py</code><code>interfaces/record.py</code><code>s03_render/page.py</code></div>
+  </div>
+</article>
+
+<div class="band"><h2>把它抬一层：图外的每一段文字都是一等对象</h2></div>
+
+<article class="card" id="textblk">
+  <header><span class="id">一般化</span><h3>图外的每一段文字都是一等对象</h3><span class="size">一个类，八个角色</span></header>
+  <p>「标题块进记录」现在的写法是「标题拆成图号 / 主标题 / 副标题 / 单位 / 位置」。
+     同一个结构还能装下报告里另外几种图外文本，而报告分析把它们标成了「不进清单」——
+     <strong>理由是基准不看，不是我们不需要</strong>：</p>
+  <div class="scroll"><table>
+    <thead><tr><th>角色</th><th>实测</th><th>报告归在哪</th></tr></thead>
+    <tbody>
+      <tr><td>图号 · 主标题 · 副标题 · 单位</td><td>标题块那一条的四个字段</td><td>P7</td></tr>
+      <tr><td><b>来源行 · 注释行</b></td><td><span class="nums">三家一致 17 页</span>，这批页面里最常见的构造</td><td>「不进清单」</td></tr>
+      <tr><td>轴标题 · 图例标题</td><td><span class="nums">竖排轴标题 28 页</span></td><td>散在「画法补齐」里</td></tr>
+    </tbody>
+  </table></div>
+  <p><b>改法</b>　<code>TextBlock(role, scope, placement, text)</code>，
+     <code>role</code> 八个取值（图号 / 主标题 / 副标题 / 单位 / 来源行 / 注释行 / 轴标题 / 图例标题），
+     <code>scope</code> 三个取值（整页 / 整张图 / 单个面板）。
+     <strong>一个类，八个取值</strong>，比一个 <code>TitleBlock</code> 加几条散落的风格维干净。</p>
+  <p class="note">配套：<code>record.Element</code> 的类别与 <code>TextBlock.role</code> 用<strong>同一份取值</strong>——
+     画出来的字与它的角色一起进 L0，页面元素框那一类训练目标因此不再是「五类粗标签」。</p>
+</article>
+
+<pre class="tree">TextBlock(role=<b>"figure_number"</b>, scope="figure", placement="above", text="Figure 3")
+TextBlock(role=<b>"title"</b>,         scope="figure", placement="above", text="Emergency department wait times by hospital")
+TextBlock(role=<b>"subtitle"</b>,      scope="figure", placement="above", text="Average per visit, Jan–Jun 2024")
+TextBlock(role=<b>"unit"</b>,          scope="figure", placement="above", text="minutes")
+TextBlock(role=<b>"axis_title"</b>,    scope="panel",  placement="left",  text="Average wait")        <i>竖排</i>
+TextBlock(role=<b>"source"</b>,        scope="figure", placement="below", text="Source: hospital admissions register")
+TextBlock(role=<b>"note"</b>,          scope="figure", placement="below", text="Excludes visits ending in transfer")</pre>
+<p class="note"><b>记录里存的是画出来的那串字，不是规格里的字段</b>——两者可能不同（折行、截断、加了上标）。<code>Element.text</code> 存前者。<br>
+  <b>来源行与注释行为什么值得装进来</b>　它们是这批页面里最常见的构造（<span class="nums">三家一致 17 页</span>），
+  而且<strong>只有它们能回答「这张图的数是哪来的」</strong>。报告分析把它们标成「不进清单」，理由是基准不看——不是我们不需要。</p>
+
+<div class="band"><h2>第二条：风格向量补取值</h2></div>
+
+<article class="card" id="P6">
+  <header><span class="id">缺口 P6</span><h3>风格向量补取值</h3><span class="size">取值 ＋ 2 个新字段</span></header>
+  <div class="body">
+    <figure class="draw">
+      <svg viewBox="0 0 420 150" role="img" aria-label="同一份数据的四种画法">
+        <text class="lb" x="52" y="12" text-anchor="middle">现在：竖条</text>
+        <rect class="plot" x="10" y="18" width="84" height="66"/>
+        <rect class="b1" x="20" y="40" width="16" height="44"/>
+        <rect class="b1" x="44" y="50" width="16" height="34"/>
+        <rect class="b1" x="68" y="58" width="16" height="26"/>
+
+        <text class="lb" x="160" y="12" text-anchor="middle">横条（缺）</text>
+        <rect class="plot" x="118" y="18" width="84" height="66"/>
+        <rect class="b1" x="118" y="28" width="62" height="12"/>
+        <rect class="b1" x="118" y="46" width="48" height="12"/>
+        <rect class="b1" x="118" y="64" width="34" height="12"/>
+
+        <text class="lb" x="268" y="12" text-anchor="middle">每系列一种记号（缺）</text>
+        <rect class="plot" x="226" y="18" width="84" height="66"/>
+        <rect class="b1" x="236" y="40" width="14" height="44"/>
+        <rect class="b1" x="260" y="50" width="14" height="34"/>
+        <rect class="b1" x="284" y="58" width="14" height="26"/>
+        <path d="M243,27 l5,5 -5,5 -5,-5 z" fill="var(--s2)"/>
+        <path d="M267,37 l5,5 -5,5 -5,-5 z" fill="var(--s2)"/>
+        <path d="M291,45 l5,5 -5,5 -5,-5 z" fill="var(--s2)"/>
+
+        <text class="lb" x="376" y="12" text-anchor="middle">图例画在区内（缺）</text>
+        <rect class="plot" x="334" y="18" width="84" height="66"/>
+        <rect class="b1" x="344" y="46" width="16" height="38"/>
+        <rect class="b1" x="368" y="56" width="16" height="28"/>
+        <rect class="b1" x="392" y="62" width="16" height="22"/>
+        <rect x="340" y="22" width="44" height="19" fill="var(--surface)" stroke="var(--line)"/>
+        <rect class="b1" x="344" y="26" width="8" height="5"/>
+        <text class="lb" x="355" y="31" font-size="6.5">2024</text>
+        <rect class="b2" x="344" y="33" width="8" height="5"/>
+        <text class="lb" x="355" y="38" font-size="6.5">2023</text>
+
+        <text class="lb" x="4" y="104">同一份数据，同一个键，同一个值——只是画法不同。</text>
+        <text class="cal" x="4" y="121">第三张那种「一个系列画条、另一个画菱形」，是这一轮量出来的最大一块：</text>
+        <text class="cal" x="4" y="137">混合图元 29 页里 22 页是这种，我们的记录里连它是什么形状都没存。</text>
+      </svg>
+      <figcaption><b>这一条说的是「同一张图能画成多少个样子」。</b>
+        <span class="nums">这 100 页上出现过、我们画不出来的画法有 37 项，30 项归这里</span>
+        （其余 7 项在别的编号下单算）。它排在后面不是因为小，
+        是因为每一项都便宜、彼此独立、可以一项一项加。</figcaption>
+    </figure>
+
+    <div class="scroll"><table>
+      <thead><tr><th>组</th><th>补哪些取值</th></tr></thead>
+      <tbody>
+        <tr><td>标签与刻度</td>
+            <td>数值标签在图元外 / 带引线 · 类目名折行 · x 轴两级标签 · 非 ISO 时间刻度</td></tr>
+        <tr><td>标题与单位</td>
+            <td>单位写在轴标题 / 副标题 / 刻度旁 · 值轴标题写在轴正上方 · 脚注上标</td></tr>
+        <tr><td>版面</td>
+            <td>图例画在绘图区<strong>内部</strong> · 不用图例把系列名标在线旁 · 说明框 · 面板底色</td></tr>
+        <tr><td>形状</td>
+            <td><strong>横向条（类目在纵轴）</strong>——条件表里根本没有「方向」这一维 ·
+                单类目高亮 · 负值与零线</td></tr>
+        <tr><td><strong>结构（两个新字段）</strong></td>
+            <td><code>series_marks</code>：每个系列画成什么记号
+                （连线 / 圆点 / 菱形 / 三角 / 短竖线）<br>
+                <code>dual_axis</code>：一条值轴还是两条（同量纲时可选）</td></tr>
+      </tbody>
+    </table></div>
+
+    <p><strong>最后一行一个字段同时覆盖两处</strong>：<a href="#P9">P9</a> 那 22 页
+       「同一条轴上两个系列换记号」，以及<a href="#compound">组合图</a>里
+       「叠加的那一层画成折线还是菱形还是短竖线」。</p>
+    <p class="note"><b>两个陷阱</b>
+      ① <strong>每加一个取值必须同时加绘制分支</strong>，并加一条自检——
+      风格向量逐维独立采样，没有分支落实的维度会在记录里写下一件没发生的事。
+      ② <strong>面板底色之前先修 <code>readback.ink_fraction</code></strong>：
+      它按白底判「框里有没有东西」，加了底色之后会<strong>静默失效</strong>——
+      自检恒过，偏移的框照样写盘。占比要改成按「与面板底色不同的像素」算。
+      <br><br><b>一条边界</b>　<code>series_marks</code> 只许在
+      <strong>可测量的图元形状之间</strong>换（矩形 / 点 / 带状）。
+      换成扇形或格子会改变可读性，那就不再是「换风格答案不变」。</p>
+    <div class="files"><em>落在</em><code>interfaces/style.py</code><code>s03_render/style.py</code><code>s03_render/draw/*</code><code>common/readback.py</code></div>
+  </div>
+</article>
+
+<div class="band"><h2>其余几条</h2></div>
+
+<div class="scroll"><table>
+  <thead><tr><th>还有哪几条落在这一步</th><th>这一步要做的</th></tr></thead>
+  <tbody>
+    <tr><td><a class="pgNone" href="#P10">▸类型表加三行</a></td>
+        <td><code>rect.py</code> 加<strong>不从零起算</strong>的分支（区间条 / 哑铃）·
+            <code>point.py</code> 加<strong>带状分支</strong>（windsock）·
+            <code>page.py</code> 直接排版表格型图</td></tr>
+    <tr><td><a class="pgNone" href="#P5">▸密度可以指定</a></td>
+        <td><code>rect.py::_write_label</code> 改成一次 <code>draw()</code> 之后批量量取。
+            现在每写一个标签调一次全图重绘，<strong>&gt;400 个图元跑不动</strong>——这一处必须赶在密度档打开之前</td></tr>
+    <tr><td><a class="pgNone" href="#P9">▸记住对着哪条轴</a></td>
+        <td>每画一个图元，同时写下它对着哪条轴、自己是什么形状</td></tr>
+    <tr><td><a class="pgNone" href="#compound">▸组合图改成规则</a></td>
+        <td>两个视图共用一个绘图区；异量纲时画第二条值轴</td></tr>
+    <tr><td><a class="pg x" href="#keysrc">▸键的每段记来源</a></td>
+        <td>按来源决定每段名字画在哪：轴刻度 / 图例 / 面板标题 / <strong>图元旁的直接标注</strong> / 标题里</td></tr>
+  </tbody>
+</table></div>
+
+<div class="band"><h2>这一组的进度</h2></div>
+
+<div class="grp">
+<div><h4>D · 03 渲染</h4><div class="chips"><a class="pgNone" href="#P10" title="ParseBench 缺口 P10 · 点开跳到那一条">▸类型表加三行</a><a class="pgNone" href="#P6" title="ParseBench 缺口 P6 · 点开跳到那一条">▸画法补齐</a><a class="pgNone" href="#P5" title="ParseBench 缺口 P5 · 点开跳到那一条">▸密度可以指定</a><a class="pgNone" href="#P9" title="ParseBench 缺口 P9 · 点开跳到那一条">▸记住对着哪条轴</a><a class="pgNone" href="#P7" title="ParseBench 缺口 P7 · 点开跳到那一条">▸标题块进记录</a></div>
+    <div class="bar"><i class="d" style="width:6%"></i><i class="c" style="width:42%"></i><i class="t" style="width:52%"></i></div>
+    <p class="cnt">2 已完成 · 31 待做（14 是改动）</p>
+    <p><strong>改动最密的一组。</strong>四种图元形状要写，风格向量要按取值域表补齐。</p></div>
+</div>
+<div class="legend">
+  <span><b class="d" style="background:var(--have)"></b>已完成</span>
+  <span><b class="c" style="background:var(--s2)"></b>待做，且是十条改动落进来的项</span>
+  <span><b class="t" style="background:var(--line)"></b>待做，主线实现</span>
+</div>
+</section>
+<section class="tab" id="tab-s04" hidden>
+<div class="band"><h2>04 记录：渲染产物 → 完整记录</h2><span>拼三层 · 判可读 · 三项自检</span></div>
+
+<p class="note"><b>RenderOutput → Record。</b>
+三层拼接、逐图元判可读、三项自检。<strong>这一步不画任何东西，也不改任何框</strong>——它只是给已经记下来的东西加上判断。</p>
+
+<figure class="draw">
+  <svg viewBox="0 0 900 250" role="img" aria-label="04 这一步到底在干什么">
+    <text class="lb" x="8" y="16">03 交上来的是「一张图像 ＋ 一堆记录」。<tspan class="lbb">04 不画任何东西，也不改任何框</tspan>——它只做三件事。</text>
+    <rect x="8" y="26" width="284" height="164" rx="6" fill="var(--surface)" stroke="var(--line)"/>
+    <text class="lbb" x="20" y="46">① 把三层拼成一行</text>
+    <g class="lb">
+      <rect x="20" y="56" width="260" height="26" rx="4" fill="var(--raised)"/>
+      <text x="30" y="67">L0 元素</text><text x="94" y="67">标题块「Figure 3 · …」</text><text x="30" y="78">　　　　　框 [96,24,540,44]</text>
+      <rect x="20" y="88" width="260" height="26" rx="4" fill="var(--raised)"/>
+      <text x="30" y="99">L1 图元</text><text x="94" y="99">("Mercy General",) → 42.3</text><text x="30" y="110">　　　　　框 [168,196,278,520]</text>
+      <rect x="20" y="120" width="260" height="26" rx="4" fill="var(--raised)"/>
+      <text x="30" y="131">L2 行数</text><text x="94" y="131">这一组由 372 行事实表聚合而来</text><text x="30" y="142">　　　　　（下钻类目标就靠它）</text>
+    </g>
+    <text class="lb" x="20" y="164">靠 <tspan class="lbb">(figure_id, panel_id, key)</tspan> 对齐。</text>
+    <text class="lb" x="20" y="180">缺哪一层就降级，不中断。</text>
+    <rect x="304" y="26" width="264" height="164" rx="6" fill="var(--surface)" stroke="var(--line)"/>
+    <text class="lbb" x="316" y="46">② 判这个值读不读得出来</text>
+    <g class="lb">
+      <text x="316" y="68">①号图的条　编码通道 = 长度</text>
+      <text x="316" y="83">　⇒ 可能可读，再看像素高够不够</text>
+      <text x="316" y="98">　⇒ <tspan class="calm">readable = true</tspan></text>
+      <text x="316" y="120">⑥号饼图的扇形　通道 = 角度</text>
+      <text x="316" y="135">　⇒ <tspan class="cal">readable = false</tspan></text>
+    </g>
+    <line class="gld" x1="316" y1="146" x2="556" y2="146"/>
+    <text class="lb" x="316" y="162">读不出来的图元<tspan class="lbb">掉出「值目标」</tspan>，</text>
+    <text class="lb" x="316" y="177">但<tspan class="lbb">仍留在「定位目标」里</tspan>——框还是真的。</text>
+    <rect x="580" y="26" width="312" height="164" rx="6" fill="var(--surface)" stroke="var(--line)"/>
+    <text class="lbb" x="592" y="46">③ 三项自检，每张图都跑</text>
+    <g class="lb">
+      <text x="592" y="68">框里有东西吗？</text><text x="760" y="68">非底色像素 63%</text><text class="calm" x="866" y="68">✓</text>
+      <text x="592" y="90">量出来对不对？</text><text x="760" y="90">反算 42.25</text><text class="calm" x="866" y="90">✓</text>
+      <text x="592" y="104">(520−196) × 60/460 = 42.25</text><text x="760" y="104">记录 42.3</text>
+      <text x="592" y="118">差 0.05 &lt; ε = 0.13</text><text x="760" y="118">ε 是现算的</text>
+      <text x="592" y="140">换风格答案变不变？</text><text x="760" y="140">横条版仍 42.3</text><text class="calm" x="866" y="140">✓</text>
+    </g>
+    <line class="gld" x1="592" y1="152" x2="880" y2="152"/>
+    <text class="lb" x="592" y="168">任何一项不过，<tspan class="lbb">整张图丢掉并记原因</tspan>。</text>
+    <text class="lb" x="592" y="183">自检在生产路径上，不在测试里。</text>
+    <line class="gld" x1="8" y1="204" x2="892" y2="204"/>
+    <text class="lb" x="8" y="222"><tspan class="lbb">ε ＝ value_per_pixel(值域 60, 像素域 460) ＝ 0.13 分钟</tspan>，两个输入都已经在 <tspan class="lbb">Panel.axes</tspan> 里，用的时候现算——这就是「容差不该写死成 1%」那一条。</text>
+    <text class="lb" x="8" y="240"><tspan class="lbb">前两项自检不需要真值</tspan>，只要图像和被声称的「值 · 框」。所以同一段代码在生成端是自检，在训练端就是可验证奖励。</text>
+  </svg>
+  <figcaption><b>一句话：04 给已经记下来的东西，加上「这个值读不读得出来」和「记的对不对」。</b>
+    它是流水线里唯一一处会主动丢弃产物的地方。</figcaption>
+</figure>
+
+<article class="card">
+  <header><span class="id">设计决定</span><h3>可读性在渲染之后判，判据只有一处<a class="pgNone" href="#P1" title="ParseBench 缺口 P1 · 点开跳到那一条">▸读数容差可传入</a><a class="pgNone" href="#P9" title="ParseBench 缺口 P9 · 点开跳到那一条">▸记住对着哪条轴</a></h3></header>
+  <div class="body">
+    <figure class="draw">
+      <svg viewBox="0 0 900 150" role="img" aria-label="可读性的三条规则">
+        <rect x="16" y="20" width="868" height="30" rx="5" fill="var(--have-soft)" stroke="var(--have)"/>
+        <text class="lb" x="30" y="39">图上写出了数值</text>
+        <text class="calm" x="300" y="39">readable，容差 0</text>
+        <text class="lb" x="874" y="39" text-anchor="end">直接抄，没有估读误差</text>
+
+        <rect x="16" y="56" width="868" height="30" rx="5" fill="var(--gap-soft)" stroke="var(--gap)"/>
+        <text class="lb" x="30" y="75">没写，画法是角度 / 颜色</text>
+        <text class="cal" x="300" y="75">不 readable</text>
+        <text class="lb" x="874" y="75" text-anchor="end">占 3% 的扇区，1% 相对误差约 0.1°，低于可测下限</text>
+
+        <rect x="16" y="92" width="868" height="30" rx="5" fill="var(--surface)" stroke="var(--line)"/>
+        <text class="lb" x="30" y="111">没写，画法是长度 / 位置</text>
+        <text class="lbb" x="300" y="111">逐图元算：该值的 1% 折算成像素 ≥ 2 时 readable</text>
+        <text class="lb" x="874" y="111" text-anchor="end">每像素代表的值 ＝ 值域跨度 ÷ 像素域跨度</text>
+
+        <text class="lb" x="16" y="142">读不出来的图元<tspan font-weight="600">退出值目标，但仍留在区域目标里</tspan>——它画在哪块像素上是确定的，只是读不到那么准。</text>
+      </svg>
+      <figcaption><b>判据在 <code>chart_types.md §4</code> 定义一次</b>，
+        <code>registry/channels.py</code> 是它唯一的实现。
+        饼图、热力图的值几乎全部读不出——<strong>这是预期结果，不是缺陷</strong>，
+        值目标产出率按图表类型分别统计。</figcaption>
+    </figure>
+  </div>
+</article>
+
+<article class="card">
+  <header><span class="id">设计决定</span><h3>三项自检在生产路径上，前两项同时是强化学习奖励<a class="pgNone" href="#P1" title="ParseBench 缺口 P1 · 点开跳到那一条">▸读数容差可传入</a><a class="pgNone" href="#P9" title="ParseBench 缺口 P9 · 点开跳到那一条">▸记住对着哪条轴</a></h3></header>
+  <div class="body">
+    <figure class="draw">
+      <svg viewBox="0 0 900 190" role="img" aria-label="三项自检与奖励共用一个实现">
+        <rect x="16" y="22" width="270" height="76" rx="6" fill="var(--surface)" stroke="var(--line)"/>
+        <text class="lbb" x="30" y="42">① 框里有没有东西</text>
+        <text class="lb"  x="30" y="60">框内与底色不同的像素占比</text>
+        <text class="lb"  x="30" y="76">拦截坐标漂移：框偏了就是空的</text>
+        <text class="calm" x="30" y="92">只要图像与框，不要真值</text>
+
+        <rect x="300" y="22" width="270" height="76" rx="6" fill="var(--surface)" stroke="var(--line)"/>
+        <text class="lbb" x="314" y="42">② 值读回来对不对</text>
+        <text class="lb"  x="314" y="60">框 ＋ 轴 → 反算值，与记录值比</text>
+        <text class="lb"  x="314" y="76">拦截轴映射错误：对数轴、负值、堆叠基线</text>
+        <text class="calm" x="314" y="92">只要图像与「值 · 框」，不要真值</text>
+
+        <rect x="584" y="22" width="300" height="76" rx="6" fill="var(--surface)" stroke="var(--line)"/>
+        <text class="lbb" x="598" y="42">③ 换风格答案变不变</text>
+        <text class="lb"  x="598" y="60">同一 FigureSpec 换风格渲第二份，比键 → 值</text>
+        <text class="lb"  x="598" y="76">拦截风格泄漏进真值</text>
+        <text class="lb"  x="598" y="92">不用额外渲染：那两份本身就是产品</text>
+
+        <path d="M150,98 L150,124 L740,124 L740,146" stroke="var(--key)" stroke-width="1.3"
+              fill="none" stroke-dasharray="3 2"/>
+        <path d="M434,98 L434,124" stroke="var(--key)" stroke-width="1.3" fill="none" stroke-dasharray="3 2"/>
+        <rect x="560" y="146" width="360" height="0" fill="none"/>
+        <rect x="300" y="140" width="300" height="38" rx="6" fill="var(--key-soft)" stroke="var(--key)"/>
+        <text class="lbb" x="450" y="157" text-anchor="middle" fill="var(--key)">common/readback.py</text>
+        <text class="lb"  x="450" y="171" text-anchor="middle">一份实现，两个调用方</text>
+        <text class="lb" x="16" y="171">04 喂它渲染器的记录</text>
+        <text class="lb" x="884" y="171" text-anchor="end">05 喂它模型的输出 ＝ 可验证奖励</text>
+      </svg>
+      <figcaption><b>前两项只需要图像和被声称的「值 · 框」，不需要真值</b>——
+        所以同一段代码在生成端是自检、在训练端是奖励。
+        失败就丢图并记原因：<strong>边画边记的错误只会在真实数据上暴露</strong>，放进测试里等于没有。</figcaption>
+    </figure>
+  </div>
+</article>
+
+<div class="band"><h2>落在这一步的缺口</h2></div>
+
+<div class="scroll"><table>
+  <thead><tr><th>落在这一步的缺口</th><th>这一步要做的</th></tr></thead>
+  <tbody>
+    <tr><td><a class="pgNone" href="#P1">▸读数容差可传入</a></td>
+        <td>自检②的容差传 ε ＝ <code>value_per_pixel(值域, 像素域)</code>；
+            抽查标注集那一路传<strong>基准口径</strong>（写了标注 0，估读 1%）——<strong>两者不能互相替换</strong>。
+            阈值还要取「容差」与「半个记录精度」的<strong>较大者</strong>：
+            在接近 0 的列（评分、比率）上，量化误差会超过百分比容差</td></tr>
+    <tr><td><a class="pg x" href="#keysrc">▸键的每段记来源</a></td>
+        <td>来源标成「页面上没写」的键，<strong>主动排除出值目标</strong>——图上根本没写，键不可复原</td></tr>
+    <tr><td><a class="pgNone" href="#P3">▸一页多图分得开</a></td>
+        <td>逐个值字典键的回读<strong>只对有几何锚点的键做</strong>（<code>value</code> · <code>cum_*</code> ·
+            五数里落在框边的那几个），否则 histogram 的 <code>bin_lo</code> / <code>bin_hi</code> 会把
+            <code>bar_width</code> 钉死，白白扩大丢图面</td></tr>
+  </tbody>
+</table></div>
+
+<div class="band"><h2>这一组的进度</h2></div>
+
+<div class="grp">
+<div><h4>E · 04 记录</h4><div class="chips"><a class="pgNone" href="#P1" title="ParseBench 缺口 P1 · 点开跳到那一条">▸读数容差可传入</a><a class="pgNone" href="#P10" title="ParseBench 缺口 P10 · 点开跳到那一条">▸类型表加三行</a></div>
+    <div class="bar"><i class="c" style="width:31%"></i><i class="t" style="width:69%"></i></div>
+    <p class="cnt">0 已完成 · 13 待做（4 是改动）</p>
+    <p>三项自检 ＋ 逐图元可读判定。容差改成参数就落在这里。</p></div>
+</div>
+<div class="legend">
+  <span><b class="d" style="background:var(--have)"></b>已完成</span>
+  <span><b class="c" style="background:var(--s2)"></b>待做，且是十条改动落进来的项</span>
+  <span><b class="t" style="background:var(--line)"></b>待做，主线实现</span>
+</div>
+</section>
+<section class="tab" id="tab-s05" hidden>
+<div class="band"><h2>05 输出：记录 → 训练目标文件</h2><span>八类目标 ＋ 可验证奖励</span></div>
+
+<p class="note"><b>Record → 训练目标文件。</b>
+八类训练目标 ＋ 可验证奖励。<br>
+<b>一句话贯穿这一页：对外产物的形状是导出参数，不是记录结构。</b>
+落在这一步的三条缺口，全都是这句话的实例——面板名进不进键、颜色分组进不进键、一页导成几份，
+改的都是导出时怎么拼，<strong>一个字段都不用往记录里加</strong>。</p>
+<p class="note"><b>八类训练目标</b>　A 组（带位置的表、抽查标注集）· B 组（图元定位、图元读值、下钻）·
+  C 组（页面元素框、图例绑定）· caption。
+  导出程序只 import <code>interfaces/record.py</code> 与 <code>common/</code>，<strong>不 import 任何阶段模块</strong>——记录自足是接口的前提。</p>
+
+<figure class="draw">
+  <svg viewBox="0 0 900 248" role="img" aria-label="同一行记录导成六样东西">
+    <rect x="8" y="20" width="250" height="80" rx="6" fill="var(--surface)" stroke="var(--s1)" stroke-width="1.4"/>
+    <text class="lbb" x="20" y="40">一行记录</text>
+    <g class="lb">
+      <text x="20" y="58">key   = ("Mercy General",)</text>
+      <text x="20" y="72">value = 42.3　　box = [168,196,278,520]</text>
+      <text x="20" y="86">rows  = 372　　 readable = true</text>
+    </g>
+    <g stroke="var(--muted)" stroke-width="1.2" fill="none"><path d="M258,60 L288,60"/></g>
+    <g class="lb">
+      <rect x="288" y="14" width="300" height="26" rx="4" fill="var(--raised)"/>
+      <text class="lbb" x="298" y="31">带位置的表</text><text x="392" y="31">| Mercy General | 42.3 | [168,196,…] |</text>
+      <rect x="288" y="44" width="300" height="26" rx="4" fill="var(--raised)"/>
+      <text class="lbb" x="298" y="61">抽查标注集</text><text x="392" y="61">问「Mercy General 是多少」→ 42.3</text>
+      <rect x="288" y="74" width="300" height="26" rx="4" fill="var(--raised)"/>
+      <text class="lbb" x="298" y="91">图元定位</text><text x="392" y="91">问「那根条在哪」→ [168,196,278,520]</text>
+      <rect x="288" y="104" width="300" height="26" rx="4" fill="var(--raised)"/>
+      <text class="lbb" x="298" y="121">图元读值</text><text x="392" y="121">给框 → 答 42.3</text>
+      <rect x="288" y="134" width="300" height="26" rx="4" fill="var(--raised)"/>
+      <text class="lbb" x="298" y="151">下钻</text><text x="392" y="151">问「由多少行聚合而来」→ 372</text>
+      <rect x="288" y="164" width="300" height="26" rx="4" fill="var(--raised)"/>
+      <text class="lbb" x="298" y="181">页面元素框</text><text x="392" y="181">标题块 [96,24,540,44]，按页合并去重</text>
+    </g>
+    <rect x="612" y="14" width="280" height="176" rx="6" fill="var(--gap-soft)" stroke="var(--gap)"/>
+    <text class="cal" x="624" y="34">键作用域改的只是第一列</text>
+    <g class="lb">
+      <text x="624" y="56">key_scope = "mark"</text>
+      <text x="624" y="70">　("Mercy General",)</text>
+      <text x="624" y="90">key_scope = "panel"</text>
+      <text x="624" y="104">　("Mercy General", "Surgery")</text>
+      <text x="624" y="118">　　　　　　　　　　　面板名进来了</text>
+      <text x="624" y="138">key_scope = "full"</text>
+      <text x="624" y="152">　("Mercy General", "Surgery", "Severe")</text>
+      <text x="624" y="166">　　　　　　　　　　　颜色分组也进来了</text>
+    </g>
+    <text class="lb" x="624" y="184">三档都不往记录里加字段。</text>
+    <line class="gld" x1="8" y1="206" x2="892" y2="206"/>
+    <text class="lb" x="8" y="224"><tspan class="lbb">panel_id 本来就在三层的连接键里，分色列本来就在 Binding 里</tspan>——改的只是导出时把键拼多长。</text>
+    <text class="lb" x="8" y="240">这个选择<tspan class="lbb">随产物落盘</tspan>：不知道用的哪一档，模型输出的键就回落不到图元，可验证奖励也就无从判起。</text>
+  </svg>
+  <figcaption><b>对外产物的形状是导出参数，不是记录结构。</b>落在这一步的三条缺口——面板名进键、颜色分组进键、一页导成几份——
+    全都是这句话的实例。</figcaption>
+</figure>
+
+<div class="band"><h2>落在这一步的第一条：面板名进对外的键</h2></div>
+
+<article class="card" id="P2">
+  <header><span class="id">缺口 P2</span><h3>面板名进对外的键</h3><span class="size">1 个导出参数</span></header>
+  <div class="body">
+    <figure class="draw">
+      <svg viewBox="0 0 420 165" role="img" aria-label="三个面板里都有一根 2024 的条">
+        <text class="lbb" x="4" y="12">同指标不同切面：一张图，三个面板，各一家医院</text>
+        <text class="lbb" x="73" y="32" text-anchor="middle">Mercy General</text>
+        <rect class="plot" x="18" y="38" width="110" height="72"/>
+        <rect class="b1" x="40" y="60" width="30" height="50"/>
+        <rect class="bl" x="82" y="76" width="30" height="34"/>
+        <text class="lb" x="55" y="122" text-anchor="middle">2023</text>
+        <text class="cal" x="97" y="122" text-anchor="middle">2024</text>
+        <text class="lbb" x="209" y="32" text-anchor="middle">St. Luke's</text>
+        <rect class="plot" x="154" y="38" width="110" height="72"/>
+        <rect class="b1" x="176" y="68" width="30" height="42"/>
+        <rect class="bl" x="218" y="82" width="30" height="28"/>
+        <text class="lb" x="191" y="122" text-anchor="middle">2023</text>
+        <text class="cal" x="233" y="122" text-anchor="middle">2024</text>
+        <text class="lbb" x="345" y="32" text-anchor="middle">Riverside</text>
+        <rect class="plot" x="290" y="38" width="110" height="72"/>
+        <rect class="b1" x="312" y="76" width="30" height="34"/>
+        <rect class="bl" x="354" y="86" width="30" height="24"/>
+        <text class="lb" x="327" y="122" text-anchor="middle">2023</text>
+        <text class="cal" x="369" y="122" text-anchor="middle">2024</text>
+        <line class="lead" x1="97" y1="128" x2="97" y2="140"/>
+        <line class="lead" x1="233" y1="128" x2="233" y2="140"/>
+        <line class="lead" x1="369" y1="128" x2="369" y2="140"/>
+        <line class="lead" x1="97" y1="140" x2="369" y2="140"/>
+        <text class="cal" x="233" y="156" text-anchor="middle">三根条的键都是 ("2024")——一条键指向三个格子，等于没指</text>
+      </svg>
+      <figcaption><b>面板名就是每个面板上方那个小标题。</b>
+        它不写进键，同一条键就同时指向好几个图元。
+        <span class="nums">实测：三家一致 24 页是这么画的，我们本来就画得出来。</span></figcaption>
+    </figure>
+
+    <div class="diff">
+      <div class="now"><h4>现在导出的 markdown</h4><pre>| key   | value |
+|-------|-------|
+| 2023  |  45.1 |
+| 2024  |  42.3 |
+| 2023  |  38.6 |
+| 2024  |  35.8 |   <s>← 键重复</s>
+| 2023  |  31.0 |
+| 2024  |  28.1 |</pre></div>
+      <div class="next"><h4>改完导出的 markdown</h4><pre>export(record, <b>key_scope="figure"</b>)
+
+| key                   | value |
+|-----------------------|-------|
+| <b>Mercy General</b>, 2024   |  42.3 |
+| <b>St. Luke's</b>, 2024      |  35.8 |
+| <b>Riverside</b>, 2024       |  28.1 |
+<i># 面板名取自面板自己的 TitleBlock.main</i></pre></div>
+    </div>
+
+    <p><strong>记录结构一个字都不改。</strong> <code>panel_id</code> 早就在三层记录的连接键里了，
+       缺的只是「导出给模型的键要不要把它拼进去」——一个导出参数，和 <a href="#P8">P8</a> 共用。</p>
+    <p><strong>白捡一条性质</strong>：面板名取自面板自己画出来的那串字，所以
+       「键必须逐字可复制」自动成立——不会出现生成端写 <code>2025</code>、
+       答案里却是 <code>Fiscal Year 2025</code> 这种下游必错的情况。反过来，
+       <strong>面板没有标题块，就不许把面板维算进键</strong>。</p>
+    <p class="note"><code>key_scope</code> <b>要随产物落盘</b>。
+      我们的不变式要求模型输出的键能回落到具体图元，不知道这批数据用的哪个作用域就回落不了。</p>
+    <div class="files"><em>落在</em><code>s05_output/export.py</code></div>
+  </div>
+</article>
+
+<div class="band"><h2>第二条：颜色分组进对外的键</h2></div>
+
+<article class="card" id="P8">
+  <header><span class="id">缺口 P8</span><h3>颜色分组进对外的键</h3><span class="size">1 字段</span></header>
+  <div class="body">
+    <figure class="draw">
+      <svg viewBox="0 0 420 172" role="img" aria-label="颜色代表分诊等级，页面上没有文字连接">
+        <text class="lbb" x="4" y="12">bar(department × AVG wait)，按分诊等级分色</text>
+        <line class="gl" x1="34" y1="122" x2="300" y2="122"/>
+        <rect class="bd" x="52"  y="52" width="40" height="70"/>
+        <rect class="bl" x="118" y="74" width="40" height="48"/>
+        <rect class="bd" x="184" y="64" width="40" height="58"/>
+        <rect class="bl" x="250" y="88" width="40" height="34"/>
+        <text class="lb" x="72"  y="134" text-anchor="middle">Trauma</text>
+        <text class="lb" x="138" y="134" text-anchor="middle">Internal</text>
+        <text class="lb" x="204" y="134" text-anchor="middle">Surgery</text>
+        <text class="lb" x="270" y="134" text-anchor="middle">Pediatrics</text>
+        <rect class="bd" x="316" y="52" width="12" height="9"/>
+        <text class="lb" x="333" y="60">High acuity</text>
+        <rect class="bl" x="316" y="70" width="12" height="9"/>
+        <text class="lb" x="333" y="78">Standard</text>
+        <line class="lead" x1="204" y1="64" x2="204" y2="42"/>
+        <line class="lead" x1="204" y1="42" x2="316" y2="42"/>
+        <line class="lead" x1="316" y1="42" x2="316" y2="52"/>
+        <text class="cal" x="4" y="156">Surgery 这根条是深色 → High acuity。</text>
+        <text class="cal" x="4" y="169">页面上没有任何一处文字把这两个词连起来，只有颜色。</text>
+      </svg>
+      <figcaption><b>图例里的色块不是系列名，也不是轴上的类目名，它是另一个变量。</b>
+        我们的键里没有这一维，风格向量里也只把颜色当装饰。</figcaption>
+    </figure>
+
+    <div class="diff">
+      <div class="now"><h4>现在</h4><pre>Binding(chart_type="bar",
+        dims=("department",),
+        measures=("wait_minutes",),
+        aggregate="AVG")
+
+key = ("Surgery",)
+<i># 颜色在风格向量里，只是装饰。</i></pre></div>
+      <div class="next"><h4>改完</h4><pre>Binding(chart_type="bar",
+        dims=("department",),
+        measures=("wait_minutes",),
+        aggregate="AVG",
+        <b>colour_group="acuity"</b>)
+
+key = ("Surgery", <b>"High acuity"</b>)</pre></div>
+    </div>
+
+    <p><strong>分色列归 <code>FigureSpec</code>，色值归 <code>StyleVector</code>。</strong>
+       这条边界不能越：风格向量要是能选哪一列分色，换个风格就换了 key，
+       第三条自检（换风格答案不变）当场失效。</p>
+    <div class="files"><em>落在</em><code>interfaces/figure.py</code><code>s05_output/export.py</code></div>
+  </div>
+</article>
+
+<div class="band"><h2>第三条：一页多张图的时候，导出的表要分得开</h2></div>
+
+<article class="card" id="P3">
+  <header><span class="id">缺口 P3</span><h3>一页多张图的时候，导出的表要分得开</h3>
+    <span class="size">1 函数 ＋ 1 条件</span></header>
+  <div class="body">
+    <p>先把不属于这一条的两件事划掉，免得它显得比实际大：</p>
+    <div class="scroll"><table>
+      <thead><tr><th>常被算进这一条的</th><th>实际在哪</th></tr></thead>
+      <tbody>
+        <tr><td>一页画好几张图</td>
+            <td><strong>规格里已经有了</strong>：<code>03_render.md §5</code>——
+                「单页多图、跨栏、图注与图表分开这些真实版面现象，且可控」。
+                缺的是 <code>page.py</code> 还没写，不是缺口</td></tr>
+        <tr><td>标题块和绘图区是分开的两块</td>
+            <td><a href="#P7">P7</a> 的第五个字段「位置」</td></tr>
+      </tbody>
+    </table></div>
+
+    <figure class="draw">
+      <svg viewBox="0 0 420 150" role="img" aria-label="同一页并排两张图，类目名完全相同">
+        <rect x="8" y="8" width="404" height="112" fill="none"
+              stroke="var(--line)" stroke-width="1" stroke-dasharray="4 3"/>
+        <text class="lb" x="14" y="20">一页</text>
+        <text class="lbb" x="112" y="34" text-anchor="middle">Figure 12 · Operating expenses</text>
+        <rect class="plot" x="30" y="40" width="164" height="52"/>
+        <rect class="b1" x="46"  y="56" width="26" height="36"/>
+        <rect class="b1" x="94"  y="66" width="26" height="26"/>
+        <rect class="b1" x="142" y="74" width="26" height="18"/>
+        <text class="cal" x="59"  y="104" text-anchor="middle">Surgery</text>
+        <text class="cal" x="107" y="104" text-anchor="middle">Internal</text>
+        <text class="cal" x="155" y="104" text-anchor="middle">Peds</text>
+        <text class="lbb" x="308" y="34" text-anchor="middle">Figure 13 · Program expenses</text>
+        <rect class="plot" x="226" y="40" width="164" height="52"/>
+        <rect class="b3" x="242" y="62" width="26" height="30"/>
+        <rect class="b3" x="290" y="52" width="26" height="40"/>
+        <rect class="b3" x="338" y="70" width="26" height="22"/>
+        <text class="cal" x="255" y="104" text-anchor="middle">Surgery</text>
+        <text class="cal" x="303" y="104" text-anchor="middle">Internal</text>
+        <text class="cal" x="351" y="104" text-anchor="middle">Peds</text>
+        <text class="cal" x="210" y="138" text-anchor="middle">两张图的类目名一模一样，只有各自的小标题能把它们分开</text>
+      </svg>
+      <figcaption><b>一图一表导出，两张表就撞在一起。</b>
+        <span class="nums">实测：一页多图三家一致 19 页；</span>
+        并排两张共用类目名的实例里，三家里两家都说「必须带上这张图自己的小标题才指得准」。</figcaption>
+    </figure>
+
+    <div class="diff">
+      <div class="now"><h4>现在导出的 markdown</h4><pre><i># 一图一表，两张表并列：</i>
+
+| Surgery  | 42.3 |
+| Internal | 31.0 |
+| Peds     | 22.6 |
+
+| Surgery  | 35.1 |   <s>← 撞车</s>
+| Internal | 46.8 |
+| Peds     | 25.4 |</pre></div>
+      <div class="next"><h4>改完导出的 markdown</h4><pre><i># 整页一份 markdown：</i>
+
+<b>#### Figure 12 · Operating expenses</b>
+| Surgery  | 42.3 |
+| Internal | 31.0 |
+| Peds     | 22.6 |
+
+<b>#### Figure 13 · Program expenses</b>
+| Surgery  | 35.1 |
+| Internal | 46.8 |
+| Peds     | 25.4 |</pre></div>
+    </div>
+
+    <p><strong>第二件事更容易漏</strong>：我们判候选重复看的是「键集合 ＋ 图元形状」，
+       而同一页并排的两张图恰好在这两项上都一样——
+       <strong>不开豁免，它会被我们自己的准入检查拒掉</strong>，而它正是最该生成的形态。</p>
+    <p class="note"><b>还有一条</b>　页面部件的框要<strong>按页合并去重</strong>再导出。
+      一页两张图各导一份，两份都只标了自己那张的标题块，互相把对方漏掉。</p>
+    <div class="files"><em>落在</em><code>s05_output/export.py</code><code>s02_figure/admit.py</code></div>
+  </div>
+</article>
+
+<div class="band"><h2>把它抬一层：导出粒度是一个参数</h2></div>
+
+<article class="card" id="gran">
+  <header><span class="id">一般化</span><h3>导出粒度是一个参数</h3><span class="size">一个参数换掉一个函数</span></header>
+  <p>「一页多图分得开」现在的写法是「加一个整页 markdown 导出函数」。
+     一般形式是<strong>导出粒度</strong>：一图一表 / 一页一份 / 一批一份。</p>
+  <p>加一个函数只解决今天这一种版面；一个参数把三种都覆盖，而且它与 <code>key_scope</code> 是<strong>同一类东西</strong>——
+     两个都是「对外产物长什么样」，两个都随产物落盘，两个都能直接进消融表当一行。</p>
+</article>
+
+<pre class="tree"><b>granularity="figure"</b>　两个文件。每个文件一张长表，不知道页面上还有另一张图
+<b>granularity="page"</b>　　一个文件。图号与标题写成表<i>前面</i>的小标题：
+
+　　## Figure 3 · Emergency department wait times by hospital
+　　| key           | value | box                 |
+　　| Mercy General | 42.3  | [168,196,278,520]   |
+　　…
+　　## Figure 4 · Share of visits by department
+　　| key     | value | box               |
+　　| Surgery | 23.3% | [612,180,690,258] |
+
+<b>granularity="batch"</b>　 一个文件装一整批，训练时按 page_id 切</pre>
+<p class="note"><b>「一页一份」不是把两个文件拼起来。</b>页面元素框那一类目标要<strong>按 <code>page_id</code> 合并去重</strong>，
+  否则两份各自只标了自己那张图的标题块，互相把对方的漏掉。</p>
+
+<div class="band"><h2>其余两条</h2></div>
+
+<div class="scroll"><table>
+  <thead><tr><th>还有哪两条落在这一步</th><th>这一步要做的</th></tr></thead>
+  <tbody>
+    <tr><td><a class="pg x" href="#keysrc">▸键的每段记来源</a></td>
+        <td>多出一类训练目标：<strong>这一段键是从哪读到的</strong></td></tr>
+    <tr><td><a class="pgNone" href="#P10">▸类型表加三行</a></td>
+        <td>表格型图<strong>没有值轴</strong> ⇒ 可验证奖励里「值对不对」这一项，对这一型恒为 <code>None</code></td></tr>
+  </tbody>
+</table></div>
+
+<div class="band"><h2>这一组的进度</h2></div>
+
+<div class="grp">
+<div><h4>F · 05 输出</h4><div class="chips"><a class="pgNone" href="#P2" title="ParseBench 缺口 P2 · 点开跳到那一条">▸面板名进键</a><a class="pgNone" href="#P8" title="ParseBench 缺口 P8 · 点开跳到那一条">▸颜色分组进键</a><a class="pgNone" href="#P3" title="ParseBench 缺口 P3 · 点开跳到那一条">▸一页多图分得开</a><a class="pgNone" href="#P10" title="ParseBench 缺口 P10 · 点开跳到那一条">▸类型表加三行</a></div>
+    <div class="bar"><i class="c" style="width:47%"></i><i class="t" style="width:53%"></i></div>
+    <p class="cnt">0 已完成 · 15 待做（7 是改动）</p>
+    <p>八类训练目标 ＋ 可验证奖励。两个导出参数（键作用域、导出粒度）在这里。</p></div>
+</div>
+<div class="legend">
+  <span><b class="d" style="background:var(--have)"></b>已完成</span>
+  <span><b class="c" style="background:var(--s2)"></b>待做，且是十条改动落进来的项</span>
+  <span><b class="t" style="background:var(--line)"></b>待做，主线实现</span>
+</div>
+</section>
+<section class="tab" id="tab-end" hidden>
+<div class="band"><h2>顺序</h2><span>接口先，主线跟着</span></div>
+
+<ol class="steps">
+  <li><b>A6 · 接口二次定版</b><span>三个接口文件 ＋ 两个 registry 文件，一次改完，抬一次
+      <code>SCHEMA_VERSION</code>，重生成 <code>tests/samples/</code>。
+      内部四条硬依赖见「共享层」那一页。<strong>全部完成再动 C。</strong></span></li>
+  <li><b>B7 · 行数下界</b><span>密度档给出行数下界，01 的事实表要能跟上。
+      与 A6 无耦合，可并行。</span></li>
+  <li><b>C · 02 选图</b><span>投影四形态 ＋ 准入 ＋ 五种多面板关系 ＋ 一条同面板叠加规则 ＋
+      唯一的新文件 <code>sampling.py</code>。写的时候就按新接口写。</span></li>
+  <li><b>D · 03 渲染</b><span>改动最密的一组：四种图元形状、带状分支、叠加记号、
+      风格取值域表、页面合成与文本块。
+      <strong>两处要提前</strong>：<code>ink_fraction</code> 与 <code>_write_label</code>。</span></li>
+  <li><b>E · 04 记录 → F · 05 输出</b><span>三项自检落在 E，两个导出参数落在 F。
+      E 与 F 都要用 A6.13 的容差参数，所以它们必须在 A6 之后动笔。</span></li>
+  <li><b>G · 扩展与消融</b><span>Tier 2 两种图元；消融表因为改动多五行；
+      最后用官方规则在 568 页上自评，改造前后各一次。</span></li>
+</ol>
+
+<div class="band"><h2>风险与对策</h2><span>每条都对应一处会静默出错的地方</span></div>
+
+<div class="scroll"><table>
+  <thead><tr><th>风险</th><th>表现</th><th>对策</th></tr></thead>
+  <tbody>
+    <tr><td>坐标漂移</td><td>自动布局、dpi、<code>bbox_inches</code> 改变实际绘图区，框整体偏移<strong>且不报错</strong></td>
+        <td>冻结这三项；自检①逐图元拦截</td></tr>
+    <tr><td>轴映射错误</td><td>对数轴、负值、堆叠基线上反算出的值与记录的值不符</td>
+        <td>自检②；对数轴放到 Tier 1 之后再开</td></tr>
+    <tr><td>声明期与执行后基数不一致</td><td>按声明判非空的族在实际数据上一张也画不出</td>
+        <td>01 的结构检查强制实际基数与声明一致，不一致就重掷或反馈</td></tr>
+    <tr><td>单次调用负担过重</td><td>场景 ＋ 脚本 ＋ 意图三段一起写，某一段质量下降</td>
+        <td>三段各有独立校验，哪段不过就带具体原因回喂哪段</td></tr>
+    <tr><td>脚本失败率</td><td>LLM 写的生成程序反复触发同一类异常</td>
+        <td>统计异常类型分布；高频类型进提示词的约束段，<strong>不靠加大重试次数</strong></td></tr>
+    <tr><td>采样抽不中</td><td>某个族反复抽到不合法或冗余的候选</td>
+        <td>每族至多 T 次，超了就跳过并记日志；各族出图率是观测量</td></tr>
+    <tr><td>值目标稀疏</td><td>饼图、热力图的值几乎全部读不出</td>
+        <td><strong>预期结果不是缺陷。</strong>这些图仍贡献定位目标；值目标产出率按类型分别统计</td></tr>
+    <tr><td>风格泄漏进真值</td><td>某个风格参数意外改了求值结果</td>
+        <td>自检③按图抽样跑，输入就是风格配对样本</td></tr>
+    <tr><td>接口漂移</td><td>上下游对同一个字段的理解不一致</td>
+        <td>接口先定死；每份带版本号与样例文件；<strong>改接口必须同时改样例</strong></td></tr>
+  </tbody>
+</table></div>
+
+<div class="band"><h2>验收</h2><span>每条都要能跑出来，不是读一遍代码</span></div>
+
+<div class="scroll"><table>
+  <thead><tr><th></th><th>怎么验</th></tr></thead>
+  <tbody>
+    <tr><td><b>接口</b></td><td><code>tests/samples/</code> 往返逐位相同；<code>SCHEMA_VERSION</code> 3 读不了 2 的产物</td></tr>
+    <tr><td><b>组合图</b></td><td>三条叠加语义各生成一批：两个测度（<code>bar ＋ line</code>）· 同一测度两次切片（<code>bar ＋ 点</code>）· 值加区间（<code>bar ＋ 带</code>）；记录能靠 <code>mark_shape</code> 把两批图元分开；16 格乘积里每一格要么能生成，要么写明为什么不合法</td></tr>
+    <tr><td><b>键</b></td><td>多面板图与含颜色分组的图，导出的表里那两段独立成列；<code>KeySource</code> 五种来源各能产出样本</td></tr>
+    <tr><td><b>可读</b></td><td>饼图在 5% 容差下的去留算得出；不印数值的图上回读自检能判对错</td></tr>
+    <tr><td><b>类型</b></td><td>16 型都能生成；覆盖网格里每一格要么有类型要么写明为什么空</td></tr>
+    <tr><td><b>密度</b></td><td>五档都能生成，各档读数正确率与预期可读率对得上</td></tr>
+    <tr><td><b>权重</b></td><td>三档预设各生成一批，同种子逐位可复现；<code>uniform</code> 与改造前逐位一致</td></tr>
+    <tr><td><b>风格</b></td><td>每个声明的取值都有绘制分支；标了「不影响可读性」的维度在自检③下答案不变</td></tr>
+    <tr><td><b>导出</b></td><td>并排两张共用类目名的图，导出后不撞车</td></tr>
+    <tr><td><b>端到端</b></td><td><code>(输入, 种子) -&gt; 输出</code> 逐位可复现；各阶段通过率进日志</td></tr>
+  </tbody>
+</table></div>
+
+<div class="band"><h2>规格同步</h2><span>代码改完，这七份文档要跟着改</span></div>
+
+<div class="scroll"><table>
+  <thead><tr><th>文档</th><th>改什么</th></tr></thead>
+  <tbody>
+    <tr><td><code>chart_types.md</code></td>
+        <td>三行新类型 · <code>mark</code>/<code>channel</code> 各两个 · <strong>删掉 <code>compound</code> 那一行</strong> ·
+            <strong>投影形态 × 图元形状覆盖网格</strong> · 界随密度档 · <strong>把 1% 从判据里拿出来</strong> ·
+            每档预期可读率 · <code>printed</code> 通道</td></tr>
+    <tr><td><code>01_data.md</code></td><td>行数下界随密度档</td></tr>
+    <tr><td><code>02_figure.md</code></td>
+        <td>冗余豁免改成按来源 · <strong>加一条同面板叠加规则</strong>（与五种多面板关系并列），「双指标」不再指名 <code>compound</code> ·
+            分色列与键的来源归 FigureSpec · <strong>再加一节「标题从哪来」</strong></td></tr>
+    <tr><td><code>03_render.md</code></td>
+        <td><strong>重算 §0 的数字链</strong> · 风格七维扩取值 · 文本块固定高度 · 按来源决定名字画在哪</td></tr>
+    <tr><td><code>04_record.md</code></td>
+        <td>图元的两个读法字段 · 面板的类型改元组 · 画出来的那串字与它的角色 · 容差是参数</td></tr>
+    <tr><td><code>05_output.md</code></td>
+        <td>抽查标注集保持基准口径 · 加导出粒度 · 标题与 caption 分开 ·
+            新目标「键的这一段从哪读到」· 消融加密度档与权重预设两行</td></tr>
+    <tr><td><code>README.md</code>（规格）<br>与 <code>.claude/CLAUDE.md</code></td>
+        <td>「整条流水线只有一次 LLM 调用」→「<strong>两次：01 写数据，02 写字</strong>」。
+            第二次不判可行性、不选图、不产出任何值 / 键 / 框</td></tr>
+  </tbody>
+</table></div>
+
+<div class="band"><h2>报告里没进十条的东西，去了哪</h2><span>两档结论逐条对照</span></div>
+
+<p>报告除了十条，还有两档结论：<b>有意不进清单的</b>，和<b>模型自己提的、下一轮从这里开始的</b>。逐条对照，免得看着像漏了。</p>
+<div class="scroll"><table>
+  <thead><tr><th>报告里的说法</th><th>报告归到</th><th>本文在哪</th></tr></thead>
+  <tbody>
+    <tr><td>双轴 · 混合图元</td><td>P9</td><td><a href="#P9">共享层 · 记住对着哪条轴</a></td></tr>
+    <tr><td>缺的图族</td><td>P10</td><td><a href="#P10">共享层 · 类型表加三行</a> ＋ <a href="#grid">类型表按乘积</a></td></tr>
+    <tr><td>各类型配比</td><td>P4</td><td><a href="#P4">02 选图 · 图表配比可换</a></td></tr>
+    <tr><td>标题块与绘图区分开</td><td>P7</td><td><a href="#P7">03 渲染 · 标题块进记录</a> ＋ <a href="#textblk">图外文本一等对象</a></td></tr>
+    <tr><td>一页画好几张图</td><td>已在规格，不是缺口</td><td><a href="#P3">05 输出 · 一页多图分得开</a> 开头写明</td></tr>
+    <tr><td>同一条轴上混形状</td><td>P6，靠 P9 才记得下来</td><td><a href="#P6">03 渲染 · 画法补齐</a> 的每系列记号</td></tr>
+    <tr><td>画法花样 · 单位写在哪</td><td>P6</td><td><a href="#P6">03 渲染 · 画法补齐</a> ＋ <a href="#styledom">风格取值域表</a></td></tr>
+    <tr><td>键必须逐字可复制</td><td>P2 / P8 的附带条件</td><td><a href="#P2">05 输出 · 面板名进键</a>（面板名取自它自己的文本块）</td></tr>
+    <tr><td><b>图下面的来源行、注释行</b></td><td>「不进清单」——基准不看</td>
+        <td><b><a href="#textblk">图外文本一等对象</a>把它吸收了</b>：<code>role</code> 的来源行 / 注释行</td></tr>
+    <tr><td><b>正文、页眉、页脚 · 裁到哪</b></td><td>「不进清单」</td>
+        <td><b>仍然不做。</b>裁图是下游预处理那一步的事；我们给的是它要的东西——
+            每个部件的框在画的时候就记下来了，下游按框自己切，同一次渲染切得出任意一档</td></tr>
+    <tr><td><b>一个格子里塞两个数</b></td><td>「记录结构的底线」</td>
+        <td><b>仍然不做，也不该做。</b>输出单位的定义就是一条记录承载一个数</td></tr>
+  </tbody>
+</table></div>
+<p>模型自己提的候选，报告说「不进这一轮，下一轮从这里开始」。<b>一般化之后有四条自动被吸收了。</b></p>
+<div class="scroll"><table>
+  <thead><tr><th>候选</th><th>提到</th><th>落在哪</th></tr></thead>
+  <tbody>
+    <tr><td>记号形状承载系列 · 点记号当系列 · 一个图例里混着颜色分组和记号系列</td><td>8 ＋ 3 ＋ 2 次</td>
+        <td><a href="#keysrc">键的每段记来源</a>里的「记号形状」这一档</td></tr>
+    <tr><td>图下面的解读段落</td><td>4 次</td><td><a href="#textblk">图外文本一等对象</a>的「注释行」</td></tr>
+    <tr><td>单位写在刻度标签里 · 写在数值标签里</td><td>6 ＋ 4 次</td>
+        <td><a href="#P6">画法补齐</a>的单位位置，<strong>再加一档「写在数值标签里」</strong></td></tr>
+    <tr><td>浮动区间条</td><td>3 次</td><td><a href="#P10">类型表加三行</a>的区间条</td></tr>
+    <tr><td>标题画在绘图区下方</td><td>3 次</td><td><a href="#P7">标题块进记录</a>的位置字段</td></tr>
+    <tr><td>数值标签旋转 · 类目组标签旋转</td><td>3 ＋ 2 次</td>
+        <td><a href="#P6">画法补齐</a>的标签维——现有的旋转只管刻度，要扩到数值标签与类目组标签</td></tr>
+    <tr><td>值轴画在顶上 · 图例带底色条 · 图标式图例项 · 表格斑马纹</td><td>各 2 次</td>
+        <td><b>仍在候选，不进这一轮。</b>四条都是<a href="#styledom">风格取值域表</a>里的空位，扩样之后按同一条规则补</td></tr>
+  </tbody>
+</table></div>
+
+<div class="band"><h2>这一组的进度</h2></div>
+
+<div class="grp">
+<div><h4>G · 扩展与消融</h4><div class="chips"><a class="pgNone" href="#P2" title="ParseBench 缺口 P2 · 点开跳到那一条">▸面板名进键</a><a class="pgNone" href="#P3" title="ParseBench 缺口 P3 · 点开跳到那一条">▸一页多图分得开</a><a class="pgNone" href="#P4" title="ParseBench 缺口 P4 · 点开跳到那一条">▸图表配比可换</a><a class="pgNone" href="#P5" title="ParseBench 缺口 P5 · 点开跳到那一条">▸密度可以指定</a><a class="pgNone" href="#P6" title="ParseBench 缺口 P6 · 点开跳到那一条">▸画法补齐</a></div>
+    <div class="bar"><i class="c" style="width:25%"></i><i class="t" style="width:75%"></i></div>
+    <p class="cnt">0 已完成 · 8 待做（2 是改动）</p>
+    <p>Tier 2 两种图元 ＋ 消融开关。改动让消融表多五行。</p></div>
+</div>
+<div class="legend">
+  <span><b class="d" style="background:var(--have)"></b>已完成</span>
+  <span><b class="c" style="background:var(--s2)"></b>待做，且是十条改动落进来的项</span>
+  <span><b class="t" style="background:var(--line)"></b>待做，主线实现</span>
+</div>
+</section>
+</main>
+<script>
+var nav = document.querySelector('nav.tabs');
+var KEYS = ["over", "base", "s01", "s02", "s03", "s04", "s05", "end"];
+function show(key){
+  nav.querySelectorAll('button').forEach(function(b){
+    b.setAttribute('aria-selected', String(b.dataset.tab === key)); });
+  document.querySelectorAll('section.tab').forEach(function(s){
+    s.hidden = s.id !== 'tab-' + key; });
+  if (location.hash.slice(1) !== key) history.replaceState(null, '', '#' + key);
+  window.scrollTo(0, 0);
+}
+nav.addEventListener('click', function(e){
+  var b = e.target.closest('button'); if (b) show(b.dataset.tab); });
+document.addEventListener('click', function(e){
+  var a = e.target.closest('a[href^="#"]'); if (!a) return;
+  var id = a.getAttribute('href').slice(1);
+  var el = document.getElementById(id); if (!el) return;
+  var sec = el.closest('section.tab');
+  if (sec && sec.hidden) { show(sec.id.slice(4)); }
+  e.preventDefault(); el.scrollIntoView({block:'start'});
+});
+if (KEYS.indexOf(location.hash.slice(1)) >= 0) show(location.hash.slice(1));
+</script>
+</body>
+</html>

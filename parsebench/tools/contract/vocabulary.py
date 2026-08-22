@@ -106,7 +106,10 @@ VOCABULARY: tuple[Component, ...] = (
     Component("mixed_marks", "structure", "mixed marks in one panel",
               "two mark shapes in the same panel: bars and a line, or point markers "
               "overlaid on bars",
-              "同面板混合图元（bar + line）", True, "`chart_types.md` 的 `compound`",
+              "同面板混合图元（bar + line）", True,
+              "`chart_types.md` 的 `compound`，只覆盖两个测度、两条纵轴的 bar + line。"
+              "同一条轴上换图元形状（同一个测度，系列 A 画条、系列 B 画菱形）"
+              "四类条件与 `grouped_bar` 逐格相同，按本文的规矩不占一行，属于风格维度",
               (2,)),
     Component("stacked_area", "structure", "stacked area",
               "filled bands stacked over a time axis",

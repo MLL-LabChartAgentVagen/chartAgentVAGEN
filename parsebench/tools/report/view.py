@@ -293,6 +293,20 @@ def style_dimensions(data: Data) -> list[dict]:
                                          row["key"]))
 
 
+def component_pages(data: Data, key: str, least: int = 2) -> set[str]:
+    """Pages where at least `least` of the three models reported this component.
+
+    The summary table counts each component on its own; crossing two of them --
+    which of the mixed-mark pages also carry two axes -- needs the page sets.
+    """
+    seen: Counter = Counter()
+    for model in MODELS:
+        for stem, answer in data.answers[model].items():
+            if any(c.get("key") == key for c in (answer.get("components") or ())):
+                seen[stem] += 1
+    return {stem for stem, n in seen.items() if n >= least}
+
+
 def facts(data: Data) -> dict[str, str]:
     """Fill every hole in `view_text`. A hole with no fact behind it is a KeyError."""
     failures = data.failures
@@ -312,6 +326,9 @@ def facts(data: Data) -> dict[str, str]:
     pages, group_labels, group_missed, group_hit = colour_group_evidence(data)
     mixed = next((row for row in failures["component_deltas"]
                   if row["key"] == "mixed_marks"), None)
+    mixed_pages = component_pages(data, "mixed_marks")
+    dual_pages = component_pages(data, "dual_axis")
+    one_axis = mixed_pages - dual_pages
 
     if mixed:
         mixed_line = (f"一张图里混着几种图形的页面，正确率 {pct(mixed['with']['rate'])}"
@@ -353,6 +370,9 @@ def facts(data: Data) -> dict[str, str]:
         "dual_figures": str(len(data.summary["axes"]["two_axis_figures"])),
         "mixed_pages": str((data.component("mixed_marks") or {"classes": {}})
                            ["classes"].get("unanimous", 0)),
+        "mixed_two_of_three": str(len(mixed_pages)),
+        "dual_two_of_three": str(len(dual_pages)),
+        "mixed_one_axis": str(len(one_axis)),
         "dual_counts": " / ".join(
             f'{data.per_model("axes", m)["左右（或上下）两条数值轴"]}'
             f'/{data.per_model("axes", m)["图的张数"]}'
@@ -407,7 +427,20 @@ def facts(data: Data) -> dict[str, str]:
             f"（比如「2018 年得分」），那个名字就是指认这个数要用的第二个名字——"
             f"「名字只写在图例里、列名被写成颜色词」这类错换算到全部失败上大约 "
             f"{data.weighted('series_identified_by_colour')} 条，"
-            f"「读到旁边那个图形上去了」大约 {data.weighted('value_read_off_wrong_mark')} 个。"),
+            f"「读到旁边那个图形上去了」大约 {data.weighted('value_read_off_wrong_mark')} 个。"
+            f"<br><br><strong>这一轮量出一件我们的类型表没覆盖的事。</strong>"
+            f"混合图元的页面有 {len(mixed_pages)} 页（三家里至少两家说有），"
+            f"其中只有 {len(mixed_pages & dual_pages)} 页是双轴，"
+            f"<strong>另外 {len(one_axis)} 页是在同一条轴上混形状</strong>——"
+            f"同一个测度、同一条轴，一个系列画成条、另一个画成菱形或短竖线"
+            f"（「女性用条、男性用菱形」「2024 用条、2012 用圆点」）。"
+            f"我们类型表里唯一能混形状的 <code>compound</code> 那一行要求"
+            f"<strong>两个不同的测度、两条纵轴</strong>，装不下这 {len(one_axis)} 页。"
+            f"这 {len(one_axis)} 页在数据上就是普通的分组条"
+            f"——四类条件和 <code>grouped_bar</code> 逐格相同，"
+            f"所以按我们自己的规矩它<strong>不该多占一行</strong>，"
+            f'该是「每个系列画成什么形状」这一维画法（<a href="#P6"><code>P6</code></a>）；'
+            f"而它记得下来的前提，正是这一条要加的「每个图形记住自己是什么形状」。"),
     }
 
 
@@ -763,7 +796,7 @@ def section_a3(data: Data, gallery: Gallery, f: dict) -> str:
 #: The two orderings, in two columns because they are not one scale.
 BY_SCORE = (
     ("P2", "名字对不上是失败的大头，上界是全部结论里最硬的一个数"),
-    ("P3", "对不上的名字有一半就在同一张表里，一页多图与整页导出都是纯加法"),
+    ("P3", "对不上的名字有一半就在同一张表里，整页导出是纯加法"),
     ("P1", "印数字 99.0% vs 不印 79.6%，两组区间离得最开"),
     ("P5", "扩到 100 页之后 ≤20 与 >400 两端的区间不重叠，「越密越差」复核出来了"),
     ("P6", "三十多个画法维度里只有「单位写在哪」那一维能换算出错误个数"),
@@ -780,24 +813,24 @@ BY_CAPABILITY = (
     ("P9", "值记住自己是对着哪条轴、哪种图形读的，反读自检才有定义"),
     ("P1", "「能读到多准」是一个可生成、可核对的量，是非标记表达不了"),
     ("P7", "我们的图连标题从哪来都没有；对分数没用、对能力有用的样板"),
-    ("P3", "页面成为一个对象：一页多张图，标题块独立于绘图区"),
+    ("P3", "同一页并排两张图的表分得开；再多一种整页 markdown 导出"),
     ("P6", "三十多个可配置的画法维度，覆盖面最大的一条；换风格自检要吃它"),
     ("P5", "密度从「碰运气落在哪」变成可以指定的自变量"),
-    ("P10", "类型表多三行；区间条还带来「一根条两个值」这件事"),
+    ("P10", "类型表多三行；配比向量因此多三个格子"),
     ("P4", "族的配比成为一个可插拔的分布，不绑死在任何一把尺子上"),
 )
 
 ORDER = (
-    ("第一步", "P2 + P8", "把键补全",
-     "同一处代码，一次改完。记录里缺的东西不补，后面每一项的产物都要返工"),
-    ("第二步", "P1 + P9", "把读法记下来",
-     "要先有补全的键，才知道精度和轴的身份挂在谁身上"),
-    ("第三步", "P3", "一页多图 + 标题块分离",
-     "纯加法，而且失败运行那一侧的证据最硬"),
-    ("第四步", "P4 + P6 + P5", "配比、画法、密度",
-     "三条都是「加一个可配置的维度、默认保持现在的行为」，彼此独立，可以并行"),
-    ("第五步", "P7 + P10", "标题字段、缺的图族",
-     "证据最弱的两条，但也都只是加字段、加行"),
+    ("第一步", "P9 + P1", "把读法记下来",
+     "反读一个值要先知道它对着哪条轴，才有定义；两条都得赶在自检和奖励动笔之前"),
+    ("第二步", "P7 + P2 + P8", "标题块，然后把键补全",
+     "面板名就是面板自己的小标题，标题块先有；两条键的改动落在同一个导出参数上"),
+    ("第三步", "P10 + P5 + P4", "缺的图族、密度、配比",
+     "类型名单定死，密度档才有得配；配比要等名单定死，才不会一写就过期"),
+    ("第四步", "P6", "画法",
+     "它加的取值直接改可读判据（对数轴、零线、横向条），必须排在 P1 之后"),
+    ("第五步", "P3", "导出侧",
+     "整页 markdown 与同页多图的豁免，都要等前面几条的产物定型"),
 )
 
 
@@ -1362,7 +1395,7 @@ def masthead(data: Data, f: dict) -> str:
     facts_html = "".join(
         f'<div class="fact"><b>{esc(value)}</b><span>{esc(name)}</span></div>'
         for value, name in ((len(text.GAPS), "条改动"), (len(MODELS), "个模型"),
-                            ("20", "页样本"), (f["failures"], "个失败样本"),
+                            (f["n_pages"], "页样本"), (f["failures"], "个失败样本"),
                             (f["page_mean"], "解析器现在的正确率"),
                             (f["ceiling"], "补上名字之后的上界")))
     return (f'<header class="masthead"><div class="inner"><div>'

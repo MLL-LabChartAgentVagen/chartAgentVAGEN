@@ -27,13 +27,13 @@ ParseBench 的 Charts 维度考的是：**从一张企业报告页面上，把�
 | [TODO.md](TODO.md) | **分析重做的待办 T0–T7**，附录里是上一轮两份分析的数字与口径留档 |
 | [reports/view.html](reports/view.html) | **先看这一份**：自足的图示版。开头用<u>一张真实的图上的一个真实的数字</u>把「键 / 值 / 区域」和基准的四步判定讲清楚，然后两个分区——**要改什么**（第一页是一张<u>总表</u>，十条改动一屏看完；后面按三家展开：键要说全 · 读法要记下来 · 图要像真的；最后是「先做哪个」。只看这一个分区就够）与**凭什么这么说**（100 页看到什么 · 568 页失败在哪 · 五个失败逐张看 · 三个模型说的一样吗）。每条改动配着它是从哪张图上看出来的，图可以点开看整页原图；单文件约 4.6 MB |
 | [reports/INDEX.md](reports/INDEX.md) | 同一份结论的纯文字版，与 view.html **由同一份文案和同一批数字生成**，不会说不同的话 |
-| [`../IMPROVEMENT_PLAN.md`](../IMPROVEMENT_PLAN.md) | **这十条怎么落进流水线**：八个设计决定、七个跨阶段连锁、模块划分与六步顺序 |
+| [`../plan/PLAN.md`](../plan/PLAN.md) | **这十条怎么落进流水线**：全文按流水线的顺序排，每条缺口**就地写在它落的那一步**里，每一节末尾是该步的施工清单。图解版 [`plan.html`](../plan/plan.html) |
 | [reports/compare.md](reports/compare.md) | 程序算的全部数字，三家并列，没有结论 |
 | `reports/<model>.md` · `reports/pages/` | 每家自己写的两份 overview；逐页三家并排 + 判分 + 裁决（裁决面） |
 | `tools/contract/` | 契约的机读半边，与 `review/06` 同一份内容：`format.py` 全部 schema 与口径 · `vocabulary.py` 65 项组件词表 · `try_page.py` 一页一模型的验证脚本（全英文） |
 | `tools/analysis/` | 抽样、prompt、三家模型的页面调用与两条控制、每家的 overview、全部一致率与判分（全英文） |
 | `tools/failures/` | 运行加载、失败形态、单变量统计、case 抽样、三家的归因调用、机制折算（全英文） |
-| `tools/report/` | 把上面两处的产物渲染成 `reports/`：`build.py` 出程序的那几份，`view.py` + `view_text.py` + `view_style.py` 出 agent 的图示版，`index_md.py` 出它的纯文字版，`crops.py` 从原页切图，`numbers.py` 做自报与实测的对账（全英文） |
+| `tools/report/` | 把上面两处的产物渲染成 `reports/`：`build.py` 出程序的那几份，`view.py` + `view_text.py` + `view_style.py` 出 agent 的图示版，`index_md.py` 出它的纯文字版，`crops.py` 从原页切图，`numbers.py` 做自报与实测的对账，`conflicts.py` 把每条分歧连同裁它要用的字段打成一份，供人工裁决（全英文） |
 | `tools/dataset/` | 下载、渲染、标注统计（全英文） |
 | `data/raw/` · `data/pages/` | chart 分片与 568 页 PNG（不入库，可重取） |
 | `data/runs/` | 解析器运行目录：逐页输出 + 官方评测报告（不入库） |
@@ -86,6 +86,7 @@ python parsebench/tools/report/build.py
 # 渲染 agent 的那一份：图示版与它的纯文字版，两者同源
 python parsebench/tools/report/view.py                     # → reports/view.html
 python parsebench/tools/report/index_md.py                 # → reports/INDEX.md
+python parsebench/tools/report/conflicts.py                # 未裁的分歧，一条一块（--all 连已裁的）
 ```
 
 `view.html` 里的每一句话在 `tools/report/view_text.py`，每一个数字是那句话里的一个具名的洞，由 `view.py` 从 `data/stats/` 填进去——填不上就构建失败，不会留下一个过期的数字。图是用解析器自己的版面框从原页上切下来的（`tools/report/crops.py`），同一张图在页面里只内联一次。
@@ -171,7 +172,7 @@ parsebench/data/
   - [x] B2 每条改动过一遍 [T0.1](TODO.md)：消融表新增 8 行、一行没减；分数栏为空或证据不足的三条靠能力栏进清单，并在表里写明分数栏是空的
   - [x] B3 与 P1–P7 对齐：扩 P1 / P2 / P3 / P4，保持 P5 / P6 / P7，**加两条**——P8（颜色 / 高亮编码的第三属性）与 P9（同面板两条平行值轴 + 混合图元），不删
 
-- [ ] **C · 流水线改造**（规格写回 `storyline/`，实现进 `src/chartgen/`，对应 [IMPL_PLAN 的 H 组](../IMPL_PLAN.md#h-parsebench-对齐)）
+- [ ] **C · 流水线改造**（规格写回 `storyline/`，实现进 `src/chartgen/`，施工项在 [plan/PLAN.md](../plan/PLAN.md) 各节末尾）
 
   **次序**由 B1 的两条依据给出，重跑后的读法是：**C2 + C8 + C9 一次改完**——它们是同一处代码，都在「一个值的地址不够长」上。两条依据的第一顺位一致，都指向键：896 个失败里约七成是寻址，全部改对的上界是按页平均 82.75% → 95.41%；而键的分量不止面板一维，颜色编码的分组名是一维（三家模型在它上面全错，是本轮唯一可核的缺口），两条平行值轴时「对着哪条轴读的」也是一维。再 C3 → C1 → C4 → C6 → C5 → C7。
 

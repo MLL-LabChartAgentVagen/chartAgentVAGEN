@@ -5,10 +5,10 @@
 Chart data generation for **grounded transcription**: synthesize charts where every rendered value carries the pixel box it was drawn in. Output unit is `(key, value, box)`. Ground truth is recorded while drawing — never obtained by annotating finished images.
 
 - Spec: `storyline/parsebench_chart/` — the single source of truth.
-- **All code is English** — comments, docstrings, exception text, prompts, CLI output. So is all pipeline-produced content: column values, units, scenario prose, intent sentences, captions, axis labels, slides. Chinese stays in the documents: `storyline/`, `README.md`, `IMPL_PLAN.md`.
+- **All code is English** — comments, docstrings, exception text, prompts, CLI output. So is all pipeline-produced content: column values, units, scenario prose, intent sentences, captions, axis labels, slides. Chinese stays in the documents: `storyline/`, `README.md`, `plan/`.
 - **Docstrings stand on their own.** Never refer to a stage by its number alone or to a spec section by number (`03 → 04`, `§4`, `L1`); say what the thing does and name the component. A spec path may follow as a pointer, never as the explanation. The running example is a US emergency department.
 - What can be drawn and under what conditions: `storyline/parsebench_chart/chart_types.md`.
-- Plan: `IMPL_PLAN.md` — module layout, data interfaces, checklist.
+- Plan: `plan/PLAN.md` — one file, ordered by the pipeline: overview (§1), the shared layer the five stages stand on (§2), then one section per stage (§3–§7), extensions (§8) and wrap-up (§9). Each ParseBench gap is written out inside the stage it lands in, and each section ends with that stage's slice of the checklist. `plan/plan.html` is the illustrated version for the user.
 - Running example in every spec doc: hospital ER wait times (3 hospitals × 4 departments × 3 severity levels, 900 rows).
 
 ## Pipeline
@@ -82,4 +82,4 @@ The recorded metadata (scenario, fact table, schema, FigureSpec, three record la
 
 ## Maintenance
 
-`storyline/parsebench_chart/` and the code must stay in sync. Update `IMPL_PLAN.md`'s checklist as work lands, `README.md` for setup or CLI changes, and `slides/parsebench_talk.html` when the method changes. Keep the hospital ER example consistent across all docs — the numbers in 01/02/03/04/05 are chained (900 rows → 8 figures = 3 intent + 2 multi-panel + 3 rotation; Mercy General 42.3 / St. Luke's 35.8 / Riverside 28.1; box [168,196,278,520]).
+`storyline/parsebench_chart/` and the code must stay in sync. Tick the per-stage checklists in `plan/PLAN.md` as work lands, `README.md` for setup or CLI changes, and `slides/parsebench_talk.html` when the method changes. Keep the hospital ER example consistent across all docs — the numbers in 01/02/03/04/05 are chained (900 rows → 8 figures = 3 intent + 2 multi-panel + 3 rotation; Mercy General 42.3 / St. Luke's 35.8 / Riverside 28.1; box [168,196,278,520]).
