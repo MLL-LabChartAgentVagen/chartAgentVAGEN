@@ -1,0 +1,367 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>01 data</title>
+<style>:root{
+  --ground:#F6F7F9; --surface:#FFFFFF; --raised:#EDF0F4;
+  --ink:#151A21; --muted:#5A6472; --line:#DFE4EA;
+  --gap:#A93E26; --gap-soft:#A93E2614; --have:#2E6A55; --have-soft:#2E6A5512;
+  --key:#2F5DA8; --key-soft:#2F5DA814;
+  --s1:#3B6EA8; --s2:#C4703B; --s3:#2E8B6E; --s1d:#254B77; --s1l:#9DBBDA;
+  --shadow:0 1px 2px rgba(21,26,33,.05), 0 8px 24px -16px rgba(21,26,33,.25);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#0E1216; --surface:#161C23; --raised:#1E2630;
+    --ink:#E7EBF0; --muted:#98A3B1; --line:#28313B;
+    --gap:#E4795A; --gap-soft:#E4795A1C; --have:#68BC9A; --have-soft:#68BC9A16;
+    --key:#7FA8E8; --key-soft:#7FA8E81C;
+    --s1:#6294CE; --s2:#DB9260; --s3:#5FB294; --s1d:#3E6D9E; --s1l:#2C4763;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -16px rgba(0,0,0,.7);
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#0E1216; --surface:#161C23; --raised:#1E2630;
+  --ink:#E7EBF0; --muted:#98A3B1; --line:#28313B;
+  --gap:#E4795A; --gap-soft:#E4795A1C; --have:#68BC9A; --have-soft:#68BC9A16;
+  --key:#7FA8E8; --key-soft:#7FA8E81C;
+  --s1:#6294CE; --s2:#DB9260; --s3:#5FB294; --s1d:#3E6D9E; --s1l:#2C4763;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -16px rgba(0,0,0,.7);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ground);color:var(--ink);
+  font-family:"IBM Plex Sans",-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;
+  font-size:15px;line-height:1.75;-webkit-font-smoothing:antialiased}
+code,pre{font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace}
+code{font-size:.88em;background:var(--raised);padding:.1em .35em;border-radius:3px}
+a{color:var(--key)}
+h1,h2,h3,h4{line-height:1.3;margin:0}
+strong{font-weight:600}
+
+.masthead{background:var(--surface);border-bottom:1px solid var(--line)}
+.masthead .inner{max-width:1080px;margin:0 auto;padding:34px 24px 26px;
+  display:flex;flex-wrap:wrap;gap:24px;align-items:flex-end;justify-content:space-between}
+.masthead h1{font-size:27px;letter-spacing:-.01em}
+.masthead p{margin:8px 0 0;color:var(--muted);max-width:58ch}
+.facts{display:flex;gap:26px;flex-wrap:wrap}
+.fact b{display:block;font-size:24px;font-variant-numeric:tabular-nums}
+.fact span{font-size:12px;color:var(--muted)}
+
+main{max-width:1080px;margin:0 auto;padding:0 24px 90px}
+.band{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;
+  padding-bottom:9px;border-bottom:2px solid var(--ink);margin:48px 0 16px;
+  scroll-margin-top:16px}
+.band h2{font-size:19px}
+.band span{font-size:13px;color:var(--muted)}
+
+table{width:100%;border-collapse:collapse;font-size:14px;background:var(--surface);
+  border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.scroll{overflow-x:auto;margin-bottom:12px}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{background:var(--raised);font-weight:600;font-size:12.5px;white-space:nowrap}
+tr:last-child td{border-bottom:none}
+td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
+
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;
+  box-shadow:var(--shadow);margin-top:20px;overflow:hidden;scroll-margin-top:16px}
+.card>header{display:flex;flex-wrap:wrap;gap:10px;align-items:baseline;
+  padding:14px 18px;border-bottom:1px solid var(--line);background:var(--raised)}
+.card>header h3{font-size:16.5px}
+.card>header .id{font-family:"IBM Plex Mono",monospace;font-size:12px;font-weight:500;
+  background:var(--key-soft);color:var(--key);padding:2px 7px;border-radius:4px}
+.card>header .size{margin-left:auto;font-size:12px;color:var(--muted)}
+.body{padding:16px 18px}
+.body>p{margin:0 0 12px}
+.body>p:last-child{margin-bottom:0}
+
+figure.draw{margin:0 0 15px;padding:14px 16px 10px;background:var(--raised);
+  border:1px solid var(--line);border-radius:8px}
+figure.draw svg{width:100%;height:auto;display:block;
+  font-family:"IBM Plex Sans",-apple-system,sans-serif}
+figure.draw figcaption{font-size:12.5px;color:var(--muted);line-height:1.6;margin-top:9px;
+  border-top:1px dashed var(--line);padding-top:8px}
+figure.draw figcaption b{color:var(--ink);font-weight:600}
+
+svg .plot{fill:none;stroke:var(--line);stroke-width:1}
+svg .gl{stroke:var(--line);stroke-width:1}
+svg .gld{stroke:var(--line);stroke-width:1;stroke-dasharray:2 3}
+svg .lb{fill:var(--muted);font-size:9px}
+svg .lbb{fill:var(--ink);font-size:9.5px;font-weight:600}
+svg .cal{fill:var(--gap);font-size:9.5px;font-weight:600}
+svg .calm{fill:var(--have);font-size:9.5px;font-weight:600}
+svg .lead{stroke:var(--gap);stroke-width:1;stroke-dasharray:3 2;fill:none}
+svg .b1{fill:var(--s1)} svg .b2{fill:var(--s2)} svg .b3{fill:var(--s3)}
+svg .bd{fill:var(--s1d)} svg .bl{fill:var(--s1l)}
+svg .ln{fill:none;stroke:var(--s2);stroke-width:1.8}
+
+.diff{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:0 0 14px}
+@media(max-width:820px){.diff{grid-template-columns:1fr}}
+.diff>div{border:1px solid var(--line);border-radius:8px;overflow:hidden;min-width:0}
+.diff h4{font-size:12px;padding:6px 12px;letter-spacing:.04em}
+.now h4{background:var(--gap-soft);color:var(--gap)}
+.next h4{background:var(--have-soft);color:var(--have)}
+.diff pre{margin:0;padding:11px 12px;font-size:12.4px;line-height:1.65;
+  overflow-x:auto;background:var(--surface);white-space:pre}
+pre i{font-style:normal;color:var(--muted)}
+pre b{font-weight:500;background:var(--have-soft);border-radius:2px;padding:0 2px}
+pre s{text-decoration:none;background:var(--gap-soft);border-radius:2px;padding:0 2px}
+
+.files{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px;padding-top:12px;
+  border-top:1px dashed var(--line)}
+.files em{font-style:normal;font-size:12px;color:var(--muted);margin-right:4px;align-self:center}
+.files code{background:var(--raised);border:1px solid var(--line);font-size:11.5px}
+
+ol.steps{list-style:none;padding:0;margin:0;counter-reset:s}
+ol.steps li{counter-increment:s;background:var(--surface);border:1px solid var(--line);
+  border-radius:8px;padding:12px 16px 12px 52px;position:relative;margin-top:10px}
+ol.steps li::before{content:counter(s);position:absolute;left:16px;top:12px;
+  width:22px;height:22px;border-radius:50%;background:var(--ink);color:var(--ground);
+  font-size:12px;display:grid;place-items:center;font-variant-numeric:tabular-nums}
+ol.steps b{margin-right:8px}
+ol.steps span{color:var(--muted);font-size:13.5px}
+
+pre.tree{background:var(--surface);border:1px solid var(--line);border-radius:8px;
+  padding:14px 16px;overflow-x:auto;font-size:12.6px;line-height:1.7;margin:0}
+pre.tree b{background:none;color:var(--have)}
+
+p.note{font-size:13.5px;color:var(--muted);background:var(--raised);
+  border-radius:6px;padding:10px 14px;margin:14px 0 0}
+p.note b{color:var(--ink)}
+.nums{font-variant-numeric:tabular-nums}
+
+nav.tabs{position:sticky;top:0;z-index:20;background:var(--ground);
+  border-bottom:1px solid var(--line);display:flex;gap:2px;padding:0 24px;
+  max-width:1080px;margin:0 auto;overflow-x:auto}
+nav.tabs button{background:none;border:0;border-bottom:2px solid transparent;
+  color:var(--muted);font:inherit;font-size:14.5px;padding:12px 14px 10px;
+  cursor:pointer;white-space:nowrap}
+nav.tabs button:hover{color:var(--ink)}
+nav.tabs button[aria-selected="true"]{color:var(--ink);font-weight:600;
+  border-bottom-color:var(--ink)}
+nav.tabs button span{display:block;font-size:11.5px;font-weight:400;color:var(--muted)}
+section.tab[hidden]{display:none}
+section.tab > .band:first-child{margin-top:24px}
+.pg{display:inline-block;font-family:"IBM Plex Mono",monospace;font-size:10.5px;
+  line-height:1.5;background:var(--gap-soft);color:var(--gap);border:1px solid var(--gap);
+  border-radius:3px;padding:0 4px;margin-left:5px;vertical-align:2px;white-space:nowrap;
+  text-decoration:none;font-weight:400}
+a.pg:hover{background:var(--gap);color:var(--ground)}
+.pg.x{background:var(--key-soft);color:var(--key);border-color:var(--key)}
+a.pg.x:hover{background:var(--key);color:var(--ground)}
+.pg.n{background:var(--have-soft);color:var(--have);border-color:var(--have)}
+pre.tree .pg{margin-left:8px;vertical-align:0}
+.grp .chips{margin-top:9px;line-height:2.1}
+.grp .chips .pg:first-child{margin-left:0}
+.key{background:var(--raised);border:1px solid var(--line);border-radius:8px;
+  padding:12px 16px;margin:16px 0 0;font-size:13.5px;color:var(--muted);line-height:2.1}
+.key b{color:var(--ink)}
+.bar{display:flex;height:12px;border-radius:6px;overflow:hidden;background:var(--raised);
+  border:1px solid var(--line);margin:6px 0 0}
+.bar i{display:block}
+.bar .d{background:var(--have)} .bar .c{background:var(--s2)} .bar .t{background:var(--line)}
+.legend{display:flex;gap:18px;font-size:12.5px;color:var(--muted);margin-top:10px;flex-wrap:wrap}
+.legend b{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px}
+.grp{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;margin-top:4px}
+.grp>div{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:12px 14px}
+.grp h4{font-size:14px;margin-bottom:4px}
+.grp p{margin:4px 0 0;font-size:13px;color:var(--muted);line-height:1.6}
+.grp .cnt{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+.tag{display:inline-block;font-family:"IBM Plex Mono",monospace;font-size:11px;
+  background:var(--gap-soft);color:var(--gap);border-radius:3px;padding:1px 5px;margin:2px 3px 0 0}
+.tag.g{background:var(--key-soft);color:var(--key)}
+
+.n{font-variant-numeric:tabular-nums;white-space:nowrap}
+.tag.g{background:var(--raised);color:var(--muted)}
+.bar{display:inline-flex;width:96px;vertical-align:middle;margin:0 8px 0 0}
+.bar i{background:var(--have)}
+figure.draw img,.diff img,.body img{border:1px solid var(--line);border-radius:6px}
+pre.tree{white-space:pre-wrap;word-break:break-word}
+td pre.tree{margin:0;font-size:12px}
+.card .body>.scroll:last-child{margin-bottom:0}
+nav.tabs a{display:block;padding:11px 14px 10px;font:inherit;font-size:13.5px;
+  color:var(--muted);text-decoration:none;border-bottom:2px solid transparent}
+nav.tabs a[aria-current="page"]{color:var(--ink);border-bottom-color:var(--ink)}
+nav.tabs a span{display:block;font-size:11.5px;color:var(--muted)}
+.gridcards{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}
+.gridcards a{display:block;text-decoration:none;color:inherit;background:var(--surface);
+  border:1px solid var(--line);border-radius:10px;overflow:hidden;box-shadow:var(--shadow)}
+.gridcards a b{display:block;padding:9px 12px 2px;font-size:14px}
+.gridcards a span{display:block;padding:0 12px 10px;font-size:12px;color:var(--muted)}
+.wall{display:grid;grid-template-columns:repeat(auto-fill,minmax(236px,1fr));
+  gap:12px;margin:14px 0}
+.wall figure{margin:0;background:var(--surface);border:1px solid var(--line);
+  border-radius:8px;overflow:hidden;box-shadow:var(--shadow)}
+.wall img{width:100%;display:block;border:0;border-radius:0}
+.wall figcaption{padding:7px 10px 9px;font-size:11.5px;color:var(--muted);line-height:1.55}
+.wall figcaption b{display:block;color:var(--ink);font-size:12px;font-weight:600;
+  margin-bottom:2px;word-break:break-all}
+.ok{color:var(--have);font-weight:600}
+.bad{color:var(--gap);font-weight:600}
+</style></head>
+<body>
+<header class="masthead"><div class="inner"><div><h1>01 data</h1><p>The artifacts one real run left behind, read back page by page. A page per stage, a page per chart type, and a last page on how the code was verified.</p></div><div class="facts"><div class="fact"><b>6</b><span>scenarios</span></div><div class="fact"><b>96</b><span>figures</span></div><div class="fact"><b>192</b><span>records</span></div><div class="fact"><b>7850</b><span>marks</span></div><div class="fact"><b>1331</b><span>tests</span></div></div></div></header><nav class="tabs"><a href="index.html">Entrance<span>Start here · site map</span></a><a href="../plan/reports/report.html">One page<span>The whole pipeline, read in one sitting</span></a><a href="stage01.html" aria-current="page">01 data<span>Scenario · script · intents</span></a><a href="stage02.html">02 figure<span>Constructed · derived · sampled</span></a><a href="stage03.html">03 render<span>Recorded while drawing · frozen layout</span></a><a href="stage04.html">04 record<span>Three layers · readability · self-checks</span></a><a href="stage05.html">05 output<span>Nine kinds of target · reward</span></a><a href="gallery.html">Every figure<span>Every figure this run drew</span></a><a href="pages.html">Several at once<span>One page · several panels · overlaid in one area</span></a><a href="types.html">Chart types<span>17 types, one page each</span></a><a href="diversity.html">Diversity<span>Style · density · spread</span></a><a href="checks.html">Checks<span>Tests · coverage · fault injection</span></a></nav>
+<main><p class="note"><b>One call, three things: the scenario prose, the declaration script, and the intents.</b> The script <em>is</em> the formalised scenario, so splitting this into two calls would insert a lossy JSON layer between them. Parsing, enumeration, the coverage check, execution and the structural check are all program: the model judges no feasibility and writes no value.</p><div class="band"><h2>The scenarios</h2><span>The domain is drawn from the pool by program</span></div><div class="scroll"><table><thead><tr><th>Scenario</th><th>Title (written by the model)</th><th>Rows</th><th>Category cols</th><th>Time cols</th><th>Measure cols</th><th>Intents</th><th>Feasible view classes (grey = empty)</th></tr></thead><tbody><tr><td><a href="#s000"><code>s000</code></a></td><td>Protected species incident filings, investigation durations, and penalty assessments across regional enforcement registries, 2023–2024</td><td><span class="n">360</span></td><td><span class="n">5</span></td><td><span class="n">1</span></td><td><span class="n">4</span></td><td><span class="n">4</span></td><td><span class="tag">comparison</span> <span class="tag">trend</span> <span class="tag">composition</span> <span class="tag">relation</span> <span class="tag">distribution</span> <span class="tag">process</span></td></tr><tr><td><a href="#s001"><code>s001</code></a></td><td>Monthly merchandise export values and commodity group shares by destination economy, 2021-2023</td><td><span class="n">360</span></td><td><span class="n">4</span></td><td><span class="n">1</span></td><td><span class="n">3</span></td><td><span class="n">3</span></td><td><span class="tag">comparison</span> <span class="tag">trend</span> <span class="tag">composition</span> <span class="tag">relation</span> <span class="tag">distribution</span> <span class="tag g">process</span></td></tr><tr><td><a href="#s002"><code>s002</code></a></td><td>Cross-national news consumption habits and media trust survey across five OECD nations, 2021–2024</td><td><span class="n">380</span></td><td><span class="n">4</span></td><td><span class="n">1</span></td><td><span class="n">3</span></td><td><span class="n">3</span></td><td><span class="tag">comparison</span> <span class="tag">trend</span> <span class="tag">composition</span> <span class="tag">relation</span> <span class="tag">distribution</span> <span class="tag g">process</span></td></tr><tr><td><a href="#s003"><code>s003</code></a></td><td>Monthly construction cost indices and building permit issuances across regional markets by the National Statistics Bureau, 2022–2024</td><td><span class="n">720</span></td><td><span class="n">5</span></td><td><span class="n">1</span></td><td><span class="n">4</span></td><td><span class="n">4</span></td><td><span class="tag">comparison</span> <span class="tag">trend</span> <span class="tag">composition</span> <span class="tag">relation</span> <span class="tag">distribution</span> <span class="tag g">process</span></td></tr><tr><td><a href="#s004"><code>s004</code></a></td><td>Real agricultural producer price indices and per-capita output value by World Bank income tier and commodity group, 2005–2023</td><td><span class="n">1800</span></td><td><span class="n">5</span></td><td><span class="n">1</span></td><td><span class="n">3</span></td><td><span class="n">4</span></td><td><span class="tag">comparison</span> <span class="tag">trend</span> <span class="tag">composition</span> <span class="tag">relation</span> <span class="tag">distribution</span> <span class="tag g">process</span></td></tr><tr><td><a href="#s005"><code>s005</code></a></td><td>Preferential trade agreement origin claims, duty forgone, and customs compliance verifications across major entry ports, 2022–2023</td><td><span class="n">800</span></td><td><span class="n">6</span></td><td><span class="n">1</span></td><td><span class="n">4</span></td><td><span class="n">4</span></td><td><span class="tag">comparison</span> <span class="tag">trend</span> <span class="tag">composition</span> <span class="tag">relation</span> <span class="tag">distribution</span> <span class="tag">process</span></td></tr></tbody></table></div><p class="note">Feasibility reads declarations only: a category column's value list gives its cardinality, a time column's start, end and frequency give its point count, and <code>additive</code> and <code>ordered</code> are declared fields. Fewer than three non-empty families sends the reply back to the model to be rewritten.</p><div class="band" id="s000"><h2>s000</h2><span>Protected species incident filings, investigation durations,</span></div><div class="card"><header><h3>(1) Scenario prose</h3><span class="id">data_context</span></header><div class="body"><p>The National Wildlife Law Enforcement Division maintains an incident and compliance registry logging protected species violations, strandings, and unauthorized habitat disturbances across regional field offices. Field agents and registry intake officers recorded case progression stages, field response times, staff investigation hours, and assessed civil penalties from January 2023 through December 2024 to evaluate enforcement pipeline efficiency and backlog resolution.</p></div></div><div class="card"><header><h3>(2) Declaration script</h3><span class="id">script</span></header><div class="body"><pre class="tree">dim(&quot;region&quot;, [&quot;Pacific West&quot;, &quot;Atlantic Coast&quot;, &quot;Gulf &amp; Interior&quot;],
+    weights=[0.40, 0.35, 0.25], group=&quot;jurisdiction&quot;)
+dim(&quot;district&quot;, [&quot;Northwest Coastal&quot;, &quot;California Inland&quot;, &quot;Alaska Marine&quot;,
+                 &quot;Northeast Maritime&quot;, &quot;Mid-Atlantic Wetlands&quot;, &quot;Southeast Coastal&quot;,
+                 &quot;Gulf Coast Plains&quot;, &quot;Rio Grande Corridor&quot;, &quot;Great Lakes Basin&quot;],
+    parent=&quot;region&quot;,
+    weights={&quot;Pacific West&quot;: [0.45, 0.35, 0.20, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+             &quot;Atlantic Coast&quot;: [0.0, 0.0, 0.0, 0.35, 0.35, 0.30, 0.0, 0.0, 0.0],
+             &quot;Gulf &amp; Interior&quot;: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.40, 0.35, 0.25]},
+    group=&quot;jurisdiction&quot;)
+dim(&quot;incident_type&quot;, [&quot;Illegal Take&quot;, &quot;Stranding &amp; Distress&quot;, &quot;Habitat Encroachment&quot;, &quot;Prohibited Commerce&quot;],
+    weights=[0.35, 0.25, 0.25, 0.15], group=&quot;incident&quot;)
+dim(&quot;case_stage&quot;, [&quot;Initial Intake&quot;, &quot;Field Assessment&quot;, &quot;Active Investigation&quot;, &quot;Formal Enforcement&quot;, &quot;Case Closed&quot;],
+    weights=[0.32, 0.26, 0.20, 0.14, 0.08], ordered=&quot;stage&quot;, group=&quot;workflow&quot;)
+
+time(&quot;filing_month&quot;, start=&quot;2023-01-01&quot;, end=&quot;2024-12-31&quot;, freq=&quot;monthly&quot;)
+
+measure(&quot;response_time_days&quot;,
+        &quot;lognormal(1.2 + 0.5*[incident_type=Habitat Encroachment] - 0.4*[incident_type=Stranding &amp; Distress] + 0.3*[region=Pacific West], 0.4)&quot;,
+        unit=&quot;days&quot;, additive=True)
+measure(&quot;penalty_assessed_usd&quot;,
+        &quot;gamma(3.0, 1200) + 2500*[incident_type=Illegal Take] + 1800*[incident_type=Prohibited Commerce] + 800*[case_stage=Formal Enforcement] + 1500*[case_stage=Case Closed]&quot;,
+        unit=&quot;USD&quot;, additive=True)
+measure(&quot;investigation_hours&quot;,
+        &quot;clip(gaussian(38 + 18*[case_stage=Active Investigation] + 32*[case_stage=Formal Enforcement] + 45*[case_stage=Case Closed] + 12*[incident_type=Illegal Take], 9), 5, 180)&quot;,
+        unit=&quot;hours&quot;, additive=True)
+measure(&quot;evidence_sufficiency_score&quot;,
+        &quot;clip(55 + 15*[case_stage=Case Closed] + 10*[case_stage=Formal Enforcement] - 12*[case_stage=Initial Intake] + gaussian(0, 8), 10, 100)&quot;,
+        unit=&quot;points&quot;, additive=False)
+
+emit(360)</pre></div></div><div class="card"><header><h3>(3) Column declarations</h3><span class="id">columns</span></header><div class="body"><div class="scroll"><table><thead><tr><th>Column</th><th>Kind</th><th>Cardinality</th><th>Group</th><th>Values / range</th><th>Semantics</th></tr></thead><tbody><tr><td><code>region</code></td><td>category</td><td><span class="n">3</span></td><td>jurisdiction</td><td>Pacific West, Atlantic Coast, Gulf &amp; Interior</td><td>—</td></tr><tr><td><code>district</code></td><td>category</td><td><span class="n">9</span></td><td>jurisdiction</td><td>Northwest Coastal, California Inland, Alaska Marine, Northeast Maritime…</td><td><span class="tag">parent=region</span></td></tr><tr><td><code>incident_type</code></td><td>category</td><td><span class="n">4</span></td><td>incident</td><td>Illegal Take, Stranding &amp; Distress, Habitat Encroachment, Prohibited Commerce</td><td>—</td></tr><tr><td><code>case_stage</code></td><td>category</td><td><span class="n">5</span></td><td>workflow</td><td>Initial Intake, Field Assessment, Active Investigation, Formal Enforcement…</td><td><span class="tag">ordered=stage</span></td></tr><tr><td><code>filing_month</code></td><td>time</td><td><span class="n">24</span></td><td>calendar</td><td>2023-01-01 → 2024-12-31, monthly</td><td>—</td></tr><tr><td><code>quarter</code></td><td>category</td><td><span class="n">8</span></td><td>calendar</td><td>2023-Q1, 2023-Q2, 2023-Q3, 2023-Q4…</td><td><span class="tag">ordered=ordinal</span> <span class="tag">derived_from=filing_month</span></td></tr><tr><td><code>response_time_days</code></td><td>measure</td><td><span class="n">360</span></td><td>—</td><td>unit days</td><td><span class="tag">additive</span></td></tr><tr><td><code>penalty_assessed_usd</code></td><td>measure</td><td><span class="n">360</span></td><td>—</td><td>unit USD</td><td><span class="tag">additive</span></td></tr><tr><td><code>investigation_hours</code></td><td>measure</td><td><span class="n">360</span></td><td>—</td><td>unit hours</td><td><span class="tag">additive</span></td></tr><tr><td><code>evidence_sufficiency_score</code></td><td>measure</td><td><span class="n">360</span></td><td>—</td><td>unit points</td><td><span class="tag">non-additive</span></td></tr></tbody></table></div></div></div><div class="card"><header><h3>(4) Intents, columns already bound</h3><span class="id">intents</span></header><div class="body"><div class="scroll"><table><thead><tr><th>#</th><th>Question</th><th>Columns</th><th>Aggregate</th><th>View class</th></tr></thead><tbody><tr><td><span class="n">0</span></td><td>How case filings drop off through sequential stages from intake to closure</td><td><code>case_stage</code></td><td><code>COUNT</code></td><td><span class="tag">process</span></td></tr><tr><td><span class="n">1</span></td><td>Which incident types incur the highest average civil penalties</td><td><code>incident_type</code>, <code>penalty_assessed_usd</code></td><td><code>AVG</code></td><td><span class="tag">comparison</span></td></tr><tr><td><span class="n">2</span></td><td>Monthly trend in total enforcement investigation hours logged</td><td><code>filing_month</code>, <code>investigation_hours</code></td><td><code>SUM</code></td><td><span class="tag">trend</span></td></tr><tr><td><span class="n">3</span></td><td>Relationship between field response times and final evidence sufficiency scores</td><td><code>response_time_days</code>, <code>evidence_sufficiency_score</code></td><td><code>NONE</code></td><td><span class="tag">relation</span></td></tr></tbody></table></div></div></div><div class="card"><header><h3>(5) First 8 rows of the fact table</h3><span class="id">facts.parquet</span></header><div class="body"><div class="scroll"><table><thead><tr><th>region</th><th>district</th><th>incident_type</th><th>case_stage</th><th>filing_month</th><th>quarter</th><th>response_time_days</th><th>penalty_assessed_usd</th><th>investigation_hours</th><th>evidence_sufficiency_score</th></tr></thead><tbody><tr><td>Pacific West</td><td>Alaska Marine</td><td>Prohibited Commerce</td><td>Formal Enforcement</td><td>2023-12-01 00:00:00</td><td>2023-Q4</td><td><span class="n">3.9</span></td><td><span class="n">4063</span></td><td><span class="n">79.8</span></td><td><span class="n">62.2</span></td></tr><tr><td>Pacific West</td><td>California Inland</td><td>Stranding &amp; Distress</td><td>Initial Intake</td><td>2024-07-01 00:00:00</td><td>2024-Q3</td><td><span class="n">1.8</span></td><td><span class="n">4630</span></td><td><span class="n">16.5</span></td><td><span class="n">53.7</span></td></tr><tr><td>Pacific West</td><td>Alaska Marine</td><td>Stranding &amp; Distress</td><td>Formal Enforcement</td><td>2024-09-01 00:00:00</td><td>2024-Q3</td><td><span class="n">6.2</span></td><td><span class="n">2480</span></td><td><span class="n">57.8</span></td><td><span class="n">62.4</span></td></tr><tr><td>Pacific West</td><td>Alaska Marine</td><td>Illegal Take</td><td>Field Assessment</td><td>2023-04-01 00:00:00</td><td>2023-Q2</td><td><span class="n">4.8</span></td><td><span class="n">10822</span></td><td><span class="n">63.7</span></td><td><span class="n">56.6</span></td></tr><tr><td>Pacific West</td><td>California Inland</td><td>Stranding &amp; Distress</td><td>Initial Intake</td><td>2023-12-01 00:00:00</td><td>2023-Q4</td><td><span class="n">3</span></td><td><span class="n">4925</span></td><td><span class="n">28.4</span></td><td><span class="n">26.1</span></td></tr><tr><td>Pacific West</td><td>California Inland</td><td>Habitat Encroachment</td><td>Initial Intake</td><td>2023-03-01 00:00:00</td><td>2023-Q1</td><td><span class="n">6</span></td><td><span class="n">1697</span></td><td><span class="n">35.2</span></td><td><span class="n">50.6</span></td></tr><tr><td>Atlantic Coast</td><td>Southeast Coastal</td><td>Illegal Take</td><td>Formal Enforcement</td><td>2023-04-01 00:00:00</td><td>2023-Q2</td><td><span class="n">4.7</span></td><td><span class="n">6971</span></td><td><span class="n">83.5</span></td><td><span class="n">65.4</span></td></tr><tr><td>Pacific West</td><td>California Inland</td><td>Illegal Take</td><td>Field Assessment</td><td>2024-01-01 00:00:00</td><td>2024-Q1</td><td><span class="n">5.9</span></td><td><span class="n">4818</span></td><td><span class="n">60.9</span></td><td><span class="n">40.7</span></td></tr></tbody></table></div></div></div><div class="band" id="s001"><h2>s001</h2><span>Monthly merchandise export values and commodity group shares</span></div><div class="card"><header><h3>(1) Scenario prose</h3><span class="id">data_context</span></header><div class="body"><p>The National Directorate of Statistics compiled customs trade declaration summaries from January 2021 through December 2023 to monitor structural shifts in merchandise export composition and evaluate national trade exposure across major trading partner economies.</p></div></div><div class="card"><header><h3>(2) Declaration script</h3><span class="id">script</span></header><div class="body"><pre class="tree">dim(&quot;destination_market&quot;, [&quot;United States&quot;, &quot;European Union&quot;, &quot;China&quot;, &quot;Japan&quot;],
+    weights=[0.32, 0.28, 0.24, 0.16], group=&quot;geography&quot;)
+
+dim(&quot;broad_sector&quot;, [&quot;Manufactured Goods&quot;, &quot;Commodities &amp; Energy&quot;, &quot;Agri-Food&quot;],
+    weights=[0.55, 0.30, 0.15], group=&quot;merchandise&quot;)
+dim(&quot;product_group&quot;,
+    [&quot;Electronics &amp; Machinery&quot;, &quot;Automotive &amp; Transport&quot;, &quot;Chemicals &amp; Plastics&quot;, &quot;Refined Petroleum&quot;, &quot;Mineral Ores&quot;, &quot;Processed Food&quot;, &quot;Raw Agricultural Goods&quot;],
+    parent=&quot;broad_sector&quot;,
+    weights={
+        &quot;Manufactured Goods&quot;: [0.45, 0.35, 0.20, 0.0, 0.0, 0.0, 0.0],
+        &quot;Commodities &amp; Energy&quot;: [0.0, 0.0, 0.0, 0.60, 0.40, 0.0, 0.0],
+        &quot;Agri-Food&quot;: [0.0, 0.0, 0.0, 0.0, 0.0, 0.60, 0.40]
+    },
+    group=&quot;merchandise&quot;)
+
+time(&quot;report_month&quot;, start=&quot;2021-01-01&quot;, end=&quot;2023-12-31&quot;, freq=&quot;monthly&quot;)
+
+measure(&quot;export_value_usd_m&quot;,
+        &quot;120.0 + 260.0 * [broad_sector=Manufactured Goods] + 140.0 * [destination_market=United States] + 90.0 * [destination_market=China] + 0.08 * report_month + gaussian(0, 20.0)&quot;,
+        unit=&quot;million USD&quot;, additive=True)
+measure(&quot;export_share_pct&quot;,
+        &quot;clip(export_value_usd_m / 42.0 + gaussian(0, 0.6), 0.5, 35.0)&quot;,
+        unit=&quot;percent&quot;, additive=False)
+measure(&quot;yoy_share_change_ppt&quot;,
+        &quot;gaussian(0.05, 1.1) + 0.4 * [product_group=Electronics &amp; Machinery] - 0.3 * [product_group=Refined Petroleum]&quot;,
+        unit=&quot;percentage points&quot;, additive=False)
+
+emit(360)</pre></div></div><div class="card"><header><h3>(3) Column declarations</h3><span class="id">columns</span></header><div class="body"><div class="scroll"><table><thead><tr><th>Column</th><th>Kind</th><th>Cardinality</th><th>Group</th><th>Values / range</th><th>Semantics</th></tr></thead><tbody><tr><td><code>destination_market</code></td><td>category</td><td><span class="n">4</span></td><td>geography</td><td>United States, European Union, China, Japan</td><td>—</td></tr><tr><td><code>broad_sector</code></td><td>category</td><td><span class="n">3</span></td><td>merchandise</td><td>Manufactured Goods, Commodities &amp; Energy, Agri-Food</td><td>—</td></tr><tr><td><code>product_group</code></td><td>category</td><td><span class="n">7</span></td><td>merchandise</td><td>Electronics &amp; Machinery, Automotive &amp; Transport, Chemicals &amp; Plastics, Refined Petroleum…</td><td><span class="tag">parent=broad_sector</span></td></tr><tr><td><code>report_month</code></td><td>time</td><td><span class="n">36</span></td><td>calendar</td><td>2021-01-01 → 2023-12-31, monthly</td><td>—</td></tr><tr><td><code>quarter</code></td><td>category</td><td><span class="n">12</span></td><td>calendar</td><td>2021-Q1, 2021-Q2, 2021-Q3, 2021-Q4…</td><td><span class="tag">ordered=ordinal</span> <span class="tag">derived_from=report_month</span></td></tr><tr><td><code>export_value_usd_m</code></td><td>measure</td><td><span class="n">360</span></td><td>—</td><td>unit million USD</td><td><span class="tag">additive</span></td></tr><tr><td><code>export_share_pct</code></td><td>measure</td><td><span class="n">360</span></td><td>—</td><td>unit percent</td><td><span class="tag">non-additive</span></td></tr><tr><td><code>yoy_share_change_ppt</code></td><td>measure</td><td><span class="n">360</span></td><td>—</td><td>unit percentage points</td><td><span class="tag">non-additive</span></td></tr></tbody></table></div><p class="note">Dependencies between measure columns: <code>export_value_usd_m</code> → <code>export_share_pct</code></p></div></div><div class="card"><header><h3>(4) Intents, columns already bound</h3><span class="id">intents</span></header><div class="body"><div class="scroll"><table><thead><tr><th>#</th><th>Question</th><th>Columns</th><th>Aggregate</th><th>View class</th></tr></thead><tbody><tr><td><span class="n">0</span></td><td>Which destination markets and broad sectors command the highest average export share</td><td><code>destination_market</code>, <code>broad_sector</code>, <code>export_share_pct</code></td><td><code>AVG</code></td><td><span class="tag">comparison</span></td></tr><tr><td><span class="n">1</span></td><td>How total merchandise export value developed across report months over the three-year series</td><td><code>report_month</code>, <code>export_value_usd_m</code></td><td><code>SUM</code></td><td><span class="tag">trend</span></td></tr><tr><td><span class="n">2</span></td><td>Whether product groups with larger overall export shares experience higher year-on-year share volatility</td><td><code>export_share_pct</code>, <code>yoy_share_change_ppt</code></td><td><code>NONE</code></td><td><span class="tag">relation</span></td></tr></tbody></table></div></div></div><div class="card"><header><h3>(5) First 8 rows of the fact table</h3><span class="id">facts.parquet</span></header><div class="body"><div class="scroll"><table><thead><tr><th>destination_market</th><th>broad_sector</th><th>product_group</th><th>report_month</th><th>quarter</th><th>export_value_usd_m</th><th>yoy_share_change_ppt</th><th>export_share_pct</th></tr></thead><tbody><tr><td>United States</td><td>Manufactured Goods</td><td>Chemicals &amp; Plastics</td><td>2021-08-01 00:00:00</td><td>2021-Q3</td><td><span class="n">518.7</span></td><td><span class="n">-0.7</span></td><td><span class="n">12</span></td></tr><tr><td>United States</td><td>Manufactured Goods</td><td>Automotive &amp; Transport</td><td>2023-01-01 00:00:00</td><td>2023-Q1</td><td><span class="n">578.9</span></td><td><span class="n">1.6</span></td><td><span class="n">13.6</span></td></tr><tr><td>United States</td><td>Manufactured Goods</td><td>Automotive &amp; Transport</td><td>2023-12-01 00:00:00</td><td>2023-Q4</td><td><span class="n">606.4</span></td><td><span class="n">0.7</span></td><td><span class="n">15</span></td></tr><tr><td>China</td><td>Manufactured Goods</td><td>Electronics &amp; Machinery</td><td>2022-06-01 00:00:00</td><td>2022-Q2</td><td><span class="n">545</span></td><td><span class="n">-0</span></td><td><span class="n">13</span></td></tr><tr><td>European Union</td><td>Commodities &amp; Energy</td><td>Refined Petroleum</td><td>2021-09-01 00:00:00</td><td>2021-Q3</td><td><span class="n">139.4</span></td><td><span class="n">-1.5</span></td><td><span class="n">5</span></td></tr><tr><td>China</td><td>Manufactured Goods</td><td>Electronics &amp; Machinery</td><td>2022-02-01 00:00:00</td><td>2022-Q1</td><td><span class="n">521.7</span></td><td><span class="n">-0</span></td><td><span class="n">12.4</span></td></tr><tr><td>China</td><td>Manufactured Goods</td><td>Electronics &amp; Machinery</td><td>2022-01-01 00:00:00</td><td>2022-Q1</td><td><span class="n">524.7</span></td><td><span class="n">-1.7</span></td><td><span class="n">12.7</span></td></tr><tr><td>United States</td><td>Manufactured Goods</td><td>Automotive &amp; Transport</td><td>2021-07-01 00:00:00</td><td>2021-Q3</td><td><span class="n">545.6</span></td><td><span class="n">-0.6</span></td><td><span class="n">12.7</span></td></tr></tbody></table></div></div></div><div class="band" id="s002"><h2>s002</h2><span>Cross-national news consumption habits and media trust surve</span></div><div class="card"><header><h3>(1) Scenario prose</h3><span class="id">data_context</span></header><div class="body"><p>An international media observatory and comparative research network conducted periodic population-weighted survey waves between January 2021 and December 2024 across five countries. The research tracks shifting reliance on digital channels versus traditional broadcasting, audience trust in primary information sources, and weekly engagement intensity.</p></div></div><div class="card"><header><h3>(2) Declaration script</h3><span class="id">script</span></header><div class="body"><pre class="tree">dim(&quot;country&quot;, [&quot;United States&quot;, &quot;United Kingdom&quot;, &quot;Germany&quot;, &quot;France&quot;, &quot;Japan&quot;],
+    weights=[0.25, 0.22, 0.20, 0.18, 0.15], group=&quot;geography&quot;)
+dim(&quot;age_group&quot;, [&quot;18-24&quot;, &quot;25-34&quot;, &quot;35-54&quot;, &quot;55+&quot;],
+    weights=[0.20, 0.28, 0.30, 0.22], ordered=&quot;ordinal&quot;, group=&quot;demographics&quot;)
+dim(&quot;main_news_source&quot;, [&quot;Social Media&quot;, &quot;Online News Sites&quot;, &quot;Television&quot;, &quot;Printed Press&quot;, &quot;Radio&quot;],
+    parent=&quot;age_group&quot;,
+    weights={&quot;18-24&quot;: [0.46, 0.34, 0.10, 0.02, 0.08],
+             &quot;25-34&quot;: [0.36, 0.38, 0.15, 0.03, 0.08],
+             &quot;35-54&quot;: [0.18, 0.36, 0.28, 0.06, 0.12],
+             &quot;55+&quot;:   [0.06, 0.22, 0.46, 0.12, 0.14]},
+    group=&quot;demographics&quot;)
+
+time(&quot;survey_date&quot;, start=&quot;2021-01-01&quot;, end=&quot;2024-12-31&quot;, freq=&quot;monthly&quot;)
+
+measure(&quot;weekly_news_hours&quot;,
+        &quot;gamma(shape = 3.5 + 1.2*[age_group=55+] - 0.8*[main_news_source=Social Media], scale = 1.6)&quot;,
+        unit=&quot;hours&quot;, additive=True)
+measure(&quot;trust_score&quot;,
+        &quot;clip(6.5 + 1.2*[main_news_source=Printed Press] + 0.8*[main_news_source=Television] + 0.6*[main_news_source=Radio] - 1.8*[main_news_source=Social Media] + 0.5*[country=Germany] - 0.6*[country=United States] + gaussian(0, 1.2), 0, 10)&quot;,
+        unit=&quot;points&quot;, additive=False)
+measure(&quot;news_frequency_per_day&quot;,
+        &quot;poisson(lam = 2.4 + 1.4*[main_news_source=Social Media] + 0.8*[main_news_source=Online News Sites] + 0.3*[age_group=25-34])&quot;,
+        unit=&quot;check-ins&quot;, additive=True)
+
+emit(380)</pre></div></div><div class="card"><header><h3>(3) Column declarations</h3><span class="id">columns</span></header><div class="body"><div class="scroll"><table><thead><tr><th>Column</th><th>Kind</th><th>Cardinality</th><th>Group</th><th>Values / range</th><th>Semantics</th></tr></thead><tbody><tr><td><code>country</code></td><td>category</td><td><span class="n">5</span></td><td>geography</td><td>United States, United Kingdom, Germany, France…</td><td>—</td></tr><tr><td><code>age_group</code></td><td>category</td><td><span class="n">4</span></td><td>demographics</td><td>18-24, 25-34, 35-54, 55+</td><td><span class="tag">ordered=ordinal</span></td></tr><tr><td><code>main_news_source</code></td><td>category</td><td><span class="n">5</span></td><td>demographics</td><td>Social Media, Online News Sites, Television, Printed Press…</td><td><span class="tag">parent=age_group</span></td></tr><tr><td><code>survey_date</code></td><td>time</td><td><span class="n">48</span></td><td>calendar</td><td>2021-01-01 → 2024-12-31, monthly</td><td>—</td></tr><tr><td><code>quarter</code></td><td>category</td><td><span class="n">16</span></td><td>calendar</td><td>2021-Q1, 2021-Q2, 2021-Q3, 2021-Q4…</td><td><span class="tag">ordered=ordinal</span> <span class="tag">derived_from=survey_date</span></td></tr><tr><td><code>weekly_news_hours</code></td><td>measure</td><td><span class="n">380</span></td><td>—</td><td>unit hours</td><td><span class="tag">additive</span></td></tr><tr><td><code>trust_score</code></td><td>measure</td><td><span class="n">380</span></td><td>—</td><td>unit points</td><td><span class="tag">non-additive</span></td></tr><tr><td><code>news_frequency_per_day</code></td><td>measure</td><td><span class="n">380</span></td><td>—</td><td>unit check-ins</td><td><span class="tag">additive</span></td></tr></tbody></table></div></div></div><div class="card"><header><h3>(4) Intents, columns already bound</h3><span class="id">intents</span></header><div class="body"><div class="scroll"><table><thead><tr><th>#</th><th>Question</th><th>Columns</th><th>Aggregate</th><th>View class</th></tr></thead><tbody><tr><td><span class="n">0</span></td><td>Average media trust score compared across primary news sources</td><td><code>main_news_source</code>, <code>trust_score</code></td><td><code>AVG</code></td><td><span class="tag">comparison</span></td></tr><tr><td><span class="n">1</span></td><td>Trend of weekly news consumption hours across survey waves over time</td><td><code>survey_date</code>, <code>weekly_news_hours</code></td><td><code>AVG</code></td><td><span class="tag">trend</span></td></tr><tr><td><span class="n">2</span></td><td>Relationship between daily news access frequency and reported trust score</td><td><code>news_frequency_per_day</code>, <code>trust_score</code></td><td><code>NONE</code></td><td><span class="tag">relation</span></td></tr></tbody></table></div></div></div><div class="card"><header><h3>(5) First 8 rows of the fact table</h3><span class="id">facts.parquet</span></header><div class="body"><div class="scroll"><table><thead><tr><th>country</th><th>age_group</th><th>main_news_source</th><th>survey_date</th><th>quarter</th><th>weekly_news_hours</th><th>trust_score</th><th>news_frequency_per_day</th></tr></thead><tbody><tr><td>Germany</td><td>35-54</td><td>Television</td><td>2021-08-01 00:00:00</td><td>2021-Q3</td><td><span class="n">9.6</span></td><td><span class="n">6.8</span></td><td><span class="n">2</span></td></tr><tr><td>United States</td><td>55+</td><td>Radio</td><td>2024-08-01 00:00:00</td><td>2024-Q3</td><td><span class="n">11.9</span></td><td><span class="n">6.8</span></td><td><span class="n">0</span></td></tr><tr><td>United States</td><td>35-54</td><td>Radio</td><td>2024-05-01 00:00:00</td><td>2024-Q2</td><td><span class="n">17.5</span></td><td><span class="n">5.9</span></td><td><span class="n">3</span></td></tr><tr><td>United States</td><td>35-54</td><td>Television</td><td>2024-03-01 00:00:00</td><td>2024-Q1</td><td><span class="n">2.4</span></td><td><span class="n">6.5</span></td><td><span class="n">1</span></td></tr><tr><td>United States</td><td>35-54</td><td>Online News Sites</td><td>2021-05-01 00:00:00</td><td>2021-Q2</td><td><span class="n">3.8</span></td><td><span class="n">5.2</span></td><td><span class="n">4</span></td></tr><tr><td>United States</td><td>35-54</td><td>Radio</td><td>2021-10-01 00:00:00</td><td>2021-Q4</td><td><span class="n">1.7</span></td><td><span class="n">6.5</span></td><td><span class="n">1</span></td></tr><tr><td>France</td><td>55+</td><td>Radio</td><td>2022-10-01 00:00:00</td><td>2022-Q4</td><td><span class="n">8.1</span></td><td><span class="n">6.8</span></td><td><span class="n">6</span></td></tr><tr><td>France</td><td>25-34</td><td>Social Media</td><td>2023-04-01 00:00:00</td><td>2023-Q2</td><td><span class="n">7.2</span></td><td><span class="n">5.6</span></td><td><span class="n">7</span></td></tr></tbody></table></div></div></div><div class="band" id="s003"><h2>s003</h2><span>Monthly construction cost indices and building permit issuan</span></div><div class="card"><header><h3>(1) Scenario prose</h3><span class="id">data_context</span></header><div class="body"><p>The National Statistics Bureau compiled monthly construction producer price indices, component input costs, and municipal building permit authorizations from January 2022 to June 2024. The data was collected under the national economic surveillance framework to evaluate cost push pressures, tracking how escalating material prices versus rising unionized labour rates affect residential and commercial building activity across macro-regions.</p></div></div><div class="card"><header><h3>(2) Declaration script</h3><span class="id">script</span></header><div class="body"><pre class="tree">dim(&quot;country_zone&quot;, [&quot;North &amp; East&quot;, &quot;South &amp; West&quot;],
+    weights=[0.55, 0.45], group=&quot;geography&quot;)
+dim(&quot;region&quot;, [&quot;Northern Metro&quot;, &quot;Eastern Industrial&quot;, &quot;Southern Coastal&quot;, &quot;Western Uplands&quot;],
+    parent=&quot;country_zone&quot;,
+    weights={&quot;North &amp; East&quot;: [0.60, 0.40, 0.0, 0.0],
+             &quot;South &amp; West&quot;: [0.0, 0.0, 0.55, 0.45]},
+    group=&quot;geography&quot;)
+
+dim(&quot;sector&quot;, [&quot;Residential&quot;, &quot;Non-Residential&quot;],
+    weights=[0.60, 0.40], group=&quot;sector_hierarchy&quot;)
+dim(&quot;building_type&quot;, [&quot;Single-Family Houses&quot;, &quot;Multi-Family Apartments&quot;, &quot;Commercial &amp; Retail&quot;, &quot;Industrial &amp; Logistics&quot;],
+    parent=&quot;sector&quot;,
+    weights={&quot;Residential&quot;: [0.55, 0.45, 0.0, 0.0],
+             &quot;Non-Residential&quot;: [0.0, 0.0, 0.50, 0.50]},
+    group=&quot;sector_hierarchy&quot;)
+
+time(&quot;report_month&quot;, start=&quot;2022-01-01&quot;, end=&quot;2024-06-01&quot;, freq=&quot;monthly&quot;)
+
+measure(&quot;material_cost_index&quot;,
+        &quot;108.0 + 0.015 * report_month + 5.5 * [sector=Residential] + 3.8 * [country_zone=North &amp; East] + gaussian(0, 2.2)&quot;,
+        unit=&quot;index (2021=100)&quot;, additive=False)
+measure(&quot;labour_cost_index&quot;,
+        &quot;102.0 + 0.024 * report_month + 3.2 * [sector=Non-Residential] + 4.5 * [region=Northern Metro] + gaussian(0, 1.8)&quot;,
+        unit=&quot;index (2021=100)&quot;, additive=False)
+measure(&quot;cost_growth_gap&quot;,
+        &quot;labour_cost_index - material_cost_index&quot;,
+        unit=&quot;percentage points&quot;, additive=False)
+measure(&quot;permits_issued&quot;,
+        &quot;poisson(48 + 16 * [sector=Residential] + 12 * [region=Northern Metro] - 0.014 * report_month)&quot;,
+        unit=&quot;permits&quot;, additive=True)
+
+emit(720)</pre></div></div><div class="card"><header><h3>(3) Column declarations</h3><span class="id">columns</span></header><div class="body"><div class="scroll"><table><thead><tr><th>Column</th><th>Kind</th><th>Cardinality</th><th>Group</th><th>Values / range</th><th>Semantics</th></tr></thead><tbody><tr><td><code>country_zone</code></td><td>category</td><td><span class="n">2</span></td><td>geography</td><td>North &amp; East, South &amp; West</td><td>—</td></tr><tr><td><code>region</code></td><td>category</td><td><span class="n">4</span></td><td>geography</td><td>Northern Metro, Eastern Industrial, Southern Coastal, Western Uplands</td><td><span class="tag">parent=country_zone</span></td></tr><tr><td><code>sector</code></td><td>category</td><td><span class="n">2</span></td><td>sector_hierarchy</td><td>Residential, Non-Residential</td><td>—</td></tr><tr><td><code>building_type</code></td><td>category</td><td><span class="n">4</span></td><td>sector_hierarchy</td><td>Single-Family Houses, Multi-Family Apartments, Commercial &amp; Retail, Industrial &amp; Logistics</td><td><span class="tag">parent=sector</span></td></tr><tr><td><code>report_month</code></td><td>time</td><td><span class="n">30</span></td><td>calendar</td><td>2022-01-01 → 2024-06-01, monthly</td><td>—</td></tr><tr><td><code>quarter</code></td><td>category</td><td><span class="n">10</span></td><td>calendar</td><td>2022-Q1, 2022-Q2, 2022-Q3, 2022-Q4…</td><td><span class="tag">ordered=ordinal</span> <span class="tag">derived_from=report_month</span></td></tr><tr><td><code>material_cost_index</code></td><td>measure</td><td><span class="n">720</span></td><td>—</td><td>unit index (2021=100)</td><td><span class="tag">non-additive</span></td></tr><tr><td><code>labour_cost_index</code></td><td>measure</td><td><span class="n">720</span></td><td>—</td><td>unit index (2021=100)</td><td><span class="tag">non-additive</span></td></tr><tr><td><code>cost_growth_gap</code></td><td>measure</td><td><span class="n">720</span></td><td>—</td><td>unit percentage points</td><td><span class="tag">non-additive</span></td></tr><tr><td><code>permits_issued</code></td><td>measure</td><td><span class="n">720</span></td><td>—</td><td>unit permits</td><td><span class="tag">additive</span></td></tr></tbody></table></div><p class="note">Dependencies between measure columns: <code>labour_cost_index</code> → <code>cost_growth_gap</code>, <code>material_cost_index</code> → <code>cost_growth_gap</code></p></div></div><div class="card"><header><h3>(4) Intents, columns already bound</h3><span class="id">intents</span></header><div class="body"><div class="scroll"><table><thead><tr><th>#</th><th>Question</th><th>Columns</th><th>Aggregate</th><th>View class</th></tr></thead><tbody><tr><td><span class="n">0</span></td><td>How did material and labour cost indices evolve over the two and a half year surveillance period</td><td><code>report_month</code>, <code>material_cost_index</code></td><td><code>AVG</code></td><td><span class="tag">trend</span></td></tr><tr><td><span class="n">1</span></td><td>Which building types face the highest labour to material cost growth gap</td><td><code>building_type</code>, <code>cost_growth_gap</code></td><td><code>AVG</code></td><td><span class="tag">comparison</span></td></tr><tr><td><span class="n">2</span></td><td>How does the volume of permits issued correlate with rising material cost indices</td><td><code>material_cost_index</code>, <code>permits_issued</code></td><td><code>NONE</code></td><td><span class="tag">relation</span></td></tr><tr><td><span class="n">3</span></td><td>Total building permits issued across geographical regions</td><td><code>region</code>, <code>permits_issued</code></td><td><code>SUM</code></td><td><span class="tag">comparison</span></td></tr></tbody></table></div></div></div><div class="card"><header><h3>(5) First 8 rows of the fact table</h3><span class="id">facts.parquet</span></header><div class="body"><div class="scroll"><table><thead><tr><th>country_zone</th><th>region</th><th>sector</th><th>building_type</th><th>report_month</th><th>quarter</th><th>material_cost_index</th><th>labour_cost_index</th><th>permits_issued</th><th>cost_growth_gap</th></tr></thead><tbody><tr><td>South &amp; West</td><td>Southern Coastal</td><td>Non-Residential</td><td>Commercial &amp; Retail</td><td>2022-03-01 00:00:00</td><td>2022-Q1</td><td><span class="n">107.1</span></td><td><span class="n">110.4</span></td><td><span class="n">52</span></td><td><span class="n">3.3</span></td></tr><tr><td>North &amp; East</td><td>Eastern Industrial</td><td>Residential</td><td>Multi-Family Apartments</td><td>2022-12-01 00:00:00</td><td>2022-Q4</td><td><span class="n">118.5</span></td><td><span class="n">111.7</span></td><td><span class="n">55</span></td><td><span class="n">-6.8</span></td></tr><tr><td>South &amp; West</td><td>Western Uplands</td><td>Residential</td><td>Single-Family Houses</td><td>2024-05-01 00:00:00</td><td>2024-Q2</td><td><span class="n">122.9</span></td><td><span class="n">122.2</span></td><td><span class="n">46</span></td><td><span class="n">-0.7</span></td></tr><tr><td>South &amp; West</td><td>Southern Coastal</td><td>Residential</td><td>Single-Family Houses</td><td>2024-02-01 00:00:00</td><td>2024-Q1</td><td><span class="n">122.2</span></td><td><span class="n">117.8</span></td><td><span class="n">48</span></td><td><span class="n">-4.4</span></td></tr><tr><td>South &amp; West</td><td>Western Uplands</td><td>Non-Residential</td><td>Commercial &amp; Retail</td><td>2024-01-01 00:00:00</td><td>2024-Q1</td><td><span class="n">119.5</span></td><td><span class="n">121.1</span></td><td><span class="n">54</span></td><td><span class="n">1.6</span></td></tr><tr><td>South &amp; West</td><td>Southern Coastal</td><td>Residential</td><td>Single-Family Houses</td><td>2022-03-01 00:00:00</td><td>2022-Q1</td><td><span class="n">116</span></td><td><span class="n">105.6</span></td><td><span class="n">67</span></td><td><span class="n">-10.4</span></td></tr><tr><td>South &amp; West</td><td>Western Uplands</td><td>Residential</td><td>Single-Family Houses</td><td>2023-07-01 00:00:00</td><td>2023-Q3</td><td><span class="n">121.5</span></td><td><span class="n">116.8</span></td><td><span class="n">70</span></td><td><span class="n">-4.7</span></td></tr><tr><td>North &amp; East</td><td>Northern Metro</td><td>Residential</td><td>Multi-Family Apartments</td><td>2024-05-01 00:00:00</td><td>2024-Q2</td><td><span class="n">134.1</span></td><td><span class="n">123.9</span></td><td><span class="n">67</span></td><td><span class="n">-10.2</span></td></tr></tbody></table></div></div></div><div class="band" id="s004"><h2>s004</h2><span>Real agricultural producer price indices and per-capita outp</span></div><div class="card"><header><h3>(1) Scenario prose</h3><span class="id">data_context</span></header><div class="body"><p>The Food and Agriculture Organization (FAO) Statistics Division compiled country-level agricultural producer prices deflated by consumer price indices alongside gross per-capita agricultural output from 2005 to 2023. The dataset evaluates terms of trade shocks, commodity-specific volatility, and structural agricultural output differences across global income classifications.</p></div></div><div class="card"><header><h3>(2) Declaration script</h3><span class="id">script</span></header><div class="body"><pre class="tree">dim(&quot;income_group&quot;, [&quot;Low income&quot;, &quot;Lower-middle income&quot;, &quot;Upper-middle income&quot;, &quot;High income&quot;], weights=[0.25, 0.30, 0.25, 0.20], ordered=&quot;ordinal&quot;, group=&quot;socioeconomic&quot;)
+dim(&quot;region&quot;, [&quot;Sub-Saharan Africa&quot;, &quot;East Africa &amp; Sahel&quot;, &quot;South Asia&quot;, &quot;Southeast Asia&quot;, &quot;Latin America &amp; Caribbean&quot;, &quot;East Asia &amp; Pacific&quot;, &quot;North America&quot;, &quot;Western Europe&quot;], parent=&quot;income_group&quot;, weights={&quot;Low income&quot;: [0.60, 0.40, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00], &quot;Lower-middle income&quot;: [0.00, 0.00, 0.55, 0.45, 0.00, 0.00, 0.00, 0.00], &quot;Upper-middle income&quot;: [0.00, 0.00, 0.00, 0.00, 0.55, 0.45, 0.00, 0.00], &quot;High income&quot;: [0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.50, 0.50]}, group=&quot;socioeconomic&quot;)
+dim(&quot;commodity_group&quot;, [&quot;Cereal Grains&quot;, &quot;Oilcrops &amp; Pulses&quot;, &quot;Livestock &amp; Dairy&quot;, &quot;Horticulture &amp; Fruits&quot;], weights=[0.35, 0.25, 0.22, 0.18], group=&quot;production&quot;)
+dim(&quot;market_orientation&quot;, [&quot;Domestic Staple&quot;, &quot;Export Cash Crop&quot;], weights=[0.62, 0.38], group=&quot;market&quot;)
+
+time(&quot;record_period&quot;, start=&quot;2005-01-01&quot;, end=&quot;2023-12-31&quot;, freq=&quot;monthly&quot;)
+
+measure(&quot;real_producer_price_index&quot;, &quot;100 + {\&quot;Low income\&quot;: 12.0, \&quot;Lower-middle income\&quot;: 7.5, \&quot;Upper-middle income\&quot;: 1.0, \&quot;High income\&quot;: -6.0}[income_group] + {\&quot;Cereal Grains\&quot;: 14.0, \&quot;Oilcrops &amp; Pulses\&quot;: 6.5, \&quot;Livestock &amp; Dairy\&quot;: -3.0, \&quot;Horticulture &amp; Fruits\&quot;: -8.5}[commodity_group] + 22.0 * exp(-((record_period - 1300) / 400)**2) + 26.0 * exp(-((record_period - 6350) / 450)**2) + gaussian(0, 5.5)&quot;, unit=&quot;index&quot;, additive=False)
+measure(&quot;yoy_real_price_change&quot;, &quot;gaussian(1.2, 3.8) + (real_producer_price_index - 100) * 0.16 + {\&quot;Export Cash Crop\&quot;: 2.4, \&quot;Domestic Staple\&quot;: -1.2}[market_orientation]&quot;, unit=&quot;%&quot;, additive=False)
+measure(&quot;per_capita_output_value&quot;, &quot;{\&quot;Low income\&quot;: 52.0, \&quot;Lower-middle income\&quot;: 110.0, \&quot;Upper-middle income\&quot;: 245.0, \&quot;High income\&quot;: 510.0}[income_group] * {\&quot;Cereal Grains\&quot;: 1.35, \&quot;Oilcrops &amp; Pulses\&quot;: 0.85, \&quot;Livestock &amp; Dairy\&quot;: 1.50, \&quot;Horticulture &amp; Fruits\&quot;: 1.15}[commodity_group] * (1.0 + 0.000035 * record_period) + gaussian(0, 12.0)&quot;, unit=&quot;USD&quot;, additive=True)
+
+emit(1800)</pre></div></div><div class="card"><header><h3>(3) Column declarations</h3><span class="id">columns</span></header><div class="body"><div class="scroll"><table><thead><tr><th>Column</th><th>Kind</th><th>Cardinality</th><th>Group</th><th>Values / range</th><th>Semantics</th></tr></thead><tbody><tr><td><code>income_group</code></td><td>category</td><td><span class="n">4</span></td><td>socioeconomic</td><td>Low income, Lower-middle income, Upper-middle income, High income</td><td><span class="tag">ordered=ordinal</span></td></tr><tr><td><code>region</code></td><td>category</td><td><span class="n">8</span></td><td>socioeconomic</td><td>Sub-Saharan Africa, East Africa &amp; Sahel, South Asia, Southeast Asia…</td><td><span class="tag">parent=income_group</span></td></tr><tr><td><code>commodity_group</code></td><td>category</td><td><span class="n">4</span></td><td>production</td><td>Cereal Grains, Oilcrops &amp; Pulses, Livestock &amp; Dairy, Horticulture &amp; Fruits</td><td>—</td></tr><tr><td><code>market_orientation</code></td><td>category</td><td><span class="n">2</span></td><td>market</td><td>Domestic Staple, Export Cash Crop</td><td>—</td></tr><tr><td><code>record_period</code></td><td>time</td><td><span class="n">228</span></td><td>calendar</td><td>2005-01-01 → 2023-12-31, monthly</td><td>—</td></tr><tr><td><code>quarter</code></td><td>category</td><td><span class="n">76</span></td><td>calendar</td><td>2005-Q1, 2005-Q2, 2005-Q3, 2005-Q4…</td><td><span class="tag">ordered=ordinal</span> <span class="tag">derived_from=record_period</span></td></tr><tr><td><code>real_producer_price_index</code></td><td>measure</td><td><span class="n">1800</span></td><td>—</td><td>unit index</td><td><span class="tag">non-additive</span></td></tr><tr><td><code>yoy_real_price_change</code></td><td>measure</td><td><span class="n">1800</span></td><td>—</td><td>unit %</td><td><span class="tag">non-additive</span></td></tr><tr><td><code>per_capita_output_value</code></td><td>measure</td><td><span class="n">1800</span></td><td>—</td><td>unit USD</td><td><span class="tag">additive</span></td></tr></tbody></table></div><p class="note">Dependencies between measure columns: <code>real_producer_price_index</code> → <code>yoy_real_price_change</code></p></div></div><div class="card"><header><h3>(4) Intents, columns already bound</h3><span class="id">intents</span></header><div class="body"><div class="scroll"><table><thead><tr><th>#</th><th>Question</th><th>Columns</th><th>Aggregate</th><th>View class</th></tr></thead><tbody><tr><td><span class="n">0</span></td><td>Compare average per-capita agricultural output value across different country income groups</td><td><code>income_group</code>, <code>per_capita_output_value</code></td><td><code>AVG</code></td><td><span class="tag">comparison</span></td></tr><tr><td><span class="n">1</span></td><td>Track the trajectory and shocks in the real agricultural producer price index over time</td><td><code>record_period</code>, <code>real_producer_price_index</code></td><td><code>AVG</code></td><td><span class="tag">trend</span></td></tr><tr><td><span class="n">2</span></td><td>Evaluate whether higher deflated producer price indices are correlated with annual real price percentage changes</td><td><code>real_producer_price_index</code>, <code>yoy_real_price_change</code></td><td><code>NONE</code></td><td><span class="tag">relation</span></td></tr><tr><td><span class="n">3</span></td><td>Analyze the commodity sector composition of total agricultural output value across regions</td><td><code>commodity_group</code>, <code>per_capita_output_value</code></td><td><code>SUM</code></td><td><span class="tag">composition</span></td></tr></tbody></table></div></div></div><div class="card"><header><h3>(5) First 8 rows of the fact table</h3><span class="id">facts.parquet</span></header><div class="body"><div class="scroll"><table><thead><tr><th>income_group</th><th>region</th><th>commodity_group</th><th>market_orientation</th><th>record_period</th><th>quarter</th><th>real_producer_price_index</th><th>per_capita_output_value</th><th>yoy_real_price_change</th></tr></thead><tbody><tr><td>Low income</td><td>East Africa &amp; Sahel</td><td>Livestock &amp; Dairy</td><td>Export Cash Crop</td><td>2008-04-01 00:00:00</td><td>2008-Q2</td><td><span class="n">110.1</span></td><td><span class="n">74</span></td><td><span class="n">6.9</span></td></tr><tr><td>Lower-middle income</td><td>South Asia</td><td>Cereal Grains</td><td>Domestic Staple</td><td>2016-03-01 00:00:00</td><td>2016-Q1</td><td><span class="n">118.8</span></td><td><span class="n">173</span></td><td><span class="n">-3.7</span></td></tr><tr><td>Upper-middle income</td><td>Latin America &amp; Caribbean</td><td>Livestock &amp; Dairy</td><td>Export Cash Crop</td><td>2007-08-01 00:00:00</td><td>2007-Q3</td><td><span class="n">98.8</span></td><td><span class="n">373</span></td><td><span class="n">0</span></td></tr><tr><td>Upper-middle income</td><td>Latin America &amp; Caribbean</td><td>Livestock &amp; Dairy</td><td>Export Cash Crop</td><td>2019-05-01 00:00:00</td><td>2019-Q2</td><td><span class="n">102.2</span></td><td><span class="n">444</span></td><td><span class="n">6.4</span></td></tr><tr><td>Lower-middle income</td><td>South Asia</td><td>Livestock &amp; Dairy</td><td>Domestic Staple</td><td>2010-02-01 00:00:00</td><td>2010-Q1</td><td><span class="n">110.4</span></td><td><span class="n">177</span></td><td><span class="n">-4.8</span></td></tr><tr><td>High income</td><td>North America</td><td>Livestock &amp; Dairy</td><td>Domestic Staple</td><td>2018-04-01 00:00:00</td><td>2018-Q2</td><td><span class="n">95.2</span></td><td><span class="n">922</span></td><td><span class="n">-2.4</span></td></tr><tr><td>Upper-middle income</td><td>East Asia &amp; Pacific</td><td>Livestock &amp; Dairy</td><td>Domestic Staple</td><td>2014-02-01 00:00:00</td><td>2014-Q1</td><td><span class="n">92.1</span></td><td><span class="n">407</span></td><td><span class="n">5.9</span></td></tr><tr><td>High income</td><td>Western Europe</td><td>Cereal Grains</td><td>Domestic Staple</td><td>2021-09-01 00:00:00</td><td>2021-Q3</td><td><span class="n">119.7</span></td><td><span class="n">832</span></td><td><span class="n">8</span></td></tr></tbody></table></div></div></div><div class="band" id="s005"><h2>s005</h2><span>Preferential trade agreement origin claims, duty forgone, an</span></div><div class="card"><header><h3>(1) Scenario prose</h3><span class="id">data_context</span></header><div class="body"><p>The national customs administration maintains this registry of monthly preferential tariff filings to monitor revenue forgone under free trade agreements, evaluate origin certification compliance across tariff headings, and track claims through clearance and audit stages.</p></div></div><div class="card"><header><h3>(2) Declaration script</h3><span class="id">script</span></header><div class="body"><pre class="tree">dim(&quot;trade_programme&quot;, [&quot;USMCA&quot;, &quot;CAFTA-DR&quot;, &quot;KORUS FTA&quot;, &quot;GSP Beneficiary&quot;],
+    weights=[0.45, 0.22, 0.20, 0.13], group=&quot;agreement&quot;)
+
+dim(&quot;port_region&quot;, [&quot;Northern Border&quot;, &quot;Southern Border&quot;, &quot;Pacific Gateway&quot;, &quot;Atlantic Gateway&quot;],
+    weights=[0.32, 0.36, 0.18, 0.14], group=&quot;geography&quot;)
+
+dim(&quot;port_of_entry&quot;, [&quot;Detroit&quot;, &quot;Buffalo&quot;, &quot;Laredo&quot;, &quot;El Paso&quot;, &quot;Los Angeles&quot;, &quot;Long Beach&quot;, &quot;New York/Newark&quot;, &quot;Savannah&quot;],
+    parent=&quot;port_region&quot;,
+    weights={
+        &quot;Northern Border&quot;: [0.65, 0.35, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        &quot;Southern Border&quot;: [0.0, 0.0, 0.70, 0.30, 0.0, 0.0, 0.0, 0.0],
+        &quot;Pacific Gateway&quot;: [0.0, 0.0, 0.0, 0.0, 0.60, 0.40, 0.0, 0.0],
+        &quot;Atlantic Gateway&quot;: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.60, 0.40]
+    })
+
+dim(&quot;tariff_heading&quot;, [&quot;HS 8708 Motor Vehicle Parts&quot;, &quot;HS 8542 Integrated Circuits&quot;, &quot;HS 8471 Data Processing Units&quot;, &quot;HS 6204 Women Suits &amp; Ensembles&quot;, &quot;HS 3901 Polymers of Ethylene&quot;],
+    weights=[0.30, 0.25, 0.20, 0.15, 0.10], group=&quot;commodity&quot;)
+
+dim(&quot;clearance_stage&quot;, [&quot;Filing Lodged&quot;, &quot;Customs Review&quot;, &quot;Origin Verification&quot;, &quot;Final Liquidation&quot;],
+    weights=[0.42, 0.28, 0.18, 0.12], ordered=&quot;stage&quot;, group=&quot;workflow&quot;)
+
+time(&quot;declaration_month&quot;, start=&quot;2022-01-01&quot;, end=&quot;2023-12-01&quot;, freq=&quot;monthly&quot;)
+
+measure(&quot;customs_value&quot;,
+        &quot;gamma(shape=4.0, scale=120) * (1.0 + 0.45 * [tariff_heading=HS 8708 Motor Vehicle Parts] + 0.25 * [trade_programme=USMCA])&quot;,
+        unit=&quot;thousand USD&quot;, additive=True)
+
+measure(&quot;duty_forgone&quot;,
+        &quot;clip(customs_value * {\&quot;USMCA\&quot;: 0.048, \&quot;CAFTA-DR\&quot;: 0.065, \&quot;KORUS FTA\&quot;: 0.038, \&quot;GSP Beneficiary\&quot;: 0.052}[trade_programme] + gaussian(0, 1.5), 0.2, 800.0)&quot;,
+        unit=&quot;thousand USD&quot;, additive=True)
+
+measure(&quot;disallowed_amount&quot;,
+        &quot;clip([clearance_stage=Final Liquidation] * duty_forgone * uniform(0.08, 0.35) + [clearance_stage=Origin Verification] * duty_forgone * 0.05, 0.0, 200.0)&quot;,
+        unit=&quot;thousand USD&quot;, additive=True)
+
+measure(&quot;effective_preference_pct&quot;,
+        &quot;clip((duty_forgone / customs_value) * 100 + gaussian(0, 0.15), 0.5, 12.0)&quot;,
+        unit=&quot;percent&quot;, additive=False)
+
+emit(800)
+</pre></div></div><div class="card"><header><h3>(3) Column declarations</h3><span class="id">columns</span></header><div class="body"><div class="scroll"><table><thead><tr><th>Column</th><th>Kind</th><th>Cardinality</th><th>Group</th><th>Values / range</th><th>Semantics</th></tr></thead><tbody><tr><td><code>trade_programme</code></td><td>category</td><td><span class="n">4</span></td><td>agreement</td><td>USMCA, CAFTA-DR, KORUS FTA, GSP Beneficiary</td><td>—</td></tr><tr><td><code>port_region</code></td><td>category</td><td><span class="n">4</span></td><td>geography</td><td>Northern Border, Southern Border, Pacific Gateway, Atlantic Gateway</td><td>—</td></tr><tr><td><code>port_of_entry</code></td><td>category</td><td><span class="n">8</span></td><td>geography</td><td>Detroit, Buffalo, Laredo, El Paso…</td><td><span class="tag">parent=port_region</span></td></tr><tr><td><code>tariff_heading</code></td><td>category</td><td><span class="n">5</span></td><td>commodity</td><td>HS 8708 Motor Vehicle Parts, HS 8542 Integrated Circuits, HS 8471 Data Processing Units, HS 6204 Women Suits &amp; Ensembles…</td><td>—</td></tr><tr><td><code>clearance_stage</code></td><td>category</td><td><span class="n">4</span></td><td>workflow</td><td>Filing Lodged, Customs Review, Origin Verification, Final Liquidation</td><td><span class="tag">ordered=stage</span></td></tr><tr><td><code>declaration_month</code></td><td>time</td><td><span class="n">24</span></td><td>calendar</td><td>2022-01-01 → 2023-12-01, monthly</td><td>—</td></tr><tr><td><code>quarter</code></td><td>category</td><td><span class="n">8</span></td><td>calendar</td><td>2022-Q1, 2022-Q2, 2022-Q3, 2022-Q4…</td><td><span class="tag">ordered=ordinal</span> <span class="tag">derived_from=declaration_month</span></td></tr><tr><td><code>customs_value</code></td><td>measure</td><td><span class="n">800</span></td><td>—</td><td>unit thousand USD</td><td><span class="tag">additive</span></td></tr><tr><td><code>duty_forgone</code></td><td>measure</td><td><span class="n">800</span></td><td>—</td><td>unit thousand USD</td><td><span class="tag">additive</span></td></tr><tr><td><code>disallowed_amount</code></td><td>measure</td><td><span class="n">800</span></td><td>—</td><td>unit thousand USD</td><td><span class="tag">additive</span></td></tr><tr><td><code>effective_preference_pct</code></td><td>measure</td><td><span class="n">800</span></td><td>—</td><td>unit percent</td><td><span class="tag">non-additive</span></td></tr></tbody></table></div><p class="note">Dependencies between measure columns: <code>customs_value</code> → <code>duty_forgone</code>, <code>duty_forgone</code> → <code>disallowed_amount</code>, <code>customs_value</code> → <code>effective_preference_pct</code>, <code>duty_forgone</code> → <code>effective_preference_pct</code></p></div></div><div class="card"><header><h3>(4) Intents, columns already bound</h3><span class="id">intents</span></header><div class="body"><div class="scroll"><table><thead><tr><th>#</th><th>Question</th><th>Columns</th><th>Aggregate</th><th>View class</th></tr></thead><tbody><tr><td><span class="n">0</span></td><td>Total duty forgone compared across different preferential trade programmes</td><td><code>trade_programme</code>, <code>duty_forgone</code></td><td><code>SUM</code></td><td><span class="tag">comparison</span></td></tr><tr><td><span class="n">1</span></td><td>Monthly trend in total entered customs value claiming tariff preferences</td><td><code>declaration_month</code>, <code>customs_value</code></td><td><code>SUM</code></td><td><span class="tag">trend</span></td></tr><tr><td><span class="n">2</span></td><td>Progression and volume drop-off of preference claims across customs clearance stages</td><td><code>clearance_stage</code></td><td><code>COUNT</code></td><td><span class="tag">process</span></td></tr><tr><td><span class="n">3</span></td><td>Relationship between declared customs value and the duty forgone amount</td><td><code>customs_value</code>, <code>duty_forgone</code></td><td><code>NONE</code></td><td><span class="tag">relation</span></td></tr></tbody></table></div></div></div><div class="card"><header><h3>(5) First 8 rows of the fact table</h3><span class="id">facts.parquet</span></header><div class="body"><div class="scroll"><table><thead><tr><th>trade_programme</th><th>port_region</th><th>port_of_entry</th><th>tariff_heading</th><th>clearance_stage</th><th>declaration_month</th><th>quarter</th><th>customs_value</th><th>duty_forgone</th><th>disallowed_amount</th><th>effective_preference_pct</th></tr></thead><tbody><tr><td>USMCA</td><td>Southern Border</td><td>Laredo</td><td>HS 8542 Integrated Circuits</td><td>Filing Lodged</td><td>2023-12-01 00:00:00</td><td>2023-Q4</td><td><span class="n">497.4</span></td><td><span class="n">25</span></td><td><span class="n">0</span></td><td><span class="n">5</span></td></tr><tr><td>CAFTA-DR</td><td>Pacific Gateway</td><td>Long Beach</td><td>HS 8471 Data Processing Units</td><td>Filing Lodged</td><td>2022-09-01 00:00:00</td><td>2022-Q3</td><td><span class="n">329.7</span></td><td><span class="n">20.8</span></td><td><span class="n">0</span></td><td><span class="n">6.1</span></td></tr><tr><td>USMCA</td><td>Pacific Gateway</td><td>Long Beach</td><td>HS 8542 Integrated Circuits</td><td>Customs Review</td><td>2023-05-01 00:00:00</td><td>2023-Q2</td><td><span class="n">186.6</span></td><td><span class="n">8.8</span></td><td><span class="n">0</span></td><td><span class="n">4.7</span></td></tr><tr><td>USMCA</td><td>Northern Border</td><td>Detroit</td><td>HS 8708 Motor Vehicle Parts</td><td>Filing Lodged</td><td>2022-08-01 00:00:00</td><td>2022-Q3</td><td><span class="n">406</span></td><td><span class="n">20.1</span></td><td><span class="n">0</span></td><td><span class="n">5</span></td></tr><tr><td>USMCA</td><td>Northern Border</td><td>Detroit</td><td>HS 8542 Integrated Circuits</td><td>Customs Review</td><td>2022-11-01 00:00:00</td><td>2022-Q4</td><td><span class="n">383.1</span></td><td><span class="n">17.7</span></td><td><span class="n">0</span></td><td><span class="n">4.7</span></td></tr><tr><td>USMCA</td><td>Northern Border</td><td>Detroit</td><td>HS 8542 Integrated Circuits</td><td>Customs Review</td><td>2023-09-01 00:00:00</td><td>2023-Q3</td><td><span class="n">681.8</span></td><td><span class="n">33.4</span></td><td><span class="n">0</span></td><td><span class="n">4.8</span></td></tr><tr><td>USMCA</td><td>Northern Border</td><td>Buffalo</td><td>HS 6204 Women Suits &amp; Ensembles</td><td>Customs Review</td><td>2023-07-01 00:00:00</td><td>2023-Q3</td><td><span class="n">446.1</span></td><td><span class="n">20.5</span></td><td><span class="n">0</span></td><td><span class="n">4.6</span></td></tr><tr><td>USMCA</td><td>Southern Border</td><td>Laredo</td><td>HS 6204 Women Suits &amp; Ensembles</td><td>Filing Lodged</td><td>2022-03-01 00:00:00</td><td>2022-Q1</td><td><span class="n">758.1</span></td><td><span class="n">34.8</span></td><td><span class="n">0</span></td><td><span class="n">4.5</span></td></tr></tbody></table></div></div></div></main>
+</body></html>

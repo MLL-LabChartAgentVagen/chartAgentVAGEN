@@ -1,0 +1,331 @@
+{
+  "schema_version": 5,
+  "type": "TableSchema",
+  "data": {
+    "scenario_id": "s004",
+    "scenario_title": "Real agricultural producer price indices and per-capita output value by World Bank income tier and commodity group, 2005–2023",
+    "data_context": "The Food and Agriculture Organization (FAO) Statistics Division compiled country-level agricultural producer prices deflated by consumer price indices alongside gross per-capita agricultural output from 2005 to 2023. The dataset evaluates terms of trade shocks, commodity-specific volatility, and structural agricultural output differences across global income classifications.",
+    "columns": [
+      {
+        "name": "income_group",
+        "kind": "category",
+        "cardinality": 4,
+        "group": "socioeconomic",
+        "parent": null,
+        "ordered": "ordinal",
+        "values": [
+          "Low income",
+          "Lower-middle income",
+          "Upper-middle income",
+          "High income"
+        ],
+        "unit": null,
+        "additive": null,
+        "freq": null,
+        "start": null,
+        "end": null,
+        "derived_from": null
+      },
+      {
+        "name": "region",
+        "kind": "category",
+        "cardinality": 8,
+        "group": "socioeconomic",
+        "parent": "income_group",
+        "ordered": null,
+        "values": [
+          "Sub-Saharan Africa",
+          "East Africa & Sahel",
+          "South Asia",
+          "Southeast Asia",
+          "Latin America & Caribbean",
+          "East Asia & Pacific",
+          "North America",
+          "Western Europe"
+        ],
+        "unit": null,
+        "additive": null,
+        "freq": null,
+        "start": null,
+        "end": null,
+        "derived_from": null
+      },
+      {
+        "name": "commodity_group",
+        "kind": "category",
+        "cardinality": 4,
+        "group": "production",
+        "parent": null,
+        "ordered": null,
+        "values": [
+          "Cereal Grains",
+          "Oilcrops & Pulses",
+          "Livestock & Dairy",
+          "Horticulture & Fruits"
+        ],
+        "unit": null,
+        "additive": null,
+        "freq": null,
+        "start": null,
+        "end": null,
+        "derived_from": null
+      },
+      {
+        "name": "market_orientation",
+        "kind": "category",
+        "cardinality": 2,
+        "group": "market",
+        "parent": null,
+        "ordered": null,
+        "values": [
+          "Domestic Staple",
+          "Export Cash Crop"
+        ],
+        "unit": null,
+        "additive": null,
+        "freq": null,
+        "start": null,
+        "end": null,
+        "derived_from": null
+      },
+      {
+        "name": "record_period",
+        "kind": "time",
+        "cardinality": 228,
+        "group": "calendar",
+        "parent": null,
+        "ordered": null,
+        "values": [],
+        "unit": null,
+        "additive": null,
+        "freq": "monthly",
+        "start": "2005-01-01",
+        "end": "2023-12-31",
+        "derived_from": null
+      },
+      {
+        "name": "quarter",
+        "kind": "category",
+        "cardinality": 76,
+        "group": "calendar",
+        "parent": null,
+        "ordered": "ordinal",
+        "values": [
+          "2005-Q1",
+          "2005-Q2",
+          "2005-Q3",
+          "2005-Q4",
+          "2006-Q1",
+          "2006-Q2",
+          "2006-Q3",
+          "2006-Q4",
+          "2007-Q1",
+          "2007-Q2",
+          "2007-Q3",
+          "2007-Q4",
+          "2008-Q1",
+          "2008-Q2",
+          "2008-Q3",
+          "2008-Q4",
+          "2009-Q1",
+          "2009-Q2",
+          "2009-Q3",
+          "2009-Q4",
+          "2010-Q1",
+          "2010-Q2",
+          "2010-Q3",
+          "2010-Q4",
+          "2011-Q1",
+          "2011-Q2",
+          "2011-Q3",
+          "2011-Q4",
+          "2012-Q1",
+          "2012-Q2",
+          "2012-Q3",
+          "2012-Q4",
+          "2013-Q1",
+          "2013-Q2",
+          "2013-Q3",
+          "2013-Q4",
+          "2014-Q1",
+          "2014-Q2",
+          "2014-Q3",
+          "2014-Q4",
+          "2015-Q1",
+          "2015-Q2",
+          "2015-Q3",
+          "2015-Q4",
+          "2016-Q1",
+          "2016-Q2",
+          "2016-Q3",
+          "2016-Q4",
+          "2017-Q1",
+          "2017-Q2",
+          "2017-Q3",
+          "2017-Q4",
+          "2018-Q1",
+          "2018-Q2",
+          "2018-Q3",
+          "2018-Q4",
+          "2019-Q1",
+          "2019-Q2",
+          "2019-Q3",
+          "2019-Q4",
+          "2020-Q1",
+          "2020-Q2",
+          "2020-Q3",
+          "2020-Q4",
+          "2021-Q1",
+          "2021-Q2",
+          "2021-Q3",
+          "2021-Q4",
+          "2022-Q1",
+          "2022-Q2",
+          "2022-Q3",
+          "2022-Q4",
+          "2023-Q1",
+          "2023-Q2",
+          "2023-Q3",
+          "2023-Q4"
+        ],
+        "unit": null,
+        "additive": null,
+        "freq": null,
+        "start": null,
+        "end": null,
+        "derived_from": "record_period"
+      },
+      {
+        "name": "real_producer_price_index",
+        "kind": "measure",
+        "cardinality": 1800,
+        "group": null,
+        "parent": null,
+        "ordered": null,
+        "values": [],
+        "unit": "index",
+        "additive": false,
+        "freq": null,
+        "start": null,
+        "end": null,
+        "derived_from": null
+      },
+      {
+        "name": "yoy_real_price_change",
+        "kind": "measure",
+        "cardinality": 1800,
+        "group": null,
+        "parent": null,
+        "ordered": null,
+        "values": [],
+        "unit": "%",
+        "additive": false,
+        "freq": null,
+        "start": null,
+        "end": null,
+        "derived_from": null
+      },
+      {
+        "name": "per_capita_output_value",
+        "kind": "measure",
+        "cardinality": 1800,
+        "group": null,
+        "parent": null,
+        "ordered": null,
+        "values": [],
+        "unit": "USD",
+        "additive": true,
+        "freq": null,
+        "start": null,
+        "end": null,
+        "derived_from": null
+      }
+    ],
+    "groups": [
+      {
+        "name": "socioeconomic",
+        "columns": [
+          "income_group",
+          "region"
+        ]
+      },
+      {
+        "name": "production",
+        "columns": [
+          "commodity_group"
+        ]
+      },
+      {
+        "name": "market",
+        "columns": [
+          "market_orientation"
+        ]
+      },
+      {
+        "name": "calendar",
+        "columns": [
+          "record_period",
+          "quarter"
+        ]
+      }
+    ],
+    "dependencies": [
+      [
+        "real_producer_price_index",
+        "yoy_real_price_change"
+      ]
+    ],
+    "intents": [
+      {
+        "index": 0,
+        "sentence": "Compare average per-capita agricultural output value across different country income groups",
+        "columns": [
+          "income_group",
+          "per_capita_output_value"
+        ],
+        "aggregate": "AVG",
+        "family": "comparison"
+      },
+      {
+        "index": 1,
+        "sentence": "Track the trajectory and shocks in the real agricultural producer price index over time",
+        "columns": [
+          "record_period",
+          "real_producer_price_index"
+        ],
+        "aggregate": "AVG",
+        "family": "trend"
+      },
+      {
+        "index": 2,
+        "sentence": "Evaluate whether higher deflated producer price indices are correlated with annual real price percentage changes",
+        "columns": [
+          "real_producer_price_index",
+          "yoy_real_price_change"
+        ],
+        "aggregate": "NONE",
+        "family": "relation"
+      },
+      {
+        "index": 3,
+        "sentence": "Analyze the commodity sector composition of total agricultural output value across regions",
+        "columns": [
+          "commodity_group",
+          "per_capita_output_value"
+        ],
+        "aggregate": "SUM",
+        "family": "composition"
+      }
+    ],
+    "n_rows": 1800,
+    "script": "dim(\"income_group\", [\"Low income\", \"Lower-middle income\", \"Upper-middle income\", \"High income\"], weights=[0.25, 0.30, 0.25, 0.20], ordered=\"ordinal\", group=\"socioeconomic\")\ndim(\"region\", [\"Sub-Saharan Africa\", \"East Africa & Sahel\", \"South Asia\", \"Southeast Asia\", \"Latin America & Caribbean\", \"East Asia & Pacific\", \"North America\", \"Western Europe\"], parent=\"income_group\", weights={\"Low income\": [0.60, 0.40, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00], \"Lower-middle income\": [0.00, 0.00, 0.55, 0.45, 0.00, 0.00, 0.00, 0.00], \"Upper-middle income\": [0.00, 0.00, 0.00, 0.00, 0.55, 0.45, 0.00, 0.00], \"High income\": [0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.50, 0.50]}, group=\"socioeconomic\")\ndim(\"commodity_group\", [\"Cereal Grains\", \"Oilcrops & Pulses\", \"Livestock & Dairy\", \"Horticulture & Fruits\"], weights=[0.35, 0.25, 0.22, 0.18], group=\"production\")\ndim(\"market_orientation\", [\"Domestic Staple\", \"Export Cash Crop\"], weights=[0.62, 0.38], group=\"market\")\n\ntime(\"record_period\", start=\"2005-01-01\", end=\"2023-12-31\", freq=\"monthly\")\n\nmeasure(\"real_producer_price_index\", \"100 + {\\\"Low income\\\": 12.0, \\\"Lower-middle income\\\": 7.5, \\\"Upper-middle income\\\": 1.0, \\\"High income\\\": -6.0}[income_group] + {\\\"Cereal Grains\\\": 14.0, \\\"Oilcrops & Pulses\\\": 6.5, \\\"Livestock & Dairy\\\": -3.0, \\\"Horticulture & Fruits\\\": -8.5}[commodity_group] + 22.0 * exp(-((record_period - 1300) / 400)**2) + 26.0 * exp(-((record_period - 6350) / 450)**2) + gaussian(0, 5.5)\", unit=\"index\", additive=False)\nmeasure(\"yoy_real_price_change\", \"gaussian(1.2, 3.8) + (real_producer_price_index - 100) * 0.16 + {\\\"Export Cash Crop\\\": 2.4, \\\"Domestic Staple\\\": -1.2}[market_orientation]\", unit=\"%\", additive=False)\nmeasure(\"per_capita_output_value\", \"{\\\"Low income\\\": 52.0, \\\"Lower-middle income\\\": 110.0, \\\"Upper-middle income\\\": 245.0, \\\"High income\\\": 510.0}[income_group] * {\\\"Cereal Grains\\\": 1.35, \\\"Oilcrops & Pulses\\\": 0.85, \\\"Livestock & Dairy\\\": 1.50, \\\"Horticulture & Fruits\\\": 1.15}[commodity_group] * (1.0 + 0.000035 * record_period) + gaussian(0, 12.0)\", unit=\"USD\", additive=True)\n\nemit(1800)",
+    "origin": {
+      "domain_id": "dom_0482",
+      "domain": "Real producer prices and per-capita agricultural output value by income group",
+      "topic": "food and agriculture: annual agricultural producer price indices and year-on-year change by commodity group and region",
+      "subject": "food and agriculture",
+      "register": "official_statistics",
+      "complexity_tier": "complex"
+    }
+  }
+}

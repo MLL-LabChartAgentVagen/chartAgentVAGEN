@@ -3,17 +3,20 @@ run_id: dev
 root_seed: 20260816
 
 llm:
-  model: claude-opus-5          # the pipeline calls a model exactly once, in the data stage
+  model: claude-opus-5          # the pipeline calls a model twice: once to write the
+                                # data, once to write the words drawn on the figures
   max_tokens: 8000
+  effort: high                  # how much reasoning to ask for. Not every model takes
+                                # one; leave it empty for those that do not
   max_retries: 3                # how many times a rejected answer is asked for again
   cache_dir: data/generated/.llm_cache
+  titles: true                  # false writes every title from a template instead
 
 scale:
   scenarios: 1                  # scenarios per run
-  max_tier: 1                   # 1 keeps to the eleven simpler chart types
+  max_tier: 2                   # 1 keeps to the simpler shapes; 2 adds cells, boxes and bands
 
 data:                           # the data stage
-  target_rows: 900
   row_tolerance: 0.10           # how far the row count may drift from the script
   min_nonempty_families: 3      # a schema below this yields too few figures to be worth it
   # Both thresholds suit the local lexical similarity that llmkit defaults to,
@@ -25,13 +28,30 @@ data:                           # the data stage
   scenario_memory: data/generated/scenarios.json
 
 figure:                         # view selection
-  k_max: 12                     # a render and storage budget, not a diversity rule
+  k_max: 16                     # a render and storage budget, not a diversity rule
   sample_tries: 8               # attempts per family before giving up on it
   max_panels: 4
+  max_derived: 3                # panel relations per scenario; the tail is cut so the
+                                # rotation, the only path that widens type coverage,
+                                # still has budget left. Which relation the list starts
+                                # at moves with the scenario id, so a batch still
+                                # reaches all six
+  max_overlays: 3               # relations that put two views in one plotting area.
+                                # All three fit: the third is a value with the spread
+                                # around it, which is how a bar gets its error bars
+  pages: 1                      # how many pages of several figures a scenario composes.
+                                # Which relations may be split across a page is declared
+                                # in panel.py; which one a scenario starts at moves with
+                                # its id, so a batch reaches all of them
+  family_weights: uniform       # uniform | parsebench | a path to a weights file
+  density_band: sparse          # sparse | normal | dense | very_dense | extreme
 
 render:
   style_variants: 2             # renderings per figure; the style self-check needs two
   degradation: true
+  style_overrides: {}           # pin any style dimension for an ablation, by name:
+                                # {value_labels: all} writes every value on every figure,
+                                # and pinning several fixes the style vector outright
 
 layers:                         # ablation switches
   page_elements: true
@@ -40,8 +60,28 @@ layers:                         # ablation switches
 
 output:
   dir: data/generated
-  targets: [grounded_table, spot_check, mark_locate, mark_read,
-            drilldown, page_elements, legend_binding, caption]
+  preset:                       # empty | parsebench -- a named set of the four
+                                # entries below, for a benchmark that asks for one
+                                # shape of answer. What a preset changes is which
+                                # projection is taken and how it is written out,
+                                # never what the record holds
+  # The four the preset fills in. Each is left unset so that a preset can supply it;
+  # write one here and it wins, which is how a preset is taken and one part changed.
+  # The value after each name is what applies when neither this file nor a preset
+  # says anything.
+  #
+  # key_scope: mark             # mark | panel | full -- how much of a mark's address
+  #                             # is handed to the model; written into the artifact
+  # granularity: figure         # figure | page | batch -- one file per what
+  # format: json                # json | markdown | both -- what the answer is asked
+  #                             # for in. Separate from the granularity: one page as
+  #                             # a document and as a payload are one record twice
+  # targets: [grounded_table, spot_check, mark_locate, mark_read,
+  #           drilldown, page_elements, legend_binding, caption]
+  mix:                          # what a training set is made of, and in what share.
+                                # A source may only fill the targets its own
+                                # annotations answer; see s05_output/mixing.py
+    - {source: generated, weight: 1.0}
 
 cache:
   enabled: true

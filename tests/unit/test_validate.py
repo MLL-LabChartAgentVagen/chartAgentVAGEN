@@ -83,6 +83,30 @@ class TestStructuralChecks:
             G.topo_order(script)
 
 
+class TestTheMeasureCheck:
+    def test_a_column_with_a_non_finite_value_fails(self, df, script):
+        """Every value has to be finite, not merely one of them: an infinity in a
+        measure survives every later stage and comes out as an axis nobody can read.
+        """
+        import numpy as np
+
+        broken = df.copy()
+        broken.loc[broken.index[3], "wait_minutes"] = np.inf
+        failures = V.structural(broken, script)
+        assert any(f.kind == "measure" and "wait_minutes" in f.message for f in failures)
+
+    def test_a_column_with_a_null_fails(self, df, script):
+        broken = df.copy()
+        broken.loc[broken.index[3], "wait_minutes"] = float("nan")
+        assert any(f.kind == "measure" for f in V.structural(broken, script))
+
+    def test_a_constant_column_fails_and_says_what_it_holds(self, df, script):
+        flat = df.copy()
+        flat["wait_minutes"] = 12.5
+        failures = V.structural(flat, script)
+        assert any(f.kind == "measure" and "12.5" in f.message for f in failures)
+
+
 class TestIntentBinding:
     def test_the_three_worked_intents_bind(self, er):
         bound = V.intents(SAMPLE["intents"], er)
@@ -117,6 +141,24 @@ class TestIntentBinding:
             V.intents([], er)
 
 
+class TestTheDensestCross:
+    def test_a_cross_outside_the_screening_range_is_not_considered(self):
+        """Six cells and a hundred cells are the ends of the range, and both are in
+        it: below six a cross is not a chart, above a hundred it is unreadable."""
+        from chartgen.interfaces.table import Column, TableSchema
+
+        def schema(a: int, b: int, rows: int = 900) -> TableSchema:
+            return TableSchema("s", "t", "c", n_rows=rows, columns=(
+                Column("x", "category", a, values=tuple(f"x{i}" for i in range(a))),
+                Column("y", "category", b, values=tuple(f"y{i}" for i in range(b))),
+                Column("m", "measure", 900, unit="u", additive=True)))
+
+        assert V.densest_cross(schema(2, 3))[0] == ("x", "y")      # exactly six cells
+        assert V.densest_cross(schema(10, 10))[0] == ("x", "y")    # exactly a hundred
+        assert V.densest_cross(schema(1, 5))[0] is None            # five, below the range
+        assert V.densest_cross(schema(11, 10))[0] is None          # 110, above it
+
+
 class TestCoverage:
     """Which families are drawable, decided without data. An empty family says why."""
 
@@ -125,6 +167,11 @@ class TestCoverage:
         assert cov.families == {"comparison": True, "trend": True, "composition": True,
                                 "relation": True, "distribution": True, "process": False}
         assert cov.nonempty == 5
+
+    def test_the_empty_families_are_the_ones_with_nothing_in_them(self, er):
+        """Read the other way round, the feedback would name the five families that
+        work and ask the model to fix them."""
+        assert V.feasibility(er).empty_families == ("process",)
 
     def test_five_families_clear_the_threshold_of_three(self, er):
         assert V.feasibility(er).ok(min_families=3)

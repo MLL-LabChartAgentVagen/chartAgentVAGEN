@@ -67,6 +67,28 @@ class TestArgumentChecks:
         with pytest.raises(DeclarationError, match="weights"):
             D.run('dim("x", ["A", "B", "C"], weights=[0.5, 0.5])\nemit(10)')
 
+    def test_weights_that_add_up_to_nothing_are_rejected(self):
+        """All-zero weights are not a distribution. Allowed through, they reach the
+        allocator as a division by zero or as a dimension whose values never occur."""
+        with pytest.raises(DeclarationError, match="zero"):
+            D.run('dim("x", ["A", "B"], weights=[0, 0])\nemit(10)')
+
+    def test_a_negative_weight_is_rejected(self):
+        with pytest.raises(DeclarationError, match="non-negative"):
+            D.run('dim("x", ["A", "B"], weights=[-1, 2])\nemit(10)')
+
+    def test_a_time_range_that_ends_where_it_starts_is_rejected(self):
+        """A start equal to the end is one point, not a range: the trend family would
+        be declared feasible and then project to a single mark."""
+        with pytest.raises(DeclarationError, match="before start"):
+            D.run('dim("x", ["A", "B"])\n'
+                  'time("d", start="2024-01-01", end="2024-01-01", freq="daily")\n'
+                  "emit(10)")
+        with pytest.raises(DeclarationError, match="before start"):
+            D.run('dim("x", ["A", "B"])\n'
+                  'time("d", start="2024-03-01", end="2024-01-01", freq="daily")\n'
+                  "emit(10)")
+
     def test_conditional_weights_must_cover_every_parent_value(self):
         script = ('dim("p", ["A", "B"])\n'
                   'dim("c", ["u", "v"], parent="p", weights={"A": [0.5, 0.5]})\nemit(10)')
@@ -119,6 +141,18 @@ class TestArgumentChecks:
     def test_emit_cannot_be_called_twice(self):
         with pytest.raises(DeclarationError, match="emit"):
             D.run('dim("x", ["A", "B"])\nemit(10)\nemit(20)')
+
+
+class TestTheDerivedCalendarFields:
+    def test_a_day_gets_its_weekday_month_quarter_and_weekend_flag(self):
+        from datetime import date
+
+        from chartgen.s01_data.declare import calendar_of
+
+        assert calendar_of(date(2024, 3, 6)) == ("Wed", "2024-03", "2024-Q1", "No")
+        assert calendar_of(date(2024, 3, 9)) == ("Sat", "2024-03", "2024-Q1", "Yes")
+        assert calendar_of(date(2024, 3, 10)) == ("Sun", "2024-03", "2024-Q1", "Yes")
+        assert calendar_of(date(2024, 12, 31))[2] == "2024-Q4"
 
 
 class TestHardConstraints:

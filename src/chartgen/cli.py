@@ -4,8 +4,10 @@
     python -m chartgen.cli data --payload FILE           data stage, no model call
     python -m chartgen.cli data --domain "ICU beds"      data stage, one model call
     python -m chartgen.cli inspect SCHEMA                diagram page for a saved schema
+    python -m chartgen.cli figures --payload FILE        view selection, no model call
     python -m chartgen.cli render SPEC -o DIR            render stage from a saved spec
     python -m chartgen.cli run --scenarios 3             the whole pipeline
+    python -m chartgen.cli run --payload FILE            the whole pipeline, no model call
 """
 
 from __future__ import annotations
@@ -30,6 +32,7 @@ from .s03_render.style import sample as sample_style
 def _llm(config: Config) -> LLM:
     return LLM(model=str(config.get("llm.model")),
                max_tokens=int(config.get("llm.max_tokens", 8000)),
+               effort=config.get("llm.effort", "high"),
                cache_dir=config.get("llm.cache_dir"))
 
 
@@ -39,15 +42,32 @@ def _deduper(config: Config, key: str, path: str | None = None) -> Deduper:
 
 
 def cmd_pool(args: argparse.Namespace) -> None:
-    from .s01_data.pool import build
+    from .s01_data.pool import Pool, build
 
     config = Config.load(args.config)
+    path = Path(args.out or config.get("data.pool_path", "data/domains/pool.json"))
     dedup = _deduper(config, "data.pool_dedup_cosine")
-    pool = build(_llm(config), n_topics=args.topics, per_topic=args.per_topic,
-                 target=args.target, is_duplicate=lambda name: not dedup.add(name))
-    path = pool.save(args.out or config.get("data.pool_path", "data/domains/pool.json"))
-    print(f"{path}: {len(pool.topics)} topics, {len(pool.domains)} sub-topics, "
-          f"{pool.stats()['tiers']}")
+    known: tuple[str, ...] = ()
+    if args.extend and path.exists():
+        # Both levels of what is already there. The names go to the duplicate judge
+        # and the topics into the prompt, so an extension adds to the pool instead of
+        # writing a second one over it.
+        old = Pool.load(path)
+        known = tuple(f"{d.subject}: {d.topic}" for d in old.domains)
+        for domain in old.domains:
+            dedup.add(domain.name)
+        print(f"extending {path}: {len(old.domains)} sub-topics already in it")
+    pool = build(_llm(config), topics_per_cell=args.topics_per_cell,
+                 per_topic=args.per_topic, target=args.target,
+                 existing_topics=known,
+                 is_duplicate=lambda name: not dedup.add(name),
+                 report=print)
+    if args.extend and path.exists():
+        pool = Pool.load(path).merged(pool)
+    written = pool.save(path)
+    stats = pool.stats()
+    print(f"{written}: {len(pool.topics)} topics, {len(pool.domains)} sub-topics, "
+          f"{stats['tiers']}, {len(stats['cells'])} cells")
 
 
 def cmd_data(args: argparse.Namespace) -> None:
@@ -94,6 +114,24 @@ def cmd_inspect(args: argparse.Namespace) -> None:
     print(f"\nwrote {out}")
 
 
+def cmd_figures(args: argparse.Namespace) -> None:
+    """Run view selection on a hand-written answer and show what it chose and why."""
+    from .s01_data.author import compose
+    from .s02_figure.compose import compose_with_log
+
+    config = Config.load(args.config).override(args.set or [])
+    seed = int(config.get("root_seed", 0))
+    payload = json.loads(Path(args.payload).read_text(encoding="utf-8"))
+    table, schema = compose(payload, scenario_id=args.scenario, seed=seed, config=config)
+    specs, log = compose_with_log(table, schema, seed, config)
+
+    out = Path(args.out or config.get("output.dir", "data/generated")) / args.scenario
+    for spec in specs:
+        serde.save(spec, out / "specs" / f"{spec.figure_id}.json")
+    print(report.figure_summary(specs, log))
+    print(f"wrote {len(specs)} specs to {out}/specs")
+
+
 def cmd_render(args: argparse.Namespace) -> None:
     spec = serde.load(FigureSpec, args.spec)
     style = (serde.load(StyleVector, args.style) if args.style
@@ -104,15 +142,47 @@ def cmd_render(args: argparse.Namespace) -> None:
 
 
 def cmd_run(args: argparse.Namespace) -> None:
+    """Run the whole pipeline. With --payload no model is called: a hand-written
+    answer goes through every stage exactly as a generated one would."""
+    from .pipeline import batch_stats
+
     config = Config.load(args.config).override(args.set or [])
     if args.scenarios:
         config.set("scale.scenarios", args.scenarios)
     pipe = Pipeline(config, Path(config.get("output.dir", "data/generated"))
                     / config.get("run_id", "dev"))
+
+    if args.payload:
+        from .s01_data.author import compose
+
+        payload = json.loads(Path(args.payload).read_text(encoding="utf-8"))
+        seed = int(config.get("root_seed", 0))
+
+        def stage_01(scenario_id, **kw):
+            from .pipeline import save_data
+
+            table, schema = compose(payload, scenario_id=scenario_id, seed=seed,
+                                    config=config)
+            save_data(table, schema, pipe.out_dir)
+            return table, schema
+
+        pipe.stage_01 = stage_01     # type: ignore[method-assign]
+
+    results = []
     for i in range(int(config.get("scale.scenarios", 1))):
-        result = pipe.run_scenario(f"s{i:03d}")
+        result = pipe.run_scenario(args.scenario if args.payload else f"s{i:03d}")
+        results.append(result)
         status = "ok" if result.ok else f"failed in {result.stage}: {result.reason}"
-        print(f"{result.scenario_id}  {status}  {len(result.records)} records")
+        print(f"{result.scenario_id}  {status}  {len(result.records)} records, "
+              f"{len(result.dropped)} dropped")
+    stats = batch_stats(results)
+    pipe.out_dir.mkdir(parents=True, exist_ok=True)
+    (pipe.out_dir / "stats.json").write_text(
+        json.dumps({**stats, "model": str(config.get("llm.model", "")),
+                    "config": config.values}, indent=1, ensure_ascii=False),
+        encoding="utf-8")
+    print()
+    print(report.run_summary(stats))
 
 
 def main(argv: list[str] | None = None) -> None:
@@ -122,9 +192,13 @@ def main(argv: list[str] | None = None) -> None:
     p = sub.add_parser("pool", help="build the domain pool: two levels plus dedup, once per project")
     p.add_argument("-o", "--out", type=Path, default=None)
     p.add_argument("--config", type=Path, default=None)
-    p.add_argument("--topics", type=int, default=20)
-    p.add_argument("--per-topic", type=int, default=12)
-    p.add_argument("--target", type=int, default=200)
+    p.add_argument("--topics-per-cell", type=int, default=2,
+                   help="topics per (subject, register) cell; 46 cells are declared")
+    p.add_argument("--per-topic", type=int, default=7)
+    p.add_argument("--target", type=int, default=600,
+                   help="a floor on the whole pool; the backfill tops the thin tier up")
+    p.add_argument("--extend", action="store_true",
+                   help="add to the pool already at --out instead of replacing it")
     p.set_defaults(func=cmd_pool)
 
     p = sub.add_parser("data", help="data stage only: a domain to a fact table and its schema")
@@ -145,6 +219,14 @@ def main(argv: list[str] | None = None) -> None:
     p.add_argument("--max-tier", type=int, default=3)
     p.set_defaults(func=cmd_inspect)
 
+    p = sub.add_parser("figures", help="view selection only: a hand-written answer to figure specs")
+    p.add_argument("--payload", type=Path, required=True)
+    p.add_argument("--scenario", default="s000")
+    p.add_argument("--config", type=Path, default=None)
+    p.add_argument("--set", action="append", metavar="KEY=VALUE")
+    p.add_argument("-o", "--out", type=Path, default=None)
+    p.set_defaults(func=cmd_figures)
+
     p = sub.add_parser("render", help="render stage only: a figure spec and a style to an image")
     p.add_argument("spec", type=Path)
     p.add_argument("--style", type=Path, default=None)
@@ -156,6 +238,9 @@ def main(argv: list[str] | None = None) -> None:
     p = sub.add_parser("run", help="run the whole pipeline")
     p.add_argument("--config", type=Path, default=None)
     p.add_argument("--scenarios", type=int, default=None)
+    p.add_argument("--payload", type=Path, default=None,
+                   help="a hand-written answer; with this no model is called")
+    p.add_argument("--scenario", default="s000")
     p.add_argument("--set", action="append", metavar="KEY=VALUE")
     p.set_defaults(func=cmd_run)
 

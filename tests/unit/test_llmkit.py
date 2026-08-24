@@ -72,6 +72,63 @@ class TestComplete:
             llm.complete("s", "u")
 
 
+
+class TestACutOffReplyAsksAgainWithMoreRoom:
+    """A reply that stops at the budget is short of room, not wrong. It used to end the
+    scenario: a six-scenario run lost one whole scenario to a declaration script that
+    ran a few hundred tokens past 8000, and nothing about that question was unanswerable.
+
+    The reasoning a model spends before it writes counts against the same budget, so how
+    much room a question needs is not something the caller can read off the question.
+    """
+
+    def cutoff(self, budgets, cut_below):
+        """A provider that cuts the reply off until the budget reaches `cut_below`."""
+        def complete(*, model, system, messages, max_tokens, effort, schema, extra):
+            budgets.append(max_tokens)
+            if max_tokens < cut_below:
+                return Response(text="part", model=model, usage=Usage(1, max_tokens),
+                                stop_reason="max_tokens")
+            return Response(text="whole", model=model, usage=Usage(1, 5),
+                            stop_reason="end_turn")
+        return complete
+
+    def test_the_budget_doubles_until_the_reply_fits(self, llm_factory):
+        llm, provider = llm_factory([], max_tokens=8000)
+        budgets: list[int] = []
+        provider.complete = self.cutoff(budgets, 30000)
+        assert llm.complete("s", "u").text == "whole"
+        assert budgets == [8000, 16000, 32000]
+
+    def test_a_reply_that_fits_is_asked_once(self, llm_factory):
+        llm, provider = llm_factory([], max_tokens=8000)
+        budgets: list[int] = []
+        provider.complete = self.cutoff(budgets, 0)
+        llm.complete("s", "u")
+        assert budgets == [8000]
+
+    def test_it_gives_up_at_the_ceiling(self, llm_factory):
+        from llmkit.types import Truncated
+
+        llm, provider = llm_factory([], max_tokens=8000, token_ceiling=16000)
+        budgets: list[int] = []
+        provider.complete = self.cutoff(budgets, 10**9)
+        with pytest.raises(Truncated):
+            llm.complete("s", "u")
+        assert budgets == [8000, 16000]
+
+    def test_the_cache_does_not_turn_over_when_the_budget_moves(self, llm_factory, tmp_path):
+        """Only whole replies are cached, so the budget that produced one says nothing
+        about its content. Keying on it threw the cache away every time it moved -- and
+        the budget moves by itself now, so the escalated reply would never be found again.
+        """
+        first, _ = llm_factory(["once"], cache_dir=tmp_path)
+        assert first.complete("s", "u").text == "once"
+        second, provider = llm_factory([], cache_dir=tmp_path, max_tokens=64000)
+        assert second.complete("s", "u").text == "once"
+        assert provider.calls == []
+
+
 class TestJsonMode:
     SCHEMA = {"type": "object", "properties": {"title": {"type": "string"}},
               "required": ["title"], "additionalProperties": False}

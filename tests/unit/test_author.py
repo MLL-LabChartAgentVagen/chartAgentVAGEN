@@ -176,3 +176,50 @@ class FakeSampler:
     def take(self, tier=None) -> dict:
         self.taken += 1
         return {**A.EXAMPLE_DOMAIN, "name": f"domain {self.taken}"}
+
+
+class TestOneDrawForTheWholeRun:
+    """A sampler draws without replacement, which says nothing if every scenario gets
+    a fresh one: each starts with the full pool and they collide. And a collision is
+    not a near miss -- the data prompt carries no scenario identifier, so the second
+    scenario is a cache hit and comes back byte for byte the same."""
+
+    def pipeline(self, tmp_path):
+        """Its own pool and its own memory file. Pointed at the project's, a test run
+        would draw from whatever the pool happens to hold and write into what real
+        runs remember."""
+        from chartgen.config import Config
+        from chartgen.pipeline import Pipeline
+        from chartgen.s01_data.pool import Domain, Pool, TIERS
+
+        pool = Pool(tuple(Domain(id=f"dom_{i:04d}", name=f"situation {i}",
+                                 topic="t", subject="health and care", register="operational",
+                                 complexity_tier=TIERS[i % 3]) for i in range(30)))
+        path = pool.save(tmp_path / "pool.json")
+        config = Config.load().override(
+            [f"data.scenario_memory={tmp_path / 'seen.json'}",
+             f"data.pool_path={path}"])
+        return Pipeline(config, tmp_path / "run")
+
+    def test_every_scenario_of_a_run_draws_from_one_sampler(self, tmp_path):
+        from chartgen.s01_data.author import _next_domain
+
+        pipe = self.pipeline(tmp_path)
+        sampler, _ = pipe._drawing()
+        assert pipe._drawing()[0] is sampler, "built once, not once per scenario"
+        # Ten sub-topics in the tier, and a tier resets once four fifths of it is
+        # gone -- so eight draws is what "without replacement" covers here.
+        drawn = [_next_domain(sampler, "simple")["id"] for _ in range(8)]
+        assert len(set(drawn)) == len(drawn), drawn
+
+    def test_the_duplicate_judge_remembers_across_scenarios(self, tmp_path):
+        pipe = self.pipeline(tmp_path)
+        _, is_duplicate = pipe._drawing()
+        assert not is_duplicate("Weekly claim turnaround by processing centre")
+        assert is_duplicate("Weekly claim turnaround by processing centre")
+
+    def test_a_hand_written_domain_bypasses_the_pool(self, tmp_path):
+        """`chartgen data --domain` names its own subject, so nothing is drawn and
+        the pool file need not exist."""
+        pipe = self.pipeline(tmp_path)
+        assert pipe._sampler is None

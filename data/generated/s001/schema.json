@@ -1,0 +1,290 @@
+{
+  "schema_version": 2,
+  "type": "TableSchema",
+  "data": {
+    "scenario_id": "s001",
+    "scenario_title": "Monthly loan loss provision build and allowance coverage across seven commercial banking segments, January 2022 to December 2024",
+    "data_context": "The credit risk analytics team at a regional commercial bank assembled this table from the monthly allowance close package covering January 2022 through December 2024. Each row is a single provision posting made at a month-end close for one business segment, tagged with the driver cited in the allowance memo and with the segment's position in the quarterly reporting calendar. The data was pulled in early 2025 to support a review of why provision expense clusters in the final month of each quarter and how allowance coverage responded to the deterioration in charge-offs that began in late 2023.",
+    "columns": [
+      {
+        "name": "segment_group",
+        "kind": "category",
+        "cardinality": 3,
+        "group": "entity",
+        "parent": null,
+        "ordered": null,
+        "values": [
+          "Commercial & Industrial",
+          "Commercial Real Estate",
+          "Small Business Banking"
+        ],
+        "unit": null,
+        "additive": null,
+        "freq": null,
+        "start": null,
+        "end": null,
+        "derived_from": null
+      },
+      {
+        "name": "business_segment",
+        "kind": "category",
+        "cardinality": 7,
+        "group": "entity",
+        "parent": "segment_group",
+        "ordered": null,
+        "values": [
+          "Middle Market C&I",
+          "Large Corporate C&I",
+          "Asset Based Lending",
+          "Investor CRE",
+          "Construction CRE",
+          "Small Business Term",
+          "Small Business Card"
+        ],
+        "unit": null,
+        "additive": null,
+        "freq": null,
+        "start": null,
+        "end": null,
+        "derived_from": null
+      },
+      {
+        "name": "quarter_month_position",
+        "kind": "category",
+        "cardinality": 3,
+        "group": "close_calendar",
+        "parent": null,
+        "ordered": "stage",
+        "values": [
+          "First month of quarter",
+          "Second month of quarter",
+          "Third month of quarter"
+        ],
+        "unit": null,
+        "additive": null,
+        "freq": null,
+        "start": null,
+        "end": null,
+        "derived_from": null
+      },
+      {
+        "name": "provision_driver",
+        "kind": "category",
+        "cardinality": 4,
+        "group": "driver",
+        "parent": null,
+        "ordered": null,
+        "values": [
+          "Portfolio growth",
+          "Risk rating migration",
+          "Economic forecast update",
+          "Charge-off replenishment"
+        ],
+        "unit": null,
+        "additive": null,
+        "freq": null,
+        "start": null,
+        "end": null,
+        "derived_from": null
+      },
+      {
+        "name": "close_month",
+        "kind": "time",
+        "cardinality": 36,
+        "group": "calendar",
+        "parent": null,
+        "ordered": null,
+        "values": [],
+        "unit": null,
+        "additive": null,
+        "freq": "monthly",
+        "start": "2022-01-01",
+        "end": "2024-12-31",
+        "derived_from": null
+      },
+      {
+        "name": "quarter",
+        "kind": "category",
+        "cardinality": 12,
+        "group": "calendar",
+        "parent": null,
+        "ordered": "ordinal",
+        "values": [
+          "2022-Q1",
+          "2022-Q2",
+          "2022-Q3",
+          "2022-Q4",
+          "2023-Q1",
+          "2023-Q2",
+          "2023-Q3",
+          "2023-Q4",
+          "2024-Q1",
+          "2024-Q2",
+          "2024-Q3",
+          "2024-Q4"
+        ],
+        "unit": null,
+        "additive": null,
+        "freq": null,
+        "start": null,
+        "end": null,
+        "derived_from": "close_month"
+      },
+      {
+        "name": "loans_outstanding",
+        "kind": "measure",
+        "cardinality": 360,
+        "group": null,
+        "parent": null,
+        "ordered": null,
+        "values": [],
+        "unit": "USD millions",
+        "additive": true,
+        "freq": null,
+        "start": null,
+        "end": null,
+        "derived_from": null
+      },
+      {
+        "name": "net_charge_offs",
+        "kind": "measure",
+        "cardinality": 360,
+        "group": null,
+        "parent": null,
+        "ordered": null,
+        "values": [],
+        "unit": "USD millions",
+        "additive": true,
+        "freq": null,
+        "start": null,
+        "end": null,
+        "derived_from": null
+      },
+      {
+        "name": "provision_expense",
+        "kind": "measure",
+        "cardinality": 360,
+        "group": null,
+        "parent": null,
+        "ordered": null,
+        "values": [],
+        "unit": "USD millions",
+        "additive": true,
+        "freq": null,
+        "start": null,
+        "end": null,
+        "derived_from": null
+      },
+      {
+        "name": "allowance_coverage_ratio",
+        "kind": "measure",
+        "cardinality": 360,
+        "group": null,
+        "parent": null,
+        "ordered": null,
+        "values": [],
+        "unit": "percent",
+        "additive": false,
+        "freq": null,
+        "start": null,
+        "end": null,
+        "derived_from": null
+      }
+    ],
+    "groups": [
+      {
+        "name": "entity",
+        "columns": [
+          "segment_group",
+          "business_segment"
+        ]
+      },
+      {
+        "name": "close_calendar",
+        "columns": [
+          "quarter_month_position"
+        ]
+      },
+      {
+        "name": "driver",
+        "columns": [
+          "provision_driver"
+        ]
+      },
+      {
+        "name": "calendar",
+        "columns": [
+          "close_month",
+          "quarter"
+        ]
+      }
+    ],
+    "dependencies": [
+      [
+        "loans_outstanding",
+        "net_charge_offs"
+      ],
+      [
+        "loans_outstanding",
+        "provision_expense"
+      ],
+      [
+        "net_charge_offs",
+        "provision_expense"
+      ],
+      [
+        "loans_outstanding",
+        "allowance_coverage_ratio"
+      ],
+      [
+        "net_charge_offs",
+        "allowance_coverage_ratio"
+      ]
+    ],
+    "intents": [
+      {
+        "index": 0,
+        "sentence": "Which position in the quarterly close calendar carries the largest provision build",
+        "columns": [
+          "quarter_month_position",
+          "provision_expense"
+        ],
+        "aggregate": "SUM",
+        "family": "comparison"
+      },
+      {
+        "index": 1,
+        "sentence": "How monthly provision expense moved over the three years and where it turned upward",
+        "columns": [
+          "close_month",
+          "provision_expense"
+        ],
+        "aggregate": "SUM",
+        "family": "trend"
+      },
+      {
+        "index": 2,
+        "sentence": "What share of total provision expense each stated driver accounts for by segment group",
+        "columns": [
+          "provision_driver",
+          "segment_group",
+          "provision_expense"
+        ],
+        "aggregate": "SUM",
+        "family": "composition"
+      },
+      {
+        "index": 3,
+        "sentence": "Whether segments with heavier net charge-offs also carry higher allowance coverage",
+        "columns": [
+          "net_charge_offs",
+          "allowance_coverage_ratio"
+        ],
+        "aggregate": "NONE",
+        "family": "relation"
+      }
+    ],
+    "n_rows": 360,
+    "script": "dim(\"segment_group\", [\"Commercial & Industrial\", \"Commercial Real Estate\", \"Small Business Banking\"],\n    weights=[0.45, 0.35, 0.20], group=\"entity\")\ndim(\"business_segment\",\n    [\"Middle Market C&I\", \"Large Corporate C&I\", \"Asset Based Lending\",\n     \"Investor CRE\", \"Construction CRE\", \"Small Business Term\", \"Small Business Card\"],\n    parent=\"segment_group\",\n    weights={\"Commercial & Industrial\": [0.45, 0.35, 0.20, 0.0, 0.0, 0.0, 0.0],\n             \"Commercial Real Estate\": [0.0, 0.0, 0.0, 0.65, 0.35, 0.0, 0.0],\n             \"Small Business Banking\": [0.0, 0.0, 0.0, 0.0, 0.0, 0.60, 0.40]},\n    group=\"entity\")\n\ndim(\"quarter_month_position\",\n    [\"First month of quarter\", \"Second month of quarter\", \"Third month of quarter\"],\n    weights=[0.34, 0.33, 0.33], ordered=\"stage\", group=\"close_calendar\")\n\ndim(\"provision_driver\",\n    [\"Portfolio growth\", \"Risk rating migration\", \"Economic forecast update\", \"Charge-off replenishment\"],\n    weights=[0.30, 0.25, 0.25, 0.20], group=\"driver\")\n\ntime(\"close_month\", start=\"2022-01-01\", end=\"2024-12-31\", freq=\"monthly\")\n\nmeasure(\"loans_outstanding\",\n        \"{\\\"Middle Market C&I\\\": 8200, \\\"Large Corporate C&I\\\": 12400,\"\n        \" \\\"Asset Based Lending\\\": 3100, \\\"Investor CRE\\\": 9600,\"\n        \" \\\"Construction CRE\\\": 4200, \\\"Small Business Term\\\": 2600,\"\n        \" \\\"Small Business Card\\\": 900}[business_segment]\"\n        \" * (1 + 0.00012 * close_month) * lognormal(0, 0.05)\",\n        unit=\"USD millions\", additive=True)\n\nmeasure(\"net_charge_offs\",\n        \"loans_outstanding\"\n        \" * (0.00060 + 0.00030 * [segment_group=Commercial Real Estate]\"\n        \"    + 0.00045 * [segment_group=Small Business Banking]\"\n        \"    + 0.00000040 * close_month\"\n        \"    + 0.00055 * where(close_month > 640, 1, 0))\"\n        \" * gamma(4, 0.25)\",\n        unit=\"USD millions\", additive=True)\n\nmeasure(\"provision_expense\",\n        \"net_charge_offs * 1.05\"\n        \" + loans_outstanding * 0.00040\"\n        \"   * (1 + 0.50 * [quarter_month_position=Third month of quarter]\"\n        \"      - 0.20 * [quarter_month_position=First month of quarter])\"\n        \"   * {\\\"Portfolio growth\\\": 0.8, \\\"Risk rating migration\\\": 1.2,\"\n        \"      \\\"Economic forecast update\\\": 1.6, \\\"Charge-off replenishment\\\": 1.0}[provision_driver]\"\n        \" + gaussian(0, 0.8)\",\n        unit=\"USD millions\", additive=True)\n\nmeasure(\"allowance_coverage_ratio\",\n        \"clip(1.10 + 90 * net_charge_offs / loans_outstanding\"\n        \"     + 0.25 * [segment_group=Small Business Banking]\"\n        \"     + 0.00010 * close_month + gaussian(0, 0.08), 0.60, 4.00)\",\n        unit=\"percent\", additive=False)\n\nemit(360)\n"
+  }
+}

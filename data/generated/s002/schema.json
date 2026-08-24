@@ -1,0 +1,334 @@
+{
+  "schema_version": 2,
+  "type": "TableSchema",
+  "data": {
+    "scenario_id": "s002",
+    "scenario_title": "Daily energy delivered on six residential distribution feeders across three substations, January-December 2023, examined by customer class and weather",
+    "data_context": "The distribution planning group of a mid-sized municipal electric utility assembled this table from SCADA feeder meters and the customer information system for calendar year 2023. Each record is one settled daily reading for one feeder and one customer class, joined to the substation weather station and to the estimated technical loss factor. The dataset was built in early 2024 to support the annual load forecast, to see which feeders approach their thermal rating on hot afternoons, and to quantify how strongly residential energy responds to heating and cooling degree days before the utility commits to a feeder reconductoring budget.",
+    "columns": [
+      {
+        "name": "substation",
+        "kind": "category",
+        "cardinality": 3,
+        "group": "network",
+        "parent": null,
+        "ordered": null,
+        "values": [
+          "Northgate",
+          "Millbrook",
+          "Cedar Hollow"
+        ],
+        "unit": null,
+        "additive": null,
+        "freq": null,
+        "start": null,
+        "end": null,
+        "derived_from": null
+      },
+      {
+        "name": "feeder",
+        "kind": "category",
+        "cardinality": 6,
+        "group": "network",
+        "parent": "substation",
+        "ordered": null,
+        "values": [
+          "NG-11",
+          "NG-12",
+          "MB-21",
+          "MB-22",
+          "CH-31",
+          "CH-32"
+        ],
+        "unit": null,
+        "additive": null,
+        "freq": null,
+        "start": null,
+        "end": null,
+        "derived_from": null
+      },
+      {
+        "name": "customer_class",
+        "kind": "category",
+        "cardinality": 3,
+        "group": "customer",
+        "parent": null,
+        "ordered": null,
+        "values": [
+          "Single-family residential",
+          "Multi-family residential",
+          "Small commercial"
+        ],
+        "unit": null,
+        "additive": null,
+        "freq": null,
+        "start": null,
+        "end": null,
+        "derived_from": null
+      },
+      {
+        "name": "reading_date",
+        "kind": "time",
+        "cardinality": 365,
+        "group": "calendar",
+        "parent": null,
+        "ordered": null,
+        "values": [],
+        "unit": null,
+        "additive": null,
+        "freq": "daily",
+        "start": "2023-01-01",
+        "end": "2023-12-31",
+        "derived_from": null
+      },
+      {
+        "name": "day_of_week",
+        "kind": "category",
+        "cardinality": 7,
+        "group": "calendar",
+        "parent": null,
+        "ordered": "ordinal",
+        "values": [
+          "Mon",
+          "Tue",
+          "Wed",
+          "Thu",
+          "Fri",
+          "Sat",
+          "Sun"
+        ],
+        "unit": null,
+        "additive": null,
+        "freq": null,
+        "start": null,
+        "end": null,
+        "derived_from": "reading_date"
+      },
+      {
+        "name": "month",
+        "kind": "category",
+        "cardinality": 12,
+        "group": "calendar",
+        "parent": null,
+        "ordered": "ordinal",
+        "values": [
+          "2023-01",
+          "2023-02",
+          "2023-03",
+          "2023-04",
+          "2023-05",
+          "2023-06",
+          "2023-07",
+          "2023-08",
+          "2023-09",
+          "2023-10",
+          "2023-11",
+          "2023-12"
+        ],
+        "unit": null,
+        "additive": null,
+        "freq": null,
+        "start": null,
+        "end": null,
+        "derived_from": "reading_date"
+      },
+      {
+        "name": "quarter",
+        "kind": "category",
+        "cardinality": 4,
+        "group": "calendar",
+        "parent": null,
+        "ordered": "ordinal",
+        "values": [
+          "2023-Q1",
+          "2023-Q2",
+          "2023-Q3",
+          "2023-Q4"
+        ],
+        "unit": null,
+        "additive": null,
+        "freq": null,
+        "start": null,
+        "end": null,
+        "derived_from": "reading_date"
+      },
+      {
+        "name": "is_weekend",
+        "kind": "category",
+        "cardinality": 2,
+        "group": "calendar",
+        "parent": null,
+        "ordered": "ordinal",
+        "values": [
+          "Yes",
+          "No"
+        ],
+        "unit": null,
+        "additive": null,
+        "freq": null,
+        "start": null,
+        "end": null,
+        "derived_from": "reading_date"
+      },
+      {
+        "name": "air_temperature",
+        "kind": "measure",
+        "cardinality": 450,
+        "group": null,
+        "parent": null,
+        "ordered": null,
+        "values": [],
+        "unit": "degrees Celsius",
+        "additive": false,
+        "freq": null,
+        "start": null,
+        "end": null,
+        "derived_from": null
+      },
+      {
+        "name": "energy_delivered",
+        "kind": "measure",
+        "cardinality": 450,
+        "group": null,
+        "parent": null,
+        "ordered": null,
+        "values": [],
+        "unit": "MWh",
+        "additive": true,
+        "freq": null,
+        "start": null,
+        "end": null,
+        "derived_from": null
+      },
+      {
+        "name": "peak_demand",
+        "kind": "measure",
+        "cardinality": 450,
+        "group": null,
+        "parent": null,
+        "ordered": null,
+        "values": [],
+        "unit": "MW",
+        "additive": false,
+        "freq": null,
+        "start": null,
+        "end": null,
+        "derived_from": null
+      },
+      {
+        "name": "technical_loss_rate",
+        "kind": "measure",
+        "cardinality": 450,
+        "group": null,
+        "parent": null,
+        "ordered": null,
+        "values": [],
+        "unit": "percent",
+        "additive": false,
+        "freq": null,
+        "start": null,
+        "end": null,
+        "derived_from": null
+      },
+      {
+        "name": "metered_customers",
+        "kind": "measure",
+        "cardinality": 450,
+        "group": null,
+        "parent": null,
+        "ordered": null,
+        "values": [],
+        "unit": "customers",
+        "additive": true,
+        "freq": null,
+        "start": null,
+        "end": null,
+        "derived_from": null
+      }
+    ],
+    "groups": [
+      {
+        "name": "network",
+        "columns": [
+          "substation",
+          "feeder"
+        ]
+      },
+      {
+        "name": "customer",
+        "columns": [
+          "customer_class"
+        ]
+      },
+      {
+        "name": "calendar",
+        "columns": [
+          "reading_date",
+          "day_of_week",
+          "month",
+          "quarter",
+          "is_weekend"
+        ]
+      }
+    ],
+    "dependencies": [
+      [
+        "air_temperature",
+        "energy_delivered"
+      ],
+      [
+        "energy_delivered",
+        "peak_demand"
+      ],
+      [
+        "peak_demand",
+        "technical_loss_rate"
+      ]
+    ],
+    "intents": [
+      {
+        "index": 0,
+        "sentence": "Which feeder delivers the most energy per day and which the least",
+        "columns": [
+          "feeder",
+          "energy_delivered"
+        ],
+        "aggregate": "AVG",
+        "family": "comparison"
+      },
+      {
+        "index": 1,
+        "sentence": "How daily energy delivered moves through the year and where the summer and winter turning points fall",
+        "columns": [
+          "reading_date",
+          "energy_delivered"
+        ],
+        "aggregate": "SUM",
+        "family": "trend"
+      },
+      {
+        "index": 2,
+        "sentence": "Whether warmer or colder air temperature goes with higher energy delivered",
+        "columns": [
+          "air_temperature",
+          "energy_delivered"
+        ],
+        "aggregate": "NONE",
+        "family": "relation"
+      },
+      {
+        "index": 3,
+        "sentence": "What share of delivered energy each customer class holds within every substation",
+        "columns": [
+          "substation",
+          "customer_class",
+          "energy_delivered"
+        ],
+        "aggregate": "SUM",
+        "family": "composition"
+      }
+    ],
+    "n_rows": 450,
+    "script": "dim(\"substation\", [\"Northgate\", \"Millbrook\", \"Cedar Hollow\"],\n    weights=[0.38, 0.34, 0.28], group=\"network\")\ndim(\"feeder\", [\"NG-11\", \"NG-12\", \"MB-21\", \"MB-22\", \"CH-31\", \"CH-32\"], parent=\"substation\",\n    weights={\"Northgate\": [0.55, 0.45, 0.0, 0.0, 0.0, 0.0],\n             \"Millbrook\": [0.0, 0.0, 0.50, 0.50, 0.0, 0.0],\n             \"Cedar Hollow\": [0.0, 0.0, 0.0, 0.0, 0.60, 0.40]},\n    group=\"network\")\ndim(\"customer_class\", [\"Single-family residential\", \"Multi-family residential\", \"Small commercial\"],\n    weights=[0.45, 0.35, 0.20], group=\"customer\")\n\ntime(\"reading_date\", start=\"2023-01-01\", end=\"2023-12-31\", freq=\"daily\")\n\nmeasure(\"air_temperature\",\n        \"11.5 + 11.0*sin(2*3.14159*(reading_date - 110)/365) + gaussian(0, 2.4)\",\n        unit=\"degrees Celsius\", additive=False)\nmeasure(\"energy_delivered\",\n        \"{'Single-family residential': 42.0, 'Multi-family residential': 28.0, 'Small commercial': 15.0}[customer_class]\"\n        \" * {'NG-11': 1.15, 'NG-12': 0.95, 'MB-21': 1.05, 'MB-22': 0.90, 'CH-31': 1.20, 'CH-32': 0.85}[feeder]\"\n        \" * (1 + 0.030*clip(air_temperature - 21, 0, 18) + 0.022*clip(13 - air_temperature, 0, 24))\"\n        \" * (1 + 0.05*[is_weekend=1])\"\n        \" * (1 + 0.00018*reading_date)\"\n        \" * (1 + 0.45*[feeder=CH-31]*[is_weekend=0]*0.0)\"\n        \" * exp(gaussian(0, 0.06))\",\n        unit=\"MWh\", additive=True)\nmeasure(\"peak_demand\",\n        \"energy_delivered / 24 * (1.58 + 0.10*[customer_class=Small commercial] + gaussian(0, 0.07))\",\n        unit=\"MW\", additive=False)\nmeasure(\"technical_loss_rate\",\n        \"clip(3.1 + 0.9*peak_demand + 0.35*[feeder=CH-31] + 0.30*[feeder=NG-11] + gaussian(0, 0.25), 1.5, 9.0)\",\n        unit=\"percent\", additive=False)\nmeasure(\"metered_customers\",\n        \"poisson({'Single-family residential': 950, 'Multi-family residential': 1400, 'Small commercial': 180}[customer_class])\",\n        unit=\"customers\", additive=True)\n\nemit(450)\n"
+  }
+}

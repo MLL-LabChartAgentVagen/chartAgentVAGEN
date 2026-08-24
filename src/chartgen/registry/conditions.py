@@ -20,12 +20,22 @@ from ..interfaces.figure import Binding
 from ..interfaces.table import (
     AGG_ADDITIVE, AGG_NON_ADDITIVE, Column, Family, TableSchema,
 )
-from .charts import CHARTS, SHAPE_AGGREGATES, ChartType, in_family, within
+from .charts import (
+    CHARTS, DEFAULT_BAND, SHAPE_AGGREGATES, ChartType, DensityBand,
+    bound_at, familyless, in_family, within,
+)
 
 #: Days one point covers at each frequency. Resampling divides the point count by
 #: the ratio between the two frequencies, never by the target alone: a column that
 #: is already monthly has its points counted in months.
-DAYS_PER_POINT: dict[str, int] = {"daily": 1, "weekly": 7, "monthly": 30}
+DAYS_PER_POINT: dict[str, int] = {"daily": 1, "weekly": 7, "monthly": 30,
+                                 "quarterly": 91, "yearly": 365}
+
+#: Frequencies to try, coarsest first. A figure built to show a trend is about the
+#: shape of the whole period, and the coarsest resampling that still clears the
+#: point floor is the one that shows it; the finer ones stay available to the
+#: rotation, which is looking for something different.
+RESAMPLE: tuple[str, ...] = ("yearly", "quarterly", "monthly", "weekly", "daily")
 
 
 @dataclass(frozen=True)
@@ -63,8 +73,13 @@ def _product(schema: TableSchema, names: Sequence[str]) -> int:
 
 # ---------------------------------------------------------------- the check
 
-def check(binding: Binding, schema: TableSchema) -> Check:
-    """Can this binding be drawn: roles, cardinality, semantics, aggregate."""
+def check(binding: Binding, schema: TableSchema,
+          *, density: DensityBand = DEFAULT_BAND) -> Check:
+    """Can this binding be drawn: roles, cardinality, semantics, aggregate.
+
+    `density` raises the ceiling on how many marks a figure may hold. The sparsest
+    band leaves every declared bound exactly as written.
+    """
     spec = CHARTS.get(binding.chart_type)
     if spec is None:
         return _no(f"no such chart type: {binding.chart_type}")
@@ -78,7 +93,7 @@ def check(binding: Binding, schema: TableSchema) -> Check:
 
     if (r := _roles(binding, spec, schema)) is not _OK:
         return r
-    if (r := _cardinality(binding, spec, schema)) is not _OK:
+    if (r := _cardinality(binding, spec, schema, density)) is not _OK:
         return r
     if (r := _semantics(binding, spec, schema)) is not _OK:
         return r
@@ -108,20 +123,23 @@ def _roles(binding: Binding, spec: ChartType, schema: TableSchema) -> Check:
     return _OK
 
 
-def _cardinality(binding: Binding, spec: ChartType, schema: TableSchema) -> Check:
+def _cardinality(binding: Binding, spec: ChartType, schema: TableSchema,
+                 density: DensityBand) -> Check:
     """Cardinality after grouping. With a time column it splits into points and series."""
     if binding.time:
         pts = _points(schema.column(binding.time), binding.resample)
-        if not within(pts, spec.points):
-            return _no(f"{spec.name} needs time points within {spec.points}, got {pts}")
+        bound = bound_at(spec.points, density)
+        if not within(pts, bound):
+            return _no(f"{spec.name} needs time points within {bound}, got {pts}")
         series = _product(schema, binding.dims)
         if not within(series, spec.series):
             return _no(f"{spec.name} needs series within {spec.series}, got {series}")
         return _OK
     if binding.dims:
         card = _product(schema, binding.dims)
-        if not within(card, spec.card):
-            return _no(f"{spec.name} needs cardinality within {spec.card}, got {card}")
+        bound = bound_at(spec.card, density)
+        if not within(card, bound):
+            return _no(f"{spec.name} needs cardinality within {bound}, got {card}")
     return _OK
 
 
@@ -164,7 +182,8 @@ def _aggregate(binding: Binding, spec: ChartType, schema: TableSchema) -> Check:
 
 def iter_bindings(chart_type: str, schema: TableSchema, *,
                   columns: Sequence[str] | None = None,
-                  aggregate: str | None = None) -> Iterator[Binding]:
+                  aggregate: str | None = None,
+                  density: DensityBand = DEFAULT_BAND) -> Iterator[Binding]:
     """Yield bindings that pass `check`, lazily and in a fixed order.
 
     Nothing is projected or evaluated and no candidate list is built: the caller
@@ -184,13 +203,14 @@ def iter_bindings(chart_type: str, schema: TableSchema, *,
             for time in ((None,) if spec.n_time[0] == 0 else ()) + times:
                 if time is not None and not within(1, spec.n_time):
                     continue
-                for n_m in _counts(spec.n_measure, len(measures)):
-                    for ms in permutations(measures, n_m):
-                        for agg in aggs:
-                            b = Binding(chart_type, dims=dims, time=time,
-                                        measures=ms, aggregate=agg)
-                            if check(b, schema).ok:
-                                yield b
+                for resample in (RESAMPLE if time is not None else (None,)):
+                    for n_m in _counts(spec.n_measure, len(measures)):
+                        for ms in permutations(measures, n_m):
+                            for agg in aggs:
+                                b = Binding(chart_type, dims=dims, time=time,
+                                            measures=ms, aggregate=agg, resample=resample)
+                                if check(b, schema, density=density).ok:
+                                    yield b
 
 
 def _counts(bound, available: int) -> range:
@@ -199,23 +219,29 @@ def _counts(bound, available: int) -> range:
     return range(lo, hi + 1)
 
 
-def iter_bindings_for_family(family: Family, schema: TableSchema, *,
+def iter_bindings_for_family(family: Family | None, schema: TableSchema, *,
                              columns: Sequence[str] | None = None,
                              aggregate: str | None = None,
-                             max_tier: int = 3) -> Iterator[Binding]:
-    """Walk a family type by type, in tie-break order."""
-    for spec in in_family(family):
+                             max_tier: int = 3,
+                             density: DensityBand = DEFAULT_BAND) -> Iterator[Binding]:
+    """Walk a family type by type, in tie-break order. `None` walks the types that
+    answer no view class, which is the only way anything reaches them."""
+    for spec in (familyless() if family is None else in_family(family)):
         if spec.tier > max_tier:
             continue
-        yield from iter_bindings(spec.name, schema, columns=columns, aggregate=aggregate)
+        yield from iter_bindings(spec.name, schema, columns=columns,
+                                 aggregate=aggregate, density=density)
 
 
-def family_nonempty(family: Family, schema: TableSchema, max_tier: int = 3) -> bool:
+def family_nonempty(family: Family, schema: TableSchema, max_tier: int = 3,
+                    density: DensityBand = DEFAULT_BAND) -> bool:
     """Whether this family holds any legal binding. Short-circuits."""
-    return next(iter_bindings_for_family(family, schema, max_tier=max_tier), None) is not None
+    return next(iter_bindings_for_family(family, schema, max_tier=max_tier,
+                                         density=density), None) is not None
 
 
-def coverage(schema: TableSchema, max_tier: int = 3) -> dict[str, bool]:
+def coverage(schema: TableSchema, max_tier: int = 3,
+             density: DensityBand = DEFAULT_BAND) -> dict[str, bool]:
     """Which families are non-empty for this schema. Needs no data."""
     from .charts import FAMILIES
-    return {f: family_nonempty(f, schema, max_tier) for f in FAMILIES}
+    return {f: family_nonempty(f, schema, max_tier, density) for f in FAMILIES}

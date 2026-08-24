@@ -17,13 +17,13 @@ from .cache import ResponseCache
 from .client import LLM
 from .embed import Deduper, cosine
 from .parse import ParseError, extract_json, validate
-from .providers import DEFAULT_MODEL, Provider, provider_for
+from .providers import DEFAULT_MODEL, Provider, provider_for, reachable
 from .types import Image, LLMError, Message, Refusal, Response, Truncated, Usage
 
 __all__ = [
     "LLM", "Message", "Image", "Response", "Usage", "Provider", "AnthropicProvider",
     "OpenAIProvider", "GeminiProvider", "provider_for",
-    "DEFAULT_MODEL", "ResponseCache", "Deduper", "cosine",
+    "DEFAULT_MODEL", "ResponseCache", "Deduper", "cosine", "reachable",
     "extract_json", "validate", "ParseError", "LLMError", "Refusal", "Truncated",
 ]
 

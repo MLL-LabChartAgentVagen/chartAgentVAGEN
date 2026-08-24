@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 5,
   "type": "RenderOutput",
   "data": {
     "figure_id": "f01",
@@ -11,31 +11,48 @@
     ],
     "style": {
       "value_labels": "none",
+      "value_label_rotation": 0.0,
+      "unit_placement": "axis_title",
+      "footnote_marker": false,
       "legend_placement": "outside",
-      "panel_gap": 0.08,
+      "panel_gap": 0.1,
       "repeat_shared_ticks": false,
+      "series_name_beside_line": false,
+      "note_box": false,
+      "panel_bg": "white",
+      "title_placement": "above",
       "panel_types": "same",
       "number_format": "plain",
       "decimals": 1,
+      "time_tick_format": "iso",
       "palette": "corporate_low",
+      "highlight_single": false,
       "edge_width": 0.8,
       "shadow": false,
       "pseudo_3d": false,
+      "hatch": null,
       "gridlines": true,
       "font_family": "auto",
       "font_size": 11.0,
       "bar_width": 0.432,
-      "hatch": null,
       "donut": false,
+      "orientation": "vertical",
+      "series_marks": null,
       "zero_baseline": true,
+      "zero_line": false,
       "tick_density": "normal",
       "label_rotation": 0.0,
       "log_scale": false,
+      "dual_axis": false,
+      "axis_title_above": false,
+      "two_level_x_labels": false,
+      "category_label_wrap": false,
       "image_size": [
         900,
         600
       ],
       "dpi": 100,
+      "margins": "normal",
       "degradation": {
         "kind": "jpeg",
         "amount": 75
@@ -46,26 +63,46 @@
         "panel_id": "p0",
         "box": [
           96.0,
-          60.0,
-          860.0,
-          520.0
+          132.0,
+          820.0,
+          480.0
         ],
         "axes": [
+          {
+            "role": "x",
+            "value_range": [
+              -0.5,
+              2.5
+            ],
+            "pixel_range": [
+              96.0,
+              820.0
+            ],
+            "scale": "linear",
+            "column": "hospital",
+            "label": "",
+            "tick_rotation": 0.0
+          },
           {
             "role": "y",
             "value_range": [
               0.0,
-              60.0
+              50.0
             ],
             "pixel_range": [
-              520.0,
-              60.0
+              480.0,
+              132.0
             ],
             "scale": "linear",
-            "column": "wait_minutes"
+            "column": "wait_minutes",
+            "label": "",
+            "tick_rotation": 0.0
           }
         ],
-        "chart_type": "bar"
+        "chart_types": [
+          "bar"
+        ],
+        "circle": null
       }
     ],
     "marks": [
@@ -79,16 +116,23 @@
           "value": 42.3
         },
         "box": [
-          168.0,
-          196.0,
-          278.0,
-          520.0
+          165.0,
+          186.0,
+          269.0,
+          480.0
         ],
         "channel": "length",
         "labeled": false,
         "label_box": null,
+        "label_text": "",
+        "value_axis": "y",
+        "mark_shape": "rect",
+        "key_src": [
+          "axis_tick"
+        ],
         "rows": null,
-        "readable": null
+        "readable": null,
+        "value_key": ""
       },
       {
         "mark_id": "m1",
@@ -100,16 +144,23 @@
           "value": 35.8
         },
         "box": [
-          423.0,
-          245.0,
-          533.0,
-          520.0
+          406.0,
+          231.0,
+          510.0,
+          480.0
         ],
         "channel": "length",
         "labeled": false,
         "label_box": null,
+        "label_text": "",
+        "value_axis": "y",
+        "mark_shape": "rect",
+        "key_src": [
+          "axis_tick"
+        ],
         "rows": null,
-        "readable": null
+        "readable": null,
+        "value_key": ""
       },
       {
         "mark_id": "m2",
@@ -121,16 +172,23 @@
           "value": 28.1
         },
         "box": [
-          678.0,
-          305.0,
-          788.0,
-          520.0
+          647.0,
+          284.0,
+          751.0,
+          480.0
         ],
         "channel": "length",
         "labeled": false,
         "label_box": null,
+        "label_text": "",
+        "value_axis": "y",
+        "mark_shape": "rect",
+        "key_src": [
+          "axis_tick"
+        ],
         "rows": null,
-        "readable": null
+        "readable": null,
+        "value_key": ""
       }
     ],
     "legend": [],
@@ -142,7 +200,64 @@
           900.0,
           600.0
         ],
-        "category": "Picture"
+        "category": "Picture",
+        "text": "",
+        "panel_id": ""
+      },
+      {
+        "box": [
+          96.0,
+          14.0,
+          180.0,
+          32.0
+        ],
+        "category": "figure_number",
+        "text": "Figure 3",
+        "panel_id": ""
+      },
+      {
+        "box": [
+          96.0,
+          34.0,
+          620.0,
+          56.0
+        ],
+        "category": "title",
+        "text": "Emergency department wait times by hospital",
+        "panel_id": ""
+      },
+      {
+        "box": [
+          96.0,
+          58.0,
+          460.0,
+          76.0
+        ],
+        "category": "subtitle",
+        "text": "Average per visit, Jan-Jun 2024",
+        "panel_id": ""
+      },
+      {
+        "box": [
+          96.0,
+          78.0,
+          170.0,
+          94.0
+        ],
+        "category": "unit",
+        "text": "minutes",
+        "panel_id": ""
+      },
+      {
+        "box": [
+          96.0,
+          560.0,
+          520.0,
+          578.0
+        ],
+        "category": "source",
+        "text": "Source: county hospital admissions register",
+        "panel_id": ""
       }
     ],
     "degradations": [
@@ -150,6 +265,9 @@
         "kind": "jpeg",
         "amount": 75
       }
-    ]
+    ],
+    "page_id": "pg01",
+    "variant": 0,
+    "caption": ""
   }
 }

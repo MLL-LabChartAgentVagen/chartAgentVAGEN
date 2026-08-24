@@ -4,11 +4,13 @@ import ast
 import inspect
 from pathlib import Path
 
+from dataclasses import replace
+
 import pytest
 
 from chartgen.common import serde
 from chartgen.interfaces.figure import Binding
-from chartgen.interfaces.table import Column, DimGroup, IntentBinding, TableSchema
+from chartgen.interfaces.table import Column, TableSchema
 from chartgen.registry import conditions as C
 
 
@@ -76,6 +78,19 @@ class TestStructuralConditions:
         assert not C.check(bind("line", dims=("hospital",), measures=("wait_minutes",),
                                 aggregate="AVG"), er).ok
 
+    def test_a_type_that_takes_no_time_column_refuses_one(self, er):
+        """The count of time columns is checked in both directions. Checked in one,
+        a bar drawn against a date axis passes the structural gate and is rejected
+        much later, by the projection, as a chart with hundreds of categories."""
+        assert C.check(bind("bar", dims=("hospital",), measures=("wait_minutes",),
+                            aggregate="AVG"), er).ok
+        assert not C.check(bind("bar", dims=("hospital",), time="visit_date",
+                                measures=("wait_minutes",), aggregate="AVG"), er).ok
+
+    def test_a_type_that_needs_a_time_column_refuses_to_go_without(self, er):
+        assert not C.check(bind("windsock", dims=("hospital",),
+                                measures=("wait_minutes",), aggregate="FIVE_NUM"), er).ok
+
     def test_a_monthly_column_counts_its_points_in_months(self):
         """Counting a monthly column's points as if they were days emptied the
         whole trend family for every scenario that is not daily."""
@@ -113,16 +128,32 @@ class TestStructuralConditions:
                             aggregate="NONE"), er).ok
         assert not C.check(bind("scatter", measures=("wait_minutes",), aggregate="NONE"), er).ok
 
-    def test_compound_takes_one_grouping_column_and_two_measures(self, er):
-        assert C.check(bind("compound", dims=("hospital",),
-                            measures=("wait_minutes", "cost"), aggregate="AVG"), er).ok
-        assert not C.check(bind("compound", dims=("hospital", "department"),
-                                measures=("wait_minutes", "cost"), aggregate="AVG"), er).ok
-
-    def test_compound_rejects_the_same_measure_twice(self, er):
-        assert not C.check(bind("compound", dims=("hospital",),
-                                measures=("wait_minutes", "wait_minutes"),
+    def test_a_range_bar_reuses_the_five_number_projection(self, er):
+        """Two rectangles' worth of edges come out of the same five numbers a box
+        plot uses, so there is no RANGE aggregate to invent."""
+        assert C.check(bind("range_bar", dims=("hospital",), measures=("wait_minutes",),
+                            aggregate="FIVE_NUM"), er).ok
+        assert not C.check(bind("range_bar", dims=("hospital",), measures=("wait_minutes",),
                                 aggregate="AVG"), er).ok
+
+    def test_a_windsock_needs_a_time_column_and_no_category(self, er):
+        assert C.check(bind("windsock", time="visit_date", measures=("wait_minutes",),
+                            aggregate="FIVE_NUM", resample="monthly"), er).ok
+        assert not C.check(bind("windsock", dims=("hospital",), time="visit_date",
+                                measures=("wait_minutes",), aggregate="FIVE_NUM"), er).ok
+
+    def test_a_table_chart_answers_no_view_class_so_no_family_reaches_it(self, er):
+        from chartgen.registry.charts import CHARTS, FAMILIES, familyless, in_family
+
+        assert CHARTS["table_chart"].family is None
+        assert "table_chart" in {c.name for c in familyless()}
+        assert all("table_chart" not in {c.name for c in in_family(f)} for f in FAMILIES)
+        assert C.check(bind("table_chart", dims=("department",), measures=("wait_minutes",),
+                            aggregate="AVG"), er).ok
+
+    def test_the_family_walk_reaches_the_family_less_types_through_none(self, er):
+        got = list(C.iter_bindings_for_family(None, er))
+        assert got and {b.chart_type for b in got} == {"category_line", "table_chart"}
 
 
 class TestSemanticConditions:
@@ -216,12 +247,22 @@ class TestCoverage:
 
     def test_tier_limit_shrinks_coverage(self, er):
         assert C.family_nonempty("distribution", er, max_tier=1)      # histogram
-        one_measure = TableSchema("s", "t", "c", columns=(
+        no_category = TableSchema("s", "t", "c", columns=(
+            Column("wait", "measure", 40, unit="minutes", additive=True),
+        ), n_rows=40)
+        # A histogram needs a hundred source rows and nothing else at tier one can
+        # group forty rows without a category column.
+        assert not C.family_nonempty("distribution", no_category, max_tier=1)
+        assert not C.family_nonempty("distribution", no_category, max_tier=2)
+
+    def test_a_range_bar_covers_distribution_at_tier_one_where_only_a_box_used_to(self):
+        few_rows = TableSchema("s", "t", "c", columns=(
             Column("hospital", "category", 3, values=("Mercy General", "St. Luke's", "Riverside")),
             Column("wait", "measure", 40, unit="minutes", additive=True),
         ), n_rows=40)
-        assert not C.family_nonempty("distribution", one_measure, max_tier=1)   # too few rows
-        assert C.family_nonempty("distribution", one_measure, max_tier=2)       # a box plot fits
+        assert C.family_nonempty("distribution", few_rows, max_tier=1)
+        first = next(C.iter_bindings_for_family("distribution", few_rows, max_tier=1))
+        assert first.chart_type == "range_bar"
 
 
 class TestDeterministicBindings:
@@ -269,21 +310,54 @@ class TestStaticGuarantees:
 
         for c in CHARTS.values():
             assert c.value_keys, c.name
-            assert set(c.value_keys) <= SHAPE_VALUE_KEYS[c.mark], c.name
+            for shape in c.mark:
+                assert set(c.value_keys) <= SHAPE_VALUE_KEYS[shape], c.name
 
-    def test_every_type_aggregate_set_matches_its_shape(self):
+    def test_a_type_accepts_exactly_the_aggregates_its_shape_declares(self, er):
+        """The shape decides the aggregate set, and `check` is what enforces it. A
+        five-number shape takes FIVE_NUM and nothing else; a scalar shape takes the
+        six that return one number and none of the three that name a shape."""
         from chartgen.registry.charts import CHARTS, SHAPE_AGGREGATES
+        from chartgen.interfaces.table import Aggregate
 
-        for c in CHARTS.values():
-            assert SHAPE_AGGREGATES[c.shape], c.name
+        every = {a for group in SHAPE_AGGREGATES.values() for a in group}
+        for name, spec in CHARTS.items():
+            allowed = set(SHAPE_AGGREGATES[spec.shape])
+            assert allowed, name
+            legal = next((b for b in C.iter_bindings(name, er)), None)
+            if legal is None:
+                continue                    # this schema cannot draw the type at all
+            for aggregate in every - allowed:
+                verdict = C.check(replace(legal, aggregate=aggregate), er)
+                assert not verdict, f"{name} accepted {aggregate}"
+                assert spec.shape in verdict.reason or "aggregate" in verdict.reason.lower()
 
-    def test_the_table_holds_thirteen_types_in_six_families(self):
+    def test_the_table_holds_seventeen_types_over_six_mark_shapes(self):
         from chartgen.registry.charts import CHARTS, FAMILIES
 
-        assert len(CHARTS) == 13
+        assert len(CHARTS) == 17
         assert {c.family for c in CHARTS.values()} == {*FAMILIES, None}
-        assert len({c.mark for c in CHARTS.values()}) == 5
+        assert len({shape for c in CHARTS.values() for shape in c.mark}) == 6
         assert {c.tier for c in CHARTS.values()} == {1, 2}
+
+    def test_every_cell_of_the_shape_product_is_either_filled_or_explained(self):
+        """The table is the product of a projection shape and a mark shape. A gap
+        is found by reading the grid, not by noticing it in someone else's data."""
+        from chartgen.registry.charts import CHARTS, GRID, SHAPE_AGGREGATES, SHAPE_VALUE_KEYS
+
+        cells = {(shape, mark) for shape in SHAPE_AGGREGATES for mark in SHAPE_VALUE_KEYS}
+        assert set(GRID) == cells
+        for cell, entry in GRID.items():
+            assert isinstance(entry, (tuple, str)) and entry, cell
+        filled = {t for e in GRID.values() if isinstance(e, tuple) for t in e}
+        assert filled == set(CHARTS)
+
+    def test_a_type_sits_in_the_cell_its_own_fields_put_it_in(self):
+        from chartgen.registry.charts import CHARTS, GRID
+
+        for c in CHARTS.values():
+            entry = GRID[(c.shape, c.primary_mark)]
+            assert isinstance(entry, tuple) and c.name in entry, c.name
 
     def test_every_family_has_at_least_one_type(self):
         from chartgen.registry.charts import FAMILIES, in_family

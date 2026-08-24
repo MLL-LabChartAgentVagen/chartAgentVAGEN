@@ -1,5 +1,8 @@
 """Human-readable views of what a stage produced: a terminal summary and a diagram page.
 
+One section per stage. A new stage adds a section here rather than a script of its
+own, so that whatever a run produced can be read without knowing which tool to run.
+
 A table schema holds three graphs that JSON hides: the dimension hierarchies (a
 forest), the dependencies between numeric columns (a directed graph), and which
 analysis intent points at which columns. `page()` writes all three as Mermaid,
@@ -13,7 +16,10 @@ every schema it saves, so a run always leaves something to look at.
 from __future__ import annotations
 
 from pathlib import Path
+from typing import Sequence
 
+from .interfaces.figure import FigureSpec
+from .interfaces.record import Record
 from .interfaces.table import Column, FactTable, TableSchema
 from .s01_data.validate import densest_cross, feasibility
 
@@ -70,6 +76,23 @@ def intents(schema: TableSchema) -> str:
     return "\n".join(lines)
 
 
+def origin_line(schema: TableSchema) -> list[str]:
+    """Which entry of the domain pool this scenario was written for.
+
+    Worth a line of its own because nothing else says it: the title is the model's
+    and names neither the sub-topic nor the tier it was drawn under, so without this
+    a batch cannot be described as covering one part of the pool and not another.
+    """
+    origin = schema.origin
+    if not origin.domain:
+        return []
+    cell = " / ".join(x for x in (origin.subject, origin.register) if x)
+    return ["", f"Drawn from `{origin.domain_id}` {origin.domain} "
+                f"-- {origin.topic}"
+                + (f" ({cell})" if cell else "")
+                + f", {origin.complexity_tier}"]
+
+
 def markdown(schema: TableSchema, *, max_tier: int = 3) -> str:
     """The three diagrams, plus the two numbers that decide whether a scenario is
     worth rendering: which chart families it can draw, and how thinly its rows
@@ -83,6 +106,7 @@ def markdown(schema: TableSchema, *, max_tier: int = 3) -> str:
     return "\n".join([
         f"# {schema.scenario_title}", "", schema.data_context, "",
         f"`{schema.scenario_id}` -- {schema.n_rows} rows, {len(schema.columns)} columns",
+        *origin_line(schema),
         "", "## Dimensions", "", "```mermaid", hierarchy(schema), "```",
         "", "## Numeric columns", "", "```mermaid", dependencies(schema), "```",
         "", "## Intents", "", "```mermaid", intents(schema), "```",
@@ -132,7 +156,13 @@ def summary(table: FactTable, schema: TableSchema, *, max_tier: int = 3) -> str:
     it declared, the intents it bound, what those declarations can draw, and the
     first rows of the table that came out."""
     drawable = feasibility(schema, max_tier=max_tier)
-    lines = [f"scenario   {schema.scenario_title}", f"           {schema.data_context}", ""]
+    lines = [f"scenario   {schema.scenario_title}", f"           {schema.data_context}"]
+    if schema.origin.domain:
+        cell = " / ".join(x for x in (schema.origin.subject, schema.origin.register) if x)
+        lines.append(f"drawn from {schema.origin.domain} "
+                     f"({', '.join(x for x in (schema.origin.topic, cell,
+                                               schema.origin.complexity_tier) if x)})")
+    lines.append("")
     for group in schema.groups:
         parts = [f"{n}({schema.column(n).cardinality})" for n in group.columns]
         chain = all(schema.column(b).parent == a
@@ -154,3 +184,146 @@ def summary(table: FactTable, schema: TableSchema, *, max_tier: int = 3) -> str:
         "", f"table      {table.n_rows} rows x {len(table.df.columns)} columns",
         table.df.head(PREVIEW_ROWS).to_string(index=False)]
     return "\n".join(lines)
+
+
+# ---------------------------------------------------------------- view selection
+
+def figure_flow(specs: Sequence["FigureSpec"]) -> str:
+    """How each figure was chosen: from an intent, from an anchor, or by drawing."""
+    lines = ["flowchart LR"]
+    for spec in specs:
+        label = "<br/>".join(dict.fromkeys(spec.chart_types))
+        lines.append(f'  {spec.figure_id}["{spec.figure_id}<br/>{label}"]')
+    for spec in specs:
+        if spec.source.kind == "intent" and spec.source.intent_index is not None:
+            node = f"i{spec.source.intent_index}"
+            lines.append(f'  {node}(["intent {spec.source.intent_index + 1}"])')
+            lines.append(f"  {node} --> {spec.figure_id}")
+        elif spec.source.anchor_figure_id:
+            lines.append(f"  {spec.source.anchor_figure_id} -.{spec.relation}.-> "
+                         f"{spec.figure_id}")
+        else:
+            lines.append(f'  r(["rotation"]) --> {spec.figure_id}')
+    return "\n".join(lines)
+
+
+def figure_table(specs: Sequence["FigureSpec"]) -> list[str]:
+    rows = ["| figure | chosen by | relation | layout | types | marks | keys read from |",
+            "|---|---|---|---|---|---|---|"]
+    for spec in specs:
+        marks = sum(len(v.data) for v in spec.views)
+        sources = sorted({s for v in spec.views for d in v.data for s in v.key_src(d)})
+        rows.append(f"| {spec.figure_id} | {spec.source.kind} | {spec.relation or '-'} | "
+                    f"{spec.layout} | {', '.join(dict.fromkeys(spec.chart_types))} | "
+                    f"{marks} | {', '.join(sources)} |")
+    return rows
+
+
+def figure_summary(specs: Sequence["FigureSpec"], log: dict | None = None) -> str:
+    """What view selection produced, and what it turned away."""
+    out = ["## Figures", "", *figure_table(specs), "",
+           "```mermaid", figure_flow(specs), "```", ""]
+    if log:
+        counts = log.get("counts", {})
+        out += ["| path | figures |", "|---|---|"]
+        out += [f"| {k} | {v} |" for k, v in counts.items()]
+        out += ["", f"Density band `{log.get('density_band')}`, family weights "
+                    f"`{(log.get('family_weights') or {}).get('preset')}`, "
+                    f"titles {'; '.join(log.get('titles') or ['not written'])}.", ""]
+        if layout := log.get("layout"):
+            out += ["| layout | figures |", "|---|---|"]
+            out += [f"| {k.replace('_', ' ')} | {v} |" for k, v in layout.items()] + [""]
+        if log.get("rejected"):
+            out += ["Candidates turned away:", ""]
+            out += [f"- {k}: {v}" for k, v in log["rejected"].items()]
+            out.append("")
+        if log.get("skipped"):
+            out += ["Nothing produced by:", ""] + [f"- {s}" for s in log["skipped"]] + [""]
+    return "\n".join(out)
+
+
+# ---------------------------------------------------------------- records
+
+def readability_by_type(records: Sequence["Record"]) -> list[str]:
+    """How many marks keep a value target, per chart type.
+
+    Low is the expected reading for an angle or a colour, and for anything drawn
+    densely. It is reported per type so that a figure carrying no value targets is
+    read as the rule working rather than as a figure that failed.
+    """
+    tally: dict[str, tuple[int, int]] = {}
+    for record in records:
+        for panel in record.panels:
+            for chart_type in panel.chart_types:
+                marks = [m for m in record.marks if m.panel_id == panel.panel_id]
+                seen, ok = tally.get(chart_type, (0, 0))
+                tally[chart_type] = (seen + len(marks),
+                                     ok + sum(1 for m in marks if m.readable))
+    rows = ["| chart type | marks | value targets | share |", "|---|---|---|---|"]
+    for name, (seen, ok) in sorted(tally.items()):
+        rows.append(f"| {name} | {seen} | {ok} | {ok / seen:.0%} |" if seen else
+                    f"| {name} | 0 | 0 | - |")
+    return rows
+
+
+def record_summary(records: Sequence["Record"],
+                   dropped: Sequence[tuple[str, str]] = ()) -> str:
+    """The self-checks, and what came through them."""
+    rows = ["| figure | marks | value targets | box content | value readback | restyled |",
+            "|---|---|---|---|---|---|"]
+    verdict = lambda v: {True: "pass", False: "FAIL", None: "not run"}[v]
+    for record in records:
+        readable = sum(1 for m in record.marks if m.readable)
+        s = record.selfcheck
+        rows.append(f"| {record.figure_id} v{record.variant} | {len(record.marks)} | {readable} | "
+                    f"{verdict(s.box_content)} | {verdict(s.value_readback)} | "
+                    f"{verdict(s.style_invariant)} |")
+    out = ["## Records", "", *rows, "", "### Value targets by chart type", "",
+           *readability_by_type(records), ""]
+    if dropped:
+        out += ["### Figures discarded", ""]
+        out += [f"- `{name}`: {why}" for name, why in dropped] + [""]
+    return "\n".join(out)
+
+
+# ---------------------------------------------------------------- targets
+
+def target_summary(records: Sequence["Record"], key_scope: str = "mark") -> str:
+    """How much of each training target one batch yields."""
+    from .s05_output.export import TARGETS, build
+
+    units = [build(r, key_scope=key_scope) for r in records]
+    rows = ["| target | entries |", "|---|---|"]
+    for name in (*TARGETS, "key_source"):
+        if name == "caption":
+            rows.append(f"| caption | {sum(1 for u in units if u.caption)} |")
+            continue
+        rows.append(f"| {name} | {sum(len(getattr(u, name, [])) for u in units)} |")
+    example = next((u for u in units if u.grounded_table), None)
+    out = ["## Training targets", "", f"Key scope `{key_scope}`.", "", *rows, ""]
+    if example is not None:
+        row = example.grounded_table[0]
+        out += ["One row of one figure, seen through six of them:", "", "```",
+                f"record      key={row['key']} values={row['values']} "
+                f"box={row['box']} rows={row['rows']} readable={row['readable']}",
+                *[f"{name:12s}{_first(getattr(example, name, []))}"
+                  for name in ("grounded_table", "spot_check", "mark_locate",
+                               "mark_read", "drilldown", "page_elements")],
+                f"{'caption':12s}{example.caption[:110]}", "```", ""]
+    return "\n".join(out)
+
+
+def _first(entries) -> str:
+    return str(entries[0]) if entries else "(none)"
+
+
+# ---------------------------------------------------------------- the whole run
+
+def run_summary(stats: dict) -> str:
+    rows = ["| | |", "|---|---|"]
+    rows += [f"| {k} | {v} |" for k, v in stats.items() if k != "reasons"]
+    out = ["## Run", "", *rows, ""]
+    if stats.get("reasons"):
+        out += ["What stopped a figure or a candidate:", ""]
+        out += [f"- {k}: {v}" for k, v in stats["reasons"].items()] + [""]
+    return "\n".join(out)

@@ -1,0 +1,273 @@
+{
+  "schema_version": 5,
+  "type": "TableSchema",
+  "data": {
+    "scenario_id": "s003",
+    "scenario_title": "Monthly construction cost indices and building permit issuances across regional markets by the National Statistics Bureau, 2022–2024",
+    "data_context": "The National Statistics Bureau compiled monthly construction producer price indices, component input costs, and municipal building permit authorizations from January 2022 to June 2024. The data was collected under the national economic surveillance framework to evaluate cost push pressures, tracking how escalating material prices versus rising unionized labour rates affect residential and commercial building activity across macro-regions.",
+    "columns": [
+      {
+        "name": "country_zone",
+        "kind": "category",
+        "cardinality": 2,
+        "group": "geography",
+        "parent": null,
+        "ordered": null,
+        "values": [
+          "North & East",
+          "South & West"
+        ],
+        "unit": null,
+        "additive": null,
+        "freq": null,
+        "start": null,
+        "end": null,
+        "derived_from": null
+      },
+      {
+        "name": "region",
+        "kind": "category",
+        "cardinality": 4,
+        "group": "geography",
+        "parent": "country_zone",
+        "ordered": null,
+        "values": [
+          "Northern Metro",
+          "Eastern Industrial",
+          "Southern Coastal",
+          "Western Uplands"
+        ],
+        "unit": null,
+        "additive": null,
+        "freq": null,
+        "start": null,
+        "end": null,
+        "derived_from": null
+      },
+      {
+        "name": "sector",
+        "kind": "category",
+        "cardinality": 2,
+        "group": "sector_hierarchy",
+        "parent": null,
+        "ordered": null,
+        "values": [
+          "Residential",
+          "Non-Residential"
+        ],
+        "unit": null,
+        "additive": null,
+        "freq": null,
+        "start": null,
+        "end": null,
+        "derived_from": null
+      },
+      {
+        "name": "building_type",
+        "kind": "category",
+        "cardinality": 4,
+        "group": "sector_hierarchy",
+        "parent": "sector",
+        "ordered": null,
+        "values": [
+          "Single-Family Houses",
+          "Multi-Family Apartments",
+          "Commercial & Retail",
+          "Industrial & Logistics"
+        ],
+        "unit": null,
+        "additive": null,
+        "freq": null,
+        "start": null,
+        "end": null,
+        "derived_from": null
+      },
+      {
+        "name": "report_month",
+        "kind": "time",
+        "cardinality": 30,
+        "group": "calendar",
+        "parent": null,
+        "ordered": null,
+        "values": [],
+        "unit": null,
+        "additive": null,
+        "freq": "monthly",
+        "start": "2022-01-01",
+        "end": "2024-06-01",
+        "derived_from": null
+      },
+      {
+        "name": "quarter",
+        "kind": "category",
+        "cardinality": 10,
+        "group": "calendar",
+        "parent": null,
+        "ordered": "ordinal",
+        "values": [
+          "2022-Q1",
+          "2022-Q2",
+          "2022-Q3",
+          "2022-Q4",
+          "2023-Q1",
+          "2023-Q2",
+          "2023-Q3",
+          "2023-Q4",
+          "2024-Q1",
+          "2024-Q2"
+        ],
+        "unit": null,
+        "additive": null,
+        "freq": null,
+        "start": null,
+        "end": null,
+        "derived_from": "report_month"
+      },
+      {
+        "name": "material_cost_index",
+        "kind": "measure",
+        "cardinality": 720,
+        "group": null,
+        "parent": null,
+        "ordered": null,
+        "values": [],
+        "unit": "index (2021=100)",
+        "additive": false,
+        "freq": null,
+        "start": null,
+        "end": null,
+        "derived_from": null
+      },
+      {
+        "name": "labour_cost_index",
+        "kind": "measure",
+        "cardinality": 720,
+        "group": null,
+        "parent": null,
+        "ordered": null,
+        "values": [],
+        "unit": "index (2021=100)",
+        "additive": false,
+        "freq": null,
+        "start": null,
+        "end": null,
+        "derived_from": null
+      },
+      {
+        "name": "cost_growth_gap",
+        "kind": "measure",
+        "cardinality": 720,
+        "group": null,
+        "parent": null,
+        "ordered": null,
+        "values": [],
+        "unit": "percentage points",
+        "additive": false,
+        "freq": null,
+        "start": null,
+        "end": null,
+        "derived_from": null
+      },
+      {
+        "name": "permits_issued",
+        "kind": "measure",
+        "cardinality": 720,
+        "group": null,
+        "parent": null,
+        "ordered": null,
+        "values": [],
+        "unit": "permits",
+        "additive": true,
+        "freq": null,
+        "start": null,
+        "end": null,
+        "derived_from": null
+      }
+    ],
+    "groups": [
+      {
+        "name": "geography",
+        "columns": [
+          "country_zone",
+          "region"
+        ]
+      },
+      {
+        "name": "sector_hierarchy",
+        "columns": [
+          "sector",
+          "building_type"
+        ]
+      },
+      {
+        "name": "calendar",
+        "columns": [
+          "report_month",
+          "quarter"
+        ]
+      }
+    ],
+    "dependencies": [
+      [
+        "labour_cost_index",
+        "cost_growth_gap"
+      ],
+      [
+        "material_cost_index",
+        "cost_growth_gap"
+      ]
+    ],
+    "intents": [
+      {
+        "index": 0,
+        "sentence": "How did material and labour cost indices evolve over the two and a half year surveillance period",
+        "columns": [
+          "report_month",
+          "material_cost_index"
+        ],
+        "aggregate": "AVG",
+        "family": "trend"
+      },
+      {
+        "index": 1,
+        "sentence": "Which building types face the highest labour to material cost growth gap",
+        "columns": [
+          "building_type",
+          "cost_growth_gap"
+        ],
+        "aggregate": "AVG",
+        "family": "comparison"
+      },
+      {
+        "index": 2,
+        "sentence": "How does the volume of permits issued correlate with rising material cost indices",
+        "columns": [
+          "material_cost_index",
+          "permits_issued"
+        ],
+        "aggregate": "NONE",
+        "family": "relation"
+      },
+      {
+        "index": 3,
+        "sentence": "Total building permits issued across geographical regions",
+        "columns": [
+          "region",
+          "permits_issued"
+        ],
+        "aggregate": "SUM",
+        "family": "comparison"
+      }
+    ],
+    "n_rows": 720,
+    "script": "dim(\"country_zone\", [\"North & East\", \"South & West\"],\n    weights=[0.55, 0.45], group=\"geography\")\ndim(\"region\", [\"Northern Metro\", \"Eastern Industrial\", \"Southern Coastal\", \"Western Uplands\"],\n    parent=\"country_zone\",\n    weights={\"North & East\": [0.60, 0.40, 0.0, 0.0],\n             \"South & West\": [0.0, 0.0, 0.55, 0.45]},\n    group=\"geography\")\n\ndim(\"sector\", [\"Residential\", \"Non-Residential\"],\n    weights=[0.60, 0.40], group=\"sector_hierarchy\")\ndim(\"building_type\", [\"Single-Family Houses\", \"Multi-Family Apartments\", \"Commercial & Retail\", \"Industrial & Logistics\"],\n    parent=\"sector\",\n    weights={\"Residential\": [0.55, 0.45, 0.0, 0.0],\n             \"Non-Residential\": [0.0, 0.0, 0.50, 0.50]},\n    group=\"sector_hierarchy\")\n\ntime(\"report_month\", start=\"2022-01-01\", end=\"2024-06-01\", freq=\"monthly\")\n\nmeasure(\"material_cost_index\",\n        \"108.0 + 0.015 * report_month + 5.5 * [sector=Residential] + 3.8 * [country_zone=North & East] + gaussian(0, 2.2)\",\n        unit=\"index (2021=100)\", additive=False)\nmeasure(\"labour_cost_index\",\n        \"102.0 + 0.024 * report_month + 3.2 * [sector=Non-Residential] + 4.5 * [region=Northern Metro] + gaussian(0, 1.8)\",\n        unit=\"index (2021=100)\", additive=False)\nmeasure(\"cost_growth_gap\",\n        \"labour_cost_index - material_cost_index\",\n        unit=\"percentage points\", additive=False)\nmeasure(\"permits_issued\",\n        \"poisson(48 + 16 * [sector=Residential] + 12 * [region=Northern Metro] - 0.014 * report_month)\",\n        unit=\"permits\", additive=True)\n\nemit(720)",
+    "origin": {
+      "domain_id": "dom_0582",
+      "domain": "Labour vs material cost drivers in construction costs",
+      "topic": "industry and technology: building permits issued, dwellings completed and construction cost indices by building type, region and quarter",
+      "subject": "industry and technology",
+      "register": "official_statistics",
+      "complexity_tier": "medium"
+    }
+  }
+}

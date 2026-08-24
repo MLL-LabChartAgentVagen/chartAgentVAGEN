@@ -1,0 +1,34 @@
+{
+  "scenario_title": "Parcel handling across six distribution sites in three regions, Jan-Jun 2024",
+  "data_context": "The network operations group pulled one record per outbound shift from six distribution sites for the first half of 2024, while a new night-shift roster was being trialled.",
+  "script": "dim(\"region\", [\"North\", \"South\", \"West\"], weights=[0.40, 0.35, 0.25], group=\"network\")\ndim(\"site\", [\"Aurora\", \"Brookfield\", \"Calder\", \"Dunmore\", \"Eastgate\", \"Fairmont\"],\n    parent=\"region\", group=\"network\",\n    weights={\"North\": [0.55, 0.45, 0, 0, 0, 0],\n             \"South\": [0, 0, 0.50, 0.50, 0, 0],\n             \"West\":  [0, 0, 0, 0, 0.60, 0.40]})\ndim(\"shift\", [\"Morning\", \"Afternoon\", \"Night\"], weights=[0.40, 0.40, 0.20],\n    ordered=\"ordinal\", group=\"schedule\")\n\ntime(\"ship_date\", start=\"2024-01-01\", end=\"2024-06-30\", freq=\"daily\")\n\nmeasure(\"parcels\",\n        \"poisson(lam = 120 + 40*[shift=Morning] - 30*[shift=Night] + 25*[region=North])\",\n        unit=\"units\", additive=True)\nmeasure(\"handling_cost\",\n        \"parcels * 1.8 + {Morning: 240, Afternoon: 190, Night: 320}[shift] + gaussian(0, 45)\",\n        unit=\"USD\", additive=True)\nmeasure(\"on_time_rate\",\n        \"clip(0.97 - parcels / 4200 - 0.05*[shift=Night] + gaussian(0, 0.02), 0, 1)\",\n        unit=\"rate\", additive=False)\n\nemit(1600)\n",
+  "intents": [
+    {
+      "sentence": "Which site handles the most parcels",
+      "columns": [
+        "site",
+        "parcels"
+      ],
+      "aggregate": "SUM",
+      "family": "comparison"
+    },
+    {
+      "sentence": "How handling cost moved through the half year",
+      "columns": [
+        "ship_date",
+        "handling_cost"
+      ],
+      "aggregate": "SUM",
+      "family": "trend"
+    },
+    {
+      "sentence": "Whether busier shifts arrive late",
+      "columns": [
+        "parcels",
+        "on_time_rate"
+      ],
+      "aggregate": "NONE",
+      "family": "relation"
+    }
+  ]
+}

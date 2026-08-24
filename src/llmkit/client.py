@@ -39,11 +39,12 @@ def _check(response: Response, max_tokens: int) -> None:
 class LLM:
     def __init__(self, model: str = DEFAULT_MODEL, *, provider: Provider | None = None,
                  max_tokens: int = 8000, effort: Effort | None = "high",
-                 cache_dir: str | Path | None = None,
+                 cache_dir: str | Path | None = None, token_ceiling: int = 32000,
                  max_content_retries: int = 3, extra: dict | None = None) -> None:
         self.model = model
         self.provider = provider or provider_for(model)
         self.max_tokens = max_tokens
+        self.token_ceiling = max(max_tokens, token_ceiling)
         self.effort = effort
         self.max_content_retries = max_content_retries
         self.extra = dict(extra or {})
@@ -63,13 +64,26 @@ class LLM:
             if hit is not None:
                 return hit
 
-        response = self.provider.complete(
-            model=self.model, system=system, messages=msgs,
-            max_tokens=self.max_tokens, effort=self.effort,
-            schema=schema, extra=self.extra)
-        with self._usage_lock:
-            self.usage = self.usage + response.usage
-        _check(response, self.max_tokens)          # declined and cut-off replies are not cached
+        budget = self.max_tokens
+        while True:
+            response = self.provider.complete(
+                model=self.model, system=system, messages=msgs,
+                max_tokens=budget, effort=self.effort,
+                schema=schema, extra=self.extra)
+            with self._usage_lock:
+                self.usage = self.usage + response.usage
+            try:
+                _check(response, budget)   # declined and cut-off replies are not cached
+            except Truncated:
+                # A cut-off reply is short of room, not wrong. The next attempt doubles
+                # the room and asks the same question; the reasoning a model spends
+                # before writing counts against this budget too, so a long declaration
+                # script can run out of it on a question that has a good answer.
+                if budget >= self.token_ceiling:
+                    raise
+                budget = min(budget * 2, self.token_ceiling)
+                continue
+            break
         if self.cache is not None:
             self.cache.put(key, response)
         return response
@@ -139,7 +153,9 @@ class LLM:
             # Image digests, not the bytes: the key is stored beside every cached
             # reply, so putting base64 in it would multiply the cache by its size.
             "messages": [[m.role, m.content, [im.digest for im in m.images]] for m in messages],
-            "max_tokens": self.max_tokens,
+            # `max_tokens` is deliberately absent: only complete replies are cached, so
+            # the budget that produced one says nothing about its content, and keying on
+            # it would throw the cache away every time the budget moved.
             "effort": self.effort,
             "schema": schema,
             "extra": self.extra,

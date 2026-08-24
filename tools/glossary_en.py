@@ -1,0 +1,1 @@
+GLOSSARY: dict[str, str] = {}

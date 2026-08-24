@@ -1,0 +1,148 @@
+{
+  "schema_version": 3,
+  "type": "FigureSpec",
+  "data": {
+    "figure_id": "f08",
+    "scenario_id": "funnel",
+    "panels": [
+      {
+        "panel_id": "p0",
+        "views": [
+          {
+            "binding": {
+              "chart_type": "waterfall",
+              "dims": [
+                "stage"
+              ],
+              "time": null,
+              "measures": [],
+              "aggregate": "COUNT",
+              "resample": null,
+              "colour_group": null,
+              "key_sources": [
+                "axis_tick"
+              ]
+            },
+            "data": [
+              {
+                "key": [
+                  "Landing"
+                ],
+                "values": {
+                  "value": 252.0,
+                  "cum_start": 0.0,
+                  "cum_end": 252.0
+                },
+                "rows": 252
+              },
+              {
+                "key": [
+                  "Product"
+                ],
+                "values": {
+                  "value": 177.0,
+                  "cum_start": 252.0,
+                  "cum_end": 429.0
+                },
+                "rows": 177
+              },
+              {
+                "key": [
+                  "Cart"
+                ],
+                "values": {
+                  "value": 135.0,
+                  "cum_start": 429.0,
+                  "cum_end": 564.0
+                },
+                "rows": 135
+              },
+              {
+                "key": [
+                  "Checkout"
+                ],
+                "values": {
+                  "value": 100.0,
+                  "cum_start": 564.0,
+                  "cum_end": 664.0
+                },
+                "rows": 100
+              },
+              {
+                "key": [
+                  "Purchase"
+                ],
+                "values": {
+                  "value": 61.0,
+                  "cum_start": 664.0,
+                  "cum_end": 725.0
+                },
+                "rows": 61
+              }
+            ],
+            "row_filter": {
+              "column": "event_date",
+              "start": "2024-01-01",
+              "end": "2024-02-15",
+              "label": "2024-01-01 to 2024-02-15"
+            },
+            "sample_index": [],
+            "key_prefix": [
+              "2024-01-01 to 2024-02-15"
+            ],
+            "prefix_source": [
+              "heading"
+            ]
+          }
+        ],
+        "texts": []
+      }
+    ],
+    "layout": "single",
+    "sharing": {
+      "share_x": false,
+      "share_y": false,
+      "share_legend": false,
+      "series_column": null
+    },
+    "relation": "time_split",
+    "source": {
+      "kind": "panel",
+      "intent_index": null,
+      "anchor_figure_id": "f01"
+    },
+    "column_units": {
+      "basket_value": "USD",
+      "dwell_seconds": "seconds",
+      "bounce_rate": "rate"
+    },
+    "column_names": {
+      "stage": "Stage",
+      "channel": "Channel",
+      "device": "Device",
+      "event_date": "Event Date",
+      "day_of_week": "Day Of Week",
+      "month": "Month",
+      "is_weekend": "Is Weekend",
+      "basket_value": "Basket Value",
+      "dwell_seconds": "Dwell Seconds",
+      "bounce_rate": "Bounce Rate"
+    },
+    "texts": [
+      {
+        "role": "title",
+        "text": "Count records by stage",
+        "scope": "figure",
+        "placement": "above"
+      },
+      {
+        "role": "subtitle",
+        "text": "2024-01-01 to 2024-02-15",
+        "scope": "figure",
+        "placement": "above"
+      }
+    ],
+    "page_id": "pg08",
+    "caption": "The number of records by Stage, the same view over two consecutive windows."
+  }
+}

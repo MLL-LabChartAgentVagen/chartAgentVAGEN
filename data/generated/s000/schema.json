@@ -1,0 +1,298 @@
+{
+  "schema_version": 2,
+  "type": "TableSchema",
+  "data": {
+    "scenario_id": "s000",
+    "scenario_title": "Weekly claim turnaround performance across four regional processing centers of a national health insurer, January-December 2024",
+    "data_context": "The claims operations analytics team of a national health insurer assembled this weekly batch-level extract covering all four regional processing centers for calendar year 2024. Each row is one weekly closing batch: a single center, claim type and submission channel combination that finished adjudication in that week. The data was pulled from the adjudication workflow log in January 2025 to support a service-level review, since the insurer had committed to a 14-day average turnaround and had rolled out an auto-adjudication rules engine at the start of the third quarter. Analysts wanted to know which centers were slow, whether electronic submissions really closed faster than paper, and whether turnaround was improving after the rollout.",
+    "columns": [
+      {
+        "name": "region",
+        "kind": "category",
+        "cardinality": 4,
+        "group": "org",
+        "parent": null,
+        "ordered": null,
+        "values": [
+          "Northeast",
+          "Midwest",
+          "South",
+          "West"
+        ],
+        "unit": null,
+        "additive": null,
+        "freq": null,
+        "start": null,
+        "end": null,
+        "derived_from": null
+      },
+      {
+        "name": "processing_center",
+        "kind": "category",
+        "cardinality": 7,
+        "group": "org",
+        "parent": "region",
+        "ordered": null,
+        "values": [
+          "Boston Hub",
+          "Albany Annex",
+          "Chicago Hub",
+          "Omaha Annex",
+          "Atlanta Hub",
+          "Dallas Annex",
+          "Phoenix Hub"
+        ],
+        "unit": null,
+        "additive": null,
+        "freq": null,
+        "start": null,
+        "end": null,
+        "derived_from": null
+      },
+      {
+        "name": "claim_type",
+        "kind": "category",
+        "cardinality": 4,
+        "group": "claim",
+        "parent": null,
+        "ordered": null,
+        "values": [
+          "Outpatient",
+          "Inpatient",
+          "Pharmacy",
+          "Dental"
+        ],
+        "unit": null,
+        "additive": null,
+        "freq": null,
+        "start": null,
+        "end": null,
+        "derived_from": null
+      },
+      {
+        "name": "submission_channel",
+        "kind": "category",
+        "cardinality": 3,
+        "group": "claim",
+        "parent": null,
+        "ordered": null,
+        "values": [
+          "Electronic",
+          "Portal",
+          "Paper"
+        ],
+        "unit": null,
+        "additive": null,
+        "freq": null,
+        "start": null,
+        "end": null,
+        "derived_from": null
+      },
+      {
+        "name": "week_closed",
+        "kind": "time",
+        "cardinality": 53,
+        "group": "calendar",
+        "parent": null,
+        "ordered": null,
+        "values": [],
+        "unit": null,
+        "additive": null,
+        "freq": "weekly",
+        "start": "2024-01-01",
+        "end": "2024-12-30",
+        "derived_from": null
+      },
+      {
+        "name": "month",
+        "kind": "category",
+        "cardinality": 12,
+        "group": "calendar",
+        "parent": null,
+        "ordered": "ordinal",
+        "values": [
+          "2024-01",
+          "2024-02",
+          "2024-03",
+          "2024-04",
+          "2024-05",
+          "2024-06",
+          "2024-07",
+          "2024-08",
+          "2024-09",
+          "2024-10",
+          "2024-11",
+          "2024-12"
+        ],
+        "unit": null,
+        "additive": null,
+        "freq": null,
+        "start": null,
+        "end": null,
+        "derived_from": "week_closed"
+      },
+      {
+        "name": "quarter",
+        "kind": "category",
+        "cardinality": 4,
+        "group": "calendar",
+        "parent": null,
+        "ordered": "ordinal",
+        "values": [
+          "2024-Q1",
+          "2024-Q2",
+          "2024-Q3",
+          "2024-Q4"
+        ],
+        "unit": null,
+        "additive": null,
+        "freq": null,
+        "start": null,
+        "end": null,
+        "derived_from": "week_closed"
+      },
+      {
+        "name": "claims_closed",
+        "kind": "measure",
+        "cardinality": 420,
+        "group": null,
+        "parent": null,
+        "ordered": null,
+        "values": [],
+        "unit": "claims/week",
+        "additive": true,
+        "freq": null,
+        "start": null,
+        "end": null,
+        "derived_from": null
+      },
+      {
+        "name": "mean_cycle_time_days",
+        "kind": "measure",
+        "cardinality": 420,
+        "group": null,
+        "parent": null,
+        "ordered": null,
+        "values": [],
+        "unit": "days",
+        "additive": false,
+        "freq": null,
+        "start": null,
+        "end": null,
+        "derived_from": null
+      },
+      {
+        "name": "pended_claims",
+        "kind": "measure",
+        "cardinality": 420,
+        "group": null,
+        "parent": null,
+        "ordered": null,
+        "values": [],
+        "unit": "claims/week",
+        "additive": true,
+        "freq": null,
+        "start": null,
+        "end": null,
+        "derived_from": null
+      },
+      {
+        "name": "auto_adjudication_rate",
+        "kind": "measure",
+        "cardinality": 420,
+        "group": null,
+        "parent": null,
+        "ordered": null,
+        "values": [],
+        "unit": "fraction",
+        "additive": false,
+        "freq": null,
+        "start": null,
+        "end": null,
+        "derived_from": null
+      }
+    ],
+    "groups": [
+      {
+        "name": "org",
+        "columns": [
+          "region",
+          "processing_center"
+        ]
+      },
+      {
+        "name": "claim",
+        "columns": [
+          "claim_type",
+          "submission_channel"
+        ]
+      },
+      {
+        "name": "calendar",
+        "columns": [
+          "week_closed",
+          "month",
+          "quarter"
+        ]
+      }
+    ],
+    "dependencies": [
+      [
+        "claims_closed",
+        "pended_claims"
+      ],
+      [
+        "mean_cycle_time_days",
+        "pended_claims"
+      ],
+      [
+        "mean_cycle_time_days",
+        "auto_adjudication_rate"
+      ]
+    ],
+    "intents": [
+      {
+        "index": 0,
+        "sentence": "Which processing center has the longest average claim turnaround time",
+        "columns": [
+          "processing_center",
+          "mean_cycle_time_days"
+        ],
+        "aggregate": "AVG",
+        "family": "comparison"
+      },
+      {
+        "index": 1,
+        "sentence": "How average turnaround time moved week by week and whether it dropped after the mid-year rules engine rollout",
+        "columns": [
+          "week_closed",
+          "mean_cycle_time_days"
+        ],
+        "aggregate": "AVG",
+        "family": "trend"
+      },
+      {
+        "index": 2,
+        "sentence": "Whether weeks with higher auto-adjudication rates show shorter cycle times",
+        "columns": [
+          "auto_adjudication_rate",
+          "mean_cycle_time_days"
+        ],
+        "aggregate": "NONE",
+        "family": "relation"
+      },
+      {
+        "index": 3,
+        "sentence": "How spread out weekly turnaround times are across submission channels and where the outlier weeks sit",
+        "columns": [
+          "submission_channel",
+          "mean_cycle_time_days"
+        ],
+        "aggregate": "MEDIAN",
+        "family": "distribution"
+      }
+    ],
+    "n_rows": 420,
+    "script": "dim(\"region\", [\"Northeast\", \"Midwest\", \"South\", \"West\"], weights=[0.28, 0.24, 0.27, 0.21], group=\"org\")\ndim(\"processing_center\", [\"Boston Hub\", \"Albany Annex\", \"Chicago Hub\", \"Omaha Annex\", \"Atlanta Hub\", \"Dallas Annex\", \"Phoenix Hub\"], parent=\"region\",\n    weights={\"Northeast\": [0.6, 0.4, 0.0, 0.0, 0.0, 0.0, 0.0],\n             \"Midwest\": [0.0, 0.0, 0.65, 0.35, 0.0, 0.0, 0.0],\n             \"South\": [0.0, 0.0, 0.0, 0.0, 0.55, 0.45, 0.0],\n             \"West\": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0]}, group=\"org\")\ndim(\"claim_type\", [\"Outpatient\", \"Inpatient\", \"Pharmacy\", \"Dental\"], weights=[0.38, 0.18, 0.29, 0.15], group=\"claim\")\ndim(\"submission_channel\", [\"Electronic\", \"Portal\", \"Paper\"], weights=[0.55, 0.28, 0.17], group=\"claim\")\n\ntime(\"week_closed\", start=\"2024-01-01\", end=\"2024-12-30\", freq=\"weekly\")\n\nmeasure(\"claims_closed\",\n        \"poisson(lam = 420 * {\\\"Boston Hub\\\": 1.3, \\\"Albany Annex\\\": 0.7, \\\"Chicago Hub\\\": 1.2, \\\"Omaha Annex\\\": 0.7, \\\"Atlanta Hub\\\": 1.25, \\\"Dallas Annex\\\": 0.8, \\\"Phoenix Hub\\\": 1.0}[processing_center]\"\n        \"      * {Outpatient: 1.0, Inpatient: 0.5, Pharmacy: 1.2, Dental: 0.6}[claim_type]\"\n        \"      * (1 + 0.10*sin(week_closed / 58.0)))\",\n        unit=\"claims/week\", additive=True)\nmeasure(\"mean_cycle_time_days\",\n        \"clip(lognormal(mu = 2.45 + 0.30*[claim_type=Inpatient] - 0.35*[claim_type=Pharmacy]\"\n        \"                    + 0.28*[submission_channel=Paper] + 0.08*[submission_channel=Portal]\"\n        \"                    + 0.12*[processing_center=Albany Annex] + 0.15*[processing_center=Omaha Annex]\"\n        \"                    - 0.06*[processing_center=Boston Hub]\"\n        \"                    - 0.18*where(week_closed > 182, 1, 0),\"\n        \"               sigma = 0.22)\"\n        \"     * (1 + 0.45*where(week_closed > 96, 1, 0)*where(week_closed < 112, 1, 0)), 1.5, 90)\",\n        unit=\"days\", additive=False)\nmeasure(\"pended_claims\",\n        \"clip(claims_closed * (0.05 + 0.010*mean_cycle_time_days + 0.04*[submission_channel=Paper] + gaussian(0, 0.012)), 0, 400)\",\n        unit=\"claims/week\", additive=True)\nmeasure(\"auto_adjudication_rate\",\n        \"clip(0.62 + 0.10*where(week_closed > 182, 1, 0) + 0.09*[submission_channel=Electronic]\"\n        \"     - 0.22*[submission_channel=Paper] - 0.008*mean_cycle_time_days + gaussian(0, 0.04), 0.05, 0.98)\",\n        unit=\"fraction\", additive=False)\n\nemit(420)\n"
+  }
+}

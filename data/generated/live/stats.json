@@ -1,0 +1,73 @@
+{
+ "scenarios": 6,
+ "scenarios_ok": 6,
+ "records": 192,
+ "dropped": 0,
+ "figure_pass_rate": 1.0,
+ "reasons": {
+  "candidate rejected: drawn illegal": 58,
+  "candidate rejected: conditions": 18,
+  "candidate rejected: redundant": 8,
+  "candidate rejected: thin": 7,
+  "candidate rejected: variation": 4,
+  "candidate rejected: distinct": 1
+ },
+ "model": "gemini-flash-latest",
+ "config": {
+  "run_id": "live",
+  "root_seed": 20260816,
+  "llm": {
+   "model": "gemini-flash-latest",
+   "max_tokens": 8000,
+   "effort": "high",
+   "max_retries": 3,
+   "cache_dir": "data/generated/.llm_cache",
+   "titles": true
+  },
+  "scale": {
+   "scenarios": 6,
+   "max_tier": 2
+  },
+  "data": {
+   "row_tolerance": 0.1,
+   "min_nonempty_families": 3,
+   "scenario_dedup_cosine": 0.75,
+   "pool_dedup_cosine": 0.65,
+   "pool_path": "data/domains/pool.json",
+   "scenario_memory": "data/generated/scenarios.json"
+  },
+  "figure": {
+   "k_max": 16,
+   "sample_tries": 8,
+   "max_panels": 4,
+   "max_derived": 3,
+   "max_overlays": 3,
+   "pages": 1,
+   "family_weights": "uniform",
+   "density_band": "sparse"
+  },
+  "render": {
+   "style_variants": 2,
+   "degradation": true,
+   "style_overrides": {}
+  },
+  "layers": {
+   "page_elements": true,
+   "encoding": true,
+   "provenance": true
+  },
+  "output": {
+   "dir": "data/generated",
+   "preset": null,
+   "mix": [
+    {
+     "source": "generated",
+     "weight": 1.0
+    }
+   ]
+  },
+  "cache": {
+   "enabled": true
+  }
+ }
+}

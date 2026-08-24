@@ -77,6 +77,19 @@ class Provider(Protocol):
 _BY_PREFIX = (("claude", "anthropic"), ("gpt", "openai"), ("o1", "openai"), ("o3", "openai"),
               ("o4", "openai"), ("gemini", "gemini"))
 
+#: The environment variable each vendor reads its key from. Knowing whether a model
+#: is reachable without sending a request is what lets a caller with a fallback path
+#: take it immediately instead of after a failed call.
+KEY_VARIABLES = {"anthropic": ("ANTHROPIC_API_KEY",),
+                 "openai": ("OPENAI_API_KEY",),
+                 "gemini": ("GOOGLE_API_KEY", "GEMINI_API_KEY")}
+
+
+def reachable(model: str) -> bool:
+    """Whether a key for this model's vendor is in the environment."""
+    vendor = next((v for prefix, v in _BY_PREFIX if model.lower().startswith(prefix)), None)
+    return any(os.environ.get(name) for name in KEY_VARIABLES.get(vendor or "", ()))
+
 
 #: OpenAI-compatible gateways that resell another vendor's models, as
 #: `name -> (base url, the environment variable holding the key)`.

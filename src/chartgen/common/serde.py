@@ -27,7 +27,7 @@ from ..interfaces.table import FactTable, TableSchema
 
 #: Raised on every interface change, so an artifact written by older code fails
 #: to load instead of being read with a field missing.
-SCHEMA_VERSION = 2
+SCHEMA_VERSION = 5
 
 T = TypeVar("T")
 

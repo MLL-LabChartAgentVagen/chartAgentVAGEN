@@ -1,0 +1,249 @@
+{
+  "schema_version": 3,
+  "type": "TableSchema",
+  "data": {
+    "scenario_id": "funnel",
+    "scenario_title": "Online checkout funnel for a regional grocery retailer, Jan-Mar 2024",
+    "data_context": "The e-commerce team logged every session step for the first quarter of 2024 while a redesigned cart page was rolled out, to see where shoppers stop.",
+    "columns": [
+      {
+        "name": "stage",
+        "kind": "category",
+        "cardinality": 5,
+        "group": "funnel",
+        "parent": null,
+        "ordered": "stage",
+        "values": [
+          "Landing",
+          "Product",
+          "Cart",
+          "Checkout",
+          "Purchase"
+        ],
+        "unit": null,
+        "additive": null,
+        "freq": null,
+        "start": null,
+        "end": null,
+        "derived_from": null
+      },
+      {
+        "name": "channel",
+        "kind": "category",
+        "cardinality": 4,
+        "group": "acquisition",
+        "parent": null,
+        "ordered": null,
+        "values": [
+          "Search",
+          "Social",
+          "Email",
+          "Direct"
+        ],
+        "unit": null,
+        "additive": null,
+        "freq": null,
+        "start": null,
+        "end": null,
+        "derived_from": null
+      },
+      {
+        "name": "device",
+        "kind": "category",
+        "cardinality": 3,
+        "group": "acquisition",
+        "parent": null,
+        "ordered": null,
+        "values": [
+          "Desktop",
+          "Mobile",
+          "Tablet"
+        ],
+        "unit": null,
+        "additive": null,
+        "freq": null,
+        "start": null,
+        "end": null,
+        "derived_from": null
+      },
+      {
+        "name": "event_date",
+        "kind": "time",
+        "cardinality": 91,
+        "group": "calendar",
+        "parent": null,
+        "ordered": null,
+        "values": [],
+        "unit": null,
+        "additive": null,
+        "freq": "daily",
+        "start": "2024-01-01",
+        "end": "2024-03-31",
+        "derived_from": null
+      },
+      {
+        "name": "day_of_week",
+        "kind": "category",
+        "cardinality": 7,
+        "group": "calendar",
+        "parent": null,
+        "ordered": "ordinal",
+        "values": [
+          "Mon",
+          "Tue",
+          "Wed",
+          "Thu",
+          "Fri",
+          "Sat",
+          "Sun"
+        ],
+        "unit": null,
+        "additive": null,
+        "freq": null,
+        "start": null,
+        "end": null,
+        "derived_from": "event_date"
+      },
+      {
+        "name": "month",
+        "kind": "category",
+        "cardinality": 3,
+        "group": "calendar",
+        "parent": null,
+        "ordered": "ordinal",
+        "values": [
+          "2024-01",
+          "2024-02",
+          "2024-03"
+        ],
+        "unit": null,
+        "additive": null,
+        "freq": null,
+        "start": null,
+        "end": null,
+        "derived_from": "event_date"
+      },
+      {
+        "name": "is_weekend",
+        "kind": "category",
+        "cardinality": 2,
+        "group": "calendar",
+        "parent": null,
+        "ordered": "ordinal",
+        "values": [
+          "No",
+          "Yes"
+        ],
+        "unit": null,
+        "additive": null,
+        "freq": null,
+        "start": null,
+        "end": null,
+        "derived_from": "event_date"
+      },
+      {
+        "name": "basket_value",
+        "kind": "measure",
+        "cardinality": 1400,
+        "group": null,
+        "parent": null,
+        "ordered": null,
+        "values": [],
+        "unit": "USD",
+        "additive": true,
+        "freq": null,
+        "start": null,
+        "end": null,
+        "derived_from": null
+      },
+      {
+        "name": "dwell_seconds",
+        "kind": "measure",
+        "cardinality": 1400,
+        "group": null,
+        "parent": null,
+        "ordered": null,
+        "values": [],
+        "unit": "seconds",
+        "additive": true,
+        "freq": null,
+        "start": null,
+        "end": null,
+        "derived_from": null
+      },
+      {
+        "name": "bounce_rate",
+        "kind": "measure",
+        "cardinality": 1400,
+        "group": null,
+        "parent": null,
+        "ordered": null,
+        "values": [],
+        "unit": "rate",
+        "additive": false,
+        "freq": null,
+        "start": null,
+        "end": null,
+        "derived_from": null
+      }
+    ],
+    "groups": [
+      {
+        "name": "funnel",
+        "columns": [
+          "stage"
+        ]
+      },
+      {
+        "name": "acquisition",
+        "columns": [
+          "channel",
+          "device"
+        ]
+      },
+      {
+        "name": "calendar",
+        "columns": [
+          "event_date",
+          "day_of_week",
+          "month",
+          "is_weekend"
+        ]
+      }
+    ],
+    "dependencies": [],
+    "intents": [
+      {
+        "index": 0,
+        "sentence": "Where shoppers drop out along the checkout path",
+        "columns": [
+          "stage"
+        ],
+        "aggregate": "COUNT",
+        "family": "process"
+      },
+      {
+        "index": 1,
+        "sentence": "How basket value splits across acquisition channels",
+        "columns": [
+          "channel",
+          "basket_value"
+        ],
+        "aggregate": "SUM",
+        "family": "composition"
+      },
+      {
+        "index": 2,
+        "sentence": "How dwell time is spread within each stage",
+        "columns": [
+          "stage",
+          "dwell_seconds"
+        ],
+        "aggregate": "FIVE_NUM",
+        "family": "distribution"
+      }
+    ],
+    "n_rows": 1400,
+    "script": "dim(\"stage\", [\"Landing\", \"Product\", \"Cart\", \"Checkout\", \"Purchase\"],\n    weights=[0.34, 0.26, 0.18, 0.13, 0.09], ordered=\"stage\", group=\"funnel\")\ndim(\"channel\", [\"Search\", \"Social\", \"Email\", \"Direct\"],\n    weights=[0.40, 0.25, 0.20, 0.15], group=\"acquisition\")\ndim(\"device\", [\"Desktop\", \"Mobile\", \"Tablet\"],\n    weights=[0.45, 0.45, 0.10], group=\"acquisition\")\n\ntime(\"event_date\", start=\"2024-01-01\", end=\"2024-03-31\", freq=\"daily\")\n\nmeasure(\"basket_value\",\n        \"lognormal(mu = 3.2 + 0.3*[stage=Checkout] + 0.5*[stage=Purchase], sigma = 0.4)\",\n        unit=\"USD\", additive=True)\nmeasure(\"dwell_seconds\",\n        \"gamma(shape = 2.0, scale = 18 + 12*[stage=Product] + 20*[stage=Checkout])\",\n        unit=\"seconds\", additive=True)\nmeasure(\"bounce_rate\",\n        \"clip(0.62 - 0.09*[stage=Cart] - 0.18*[stage=Checkout] - 0.30*[stage=Purchase] + gaussian(0, 0.05), 0, 1)\",\n        unit=\"rate\", additive=False)\n\nemit(1400)\n"
+  }
+}

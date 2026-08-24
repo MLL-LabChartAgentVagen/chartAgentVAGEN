@@ -1,0 +1,275 @@
+{
+  "schema_version": 5,
+  "type": "TableSchema",
+  "data": {
+    "scenario_id": "s000",
+    "scenario_title": "Protected species incident filings, investigation durations, and penalty assessments across regional enforcement registries, 2023–2024",
+    "data_context": "The National Wildlife Law Enforcement Division maintains an incident and compliance registry logging protected species violations, strandings, and unauthorized habitat disturbances across regional field offices. Field agents and registry intake officers recorded case progression stages, field response times, staff investigation hours, and assessed civil penalties from January 2023 through December 2024 to evaluate enforcement pipeline efficiency and backlog resolution.",
+    "columns": [
+      {
+        "name": "region",
+        "kind": "category",
+        "cardinality": 3,
+        "group": "jurisdiction",
+        "parent": null,
+        "ordered": null,
+        "values": [
+          "Pacific West",
+          "Atlantic Coast",
+          "Gulf & Interior"
+        ],
+        "unit": null,
+        "additive": null,
+        "freq": null,
+        "start": null,
+        "end": null,
+        "derived_from": null
+      },
+      {
+        "name": "district",
+        "kind": "category",
+        "cardinality": 9,
+        "group": "jurisdiction",
+        "parent": "region",
+        "ordered": null,
+        "values": [
+          "Northwest Coastal",
+          "California Inland",
+          "Alaska Marine",
+          "Northeast Maritime",
+          "Mid-Atlantic Wetlands",
+          "Southeast Coastal",
+          "Gulf Coast Plains",
+          "Rio Grande Corridor",
+          "Great Lakes Basin"
+        ],
+        "unit": null,
+        "additive": null,
+        "freq": null,
+        "start": null,
+        "end": null,
+        "derived_from": null
+      },
+      {
+        "name": "incident_type",
+        "kind": "category",
+        "cardinality": 4,
+        "group": "incident",
+        "parent": null,
+        "ordered": null,
+        "values": [
+          "Illegal Take",
+          "Stranding & Distress",
+          "Habitat Encroachment",
+          "Prohibited Commerce"
+        ],
+        "unit": null,
+        "additive": null,
+        "freq": null,
+        "start": null,
+        "end": null,
+        "derived_from": null
+      },
+      {
+        "name": "case_stage",
+        "kind": "category",
+        "cardinality": 5,
+        "group": "workflow",
+        "parent": null,
+        "ordered": "stage",
+        "values": [
+          "Initial Intake",
+          "Field Assessment",
+          "Active Investigation",
+          "Formal Enforcement",
+          "Case Closed"
+        ],
+        "unit": null,
+        "additive": null,
+        "freq": null,
+        "start": null,
+        "end": null,
+        "derived_from": null
+      },
+      {
+        "name": "filing_month",
+        "kind": "time",
+        "cardinality": 24,
+        "group": "calendar",
+        "parent": null,
+        "ordered": null,
+        "values": [],
+        "unit": null,
+        "additive": null,
+        "freq": "monthly",
+        "start": "2023-01-01",
+        "end": "2024-12-31",
+        "derived_from": null
+      },
+      {
+        "name": "quarter",
+        "kind": "category",
+        "cardinality": 8,
+        "group": "calendar",
+        "parent": null,
+        "ordered": "ordinal",
+        "values": [
+          "2023-Q1",
+          "2023-Q2",
+          "2023-Q3",
+          "2023-Q4",
+          "2024-Q1",
+          "2024-Q2",
+          "2024-Q3",
+          "2024-Q4"
+        ],
+        "unit": null,
+        "additive": null,
+        "freq": null,
+        "start": null,
+        "end": null,
+        "derived_from": "filing_month"
+      },
+      {
+        "name": "response_time_days",
+        "kind": "measure",
+        "cardinality": 360,
+        "group": null,
+        "parent": null,
+        "ordered": null,
+        "values": [],
+        "unit": "days",
+        "additive": true,
+        "freq": null,
+        "start": null,
+        "end": null,
+        "derived_from": null
+      },
+      {
+        "name": "penalty_assessed_usd",
+        "kind": "measure",
+        "cardinality": 360,
+        "group": null,
+        "parent": null,
+        "ordered": null,
+        "values": [],
+        "unit": "USD",
+        "additive": true,
+        "freq": null,
+        "start": null,
+        "end": null,
+        "derived_from": null
+      },
+      {
+        "name": "investigation_hours",
+        "kind": "measure",
+        "cardinality": 360,
+        "group": null,
+        "parent": null,
+        "ordered": null,
+        "values": [],
+        "unit": "hours",
+        "additive": true,
+        "freq": null,
+        "start": null,
+        "end": null,
+        "derived_from": null
+      },
+      {
+        "name": "evidence_sufficiency_score",
+        "kind": "measure",
+        "cardinality": 360,
+        "group": null,
+        "parent": null,
+        "ordered": null,
+        "values": [],
+        "unit": "points",
+        "additive": false,
+        "freq": null,
+        "start": null,
+        "end": null,
+        "derived_from": null
+      }
+    ],
+    "groups": [
+      {
+        "name": "jurisdiction",
+        "columns": [
+          "region",
+          "district"
+        ]
+      },
+      {
+        "name": "incident",
+        "columns": [
+          "incident_type"
+        ]
+      },
+      {
+        "name": "workflow",
+        "columns": [
+          "case_stage"
+        ]
+      },
+      {
+        "name": "calendar",
+        "columns": [
+          "filing_month",
+          "quarter"
+        ]
+      }
+    ],
+    "dependencies": [],
+    "intents": [
+      {
+        "index": 0,
+        "sentence": "How case filings drop off through sequential stages from intake to closure",
+        "columns": [
+          "case_stage"
+        ],
+        "aggregate": "COUNT",
+        "family": "process"
+      },
+      {
+        "index": 1,
+        "sentence": "Which incident types incur the highest average civil penalties",
+        "columns": [
+          "incident_type",
+          "penalty_assessed_usd"
+        ],
+        "aggregate": "AVG",
+        "family": "comparison"
+      },
+      {
+        "index": 2,
+        "sentence": "Monthly trend in total enforcement investigation hours logged",
+        "columns": [
+          "filing_month",
+          "investigation_hours"
+        ],
+        "aggregate": "SUM",
+        "family": "trend"
+      },
+      {
+        "index": 3,
+        "sentence": "Relationship between field response times and final evidence sufficiency scores",
+        "columns": [
+          "response_time_days",
+          "evidence_sufficiency_score"
+        ],
+        "aggregate": "NONE",
+        "family": "relation"
+      }
+    ],
+    "n_rows": 360,
+    "script": "dim(\"region\", [\"Pacific West\", \"Atlantic Coast\", \"Gulf & Interior\"],\n    weights=[0.40, 0.35, 0.25], group=\"jurisdiction\")\ndim(\"district\", [\"Northwest Coastal\", \"California Inland\", \"Alaska Marine\",\n                 \"Northeast Maritime\", \"Mid-Atlantic Wetlands\", \"Southeast Coastal\",\n                 \"Gulf Coast Plains\", \"Rio Grande Corridor\", \"Great Lakes Basin\"],\n    parent=\"region\",\n    weights={\"Pacific West\": [0.45, 0.35, 0.20, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],\n             \"Atlantic Coast\": [0.0, 0.0, 0.0, 0.35, 0.35, 0.30, 0.0, 0.0, 0.0],\n             \"Gulf & Interior\": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.40, 0.35, 0.25]},\n    group=\"jurisdiction\")\ndim(\"incident_type\", [\"Illegal Take\", \"Stranding & Distress\", \"Habitat Encroachment\", \"Prohibited Commerce\"],\n    weights=[0.35, 0.25, 0.25, 0.15], group=\"incident\")\ndim(\"case_stage\", [\"Initial Intake\", \"Field Assessment\", \"Active Investigation\", \"Formal Enforcement\", \"Case Closed\"],\n    weights=[0.32, 0.26, 0.20, 0.14, 0.08], ordered=\"stage\", group=\"workflow\")\n\ntime(\"filing_month\", start=\"2023-01-01\", end=\"2024-12-31\", freq=\"monthly\")\n\nmeasure(\"response_time_days\",\n        \"lognormal(1.2 + 0.5*[incident_type=Habitat Encroachment] - 0.4*[incident_type=Stranding & Distress] + 0.3*[region=Pacific West], 0.4)\",\n        unit=\"days\", additive=True)\nmeasure(\"penalty_assessed_usd\",\n        \"gamma(3.0, 1200) + 2500*[incident_type=Illegal Take] + 1800*[incident_type=Prohibited Commerce] + 800*[case_stage=Formal Enforcement] + 1500*[case_stage=Case Closed]\",\n        unit=\"USD\", additive=True)\nmeasure(\"investigation_hours\",\n        \"clip(gaussian(38 + 18*[case_stage=Active Investigation] + 32*[case_stage=Formal Enforcement] + 45*[case_stage=Case Closed] + 12*[incident_type=Illegal Take], 9), 5, 180)\",\n        unit=\"hours\", additive=True)\nmeasure(\"evidence_sufficiency_score\",\n        \"clip(55 + 15*[case_stage=Case Closed] + 10*[case_stage=Formal Enforcement] - 12*[case_stage=Initial Intake] + gaussian(0, 8), 10, 100)\",\n        unit=\"points\", additive=False)\n\nemit(360)",
+    "origin": {
+      "domain_id": "dom_0451",
+      "domain": "Illegal-take case backlog and closure counts",
+      "topic": "climate and environment: protected species incident filings logged by field offices — strandings, illegal-take cases and habitat-disturbance reports — with case volumes, response times and enforcement outcomes by district and month",
+      "subject": "climate and environment",
+      "register": "registry",
+      "complexity_tier": "simple"
+    }
+  }
+}

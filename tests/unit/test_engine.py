@@ -45,6 +45,22 @@ class TestTopologicalOrder:
         assert "cost" in str(exc.value) and "revenue" in str(exc.value)
 
 
+    def test_a_cycle_among_three_columns_is_written_as_a_loop(self):
+        """The walk starts at one of the columns still unresolved. Starting anywhere
+        else names a column that is not in the loop, which sends the reader looking
+        at the wrong declaration."""
+        script = D.run('dim("a", ["A", "B"], group="g")\ndim("b", ["u", "v"], group="h")\n'
+                       'measure("x", "y + 1", unit="u", additive=True)\n'
+                       'measure("y", "z + 1", unit="u", additive=True)\n'
+                       'measure("z", "x + 1", unit="u", additive=True)\nemit(10)')
+        with pytest.raises(DeclarationError) as exc:
+            G.topo_order(script)
+        message = str(exc.value)
+        loop = message.split(": ")[-1].split(" -> ")
+        assert set(loop) <= {"x", "y", "z"}
+        assert loop[0] == loop[-1] or len(loop) >= 3
+
+
 class TestOneRowIsOneEvent:
     def test_emit_fixes_the_row_count_exactly(self, df):
         assert len(df) == 900

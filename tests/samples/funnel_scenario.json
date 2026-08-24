@@ -1,0 +1,33 @@
+{
+  "scenario_title": "Online checkout funnel for a regional grocery retailer, Jan-Mar 2024",
+  "data_context": "The e-commerce team logged every session step for the first quarter of 2024 while a redesigned cart page was rolled out, to see where shoppers stop.",
+  "script": "dim(\"stage\", [\"Landing\", \"Product\", \"Cart\", \"Checkout\", \"Purchase\"],\n    weights=[0.34, 0.26, 0.18, 0.13, 0.09], ordered=\"stage\", group=\"funnel\")\ndim(\"channel\", [\"Search\", \"Social\", \"Email\", \"Direct\"],\n    weights=[0.40, 0.25, 0.20, 0.15], group=\"acquisition\")\ndim(\"device\", [\"Desktop\", \"Mobile\", \"Tablet\"],\n    weights=[0.45, 0.45, 0.10], group=\"acquisition\")\n\ntime(\"event_date\", start=\"2024-01-01\", end=\"2024-03-31\", freq=\"daily\")\n\nmeasure(\"basket_value\",\n        \"lognormal(mu = 3.2 + 0.3*[stage=Checkout] + 0.5*[stage=Purchase], sigma = 0.4)\",\n        unit=\"USD\", additive=True)\nmeasure(\"dwell_seconds\",\n        \"gamma(shape = 2.0, scale = 18 + 12*[stage=Product] + 20*[stage=Checkout])\",\n        unit=\"seconds\", additive=True)\nmeasure(\"bounce_rate\",\n        \"clip(0.62 - 0.09*[stage=Cart] - 0.18*[stage=Checkout] - 0.30*[stage=Purchase] + gaussian(0, 0.05), 0, 1)\",\n        unit=\"rate\", additive=False)\n\nemit(1400)\n",
+  "intents": [
+    {
+      "sentence": "Where shoppers drop out along the checkout path",
+      "columns": [
+        "stage"
+      ],
+      "aggregate": "COUNT",
+      "family": "process"
+    },
+    {
+      "sentence": "How basket value splits across acquisition channels",
+      "columns": [
+        "channel",
+        "basket_value"
+      ],
+      "aggregate": "SUM",
+      "family": "composition"
+    },
+    {
+      "sentence": "How dwell time is spread within each stage",
+      "columns": [
+        "stage",
+        "dwell_seconds"
+      ],
+      "aggregate": "FIVE_NUM",
+      "family": "distribution"
+    }
+  ]
+}

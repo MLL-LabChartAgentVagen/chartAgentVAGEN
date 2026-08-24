@@ -1,5 +1,7 @@
 # Python
 __pycache__/
+.coverage
+coverage.json
 *.py[cod]
 *.so
 .pytest_cache/
@@ -16,6 +18,17 @@ out/
 cache/
 *.parquet
 *.png
+
+# The example images a report page ships with are tracked; the page itself is not.
+!plan/reports/examples/*.png
+!plan/reports/examples/*.jpg
+
+# Both generated sites are built from a run and carry their images inside them --
+# twenty megabytes of embedded JPEG that any checkout can reproduce:
+#   python tools/build_report.py data/generated/live
+#   python tools/build_review.py --run data/generated/live
+review/
+plan/reports/*.html
 
 # OS
 .DS_Store

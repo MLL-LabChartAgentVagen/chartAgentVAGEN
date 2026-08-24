@@ -8,7 +8,7 @@ import pytest
 from chartgen.common.geometry import Box
 from chartgen.common import serde
 from chartgen.interfaces.figure import Binding, Datum, FigureSpec, PanelSpec, Sharing, Source, ViewSpec
-from chartgen.interfaces.record import Axis, Mark, Panel, Record, RenderOutput, SelfCheck
+from chartgen.interfaces.record import Axis, Mark, Panel, Record, SelfCheck
 from chartgen.interfaces.style import StyleVector
 from chartgen.interfaces.table import Column, FactTable, IntentBinding, TableSchema
 
@@ -41,7 +41,7 @@ def figure() -> FigureSpec:
     )
     return FigureSpec(
         figure_id="f01", scenario_id="er_wait",
-        panels=(PanelSpec("p0", view),),
+        panels=(PanelSpec("p0", (view,)),),
         sharing=Sharing(), source=Source("intent", intent_index=0),
     )
 
@@ -82,7 +82,7 @@ class TestRoundTrip:
             figure_id="f01", scenario_id="s", image_path="a.png", image_size=(900, 600),
             style=StyleVector(),
             panels=(Panel("p0", Box(96, 60, 860, 520),
-                          (Axis("y", (0.0, 60.0), (520.0, 60.0), column="wait_minutes"),), "bar"),),
+                          (Axis("y", (0.0, 60.0), (520.0, 60.0), column="wait_minutes"),), ("bar",)),),
             marks=(Mark("m0", "p0", ("Mercy General",), {"value": 42.3}, Box(168, 196, 278, 520),
                         "length", rows=372, readable=True),),
             selfcheck=SelfCheck(True, True, None),
@@ -149,5 +149,5 @@ class TestSamples:
         record = serde.sample("Record")
         assert schema.n_rows == 900
         assert [d.values["value"] for d in figure.panels[0].view.data] == [42.3, 35.8, 28.1]
-        assert record.marks[0].box.as_tuple() == (168.0, 196.0, 278.0, 520.0)
+        assert record.marks[0].box.as_tuple() == (165.0, 186.0, 269.0, 480.0)
         assert record.marks[0].rows == 372

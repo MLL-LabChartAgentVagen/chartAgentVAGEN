@@ -1,0 +1,232 @@
+{
+  "schema_version": 5,
+  "type": "TableSchema",
+  "data": {
+    "scenario_id": "s001",
+    "scenario_title": "Monthly merchandise export values and commodity group shares by destination economy, 2021-2023",
+    "data_context": "The National Directorate of Statistics compiled customs trade declaration summaries from January 2021 through December 2023 to monitor structural shifts in merchandise export composition and evaluate national trade exposure across major trading partner economies.",
+    "columns": [
+      {
+        "name": "destination_market",
+        "kind": "category",
+        "cardinality": 4,
+        "group": "geography",
+        "parent": null,
+        "ordered": null,
+        "values": [
+          "United States",
+          "European Union",
+          "China",
+          "Japan"
+        ],
+        "unit": null,
+        "additive": null,
+        "freq": null,
+        "start": null,
+        "end": null,
+        "derived_from": null
+      },
+      {
+        "name": "broad_sector",
+        "kind": "category",
+        "cardinality": 3,
+        "group": "merchandise",
+        "parent": null,
+        "ordered": null,
+        "values": [
+          "Manufactured Goods",
+          "Commodities & Energy",
+          "Agri-Food"
+        ],
+        "unit": null,
+        "additive": null,
+        "freq": null,
+        "start": null,
+        "end": null,
+        "derived_from": null
+      },
+      {
+        "name": "product_group",
+        "kind": "category",
+        "cardinality": 7,
+        "group": "merchandise",
+        "parent": "broad_sector",
+        "ordered": null,
+        "values": [
+          "Electronics & Machinery",
+          "Automotive & Transport",
+          "Chemicals & Plastics",
+          "Refined Petroleum",
+          "Mineral Ores",
+          "Processed Food",
+          "Raw Agricultural Goods"
+        ],
+        "unit": null,
+        "additive": null,
+        "freq": null,
+        "start": null,
+        "end": null,
+        "derived_from": null
+      },
+      {
+        "name": "report_month",
+        "kind": "time",
+        "cardinality": 36,
+        "group": "calendar",
+        "parent": null,
+        "ordered": null,
+        "values": [],
+        "unit": null,
+        "additive": null,
+        "freq": "monthly",
+        "start": "2021-01-01",
+        "end": "2023-12-31",
+        "derived_from": null
+      },
+      {
+        "name": "quarter",
+        "kind": "category",
+        "cardinality": 12,
+        "group": "calendar",
+        "parent": null,
+        "ordered": "ordinal",
+        "values": [
+          "2021-Q1",
+          "2021-Q2",
+          "2021-Q3",
+          "2021-Q4",
+          "2022-Q1",
+          "2022-Q2",
+          "2022-Q3",
+          "2022-Q4",
+          "2023-Q1",
+          "2023-Q2",
+          "2023-Q3",
+          "2023-Q4"
+        ],
+        "unit": null,
+        "additive": null,
+        "freq": null,
+        "start": null,
+        "end": null,
+        "derived_from": "report_month"
+      },
+      {
+        "name": "export_value_usd_m",
+        "kind": "measure",
+        "cardinality": 360,
+        "group": null,
+        "parent": null,
+        "ordered": null,
+        "values": [],
+        "unit": "million USD",
+        "additive": true,
+        "freq": null,
+        "start": null,
+        "end": null,
+        "derived_from": null
+      },
+      {
+        "name": "export_share_pct",
+        "kind": "measure",
+        "cardinality": 360,
+        "group": null,
+        "parent": null,
+        "ordered": null,
+        "values": [],
+        "unit": "percent",
+        "additive": false,
+        "freq": null,
+        "start": null,
+        "end": null,
+        "derived_from": null
+      },
+      {
+        "name": "yoy_share_change_ppt",
+        "kind": "measure",
+        "cardinality": 360,
+        "group": null,
+        "parent": null,
+        "ordered": null,
+        "values": [],
+        "unit": "percentage points",
+        "additive": false,
+        "freq": null,
+        "start": null,
+        "end": null,
+        "derived_from": null
+      }
+    ],
+    "groups": [
+      {
+        "name": "geography",
+        "columns": [
+          "destination_market"
+        ]
+      },
+      {
+        "name": "merchandise",
+        "columns": [
+          "broad_sector",
+          "product_group"
+        ]
+      },
+      {
+        "name": "calendar",
+        "columns": [
+          "report_month",
+          "quarter"
+        ]
+      }
+    ],
+    "dependencies": [
+      [
+        "export_value_usd_m",
+        "export_share_pct"
+      ]
+    ],
+    "intents": [
+      {
+        "index": 0,
+        "sentence": "Which destination markets and broad sectors command the highest average export share",
+        "columns": [
+          "destination_market",
+          "broad_sector",
+          "export_share_pct"
+        ],
+        "aggregate": "AVG",
+        "family": "comparison"
+      },
+      {
+        "index": 1,
+        "sentence": "How total merchandise export value developed across report months over the three-year series",
+        "columns": [
+          "report_month",
+          "export_value_usd_m"
+        ],
+        "aggregate": "SUM",
+        "family": "trend"
+      },
+      {
+        "index": 2,
+        "sentence": "Whether product groups with larger overall export shares experience higher year-on-year share volatility",
+        "columns": [
+          "export_share_pct",
+          "yoy_share_change_ppt"
+        ],
+        "aggregate": "NONE",
+        "family": "relation"
+      }
+    ],
+    "n_rows": 360,
+    "script": "dim(\"destination_market\", [\"United States\", \"European Union\", \"China\", \"Japan\"],\n    weights=[0.32, 0.28, 0.24, 0.16], group=\"geography\")\n\ndim(\"broad_sector\", [\"Manufactured Goods\", \"Commodities & Energy\", \"Agri-Food\"],\n    weights=[0.55, 0.30, 0.15], group=\"merchandise\")\ndim(\"product_group\",\n    [\"Electronics & Machinery\", \"Automotive & Transport\", \"Chemicals & Plastics\", \"Refined Petroleum\", \"Mineral Ores\", \"Processed Food\", \"Raw Agricultural Goods\"],\n    parent=\"broad_sector\",\n    weights={\n        \"Manufactured Goods\": [0.45, 0.35, 0.20, 0.0, 0.0, 0.0, 0.0],\n        \"Commodities & Energy\": [0.0, 0.0, 0.0, 0.60, 0.40, 0.0, 0.0],\n        \"Agri-Food\": [0.0, 0.0, 0.0, 0.0, 0.0, 0.60, 0.40]\n    },\n    group=\"merchandise\")\n\ntime(\"report_month\", start=\"2021-01-01\", end=\"2023-12-31\", freq=\"monthly\")\n\nmeasure(\"export_value_usd_m\",\n        \"120.0 + 260.0 * [broad_sector=Manufactured Goods] + 140.0 * [destination_market=United States] + 90.0 * [destination_market=China] + 0.08 * report_month + gaussian(0, 20.0)\",\n        unit=\"million USD\", additive=True)\nmeasure(\"export_share_pct\",\n        \"clip(export_value_usd_m / 42.0 + gaussian(0, 0.6), 0.5, 35.0)\",\n        unit=\"percent\", additive=False)\nmeasure(\"yoy_share_change_ppt\",\n        \"gaussian(0.05, 1.1) + 0.4 * [product_group=Electronics & Machinery] - 0.3 * [product_group=Refined Petroleum]\",\n        unit=\"percentage points\", additive=False)\n\nemit(360)",
+    "origin": {
+      "domain_id": "dom_0299",
+      "domain": "Export share by product group",
+      "topic": "merchandise trade balance and export shares by partner country and product group",
+      "subject": "macroeconomy and trade",
+      "register": "official_statistics",
+      "complexity_tier": "simple"
+    }
+  }
+}

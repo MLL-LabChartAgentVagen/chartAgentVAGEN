@@ -30,7 +30,7 @@ from typing import Any, Callable, Literal, Protocol, Sequence
 
 from ..common.rng import seed_of
 from ..config import Config
-from ..interfaces.table import FactTable, TableSchema
+from ..interfaces.table import FactTable, Origin, TableSchema
 from ..registry.charts import FAMILIES
 from . import engine, validate
 from .declare import run, to_schema
@@ -107,6 +107,12 @@ USER = """## Domain
 
 {domain}
 
+`register` is who published these numbers and for whom, and the scenario has to stay
+in it. It decides the voice, the entities and what the numbers are: a statistics
+agency breaks a country down by age band and reports a change that can be negative;
+an organisation watching its own process breaks a site down by shift and reports a
+count. Write the one the domain names, not the one that comes to hand.
+
 Aim for {row_lo}-{row_hi} rows and put that number in `emit(n)`.
 
 ## What to write
@@ -134,6 +140,14 @@ dim(name, values, weights=None, parent=None, ordered=None, group=None)
     is how a value belonging to exactly one parent is written -- a processing
     center sits in one region, while every hospital has a surgery department.
     Every declared value must still occur under some parent.
+
+    `ordered="stage"` is the strongest of the three and the one most often left
+    out. Write it when the values are steps something passes through in order and
+    every row sits at exactly one of them, with the weights falling from the first
+    step to the last because fewer things reach each next one:
+
+        dim("claim_stage", ["Received", "Adjudicated", "Approved", "Paid"],
+            weights=[0.40, 0.28, 0.20, 0.12], ordered="stage", group="workflow")
 time(name, start, end, freq)
     A time column, freq is daily, weekly or monthly. The calendar fields
     day_of_week, month, quarter and is_weekend are derived automatically -- do not
@@ -170,6 +184,12 @@ term, a trend break is a piecewise term over time, seasonality is a sine over ti
 8. Size the table to the columns: pick any two category columns you expect to be
    charted together and make sure `n` gives their cross product at least
    {min_rows_per_cell} rows per cell
+9. If the subject matter contains a sequence of steps something passes through --
+   an application through screening, review and approval; a shipment through
+   pickup, transit and delivery; a patient through triage, treatment and discharge
+   -- declare that sequence as one category column with `ordered="stage"`. Declare
+   it only when the steps are genuinely sequential and every row sits at exactly
+   one of them; a set of parallel categories is not a sequence of stages
 
 ## View classes for intents
 
@@ -199,10 +219,13 @@ FEEDBACK = """
 
 Fix it and reply with the complete JSON again."""
 
-#: The subject area of the worked example in the prompt.
+#: The pool entry the worked example in the prompt was written for.
 EXAMPLE_DOMAIN: dict[str, Any] = {
+    "id": "dom_0001",
     "name": "Emergency department operations",
-    "topic": "Healthcare",
+    "topic": "Emergency care delivery",
+    "subject": "health and care",
+    "register": "operational",
     "complexity_tier": "medium",
     "typical_entities_hint": ["hospital", "department", "triage level"],
     "typical_metrics_hint": [{"name": "wait_time", "unit": "minutes"}],
@@ -276,8 +299,14 @@ def user_prompt(domain: dict[str, Any], row_range: tuple[int, int],
 # ---------------------------------------------------------------- the rules half
 
 def compose(payload: dict[str, Any], *, scenario_id: str, seed: int,
-            config: Config) -> tuple[FactTable, TableSchema]:
-    """One answer to a fact table and a schema. Raises `Rejected` if it fails a check."""
+            config: Config, domain: dict[str, Any] | None = None
+            ) -> tuple[FactTable, TableSchema]:
+    """One answer to a fact table and a schema. Raises `Rejected` if it fails a check.
+
+    `domain` is the pool entry the answer was written for. It goes onto the schema
+    because nothing else records which part of the pool a batch sampled: the title
+    is written by the model and names neither the sub-topic nor the tier.
+    """
     try:
         script = run(str(payload["script"]))
     except DeclarationError as exc:
@@ -312,7 +341,19 @@ def compose(payload: dict[str, Any], *, scenario_id: str, seed: int,
     if failures:
         raise Rejected("structure", "\n".join(f.message for f in failures))
 
-    return FactTable(scenario_id, df), replace(schema, n_rows=len(df))
+    return FactTable(scenario_id, df), replace(schema, n_rows=len(df),
+                                               origin=origin_of(domain))
+
+
+def origin_of(domain: dict[str, Any] | None) -> Origin:
+    """The pool entry a scenario came from, as the schema records it."""
+    if not domain:
+        return Origin()
+    return Origin(domain_id=str(domain.get("id", "")), domain=str(domain.get("name", "")),
+                  topic=str(domain.get("topic", "")),
+                  subject=str(domain.get("subject", "")),
+                  register=str(domain.get("register", "")),
+                  complexity_tier=str(domain.get("complexity_tier", "")))
 
 
 # ---------------------------------------------------------------- the call and the loop
@@ -350,7 +391,8 @@ def build_scenario(scenario_id: str, seed: int, config: Config, *,
             domain, feedback = None, None
             continue
         try:
-            return compose(payload, scenario_id=scenario_id, seed=seed, config=config)
+            return compose(payload, scenario_id=scenario_id, seed=seed, config=config,
+                           domain=domain)
         except Rejected as exc:
             last, feedback = exc, str(exc)
             _note(log, exc)
@@ -386,14 +428,34 @@ def _tier_of(scenario_id: str, seed: int) -> str:
     return TIERS[seed_of(seed, scenario_id, "tier") % len(TIERS)]
 
 
-def _default_sampler(config: Config, scenario_id: str) -> Sampling:
-    """One sampler per scenario, seeded with the scenario it draws for.
+def run_drawing(config: Config) -> tuple[Sampling, Callable[[str], bool]]:
+    """One draw and one duplicate judge for a whole run.
 
-    A sampler holds what it has already handed out, so it must outlive the retry
-    loop: a scenario rejected as a near-duplicate has to draw a different
-    sub-topic, and a fresh sampler would hand back the one just rejected. The
-    scenario identifier goes into the seed for the same reason -- without it every
-    scenario in a batch starts from the same draw.
+    Per scenario neither says anything. A sampler draws without replacement from its
+    own copy of the pool, so one per scenario lets every scenario draw the same
+    sub-topic; and a repeat is not a near miss but an identical scenario, because the
+    data prompt carries no scenario identifier and the answer comes back off the
+    response cache -- same title, same columns, same fact table.
+    """
+    from llmkit import Deduper
+
+    memory = str(config.get("data.scenario_memory") or "") or None
+    seen = Deduper(threshold=float(config.get("data.scenario_dedup_cosine", 0.85)),
+                   path=memory)
+    return _default_sampler(config), lambda text: not seen.add(text)
+
+
+def _default_sampler(config: Config, scenario_id: str = "") -> Sampling:
+    """A sampler over the pool, seeded from the root seed and whatever names it.
+
+    A sampler holds what it has already handed out, so it must outlive whatever draws
+    from it. Inside one scenario that is the retry loop: a scenario rejected as a
+    near-duplicate has to draw a different sub-topic, and a fresh sampler would hand
+    back the one just rejected. Across a run it is the whole batch -- one sampler per
+    scenario makes the without-replacement draw say nothing at all, because each of
+    them starts with the full pool. A batch passes no scenario identifier for that
+    reason; a single scenario passes its own so that two of them run separately still
+    differ.
     """
     path = Path(str(config.get("data.pool_path", "data/domains/pool.json")))
     if not path.exists():
@@ -407,4 +469,5 @@ def _default_llm(config: Config) -> Authoring:
 
     return LLM(model=str(config.get("llm.model")),
                max_tokens=int(config.get("llm.max_tokens", 8000)),
+               effort=config.get("llm.effort", "high"),
                cache_dir=config.get("llm.cache_dir"))

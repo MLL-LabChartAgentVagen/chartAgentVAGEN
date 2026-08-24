@@ -1,0 +1,1302 @@
+{
+ "killed": 98,
+ "total": 144,
+ "mutants": [
+  {
+   "module": "cli.py",
+   "line": 63,
+   "before": "is_duplicate=lambda name: not dedup.add(name),",
+   "after": "is_duplicate=lambda name: dedup.add(name),",
+   "kind": "a negation dropped",
+   "killed": false,
+   "seconds": 21.1
+  },
+  {
+   "module": "cli.py",
+   "line": 65,
+   "before": "if args.extend and path.exists():",
+   "after": "if args.extend or path.exists():",
+   "kind": "a condition weakened",
+   "killed": false,
+   "seconds": 20.9
+  },
+  {
+   "module": "cli.py",
+   "line": 94,
+   "before": "is_duplicate=lambda text: not memory.add(text))",
+   "after": "is_duplicate=lambda text: memory.add(text))",
+   "kind": "a negation dropped",
+   "killed": false,
+   "seconds": 21.1
+  },
+  {
+   "module": "common/cache.py",
+   "line": 26,
+   "before": "payload = serde.to_dict(obj) if is_dataclass(obj) and not isinstance(obj, type) else obj",
+   "after": "payload = serde.to_dict(obj) if is_dataclass(obj) or not isinstance(obj, type) else obj",
+   "kind": "a condition weakened",
+   "killed": false,
+   "seconds": 0.8
+  },
+  {
+   "module": "common/cache.py",
+   "line": 26,
+   "before": "payload = serde.to_dict(obj) if is_dataclass(obj) and not isinstance(obj, type) else obj",
+   "after": "payload = serde.to_dict(obj) if is_dataclass(obj) and isinstance(obj, type) else obj",
+   "kind": "a negation dropped",
+   "killed": true,
+   "seconds": 0.8
+  },
+  {
+   "module": "common/cache.py",
+   "line": 44,
+   "before": "if self.enabled and path.exists():",
+   "after": "if self.enabled or path.exists():",
+   "kind": "a condition weakened",
+   "killed": true,
+   "seconds": 0.8
+  },
+  {
+   "module": "common/geometry.py",
+   "line": 40,
+   "before": "object.__setattr__(self, \"x1\", float(max(vals[0], vals[2])))",
+   "after": "object.__setattr__(self, \"x1\", float(max(vals[1], vals[2])))",
+   "kind": "the wrong element",
+   "killed": true,
+   "seconds": 0.9
+  },
+  {
+   "module": "common/geometry.py",
+   "line": 60,
+   "before": "return ((self.x0, self.y0), (self.x1, self.y0), (self.x1, self.y1), (self.x0, self.y1))",
+   "after": "return ((self.x1, self.y0), (self.x1, self.y0), (self.x1, self.y1), (self.x0, self.y1))",
+   "kind": "one edge of a box for another",
+   "killed": true,
+   "seconds": 0.8
+  },
+  {
+   "module": "common/geometry.py",
+   "line": 90,
+   "before": "iy = max(0.0, min(a.y1, b.y1) - max(a.y0, b.y0))",
+   "after": "iy = max(0.0, max(a.y1, b.y1) - max(a.y0, b.y0))",
+   "kind": "the wrong end of a range",
+   "killed": false,
+   "seconds": 58.3
+  },
+  {
+   "module": "common/readback.py",
+   "line": 605,
+   "before": "allowed = slack if slack is not None else _slack(target, quantum, readings)",
+   "after": "allowed = slack if slack is None else _slack(target, quantum, readings)",
+   "kind": "a negation dropped",
+   "killed": true,
+   "seconds": 2.0
+  },
+  {
+   "module": "common/readback.py",
+   "line": 380,
+   "before": "xs = [p[0] for p in points]",
+   "after": "xs = [p[1] for p in points]",
+   "kind": "the wrong element",
+   "killed": true,
+   "seconds": 1.4
+  },
+  {
+   "module": "common/readback.py",
+   "line": 260,
+   "before": "dy = max(0.0, (size - box.height) / 2)",
+   "after": "dy = min(0.0, (size - box.height) / 2)",
+   "kind": "the wrong end of a range",
+   "killed": false,
+   "seconds": 108.8
+  },
+  {
+   "module": "common/serde.py",
+   "line": 64,
+   "before": "args = [a for a in get_args(tp) if a is not type(None)]",
+   "after": "args = [a for a in get_args(tp) if a is type(None)]",
+   "kind": "a negation dropped",
+   "killed": true,
+   "seconds": 0.6
+  },
+  {
+   "module": "common/serde.py",
+   "line": 65,
+   "before": "return (args[0] if len(args) == 1 else Union[tuple(args)], len(args) < len(get_args(tp)))",
+   "after": "return (args[1] if len(args) == 1 else Union[tuple(args)], len(args) < len(get_args(tp)))",
+   "kind": "the wrong element",
+   "killed": true,
+   "seconds": 0.5
+  },
+  {
+   "module": "common/serde.py",
+   "line": 48,
+   "before": "if dataclasses.is_dataclass(obj) and not isinstance(obj, type):",
+   "after": "if dataclasses.is_dataclass(obj) and isinstance(obj, type):",
+   "kind": "a negation dropped",
+   "killed": true,
+   "seconds": 0.6
+  },
+  {
+   "module": "config.py",
+   "line": 35,
+   "before": "node[parts[-1]] = value",
+   "after": "node[parts[0]] = value",
+   "kind": "the wrong element",
+   "killed": true,
+   "seconds": 0.5
+  },
+  {
+   "module": "config.py",
+   "line": 25,
+   "before": "if not isinstance(node, dict) or part not in node:",
+   "after": "if isinstance(node, dict) or part not in node:",
+   "kind": "a negation dropped",
+   "killed": true,
+   "seconds": 0.5
+  },
+  {
+   "module": "interfaces/figure.py",
+   "line": 157,
+   "before": "return self.prefix_source + tuple(declared) + (\"not_shown\",) * max(0, extra)",
+   "after": "return self.prefix_source + tuple(declared) + (\"not_shown\",) * min(0, extra)",
+   "kind": "the wrong end of a range",
+   "killed": false,
+   "seconds": 1.3
+  },
+  {
+   "module": "interfaces/figure.py",
+   "line": 162,
+   "before": "return bool(self.key_prefix) and self.prefix_source[:1] not in (",
+   "after": "return bool(self.key_prefix) and self.prefix_source[:1] in (",
+   "kind": "a negation dropped",
+   "killed": false,
+   "seconds": 23.7
+  },
+  {
+   "module": "interfaces/figure.py",
+   "line": 162,
+   "before": "return bool(self.key_prefix) and self.prefix_source[:1] not in (",
+   "after": "return bool(self.key_prefix) or self.prefix_source[:1] not in (",
+   "kind": "a condition weakened",
+   "killed": true,
+   "seconds": 1.4
+  },
+  {
+   "module": "interfaces/record.py",
+   "line": 254,
+   "before": "return min((b.box.x0 for b in held), default=float(self.image_size[0]))",
+   "after": "return min((b.box.x0 for b in held), default=float(self.image_size[1]))",
+   "kind": "the wrong element",
+   "killed": false,
+   "seconds": 1.8
+  },
+  {
+   "module": "interfaces/record.py",
+   "line": 251,
+   "before": "return min((b.box.y0 for b in held), default=float(self.image_size[1]))",
+   "after": "return min((b.box.y1 for b in held), default=float(self.image_size[1]))",
+   "kind": "one edge of a box for another",
+   "killed": false,
+   "seconds": 1.5
+  },
+  {
+   "module": "interfaces/record.py",
+   "line": 247,
+   "before": "held = [b for b in self.blocks if b.edge == edge and b.occupied]",
+   "after": "held = [b for b in self.blocks if b.edge == edge or b.occupied]",
+   "kind": "a condition weakened",
+   "killed": false,
+   "seconds": 1.8
+  },
+  {
+   "module": "interfaces/style.py",
+   "line": 81,
+   "before": "if weights is not None and len(weights) != len(domain):",
+   "after": "if weights is not None or len(weights) != len(domain):",
+   "kind": "a condition weakened",
+   "killed": true,
+   "seconds": 0.5
+  },
+  {
+   "module": "interfaces/style.py",
+   "line": 81,
+   "before": "if weights is not None and len(weights) != len(domain):",
+   "after": "if weights is None and len(weights) != len(domain):",
+   "kind": "a negation dropped",
+   "killed": true,
+   "seconds": 0.5
+  },
+  {
+   "module": "interfaces/style.py",
+   "line": 276,
+   "before": "name for name, dim in STYLE_DOMAINS.items() if not dim.readable)",
+   "after": "name for name, dim in STYLE_DOMAINS.items() if dim.readable)",
+   "kind": "a negation dropped",
+   "killed": true,
+   "seconds": 0.5
+  },
+  {
+   "module": "interfaces/table.py",
+   "line": 63,
+   "before": "if not word or name.lower().startswith(word.lower()):",
+   "after": "if word or name.lower().startswith(word.lower()):",
+   "kind": "a negation dropped",
+   "killed": true,
+   "seconds": 0.6
+  },
+  {
+   "module": "pipeline.py",
+   "line": 119,
+   "before": "if \"domain\" not in kw and \"sampler\" not in kw:",
+   "after": "if \"domain\" not in kw or \"sampler\" not in kw:",
+   "kind": "a condition weakened",
+   "killed": false,
+   "seconds": 20.9
+  },
+  {
+   "module": "pipeline.py",
+   "line": 190,
+   "before": "done = degrade.apply_to_all(members, members[0].style.degradation, seed=self.seed)",
+   "after": "done = degrade.apply_to_all(members, members[1].style.degradation, seed=self.seed)",
+   "kind": "the wrong element",
+   "killed": false,
+   "seconds": 21.0
+  },
+  {
+   "module": "pipeline.py",
+   "line": 226,
+   "before": "if variants > 1 and (spec.figure_id, 1) in drawn:",
+   "after": "if variants > 1 or (spec.figure_id, 1) in drawn:",
+   "kind": "a condition weakened",
+   "killed": false,
+   "seconds": 21.4
+  },
+  {
+   "module": "registry/channels.py",
+   "line": 143,
+   "before": "return pixels_for(value, axis, tolerance) >= MIN_PIXELS",
+   "after": "return pixels_for(value, axis, tolerance) >  MIN_PIXELS",
+   "kind": "a bound loosened by one",
+   "killed": true,
+   "seconds": 0.9
+  },
+  {
+   "module": "registry/channels.py",
+   "line": 165,
+   "before": "if char.isdigit() or char == \".\" or (char == \",\" and number):",
+   "after": "if char.isdigit() or char == \".\" or (char == \",\" or number):",
+   "kind": "a condition weakened",
+   "killed": true,
+   "seconds": 0.8
+  },
+  {
+   "module": "registry/channels.py",
+   "line": 138,
+   "before": "return angular_epsilon(radius) <= tolerance * abs(value)",
+   "after": "return angular_epsilon(radius) <  tolerance * abs(value)",
+   "kind": "a bound loosened by one",
+   "killed": false,
+   "seconds": 48.6
+  },
+  {
+   "module": "registry/charts.py",
+   "line": 283,
+   "before": "DEFAULT_BAND = DENSITY_BANDS[0]",
+   "after": "DEFAULT_BAND = DENSITY_BANDS[1]",
+   "kind": "the wrong element",
+   "killed": false,
+   "seconds": 48.7
+  },
+  {
+   "module": "registry/charts.py",
+   "line": 101,
+   "before": "return self.channel[0]",
+   "after": "return self.channel[1]",
+   "kind": "the wrong element",
+   "killed": true,
+   "seconds": 0.9
+  },
+  {
+   "module": "registry/charts.py",
+   "line": 295,
+   "before": "return ok[-1] if ok else DENSITY_BANDS[0]",
+   "after": "return ok[-1] if ok else DENSITY_BANDS[1]",
+   "kind": "the wrong element",
+   "killed": false,
+   "seconds": 49.5
+  },
+  {
+   "module": "registry/conditions.py",
+   "line": 141,
+   "before": "if not within(card, bound):",
+   "after": "if within(card, bound):",
+   "kind": "a negation dropped",
+   "killed": true,
+   "seconds": 0.6
+  },
+  {
+   "module": "registry/conditions.py",
+   "line": 218,
+   "before": "hi = available if hi is None else min(hi, available)",
+   "after": "hi = available if hi is None else max(hi, available)",
+   "kind": "the wrong end of a range",
+   "killed": false,
+   "seconds": 12.8
+  },
+  {
+   "module": "registry/conditions.py",
+   "line": 149,
+   "before": "if not schema.column(name).additive:",
+   "after": "if schema.column(name).additive:",
+   "kind": "a negation dropped",
+   "killed": true,
+   "seconds": 0.6
+  },
+  {
+   "module": "report.py",
+   "line": 198,
+   "before": "if spec.source.kind == \"intent\" and spec.source.intent_index is not None:",
+   "after": "if spec.source.kind == \"intent\" or spec.source.intent_index is not None:",
+   "kind": "a condition weakened",
+   "killed": false,
+   "seconds": 1.2
+  },
+  {
+   "module": "report.py",
+   "line": 198,
+   "before": "if spec.source.kind == \"intent\" and spec.source.intent_index is not None:",
+   "after": "if spec.source.kind == \"intent\" and spec.source.intent_index is None:",
+   "kind": "a negation dropped",
+   "killed": false,
+   "seconds": 1.2
+  },
+  {
+   "module": "report.py",
+   "line": 305,
+   "before": "row = example.grounded_table[0]",
+   "after": "row = example.grounded_table[1]",
+   "kind": "the wrong element",
+   "killed": false,
+   "seconds": 1.2
+  },
+  {
+   "module": "s01_data/author.py",
+   "line": 412,
+   "before": "if log is not None:",
+   "after": "if log is None:",
+   "kind": "a negation dropped",
+   "killed": true,
+   "seconds": 0.6
+  },
+  {
+   "module": "s01_data/author.py",
+   "line": 331,
+   "before": "if not drawable.ok(min_families):",
+   "after": "if drawable.ok(min_families):",
+   "kind": "a negation dropped",
+   "killed": true,
+   "seconds": 0.6
+  },
+  {
+   "module": "s01_data/author.py",
+   "line": 290,
+   "before": "row_lo=row_range[0], row_hi=row_range[1],",
+   "after": "row_lo=row_range[1], row_hi=row_range[1],",
+   "kind": "the wrong element",
+   "killed": false,
+   "seconds": 0.9
+  },
+  {
+   "module": "s01_data/declare.py",
+   "line": 329,
+   "before": "if script.time is not None:",
+   "after": "if script.time is None:",
+   "kind": "a negation dropped",
+   "killed": true,
+   "seconds": 0.6
+  },
+  {
+   "module": "s01_data/declare.py",
+   "line": 256,
+   "before": "if not isinstance(name, str) or not name.isidentifier():",
+   "after": "if isinstance(name, str) or not name.isidentifier():",
+   "kind": "a negation dropped",
+   "killed": true,
+   "seconds": 0.5
+  },
+  {
+   "module": "s01_data/declare.py",
+   "line": 190,
+   "before": "if parent is not None and parent not in {d.name for d in self.dims}:",
+   "after": "if parent is None and parent not in {d.name for d in self.dims}:",
+   "kind": "a negation dropped",
+   "killed": true,
+   "seconds": 0.6
+  },
+  {
+   "module": "s01_data/engine.py",
+   "line": 104,
+   "before": "start = sorted(nodes)[0]",
+   "after": "start = sorted(nodes)[1]",
+   "kind": "the wrong element",
+   "killed": false,
+   "seconds": 1.0
+  },
+  {
+   "module": "s01_data/engine.py",
+   "line": 55,
+   "before": "if script.time is not None:",
+   "after": "if script.time is None:",
+   "kind": "a negation dropped",
+   "killed": true,
+   "seconds": 0.6
+  },
+  {
+   "module": "s01_data/engine.py",
+   "line": 162,
+   "before": "weights = decl.weights if not isinstance(decl.weights, dict) else None",
+   "after": "weights = decl.weights if isinstance(decl.weights, dict) else None",
+   "kind": "a negation dropped",
+   "killed": true,
+   "seconds": 0.7
+  },
+  {
+   "module": "s01_data/expr.py",
+   "line": 159,
+   "before": "and node.func.id == _IND:",
+   "after": "or node.func.id == _IND:",
+   "kind": "a condition weakened",
+   "killed": true,
+   "seconds": 0.7
+  },
+  {
+   "module": "s01_data/expr.py",
+   "line": 172,
+   "before": "if node.id not in env:",
+   "after": "if node.id in env:",
+   "kind": "a negation dropped",
+   "killed": true,
+   "seconds": 0.6
+  },
+  {
+   "module": "s01_data/expr.py",
+   "line": 185,
+   "before": "_eval(node.comparators[0], env, rng, n))",
+   "after": "_eval(node.comparators[1], env, rng, n))",
+   "kind": "the wrong element",
+   "killed": true,
+   "seconds": 0.6
+  },
+  {
+   "module": "s01_data/pool.py",
+   "line": 482,
+   "before": "if target <= 0:",
+   "after": "if target <  0:",
+   "kind": "a bound loosened by one",
+   "killed": true,
+   "seconds": 0.7
+  },
+  {
+   "module": "s01_data/pool.py",
+   "line": 488,
+   "before": "thin = min(TIERS, key=lambda t: counts.get(t, 0))",
+   "after": "thin = max(TIERS, key=lambda t: counts.get(t, 0))",
+   "kind": "the wrong end of a range",
+   "killed": true,
+   "seconds": 0.6
+  },
+  {
+   "module": "s01_data/pool.py",
+   "line": 307,
+   "before": "if total - len(left) >= RESET_AFTER * total:",
+   "after": "if total - len(left) >  RESET_AFTER * total:",
+   "kind": "a bound loosened by one",
+   "killed": true,
+   "seconds": 0.6
+  },
+  {
+   "module": "s01_data/validate.py",
+   "line": 189,
+   "before": "if not schema.has(name):",
+   "after": "if schema.has(name):",
+   "kind": "a negation dropped",
+   "killed": true,
+   "seconds": 0.6
+  },
+  {
+   "module": "s01_data/validate.py",
+   "line": 186,
+   "before": "if not columns:",
+   "after": "if columns:",
+   "kind": "a negation dropped",
+   "killed": true,
+   "seconds": 0.6
+  },
+  {
+   "module": "s01_data/validate.py",
+   "line": 115,
+   "before": "if not any(CARD_RANGE[0] <= c.cardinality <= CARD_RANGE[1] for c in schema.categories):",
+   "after": "if not any(CARD_RANGE[1] <= c.cardinality <= CARD_RANGE[1] for c in schema.categories):",
+   "kind": "the wrong element",
+   "killed": false,
+   "seconds": 1.0
+  },
+  {
+   "module": "s02_figure/admit.py",
+   "line": 112,
+   "before": "if spec.min_rows_per_cell and spec.shape != \"per_row\":",
+   "after": "if spec.min_rows_per_cell or spec.shape != \"per_row\":",
+   "kind": "a condition weakened",
+   "killed": false,
+   "seconds": 1.3
+  },
+  {
+   "module": "s02_figure/admit.py",
+   "line": 98,
+   "before": "needed = min(DISTINCT_CEILING, max(2, math.ceil(len(values) * DISTINCT_FRACTION)))",
+   "after": "needed = min(DISTINCT_CEILING, min(2, math.ceil(len(values) * DISTINCT_FRACTION)))",
+   "kind": "the wrong end of a range",
+   "killed": true,
+   "seconds": 0.6
+  },
+  {
+   "module": "s02_figure/admit.py",
+   "line": 126,
+   "before": "smallest = min(values) / total if total else 0.0",
+   "after": "smallest = max(values) / total if total else 0.0",
+   "kind": "the wrong end of a range",
+   "killed": true,
+   "seconds": 0.5
+  },
+  {
+   "module": "s02_figure/caption.py",
+   "line": 57,
+   "before": "if spec.source.kind == \"intent\" and spec.source.intent_index is not None:",
+   "after": "if spec.source.kind == \"intent\" and spec.source.intent_index is None:",
+   "kind": "a negation dropped",
+   "killed": true,
+   "seconds": 0.6
+  },
+  {
+   "module": "s02_figure/caption.py",
+   "line": 46,
+   "before": "measure = spec.label_of(b.measures[0]) if b.measures else \"\"",
+   "after": "measure = spec.label_of(b.measures[1]) if b.measures else \"\"",
+   "kind": "the wrong element",
+   "killed": true,
+   "seconds": 0.6
+  },
+  {
+   "module": "s02_figure/caption.py",
+   "line": 57,
+   "before": "if spec.source.kind == \"intent\" and spec.source.intent_index is not None:",
+   "after": "if spec.source.kind == \"intent\" or spec.source.intent_index is not None:",
+   "kind": "a condition weakened",
+   "killed": true,
+   "seconds": 0.6
+  },
+  {
+   "module": "s02_figure/compose.py",
+   "line": 275,
+   "before": "if n_cat > len(cats) or (spec.n_time[0] and not times):",
+   "after": "if n_cat > len(cats) or (spec.n_time[0] and times):",
+   "kind": "a negation dropped",
+   "killed": false,
+   "seconds": 23.6
+  },
+  {
+   "module": "s02_figure/compose.py",
+   "line": 451,
+   "before": "shared = [f for f in multi if f.sharing.share_legend and f.sharing.series_column]",
+   "after": "shared = [f for f in multi if f.sharing.share_legend or f.sharing.series_column]",
+   "kind": "a condition weakened",
+   "killed": true,
+   "seconds": 1.0
+  },
+  {
+   "module": "s02_figure/compose.py",
+   "line": 270,
+   "before": "if not spec.require_stage or c.ordered == \"stage\"]",
+   "after": "if spec.require_stage or c.ordered == \"stage\"]",
+   "kind": "a negation dropped",
+   "killed": true,
+   "seconds": 37.2
+  },
+  {
+   "module": "s02_figure/keys.py",
+   "line": 59,
+   "before": "if binding.colour_group and binding.colour_group not in columns:",
+   "after": "if binding.colour_group or binding.colour_group not in columns:",
+   "kind": "a condition weakened",
+   "killed": true,
+   "seconds": 1.3
+  },
+  {
+   "module": "s02_figure/keys.py",
+   "line": 59,
+   "before": "if binding.colour_group and binding.colour_group not in columns:",
+   "after": "if binding.colour_group and binding.colour_group in columns:",
+   "kind": "a negation dropped",
+   "killed": true,
+   "seconds": 1.3
+  },
+  {
+   "module": "s02_figure/keys.py",
+   "line": 80,
+   "before": "parent = schema.column(binding.dims[-1]).parent",
+   "after": "parent = schema.column(binding.dims[0]).parent",
+   "kind": "the wrong element",
+   "killed": true,
+   "seconds": 1.3
+  },
+  {
+   "module": "s02_figure/panel.py",
+   "line": 353,
+   "before": "if CHARTS[binding.chart_type].family != \"comparison\" or not binding.measures:",
+   "after": "if CHARTS[binding.chart_type].family != \"comparison\" or binding.measures:",
+   "kind": "a negation dropped",
+   "killed": true,
+   "seconds": 0.7
+  },
+  {
+   "module": "s02_figure/panel.py",
+   "line": 203,
+   "before": "if c.family == family and c.tier <= max_tier",
+   "after": "if c.family == family or c.tier <= max_tier",
+   "kind": "a condition weakened",
+   "killed": true,
+   "seconds": 0.7
+  },
+  {
+   "module": "s02_figure/panel.py",
+   "line": 359,
+   "before": "if view is not None:",
+   "after": "if view is None:",
+   "kind": "a negation dropped",
+   "killed": true,
+   "seconds": 0.7
+  },
+  {
+   "module": "s02_figure/project.py",
+   "line": 254,
+   "before": "whisker_hi = float(inside.max()) if inside.size else float(chunk.max())",
+   "after": "whisker_hi = float(inside.min()) if inside.size else float(chunk.max())",
+   "kind": "the wrong end of a range",
+   "killed": true,
+   "seconds": 0.9
+  },
+  {
+   "module": "s02_figure/project.py",
+   "line": 311,
+   "before": "series = df[binding.dims[0]].astype(str).to_numpy() if binding.dims else None",
+   "after": "series = df[binding.dims[1]].astype(str).to_numpy() if binding.dims else None",
+   "kind": "the wrong element",
+   "killed": true,
+   "seconds": 0.9
+  },
+  {
+   "module": "s02_figure/project.py",
+   "line": 276,
+   "before": "values = df[binding.measures[0]].astype(float).to_numpy()",
+   "after": "values = df[binding.measures[1]].astype(float).to_numpy()",
+   "kind": "the wrong element",
+   "killed": true,
+   "seconds": 0.9
+  },
+  {
+   "module": "s02_figure/sampling.py",
+   "line": 103,
+   "before": "reachable = any(c.tier <= max_tier for c in familyless())",
+   "after": "reachable = any(c.tier <  max_tier for c in familyless())",
+   "kind": "a bound loosened by one",
+   "killed": true,
+   "seconds": 0.9
+  },
+  {
+   "module": "s02_figure/sampling.py",
+   "line": 134,
+   "before": "if w.sum() <= 0:",
+   "after": "if w.sum() <  0:",
+   "kind": "a bound loosened by one",
+   "killed": true,
+   "seconds": 0.9
+  },
+  {
+   "module": "s02_figure/sampling.py",
+   "line": 87,
+   "before": "if not path.exists():",
+   "after": "if path.exists():",
+   "kind": "a negation dropped",
+   "killed": true,
+   "seconds": 1.0
+  },
+  {
+   "module": "s02_figure/title.py",
+   "line": 297,
+   "before": "unnamed = [c for c in columns_of(specs) if not str(names.get(c, \"\")).strip()]",
+   "after": "unnamed = [c for c in columns_of(specs) if str(names.get(c, \"\")).strip()]",
+   "kind": "a negation dropped",
+   "killed": true,
+   "seconds": 12.3
+  },
+  {
+   "module": "s02_figure/title.py",
+   "line": 240,
+   "before": "if spec.source.kind == \"intent\" and spec.source.intent_index is not None:",
+   "after": "if spec.source.kind == \"intent\" or spec.source.intent_index is not None:",
+   "kind": "a condition weakened",
+   "killed": false,
+   "seconds": 1.8
+  },
+  {
+   "module": "s02_figure/title.py",
+   "line": 318,
+   "before": "measure = b.measures[0] if b.measures else \"\"",
+   "after": "measure = b.measures[1] if b.measures else \"\"",
+   "kind": "the wrong element",
+   "killed": true,
+   "seconds": 1.1
+  },
+  {
+   "module": "s03_render/degrade.py",
+   "line": 107,
+   "before": "return apply_to_all([rendered], degradation, seed=seed)[0]",
+   "after": "return apply_to_all([rendered], degradation, seed=seed)[1]",
+   "kind": "the wrong element",
+   "killed": true,
+   "seconds": 1.7
+  },
+  {
+   "module": "s03_render/degrade.py",
+   "line": 118,
+   "before": "if not rendered or degradation.kind == \"none\":",
+   "after": "if rendered or degradation.kind == \"none\":",
+   "kind": "a negation dropped",
+   "killed": true,
+   "seconds": 1.7
+  },
+  {
+   "module": "s03_render/degrade.py",
+   "line": 51,
+   "before": "factor = DOWNSCALE[0] + amount * (DOWNSCALE[1] - DOWNSCALE[0])",
+   "after": "factor = DOWNSCALE[1] + amount * (DOWNSCALE[1] - DOWNSCALE[0])",
+   "kind": "the wrong element",
+   "killed": false,
+   "seconds": 3.9
+  },
+  {
+   "module": "s03_render/draw/boxlike.py",
+   "line": 89,
+   "before": "at = frame.position(datum.key[0])",
+   "after": "at = frame.position(datum.key[1])",
+   "kind": "the wrong element",
+   "killed": true,
+   "seconds": 2.8
+  },
+  {
+   "module": "s03_render/draw/boxlike.py",
+   "line": 61,
+   "before": "at = frame.position(datum.key[0])",
+   "after": "at = frame.position(datum.key[1])",
+   "kind": "the wrong element",
+   "killed": true,
+   "seconds": 2.8
+  },
+  {
+   "module": "s03_render/draw/boxlike.py",
+   "line": 110,
+   "before": "return BACKGROUND if 0.299 * rgb[0] + 0.587 * rgb[1] + 0.114 * rgb[2] < DARK else TEXT_COLOR",
+   "after": "return BACKGROUND if 0.299 * rgb[1] + 0.587 * rgb[1] + 0.114 * rgb[2] < DARK else TEXT_COLOR",
+   "kind": "the wrong element",
+   "killed": false,
+   "seconds": 48.3
+  },
+  {
+   "module": "s03_render/draw/canvas.py",
+   "line": 421,
+   "before": "if s.axis_title_above and not panel.has_title:",
+   "after": "if s.axis_title_above and panel.has_title:",
+   "kind": "a negation dropped",
+   "killed": true,
+   "seconds": 44.9
+  },
+  {
+   "module": "s03_render/draw/canvas.py",
+   "line": 650,
+   "before": "x = max(panel.rect.x0 + 6, panel.rect.x1 - 6 - widest)",
+   "after": "x = max(panel.rect.x1 + 6, panel.rect.x1 - 6 - widest)",
+   "kind": "one edge of a box for another",
+   "killed": false,
+   "seconds": 106.9
+  },
+  {
+   "module": "s03_render/draw/canvas.py",
+   "line": 457,
+   "before": "self._pending = [(a, then) for a, then in self._pending if a is not artist]",
+   "after": "self._pending = [(a, then) for a, then in self._pending if a is artist]",
+   "kind": "a negation dropped",
+   "killed": true,
+   "seconds": 15.6
+  },
+  {
+   "module": "s03_render/draw/cell.py",
+   "line": 149,
+   "before": "return Box(rect.x0, rect.y0 + rect.height * HEADROOM, rect.x1, rect.y1)",
+   "after": "return Box(rect.x0, rect.y1 + rect.height * HEADROOM, rect.x1, rect.y1)",
+   "kind": "one edge of a box for another",
+   "killed": true,
+   "seconds": 4.3
+  },
+  {
+   "module": "s03_render/draw/cell.py",
+   "line": 149,
+   "before": "return Box(rect.x0, rect.y0 + rect.height * HEADROOM, rect.x1, rect.y1)",
+   "after": "return Box(rect.x1, rect.y0 + rect.height * HEADROOM, rect.x1, rect.y1)",
+   "kind": "one edge of a box for another",
+   "killed": true,
+   "seconds": 4.2
+  },
+  {
+   "module": "s03_render/draw/cell.py",
+   "line": 116,
+   "before": "if frame.series and len(datum.key) > 1 else 0) + 1,",
+   "after": "if frame.series or len(datum.key) > 1 else 0) + 1,",
+   "kind": "a condition weakened",
+   "killed": false,
+   "seconds": 48.7
+  },
+  {
+   "module": "s03_render/draw/context.py",
+   "line": 103,
+   "before": "name = self.view.key_prefix[0]",
+   "after": "name = self.view.key_prefix[1]",
+   "kind": "the wrong element",
+   "killed": false,
+   "seconds": 107.5
+  },
+  {
+   "module": "s03_render/draw/context.py",
+   "line": 71,
+   "before": "return b.group_columns[0] if b.group_columns else None",
+   "after": "return b.group_columns[1] if b.group_columns else None",
+   "kind": "the wrong element",
+   "killed": true,
+   "seconds": 1.0
+  },
+  {
+   "module": "s03_render/draw/context.py",
+   "line": 84,
+   "before": "if not column:",
+   "after": "if column:",
+   "kind": "a negation dropped",
+   "killed": true,
+   "seconds": 16.3
+  },
+  {
+   "module": "s03_render/draw/fit.py",
+   "line": 79,
+   "before": "if not any(nudge(canvas, panel, floor_for(canvas, panel, floor))",
+   "after": "if any(nudge(canvas, panel, floor_for(canvas, panel, floor))",
+   "kind": "a negation dropped",
+   "killed": false,
+   "seconds": 112.3
+  },
+  {
+   "module": "s03_render/draw/fit.py",
+   "line": 155,
+   "before": "if box.y0 >= ceiling:",
+   "after": "if box.y1 >= ceiling:",
+   "kind": "one edge of a box for another",
+   "killed": true,
+   "seconds": 42.5
+  },
+  {
+   "module": "s03_render/draw/fit.py",
+   "line": 189,
+   "before": "column = max(left - 6.0 - canvas.text_box(side).width / 2,",
+   "after": "column = min(left - 6.0 - canvas.text_box(side).width / 2,",
+   "kind": "the wrong end of a range",
+   "killed": true,
+   "seconds": 46.8
+  },
+  {
+   "module": "s03_render/draw/frame.py",
+   "line": 93,
+   "before": "if len(d.key) >= 2 and d.key[1] not in out:",
+   "after": "if len(d.key) >  2 and d.key[1] not in out:",
+   "kind": "a bound loosened by one",
+   "killed": true,
+   "seconds": 16.6
+  },
+  {
+   "module": "s03_render/draw/frame.py",
+   "line": 151,
+   "before": "categories = tuple(categories_of(views[0]))",
+   "after": "categories = tuple(categories_of(views[1]))",
+   "kind": "the wrong element",
+   "killed": true,
+   "seconds": 0.9
+  },
+  {
+   "module": "s03_render/draw/frame.py",
+   "line": 158,
+   "before": "is_time = bool(views[0].binding.time)",
+   "after": "is_time = bool(views[1].binding.time)",
+   "kind": "the wrong element",
+   "killed": true,
+   "seconds": 0.9
+  },
+  {
+   "module": "s03_render/draw/labels.py",
+   "line": 122,
+   "before": "and ctx.panel.right_ax is not None else ctx.panel.ax)",
+   "after": "or ctx.panel.right_ax is not None else ctx.panel.ax)",
+   "kind": "a condition weakened",
+   "killed": true,
+   "seconds": 58.7
+  },
+  {
+   "module": "s03_render/draw/labels.py",
+   "line": 76,
+   "before": "if lum <= MAX_ON_PAGE:",
+   "after": "if lum <  MAX_ON_PAGE:",
+   "kind": "a bound loosened by one",
+   "killed": false,
+   "seconds": 59.5
+  },
+  {
+   "module": "s03_render/draw/labels.py",
+   "line": 50,
+   "before": "luminance = 0.299 * fill[0] + 0.587 * fill[1] + 0.114 * fill[2]",
+   "after": "luminance = 0.299 * fill[1] + 0.587 * fill[1] + 0.114 * fill[2]",
+   "kind": "the wrong element",
+   "killed": true,
+   "seconds": 53.1
+  },
+  {
+   "module": "s03_render/draw/layout.py",
+   "line": 87,
+   "before": "box = Box(plot.x0 - far, plot.y0, plot.x0 - near, plot.y1)",
+   "after": "box = Box(plot.x1 - far, plot.y0, plot.x0 - near, plot.y1)",
+   "kind": "one edge of a box for another",
+   "killed": false,
+   "seconds": 59.5
+  },
+  {
+   "module": "s03_render/draw/layout.py",
+   "line": 89,
+   "before": "box = Box(plot.x1 + near, plot.y0, plot.x1 + far, plot.y1)",
+   "after": "box = Box(plot.x1 + near, plot.y1, plot.x1 + far, plot.y1)",
+   "kind": "one edge of a box for another",
+   "killed": true,
+   "seconds": 0.8
+  },
+  {
+   "module": "s03_render/draw/layout.py",
+   "line": 85,
+   "before": "box = Box(plot.x0, plot.y1 + near, plot.x1, plot.y1 + far)",
+   "after": "box = Box(plot.x1, plot.y1 + near, plot.x1, plot.y1 + far)",
+   "kind": "one edge of a box for another",
+   "killed": true,
+   "seconds": 0.8
+  },
+  {
+   "module": "s03_render/draw/point.py",
+   "line": 251,
+   "before": "return ctx.colour_for(data[0].key)",
+   "after": "return ctx.colour_for(data[1].key)",
+   "kind": "the wrong element",
+   "killed": false,
+   "seconds": 48.5
+  },
+  {
+   "module": "s03_render/draw/point.py",
+   "line": 307,
+   "before": "*_xy(frame, positions[-1], (lows[-1] + highs[-1]) / 2), colour)",
+   "after": "*_xy(frame, positions[0], (lows[-1] + highs[-1]) / 2), colour)",
+   "kind": "the wrong element",
+   "killed": false,
+   "seconds": 48.9
+  },
+  {
+   "module": "s03_render/draw/point.py",
+   "line": 232,
+   "before": "return datum.key[1] if len(datum.key) >= 2 else \"\"",
+   "after": "return datum.key[1] if len(datum.key) >  2 else \"\"",
+   "kind": "a bound loosened by one",
+   "killed": true,
+   "seconds": 3.4
+  },
+  {
+   "module": "s03_render/draw/rect.py",
+   "line": 76,
+   "before": "if name not in names:",
+   "after": "if name in names:",
+   "kind": "a negation dropped",
+   "killed": true,
+   "seconds": 1.0
+  },
+  {
+   "module": "s03_render/draw/rect.py",
+   "line": 55,
+   "before": "return datum.key[1] if len(datum.key) >= 2 and series else \"\"",
+   "after": "return datum.key[1] if len(datum.key) >= 2 or series else \"\"",
+   "kind": "a condition weakened",
+   "killed": true,
+   "seconds": 16.6
+  },
+  {
+   "module": "s03_render/draw/rect.py",
+   "line": 74,
+   "before": "names = here.setdefault(datum.key[0], [])",
+   "after": "names = here.setdefault(datum.key[1], [])",
+   "kind": "the wrong element",
+   "killed": true,
+   "seconds": 1.0
+  },
+  {
+   "module": "s03_render/draw/sector.py",
+   "line": 88,
+   "before": "centre = ((rect.x0 + rect.x1) / 2, (rect.y0 + rect.y1) / 2)",
+   "after": "centre = ((rect.x1 + rect.x1) / 2, (rect.y0 + rect.y1) / 2)",
+   "kind": "one edge of a box for another",
+   "killed": true,
+   "seconds": 11.1
+  },
+  {
+   "module": "s03_render/draw/sector.py",
+   "line": 71,
+   "before": "return Box(min(xs), min(ys), max(xs), max(ys))",
+   "after": "return Box(min(xs), min(ys), min(xs), max(ys))",
+   "kind": "the wrong end of a range",
+   "killed": true,
+   "seconds": 4.5
+  },
+  {
+   "module": "s03_render/draw/sector.py",
+   "line": 89,
+   "before": "radius = RADIUS * min(rect.width, rect.height)",
+   "after": "radius = RADIUS * max(rect.width, rect.height)",
+   "kind": "the wrong end of a range",
+   "killed": false,
+   "seconds": 49.0
+  },
+  {
+   "module": "s03_render/page.py",
+   "line": 128,
+   "before": "if count <= 1:",
+   "after": "if count <  1:",
+   "kind": "a bound loosened by one",
+   "killed": true,
+   "seconds": 1.5
+  },
+  {
+   "module": "s03_render/page.py",
+   "line": 234,
+   "before": "return (float(pts[0][i]), float(pts[1][i]))",
+   "after": "return (float(pts[1][i]), float(pts[1][i]))",
+   "kind": "the wrong element",
+   "killed": true,
+   "seconds": 1.2
+  },
+  {
+   "module": "s03_render/page.py",
+   "line": 131,
+   "before": "rows = 1 if count <= 2 else -(-count // 2)",
+   "after": "rows = 1 if count <  2 else -(-count // 2)",
+   "kind": "a bound loosened by one",
+   "killed": false,
+   "seconds": 3.0
+  },
+  {
+   "module": "s03_render/render.py",
+   "line": 130,
+   "before": "return key[-1] if len(key) > 1 else (key[0] if key else \"\")",
+   "after": "return key[-1] if len(key) > 1 else (key[1] if key else \"\")",
+   "kind": "the wrong element",
+   "killed": true,
+   "seconds": 0.9
+  },
+  {
+   "module": "s03_render/render.py",
+   "line": 212,
+   "before": "above = [b for b in spec.texts if b.scope == \"figure\" and b.role in",
+   "after": "above = [b for b in spec.texts if b.scope == \"figure\" or b.role in",
+   "kind": "a condition weakened",
+   "killed": false,
+   "seconds": 110.0
+  },
+  {
+   "module": "s03_render/render.py",
+   "line": 228,
+   "before": "canvas.write_text(block, Box(rect.x0, rect.y0 - PANEL_TITLE_HEIGHT,",
+   "after": "canvas.write_text(block, Box(rect.x0, rect.y1 - PANEL_TITLE_HEIGHT,",
+   "kind": "one edge of a box for another",
+   "killed": false,
+   "seconds": 109.1
+  },
+  {
+   "module": "s03_render/style.py",
+   "line": 203,
+   "before": "if step <= 0:",
+   "after": "if step <  0:",
+   "kind": "a bound loosened by one",
+   "killed": false,
+   "seconds": 106.7
+  },
+  {
+   "module": "s03_render/style.py",
+   "line": 197,
+   "before": "return (lo, max(hi, lo + step), step)",
+   "after": "return (lo, min(hi, lo + step), step)",
+   "kind": "the wrong end of a range",
+   "killed": false,
+   "seconds": 104.3
+  },
+  {
+   "module": "s03_render/style.py",
+   "line": 178,
+   "before": "lo = max(min(vmin, vmax), vmax / 1e4)",
+   "after": "lo = min(min(vmin, vmax), vmax / 1e4)",
+   "kind": "the wrong end of a range",
+   "killed": false,
+   "seconds": 108.2
+  },
+  {
+   "module": "s04_record/merge.py",
+   "line": 46,
+   "before": "if not encoding:",
+   "after": "if encoding:",
+   "kind": "a negation dropped",
+   "killed": true,
+   "seconds": 0.9
+  },
+  {
+   "module": "s04_record/readable.py",
+   "line": 58,
+   "before": "if mark.mark_shape == \"sector\" and \"share\" in mark.values and not mark.labeled:",
+   "after": "if mark.mark_shape == \"sector\" or \"share\" in mark.values and not mark.labeled:",
+   "kind": "a condition weakened",
+   "killed": true,
+   "seconds": 1.2
+  },
+  {
+   "module": "s04_record/readable.py",
+   "line": 64,
+   "before": "if small in mark.values and large in mark.values:",
+   "after": "if small in mark.values or large in mark.values:",
+   "kind": "a condition weakened",
+   "killed": false,
+   "seconds": 49.7
+  },
+  {
+   "module": "s04_record/readable.py",
+   "line": 76,
+   "before": "return \"not_shown\" not in mark.key_src",
+   "after": "return \"not_shown\" in mark.key_src",
+   "kind": "a negation dropped",
+   "killed": true,
+   "seconds": 1.0
+  },
+  {
+   "module": "s04_record/selfcheck.py",
+   "line": 72,
+   "before": "if not result.has_content:",
+   "after": "if result.has_content:",
+   "kind": "a negation dropped",
+   "killed": true,
+   "seconds": 1.2
+  },
+  {
+   "module": "s04_record/selfcheck.py",
+   "line": 75,
+   "before": "if result.value_agrees is not None:",
+   "after": "if result.value_agrees is None:",
+   "kind": "a negation dropped",
+   "killed": true,
+   "seconds": 1.3
+  },
+  {
+   "module": "s04_record/selfcheck.py",
+   "line": 48,
+   "before": "if not finite:",
+   "after": "if finite:",
+   "kind": "a negation dropped",
+   "killed": true,
+   "seconds": 1.6
+  },
+  {
+   "module": "s05_output/export.py",
+   "line": 198,
+   "before": "if element.category == category and element.text and not element.panel_id]",
+   "after": "if element.category == category or element.text and not element.panel_id]",
+   "kind": "a condition weakened",
+   "killed": true,
+   "seconds": 1.8
+  },
+  {
+   "module": "s05_output/export.py",
+   "line": 198,
+   "before": "if element.category == category and element.text and not element.panel_id]",
+   "after": "if element.category == category and element.text and element.panel_id]",
+   "kind": "a negation dropped",
+   "killed": true,
+   "seconds": 1.7
+  },
+  {
+   "module": "s05_output/export.py",
+   "line": 301,
+   "before": "width = max((len(row[\"key\"]) for row in unit.grounded_table), default=1)",
+   "after": "width = min((len(row[\"key\"]) for row in unit.grounded_table), default=1)",
+   "kind": "the wrong end of a range",
+   "killed": false,
+   "seconds": 5.0
+  },
+  {
+   "module": "s05_output/mixing.py",
+   "line": 84,
+   "before": "if sum(p.weight for p in self.portions) <= 0:",
+   "after": "if sum(p.weight for p in self.portions) <  0:",
+   "kind": "a bound loosened by one",
+   "killed": true,
+   "seconds": 0.6
+  },
+  {
+   "module": "s05_output/mixing.py",
+   "line": 80,
+   "before": "if not self.portions:",
+   "after": "if self.portions:",
+   "kind": "a negation dropped",
+   "killed": true,
+   "seconds": 0.6
+  },
+  {
+   "module": "s05_output/verify.py",
+   "line": 71,
+   "before": "return self.has_content and self.value_agrees is not False",
+   "after": "return self.has_content or self.value_agrees is not False",
+   "kind": "a condition weakened",
+   "killed": true,
+   "seconds": 1.9
+  },
+  {
+   "module": "s05_output/verify.py",
+   "line": 100,
+   "before": "panel = by_id.get(claim.panel_id) or panels[0]",
+   "after": "panel = by_id.get(claim.panel_id) or panels[1]",
+   "kind": "the wrong element",
+   "killed": true,
+   "seconds": 1.9
+  },
+  {
+   "module": "s05_output/verify.py",
+   "line": 121,
+   "before": "if not judgements:",
+   "after": "if judgements:",
+   "kind": "a negation dropped",
+   "killed": true,
+   "seconds": 1.7
+  }
+ ]
+}

@@ -1,0 +1,189 @@
+{
+  "schema_version": 3,
+  "type": "FigureSpec",
+  "data": {
+    "figure_id": "f08",
+    "scenario_id": "er_wait",
+    "panels": [
+      {
+        "panel_id": "p0",
+        "views": [
+          {
+            "binding": {
+              "chart_type": "bar",
+              "dims": [
+                "hospital"
+              ],
+              "time": null,
+              "measures": [
+                "wait_minutes"
+              ],
+              "aggregate": "AVG",
+              "resample": null,
+              "colour_group": null,
+              "key_sources": [
+                "axis_tick"
+              ]
+            },
+            "data": [
+              {
+                "key": [
+                  "Mercy General"
+                ],
+                "values": {
+                  "value": 29.947916666666668
+                },
+                "rows": 192
+              },
+              {
+                "key": [
+                  "St. Luke's"
+                ],
+                "values": {
+                  "value": 24.359235668789808
+                },
+                "rows": 157
+              },
+              {
+                "key": [
+                  "Riverside"
+                ],
+                "values": {
+                  "value": 22.89433962264151
+                },
+                "rows": 106
+              }
+            ],
+            "row_filter": {
+              "column": "visit_date",
+              "start": "2024-01-01",
+              "end": "2024-03-31",
+              "label": "2024-01-01 to 2024-03-31"
+            },
+            "sample_index": [],
+            "key_prefix": [
+              "2024-01-01 to 2024-03-31"
+            ],
+            "prefix_source": [
+              "legend"
+            ]
+          },
+          {
+            "binding": {
+              "chart_type": "category_line",
+              "dims": [
+                "hospital"
+              ],
+              "time": null,
+              "measures": [
+                "wait_minutes"
+              ],
+              "aggregate": "AVG",
+              "resample": null,
+              "colour_group": null,
+              "key_sources": [
+                "axis_tick"
+              ]
+            },
+            "data": [
+              {
+                "key": [
+                  "Mercy General"
+                ],
+                "values": {
+                  "value": 28.580357142857142
+                },
+                "rows": 168
+              },
+              {
+                "key": [
+                  "St. Luke's"
+                ],
+                "values": {
+                  "value": 25.19367088607595
+                },
+                "rows": 158
+              },
+              {
+                "key": [
+                  "Riverside"
+                ],
+                "values": {
+                  "value": 23.862184873949577
+                },
+                "rows": 119
+              }
+            ],
+            "row_filter": {
+              "column": "visit_date",
+              "start": "2024-04-01",
+              "end": "2024-06-30",
+              "label": "2024-04-01 to 2024-06-30"
+            },
+            "sample_index": [],
+            "key_prefix": [
+              "2024-04-01 to 2024-06-30"
+            ],
+            "prefix_source": [
+              "legend"
+            ]
+          }
+        ],
+        "texts": []
+      }
+    ],
+    "layout": "overlay",
+    "sharing": {
+      "share_x": true,
+      "share_y": true,
+      "share_legend": true,
+      "series_column": null
+    },
+    "relation": "overlay_slice",
+    "source": {
+      "kind": "overlay",
+      "intent_index": null,
+      "anchor_figure_id": "f01"
+    },
+    "column_units": {
+      "wait_minutes": "minutes",
+      "cost": "USD",
+      "satisfaction": "points"
+    },
+    "column_names": {
+      "hospital": "Hospital",
+      "department": "Department",
+      "severity": "Severity",
+      "visit_date": "Visit Date",
+      "day_of_week": "Day Of Week",
+      "month": "Month",
+      "quarter": "Quarter",
+      "is_weekend": "Is Weekend",
+      "wait_minutes": "Wait Minutes",
+      "cost": "Cost",
+      "satisfaction": "Satisfaction"
+    },
+    "texts": [
+      {
+        "role": "title",
+        "text": "Avg wait minutes by hospital",
+        "scope": "figure",
+        "placement": "above"
+      },
+      {
+        "role": "subtitle",
+        "text": "f08, overlay slice",
+        "scope": "figure",
+        "placement": "above"
+      },
+      {
+        "role": "unit",
+        "text": "minutes",
+        "scope": "figure",
+        "placement": "above"
+      }
+    ],
+    "page_id": "",
+    "caption": "Average Wait Minutes by Hospital, one measure over two slices in one plotting area."
+  }
+}

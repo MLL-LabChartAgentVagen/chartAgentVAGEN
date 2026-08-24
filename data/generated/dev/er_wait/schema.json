@@ -1,0 +1,279 @@
+{
+  "schema_version": 3,
+  "type": "TableSchema",
+  "data": {
+    "scenario_id": "er_wait",
+    "scenario_title": "Emergency department visits and wait times at three metro hospitals, Jan-Jun 2024",
+    "data_context": "The county health department compiled per-visit records from three hospitals for January through June 2024 to assess a new triage diversion policy.",
+    "columns": [
+      {
+        "name": "hospital",
+        "kind": "category",
+        "cardinality": 3,
+        "group": "entity",
+        "parent": null,
+        "ordered": null,
+        "values": [
+          "Mercy General",
+          "St. Luke's",
+          "Riverside"
+        ],
+        "unit": null,
+        "additive": null,
+        "freq": null,
+        "start": null,
+        "end": null,
+        "derived_from": null
+      },
+      {
+        "name": "department",
+        "kind": "category",
+        "cardinality": 4,
+        "group": "entity",
+        "parent": "hospital",
+        "ordered": null,
+        "values": [
+          "Internal Medicine",
+          "Surgery",
+          "Pediatrics",
+          "Trauma"
+        ],
+        "unit": null,
+        "additive": null,
+        "freq": null,
+        "start": null,
+        "end": null,
+        "derived_from": null
+      },
+      {
+        "name": "severity",
+        "kind": "category",
+        "cardinality": 3,
+        "group": "triage",
+        "parent": null,
+        "ordered": "ordinal",
+        "values": [
+          "Minor",
+          "Moderate",
+          "Severe"
+        ],
+        "unit": null,
+        "additive": null,
+        "freq": null,
+        "start": null,
+        "end": null,
+        "derived_from": null
+      },
+      {
+        "name": "visit_date",
+        "kind": "time",
+        "cardinality": 182,
+        "group": "calendar",
+        "parent": null,
+        "ordered": null,
+        "values": [],
+        "unit": null,
+        "additive": null,
+        "freq": "daily",
+        "start": "2024-01-01",
+        "end": "2024-06-30",
+        "derived_from": null
+      },
+      {
+        "name": "day_of_week",
+        "kind": "category",
+        "cardinality": 7,
+        "group": "calendar",
+        "parent": null,
+        "ordered": "ordinal",
+        "values": [
+          "Mon",
+          "Tue",
+          "Wed",
+          "Thu",
+          "Fri",
+          "Sat",
+          "Sun"
+        ],
+        "unit": null,
+        "additive": null,
+        "freq": null,
+        "start": null,
+        "end": null,
+        "derived_from": "visit_date"
+      },
+      {
+        "name": "month",
+        "kind": "category",
+        "cardinality": 6,
+        "group": "calendar",
+        "parent": null,
+        "ordered": "ordinal",
+        "values": [
+          "2024-01",
+          "2024-02",
+          "2024-03",
+          "2024-04",
+          "2024-05",
+          "2024-06"
+        ],
+        "unit": null,
+        "additive": null,
+        "freq": null,
+        "start": null,
+        "end": null,
+        "derived_from": "visit_date"
+      },
+      {
+        "name": "quarter",
+        "kind": "category",
+        "cardinality": 2,
+        "group": "calendar",
+        "parent": null,
+        "ordered": "ordinal",
+        "values": [
+          "2024-Q1",
+          "2024-Q2"
+        ],
+        "unit": null,
+        "additive": null,
+        "freq": null,
+        "start": null,
+        "end": null,
+        "derived_from": "visit_date"
+      },
+      {
+        "name": "is_weekend",
+        "kind": "category",
+        "cardinality": 2,
+        "group": "calendar",
+        "parent": null,
+        "ordered": "ordinal",
+        "values": [
+          "No",
+          "Yes"
+        ],
+        "unit": null,
+        "additive": null,
+        "freq": null,
+        "start": null,
+        "end": null,
+        "derived_from": "visit_date"
+      },
+      {
+        "name": "wait_minutes",
+        "kind": "measure",
+        "cardinality": 900,
+        "group": null,
+        "parent": null,
+        "ordered": null,
+        "values": [],
+        "unit": "minutes",
+        "additive": true,
+        "freq": null,
+        "start": null,
+        "end": null,
+        "derived_from": null
+      },
+      {
+        "name": "cost",
+        "kind": "measure",
+        "cardinality": 900,
+        "group": null,
+        "parent": null,
+        "ordered": null,
+        "values": [],
+        "unit": "USD",
+        "additive": true,
+        "freq": null,
+        "start": null,
+        "end": null,
+        "derived_from": null
+      },
+      {
+        "name": "satisfaction",
+        "kind": "measure",
+        "cardinality": 900,
+        "group": null,
+        "parent": null,
+        "ordered": null,
+        "values": [],
+        "unit": "points",
+        "additive": false,
+        "freq": null,
+        "start": null,
+        "end": null,
+        "derived_from": null
+      }
+    ],
+    "groups": [
+      {
+        "name": "entity",
+        "columns": [
+          "hospital",
+          "department"
+        ]
+      },
+      {
+        "name": "triage",
+        "columns": [
+          "severity"
+        ]
+      },
+      {
+        "name": "calendar",
+        "columns": [
+          "visit_date",
+          "day_of_week",
+          "month",
+          "quarter",
+          "is_weekend"
+        ]
+      }
+    ],
+    "dependencies": [
+      [
+        "wait_minutes",
+        "cost"
+      ],
+      [
+        "wait_minutes",
+        "satisfaction"
+      ]
+    ],
+    "intents": [
+      {
+        "index": 0,
+        "sentence": "Which hospital and department waits longest",
+        "columns": [
+          "hospital",
+          "wait_minutes"
+        ],
+        "aggregate": "AVG",
+        "family": "comparison"
+      },
+      {
+        "index": 1,
+        "sentence": "How wait time moved over the half year",
+        "columns": [
+          "visit_date",
+          "wait_minutes"
+        ],
+        "aggregate": "AVG",
+        "family": "trend"
+      },
+      {
+        "index": 2,
+        "sentence": "Do longer waits go with lower satisfaction",
+        "columns": [
+          "wait_minutes",
+          "satisfaction"
+        ],
+        "aggregate": "NONE",
+        "family": "relation"
+      }
+    ],
+    "n_rows": 900,
+    "script": "dim(\"hospital\", [\"Mercy General\", \"St. Luke's\", \"Riverside\"],\n    weights=[0.40, 0.35, 0.25], group=\"entity\")\ndim(\"department\", [\"Internal Medicine\", \"Surgery\", \"Pediatrics\", \"Trauma\"], parent=\"hospital\",\n    weights={\"Mercy General\": [0.35, 0.25, 0.15, 0.25],\n             \"St. Luke's\": [0.40, 0.20, 0.20, 0.20],\n             \"Riverside\": [0.30, 0.30, 0.15, 0.25]})\ndim(\"severity\", [\"Minor\", \"Moderate\", \"Severe\"], weights=[0.50, 0.35, 0.15],\n    ordered=\"ordinal\", group=\"triage\")\n\ntime(\"visit_date\", start=\"2024-01-01\", end=\"2024-06-30\", freq=\"daily\")\n\nmeasure(\"wait_minutes\",\n        \"lognormal(mu = 2.8 + 0.4*[severity=Moderate] + 0.9*[severity=Severe]\"\n        \"             + 0.2*[hospital=Mercy General],\"\n        \"          sigma = 0.35)\",\n        unit=\"minutes\", additive=True)\nmeasure(\"cost\",\n        \"wait_minutes * 12 + {Minor: 80, Moderate: 260, Severe: 700}[severity] + gaussian(0, 30)\",\n        unit=\"USD\", additive=True)\nmeasure(\"satisfaction\",\n        \"clip(5.2 - wait_minutes / 32 + gaussian(0, 0.3), 1, 5)\",\n        unit=\"points\", additive=False)\n\nemit(900)\n"
+  }
+}

@@ -126,7 +126,7 @@
     <p class="slide-subtitle" style="margin-bottom:1vh;">A chart data generation pipeline instrumented at render time</p>
     <p class="slide-subtitle" style="margin-bottom:5vh;">Every value carries the pixels it was read from</p>
     <div class="card" style="max-width:58%;text-align:center;">
-      Five stages, one model call, one worked example carried all the way through
+      Five stages, two model calls, one worked example carried all the way through
     </div>
   </div>
   <div class="footer">ParseBench · Chart Data Generation</div>
@@ -796,11 +796,11 @@ stage dimension     none                        <span class="c">&rarr; process f
     </div>
     <div class="grid4" style="margin-top:2.2vh;">
       <div class="card"><span class="card-label muted">length &middot; position</span><div>bar, line, scatter, box &mdash; run the criterion above</div></div>
-      <div class="card card-bad"><span class="card-label">angle</span><div>a 3% slice, 1% error is 0.1&deg;</div></div>
+      <div class="card"><span class="card-label muted">angle</span><div>a wedge, graded by its radius: 3 &times; 2 / (2&pi;r)</div></div>
       <div class="card card-bad"><span class="card-label">area</span><div>error grows as the square</div></div>
       <div class="card card-bad"><span class="card-label">colour</span><div>quantized scale, non-linear perception</div></div>
     </div>
-    <div class="cap" style="margin-top:1.4vh;">An unreadable mark leaves the value targets and stays in the localization targets. Pie and heatmap figures often contribute only boxes, and that is the intended outcome.</div>
+    <div class="cap" style="margin-top:1.4vh;">An unreadable mark leaves the value targets and stays in the localization targets. A heatmap contributes only boxes, and that is the intended outcome; a pie depends on the tolerance being asked for &mdash; none of its wedges at one percent, every wedge above a seventh of it at five.</div>
   </div>
   <div class="footer">ParseBench · Chart Data Generation</div>
 </section>

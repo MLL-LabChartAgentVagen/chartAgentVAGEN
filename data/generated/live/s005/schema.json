@@ -1,0 +1,318 @@
+{
+  "schema_version": 5,
+  "type": "TableSchema",
+  "data": {
+    "scenario_id": "s005",
+    "scenario_title": "Preferential trade agreement origin claims, duty forgone, and customs compliance verifications across major entry ports, 2022–2023",
+    "data_context": "The national customs administration maintains this registry of monthly preferential tariff filings to monitor revenue forgone under free trade agreements, evaluate origin certification compliance across tariff headings, and track claims through clearance and audit stages.",
+    "columns": [
+      {
+        "name": "trade_programme",
+        "kind": "category",
+        "cardinality": 4,
+        "group": "agreement",
+        "parent": null,
+        "ordered": null,
+        "values": [
+          "USMCA",
+          "CAFTA-DR",
+          "KORUS FTA",
+          "GSP Beneficiary"
+        ],
+        "unit": null,
+        "additive": null,
+        "freq": null,
+        "start": null,
+        "end": null,
+        "derived_from": null
+      },
+      {
+        "name": "port_region",
+        "kind": "category",
+        "cardinality": 4,
+        "group": "geography",
+        "parent": null,
+        "ordered": null,
+        "values": [
+          "Northern Border",
+          "Southern Border",
+          "Pacific Gateway",
+          "Atlantic Gateway"
+        ],
+        "unit": null,
+        "additive": null,
+        "freq": null,
+        "start": null,
+        "end": null,
+        "derived_from": null
+      },
+      {
+        "name": "port_of_entry",
+        "kind": "category",
+        "cardinality": 8,
+        "group": "geography",
+        "parent": "port_region",
+        "ordered": null,
+        "values": [
+          "Detroit",
+          "Buffalo",
+          "Laredo",
+          "El Paso",
+          "Los Angeles",
+          "Long Beach",
+          "New York/Newark",
+          "Savannah"
+        ],
+        "unit": null,
+        "additive": null,
+        "freq": null,
+        "start": null,
+        "end": null,
+        "derived_from": null
+      },
+      {
+        "name": "tariff_heading",
+        "kind": "category",
+        "cardinality": 5,
+        "group": "commodity",
+        "parent": null,
+        "ordered": null,
+        "values": [
+          "HS 8708 Motor Vehicle Parts",
+          "HS 8542 Integrated Circuits",
+          "HS 8471 Data Processing Units",
+          "HS 6204 Women Suits & Ensembles",
+          "HS 3901 Polymers of Ethylene"
+        ],
+        "unit": null,
+        "additive": null,
+        "freq": null,
+        "start": null,
+        "end": null,
+        "derived_from": null
+      },
+      {
+        "name": "clearance_stage",
+        "kind": "category",
+        "cardinality": 4,
+        "group": "workflow",
+        "parent": null,
+        "ordered": "stage",
+        "values": [
+          "Filing Lodged",
+          "Customs Review",
+          "Origin Verification",
+          "Final Liquidation"
+        ],
+        "unit": null,
+        "additive": null,
+        "freq": null,
+        "start": null,
+        "end": null,
+        "derived_from": null
+      },
+      {
+        "name": "declaration_month",
+        "kind": "time",
+        "cardinality": 24,
+        "group": "calendar",
+        "parent": null,
+        "ordered": null,
+        "values": [],
+        "unit": null,
+        "additive": null,
+        "freq": "monthly",
+        "start": "2022-01-01",
+        "end": "2023-12-01",
+        "derived_from": null
+      },
+      {
+        "name": "quarter",
+        "kind": "category",
+        "cardinality": 8,
+        "group": "calendar",
+        "parent": null,
+        "ordered": "ordinal",
+        "values": [
+          "2022-Q1",
+          "2022-Q2",
+          "2022-Q3",
+          "2022-Q4",
+          "2023-Q1",
+          "2023-Q2",
+          "2023-Q3",
+          "2023-Q4"
+        ],
+        "unit": null,
+        "additive": null,
+        "freq": null,
+        "start": null,
+        "end": null,
+        "derived_from": "declaration_month"
+      },
+      {
+        "name": "customs_value",
+        "kind": "measure",
+        "cardinality": 800,
+        "group": null,
+        "parent": null,
+        "ordered": null,
+        "values": [],
+        "unit": "thousand USD",
+        "additive": true,
+        "freq": null,
+        "start": null,
+        "end": null,
+        "derived_from": null
+      },
+      {
+        "name": "duty_forgone",
+        "kind": "measure",
+        "cardinality": 800,
+        "group": null,
+        "parent": null,
+        "ordered": null,
+        "values": [],
+        "unit": "thousand USD",
+        "additive": true,
+        "freq": null,
+        "start": null,
+        "end": null,
+        "derived_from": null
+      },
+      {
+        "name": "disallowed_amount",
+        "kind": "measure",
+        "cardinality": 800,
+        "group": null,
+        "parent": null,
+        "ordered": null,
+        "values": [],
+        "unit": "thousand USD",
+        "additive": true,
+        "freq": null,
+        "start": null,
+        "end": null,
+        "derived_from": null
+      },
+      {
+        "name": "effective_preference_pct",
+        "kind": "measure",
+        "cardinality": 800,
+        "group": null,
+        "parent": null,
+        "ordered": null,
+        "values": [],
+        "unit": "percent",
+        "additive": false,
+        "freq": null,
+        "start": null,
+        "end": null,
+        "derived_from": null
+      }
+    ],
+    "groups": [
+      {
+        "name": "agreement",
+        "columns": [
+          "trade_programme"
+        ]
+      },
+      {
+        "name": "geography",
+        "columns": [
+          "port_region",
+          "port_of_entry"
+        ]
+      },
+      {
+        "name": "commodity",
+        "columns": [
+          "tariff_heading"
+        ]
+      },
+      {
+        "name": "workflow",
+        "columns": [
+          "clearance_stage"
+        ]
+      },
+      {
+        "name": "calendar",
+        "columns": [
+          "declaration_month",
+          "quarter"
+        ]
+      }
+    ],
+    "dependencies": [
+      [
+        "customs_value",
+        "duty_forgone"
+      ],
+      [
+        "duty_forgone",
+        "disallowed_amount"
+      ],
+      [
+        "customs_value",
+        "effective_preference_pct"
+      ],
+      [
+        "duty_forgone",
+        "effective_preference_pct"
+      ]
+    ],
+    "intents": [
+      {
+        "index": 0,
+        "sentence": "Total duty forgone compared across different preferential trade programmes",
+        "columns": [
+          "trade_programme",
+          "duty_forgone"
+        ],
+        "aggregate": "SUM",
+        "family": "comparison"
+      },
+      {
+        "index": 1,
+        "sentence": "Monthly trend in total entered customs value claiming tariff preferences",
+        "columns": [
+          "declaration_month",
+          "customs_value"
+        ],
+        "aggregate": "SUM",
+        "family": "trend"
+      },
+      {
+        "index": 2,
+        "sentence": "Progression and volume drop-off of preference claims across customs clearance stages",
+        "columns": [
+          "clearance_stage"
+        ],
+        "aggregate": "COUNT",
+        "family": "process"
+      },
+      {
+        "index": 3,
+        "sentence": "Relationship between declared customs value and the duty forgone amount",
+        "columns": [
+          "customs_value",
+          "duty_forgone"
+        ],
+        "aggregate": "NONE",
+        "family": "relation"
+      }
+    ],
+    "n_rows": 800,
+    "script": "dim(\"trade_programme\", [\"USMCA\", \"CAFTA-DR\", \"KORUS FTA\", \"GSP Beneficiary\"],\n    weights=[0.45, 0.22, 0.20, 0.13], group=\"agreement\")\n\ndim(\"port_region\", [\"Northern Border\", \"Southern Border\", \"Pacific Gateway\", \"Atlantic Gateway\"],\n    weights=[0.32, 0.36, 0.18, 0.14], group=\"geography\")\n\ndim(\"port_of_entry\", [\"Detroit\", \"Buffalo\", \"Laredo\", \"El Paso\", \"Los Angeles\", \"Long Beach\", \"New York/Newark\", \"Savannah\"],\n    parent=\"port_region\",\n    weights={\n        \"Northern Border\": [0.65, 0.35, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],\n        \"Southern Border\": [0.0, 0.0, 0.70, 0.30, 0.0, 0.0, 0.0, 0.0],\n        \"Pacific Gateway\": [0.0, 0.0, 0.0, 0.0, 0.60, 0.40, 0.0, 0.0],\n        \"Atlantic Gateway\": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.60, 0.40]\n    })\n\ndim(\"tariff_heading\", [\"HS 8708 Motor Vehicle Parts\", \"HS 8542 Integrated Circuits\", \"HS 8471 Data Processing Units\", \"HS 6204 Women Suits & Ensembles\", \"HS 3901 Polymers of Ethylene\"],\n    weights=[0.30, 0.25, 0.20, 0.15, 0.10], group=\"commodity\")\n\ndim(\"clearance_stage\", [\"Filing Lodged\", \"Customs Review\", \"Origin Verification\", \"Final Liquidation\"],\n    weights=[0.42, 0.28, 0.18, 0.12], ordered=\"stage\", group=\"workflow\")\n\ntime(\"declaration_month\", start=\"2022-01-01\", end=\"2023-12-01\", freq=\"monthly\")\n\nmeasure(\"customs_value\",\n        \"gamma(shape=4.0, scale=120) * (1.0 + 0.45 * [tariff_heading=HS 8708 Motor Vehicle Parts] + 0.25 * [trade_programme=USMCA])\",\n        unit=\"thousand USD\", additive=True)\n\nmeasure(\"duty_forgone\",\n        \"clip(customs_value * {\\\"USMCA\\\": 0.048, \\\"CAFTA-DR\\\": 0.065, \\\"KORUS FTA\\\": 0.038, \\\"GSP Beneficiary\\\": 0.052}[trade_programme] + gaussian(0, 1.5), 0.2, 800.0)\",\n        unit=\"thousand USD\", additive=True)\n\nmeasure(\"disallowed_amount\",\n        \"clip([clearance_stage=Final Liquidation] * duty_forgone * uniform(0.08, 0.35) + [clearance_stage=Origin Verification] * duty_forgone * 0.05, 0.0, 200.0)\",\n        unit=\"thousand USD\", additive=True)\n\nmeasure(\"effective_preference_pct\",\n        \"clip((duty_forgone / customs_value) * 100 + gaussian(0, 0.15), 0.5, 12.0)\",\n        unit=\"percent\", additive=False)\n\nemit(800)\n",
+    "origin": {
+      "domain_id": "dom_0308",
+      "domain": "Preferential origin claims and duty forgone under trade agreements",
+      "topic": "macroeconomy and trade: customs import declarations and duty amounts assessed by tariff heading and port of entry",
+      "subject": "macroeconomy and trade",
+      "register": "registry",
+      "complexity_tier": "medium"
+    }
+  }
+}

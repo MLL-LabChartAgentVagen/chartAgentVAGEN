@@ -180,8 +180,8 @@ pre.tree .pg{margin-left:8px;vertical-align:0}
 <header class="masthead"><div class="inner"><div><h1>图表数据生成流水线 · 实现计划</h1>
 <p>按<strong>流水线的顺序</strong>排：第一页是整条流水线怎么串起来的，后面每一页讲其中的一步。
 <strong>ParseBench 上量出来的十条缺口，各自就地嵌在它该落的那一步里</strong>，用带颜色的角标标出来，点角标能跳到那一条的正文。<br>
-全篇用同一个贯穿示例：急诊科等待时间，3 家医院 × 4 个科室 × 3 个分诊等级 × 182 天 ＝ 900 行。coding agent 用的那一份是 <a href="PLAN.md">PLAN.md</a>。</p></div>
-<div class="facts"><div class="fact"><b>5</b><span>个阶段</span></div><div class="fact"><b>2</b><span>次 LLM 调用</span></div><div class="fact"><b>143</b><span>个施工项</span></div><div class="fact"><b>13</b><span>已完成</span></div></div></div></header>
+全篇用同一个贯穿示例：急诊科等待时间，3 家医院 × 4 个科室 × 3 个分诊等级 × 182 天 ＝ 900 行。coding agent 用的那一份是 <a href="PLAN.md">PLAN.md</a>；<b>跑出来的东西在 <a href="reports/report.html">reports/report.html</a></b>（一次真实运行，一页 HTML；更细的在 <a href="../review/index.html">review/</a>：每步一页、每种图表类型一页、外加一页讲代码怎么被验的）。</p></div>
+<div class="facts"><div class="fact"><b>5</b><span>个阶段</span></div><div class="fact"><b>2</b><span>次 LLM 调用</span></div><div class="fact"><b>133</b><span>个施工项</span></div><div class="fact"><b>129</b><span>已完成</span></div></div></div></header>
 <nav class="tabs"><button type="button" data-tab="over" aria-selected="true">总览<span>五步怎么串起来</span></button><button type="button" data-tab="base" aria-selected="false">共享层<span>接口 · 条件表 · 公共模块</span></button><button type="button" data-tab="s01" aria-selected="false">01 数据<span>写场景与数据</span></button><button type="button" data-tab="s02" aria-selected="false">02 选图<span>选图 · 组合 · 标题</span></button><button type="button" data-tab="s03" aria-selected="false">03 渲染<span>边画边记</span></button><button type="button" data-tab="s04" aria-selected="false">04 记录<span>可读判定与自检</span></button><button type="button" data-tab="s05" aria-selected="false">05 输出<span>训练目标与奖励</span></button><button type="button" data-tab="end" aria-selected="false">收口<span>顺序 · 风险 · 验收</span></button></nav>
 <main>
 <section class="tab" id="tab-over">
@@ -225,7 +225,7 @@ pre.tree .pg{margin-left:8px;vertical-align:0}
     <text class="lb" x="337" y="108" text-anchor="middle">FigureSpec</text>
     <text class="lb" x="505" y="108" text-anchor="middle">RenderOutput</text>
     <text class="lb" x="673" y="108" text-anchor="middle">Record</text>
-    <text class="lb" x="866" y="70">八类文件</text>
+    <text class="lb" x="866" y="70">九类文件</text>
     <!-- worked example chain -->
     <line class="gld" x1="10" y1="140" x2="890" y2="140"/>
     <text class="lbb" x="10" y="158">贯穿示例</text>
@@ -2260,15 +2260,15 @@ TextBlock(role=<b>"note"</b>,          scope="figure", placement="below", text="
 </div>
 </section>
 <section class="tab" id="tab-s05" hidden>
-<div class="band"><h2>05 输出：记录 → 训练目标文件</h2><span>八类目标 ＋ 可验证奖励</span></div>
+<div class="band"><h2>05 输出：记录 → 训练目标文件</h2><span>九类目标 ＋ 可验证奖励</span></div>
 
 <p class="note"><b>Record → 训练目标文件。</b>
-八类训练目标 ＋ 可验证奖励。<br>
+九类训练目标 ＋ 可验证奖励。<br>
 <b>一句话贯穿这一页：对外产物的形状是导出参数，不是记录结构。</b>
 落在这一步的三条缺口，全都是这句话的实例——面板名进不进键、颜色分组进不进键、一页导成几份，
 改的都是导出时怎么拼，<strong>一个字段都不用往记录里加</strong>。</p>
-<p class="note"><b>八类训练目标</b>　A 组（带位置的表、抽查标注集）· B 组（图元定位、图元读值、下钻）·
-  C 组（页面元素框、图例绑定）· caption。
+<p class="note"><b>九类训练目标</b>　A 组（带位置的表、抽查标注集）· B 组（图元定位、图元读值、下钻）·
+  C 组（页面元素框、图例绑定）· caption · 键的每一段是从页面哪里读到的。
   导出程序只 import <code>interfaces/record.py</code> 与 <code>common/</code>，<strong>不 import 任何阶段模块</strong>——记录自足是接口的前提。</p>
 
 <figure class="draw">
@@ -2561,7 +2561,7 @@ key = ("Surgery", <b>"High acuity"</b>)</pre></div>
 <div><h4>F · 05 输出</h4><div class="chips"><a class="pgNone" href="#P2" title="ParseBench 缺口 P2 · 点开跳到那一条">▸面板名进键</a><a class="pgNone" href="#P8" title="ParseBench 缺口 P8 · 点开跳到那一条">▸颜色分组进键</a><a class="pgNone" href="#P3" title="ParseBench 缺口 P3 · 点开跳到那一条">▸一页多图分得开</a><a class="pgNone" href="#P10" title="ParseBench 缺口 P10 · 点开跳到那一条">▸类型表加三行</a></div>
     <div class="bar"><i class="c" style="width:47%"></i><i class="t" style="width:53%"></i></div>
     <p class="cnt">0 已完成 · 15 待做（7 是改动）</p>
-    <p>八类训练目标 ＋ 可验证奖励。两个导出参数（键作用域、导出粒度）在这里。</p></div>
+    <p>九类训练目标 ＋ 可验证奖励。四个导出参数（键作用域、导出粒度、导出形态、目标清单）与打包它们的预设在这里。</p></div>
 </div>
 <div class="legend">
   <span><b class="d" style="background:var(--have)"></b>已完成</span>
@@ -2583,7 +2583,7 @@ key = ("Surgery", <b>"High acuity"</b>)</pre></div>
   <li><b>D · 03 渲染</b><span>改动最密的一组：四种图元形状、带状分支、叠加记号、
       风格取值域表、页面合成与文本块。
       <strong>两处要提前</strong>：<code>ink_fraction</code> 与 <code>_write_label</code>。</span></li>
-  <li><b>E · 04 记录 → F · 05 输出</b><span>三项自检落在 E，两个导出参数落在 F。
+  <li><b>E · 04 记录 → F · 05 输出</b><span>三项自检落在 E，四个导出参数落在 F。
       E 与 F 都要用 A6.13 的容差参数，所以它们必须在 A6 之后动笔。</span></li>
   <li><b>G · 扩展与消融</b><span>Tier 2 两种图元；消融表因为改动多五行；
       最后用官方规则在 568 页上自评，改造前后各一次。</span></li>

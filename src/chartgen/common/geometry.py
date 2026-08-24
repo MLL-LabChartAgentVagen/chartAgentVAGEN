@@ -62,9 +62,27 @@ class Box:
     def contains(self, x: float, y: float) -> bool:
         return self.x0 <= x <= self.x1 and self.y0 <= y <= self.y1
 
+    def grow(self, pad: float) -> "Box":
+        """This box with `pad` pixels added on every side.
+
+        For asking whether two things are far enough apart: two boxes that touch
+        overlap by nothing, so the question has to be put to a box with the clear
+        space it needs already in it.
+        """
+        return Box(self.x0 - pad, self.y0 - pad, self.x1 + pad, self.y1 + pad)
+
     def clip_to(self, other: "Box") -> "Box":
-        return Box(max(self.x0, other.x0), max(self.y0, other.y0),
-                   min(self.x1, other.x1), min(self.y1, other.y1))
+        """This box, cut down to `other`.
+
+        A box entirely outside `other` collapses onto the edge it went past. Cutting
+        each coordinate on its own would leave the low edge above the high one, and a
+        box normalises itself on construction -- so the two would swap and the result
+        would claim a region that was clipped away.
+        """
+        return Box(min(max(self.x0, other.x0), other.x1),
+                   min(max(self.y0, other.y0), other.y1),
+                   max(min(self.x1, other.x1), other.x0),
+                   max(min(self.y1, other.y1), other.y0))
 
 
 def iou(a: Box, b: Box) -> float:

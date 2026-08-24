@@ -42,6 +42,8 @@ DERIVED_BY_FREQ: dict[str, tuple[str, ...]] = {
     "daily": DERIVED,
     "weekly": ("month", "quarter"),
     "monthly": ("quarter",),
+    "quarterly": (),
+    "yearly": (),
 }
 
 #: Dimension group that holds the time column and its derived calendar fields.
@@ -49,7 +51,7 @@ CALENDAR = "calendar"
 
 WEEKDAYS: tuple[str, ...] = ("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun")
 
-FREQS: tuple[Freq, ...] = ("daily", "weekly", "monthly")
+FREQS: tuple[Freq, ...] = ("daily", "weekly", "monthly", "quarterly", "yearly")
 
 ORDERED: tuple[Ordered | None, ...] = (None, "ordinal", "stage")
 
@@ -90,9 +92,14 @@ class TimeDecl:
             first = lo - timedelta(days=lo.weekday())
             n = ((hi - first).days // 7) + 1
             return tuple(first + timedelta(weeks=i) for i in range(n))
-        months = (hi.year - lo.year) * 12 + hi.month - lo.month
-        return tuple(date(lo.year + (lo.month - 1 + i) // 12,
-                          (lo.month - 1 + i) % 12 + 1, 1) for i in range(months + 1))
+        if self.freq == "yearly":
+            return tuple(date(y, 1, 1) for y in range(lo.year, hi.year + 1))
+        step = 3 if self.freq == "quarterly" else 1
+        first = date(lo.year, lo.month - (lo.month - 1) % step, 1) if step > 1 else lo
+        months = (hi.year - first.year) * 12 + hi.month - first.month
+        return tuple(date(first.year + (first.month - 1 + i) // 12,
+                          (first.month - 1 + i) % 12 + 1, 1)
+                     for i in range(0, months + 1, step))
 
 
 @dataclass(frozen=True)
