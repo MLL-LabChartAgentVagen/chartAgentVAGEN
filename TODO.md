@@ -4,20 +4,32 @@
 
 ---
 
-## 1 · 先审：另一个 session 的实现与产物
+## 1 · 先审：上一个 session 的实现与产物
 
-`src/chartgen/` 的五阶段流水线实现，连同它生成的运行与分析报告，由另一个 session 写成，这次一起入库，**尚未逐条审过**。
+`src/chartgen/` 的五阶段流水线，连同它生成的运行与站点，由上一个 session 写成，这次一起入库，**我还没逐条审过**。剩下要做的就是 check 这些生成的内容。
 
-**已完成**：五阶段落地 145/149 项（十条缺口 P1–P10 与五条一般化）；一次完整运行在 `data/generated/`；两个站点 `review/`（每步一页 + 全部样本 + 每种图表类型 + 多样性 + 检查页）与 `plan/reports/*.html`；ParseBench 三家模型分析报告在 `parsebench/reports/`。
+### 1.1 上一个 session 做完了什么（总结）
 
-**还没做**（都在训练 / 评测侧，不是流水线能力）：消融表的数字（要先训模型）、其他导出（问答对 / 图表代码 / 配对样本）、官方规则在 568 页上的自评。
+- **实现**：五阶段流水线从规格落成代码，149 项里 145 项完成；十条 ParseBench 缺口 P1–P10 与五条一般化都进了代码。
+- **产物**：一次完整运行在 `data/generated/live`（6 个场景）；两个自建站点 `review/`（每步一页 + 全部样本 + 每种图表类型 + 多样性 + 检查页）与 `plan/reports/*.html`；三家模型的 ParseBench 分析报告在 `parsebench/reports/`。
+- **自验**：1330 项测试、语句覆盖 96%、故障注入 98/144（活下来 46 处）、17 种图表类型全过自检、奖励在五种图元形状上一致性 1.0、ER 数字链五份规格文档对齐。
+- **活的总结**在 `review/index.html` 与 `review/checks.html`。站点已入库，直接打开即可；要重新生成给自己看：
+  ```
+  python tools/build_review.py --run data/generated/live     # → review/index.html
+  python tools/build_report.py data/generated/live           # → plan/reports/report.html
+  ```
 
-**审的时候要做**：
+### 1.2 还没做（都在训练 / 评测侧，不是流水线能力）
+
+消融表的数字（要先训模型）、其他导出（问答对 / 图表代码 / 配对样本）、官方规则在 568 页上的自评。
+
+### 1.3 我要 check 的
 
 - [ ] 跑一遍端到端，确认 (输入, 种子) → 输出 逐位可复现
 - [ ] 打开 `review/index.html`，过一遍全部样本与检查页
 - [ ] 跑测试（1330 项，语句覆盖 96%）
 - [ ] 逐条核对十条缺口是否如实落地
+- [ ] **再跑一批更大的样本（50+ 场景）来 check 生成质量**。当前运行只有 6 个场景，看不出多样性、图表类型覆盖、复杂组合图的比例；而 §2 三条改进的效果也得在更大的一批上才看得见。成本是每场景两次 LLM 调用（01 数据、02 文字），50 场景约 100 次，便宜。**建议做**。
 
 ---
 
@@ -44,7 +56,13 @@ ParseBench 标注不带图表类型标签，配比只能用三家模型看图数
 
 ---
 
-## 3 · 之后（visual provenance）
+## 3 · ParseBench 样本可视化
+
+- [ ] 做一个 ParseBench 样本页：沿用现在的 HTML 模板（`plan/plan.html` 的样式，与 `tools/reportkit.py`），把 ParseBench 的样本页逐个列出来，每页配它的图与抽查点，清晰、well-organized、美观。数据在 `parsebench/data/`（标注 `raw/chart.jsonl`、页面图 `pages/`、100 页抽样 `stats/analysis_sample.json`）。
+
+---
+
+## 4 · 之后（visual provenance）
 
 单独一批重跑，与当前阶段的改动前后可比。
 
